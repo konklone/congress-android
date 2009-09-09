@@ -4,9 +4,22 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:id="@+id/debug"
-    />
+	<TextView  
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:id="@+id/debug"
+	    android:text=""
+	    />
+	<EditText  
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:id="@+id/zip"
+	    />
+	
+	<Button android:id="@+id/fetch"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Fetch"
+		/>
+					
 </LinearLayout>
