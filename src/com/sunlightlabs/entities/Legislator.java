@@ -31,11 +31,24 @@ public class Legislator extends JSONEntity {
 	/* Added by Eric Mill, Sep 11, 2009 */
 	
 	public String toString() {
-		return getName();
+		return titledName();
+	}
+	
+	public String getId() {
+		return getProperty("bioguide_id");
 	}
 	
 	public String getName() {
-		return getProperty("title") + ". " + firstName() + " " + lastName();
+		return firstName() + " " + lastName();
+	}
+	
+	// An appropriate name to submit to GovPix
+	public String picName() {
+		return getName();
+	}
+	
+	public String titledName() {
+		return getProperty("title") + ". " + getName();
 	}
 	
 	public String firstName() {

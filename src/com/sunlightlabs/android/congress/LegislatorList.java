@@ -3,7 +3,10 @@ package com.sunlightlabs.android.congress;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
@@ -11,15 +14,27 @@ import com.sunlightlabs.entities.Legislator;
 public class LegislatorList extends ListActivity {
 	public static String ZIP_CODE = "com.sunlightlabs.android.congress.zip_code";
 	private ApiCall api;
+	private Legislator[] legislators;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	
     	api = new ApiCall("");
     	
+    	loadLegislators();
+    	
+    	setListAdapter(new ArrayAdapter<Legislator>(this, android.R.layout.simple_list_item_1, legislators));
+    	getListView().setOnItemClickListener(new OnItemClickListener() { 
+    		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    			Legislator legislator = (Legislator) parent.getItemAtPosition(position);
+    			launchProfile(legislator.getId());
+    		}
+    	});
+    }
+    
+    public void loadLegislators() {
     	String zipCode = getIntent().getStringExtra(ZIP_CODE);
-    	setListAdapter(new ArrayAdapter<Legislator>(this, android.R.layout.simple_list_item_1, byZip(zipCode)));
+    	legislators = byZip(zipCode);
     }
     
     public Legislator[] byZip(String zipCode) {
