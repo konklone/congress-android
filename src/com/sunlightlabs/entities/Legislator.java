@@ -27,6 +27,27 @@ public class Legislator extends JSONEntity {
 	public static String getPluralEntityName() {
 		return "legislators";
 	}
+	
+	/* Added by Eric Mill, Sep 11, 2009 */
+	
+	public String toString() {
+		return getName();
+	}
+	
+	public String getName() {
+		return getProperty("title") + ". " + firstName() + " " + lastName();
+	}
+	
+	public String firstName() {
+		String first_name = getProperty("nickname");
+		if (first_name == null || first_name.length() == 0)
+			first_name = getProperty("firstname");
+		return first_name;
+	}
+	
+	public String lastName() {
+		return getProperty("lastname");
+	}
 
 	/**
 	 * internal function to build Legislators
@@ -148,10 +169,5 @@ public class Legislator extends JSONEntity {
 		return KNOWN_PROPERTIES;
 	}
 	
-	public String getName()
-	{
-		return getProperty("firstname") + " " + 
-		getProperty("lastname");
-	}
 	
 }
