@@ -58,8 +58,6 @@ public class ApiCall {
 	 */
 	public JSONObject getJSONResponse(String apiCall, Map<String, String> params) {
 		String s = callAPI(apiCall, params);
-	//	if(s.contains("lobbyist"))
-	//	  System.out.println(s);
 		JSONTokener tokenizer = new JSONTokener(s);
 		try {
 			JSONObject obj = new JSONObject(tokenizer);
