@@ -6,8 +6,8 @@
   	>
   
   	<ImageView
-  		android:layout_width="60px"
-  		android:layout_height="75px"
+  		android:layout_width="100px"
+  		android:layout_height="125px"
   		android:id="@+id/picture"
   		/>
   	<LinearLayout
