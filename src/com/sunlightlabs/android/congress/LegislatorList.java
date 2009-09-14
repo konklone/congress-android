@@ -26,8 +26,7 @@ public class LegislatorList extends ListActivity {
     	setListAdapter(new ArrayAdapter<Legislator>(this, android.R.layout.simple_list_item_1, legislators));
     	getListView().setOnItemClickListener(new OnItemClickListener() { 
     		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    			Legislator legislator = (Legislator) parent.getItemAtPosition(position);
-    			launchProfile(legislator.getId());
+    			launchProfile(((Legislator) parent.getItemAtPosition(position)).getId());
     		}
     	});
     }
