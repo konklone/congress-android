@@ -5,19 +5,20 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import android.app.Activity;
-import android.content.res.Resources;
+import android.app.TabActivity;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
 
-public class LegislatorProfile extends Activity {
+public class LegislatorProfile extends TabActivity {
 	public static String LEGISLATOR_ID = "com.sunlightlabs.android.congress.legislator_id";
+	private TabHost tabHost;
 	private String id;
 	private Legislator legislator;
 	
@@ -28,10 +29,19 @@ public class LegislatorProfile extends Activity {
         
         id = getIntent().getStringExtra(LEGISLATOR_ID);
         
+        setupTabs();
+        
         loadLegislator(id);
         loadInformation();
 	}
 	
+	
+	public void setupTabs() {
+		tabHost = getTabHost();
+		tabHost.addTab(tabHost.newTabSpec("profile_tab").setIndicator("Profile").setContent(R.id.profile_tab));
+		tabHost.addTab(tabHost.newTabSpec("news_tab").setIndicator("News").setContent(R.id.news_tab));
+		tabHost.setCurrentTab(0);
+	}
 	
 	public void loadLegislator(String id) {
 		String api_key = getResources().getString(R.string.sunlight_api_key);
