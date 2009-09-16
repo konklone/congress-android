@@ -13,13 +13,11 @@ import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorList extends ListActivity {
 	public static String ZIP_CODE = "com.sunlightlabs.android.congress.zip_code";
-	private ApiCall api;
 	private Legislator[] legislators;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	api = new ApiCall("");
     	
     	loadLegislators();
     	
@@ -32,12 +30,10 @@ public class LegislatorList extends ListActivity {
     }
     
     public void loadLegislators() {
+    	String api_key = getResources().getString(R.string.sunlight_api_key);
+		ApiCall api = new ApiCall(api_key);
     	String zipCode = getIntent().getStringExtra(ZIP_CODE);
-    	legislators = byZip(zipCode);
-    }
-    
-    public Legislator[] byZip(String zipCode) {
-    	return Legislator.getLegislatorsForZipCode(api, zipCode);
+    	legislators = Legislator.getLegislatorsForZipCode(api, zipCode);
     }
     
     public void launchProfile(String id) {

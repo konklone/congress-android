@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,7 +34,8 @@ public class LegislatorProfile extends Activity {
 	
 	
 	public void loadLegislator(String id) {
-		ApiCall api = new ApiCall("");
+		String api_key = getResources().getString(R.string.sunlight_api_key);
+		ApiCall api = new ApiCall(api_key);
 		legislator = Legislator.getLegislatorById(api, id);
 	}
 	

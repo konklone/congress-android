@@ -1,1 +1,3 @@
 Sunlight's first mobile app, a way to track your member of Congress using their various feeds (YouTube, Twitter, blog, etc.), and mentions in the news.
+
+When setting this up, make sure to copy keys.xml.example to res/values/keys.xml and fill in your Sunlight API key.
