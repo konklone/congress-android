@@ -1,10 +1,11 @@
 package com.sunlightlabs.entities;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.json.*;
+import org.json.JSONObject;
 
-import com.sunlightlabs.api.*;
+import com.sunlightlabs.api.ApiCall;
 
 /**
   * represents a  state legislator
@@ -60,6 +61,16 @@ public class Legislator extends JSONEntity {
 	
 	public String lastName() {
 		return getProperty("lastname");
+	}
+	
+	public String getDomain() {
+		String district = getProperty("district");
+		if (district.equals("Senior Seat") || district.equals("Junior Seat"))
+			return district;
+		else if (district.equals("0"))
+			return "At-Large";
+		else
+			return "District " + district;
 	}
 
 	/**

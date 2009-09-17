@@ -52,26 +52,60 @@ public class LegislatorProfile extends TabActivity {
 	
 	public void loadInformation() {
 		ImageView picture = (ImageView) this.findViewById(R.id.picture);
+		picture.setImageDrawable(fetchImage());
 		
+		// name
+		TextView name = (TextView) this.findViewById(R.id.profile_name);
+		name.setText(legislator.titledName());
+		
+		// party and state
+		TextView party_state = (TextView) this.findViewById(R.id.profile_party_state);
+		String party_line = 
+				"(" + legislator.getProperty("party") + "-" + legislator.getProperty("state") + ") " 
+				+ legislator.getDomain(); 
+		party_state.setText(party_line);
+	
+		
+		// website
+		TextView website = (TextView) this.findViewById(R.id.profile_website);
+		website.setText(legislator.getProperty("website"));
+		
+		// phone
+		TextView phone = (TextView) this.findViewById(R.id.profile_phone);
+		phone.setText(legislator.getProperty("phone"));
+		
+		// office address
+		TextView office = (TextView) this.findViewById(R.id.profile_office);
+		office.setText(legislator.getProperty("congress_office"));
+		
+		// twitter handle
+		String twitter_id = legislator.getProperty("twitter_id");
+		if (!twitter_id.equals("")) {
+			TextView twitter = (TextView) this.findViewById(R.id.profile_twitter);
+			twitter.setText("@" + twitter_id);
+		}
+		
+		// YouTube account
+		String youtube_url = legislator.getProperty("youtube_url");
+		if (!youtube_url.equals("")) {
+			TextView youtube = (TextView) this.findViewById(R.id.profile_youtube);
+			youtube.setText(youtube_url);
+		}
+	}
+	
+	public Drawable fetchImage() {
 		String url = "http://govpix.appspot.com/" + Uri.encode(legislator.picName());
 		InputStream stream;
-		Drawable drawable;
+		Drawable drawable = null;
 		try {
 			stream = (InputStream) fetch(url);
 			drawable = Drawable.createFromStream(stream, "src");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-			return;
 		} catch (IOException e) {
 			e.printStackTrace();
-			return;
 		}
-				
-		picture.setImageDrawable(drawable);
-		
-		
-		TextView name = (TextView) this.findViewById(R.id.profile_name);
-		name.setText(legislator.getName());
+		return drawable;
 	}
 	
 	public Object fetch(String address) throws MalformedURLException, IOException {
