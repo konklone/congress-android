@@ -9,7 +9,6 @@ import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorTabs extends TabActivity {
-	public static String LEGISLATOR_ID = "com.sunlightlabs.android.congress.legislator_id";
 	private TabHost tabHost;
 	private Legislator legislator;
 	
@@ -18,7 +17,7 @@ public class LegislatorTabs extends TabActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.legislator);
         
-        String id = getIntent().getStringExtra(LEGISLATOR_ID);
+        String id = getIntent().getStringExtra("legislator_id");
         loadLegislator(id);
         
         setupTabs();
@@ -32,8 +31,12 @@ public class LegislatorTabs extends TabActivity {
 	
 	public void setupTabs() {
 		tabHost = getTabHost();
+		
 		tabHost.addTab(tabHost.newTabSpec("profile_tab").setIndicator("Profile").setContent(profileIntent()));
-		tabHost.addTab(tabHost.newTabSpec("news_tab").setIndicator("News").setContent(R.id.news_tab));
+		
+		if (!legislator.getProperty("twitter_id").equals(""))
+			tabHost.addTab(tabHost.newTabSpec("twitter_tab").setIndicator("Twitter").setContent(twitterIntent()));
+		
 		tabHost.setCurrentTab(0);
 	}
 	
@@ -53,6 +56,18 @@ public class LegislatorTabs extends TabActivity {
 		extras.putString("phone", legislator.getProperty("phone"));
 		extras.putString("twitter_id", legislator.getProperty("twitter_id"));
 		extras.putString("youtube_url", legislator.getProperty("youtube_url"));
+		
+		intent.putExtras(extras);
+		return intent;
+	}
+	
+	public Intent twitterIntent() {
+		Intent intent = new Intent();
+		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorTwitter");
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		
+		Bundle extras = new Bundle();
+		extras.putString("username", legislator.getProperty("twitter_id"));
 		
 		intent.putExtras(extras);
 		return intent;

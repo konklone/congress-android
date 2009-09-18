@@ -42,7 +42,7 @@ public class LegislatorList extends ListActivity {
 		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		
 		Bundle extras = new Bundle();
-		extras.putString(LegislatorTabs.LEGISLATOR_ID, id); 
+		extras.putString("legislator_id", id); 
 		i.putExtras(extras);
 		
 		startActivity(i);

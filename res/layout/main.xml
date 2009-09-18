@@ -8,12 +8,12 @@
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
 	    android:id="@+id/zip"
-	    android:text="20878"
+	    android:text="55362"
 	    />
 	
 	<Button android:id="@+id/fetch"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:layout_height="50sp"
 		android:text="Fetch"
 		/>
 					

@@ -12,8 +12,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".LegislatorList" />
-        <activity android:name=".LegislatorTabs" />
+        <activity android:name=".LegislatorTabs"
+        	android:label="Congress - Profile" />
         <activity android:name=".LegislatorProfile" />
+        <activity android:name=".LegislatorTwitter" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-sdk android:minSdkVersion="3" />
