@@ -12,6 +12,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".LegislatorList" />
+        <activity android:name=".LegislatorTabs" />
         <activity android:name=".LegislatorProfile" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />

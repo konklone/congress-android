@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.regex.Pattern;
 
-import android.app.TabActivity;
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,39 +16,29 @@ import android.widget.TextView;
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
 
-public class LegislatorProfile extends TabActivity {
-	public static String LEGISLATOR_ID = "com.sunlightlabs.android.congress.legislator_id";
-	private TabHost tabHost;
-	private String id;
-	private Legislator legislator;
+public class LegislatorProfile extends Activity {
+	private String picName, titledName, party, state, domain, phone, website, office, youtube_url, twitter_id; 
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.legislator);
+        setContentView(R.layout.legislator_profile);
         
-        id = getIntent().getStringExtra(LEGISLATOR_ID);
+        Bundle extras = getIntent().getExtras(); 
         
-        setupTabs();
+        picName = extras.getString("picName");
+        titledName = extras.getString("titledName");
+        party = extras.getString("party");
+        state = extras.getString("state");
+        domain = extras.getString("domain");
+        phone = extras.getString("phone");
+        website = extras.getString("website");
+        office = extras.getString("office");
+        youtube_url = extras.getString("youtube_url");
+        twitter_id = extras.getString("twitter_id");
         
-        loadLegislator(id);
         loadInformation();
 	}
-	
-	
-	public void setupTabs() {
-		tabHost = getTabHost();
-		tabHost.addTab(tabHost.newTabSpec("profile_tab").setIndicator("Profile").setContent(R.id.profile_tab));
-		tabHost.addTab(tabHost.newTabSpec("news_tab").setIndicator("News").setContent(R.id.news_tab));
-		tabHost.setCurrentTab(0);
-	}
-	
-	public void loadLegislator(String id) {
-		String api_key = getResources().getString(R.string.sunlight_api_key);
-		ApiCall api = new ApiCall(api_key);
-		legislator = Legislator.getLegislatorById(api, id);
-	}
-	
 	
 	public void loadInformation() {
 		ImageView picture = (ImageView) this.findViewById(R.id.picture);
@@ -57,26 +46,24 @@ public class LegislatorProfile extends TabActivity {
 		
 		// name
 		TextView name = (TextView) this.findViewById(R.id.profile_name);
-		name.setText(legislator.titledName());
+		name.setText(titledName);
 		
 		// party and state
 		TextView party_state = (TextView) this.findViewById(R.id.profile_party_state);
-		String party_line = 
-				"(" + legislator.getProperty("party") + "-" + legislator.getProperty("state") + ") " 
-				+ legislator.getDomain(); 
+		String party_line = "(" + party + "-" + state + ") " + domain; 
 		party_state.setText(party_line);
 
 		// phone
-		TextView phone = (TextView) this.findViewById(R.id.profile_phone);
-		phone.setText(legislator.getProperty("phone"));
+		TextView phoneView = (TextView) this.findViewById(R.id.profile_phone);
+		phoneView.setText(phone);
 		
 		// office address
-		TextView office = (TextView) this.findViewById(R.id.profile_office);
-		office.setText(legislator.getProperty("congress_office"));
+		TextView officeView = (TextView) this.findViewById(R.id.profile_office);
+		officeView.setText(office);
 		
 		// website
-		TextView website = (TextView) this.findViewById(R.id.profile_website);
-		website.setText(legislator.getProperty("website"));
+		TextView websiteView = (TextView) this.findViewById(R.id.profile_website);
+		websiteView.setText(website);
 	
 		
 //		// twitter handle
@@ -95,7 +82,7 @@ public class LegislatorProfile extends TabActivity {
 	}
 	
 	public Drawable fetchImage() {
-		String url = "http://govpix.appspot.com/" + Uri.encode(legislator.picName());
+		String url = "http://govpix.appspot.com/" + Uri.encode(picName);
 		InputStream stream;
 		Drawable drawable = null;
 		try {

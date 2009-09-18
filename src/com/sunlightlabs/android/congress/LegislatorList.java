@@ -24,7 +24,7 @@ public class LegislatorList extends ListActivity {
     	setListAdapter(new ArrayAdapter<Legislator>(this, android.R.layout.simple_list_item_1, legislators));
     	getListView().setOnItemClickListener(new OnItemClickListener() { 
     		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    			launchProfile(((Legislator) parent.getItemAtPosition(position)).getId());
+    			launchLegislator(((Legislator) parent.getItemAtPosition(position)).getId());
     		}
     	});
     }
@@ -36,13 +36,13 @@ public class LegislatorList extends ListActivity {
     	legislators = Legislator.getLegislatorsForZipCode(api, zipCode);
     }
     
-    public void launchProfile(String id) {
+    public void launchLegislator(String id) {
     	Intent i = new Intent();
-		i.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorProfile");
+		i.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorTabs");
 		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		
 		Bundle extras = new Bundle();
-		extras.putString(LegislatorProfile.LEGISLATOR_ID, id); 
+		extras.putString(LegislatorTabs.LEGISLATOR_ID, id); 
 		i.putExtras(extras);
 		
 		startActivity(i);
