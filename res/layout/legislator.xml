@@ -54,13 +54,21 @@
 					  		android:id="@+id/profile_name"
 					  		android:layout_width="wrap_content"
 				  			android:layout_height="wrap_content"
-				  			android:textSize="15sp"
+				  			android:textSize="20sp"
 					  		/>
 					  	<TextView
 					  		android:id="@+id/profile_party_state"
 					  		android:layout_width="wrap_content"
 					  		android:layout_height="wrap_content"
-					  		android:textSize="14sp"
+					  		android:textSize="18sp"
+					  		/>
+					  	
+					  	<TextView 
+					  		android:id="@+id/profile_phone"
+					  		android:layout_width="wrap_content"
+				  			android:layout_height="wrap_content"
+				  			android:autoLink="phone"
+				  			android:textSize="20sp" 
 					  		/>
 				  		
 				  	</LinearLayout>
@@ -75,35 +83,32 @@
 			  		>
 			  		
 			  		<TextView 
-				  		android:id="@+id/profile_website"
+				  		android:id="@+id/profile_office"
 				  		android:layout_width="wrap_content"
 			  			android:layout_height="wrap_content" 
+			  			android:textSize="16sp"
 				  		/>
 			  		
 			  		<TextView 
-				  		android:id="@+id/profile_phone"
+				  		android:id="@+id/profile_website"
 				  		android:layout_width="wrap_content"
 			  			android:layout_height="wrap_content"
-			  			android:autoLink="phone" 
+			  			android:autoLink="web"
+			  			android:textSize="18sp"
 				  		/>
 				  		
 				  	<TextView 
 				  		android:id="@+id/profile_youtube"
 				  		android:layout_width="wrap_content"
-			  			android:layout_height="wrap_content" 
-			  			android:autoLink="web"
+			  			android:layout_height="wrap_content"
+			  			android:textSize="18sp"
 				  		/>
 				  	
 				  	<TextView 
 				  		android:id="@+id/profile_twitter"
 				  		android:layout_width="wrap_content"
 			  			android:layout_height="wrap_content" 
-				  		/>
-				  	
-				  	<TextView 
-				  		android:id="@+id/profile_office"
-				  		android:layout_width="wrap_content"
-			  			android:layout_height="wrap_content" 
+			  			android:textSize="18sp"
 				  		/>
 			  	</LinearLayout>
 		  	

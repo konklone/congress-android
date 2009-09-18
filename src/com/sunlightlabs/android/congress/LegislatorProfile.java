@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Pattern;
 
 import android.app.TabActivity;
 import android.graphics.drawable.Drawable;
@@ -64,12 +65,7 @@ public class LegislatorProfile extends TabActivity {
 				"(" + legislator.getProperty("party") + "-" + legislator.getProperty("state") + ") " 
 				+ legislator.getDomain(); 
 		party_state.setText(party_line);
-	
-		
-		// website
-		TextView website = (TextView) this.findViewById(R.id.profile_website);
-		website.setText(legislator.getProperty("website"));
-		
+
 		// phone
 		TextView phone = (TextView) this.findViewById(R.id.profile_phone);
 		phone.setText(legislator.getProperty("phone"));
@@ -78,19 +74,24 @@ public class LegislatorProfile extends TabActivity {
 		TextView office = (TextView) this.findViewById(R.id.profile_office);
 		office.setText(legislator.getProperty("congress_office"));
 		
-		// twitter handle
-		String twitter_id = legislator.getProperty("twitter_id");
-		if (!twitter_id.equals("")) {
-			TextView twitter = (TextView) this.findViewById(R.id.profile_twitter);
-			twitter.setText("@" + twitter_id);
-		}
+		// website
+		TextView website = (TextView) this.findViewById(R.id.profile_website);
+		website.setText(legislator.getProperty("website"));
+	
 		
-		// YouTube account
-		String youtube_url = legislator.getProperty("youtube_url");
-		if (!youtube_url.equals("")) {
-			TextView youtube = (TextView) this.findViewById(R.id.profile_youtube);
-			youtube.setText(youtube_url);
-		}
+//		// twitter handle
+//		String twitter_id = legislator.getProperty("twitter_id");
+//		if (!twitter_id.equals("")) {
+//			TextView twitter = (TextView) this.findViewById(R.id.profile_twitter);
+//			twitter.setText("Twitter: @" + twitter_id);
+//		}
+//		
+//		// YouTube account
+//		String youtube_url = legislator.getProperty("youtube_url");
+//		if (!youtube_url.equals("")) {
+//			TextView youtube = (TextView) this.findViewById(R.id.profile_youtube);
+//			youtube.setText("YouTube: " + youtube_url.replaceFirst("http://(?:www\\.)?youtube\\.com/", ""));
+//		}
 	}
 	
 	public Drawable fetchImage() {
@@ -98,7 +99,7 @@ public class LegislatorProfile extends TabActivity {
 		InputStream stream;
 		Drawable drawable = null;
 		try {
-			stream = (InputStream) fetch(url);
+			stream = (InputStream) fetchObject(url);
 			drawable = Drawable.createFromStream(stream, "src");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -108,7 +109,7 @@ public class LegislatorProfile extends TabActivity {
 		return drawable;
 	}
 	
-	public Object fetch(String address) throws MalformedURLException, IOException {
+	private Object fetchObject(String address) throws MalformedURLException, IOException {
 		URL url = new URL(address);
 		Object content = url.getContent();
 		return content;
