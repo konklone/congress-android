@@ -10,11 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
-import android.widget.TabHost;
 import android.widget.TextView;
-
-import com.sunlightlabs.api.ApiCall;
-import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorProfile extends Activity {
 	private String picName, titledName, party, state, domain, phone, website, office, youtube_url, twitter_id; 
