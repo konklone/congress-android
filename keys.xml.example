@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sunlight_api_key"></string>
+    <string name="yahoo_news_key"></string>
 </resources>

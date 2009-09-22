@@ -33,6 +33,7 @@ public class LegislatorTabs extends TabActivity {
 		tabHost = getTabHost();
 		
 		tabHost.addTab(tabHost.newTabSpec("profile_tab").setIndicator("Profile").setContent(profileIntent()));
+		tabHost.addTab(tabHost.newTabSpec("news_tab").setIndicator("News").setContent(newsIntent()));
 		
 		if (!legislator.getProperty("twitter_id").equals(""))
 			tabHost.addTab(tabHost.newTabSpec("twitter_tab").setIndicator("Twitter").setContent(twitterIntent()));
@@ -68,6 +69,18 @@ public class LegislatorTabs extends TabActivity {
 		
 		Bundle extras = new Bundle();
 		extras.putString("username", legislator.getProperty("twitter_id"));
+		
+		intent.putExtras(extras);
+		return intent;
+	}
+	
+	public Intent newsIntent() {
+		Intent intent = new Intent();
+		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorNews");
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		
+		Bundle extras = new Bundle();
+		extras.putString("searchName", legislator.titledName());
 		
 		intent.putExtras(extras);
 		return intent;

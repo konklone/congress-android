@@ -78,10 +78,10 @@ public class LegislatorTwitter extends ListActivity {
     	private Status[] tweets;
     	LayoutInflater inflater;
 
-        public TweetAdapter(Activity c, Status[] tw) {
-            context = c;
-            tweets = tw;
-            inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        public TweetAdapter(Activity context, Status[] tweets) {
+            this.context = context;
+            this.tweets = tweets;
+            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
 		public int getCount() {
