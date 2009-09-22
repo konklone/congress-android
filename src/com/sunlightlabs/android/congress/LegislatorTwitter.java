@@ -3,8 +3,6 @@ package com.sunlightlabs.android.congress;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.sunlightlabs.entities.Legislator;
-
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -18,14 +16,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class LegislatorTwitter extends ListActivity {
 	private String username;
 	static final int LOADING_TWEETS = 0;
-    ProgressThread progressThread;
+    
+	Thread twitterThread;
     ProgressDialog progressDialog;
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -42,8 +40,8 @@ public class LegislatorTwitter extends ListActivity {
             progressDialog = new ProgressDialog(this);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setMessage("Plucking tweets from the air...");
-            progressThread = new ProgressThread(handler);
-            progressThread.start();
+            twitterThread = new ProgressThread();
+            twitterThread.start();
             return progressDialog;
         default:
             return null;
@@ -73,11 +71,6 @@ public class LegislatorTwitter extends ListActivity {
 
     /** Nested class that performs progress calculations (counting) */
     private class ProgressThread extends Thread {
-        Handler mHandler;
-       
-        ProgressThread(Handler h) {
-            mHandler = h;
-        }
        
         public void run() { 
         	Twitter twitter = new Twitter();
@@ -101,9 +94,9 @@ public class LegislatorTwitter extends ListActivity {
             
             b.putStringArray("statuses", tweets);
             
-            Message msg = mHandler.obtainMessage();
+            Message msg = handler.obtainMessage();
             msg.setData(b);
-            mHandler.sendMessage(msg);
+            handler.sendMessage(msg);
     	}
     }
 
