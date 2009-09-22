@@ -62,18 +62,6 @@ public class LegislatorTabs extends TabActivity {
 		return intent;
 	}
 	
-	public Intent twitterIntent() {
-		Intent intent = new Intent();
-		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorTwitter");
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		
-		Bundle extras = new Bundle();
-		extras.putString("username", legislator.getProperty("twitter_id"));
-		
-		intent.putExtras(extras);
-		return intent;
-	}
-	
 	public Intent newsIntent() {
 		Intent intent = new Intent();
 		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorNews");
@@ -85,4 +73,17 @@ public class LegislatorTabs extends TabActivity {
 		intent.putExtras(extras);
 		return intent;
 	}
+	
+	public Intent twitterIntent() {
+		Intent intent = new Intent();
+		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorTwitter");
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		
+		Bundle extras = new Bundle();
+		extras.putString("username", legislator.getProperty("twitter_id"));
+		
+		intent.putExtras(extras);
+		return intent;
+	}
+
 }

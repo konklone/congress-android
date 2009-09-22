@@ -1,5 +1,6 @@
 package com.sunlightlabs.android.yahoo.news;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.text.format.Time;
@@ -7,8 +8,6 @@ import android.text.format.Time;
 public class NewsItem {
 	public String title, source, displayURL, clickURL;
 	public Time timestamp;
-	
-	public NewsItem() {}
 	
 	public NewsItem(String title, String source, String displayURL, String clickURL, Time timestamp) {
 		this.title = title;
@@ -19,6 +18,24 @@ public class NewsItem {
 	}
 	
 	public NewsItem(JSONObject json) {
-		
+		try {
+			this.title = json.getString("Title");
+			this.displayURL = json.getString("Url");
+			this.clickURL = json.getString("ClickUrl");
+			this.source = json.getString("NewsSource");
+			this.timestamp = new Time();
+			this.timestamp.set(json.getLong("PublishDate"));
+			
+		} catch (JSONException e) {
+			setDefaults();
+		}
+	}
+	
+	private void setDefaults() {
+		this.title = "[No article loaded]";
+		this.displayURL = "[no URL]";
+		this.clickURL = null;
+		this.source = "[no source]";
+		this.timestamp = new Time();
 	}
 }

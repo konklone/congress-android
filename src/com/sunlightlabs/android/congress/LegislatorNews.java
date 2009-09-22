@@ -35,12 +35,10 @@ public class LegislatorNews extends ListActivity {
 		NewsService service = new NewsService(apiKey);
 		
 		try {
-			String news = service.fetchNewsResults(searchName);
+			items = service.fetchNewsResults(searchName);
 		} catch (NewsException e) {
 			Toast.makeText(this, "Couldn't load news, try again later.", Toast.LENGTH_SHORT);
 		}
-		
-		items = fakeNews();
 		setListAdapter(new NewsAdapter(LegislatorNews.this, items));
 	}
 	

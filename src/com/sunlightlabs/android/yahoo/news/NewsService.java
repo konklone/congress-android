@@ -1,16 +1,16 @@
 package com.sunlightlabs.android.yahoo.news;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URLEncoder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class NewsService {
 	public static final String BASE_URL = "http://search.yahooapis.com/NewsSearchService/V1/newsSearch";
@@ -30,7 +30,24 @@ public class NewsService {
 		this.apiKey = apiKey;
 	}
 	
-	public String fetchNewsResults(String query) throws NewsException {
+	public NewsItem[] fetchNewsResults(String query) throws NewsException {
+		String rawJSON = fetchJSON(query);
+		NewsItem[] items;
+		try {
+			JSONObject resultSet = new JSONObject(rawJSON);
+			JSONArray results = resultSet.getJSONObject("ResultSet").getJSONArray("Result");
+			items = new NewsItem[results.length()];
+			for (int i = 0; i<results.length(); i++)
+				items[i] = new NewsItem(results.getJSONObject(i));
+				
+		} catch(JSONException e) {
+			throw new NewsException(e);
+		}
+		
+		return items;
+	}
+	
+	public String fetchJSON(String query) throws NewsException {
 		String queryString = queryString(query);
 		String url = BASE_URL + "?" + queryString;
 		HttpGet request = new HttpGet(url);
@@ -41,9 +58,9 @@ public class NewsService {
         try {
 	        HttpResponse response = client.execute(request);
 	        int statusCode = response.getStatusLine().getStatusCode();
-	        String body = EntityUtils.toString(response.getEntity());
 	        
 	        if (statusCode == HttpStatus.SC_OK) {
+	        	String body = EntityUtils.toString(response.getEntity());
 	        	return body;
 	        } else {
 	        	throw new NewsException("Bad status code on fetching news", statusCode);
