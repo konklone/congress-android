@@ -31,7 +31,11 @@ public class LegislatorTwitter extends ListActivity {
     	
     	username = getIntent().getStringExtra("username");
     	
-    	showDialog(LOADING_TWEETS);
+    	loadTweets();
+	}
+	
+	protected void loadTweets() {
+		showDialog(LOADING_TWEETS);
 	}
    
     protected Dialog onCreateDialog(int id) {
