@@ -1,23 +1,23 @@
 package com.sunlightlabs.android.congress;
 
 import java.util.List;
-import java.util.ListIterator;
 
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 public class LegislatorTwitter extends ListActivity {
 	static final int LOADING_TWEETS = 0;
@@ -37,14 +37,7 @@ public class LegislatorTwitter extends ListActivity {
     final Handler handler = new Handler();
     final Runnable updateTweets = new Runnable() {
         public void run() {
-        	setListAdapter(new ArrayAdapter<Status>(LegislatorTwitter.this, android.R.layout.simple_list_item_1, tweets));
-        	getListView().setOnItemClickListener(new OnItemClickListener() { 
-        		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        			Status tweet = ((Status) parent.getItemAtPosition(position));
-        			Toast.makeText(LegislatorTwitter.this, tweet.getText(), 5);
-        		}
-        	});
-        	
+        	setListAdapter(new TweetAdapter(LegislatorTwitter.this, tweets));
         	dismissDialog(LOADING_TWEETS);
         }
     };
@@ -77,6 +70,45 @@ public class LegislatorTwitter extends ListActivity {
         default:
             return null;
         }
+    }
+    
+    protected class TweetAdapter extends BaseAdapter {
+    	private Activity context;
+    	private Status[] tweets;
+    	LayoutInflater inflater;
+
+        public TweetAdapter(Activity c, Status[] tw) {
+            context = c;
+            tweets = tw;
+            inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+		public int getCount() {
+			return tweets.length;
+		}
+
+		public Object getItem(int position) {
+			return tweets[position];
+		}
+
+		public long getItemId(int position) {
+			Status tweet = (Status) getItem(position);
+			return tweet.getId();
+		}
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			TextView text;
+			if (convertView == null) {
+				//text = (View) inflater.inflate(R.layout.legislator_tweet, null);
+				text = new TextView(context);
+			} else {
+				text = (TextView) convertView;
+			}
+			Status tweet = (Status) getItem(position);
+			text.setText(tweet.getText());
+			return text;
+		}
+
     }
 
 }
