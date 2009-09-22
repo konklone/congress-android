@@ -32,6 +32,8 @@ public class LegislatorList extends ListActivity {
     public void loadLegislators() {
     	String api_key = getResources().getString(R.string.sunlight_api_key);
 		ApiCall api = new ApiCall(api_key);
+		
+		// expand here to handle other types of legislator searches for this list
     	String zipCode = getIntent().getStringExtra(ZIP_CODE);
     	legislators = Legislator.getLegislatorsForZipCode(api, zipCode);
     }
