@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class LegislatorTwitter extends ListActivity {
@@ -97,16 +98,21 @@ public class LegislatorTwitter extends ListActivity {
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
-			TextView text;
+			LinearLayout view;
 			if (convertView == null) {
-				//text = (View) inflater.inflate(R.layout.legislator_tweet, null);
-				text = new TextView(context);
+				view = (LinearLayout) inflater.inflate(R.layout.legislator_tweet, null);
 			} else {
-				text = (TextView) convertView;
+				view = (LinearLayout) convertView;
 			}
+			
 			Status tweet = (Status) getItem(position);
+			
+			TextView text = (TextView) view.findViewById(R.id.tweet_text);
 			text.setText(tweet.getText());
-			return text;
+			TextView when = (TextView) view.findViewById(R.id.tweet_when);
+			when.setText(tweet.getCreatedAt().toGMTString());
+			
+			return view;
 		}
 
     }
