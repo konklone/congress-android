@@ -1,7 +1,5 @@
 package com.sunlightlabs.android.congress;
 
-import com.sunlightlabs.api.ApiCall;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,7 +35,7 @@ public class MainMenu extends Activity {
 		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		
 		Bundle extras = new Bundle();
-		extras.putString(LegislatorList.ZIP_CODE, zipCode); 
+		extras.putString("zip_code", zipCode); 
 		i.putExtras(extras);
 		
 		startActivity(i);

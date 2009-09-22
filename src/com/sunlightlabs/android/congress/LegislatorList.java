@@ -12,7 +12,6 @@ import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorList extends ListActivity {
-	public static String ZIP_CODE = "com.sunlightlabs.android.congress.zip_code";
 	private Legislator[] legislators;
     
     @Override
@@ -34,7 +33,7 @@ public class LegislatorList extends ListActivity {
 		ApiCall api = new ApiCall(api_key);
 		
 		// expand here to handle other types of legislator searches for this list
-    	String zipCode = getIntent().getStringExtra(ZIP_CODE);
+    	String zipCode = getIntent().getStringExtra("zip_code");
     	legislators = Legislator.getLegislatorsForZipCode(api, zipCode);
     }
     
