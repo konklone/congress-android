@@ -25,33 +25,7 @@ public class LegislatorTwitter extends ListActivity {
     
 	Thread twitterThread;
     ProgressDialog progressDialog;
-	
-	public void onCreate(Bundle savedInstanceState) {
-    	super.onCreate(savedInstanceState);
-    	
-    	username = getIntent().getStringExtra("username");
-    	
-    	loadTweets();
-	}
-	
-	protected void loadTweets() {
-		showDialog(LOADING_TWEETS);
-	}
-   
-    protected Dialog onCreateDialog(int id) {
-        switch(id) {
-        case LOADING_TWEETS:
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setMessage("Plucking tweets from the air...");
-            twitterThread = new ProgressThread();
-            twitterThread.start();
-            return progressDialog;
-        default:
-            return null;
-        }
-    }
-
+    
     // Define the Handler that receives messages from the thread and update the progress
     final Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -72,36 +46,60 @@ public class LegislatorTwitter extends ListActivity {
             }
         }
     };
-
-    /** Nested class that performs progress calculations (counting) */
-    private class ProgressThread extends Thread {
-       
-        public void run() { 
-        	Twitter twitter = new Twitter();
-        	List<Status> statuses;
-        	try {
-        		statuses = twitter.getUserTimeline(username);
-        		returnStatuses(statuses);
-        	} catch(TwitterException e) {
-        		Log.e("ERROR", e.getMessage());
-        	}
+	
+	public void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);
+    	
+    	username = getIntent().getStringExtra("username");
+    	
+    	loadTweets();
+	}
+	
+	protected void loadTweets() {
+		twitterThread = new Thread() {
+	        public void run() { 
+	        	Twitter twitter = new Twitter();
+	        	List<Status> statuses;
+	        	try {
+	        		statuses = twitter.getUserTimeline(username);
+	        		returnStatuses(statuses);
+	        	} catch(TwitterException e) {
+	        		Log.e("ERROR", e.getMessage());
+	        	}
+	        }
+	    
+	    	public void returnStatuses(List<Status> statuses) {
+	            Bundle b = new Bundle();
+	            b.putBoolean("success", true);
+	            
+	            String[] tweets = new String[statuses.size()];
+	            int i = 0;
+	            for (ListIterator<Status> it = statuses.listIterator(); it.hasNext();)
+	            	tweets[i++] = it.next().getText();
+	            
+	            b.putStringArray("statuses", tweets);
+	            
+	            Message msg = handler.obtainMessage();
+	            msg.setData(b);
+	            handler.sendMessage(msg);
+	    	}
+	    };
+		
+		showDialog(LOADING_TWEETS);
+	}
+   
+    protected Dialog onCreateDialog(int id) {
+        switch(id) {
+        case LOADING_TWEETS:
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("Plucking tweets from the air...");
+            //twitterThread = new ProgressThread();
+            twitterThread.start();
+            return progressDialog;
+        default:
+            return null;
         }
-    
-    	public void returnStatuses(List<Status> statuses) {
-            Bundle b = new Bundle();
-            b.putBoolean("success", true);
-            
-            String[] tweets = new String[statuses.size()];
-            int i = 0;
-            for (ListIterator<Status> it = statuses.listIterator(); it.hasNext();)
-            	tweets[i++] = it.next().getText();
-            
-            b.putStringArray("statuses", tweets);
-            
-            Message msg = handler.obtainMessage();
-            msg.setData(b);
-            handler.sendMessage(msg);
-    	}
     }
 
 }
