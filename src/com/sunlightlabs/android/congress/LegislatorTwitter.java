@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class LegislatorTwitter extends ListActivity {
-	static final int LOADING_TWEETS = 0;
+	static final int LOADING = 0;
 	
 	private String username;
 	private Status[] tweets;
@@ -38,7 +38,7 @@ public class LegislatorTwitter extends ListActivity {
     final Runnable updateTweets = new Runnable() {
         public void run() {
         	setListAdapter(new TweetAdapter(LegislatorTwitter.this, tweets));
-        	dismissDialog(LOADING_TWEETS);
+        	dismissDialog(LOADING);
         }
     };
 	
@@ -57,12 +57,12 @@ public class LegislatorTwitter extends ListActivity {
 	    };
 	    twitterThread.start();
 	    
-		showDialog(LOADING_TWEETS);
+		showDialog(LOADING);
 	}
     
     protected Dialog onCreateDialog(int id) {
         switch(id) {
-        case LOADING_TWEETS:
+        case LOADING:
             ProgressDialog dialog = new ProgressDialog(this);
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             dialog.setMessage("Plucking tweets from the air...");
@@ -73,12 +73,10 @@ public class LegislatorTwitter extends ListActivity {
     }
     
     protected class TweetAdapter extends BaseAdapter {
-    	private Activity context;
     	private Status[] tweets;
     	LayoutInflater inflater;
 
         public TweetAdapter(Activity context, Status[] tweets) {
-            this.context = context;
             this.tweets = tweets;
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }

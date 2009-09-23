@@ -95,12 +95,10 @@ public class LegislatorNews extends ListActivity {
 	}
 	
 	protected class NewsAdapter extends BaseAdapter {
-    	private Activity context;
     	private NewsItem[] items;
     	LayoutInflater inflater;
 
         public NewsAdapter(Activity context, NewsItem[] items) {
-            this.context = context;
             this.items = items;
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
