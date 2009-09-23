@@ -40,7 +40,6 @@ public class LegislatorList extends ListActivity {
     public void launchLegislator(String id) {
     	Intent i = new Intent();
 		i.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorTabs");
-		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		
 		Bundle extras = new Bundle();
 		extras.putString("legislator_id", id); 

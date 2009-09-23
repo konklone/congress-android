@@ -44,7 +44,6 @@ public class LegislatorTabs extends TabActivity {
 	public Intent profileIntent() {
 		Intent intent = new Intent();
 		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorProfile");
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		
 		Bundle extras = new Bundle();
 		extras.putString("picName", legislator.picName());
@@ -65,7 +64,6 @@ public class LegislatorTabs extends TabActivity {
 	public Intent newsIntent() {
 		Intent intent = new Intent();
 		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorNews");
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		
 		Bundle extras = new Bundle();
 		extras.putString("searchName", legislator.titledName());
@@ -77,7 +75,6 @@ public class LegislatorTabs extends TabActivity {
 	public Intent twitterIntent() {
 		Intent intent = new Intent();
 		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorTwitter");
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		
 		Bundle extras = new Bundle();
 		extras.putString("username", legislator.getProperty("twitter_id"));

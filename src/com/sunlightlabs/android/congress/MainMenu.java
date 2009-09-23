@@ -18,12 +18,12 @@ public class MainMenu extends Activity {
     }
 	
 	public void setupControls() {
-        Button fetch = (Button) this.findViewById(R.id.fetch);
-        final EditText zip = (EditText) this.findViewById(R.id.zip);
+        Button fetchZip = (Button) this.findViewById(R.id.fetch_zip);
+        Button fetchLocation = (Button) this.findViewById(R.id.fetch_location);
         
-    	fetch.setOnClickListener(new View.OnClickListener() {
+    	fetchZip.setOnClickListener(new View.OnClickListener() {
     		public void onClick(View v) {
-    			String zipCode = zip.getText().toString();
+    			String zipCode = "55362"; // for now
     			searchByZip(zipCode);
     		}
     	});
@@ -32,7 +32,6 @@ public class MainMenu extends Activity {
 	public void searchByZip(String zipCode) {
     	Intent i = new Intent();
 		i.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorList");
-		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		
 		Bundle extras = new Bundle();
 		extras.putString("zip_code", zipCode); 
