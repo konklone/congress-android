@@ -60,21 +60,6 @@ public class LegislatorProfile extends Activity {
 		// website
 		TextView websiteView = (TextView) this.findViewById(R.id.profile_website);
 		websiteView.setText(website);
-	
-		
-//		// twitter handle
-//		String twitter_id = legislator.getProperty("twitter_id");
-//		if (!twitter_id.equals("")) {
-//			TextView twitter = (TextView) this.findViewById(R.id.profile_twitter);
-//			twitter.setText("Twitter: @" + twitter_id);
-//		}
-//		
-//		// YouTube account
-//		String youtube_url = legislator.getProperty("youtube_url");
-//		if (!youtube_url.equals("")) {
-//			TextView youtube = (TextView) this.findViewById(R.id.profile_youtube);
-//			youtube.setText("YouTube: " + youtube_url.replaceFirst("http://(?:www\\.)?youtube\\.com/", ""));
-//		}
 	}
 	
 	public Drawable fetchImage() {
