@@ -9,11 +9,13 @@ import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class LegislatorProfile extends Activity {
-	private String picName, titledName, party, state, domain, phone, website, office, youtube_url, twitter_id; 
+	private String picName, titledName, party, state, domain, phone, website, office;
+	private Drawable avatar;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,16 +32,20 @@ public class LegislatorProfile extends Activity {
         phone = extras.getString("phone");
         website = extras.getString("website");
         office = extras.getString("office");
-        youtube_url = extras.getString("youtube_url");
-        twitter_id = extras.getString("twitter_id");
         
         loadInformation();
+        loadImage();
 	}
 	
-	public void loadInformation() {
-		ImageView picture = (ImageView) this.findViewById(R.id.picture);
-		picture.setImageDrawable(fetchImage());
-		
+	final Handler handler = new Handler();
+    final Runnable updateThread = new Runnable() {
+        public void run() {
+    		ImageView picture = (ImageView) LegislatorProfile.this.findViewById(R.id.picture);
+    		picture.setImageDrawable(avatar);
+        }
+    };
+	
+	public void loadInformation() {		
 		// name
 		TextView name = (TextView) this.findViewById(R.id.profile_name);
 		name.setText(titledName);
@@ -62,24 +68,32 @@ public class LegislatorProfile extends Activity {
 		websiteView.setText(website);
 	}
 	
-	public Drawable fetchImage() {
-		String url = "http://govpix.appspot.com/" + Uri.encode(picName);
-		InputStream stream;
-		Drawable drawable = null;
+	public void loadImage() {
+		Thread loadingThread = new Thread() {
+			public void run() {
+				String url = "http://govpix.appspot.com/" + Uri.encode(picName);
+				InputStream stream = (InputStream) fetchObject(url);
+				if (stream != null)
+					avatar = Drawable.createFromStream(stream, "src");
+				else
+					avatar = getResources().getDrawable(R.drawable.no_photo);
+				
+				handler.post(updateThread);
+			}
+		};
+		loadingThread.start();
+	}
+	
+	private Object fetchObject(String address) {
+		Object content = null;
 		try {
-			stream = (InputStream) fetchObject(url);
-			drawable = Drawable.createFromStream(stream, "src");
+			URL url = new URL(address);
+			content = url.getContent();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return drawable;
-	}
-	
-	private Object fetchObject(String address) throws MalformedURLException, IOException {
-		URL url = new URL(address);
-		Object content = url.getContent();
 		return content;
 	}
 
