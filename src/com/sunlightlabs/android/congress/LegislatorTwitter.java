@@ -34,7 +34,6 @@ public class LegislatorTwitter extends ListActivity {
     	loadTweets();
 	}
 	
-    // Define the Handler that receives messages from the thread and update the progress
     final Handler handler = new Handler();
     final Runnable updateTweets = new Runnable() {
         public void run() {
