@@ -1,10 +1,5 @@
 package com.sunlightlabs.android.congress;
 
-import java.util.List;
-
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -19,6 +14,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.sunlightlabs.android.twitter.Status;
+import com.sunlightlabs.android.twitter.Twitter;
+import com.sunlightlabs.android.twitter.TwitterException;
 
 public class LegislatorTwitter extends ListActivity {
 	static final int LOADING = 0;
@@ -47,8 +46,7 @@ public class LegislatorTwitter extends ListActivity {
 	        public void run() { 
 	        	try {
 	        		Twitter twitter = new Twitter();
-	        		List<Status> tweetList = twitter.getUserTimeline(username);
-	        		tweets = (Status[]) tweetList.toArray(new Status[0]);
+	        		tweets = twitter.getUserTimeline(username);
 	        	} catch(TwitterException e) {
 	        		Log.e("ERROR", e.getMessage());
 	        	}
@@ -91,7 +89,7 @@ public class LegislatorTwitter extends ListActivity {
 
 		public long getItemId(int position) {
 			Status tweet = (Status) getItem(position);
-			return tweet.getId();
+			return tweet.id;
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -105,9 +103,9 @@ public class LegislatorTwitter extends ListActivity {
 			Status tweet = (Status) getItem(position);
 			
 			TextView text = (TextView) view.findViewById(R.id.tweet_text);
-			text.setText(tweet.getText());
+			text.setText(tweet.text);
 			TextView when = (TextView) view.findViewById(R.id.tweet_when);
-			when.setText(tweet.getCreatedAt().toGMTString());
+			when.setText(tweet.createdAt.toString());
 			
 			return view;
 		}

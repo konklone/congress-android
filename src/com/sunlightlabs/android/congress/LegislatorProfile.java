@@ -85,16 +85,12 @@ public class LegislatorProfile extends Activity {
 	}
 	
 	private Object fetchObject(String address) {
-		Object content = null;
 		try {
 			URL url = new URL(address);
-			content = url.getContent();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			return url.getContent();
+		} catch (Exception e) {
+			return null;
 		}
-		return content;
 	}
 
 	
