@@ -36,7 +36,7 @@ public class LegislatorNews extends ListActivity {
 	}
 	
 	final Handler handler = new Handler();
-    final Runnable updateNews = new Runnable() {
+    final Runnable updateThread = new Runnable() {
         public void run() {
         	setListAdapter(new NewsAdapter(LegislatorNews.this, items));
         	dismissDialog(LOADING);
@@ -44,7 +44,7 @@ public class LegislatorNews extends ListActivity {
     };
 	
 	protected void loadNews() {
-		Thread newsThread = new Thread() {
+		Thread loadingThread = new Thread() {
 	        public void run() { 
 	        	try {
 	    			String apiKey = getResources().getString(R.string.yahoo_news_key);
@@ -53,10 +53,10 @@ public class LegislatorNews extends ListActivity {
 	    		} catch (NewsException e) {
 	    			Toast.makeText(LegislatorNews.this, "Couldn't load news, try again later.", Toast.LENGTH_SHORT);
 	    		}
-	        	handler.post(updateNews);
+	        	handler.post(updateThread);
 	        }
 	    };
-	    newsThread.start();
+	    loadingThread.start();
 	    
 		showDialog(LOADING);
 	}

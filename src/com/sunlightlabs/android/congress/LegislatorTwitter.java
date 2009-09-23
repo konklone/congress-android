@@ -35,7 +35,7 @@ public class LegislatorTwitter extends ListActivity {
 	}
 	
     final Handler handler = new Handler();
-    final Runnable updateTweets = new Runnable() {
+    final Runnable updateThread = new Runnable() {
         public void run() {
         	setListAdapter(new TweetAdapter(LegislatorTwitter.this, tweets));
         	dismissDialog(LOADING);
@@ -43,7 +43,7 @@ public class LegislatorTwitter extends ListActivity {
     };
 	
 	protected void loadTweets() {
-		Thread twitterThread = new Thread() {
+		Thread loadingThread = new Thread() {
 	        public void run() { 
 	        	try {
 	        		Twitter twitter = new Twitter();
@@ -52,10 +52,10 @@ public class LegislatorTwitter extends ListActivity {
 	        	} catch(TwitterException e) {
 	        		Log.e("ERROR", e.getMessage());
 	        	}
-	        	handler.post(updateTweets);
+	        	handler.post(updateThread);
 	        }
 	    };
-	    twitterThread.start();
+	    loadingThread.start();
 	    
 		showDialog(LOADING);
 	}
