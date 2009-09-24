@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sunlightlabs.android.twitter.Status;
 import com.sunlightlabs.android.twitter.Twitter;
@@ -48,7 +49,7 @@ public class LegislatorTwitter extends ListActivity {
 	        		Twitter twitter = new Twitter();
 	        		tweets = twitter.getUserTimeline(username);
 	        	} catch(TwitterException e) {
-	        		Log.e("ERROR", e.getMessage());
+	        		Toast.makeText(LegislatorTwitter.this, "Couldn't load tweets.", Toast.LENGTH_SHORT).show();
 	        	}
 	        	handler.post(updateThread);
 	        }

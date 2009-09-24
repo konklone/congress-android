@@ -51,7 +51,7 @@ public class LegislatorNews extends ListActivity {
 	    			NewsService service = new NewsService(apiKey);
 	    			items = service.fetchNewsResults(searchName);
 	    		} catch (NewsException e) {
-	    			Toast.makeText(LegislatorNews.this, "Couldn't load news, try again later.", Toast.LENGTH_SHORT);
+	    			Toast.makeText(LegislatorNews.this, "Couldn't load news.", Toast.LENGTH_SHORT).show();
 	    		}
 	        	handler.post(updateThread);
 	        }
