@@ -29,8 +29,6 @@ public class Legislator extends JSONEntity {
 		return "legislators";
 	}
 	
-	/* Added by Eric Mill, Sep 11, 2009 */
-	
 	public String toString() {
 		return titledName();
 	}
@@ -96,13 +94,12 @@ public class Legislator extends JSONEntity {
 		Map<String, String> params = new HashMap<String, String>();
 		String apiCall = "legislators.getList";
 		return allLegislators(call, params);
-
 	}
 
 	/**
 	 * 
 	 * @param call non-null caller 
-	 * @param params non-null mapo of search properties
+	 * @param params non-null map of search properties
 	 * @return non-null array of Legislators
 		 */
 	public static Legislator[] allLegislators(ApiCall call,
@@ -111,7 +108,6 @@ public class Legislator extends JSONEntity {
 		JSONObject[] items = JSONEntity.getJSONObjects(call, params, apiCall,
 				getPluralEntityName());
 		return buildLegislators(items);
-
 	}
 
 	/**
@@ -128,6 +124,19 @@ public class Legislator extends JSONEntity {
 		JSONObject[] items = JSONEntity.getJSONObjects(call, params, apiCall,
 				getPluralEntityName());
 		return buildLegislators(items);
+	}
+	
+	public static Legislator[] getLegislatorsForLatLong(ApiCall call, String latitude, String longitude) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("latitude", latitude);
+		params.put("longitude", longitude);
+		String apiCall = "legislators.allForLatLong";
+		JSONObject[] items = JSONEntity.getJSONObjects(call, params, apiCall, getPluralEntityName());
+		return buildLegislators(items);
+	}
+	
+	public static Legislator[] getLegislatorsForLatLong(ApiCall call, double latitude, double longitude) {
+		return getLegislatorsForLatLong(call, latitude + "", longitude + "");
 	}
 
 	/**

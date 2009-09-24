@@ -46,8 +46,15 @@ public class LegislatorList extends ListActivity {
 				ApiCall api = new ApiCall(api_key);
 				
 				// expand here to handle other types of legislator searches for this list
-		    	String zipCode = getIntent().getStringExtra("zip_code");
-		    	legislators = Legislator.getLegislatorsForZipCode(api, zipCode);
+				Bundle extras = getIntent().getExtras();
+				
+		    	String zipCode = extras.getString("zip_code");
+		    	double latitude = extras.getDouble("latitude");
+		    	double longitude = extras.getDouble("longitude");
+		    	if (zipCode != null)
+		    		legislators = Legislator.getLegislatorsForZipCode(api, zipCode);
+		    	else
+		    		legislators = Legislator.getLegislatorsForLatLong(api, latitude, longitude);
 		    	
 		    	handler.post(updateThread);
 	        }
