@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="10sp"
+    >
+    
+    <TextView
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:text="Enter a zip code:"
+    	android:textSize="18sp"
+    	/>
+    
+    <EditText android:id="@+id/zip_code"
+    	android:layout_width="210sp"
+    	android:layout_height="wrap_content"
+    	android:hint="e.g. 11216"
+    	android:layout_marginTop="10sp"
+    	android:layout_marginBottom="5sp"
+    	android:inputType="number"
+    	/>
+    
+    <LinearLayout
+    	android:orientation="horizontal"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	>
+    	
+    	<Button android:id="@+id/ok_zip_code"
+    		android:layout_width="100sp"
+    		android:layout_height="wrap_content"
+    		android:text="OK"
+    		android:textSize="18sp"
+    		android:layout_marginRight="5sp"
+    		/>
+    	
+    	<Button android:id="@+id/cancel_zip_code"
+    		android:layout_width="100sp"
+    		android:layout_height="wrap_content"
+    		android:text="Cancel"
+    		android:textSize="18sp"
+    		android:layout_marginLeft="5sp"
+    		/>
+    		
+    </LinearLayout>
+    	
+</LinearLayout>

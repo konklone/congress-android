@@ -16,6 +16,9 @@
         <activity android:name=".LegislatorProfile" />
         <activity android:name=".LegislatorNews" />
         <activity android:name=".LegislatorTwitter" />
+        <activity android:name=".GetZip"
+        	android:theme="@android:style/Theme.Dialog" 
+        	/>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-sdk android:minSdkVersion="3" />
