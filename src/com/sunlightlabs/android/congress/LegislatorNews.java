@@ -86,12 +86,12 @@ public class LegislatorNews extends ListActivity {
 	}
 	
 	private String correctExceptions(String name) {
-		String newName;
-		if (name == "Rep Nancy Pelosi")
-			newName = "Speaker Nancy Pelosi";
+		if (name.equals("Rep. Nancy Pelosi"))
+			return "Speaker Nancy Pelosi";
+		else if (name.equals("Del. Eleanor Norton"))
+			return "Eleanor Holmes Norton";
 		else
-			newName = name;
-		return newName;
+			return name;
 	}
 	
 	protected class NewsAdapter extends BaseAdapter {
