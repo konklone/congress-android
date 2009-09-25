@@ -6,15 +6,16 @@ import org.json.JSONObject;
 import android.text.format.Time;
 
 public class NewsItem {
-	public String title, source, displayURL, clickURL;
+	public String title, source, displayURL, clickURL, summary;
 	public Time timestamp;
 	
-	public NewsItem(String title, String source, String displayURL, String clickURL, Time timestamp) {
+	public NewsItem(String title, String summary, String source, String displayURL, String clickURL, Time timestamp) {
 		this.title = title;
 		this.displayURL = displayURL;
 		this.clickURL = clickURL;
 		this.source = source;
 		this.timestamp = timestamp;
+		this.summary = summary;
 	}
 	
 	public NewsItem(JSONObject json) {
@@ -23,6 +24,7 @@ public class NewsItem {
 			this.displayURL = json.getString("Url");
 			this.clickURL = json.getString("ClickUrl");
 			this.source = json.getString("NewsSource");
+			this.summary = json.getString("Summary");
 			this.timestamp = new Time();
 			this.timestamp.set(json.getLong("PublishDate"));
 			
@@ -36,6 +38,7 @@ public class NewsItem {
 		this.displayURL = "[no URL]";
 		this.clickURL = null;
 		this.source = "[no source]";
+		this.summary = "[no summary]";
 		this.timestamp = new Time();
 	}
 }

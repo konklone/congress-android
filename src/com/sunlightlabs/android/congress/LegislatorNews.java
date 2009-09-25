@@ -23,7 +23,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.sunlightlabs.android.yahoo.news.NewsException;
 import com.sunlightlabs.android.yahoo.news.NewsItem;
 import com.sunlightlabs.android.yahoo.news.NewsService;
-import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorNews extends ListActivity {
 	private static final int LOADING = 0;
@@ -84,14 +83,17 @@ public class LegislatorNews extends ListActivity {
         }
     }
 	
-	public NewsItem[] fakeNews() {
+	public NewsItem[] fakeNews() throws NewsException {
 		NewsItem[] items = new NewsItem[5];
 		
-		items[0] = new NewsItem("Title of the Article 1", "BBC", "http://bbc.co.uk", "http://sunlightlabs.com", new Time());
-		items[1] = new NewsItem("Title of the Article 2", "NBC News", "http://news.nbc.com/anything/everything", "http://sunlightlabs.com", new Time());
-		items[2] = new NewsItem("Title 3", "BBC", "http://bbc.co.uk", "http://sunlightlabs.com", new Time());
-		items[3] = new NewsItem("Title of the Article 4", "NBC News", "http://news.nbc.com/anything/everything", "http://sunlightlabs.com", new Time());
-		items[4] = new NewsItem("Hugely Long Major Title of the Article 5", "BBC", "http://bbc.co.uk", "http://sunlightlabs.com", new Time());
+		items[0] = new NewsItem("Title of the Article 1", "Summary 1", "BBC", "http://bbc.co.uk", "http://sunlightlabs.com", new Time());
+		items[1] = new NewsItem("Title of the Article 2", "Summary 1", "NBC News", "http://news.nbc.com/anything/everything", "http://sunlightlabs.com", new Time());
+		items[2] = new NewsItem("Title 3", "Summary 1", "BBC", "http://bbc.co.uk", "http://sunlightlabs.com", new Time());
+		items[3] = new NewsItem("Title of the Article 4", "Summary 1", "NBC News", "http://news.nbc.com/anything/everything", "http://sunlightlabs.com", new Time());
+		items[4] = new NewsItem("Hugely Long Major Title of the Article 5", "Summary 1", "BBC", "http://bbc.co.uk", "http://sunlightlabs.com", new Time());
+		
+		if (1 == 0)
+			throw new NewsException(new Exception("never called"));
 		
 		return items;
 	}
@@ -136,10 +138,16 @@ public class LegislatorNews extends ListActivity {
 			
 			NewsItem item = (NewsItem) getItem(position);
 			
+			
 			TextView text = (TextView) view.findViewById(R.id.news_item_title);
 			text.setText(item.title);
-			TextView when = (TextView) view.findViewById(R.id.news_item_when);
-			when.setText(item.timestamp.toString());
+			
+			TextView summary = (TextView) view.findViewById(R.id.news_item_summary);
+			summary.setText(item.summary);
+			
+			TextView when = (TextView) view.findViewById(R.id.news_item_when_where);
+			String time = item.timestamp.format("%b %d");
+			when.setText(time + ", " + item.source);
 			
 			return view;
 		}
