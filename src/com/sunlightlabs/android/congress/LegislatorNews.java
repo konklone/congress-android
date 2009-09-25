@@ -5,20 +5,25 @@ import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.sunlightlabs.android.yahoo.news.NewsException;
 import com.sunlightlabs.android.yahoo.news.NewsItem;
 import com.sunlightlabs.android.yahoo.news.NewsService;
+import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorNews extends ListActivity {
 	private static final int LOADING = 0;
@@ -39,6 +44,12 @@ public class LegislatorNews extends ListActivity {
     final Runnable updateThread = new Runnable() {
         public void run() {
         	setListAdapter(new NewsAdapter(LegislatorNews.this, items));
+        	getListView().setOnItemClickListener(new OnItemClickListener() { 
+        		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        			NewsItem item = (NewsItem) parent.getItemAtPosition(position);
+        			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.clickURL)));
+        		}
+        	});
         	dismissDialog(LOADING);
         }
     };
