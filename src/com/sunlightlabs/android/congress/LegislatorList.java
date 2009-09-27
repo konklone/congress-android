@@ -7,11 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.sunlightlabs.android.congress.LegislatorNews.NewsAdapter;
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
 
@@ -30,14 +29,13 @@ public class LegislatorList extends ListActivity {
     final Runnable updateThread = new Runnable() {
         public void run() {
         	setListAdapter(new ArrayAdapter<Legislator>(LegislatorList.this, android.R.layout.simple_list_item_1, legislators));
-        	getListView().setOnItemClickListener(new OnItemClickListener() { 
-        		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        			launchLegislator(((Legislator) parent.getItemAtPosition(position)).getId());
-        		}
-        	});
         	dismissDialog(LOADING);
         }
     };
+    
+    public void onListItemClick(ListView parent, View v, int position, long id) {
+    	launchLegislator(((Legislator) parent.getItemAtPosition(position)).getId());
+    }
 	
     public void loadLegislators() {
     	Thread loadingThread = new Thread() {
