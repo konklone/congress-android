@@ -105,10 +105,32 @@ public class LegislatorTwitter extends ListActivity {
 			
 			TextView text = (TextView) view.findViewById(R.id.tweet_text);
 			text.setText(tweet.text);
+			
 			TextView when = (TextView) view.findViewById(R.id.tweet_when);
-			when.setText(tweet.createdAt.toString());
+			when.setText("posted " + timeAgoInWords(tweet.createdAtMillis));
 			
 			return view;
+		}
+		
+		private String timeAgoInWords(long olderTime) {
+			long now = System.currentTimeMillis();
+			long diff = now - olderTime; 
+			if (diff < 2000) // 2 seconds
+				return "just now";
+			else if (diff < 50000) // 50 seconds
+				return (diff / 1000) + " seconds ago";
+			else if (diff < 65000) // 1 minute, 5 seconds
+				return "a minute ago";
+			else if (diff < 3300000) // 55 minutes
+				return (diff / 60000) + " minutes ago";
+			else if (diff < 3900000) // 65 minutes
+				return "an hour ago";
+			else if (diff < 82800000) // 23 hours
+				return (diff / 3600000) + " hours ago";
+			else if (diff < 90000000) // 25 hours
+				return "a day ago";
+			else
+				return (diff / 86400000) + " days ago";
 		}
 
     }

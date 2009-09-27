@@ -8,8 +8,9 @@ import org.json.JSONObject;
 import android.text.format.Time;
 
 public class Status {
-	public String text;
 	public long id;
+	public String text;
+	public long createdAtMillis;
 	public Time createdAt;
 	
 	public Status(JSONObject json) {
@@ -17,7 +18,8 @@ public class Status {
 			this.text = json.getString("text");
 			this.id = json.getLong("id");
 			this.createdAt = new Time();
-			this.createdAt.set(Date.parse(json.getString("created_at")));			
+			this.createdAtMillis = Date.parse(json.getString("created_at"));
+			this.createdAt.set(this.createdAtMillis);			
 		} catch (JSONException e) {
 			setDefaults();
 		}
@@ -25,7 +27,9 @@ public class Status {
 	
 	private void setDefaults() {
 		this.text = "[No tweet loaded]";
+		this.createdAtMillis = System.currentTimeMillis();
 		this.createdAt = new Time();
+		this.createdAt.set(this.createdAtMillis);
 		this.id = -1;
 	}
 

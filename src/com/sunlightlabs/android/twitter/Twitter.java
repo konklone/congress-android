@@ -2,7 +2,6 @@ package com.sunlightlabs.android.twitter;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -11,10 +10,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import com.sunlightlabs.android.yahoo.news.NewsException;
-import com.sunlightlabs.android.yahoo.news.NewsItem;
+import android.text.format.Time;
 
 
 public class Twitter {
