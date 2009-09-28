@@ -41,11 +41,6 @@ public class Legislator extends JSONEntity {
 		return firstName() + " " + lastName();
 	}
 	
-	// An appropriate name to submit to GovPix
-	public String picName() {
-		return getName();
-	}
-	
 	public String titledName() {
 		return getProperty("title") + ". " + getName();
 	}

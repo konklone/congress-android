@@ -46,7 +46,7 @@ public class LegislatorTabs extends TabActivity {
 		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorProfile");
 		
 		Bundle extras = new Bundle();
-		extras.putString("picName", legislator.picName());
+		extras.putString("id", legislator.getId());
 		extras.putString("titledName", legislator.titledName());
 		extras.putString("state", legislator.getProperty("state"));
 		extras.putString("party", legislator.getProperty("party"));

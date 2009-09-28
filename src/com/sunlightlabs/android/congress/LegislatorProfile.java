@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class LegislatorProfile extends Activity {
-	private String picName, titledName, party, state, domain, phone, website, office;
+	private String id, titledName, party, state, domain, phone, website, office;
 	private Drawable avatar;
 	
 	@Override
@@ -24,7 +24,7 @@ public class LegislatorProfile extends Activity {
         
         Bundle extras = getIntent().getExtras(); 
         
-        picName = extras.getString("picName");
+        id = extras.getString("id");
         titledName = extras.getString("titledName");
         party = extras.getString("party");
         state = extras.getString("state");
@@ -71,7 +71,7 @@ public class LegislatorProfile extends Activity {
 	public void loadImage() {
 		Thread loadingThread = new Thread() {
 			public void run() {
-				String url = "http://govpix.appspot.com/" + Uri.encode(picName);
+				String url = picUrl("100x125", id);
 				InputStream stream = (InputStream) fetchObject(url);
 				if (stream != null)
 					avatar = Drawable.createFromStream(stream, "src");
@@ -92,6 +92,9 @@ public class LegislatorProfile extends Activity {
 			return null;
 		}
 	}
-
+	
+	private String picUrl(String size, String bioguideId) {
+		return "http://assets.sunlightfoundation.com/moc/" + size + "/" + bioguideId + ".jpg";
+	}
 	
 }
