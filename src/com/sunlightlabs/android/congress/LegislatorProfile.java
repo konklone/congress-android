@@ -1,21 +1,25 @@
 package com.sunlightlabs.android.congress;
 
-import java.io.IOException;
+import java.io.File;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class LegislatorProfile extends Activity {
+	public static final String PIC_SMALL = "40x50";
+	public static final String PIC_MEDIUM = "100x125";
+	public static final String PIC_LARGE = "200x250";
+	
 	private String id, titledName, party, state, domain, phone, website, office;
 	private Drawable avatar;
+	
+	private String avatarPath = "/sdcard/sunlight-android/avatars";
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,8 @@ public class LegislatorProfile extends Activity {
         phone = extras.getString("phone");
         website = extras.getString("website");
         office = extras.getString("office");
+        
+        initializeDirectories(id);
         
         loadInformation();
         loadImage();
@@ -71,10 +77,9 @@ public class LegislatorProfile extends Activity {
 	public void loadImage() {
 		Thread loadingThread = new Thread() {
 			public void run() {
-				String url = picUrl("100x125", id);
-				InputStream stream = (InputStream) fetchObject(url);
-				if (stream != null)
-					avatar = Drawable.createFromStream(stream, "src");
+				Drawable drawable = getImage(PIC_MEDIUM, id);
+				if (drawable != null)
+					avatar = drawable;
 				else
 					avatar = getResources().getDrawable(R.drawable.no_photo);
 				
@@ -93,8 +98,30 @@ public class LegislatorProfile extends Activity {
 		}
 	}
 	
+	private void initializeDirectories(String id) {
+		File avatarDir = new File(avatarPath + "/");
+		if (!avatarDir.exists())
+			avatarDir.mkdirs();
+		
+		File legislatorDir = new File(avatarPath + "/" + id + "/");
+		if (!legislatorDir.exists())
+			legislatorDir.mkdir();
+	}
+	
 	private String picUrl(String size, String bioguideId) {
 		return "http://assets.sunlightfoundation.com/moc/" + size + "/" + bioguideId + ".jpg";
 	}
+	
+	/**
+	 * 
+	 */
+	public Drawable getImage(String size, String bioguideId) {
+		String url = picUrl(PIC_MEDIUM, id);
+		
+		InputStream stream = (InputStream) fetchObject(url);
+		return Drawable.createFromStream(stream, "src");
+	}
+	
+	
 	
 }
