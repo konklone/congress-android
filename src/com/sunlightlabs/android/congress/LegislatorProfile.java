@@ -57,6 +57,10 @@ public class LegislatorProfile extends Activity {
     };
 	
 	public void loadInformation() {		
+		// avatar (loading photo)
+		ImageView photo = (ImageView) this.findViewById(R.id.picture);
+		photo.setImageResource(R.drawable.loading_photo);
+		
 		// name
 		TextView name = (TextView) this.findViewById(R.id.profile_name);
 		name.setText(titledName);
@@ -96,7 +100,7 @@ public class LegislatorProfile extends Activity {
 	
 	/*
 	 * Various static methods that other classes can use to fetch legislator profile images,
-	 * and cause them to be cached to disk.
+	 * and cause them to be downloaded and cached to disk.
 	 */
 	
 	public static Drawable getImage(String size, String bioguideId) {
