@@ -1,7 +1,7 @@
 package com.sunlightlabs.android.congress;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
@@ -151,9 +152,7 @@ public class LegislatorProfile extends Activity {
 			return;
 		
 		String url = picUrl(size, bioguideId);
-		InputStream stream = fetchStream(url);
-		if (stream != null)
-			writeFile(stream, outFile);
+		downloadFile(url, outFile);
 	}
 	
 	private static InputStream fetchStream(String address) {
@@ -165,22 +164,20 @@ public class LegislatorProfile extends Activity {
 		}
 	}
 	
-	private static void writeFile(InputStream stream, File outputFile) {
+	private static void downloadFile(String url, File outputFile) {
 		try {
-			BufferedOutputStream fos = new BufferedOutputStream(new FileOutputStream(outputFile));
+			URL u = new URL(url);
+			URLConnection conn = u.openConnection();
+			int contentLength = conn.getContentLength();
 			
-	        int bytesAvailable = stream.available();
-	        int maxBufferSize = 1024 * 4;
-	        int bufferSize = Math.min(bytesAvailable, maxBufferSize);
-	        byte[] buffer = new byte[bufferSize];
-	        int bytesRead = stream.read(buffer, 0, bufferSize);
-	        while (bytesRead > 0) {
-	            fos.write(buffer, 0, bufferSize);
-	            bytesAvailable = stream.available();
-	            bufferSize = Math.min(bytesAvailable, maxBufferSize);
-	            bytesRead = stream.read(buffer, 0, bufferSize);
-	        }
+			DataInputStream stream = new DataInputStream(u.openStream());
+			
+	        byte[] buffer = new byte[contentLength];
+	        stream.readFully(buffer);
 	        stream.close();
+	        
+	        DataOutputStream fos = new DataOutputStream(new FileOutputStream(outputFile));
+	        fos.write(buffer);
 	        fos.flush();
 	        fos.close();
 		} catch(FileNotFoundException e) {
