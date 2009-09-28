@@ -3,7 +3,6 @@ package com.sunlightlabs.android.congress;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,6 +11,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import android.app.Activity;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -103,23 +103,14 @@ public class LegislatorProfile extends Activity {
 	 * and cause them to be downloaded and cached to disk.
 	 */
 	
-	public static Drawable getImage(String size, String bioguideId) {
+	public static BitmapDrawable getImage(String size, String bioguideId) {
 		initializeDirectories(bioguideId);
 		
 		File imageFile = new File(picPath(size, bioguideId));
 		if (!imageFile.exists())
 			cacheImages(bioguideId);
 		
-		InputStream stream;
-		try {
-			stream = new FileInputStream(imageFile);
-		}
-		catch (FileNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-		
-		Drawable drawable = Drawable.createFromStream(stream, "src");
-		return drawable;
+		return new BitmapDrawable(picPath(size, bioguideId));
 	}
 	
 	private static void initializeDirectories(String bioguideId) {

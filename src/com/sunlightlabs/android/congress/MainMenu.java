@@ -103,11 +103,14 @@ public class MainMenu extends Activity {
 				String zipCode = data.getExtras().getString("zip_code");
 				searchByZip(zipCode);
 			}
+			break;
 		case RESULT_SHORTCUT:
 			if (resultCode == RESULT_OK) {
+				String legislatorName = data.getStringExtra(Intent.EXTRA_SHORTCUT_NAME);
 				setResult(RESULT_OK, data);
 	    		finish();
 			}
+			break;
 		}
 	}
 }

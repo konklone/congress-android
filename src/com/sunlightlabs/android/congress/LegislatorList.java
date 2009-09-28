@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -46,13 +47,12 @@ public class LegislatorList extends ListActivity {
     	if (shortcut) {
     		String name = legislator.getProperty("title") + ". " + legislator.getProperty("lastname");
     		
-    		//Intent shortcutIntent = new Intent();
+    		BitmapDrawable drawable = LegislatorProfile.getImage(LegislatorProfile.PIC_SMALL, legislatorId);
     		
     		Intent intent = new Intent();
     		intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, legislatorIntent);
     		intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
-    		intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, 
-    					Intent.ShortcutIconResource.fromContext(this, R.drawable.icon));
+    		intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, drawable.getBitmap());
     		
     		setResult(RESULT_OK, intent);
     		finish();
