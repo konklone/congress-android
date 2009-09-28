@@ -131,7 +131,7 @@ public class LegislatorNews extends ListActivity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LinearLayout view;
 			if (convertView == null) {
-				view = (LinearLayout) inflater.inflate(R.layout.legislator_news_item, null);
+				view = (LinearLayout) inflater.inflate(R.layout.news_item, null);
 			} else {
 				view = (LinearLayout) convertView;
 			}

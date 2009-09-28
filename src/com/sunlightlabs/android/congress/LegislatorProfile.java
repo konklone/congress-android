@@ -20,7 +20,7 @@ public class LegislatorProfile extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.legislator_profile);
+        setContentView(R.layout.profile);
         
         Bundle extras = getIntent().getExtras(); 
         
