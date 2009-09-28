@@ -12,7 +12,11 @@ import android.widget.Button;
 
 public class MainMenu extends Activity {
 	public static final int RESULT_ZIP = 1;
+	private static final int RESULT_SHORTCUT = 2;
 	private Location location;
+
+	// whether the user has come to this activity looking to create a shortcut
+	private boolean shortcut = false;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -21,6 +25,10 @@ public class MainMenu extends Activity {
         
         loadLocation();
         setupControls();
+
+        String action = getIntent().getAction();
+        if (action != null && action.equals(Intent.ACTION_CREATE_SHORTCUT))
+        	shortcut = true;
     }
 	
 	public void loadLocation() {
@@ -61,10 +69,14 @@ public class MainMenu extends Activity {
 		i.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorList");
 		
 		Bundle extras = new Bundle();
-		extras.putString("zip_code", zipCode); 
+		extras.putString("zip_code", zipCode);
+		extras.putBoolean("shortcut", shortcut);
 		i.putExtras(extras);
 		
-		startActivity(i);
+		if (shortcut)
+			startActivityForResult(i, RESULT_SHORTCUT);
+		else
+			startActivity(i);
     }
 	
 	public void searchByLatLong(double latitude, double longitude) {
@@ -74,9 +86,13 @@ public class MainMenu extends Activity {
 		Bundle extras = new Bundle();
 		extras.putDouble("latitude", latitude);
 		extras.putDouble("longitude", longitude);
+		extras.putBoolean("shortcut", shortcut);
 		i.putExtras(extras);
 		
-		startActivity(i);
+		if (shortcut)
+			startActivityForResult(i, RESULT_SHORTCUT);
+		else
+			startActivity(i);
 	}
 	
 	@Override
@@ -86,6 +102,11 @@ public class MainMenu extends Activity {
 			if (resultCode == RESULT_OK) {
 				String zipCode = data.getExtras().getString("zip_code");
 				searchByZip(zipCode);
+			}
+		case RESULT_SHORTCUT:
+			if (resultCode == RESULT_OK) {
+				setResult(RESULT_OK, data);
+	    		finish();
 			}
 		}
 	}

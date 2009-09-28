@@ -17,10 +17,15 @@ import com.sunlightlabs.entities.Legislator;
 public class LegislatorList extends ListActivity {
 	private final static int LOADING = 0;
 	private Legislator[] legislators;
+	
+	// whether the user has come to this activity looking to create a shortcut
+	private boolean shortcut;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
+    	
+    	shortcut = getIntent().getBooleanExtra("shortcut", false);
     	
     	loadLegislators();
     }
@@ -34,7 +39,25 @@ public class LegislatorList extends ListActivity {
     };
     
     public void onListItemClick(ListView parent, View v, int position, long id) {
-    	launchLegislator(((Legislator) parent.getItemAtPosition(position)).getId());
+    	Legislator legislator = (Legislator) parent.getItemAtPosition(position);
+    	String legislatorId = legislator.getId();
+    	Intent legislatorIntent = legislatorIntent(legislatorId);
+    	
+    	if (shortcut) {
+    		String name = legislator.getProperty("title") + ". " + legislator.getProperty("lastname");
+    		
+    		//Intent shortcutIntent = new Intent();
+    		
+    		Intent intent = new Intent();
+    		intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, legislatorIntent);
+    		intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
+    		intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, 
+    					Intent.ShortcutIconResource.fromContext(this, R.drawable.icon));
+    		
+    		setResult(RESULT_OK, intent);
+    		finish();
+    	} else
+    		startActivity(legislatorIntent);
     }
 	
     public void loadLegislators() {
@@ -63,16 +86,20 @@ public class LegislatorList extends ListActivity {
     }
     
     public void launchLegislator(String id) {
-    	Intent i = new Intent();
+		startActivity(legislatorIntent(id));
+    }
+    
+    public Intent legislatorIntent(String id) {
+    	Intent i = new Intent(Intent.ACTION_MAIN);
 		i.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorTabs");
 		
 		Bundle extras = new Bundle();
 		extras.putString("legislator_id", id); 
 		i.putExtras(extras);
 		
-		startActivity(i);
+		return i;
     }
-    
+
     protected Dialog onCreateDialog(int id) {
         switch(id) {
         case LOADING:
