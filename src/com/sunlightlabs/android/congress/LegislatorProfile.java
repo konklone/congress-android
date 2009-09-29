@@ -15,6 +15,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.util.Linkify;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -78,9 +79,11 @@ public class LegislatorProfile extends Activity {
 
 		TextView phoneView = (TextView) this.findViewById(R.id.profile_phone);
 		phoneView.setText(phone);
+		Linkify.addLinks(phoneView, Linkify.PHONE_NUMBERS);
 		
 		TextView websiteView = (TextView) this.findViewById(R.id.profile_website);
 		websiteView.setText(websiteName(website));
+		Linkify.addLinks(websiteView, Linkify.WEB_URLS);
 	}
 	
 	public void loadImage() {
