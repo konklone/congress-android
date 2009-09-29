@@ -83,21 +83,6 @@ public class LegislatorNews extends ListActivity {
         }
     }
 	
-	public NewsItem[] fakeNews() throws NewsException {
-		NewsItem[] items = new NewsItem[5];
-		
-		items[0] = new NewsItem("Title of the Article 1", "Summary 1", "BBC", "http://bbc.co.uk", "http://sunlightlabs.com", new Time());
-		items[1] = new NewsItem("Title of the Article 2", "Summary 1", "NBC News", "http://news.nbc.com/anything/everything", "http://sunlightlabs.com", new Time());
-		items[2] = new NewsItem("Title 3", "Summary 1", "BBC", "http://bbc.co.uk", "http://sunlightlabs.com", new Time());
-		items[3] = new NewsItem("Title of the Article 4", "Summary 1", "NBC News", "http://news.nbc.com/anything/everything", "http://sunlightlabs.com", new Time());
-		items[4] = new NewsItem("Hugely Long Major Title of the Article 5", "Summary 1", "BBC", "http://bbc.co.uk", "http://sunlightlabs.com", new Time());
-		
-		if (1 == 0)
-			throw new NewsException(new Exception("never called"));
-		
-		return items;
-	}
-	
 	private String correctExceptions(String name) {
 		if (name.equals("Rep. Nancy Pelosi"))
 			return "Speaker Nancy Pelosi";
