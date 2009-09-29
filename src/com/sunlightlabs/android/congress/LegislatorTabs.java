@@ -1,5 +1,7 @@
 package com.sunlightlabs.android.congress;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +12,8 @@ import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorTabs extends TabActivity {
+	private static final int LOADING = 0;
+	
 	private Legislator legislator;
 	private String apiKey;
 	private TabHost.TabSpec profileTab;
@@ -31,6 +35,8 @@ public class LegislatorTabs extends TabActivity {
 	final Runnable doneLoading = new Runnable() {
 		public void run() {
 			setupTabs();
+			
+			dismissDialog(LOADING);
 		}
 	};
 	
@@ -43,14 +49,14 @@ public class LegislatorTabs extends TabActivity {
 			}
 		};
 		loadingThread.start();
+		
+		showDialog(LOADING);
 	}
 	
 	public void loadingTabs() {
 		TabHost tabHost = getTabHost();
 		tabHost.addTab(tabHost.newTabSpec("profile_tab").setIndicator("Profile").setContent(R.id.tabs_loading));
-		
 		tabHost.addTab(tabHost.newTabSpec("news_tab").setIndicator("News").setContent(R.id.tabs_loading));
-		
 		tabHost.setCurrentTab(0);
 	}
 	
@@ -108,5 +114,18 @@ public class LegislatorTabs extends TabActivity {
 		intent.putExtras(extras);
 		return intent;
 	}
+	
+	protected Dialog onCreateDialog(int id) {
+        switch(id) {
+        case LOADING:
+            ProgressDialog dialog = new ProgressDialog(this);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("Loading...");
+            dialog.setCancelable(false);
+            return dialog;
+        default:
+            return null;
+        }
+    }
 
 }
