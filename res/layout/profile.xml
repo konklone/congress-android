@@ -117,7 +117,7 @@
 	  			android:id="@+id/profile_phone"
 	  			android:layout_width="wrap_content"
 	 			android:layout_height="wrap_content"
-	 			android:layout_marginTop="7sp"
+	 			android:layout_marginTop="3sp"
 	 			 
 	  			android:textSize="30sp"
 	  			android:textColor="@android:color/white"
@@ -145,7 +145,7 @@
  			
 	  			android:layout_width="wrap_content"
 	 			android:layout_height="wrap_content"
-	 			android:layout_marginTop="10sp"
+	 			android:layout_marginTop="7sp"
 	 			
 	 			android:textSize="22sp"
 	 			android:textColor="@android:color/white"
