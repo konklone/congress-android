@@ -57,8 +57,12 @@ public class LegislatorProfile extends Activity {
     };
 	
 	public void loadInformation() {
-		ImageView photo = (ImageView) this.findViewById(R.id.profile_picture);
-		photo.setImageResource(R.drawable.loading_photo);
+		ImageView picture = (ImageView) this.findViewById(R.id.profile_picture);
+		BitmapDrawable file = quickGetImage(PIC_MEDIUM, id);
+		if (file != null)
+			picture.setImageDrawable(file);
+		else
+			picture.setImageResource(R.drawable.loading_photo);
 		
 		TextView name = (TextView) this.findViewById(R.id.profile_name);
 		name.setText(titledName);
@@ -107,6 +111,15 @@ public class LegislatorProfile extends Activity {
 			cacheImages(bioguideId);
 		
 		return new BitmapDrawable(picPath(size, bioguideId));
+	}
+	
+	// Quick checks the disk for an avatar - if it isn't loaded
+	public static BitmapDrawable quickGetImage(String size, String bioguideId) {
+		File imageFile = new File(picPath(size, bioguideId));
+		if (imageFile.exists())
+			return new BitmapDrawable(picPath(size, bioguideId));
+		else
+			return null;
 	}
 	
 	private static void initializeDirectories(String bioguideId) {
