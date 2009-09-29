@@ -5,7 +5,14 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	>
-		
+	
+	<TextView
+		android:id="@+id/profile_name"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="Sen. Ted Kennedy"
+		/>
+	
 	<LinearLayout
 		android:id="@+id/profile_top"
 		android:orientation="horizontal"
@@ -17,6 +24,7 @@
 	  		android:layout_width="100px"
 	  		android:layout_height="125px"
 	  		android:id="@+id/picture"
+	  		android:src="@drawable/no_photo"
 	  		/>
 	  	
 	  	<LinearLayout
@@ -27,24 +35,27 @@
 	  		>
   		
 	  		<TextView 
-		  		android:id="@+id/profile_name"
+		  		android:id="@+id/profile_party"
 		  		android:layout_width="wrap_content"
 	  			android:layout_height="wrap_content"
 	  			android:textSize="20sp"
+	  			android:text="Democrat"
+	  			
 		  		/>
 		  	<TextView
-		  		android:id="@+id/profile_party_state"
+		  		android:id="@+id/profile_state"
 		  		android:layout_width="wrap_content"
 		  		android:layout_height="wrap_content"
 		  		android:textSize="18sp"
+		  		android:text="Massachusetts"
 		  		/>
 		  	
 		  	<TextView 
-		  		android:id="@+id/profile_phone"
+		  		android:id="@+id/profile_domain"
 		  		android:layout_width="wrap_content"
 	  			android:layout_height="wrap_content"
-	  			android:autoLink="phone"
-	  			android:textSize="20sp" 
+	  			android:textSize="18sp"
+	  			android:text="Upper Seat"
 		  		/>
   		
   		</LinearLayout>
@@ -58,34 +69,74 @@
  		android:layout_height="wrap_content"
  		>
  		
- 		<TextView 
-  		android:id="@+id/profile_office"
-  		android:layout_width="wrap_content"
- 			android:layout_height="wrap_content" 
- 			android:textSize="16sp"
-  		/>
- 		
- 		<TextView 
-  		android:id="@+id/profile_website"
-  		android:layout_width="wrap_content"
+ 		<LinearLayout
+ 			android:id="@+id/profile_phone_row"
+ 			android:layout_width="fill_parent"
  			android:layout_height="wrap_content"
- 			android:autoLink="web"
- 			android:textSize="18sp"
-  		/>
-  		
-	  	<TextView 
-	  		android:id="@+id/profile_youtube"
-	  		android:layout_width="wrap_content"
-	 			android:layout_height="wrap_content"
-	 			android:textSize="18sp"
-	  		/>
-	  	
-	  	<TextView 
-	  		android:id="@+id/profile_twitter"
-	  		android:layout_width="wrap_content"
+ 			android:orientation="horizontal"
+ 			>
+ 		
+ 			<ImageView
+ 				android:id="@+id/profile_phone_icon"
+ 				android:layout_width="wrap_content"
+ 				android:layout_height="wrap_content"
+ 				/>
+ 			
+	 		<TextView 
+	  			android:id="@+id/profile_phone"
+	  			android:layout_width="wrap_content"
 	 			android:layout_height="wrap_content" 
+	 			android:autoLink="phone"
+	  			android:textSize="20sp" 
+	  			android:text="(555) 555-1212"
+	  			/>
+  		</LinearLayout>
+ 		
+ 		<LinearLayout
+ 			android:id="@+id/profile_website_row"
+ 			android:layout_width="fill_parent"
+ 			android:layout_height="wrap_content"
+ 			android:orientation="horizontal"
+ 			>
+ 		
+ 			<ImageView
+ 				android:id="@+id/profile_website_icon"
+ 				android:layout_width="wrap_content"
+ 				android:layout_height="wrap_content"
+ 				/>
+ 			<TextView 
+		  		android:id="@+id/profile_website"
+	  			android:layout_width="wrap_content"
+	 			android:layout_height="wrap_content"
+	 			android:autoLink="web"
 	 			android:textSize="18sp"
-	  		/>
+	 			android:text="http://kennedy.senate.gov"
+	  			/>
+  		</LinearLayout>
+  		
+  		<LinearLayout
+ 			android:id="@+id/profile_youtube_row"
+ 			android:layout_width="fill_parent"
+ 			android:layout_height="wrap_content"
+ 			android:orientation="horizontal"
+ 			>
+ 		
+ 			<ImageView
+ 				android:id="@+id/profile_youtube_icon"
+ 				android:layout_width="wrap_content"
+ 				android:layout_height="wrap_content"
+ 				/>
+		  	<TextView 
+		  		android:id="@+id/profile_youtube"
+		  		android:layout_width="wrap_content"
+		 		android:layout_height="wrap_content"
+		 		android:autoLink="web"
+		 		android:textSize="18sp"
+		 		android:text="http://youtube.com/stringofletters"
+		  		/>
+		  		
+		</LinearLayout>
+	  	
 	</LinearLayout>
 	
 </LinearLayout>
