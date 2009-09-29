@@ -3,34 +3,60 @@ package com.sunlightlabs.android.congress;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.TabHost;
 
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorTabs extends TabActivity {
-	private TabHost tabHost;
 	private Legislator legislator;
+	private String apiKey;
+	private TabHost.TabSpec profileTab;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.legislator);
         
-        String id = getIntent().getStringExtra("legislator_id");
-        loadLegislator(id);
+        loadingTabs();
         
-        setupTabs();
+        String id = getIntent().getStringExtra("legislator_id");
+        apiKey = getResources().getString(R.string.sunlight_api_key);
+        
+        loadLegislator(id);
 	}
 	
-	public void loadLegislator(String id) {
-		String api_key = getResources().getString(R.string.sunlight_api_key);
-		ApiCall api = new ApiCall(api_key);
-		legislator = Legislator.getLegislatorById(api, id);
+	final Handler handler = new Handler();
+	final Runnable doneLoading = new Runnable() {
+		public void run() {
+			setupTabs();
+		}
+	};
+	
+	public void loadLegislator(String legId) {
+		final String id = legId;
+		Thread loadingThread = new Thread() {
+			public void run() {
+				legislator = Legislator.getLegislatorById(new ApiCall(apiKey), id);
+				handler.post(doneLoading);
+			}
+		};
+		loadingThread.start();
+	}
+	
+	public void loadingTabs() {
+		TabHost tabHost = getTabHost();
+		tabHost.addTab(tabHost.newTabSpec("profile_tab").setIndicator("Profile").setContent(R.id.tabs_loading));
+		
+		tabHost.addTab(tabHost.newTabSpec("news_tab").setIndicator("News").setContent(R.id.tabs_loading));
+		
+		tabHost.setCurrentTab(0);
 	}
 	
 	public void setupTabs() {
-		tabHost = getTabHost();
+		TabHost tabHost = getTabHost();
+		tabHost.clearAllTabs();
 		
 		tabHost.addTab(tabHost.newTabSpec("profile_tab").setIndicator("Profile").setContent(profileIntent()));
 		tabHost.addTab(tabHost.newTabSpec("news_tab").setIndicator("News").setContent(newsIntent()));
