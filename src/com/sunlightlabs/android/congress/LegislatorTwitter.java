@@ -21,7 +21,7 @@ import com.sunlightlabs.android.twitter.Twitter;
 import com.sunlightlabs.android.twitter.TwitterException;
 
 public class LegislatorTwitter extends ListActivity {
-	static final int LOADING = 0;
+	private static final int LOADING = 0;
 	
 	private String username;
 	private Status[] tweets;
