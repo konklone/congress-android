@@ -26,7 +26,8 @@ public class NewsItem {
 			this.source = json.getString("NewsSource");
 			this.summary = json.getString("Summary");
 			this.timestamp = new Time();
-			this.timestamp.set(json.getLong("PublishDate"));
+			long publishDate = json.getLong("PublishDate") * 1000;
+			this.timestamp.set(publishDate);
 			
 		} catch (JSONException e) {
 			setDefaults();
