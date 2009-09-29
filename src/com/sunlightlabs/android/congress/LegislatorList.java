@@ -9,8 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
@@ -19,15 +20,29 @@ public class LegislatorList extends ListActivity {
 	private final static int LOADING = 0;
 	private Legislator[] legislators;
 	
+	private Button back;
+	
 	// whether the user has come to this activity looking to create a shortcut
 	private boolean shortcut;
+	
+	private String zipCode;
+	private double latitude = -1;
+	private double longitude = -1;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
+    	setContentView(R.layout.legislator_list);
     	
-    	shortcut = getIntent().getBooleanExtra("shortcut", false);
+		Bundle extras = getIntent().getExtras();
+		
+    	zipCode = extras.getString("zip_code");
+    	latitude = extras.getDouble("latitude");
+    	longitude = extras.getDouble("longitude");
     	
+    	shortcut = extras.getBoolean("shortcut", false);
+    	
+    	setupControls();
     	loadLegislators();
     }
     
@@ -35,9 +50,31 @@ public class LegislatorList extends ListActivity {
     final Runnable updateThread = new Runnable() {
         public void run() {
         	setListAdapter(new ArrayAdapter<Legislator>(LegislatorList.this, android.R.layout.simple_list_item_1, legislators));
+        	
+        	TextView empty = (TextView) LegislatorList.this.findViewById(R.id.empty_msg);
+        	int length = legislators.length;
+        	if (legislators.length <= 0) {
+        		if (zipSearch())
+        			empty.setText(R.string.empty_zipcode);
+        		else if (locationSearch())
+        			empty.setText(R.string.empty_location);
+        		else
+        			empty.setText(R.string.empty_general);
+        		back.setVisibility(View.VISIBLE);
+        	}
+        	
         	dismissDialog(LOADING);
         }
     };
+    
+    public void setupControls() {
+    	back = (Button) LegislatorList.this.findViewById(R.id.empty_back);
+    	back.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				finish();
+			}
+		});
+    }
     
     public void onListItemClick(ListView parent, View v, int position, long id) {
     	Legislator legislator = (Legislator) parent.getItemAtPosition(position);
@@ -66,15 +103,9 @@ public class LegislatorList extends ListActivity {
 		    	String api_key = getResources().getString(R.string.sunlight_api_key);
 				ApiCall api = new ApiCall(api_key);
 				
-				// expand here to handle other types of legislator searches for this list
-				Bundle extras = getIntent().getExtras();
-				
-		    	String zipCode = extras.getString("zip_code");
-		    	double latitude = extras.getDouble("latitude");
-		    	double longitude = extras.getDouble("longitude");
-		    	if (zipCode != null)
+		    	if (zipSearch())
 		    		legislators = Legislator.getLegislatorsForZipCode(api, zipCode);
-		    	else
+		    	else if (locationSearch())
 		    		legislators = Legislator.getLegislatorsForLatLong(api, latitude, longitude);
 		    	
 		    	handler.post(updateThread);
@@ -83,6 +114,15 @@ public class LegislatorList extends ListActivity {
     	loadingThread.start();
 	    
 		showDialog(LOADING);
+    }
+    
+    private boolean zipSearch() {
+    	return zipCode != null;
+    }
+    
+    private boolean locationSearch() {
+    	// sucks for people at the equator
+    	return (latitude != 0.0 && longitude != 0.0);
     }
     
     public void launchLegislator(String id) {
