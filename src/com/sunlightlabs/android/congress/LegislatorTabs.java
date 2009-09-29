@@ -16,7 +16,6 @@ public class LegislatorTabs extends TabActivity {
 	
 	private Legislator legislator;
 	private String apiKey;
-	private TabHost.TabSpec profileTab;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
