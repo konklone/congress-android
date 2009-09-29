@@ -101,7 +101,8 @@ public class MainMenu extends Activity {
 		case RESULT_ZIP:
 			if (resultCode == RESULT_OK) {
 				String zipCode = data.getExtras().getString("zip_code");
-				searchByZip(zipCode);
+				if (!zipCode.equals(""))
+					searchByZip(zipCode);
 			}
 			break;
 		case RESULT_SHORTCUT:
