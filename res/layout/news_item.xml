@@ -14,6 +14,7 @@
 		android:text="Title of the News Story"
 		android:textColor="@android:color/white"
 		/>
+		
 	<TextView android:id="@+id/news_item_when_where"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

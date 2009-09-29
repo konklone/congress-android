@@ -51,13 +51,13 @@ public class LegislatorProfile extends Activity {
 	final Handler handler = new Handler();
     final Runnable updateThread = new Runnable() {
         public void run() {
-    		ImageView picture = (ImageView) LegislatorProfile.this.findViewById(R.id.picture);
+    		ImageView picture = (ImageView) LegislatorProfile.this.findViewById(R.id.profile_picture);
     		picture.setImageDrawable(avatar);
         }
     };
 	
-	public void loadInformation() {		
-		ImageView photo = (ImageView) this.findViewById(R.id.picture);
+	public void loadInformation() {
+		ImageView photo = (ImageView) this.findViewById(R.id.profile_picture);
 		photo.setImageResource(R.drawable.loading_photo);
 		
 		TextView name = (TextView) this.findViewById(R.id.profile_name);
@@ -70,13 +70,13 @@ public class LegislatorProfile extends Activity {
 		stateView.setText(stateName(state));
 		
 		TextView domainView = (TextView) this.findViewById(R.id.profile_domain); 
-		domainView.setText(domain);
+		domainView.setText(domainName(domain));
 
 		TextView phoneView = (TextView) this.findViewById(R.id.profile_phone);
 		phoneView.setText(phone);
 		
 		TextView websiteView = (TextView) this.findViewById(R.id.profile_website);
-		websiteView.setText(website);
+		websiteView.setText(websiteName(website));
 	}
 	
 	public void loadImage() {
@@ -178,6 +178,10 @@ public class LegislatorProfile extends Activity {
 		}
 	}
 	
+	private String websiteName(String url) {
+		return url.replace("http://", "").replace("/", "");
+	}
+	
 	private String partyName(String code) {
 		if (code.equals("D"))
 			return "Democrat";
@@ -187,6 +191,15 @@ public class LegislatorProfile extends Activity {
 			return "Independent";
 		else
 			return "";
+	}
+	
+	private String domainName(String domain) {
+		if (domain.equals("Upper Seat"))
+			return "Senior Senator";
+		if (domain.equals("Lower Seat"))
+			return "Junior Senator";
+		else
+			return domain;
 	}
 	
 	private String stateName(String code) {
