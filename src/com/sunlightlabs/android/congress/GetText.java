@@ -7,31 +7,46 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
-public class GetZip extends Activity {
-	private EditText zipCode;
+public class GetText extends Activity {
+	private EditText responseField;
 	
+	private String ask, hint;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.get_zip);
+        setContentView(R.layout.get_text);
+        
+        Bundle extras = getIntent().getExtras();
+        ask = extras.getString("ask");
+        hint = extras.getString("hint");
         
         setupControls();
     }
 	
 	public void setupControls() {
-		zipCode = (EditText) this.findViewById(R.id.zip_code);
-		Button ok = (Button) this.findViewById(R.id.ok_zip_code);
-		Button cancel = (Button) this.findViewById(R.id.cancel_zip_code);
+		if (ask != null) {
+			TextView askView = (TextView) this.findViewById(R.id.get_text_ask);
+			askView.setText(ask);
+		}
+		
+		responseField = (EditText) this.findViewById(R.id.get_text_response);
+		if (hint != null)
+			responseField.setHint(hint);
+		
+		
+		Button ok = (Button) this.findViewById(R.id.get_text_ok);
+		Button cancel = (Button) this.findViewById(R.id.get_text_cancel);
 		
 		ok.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				String zip = zipCode.getText().toString();
+				String response = responseField.getText().toString();
 				
 				Bundle data = new Bundle();
-				data.putString("zip_code", zip);
+				data.putString("response", response);
 				Intent i = new Intent();
 				i.putExtras(data);
 				

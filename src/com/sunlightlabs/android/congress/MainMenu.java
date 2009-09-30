@@ -12,7 +12,8 @@ import android.widget.Button;
 
 public class MainMenu extends Activity {
 	public static final int RESULT_ZIP = 1;
-	private static final int RESULT_SHORTCUT = 2;
+	public static final int RESULT_LASTNAME = 2;
+	private static final int RESULT_SHORTCUT = 3;
 	private Location location;
 
 	// whether the user has come to this activity looking to create a shortcut
@@ -34,7 +35,7 @@ public class MainMenu extends Activity {
 	public void loadLocation() {
 		LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
 		location = null;
-		List<String> enabled = lm.getProviders(true);
+
 		if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
 			location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		else if (lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
@@ -58,7 +59,11 @@ public class MainMenu extends Activity {
     	fetchZip.setOnClickListener(new View.OnClickListener() {
     		public void onClick(View v) {
     			Intent intent = new Intent();
-    			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetZip");
+    			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText");
+    			Bundle extras = new Bundle();
+    			extras.putString("ask", "Enter a zip code:");
+    			extras.putString("hint", "e.g. 11216");
+    			intent.putExtras(extras);
     			startActivityForResult(intent, RESULT_ZIP);
     		}
     	});
@@ -122,14 +127,13 @@ public class MainMenu extends Activity {
 		switch(requestCode) {
 		case RESULT_ZIP:
 			if (resultCode == RESULT_OK) {
-				String zipCode = data.getExtras().getString("zip_code");
+				String zipCode = data.getExtras().getString("response");
 				if (!zipCode.equals(""))
 					searchByZip(zipCode);
 			}
 			break;
 		case RESULT_SHORTCUT:
 			if (resultCode == RESULT_OK) {
-				String legislatorName = data.getStringExtra(Intent.EXTRA_SHORTCUT_NAME);
 				setResult(RESULT_OK, data);
 	    		finish();
 			}
