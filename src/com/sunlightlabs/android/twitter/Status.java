@@ -9,7 +9,7 @@ import android.text.format.Time;
 
 public class Status {
 	public long id;
-	public String text;
+	public String text, username, source;
 	public long createdAtMillis;
 	public Time createdAt;
 	
@@ -17,6 +17,9 @@ public class Status {
 		try {
 			this.text = json.getString("text");
 			this.id = json.getLong("id");
+			this.source = json.getString("source");
+			this.username = json.getJSONObject("user").getString("screen_name");
+			
 			this.createdAt = new Time();
 			this.createdAtMillis = Date.parse(json.getString("created_at"));
 			this.createdAt.set(this.createdAtMillis);			
@@ -27,10 +30,13 @@ public class Status {
 	
 	private void setDefaults() {
 		this.text = "[No tweet loaded]";
+		this.id = -1;
+		this.source = "[nowhere]";
+		this.username = "[nobody]";
+		
 		this.createdAtMillis = System.currentTimeMillis();
 		this.createdAt = new Time();
 		this.createdAt.set(this.createdAtMillis);
-		this.id = -1;
 	}
 
 }

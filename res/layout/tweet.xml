@@ -5,23 +5,27 @@
 	android:layout_height="fill_parent"
 	>
 
-	<TextView
-		android:id="@+id/tweet_text"
+	<TextView android:id="@+id/tweet_text"
+		
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_marginTop="2sp"
+		
 		android:textSize="18sp"
 		android:textColor="@android:color/white"
+		
 		android:text="This tweet could be as long as 140 characters, which is longer than you may think. And it might start with an @reply."
-		android:layout_marginTop="2sp" 
 		/>
 		
-	<TextView
-		android:id="@+id/tweet_when"
+	<TextView android:id="@+id/tweet_byline"
+		
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="3sp"
-		android:textSize="16sp"
-		android:text="1 day ago"
+		
+		android:textSize="12sp"
+		
+		android:text="posted 1 day ago by @SomeBody from TweetDeck"
 		/>
 
 </LinearLayout>
