@@ -1,5 +1,8 @@
 package com.sunlightlabs.android.congress;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -28,6 +31,7 @@ public class LegislatorList extends ListActivity {
 	private String zipCode;
 	private double latitude = -1;
 	private double longitude = -1;
+	private String lastName;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,7 @@ public class LegislatorList extends ListActivity {
     	zipCode = extras.getString("zip_code");
     	latitude = extras.getDouble("latitude");
     	longitude = extras.getDouble("longitude");
+    	lastName = extras.getString("last_name");
     	
     	shortcut = extras.getBoolean("shortcut", false);
     	
@@ -58,6 +63,8 @@ public class LegislatorList extends ListActivity {
         			empty.setText(R.string.empty_zipcode);
         		else if (locationSearch())
         			empty.setText(R.string.empty_location);
+        		else if (lastNameSearch())
+        			empty.setText(R.string.empty_last_name);
         		else
         			empty.setText(R.string.empty_general);
         		back.setVisibility(View.VISIBLE);
@@ -107,6 +114,12 @@ public class LegislatorList extends ListActivity {
 		    		legislators = Legislator.getLegislatorsForZipCode(api, zipCode);
 		    	else if (locationSearch())
 		    		legislators = Legislator.getLegislatorsForLatLong(api, latitude, longitude);
+		    	else if (lastNameSearch()) {
+		    		Map<String,String> params = new HashMap<String,String>();
+		    		params.put("lastname", lastName);
+		    		params.put("in_office", "1");
+		    		legislators = Legislator.allLegislators(api, params);
+		    	}
 		    	
 		    	handler.post(updateThread);
 	        }
@@ -121,8 +134,12 @@ public class LegislatorList extends ListActivity {
     }
     
     private boolean locationSearch() {
-    	// sucks for people at the equator
+    	// sucks for people at the intersection of the equator and prime meridian
     	return (latitude != 0.0 && longitude != 0.0);
+    }
+    
+    private boolean lastNameSearch() {
+    	return lastName != null;
     }
     
     public void launchLegislator(String id) {

@@ -2,11 +2,15 @@
 <resources>
     <string name="app_name">Congress</string>
     <string name="create_shortcuts">Legislator</string>
+    <string name="main_title">Find A Legislator By</string>
     <string name="empty_zipcode">
     	No legislators found for your zipcode.
     </string>
     <string name="empty_location">
     	No legislators found for your location.
+    </string>
+    <string name="empty_last_name">
+    	No legislators found by that last name.
     </string>
     <string name="empty_general">
     	No legislators found.

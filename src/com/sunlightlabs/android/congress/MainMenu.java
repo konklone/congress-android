@@ -45,14 +45,6 @@ public class MainMenu extends Activity {
         Button fetchZip = (Button) this.findViewById(R.id.fetch_zip);
         Button fetchLocation = (Button) this.findViewById(R.id.fetch_location);
         
-    	fetchZip.setOnClickListener(new View.OnClickListener() {
-    		public void onClick(View v) {
-    			Intent intent = new Intent();
-    			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetZip");
-    			startActivityForResult(intent, RESULT_ZIP);
-    		}
-    	});
-    	
     	if (location != null) {
 	    	fetchLocation.setOnClickListener(new View.OnClickListener() {
 	    		public void onClick(View v) {
@@ -62,6 +54,21 @@ public class MainMenu extends Activity {
 	    	});
     	} else
     		fetchLocation.setEnabled(false);
+    	
+    	fetchZip.setOnClickListener(new View.OnClickListener() {
+    		public void onClick(View v) {
+    			Intent intent = new Intent();
+    			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetZip");
+    			startActivityForResult(intent, RESULT_ZIP);
+    		}
+    	});
+    	
+    	Button fetchLastName = (Button) this.findViewById(R.id.fetch_last_name);
+    	fetchLastName.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				searchByLastName("kennedy");
+			}
+		});
     }
 	
 	public void searchByZip(String zipCode) {
@@ -86,6 +93,21 @@ public class MainMenu extends Activity {
 		Bundle extras = new Bundle();
 		extras.putDouble("latitude", latitude);
 		extras.putDouble("longitude", longitude);
+		extras.putBoolean("shortcut", shortcut);
+		i.putExtras(extras);
+		
+		if (shortcut)
+			startActivityForResult(i, RESULT_SHORTCUT);
+		else
+			startActivity(i);
+	}
+	
+	public void searchByLastName(String lastName) {
+		Intent i = new Intent();
+		i.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorList");
+		
+		Bundle extras = new Bundle();
+		extras.putString("last_name", lastName);
 		extras.putBoolean("shortcut", shortcut);
 		i.putExtras(extras);
 		
