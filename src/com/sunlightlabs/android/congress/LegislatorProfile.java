@@ -262,15 +262,15 @@ public class LegislatorProfile extends Activity {
 	    if (code.equals("MD"))
 	        return "Maryland";
 	    if (code.equals("MA"))
-	        return "Ma  achusetts";
+	        return "Massachusetts";
 	    if (code.equals("MI"))
 	        return "Michigan";
 	    if (code.equals("MN"))
 	        return "Minnesota";
 	    if (code.equals("MS"))
-	        return "Mi  i ippi";
+	        return "Mississippi";
 	    if (code.equals("MO"))
-	        return "Mi  ouri";
+	        return "Missouri";
 	    if (code.equals("MT"))
 	        return "Montana";
 	    if (code.equals("NE"))
@@ -306,7 +306,7 @@ public class LegislatorProfile extends Activity {
 	    if (code.equals("SD"))
 	        return "South Dakota";
 	    if (code.equals("TN"))
-	        return "Tenne ee";
+	        return "Tennessee";
 	    if (code.equals("TX"))
 	        return "Texas";
 	    if (code.equals("UT"))
