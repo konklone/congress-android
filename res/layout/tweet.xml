@@ -13,6 +13,7 @@
 		
 		android:textSize="18sp"
 		android:textColor="@android:color/white"
+		android:autoLink="web"
 		
 		android:text="This tweet could be as long as 140 characters, which is longer than you may think. And it might start with an @reply."
 		/>
@@ -23,9 +24,9 @@
 		android:layout_height="wrap_content"
 		android:layout_marginTop="3sp"
 		
-		android:textSize="12sp"
+		android:textSize="14sp"
 		
-		android:text="posted 1 day ago by @SomeBody from TweetDeck"
+		android:text="posted 1 day ago by @SomeBody"
 		/>
 
 </LinearLayout>

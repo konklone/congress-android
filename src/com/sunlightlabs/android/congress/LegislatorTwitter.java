@@ -129,7 +129,7 @@ public class LegislatorTwitter extends ListActivity {
 			text.setText(tweet.text);
 			
 			TextView byline = (TextView) view.findViewById(R.id.tweet_byline);
-			byline.setText("posted " + timeAgoInWords(tweet.createdAtMillis) + " by @" + tweet.username + " from " + tweet.source);
+			byline.setText("posted " + timeAgoInWords(tweet.createdAtMillis) + " by @" + tweet.username);
 			
 			return view;
 		}
