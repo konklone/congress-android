@@ -11,4 +11,7 @@
     <string name="empty_general">
     	No legislators found.
     </string>
+    <string name="news_empty">
+    	No news found, but by all means, try again.
+    </string>
 </resources>

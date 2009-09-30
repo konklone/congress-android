@@ -29,15 +29,16 @@ public class LegislatorNews extends ListActivity {
 	private String searchName;
 	private NewsItem[] items;
 	
-	private Button refresh;
+	private Button refresh;;
     	
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
+    	setContentView(R.layout.news_list);
     	
     	searchName = getIntent().getStringExtra("searchName");
     	searchName = correctExceptions(searchName);
     	
-    	//refresh = (Button) this.findViewById(R.id.news_refresh);
+    	setupControls();
     	
     	loadNews();
 	}
@@ -45,8 +46,14 @@ public class LegislatorNews extends ListActivity {
 	final Handler handler = new Handler();
     final Runnable updateThread = new Runnable() {
         public void run() {
-        	//items = new NewsItem[0];
         	setListAdapter(new NewsAdapter(LegislatorNews.this, items));
+        	
+        	if (items.length <= 0) {
+        		TextView empty = (TextView) LegislatorNews.this.findViewById(R.id.news_empty);
+        		empty.setText(R.string.news_empty);
+        		refresh.setVisibility(View.VISIBLE);
+        	}
+        	
         	dismissDialog(LOADING);
         }
     };
@@ -57,6 +64,15 @@ public class LegislatorNews extends ListActivity {
 		NewsItem item = (NewsItem) parent.getItemAtPosition(position);
 		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.clickURL)));
 	}
+    
+    private void setupControls() {
+    	refresh = (Button) this.findViewById(R.id.news_refresh);
+    	refresh.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				loadNews();
+			}
+		});
+    }
 	
 	protected void loadNews() {
 		Thread loadingThread = new Thread() {
