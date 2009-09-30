@@ -11,11 +11,13 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.util.Linkify;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +28,7 @@ public class LegislatorProfile extends Activity {
 	
 	private String id, titledName, party, state, domain, phone, website, office;
 	private Drawable avatar;
+	private ImageView picture;
 	
 	private static final String avatarPath = "/sdcard/sunlight-android/avatars/";
 	
@@ -52,13 +55,13 @@ public class LegislatorProfile extends Activity {
 	final Handler handler = new Handler();
     final Runnable updateThread = new Runnable() {
         public void run() {
-    		ImageView picture = (ImageView) LegislatorProfile.this.findViewById(R.id.profile_picture);
     		picture.setImageDrawable(avatar);
+    		bindAvatar();
         }
     };
 	
 	public void loadInformation() {
-		ImageView picture = (ImageView) this.findViewById(R.id.profile_picture);
+		picture = (ImageView) this.findViewById(R.id.profile_picture);
 		BitmapDrawable file = quickGetImage(PIC_MEDIUM, id);
 		if (file != null)
 			picture.setImageDrawable(file);
@@ -84,6 +87,20 @@ public class LegislatorProfile extends Activity {
 		TextView websiteView = (TextView) this.findViewById(R.id.profile_website);
 		websiteView.setText(websiteName(website));
 		Linkify.addLinks(websiteView, Linkify.WEB_URLS);
+	}
+	
+	// needs to only be called when avatars have been downloaded and cached
+	private void bindAvatar() {
+		picture.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent avatarIntent = new Intent(LegislatorProfile.this, Avatar.class);
+				Bundle extras = new Bundle();
+				extras.putString("id", id);
+				avatarIntent.putExtras(extras);
+				
+				startActivity(avatarIntent);
+			}
+		});
 	}
 	
 	public void loadImage() {
