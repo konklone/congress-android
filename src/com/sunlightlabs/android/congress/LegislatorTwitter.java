@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,19 +26,31 @@ public class LegislatorTwitter extends ListActivity {
 	
 	private String username;
 	private Status[] tweets;
-    	
+	
+	private Button refresh;
+	
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
+    	setContentView(R.layout.twitter);
     	
     	username = getIntent().getStringExtra("username");
+    	
+    	setupControls();
     	
     	loadTweets();
 	}
 	
     final Handler handler = new Handler();
     final Runnable updateThread = new Runnable() {
-        public void run() {
+        public void run() {        	
         	setListAdapter(new TweetAdapter(LegislatorTwitter.this, tweets));
+        	
+        	if (tweets.length <= 0) {
+        		TextView empty = (TextView) LegislatorTwitter.this.findViewById(R.id.twitter_empty);
+        		empty.setText(R.string.twitter_empty);
+        		refresh.setVisibility(View.VISIBLE);
+        	}
+        	
         	dismissDialog(LOADING);
         }
     };
@@ -57,6 +70,15 @@ public class LegislatorTwitter extends ListActivity {
 	    loadingThread.start();
 	    
 		showDialog(LOADING);
+	}
+	
+	private void setupControls() {
+		refresh = (Button) this.findViewById(R.id.twitter_refresh);
+    	refresh.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				loadTweets();
+			}
+		});
 	}
     
     protected Dialog onCreateDialog(int id) {

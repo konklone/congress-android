@@ -14,4 +14,7 @@
     <string name="news_empty">
     	No news found, but by all means, try again.
     </string>
+    <string name="twitter_empty">
+    	No tweets found, but since that's ridiculous, it's probably in error.
+    </string>
 </resources>
