@@ -58,5 +58,19 @@
 		android:textSize="26sp"
 		android:text="Last Name"
 		/>
+	
+	<Button android:id="@+id/fetch_state"
+		
+		android:layout_width="fill_parent"
+		android:layout_height="80sp"
+		
+		android:layout_marginLeft="10sp"
+		android:layout_marginRight="10sp"
+		android:layout_marginTop="5sp"
+		android:layout_marginBottom="5sp"
+		
+		android:textSize="26sp"
+		android:text="State"
+		/>
 					
 </LinearLayout>

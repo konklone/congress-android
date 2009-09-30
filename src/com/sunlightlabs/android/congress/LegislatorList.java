@@ -32,6 +32,7 @@ public class LegislatorList extends ListActivity {
 	private double latitude = -1;
 	private double longitude = -1;
 	private String lastName;
+	private String state;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class LegislatorList extends ListActivity {
     	latitude = extras.getDouble("latitude");
     	longitude = extras.getDouble("longitude");
     	lastName = extras.getString("last_name");
+    	state = extras.getString("state");
     	
     	shortcut = extras.getBoolean("shortcut", false);
     	
@@ -117,7 +119,10 @@ public class LegislatorList extends ListActivity {
 		    	else if (lastNameSearch()) {
 		    		Map<String,String> params = new HashMap<String,String>();
 		    		params.put("lastname", lastName);
-		    		params.put("in_office", "1");
+		    		legislators = Legislator.allLegislators(api, params);
+		    	} else if (stateSearch()) {
+		    		Map<String,String> params = new HashMap<String,String>();
+		    		params.put("state", state);
 		    		legislators = Legislator.allLegislators(api, params);
 		    	}
 		    	
@@ -140,6 +145,10 @@ public class LegislatorList extends ListActivity {
     
     private boolean lastNameSearch() {
     	return lastName != null;
+    }
+    
+    private boolean stateSearch() {
+    	return state != null;
     }
     
     public void launchLegislator(String id) {

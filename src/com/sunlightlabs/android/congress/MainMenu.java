@@ -1,7 +1,5 @@
 package com.sunlightlabs.android.congress;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
@@ -14,7 +12,8 @@ import android.widget.Button;
 public class MainMenu extends Activity {
 	public static final int RESULT_ZIP = 1;
 	public static final int RESULT_LASTNAME = 2;
-	private static final int RESULT_SHORTCUT = 3;
+	public static final int RESULT_STATE = 3;
+	private static final int RESULT_SHORTCUT = 10;
 	private Location location;
 
 	// whether the user has come to this activity looking to create a shortcut
@@ -69,45 +68,44 @@ public class MainMenu extends Activity {
 				getResponse(RESULT_LASTNAME);
 			}
 		});
+    	
+    	Button fetchState = (Button) this.findViewById(R.id.fetch_state);
+    	fetchState.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				getResponse(RESULT_STATE);
+			}
+		});
     }
 	
 	public void searchByZip(String zipCode) {
-    	Intent i = new Intent();
-		i.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorList");
-		
 		Bundle extras = new Bundle();
 		extras.putString("zip_code", zipCode);
-		extras.putBoolean("shortcut", shortcut);
-		i.putExtras(extras);
-		
-		if (shortcut)
-			startActivityForResult(i, RESULT_SHORTCUT);
-		else
-			startActivity(i);
+		search(extras);
     }
 	
 	public void searchByLatLong(double latitude, double longitude) {
-		Intent i = new Intent();
-		i.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorList");
-		
 		Bundle extras = new Bundle();
 		extras.putDouble("latitude", latitude);
 		extras.putDouble("longitude", longitude);
-		extras.putBoolean("shortcut", shortcut);
-		i.putExtras(extras);
-		
-		if (shortcut)
-			startActivityForResult(i, RESULT_SHORTCUT);
-		else
-			startActivity(i);
+		search(extras);
 	}
 	
 	public void searchByLastName(String lastName) {
+		Bundle extras = new Bundle();
+		extras.putString("last_name", lastName);
+		search(extras);
+	}
+	
+	public void searchByState(String state) {
+		Bundle extras = new Bundle();
+		extras.putString("state", state);
+		search(extras);
+	}
+	
+	private void search(Bundle extras) {
 		Intent i = new Intent();
 		i.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorList");
 		
-		Bundle extras = new Bundle();
-		extras.putString("last_name", lastName);
 		extras.putBoolean("shortcut", shortcut);
 		i.putExtras(extras);
 		
@@ -122,15 +120,26 @@ public class MainMenu extends Activity {
 		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText");
 		Bundle extras = new Bundle();
 		
-		if (requestCode == RESULT_ZIP) {
+		switch (requestCode) {
+		case RESULT_ZIP:
 			extras.putString("ask", "Enter a zip code:");
 			extras.putString("hint", "e.g. 11216");
 			extras.putInt("inputType", InputType.TYPE_CLASS_NUMBER);
-		} else if (requestCode == RESULT_LASTNAME) {
+			break;
+		case RESULT_LASTNAME:
 			extras.putString("ask", "Enter a last name:");
 			extras.putString("hint", "e.g. Schumer");
 			extras.putInt("inputType", InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+			break;
+		case RESULT_STATE:
+			extras.putString("ask", "Enter a 2-letter state code:");
+			extras.putString("hint", "e.g. NY");
+			extras.putInt("inputType", InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+			break;
+		default:
+			break;
 		}
+		
 		intent.putExtras(extras);
 		startActivityForResult(intent, requestCode);
 	}
@@ -150,6 +159,13 @@ public class MainMenu extends Activity {
 				String lastName = data.getExtras().getString("response");
 				if (!lastName.equals(""))
 					searchByLastName(lastName);
+			}
+			break;
+		case RESULT_STATE:
+			if (resultCode == RESULT_OK) {
+				String state = data.getExtras().getString("response");
+				if (!state.equals(""))
+					searchByState(state);
 			}
 			break;
 		case RESULT_SHORTCUT:
