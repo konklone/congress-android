@@ -132,7 +132,7 @@ public class MainMenu extends Activity {
 			extras.putInt("inputType", InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 			break;
 		case RESULT_STATE:
-			extras.putString("ask", "Enter a 2-letter state code:");
+			extras.putString("ask", "2-letter state code:");
 			extras.putString("hint", "e.g. NY");
 			extras.putInt("inputType", InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
 			break;
