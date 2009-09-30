@@ -9,16 +9,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.sunlightlabs.android.yahoo.news.NewsException;
 import com.sunlightlabs.android.yahoo.news.NewsItem;
@@ -29,6 +28,8 @@ public class LegislatorNews extends ListActivity {
 	
 	private String searchName;
 	private NewsItem[] items;
+	
+	private Button refresh;
     	
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -36,22 +37,26 @@ public class LegislatorNews extends ListActivity {
     	searchName = getIntent().getStringExtra("searchName");
     	searchName = correctExceptions(searchName);
     	
+    	//refresh = (Button) this.findViewById(R.id.news_refresh);
+    	
     	loadNews();
 	}
 	
 	final Handler handler = new Handler();
     final Runnable updateThread = new Runnable() {
         public void run() {
+        	//items = new NewsItem[0];
         	setListAdapter(new NewsAdapter(LegislatorNews.this, items));
-        	getListView().setOnItemClickListener(new OnItemClickListener() { 
-        		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        			NewsItem item = (NewsItem) parent.getItemAtPosition(position);
-        			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.clickURL)));
-        		}
-        	});
         	dismissDialog(LOADING);
         }
     };
+    
+
+    @Override
+	public void onListItemClick(ListView parent, View view, int position, long id) {
+		NewsItem item = (NewsItem) parent.getItemAtPosition(position);
+		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.clickURL)));
+	}
 	
 	protected void loadNews() {
 		Thread loadingThread = new Thread() {

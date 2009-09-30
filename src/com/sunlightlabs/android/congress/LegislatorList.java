@@ -52,7 +52,7 @@ public class LegislatorList extends ListActivity {
         	setListAdapter(new ArrayAdapter<Legislator>(LegislatorList.this, android.R.layout.simple_list_item_1, legislators));
         	
         	TextView empty = (TextView) LegislatorList.this.findViewById(R.id.empty_msg);
-        	int length = legislators.length;
+        	
         	if (legislators.length <= 0) {
         		if (zipSearch())
         			empty.setText(R.string.empty_zipcode);
