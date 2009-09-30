@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 
@@ -58,20 +59,14 @@ public class MainMenu extends Activity {
     	
     	fetchZip.setOnClickListener(new View.OnClickListener() {
     		public void onClick(View v) {
-    			Intent intent = new Intent();
-    			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText");
-    			Bundle extras = new Bundle();
-    			extras.putString("ask", "Enter a zip code:");
-    			extras.putString("hint", "e.g. 11216");
-    			intent.putExtras(extras);
-    			startActivityForResult(intent, RESULT_ZIP);
+    			getResponse(RESULT_ZIP);
     		}
     	});
     	
     	Button fetchLastName = (Button) this.findViewById(R.id.fetch_last_name);
     	fetchLastName.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				searchByLastName("kennedy");
+				getResponse(RESULT_LASTNAME);
 			}
 		});
     }
@@ -122,6 +117,24 @@ public class MainMenu extends Activity {
 			startActivity(i);
 	}
 	
+	private void getResponse(int requestCode) {
+		Intent intent = new Intent();
+		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText");
+		Bundle extras = new Bundle();
+		
+		if (requestCode == RESULT_ZIP) {
+			extras.putString("ask", "Enter a zip code:");
+			extras.putString("hint", "e.g. 11216");
+			extras.putInt("inputType", InputType.TYPE_CLASS_NUMBER);
+		} else if (requestCode == RESULT_LASTNAME) {
+			extras.putString("ask", "Enter a last name:");
+			extras.putString("hint", "e.g. Schumer");
+			extras.putInt("inputType", InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+		}
+		intent.putExtras(extras);
+		startActivityForResult(intent, requestCode);
+	}
+	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch(requestCode) {
@@ -130,6 +143,13 @@ public class MainMenu extends Activity {
 				String zipCode = data.getExtras().getString("response");
 				if (!zipCode.equals(""))
 					searchByZip(zipCode);
+			}
+			break;
+		case RESULT_LASTNAME:
+			if (resultCode == RESULT_OK) {
+				String lastName = data.getExtras().getString("response");
+				if (!lastName.equals(""))
+					searchByLastName(lastName);
 			}
 			break;
 		case RESULT_SHORTCUT:

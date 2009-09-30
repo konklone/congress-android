@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -13,6 +14,7 @@ public class GetText extends Activity {
 	private EditText responseField;
 	
 	private String ask, hint;
+	private int inputType;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,7 @@ public class GetText extends Activity {
         Bundle extras = getIntent().getExtras();
         ask = extras.getString("ask");
         hint = extras.getString("hint");
+        inputType = extras.getInt("inputType", InputType.TYPE_CLASS_TEXT);
         
         setupControls();
     }
@@ -36,6 +39,8 @@ public class GetText extends Activity {
 		responseField = (EditText) this.findViewById(R.id.get_text_response);
 		if (hint != null)
 			responseField.setHint(hint);
+		
+		responseField.setInputType(inputType);
 		
 		
 		Button ok = (Button) this.findViewById(R.id.get_text_ok);
