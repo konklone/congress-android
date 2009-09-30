@@ -12,6 +12,9 @@
     <string name="empty_last_name">
     	No legislators found by that last name.
     </string>
+    <string name="empty_state">
+    	That state code isn't valid. Give it another shot.
+    </string>
     <string name="empty_general">
     	No legislators found.
     </string>

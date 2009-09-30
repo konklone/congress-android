@@ -67,6 +67,8 @@ public class LegislatorList extends ListActivity {
         			empty.setText(R.string.empty_location);
         		else if (lastNameSearch())
         			empty.setText(R.string.empty_last_name);
+        		else if (stateSearch())
+        			empty.setText(R.string.empty_state);
         		else
         			empty.setText(R.string.empty_general);
         		back.setVisibility(View.VISIBLE);
