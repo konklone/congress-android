@@ -1,5 +1,8 @@
 package com.sunlightlabs.android.congress;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TabActivity;
@@ -69,6 +72,9 @@ public class LegislatorTabs extends TabActivity {
 		if (!legislator.getProperty("twitter_id").equals(""))
 			tabHost.addTab(tabHost.newTabSpec("twitter_tab").setIndicator("Twitter").setContent(twitterIntent()));
 		
+		if (!youtubeUsername(legislator).equals(""))
+			tabHost.addTab(tabHost.newTabSpec("youtube_tab").setIndicator("YouTube").setContent(youtubeIntent()));
+		
 		tabHost.setCurrentTab(0);
 	}
 	
@@ -86,7 +92,7 @@ public class LegislatorTabs extends TabActivity {
 		extras.putString("website", legislator.getProperty("website"));
 		extras.putString("phone", legislator.getProperty("phone"));
 		extras.putString("twitter_id", legislator.getProperty("twitter_id"));
-		extras.putString("youtube_url", legislator.getProperty("youtube_url"));
+		extras.putString("youtube_id", youtubeUsername(legislator));
 		
 		intent.putExtras(extras);
 		return intent;
@@ -114,6 +120,17 @@ public class LegislatorTabs extends TabActivity {
 		return intent;
 	}
 	
+	public Intent youtubeIntent() {
+		Intent intent = new Intent();
+		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorYouTube");
+		
+		Bundle extras = new Bundle();
+		extras.putString("username", youtubeUsername(legislator));
+		
+		intent.putExtras(extras);
+		return intent;
+	}
+	
 	protected Dialog onCreateDialog(int id) {
         switch(id) {
         case LOADING:
@@ -126,5 +143,18 @@ public class LegislatorTabs extends TabActivity {
             return null;
         }
     }
+	
+	public static String youtubeUsername(Legislator legislator) {
+		String url = legislator.getProperty("youtube_url");
+		Pattern p = Pattern.compile("http://(?:www\\.)?youtube\\.com/(?:user/)?(.*?)/?$", Pattern.CASE_INSENSITIVE);
+		Matcher m = p.matcher(url);
+		boolean found = m.find();
+		if (found) {
+			String username = m.group(1);
+			int x = 1;
+			return username;
+		} else
+			return "";
+	}
 
 }

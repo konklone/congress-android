@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	
+	android:padding="5sp"
+	>
+	
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		
+		>
+		
+		<ImageView android:id="@+id/video_icon"
+			android:src="@android:drawable/ic_menu_upload_you_tube"
+			android:layout_width="48sp"
+			android:layout_height="48sp"
+			/>
+		
+		<LinearLayout
+			android:orientation="vertical"
+			android:padding="5sp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			>
+	
+			<TextView
+				android:id="@+id/video_title"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				
+				android:textSize="18sp" 
+				android:textColor="@android:color/white"
+				
+				android:text="Title of the YouTube Video And Then Some"
+				/>
+				
+			<TextView android:id="@+id/video_when"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				
+				android:textSize="15sp"
+				
+				android:text="September 22"
+				/>
+		</LinearLayout>
+	</LinearLayout>
+	
+	<TextView android:id="@+id/video_description"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="5sp"
+		
+		android:textSize="14sp"
+		
+		android:text="The summary of a video could be quite long and would look daunting unless wrapped and truncated appropriately.  Be sure to do this in all cases."
+		/>			
+</LinearLayout>

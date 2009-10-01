@@ -35,6 +35,8 @@
         <activity android:name=".LegislatorProfile" />
         <activity android:name=".LegislatorNews" />
         <activity android:name=".LegislatorTwitter" />
+        <activity android:name=".LegislatorYouTube" />
+        
         <activity android:name=".GetText"
         	android:theme="@android:style/Theme.Dialog" 
         	/>

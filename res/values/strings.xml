@@ -24,4 +24,7 @@
     <string name="twitter_empty">
     	No tweets found, but since that's ridiculous, it's probably in error.
     </string>
+    <string name="youtube_empty">
+    	No videos found, but by all means, try again.
+    </string>
 </resources>
