@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -13,9 +15,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sunlightlabs.android.yahoo.news.NewsItem;
 import com.sunlightlabs.android.youtube.Video;
 import com.sunlightlabs.android.youtube.YouTube;
 import com.sunlightlabs.android.youtube.YouTubeException;
@@ -70,6 +74,12 @@ private static final int LOADING = 0;
 	    loadingThread.start();
 	    
 		showDialog(LOADING);
+	}
+	
+	@Override
+	public void onListItemClick(ListView parent, View view, int position, long id) {
+		Video video = (Video) parent.getItemAtPosition(position);
+		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(video.url)));
 	}
 	
 	private void setupControls() {

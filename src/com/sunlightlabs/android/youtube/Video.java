@@ -15,6 +15,7 @@ public class Video {
 		
 		// e.g. <link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=LnLnClV9ygY&amp;feature=youtube_gdata'/>
 		this.url = parseValue("<link rel=[\'\"]alternate[\'\"] type=[\'\"]text/html[\'\"] href=[\'\"](.*?)[\'\"]\\s?/>", xml);
+		this.url = this.url.replace("&amp;", "&");
 		
 		// e.g. <media:thumbnail url='http://i.ytimg.com/vi/LnLnClV9ygY/1.jpg' height='90'
 		this.thumbnailUrl = parseValue("<media:thumbnail url=[\'\"](.*?)[\'\"] height", xml);
