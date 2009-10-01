@@ -47,7 +47,7 @@ public class Twitter {
 	
 	public String fetchJSON(String url) throws TwitterException {
 		HttpGet request = new HttpGet(url);
-        //request.addHeader("User-Agent", "Sunlight's Congress Android App (http://github.com/sunlightlabs/congress");
+        request.addHeader("User-Agent", "Sunlight's Congress Android App (http://github.com/sunlightlabs/congress");
 		
         DefaultHttpClient client = new DefaultHttpClient();
         
