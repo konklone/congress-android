@@ -51,7 +51,7 @@ public class NewsService {
 		String queryString = queryString(query);
 		String url = BASE_URL + "?" + queryString;
 		HttpGet request = new HttpGet(url);
-        //request.addHeader("User-Agent", "Sunlight's Congress Android App (http://github.com/sunlightlabs/congress");
+        request.addHeader("User-Agent", "Sunlight's Congress Android App (http://github.com/sunlightlabs/congress");
 		
         DefaultHttpClient client = new DefaultHttpClient();
         
