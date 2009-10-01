@@ -128,7 +128,7 @@ private static final int LOADING = 0;
 			text.setText(video.title);
 			
 			TextView description = (TextView) view.findViewById(R.id.video_description);
-			text.setText(video.description);
+			description.setText(video.description);
 			
 			TextView when = (TextView) view.findViewById(R.id.video_when);
 			when.setText(video.timestamp.format("%b %d"));
