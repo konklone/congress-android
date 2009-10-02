@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<EditTextPreference
+		android:key="twitter_username" 
+		android:title="Twitter Username" 
+		android:summary="Used for replying to legislators' tweets." 
+		android:inputType="text"
+		/>
+	
+	<EditTextPreference
+		android:key="twitter_password" 
+		android:title="Twitter Password" 
+		android:summary="Used for replying to legislators' tweets." 
+		android:inputType="text"
+		android:password="true"
+		/>
+
+</PreferenceScreen>

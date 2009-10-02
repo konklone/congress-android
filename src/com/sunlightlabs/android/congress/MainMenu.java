@@ -6,10 +6,14 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 public class MainMenu extends Activity {
+	private static final int MENU_PREFS = 0;
+	
 	public static final int RESULT_ZIP = 1;
 	public static final int RESULT_LASTNAME = 2;
 	public static final int RESULT_STATE = 3;
@@ -176,4 +180,20 @@ public class MainMenu extends Activity {
 			break;
 		}
 	}
+	
+	@Override 
+    public boolean onCreateOptionsMenu(Menu menu) { 
+	    super.onCreateOptionsMenu(menu); 
+	    getMenuInflater().inflate(R.menu.main, menu);
+	    return true;
+    }
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch(item.getItemId()) { 
+    	case R.id.settings: 
+    		startActivity(new Intent(this, Preferences.class));  
+    	}
+    	return true;
+    }
 }
