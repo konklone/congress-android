@@ -38,6 +38,9 @@
         <activity android:name=".LegislatorYouTube" />
         
         <activity android:name=".Preferences" />
+        <activity android:name=".TwitterReply" 
+        	android:theme="@android:style/Theme.Dialog" 
+        	/>
         
         <activity android:name=".GetText"
         	android:theme="@android:style/Theme.Dialog" 

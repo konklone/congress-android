@@ -20,16 +20,27 @@ public class Twitter {
 	public int page, count;
 	public String type;
 	
+	public String username, password;
+	
 	
 	public Twitter() {
 		this.page = 1;
 		this.count = 20;
 		this.type = "json";
+		this.username = null;
+		this.password = null;
 	}
 	
+	public Twitter(String username, String password) {
+		this.page = 1;
+		this.count = 20;
+		this.type = "json";
+		this.username = username;
+		this.password = password;
+	}
 	
-	public Status[] getUserTimeline(String username) throws TwitterException {
-		String rawJSON = fetchJSON(userTimelineUrl(username));
+	public Status[] getUserTimeline(String userId) throws TwitterException {
+		String rawJSON = fetchJSON(userTimelineUrl(userId));
 		Status[] tweets;
 		try {
 			
@@ -43,6 +54,17 @@ public class Twitter {
 		}
 		
 		return tweets;
+	}
+	
+	/** 
+	 * Updates one's Twitter account.
+	 */
+	public boolean update(String message) {
+		// final sanity check before we make a network request
+		if (this.username == null || this.password == null)
+			return false;
+		
+		return true;
 	}
 	
 	public String fetchJSON(String url) throws TwitterException {
@@ -66,8 +88,12 @@ public class Twitter {
 	    }
 	}
 	
-	private String userTimelineUrl(String username) {
-		return url("/statuses/user_timeline/" + username);
+	private String userTimelineUrl(String userId) {
+		return url("/statuses/user_timeline/" + userId);
+	}
+	
+	private String updateUrl() {
+		return BASE_URL + "/statuses/update." + type;
 	}
 	
 	private String url(String path) {

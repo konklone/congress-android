@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +71,12 @@ public class LegislatorTwitter extends ListActivity {
 	    loadingThread.start();
 	    
 		showDialog(LOADING);
+	}
+	
+	public void onListItemClick(ListView parent, View v, int position, long id) {
+		Status tweet = (Status) parent.getItemAtPosition(position);
+		Intent intent = new Intent(this, TwitterReply.class);
+		startActivity(intent);
 	}
 	
 	private void setupControls() {
