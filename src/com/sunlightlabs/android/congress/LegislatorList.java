@@ -93,13 +93,11 @@ public class LegislatorList extends ListActivity {
     	Intent legislatorIntent = legislatorIntent(legislatorId);
     	
     	if (shortcut) {
-    		String name = legislator.getProperty("title") + ". " + legislator.getProperty("lastname");
-    		
     		BitmapDrawable drawable = LegislatorProfile.getImage(LegislatorProfile.PIC_SMALL, legislatorId);
     		
     		Intent intent = new Intent();
     		intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, legislatorIntent);
-    		intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
+    		intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, legislator.getProperty("lastname"));
     		intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, drawable.getBitmap());
     		
     		setResult(RESULT_OK, intent);
