@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
+    android:layout_width="250sp"
     android:layout_height="fill_parent"
     android:padding="10sp"
     >
     
+    <TextView android:id="@+id/twitter_says"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:textSize="12sp"
+    	android:textColor="@android:color/white"
+    	android:text="somebody says:"
+    	/>
+    	
+    <TextView android:id="@+id/twitter_original"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_marginTop="5sp"
+    	android:layout_marginBottom="10sp"
+    	
+    	android:textSize="14sp"
+    	android:textColor="@android:color/white"
+    	android:text="This is the original tweet, and could be quite long, or sad, or even Mexican.  Anything can go here."
+    	/>
+    
     <EditText android:id="@+id/twitter_message"
-    	android:layout_width="210sp"
+    	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
     	android:gravity="top"
-    	android:hint="Enter a reply"
     	android:lines="3"
-    	android:layout_marginTop="10sp"
     	android:layout_marginBottom="5sp"
     	/>
     
@@ -26,7 +43,7 @@
     		android:layout_width="100sp"
     		android:layout_height="wrap_content"
     		android:text="Reply"
-    		android:textSize="18sp"
+    		android:textSize="14sp"
     		android:layout_marginRight="5sp"
     		/>
     	

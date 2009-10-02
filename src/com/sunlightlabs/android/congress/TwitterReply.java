@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sunlightlabs.android.twitter.Twitter;
@@ -16,6 +17,7 @@ public class TwitterReply extends Activity {
 	private static final int RESULT_PREFS = 0;
 
 	private String username, password;
+	private String tweet_text, tweet_username;
 	private EditText message;
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -25,12 +27,24 @@ public class TwitterReply extends Activity {
         
         username = Preferences.getString(this, "twitter_username");
         password = Preferences.getString(this, "twitter_password");
+        
+        Bundle extras = getIntent().getExtras();
+        tweet_text = extras.getString("tweet_text");
+        tweet_username = extras.getString("tweet_username");
      
         setupControls();
 	}
 	
 	public void setupControls() {
+		TextView ask = (TextView) findViewById(R.id.twitter_says);
+		ask.setText("@" + tweet_username + " says:");
+		
+		TextView original = (TextView) findViewById(R.id.twitter_original);
+		original.setText(tweet_text);
+		
 		message = (EditText) findViewById(R.id.twitter_message);
+		message.setText("@" + tweet_username + " ");
+		
 		Button reply = (Button) findViewById(R.id.twitter_ok);
 		reply.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
