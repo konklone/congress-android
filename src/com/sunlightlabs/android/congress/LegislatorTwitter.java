@@ -76,6 +76,8 @@ public class LegislatorTwitter extends ListActivity {
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		Status tweet = (Status) parent.getItemAtPosition(position);
 		Intent intent = new Intent(this, TwitterReply.class);
+		intent.putExtra("tweet_text", tweet.text);
+		intent.putExtra("tweet_username", tweet.username);
 		startActivity(intent);
 	}
 	

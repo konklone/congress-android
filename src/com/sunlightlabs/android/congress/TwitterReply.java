@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.sunlightlabs.android.twitter.Twitter;
+import com.sunlightlabs.android.twitter.TwitterException;
 
 public class TwitterReply extends Activity {
 	private static final int RESULT_PREFS = 0;
@@ -50,11 +51,15 @@ public class TwitterReply extends Activity {
 	// it just verifies that if we didn't have them, we brought them to the preference screen once.
 	public void onHaveCredentials() {
 		Twitter twitter = new Twitter(username, password);
-		if (twitter.update(message.getText().toString())) {
-			alert("Your Twitter status has been updated.");
-			finish();
-		} else
-			alert("Could not update your Twitter status. Please verify your credentials in the Settings screen.");
+		try {
+			if (twitter.update(message.getText().toString())) {
+				alert("Your Twitter status has been updated.");
+				finish();
+			} else
+				alert("Could not update your Twitter status. Please verify your credentials in the Settings screen.");
+		} catch(TwitterException e) {
+			alert("Could not connect to Twitter. Please try again later.");
+		}
 	}
 	
 	public void verifyHaveCredentials() {
