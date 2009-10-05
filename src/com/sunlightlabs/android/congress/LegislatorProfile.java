@@ -74,8 +74,11 @@ public class LegislatorProfile extends Activity {
 		TextView partyView = (TextView) this.findViewById(R.id.profile_party); 
 		partyView.setText(partyName(party));
 		
-		TextView stateView = (TextView) this.findViewById(R.id.profile_state); 
+		TextView stateView = (TextView) this.findViewById(R.id.profile_state);
+		String stateName = stateName(state);
 		stateView.setText(stateName(state));
+		if (stateName.equals("District of Columbia"))
+			stateView.setTextSize(18);
 		
 		TextView domainView = (TextView) this.findViewById(R.id.profile_domain); 
 		domainView.setText(domainName(domain));
