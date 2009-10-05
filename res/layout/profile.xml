@@ -153,29 +153,6 @@
 	 			android:text="klobuchar.senate.gov"
 	  			/>
   		</LinearLayout>
-  		
-<!--  		<LinearLayout-->
-<!-- 			android:id="@+id/profile_youtube_row"-->
-<!-- 			android:layout_width="fill_parent"-->
-<!-- 			android:layout_height="wrap_content"-->
-<!-- 			android:orientation="horizontal"-->
-<!-- 			>-->
-<!-- 		-->
-<!-- 			<ImageView-->
-<!-- 				android:id="@+id/profile_youtube_icon"-->
-<!-- 				android:layout_width="wrap_content"-->
-<!-- 				android:layout_height="wrap_content"-->
-<!-- 				/>-->
-<!--		  	<TextView -->
-<!--		  		android:id="@+id/profile_youtube"-->
-<!--		  		android:layout_width="wrap_content"-->
-<!--		 		android:layout_height="wrap_content"-->
-<!--		 		android:autoLink="web"-->
-<!--		 		android:textSize="18sp"-->
-<!--		 		android:text="http://youtube.com/stringofletters"-->
-<!--		  		/>-->
-<!--		  		-->
-<!--		</LinearLayout>-->
 	  	
 	</LinearLayout>
 	
