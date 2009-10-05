@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.ClipboardManager;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ import com.sunlightlabs.android.youtube.YouTubeException;
 public class LegislatorYouTube extends ListActivity {
 	private static final int LOADING = 0;
 	private static final int MENU_WATCH = 0;
+	private static final int MENU_COPY = 1;
 	
 	private String username;
 	private Video[] videos;
@@ -91,16 +93,21 @@ public class LegislatorYouTube extends ListActivity {
 	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, view, menuInfo);
 		menu.add(0, MENU_WATCH, 0, "Watch");
+		menu.add(0, MENU_COPY, 1, "Copy link");
 	}
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		Video video = (Video) getListView().getItemAtPosition(info.position);
+		
 		switch (item.getItemId()) {
 		case MENU_WATCH:
-			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-			Video video = (Video) getListView().getItemAtPosition(info.position);
 			launchVideo(video);
 			return true;
+		case MENU_COPY:
+			ClipboardManager cm = (ClipboardManager) getSystemService(Activity.CLIPBOARD_SERVICE);
+			cm.setText(video.url);
 		}
 		
 		return super.onContextItemSelected(item);
