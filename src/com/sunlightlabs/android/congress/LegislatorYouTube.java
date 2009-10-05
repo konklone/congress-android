@@ -9,24 +9,29 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import com.sunlightlabs.android.twitter.Status;
 import com.sunlightlabs.android.yahoo.news.NewsItem;
 import com.sunlightlabs.android.youtube.Video;
 import com.sunlightlabs.android.youtube.YouTube;
 import com.sunlightlabs.android.youtube.YouTubeException;
 
 public class LegislatorYouTube extends ListActivity {
-
-private static final int LOADING = 0;
+	private static final int LOADING = 0;
+	private static final int MENU_WATCH = 0;
 	
 	private String username;
 	private Video[] videos;
@@ -79,6 +84,29 @@ private static final int LOADING = 0;
 	@Override
 	public void onListItemClick(ListView parent, View view, int position, long id) {
 		Video video = (Video) parent.getItemAtPosition(position);
+		launchVideo(video);
+	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, view, menuInfo);
+		menu.add(0, MENU_WATCH, 0, "Watch");
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_WATCH:
+			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+			Video video = (Video) getListView().getItemAtPosition(info.position);
+			launchVideo(video);
+			return true;
+		}
+		
+		return super.onContextItemSelected(item);
+	}
+	
+	private void launchVideo(Video video) {
 		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(video.url)));
 	}
 	
@@ -89,6 +117,7 @@ private static final int LOADING = 0;
 				loadVideos();
 			}
 		});
+    	registerForContextMenu(getListView());
 	}
     
     protected Dialog onCreateDialog(int id) {
