@@ -215,7 +215,7 @@ public class LegislatorProfile extends Activity {
 	}
 	
 	private String websiteName(String url) {
-		return url.replace("http://", "").replace("/", "");
+		return url.replace("http://", "").replaceAll("/$", "");
 	}
 	
 	private String partyName(String code) {
