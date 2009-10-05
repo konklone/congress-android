@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.ClipboardManager;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,11 +27,11 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import com.sunlightlabs.android.yahoo.news.NewsException;
 import com.sunlightlabs.android.yahoo.news.NewsItem;
 import com.sunlightlabs.android.yahoo.news.NewsService;
-import com.sunlightlabs.android.youtube.Video;
 
 public class LegislatorNews extends ListActivity {
 	private static final int LOADING = 0;
 	private static final int MENU_VIEW = 0;
+	private static final int MENU_COPY = 1;
 	
 	private String searchName;
 	private NewsItem[] items;
@@ -75,16 +76,21 @@ public class LegislatorNews extends ListActivity {
 	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, view, menuInfo);
 		menu.add(0, MENU_VIEW, 0, "View");
+		menu.add(0, MENU_COPY, 1, "Copy link");
 	}
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		NewsItem newsItem = (NewsItem) getListView().getItemAtPosition(info.position);
+		
 		switch (item.getItemId()) {
 		case MENU_VIEW:
-			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-			NewsItem newsItem = (NewsItem) getListView().getItemAtPosition(info.position);
 			launchNews(newsItem);
 			return true;
+		case MENU_COPY:
+			ClipboardManager cm = (ClipboardManager) getSystemService(Activity.CLIPBOARD_SERVICE);
+			cm.setText(newsItem.clickURL);
 		}
 		
 		return super.onContextItemSelected(item);
