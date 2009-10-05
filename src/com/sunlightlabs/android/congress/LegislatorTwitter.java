@@ -9,15 +9,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.Time;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.sunlightlabs.android.twitter.Status;
 import com.sunlightlabs.android.twitter.Twitter;
@@ -25,6 +29,8 @@ import com.sunlightlabs.android.twitter.TwitterException;
 
 public class LegislatorTwitter extends ListActivity {
 	private static final int LOADING = 0;
+	
+	private static final int MENU_REPLY = 0;
 	
 	private String username;
 	private Status[] tweets;
@@ -76,6 +82,29 @@ public class LegislatorTwitter extends ListActivity {
 	
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		Status tweet = (Status) parent.getItemAtPosition(position);
+		launchReplyForTweet(tweet);
+	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, view, menuInfo);
+		menu.add(0, MENU_REPLY, 0, "Reply");
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_REPLY:
+			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+			Status tweet = (Status) getListView().getItemAtPosition(info.position);
+			launchReplyForTweet(tweet);
+			return true;
+		}
+		
+		return super.onContextItemSelected(item);
+	}
+	
+	private void launchReplyForTweet(Status tweet) {
 		Intent intent = new Intent(this, TwitterReply.class);
 		intent.putExtra("tweet_text", tweet.text);
 		intent.putExtra("tweet_username", tweet.username);
@@ -89,6 +118,7 @@ public class LegislatorTwitter extends ListActivity {
 				loadTweets();
 			}
 		});
+    	registerForContextMenu(getListView());
 	}
     
     protected Dialog onCreateDialog(int id) {
