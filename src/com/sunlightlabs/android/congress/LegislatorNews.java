@@ -9,22 +9,28 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.sunlightlabs.android.yahoo.news.NewsException;
 import com.sunlightlabs.android.yahoo.news.NewsItem;
 import com.sunlightlabs.android.yahoo.news.NewsService;
+import com.sunlightlabs.android.youtube.Video;
 
 public class LegislatorNews extends ListActivity {
 	private static final int LOADING = 0;
+	private static final int MENU_VIEW = 0;
 	
 	private String searchName;
 	private NewsItem[] items;
@@ -62,6 +68,29 @@ public class LegislatorNews extends ListActivity {
     @Override
 	public void onListItemClick(ListView parent, View view, int position, long id) {
 		NewsItem item = (NewsItem) parent.getItemAtPosition(position);
+		launchNews(item);
+	}
+    
+    @Override
+	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, view, menuInfo);
+		menu.add(0, MENU_VIEW, 0, "View");
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_VIEW:
+			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+			NewsItem newsItem = (NewsItem) getListView().getItemAtPosition(info.position);
+			launchNews(newsItem);
+			return true;
+		}
+		
+		return super.onContextItemSelected(item);
+	}
+	
+	private void launchNews(NewsItem item) {
 		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.clickURL)));
 	}
     
@@ -72,6 +101,7 @@ public class LegislatorNews extends ListActivity {
 				loadNews();
 			}
 		});
+    	registerForContextMenu(getListView());
     }
 	
 	protected void loadNews() {
