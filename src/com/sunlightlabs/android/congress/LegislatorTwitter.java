@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,8 +161,13 @@ public class LegislatorTwitter extends ListActivity {
 				return (diff / 3600000) + " hours ago";
 			else if (diff < 90000000) // 25 hours
 				return "a day ago";
-			else
+			else if (diff < 1123200000) // 13 days
 				return (diff / 86400000) + " days ago";
+			else {
+				Time old = new Time();
+				old.set(olderTime);
+				return old.format("%b %d");
+			}
 		}
 
     }
