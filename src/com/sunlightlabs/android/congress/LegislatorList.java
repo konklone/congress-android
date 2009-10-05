@@ -93,6 +93,10 @@ public class LegislatorList extends ListActivity {
     	Intent legislatorIntent = legislatorIntent(legislatorId);
     	
     	if (shortcut) {
+    		// Make sure that shortcuts always open the desired profile, 
+    		// instead of bringing someone else's profile to the front who was just open
+    		legislatorIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+    		
     		BitmapDrawable drawable = LegislatorProfile.getImage(LegislatorProfile.PIC_SMALL, legislatorId);
     		
     		Intent intent = new Intent();
