@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.ClipboardManager;
 import android.text.format.Time;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ public class LegislatorTwitter extends ListActivity {
 	private static final int LOADING = 0;
 	
 	private static final int MENU_REPLY = 0;
+	private static final int MENU_COPY = 1;
 	
 	private String username;
 	private Status[] tweets;
@@ -89,16 +91,21 @@ public class LegislatorTwitter extends ListActivity {
 	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, view, menuInfo);
 		menu.add(0, MENU_REPLY, 0, "Reply");
+		menu.add(0, MENU_COPY, 1, "Copy tweet text");
 	}
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		Status tweet = (Status) getListView().getItemAtPosition(info.position);
+		
 		switch (item.getItemId()) {
 		case MENU_REPLY:
-			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-			Status tweet = (Status) getListView().getItemAtPosition(info.position);
 			launchReplyForTweet(tweet);
 			return true;
+		case MENU_COPY:
+			ClipboardManager cm = (ClipboardManager) getSystemService(Activity.CLIPBOARD_SERVICE);
+			cm.setText(tweet.text);
 		}
 		
 		return super.onContextItemSelected(item);
