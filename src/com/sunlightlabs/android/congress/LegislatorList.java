@@ -74,7 +74,7 @@ public class LegislatorList extends ListActivity {
         		back.setVisibility(View.VISIBLE);
         	}
         	
-        	dismissDialog(LOADING);
+        	removeDialog(LOADING);
         }
     };
     
