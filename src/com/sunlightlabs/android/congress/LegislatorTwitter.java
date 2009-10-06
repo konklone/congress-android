@@ -165,7 +165,7 @@ public class LegislatorTwitter extends ListActivity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LinearLayout view;
 			if (convertView == null) {
-				view = (LinearLayout) inflater.inflate(R.layout.tweet, null);
+				view = (LinearLayout) inflater.inflate(R.layout.tweet, null); 
 			} else {
 				view = (LinearLayout) convertView;
 			}

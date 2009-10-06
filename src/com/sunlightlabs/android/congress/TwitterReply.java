@@ -40,10 +40,7 @@ public class TwitterReply extends Activity {
         setupControls();
 	}
 	
-	public void setupControls() {
-		TextView ask = (TextView) findViewById(R.id.twitter_says);
-		ask.setText("@" + tweet_username + " says:");
-		
+	public void setupControls() {		
 		TextView original = (TextView) findViewById(R.id.twitter_original);
 		original.setText(tweet_text);
 		

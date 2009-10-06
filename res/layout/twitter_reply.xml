@@ -1,60 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="250sp"
-    android:layout_height="fill_parent"
-    android:padding="10sp"
-    >
-    
-    <TextView android:id="@+id/twitter_says"
-    	android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
-    	android:textSize="12sp"
-    	android:textColor="@android:color/white"
-    	android:text="somebody says:"
-    	/>
-    	
-    <TextView android:id="@+id/twitter_original"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:layout_marginTop="5sp"
-    	android:layout_marginBottom="10sp"
-    	
-    	android:textSize="14sp"
-    	android:textColor="@android:color/white"
-    	android:text="This is the original tweet, and could be quite long, or sad, or even Mexican.  Anything can go here."
-    	/>
-    
-    <EditText android:id="@+id/twitter_message"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:gravity="top"
-    	android:lines="3"
-    	android:layout_marginBottom="5sp"
-    	/>
-    
-    <LinearLayout
-    	android:orientation="horizontal"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	>
-    	
-    	<Button android:id="@+id/twitter_ok"
-    		android:layout_width="100sp"
-    		android:layout_height="wrap_content"
-    		android:text="Reply"
-    		android:textSize="14sp"
-    		android:layout_marginRight="5sp"
-    		/>
-    	
-    	<Button android:id="@+id/twitter_cancel"
-    		android:layout_width="100sp"
-    		android:layout_height="wrap_content"
-    		android:text="Cancel"
-    		android:textSize="18sp"
-    		android:layout_marginLeft="5sp"
-    		/>
-    		
-    </LinearLayout>
-    	
-</LinearLayout>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="250sp"
+	android:layout_height="fill_parent"
+	
+	android:fillViewport="true"
+	>
+	<LinearLayout 
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:padding="10sp"
+	    >
+	    	
+	    <TextView android:id="@+id/twitter_original"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:layout_marginTop="5sp"
+	    	android:layout_marginBottom="10sp"
+	    	
+	    	android:autoLink="web"
+	    	
+	    	android:textSize="16sp"
+	    	android:textColor="@android:color/white"
+	    	android:text="This is the original tweet from http://twitter.com, and could be quite long, or sad, or even Mexican.  Anything can go here."
+	    	/>
+	    
+	    <EditText android:id="@+id/twitter_message"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:gravity="top"
+	    	android:lines="3"
+	    	android:layout_marginBottom="5sp"
+	    	/>
+	    
+	    <LinearLayout
+	    	android:orientation="horizontal"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	>
+	    	
+	    	<Button android:id="@+id/twitter_ok"
+	    		android:layout_width="100sp"
+	    		android:layout_height="wrap_content"
+	    		android:text="Reply"
+	    		android:textSize="14sp"
+	    		android:layout_marginRight="5sp"
+	    		/>
+	    	
+	    	<Button android:id="@+id/twitter_cancel"
+	    		android:layout_width="100sp"
+	    		android:layout_height="wrap_content"
+	    		android:text="Cancel"
+	    		android:textSize="18sp"
+	    		android:layout_marginLeft="5sp"
+	    		/>
+	    		
+	    </LinearLayout>
+	    	
+	</LinearLayout>
+</ScrollView>

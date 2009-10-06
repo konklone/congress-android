@@ -15,7 +15,6 @@
 		
 		android:textSize="18sp"
 		android:textColor="@android:color/white"
-		android:autoLink="web"
 		
 		android:text="This tweet could be as long as 140 characters, which is longer than you may think. And it might start with an @reply."
 		/>
