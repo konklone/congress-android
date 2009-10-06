@@ -57,7 +57,6 @@ public class Twitter {
 		String rawJSON = fetchJSON(userTimelineUrl(userId));
 		Status[] tweets;
 		try {
-			
 			JSONArray rawTweets = new JSONArray(rawJSON);
 			tweets = new Status[rawTweets.length()];
 			for (int i = 0; i<rawTweets.length(); i++)
