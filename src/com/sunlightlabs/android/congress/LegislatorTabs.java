@@ -38,7 +38,7 @@ public class LegislatorTabs extends TabActivity {
 		public void run() {
 			setupTabs();
 			
-			dismissDialog(LOADING);
+			removeDialog(LOADING);
 		}
 	};
 	
