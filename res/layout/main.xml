@@ -1,76 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-    
-    <TextView
-    	android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
-    	android:layout_gravity="center"
-    	
-    	android:layout_marginTop="5sp"
-    	android:layout_marginBottom="10sp"
-    	
-    	android:textSize="30sp"
-    	android:textColor="@android:color/white"
-    	android:text="@string/main_title" 
-    	/>
-    
-    <Button android:id="@+id/fetch_location"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:fillViewport="true"
+	>
+
+	<LinearLayout
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    >
+	    
+	    <TextView
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:layout_gravity="center"
+	    	
+	    	android:layout_marginTop="5sp"
+	    	android:layout_marginBottom="10sp"
+	    	
+	    	android:textSize="30sp"
+	    	android:textColor="@android:color/white"
+	    	android:text="@string/main_title" 
+	    	/>
+	    
+	    <Button android:id="@+id/fetch_location"
+			
+			android:layout_width="fill_parent"
+			android:layout_height="80sp"
+			
+			android:layout_marginLeft="10sp"
+			android:layout_marginRight="10sp"
+			android:layout_marginTop="5sp"
+			android:layout_marginBottom="5sp"
+			
+			android:textSize="26sp"
+			android:text="My Location"
+			/>
 		
-		android:layout_width="fill_parent"
-		android:layout_height="80sp"
-		
-		android:layout_marginLeft="10sp"
-		android:layout_marginRight="10sp"
-		android:layout_marginTop="5sp"
-		android:layout_marginBottom="5sp"
-		
-		android:textSize="26sp"
-		android:text="My Location"
-		/>
-	
-	<Button android:id="@+id/fetch_state"
-		
-		android:layout_width="fill_parent"
-		android:layout_height="80sp"
-		
-		android:layout_marginLeft="10sp"
-		android:layout_marginRight="10sp"
-		android:layout_marginTop="5sp"
-		android:layout_marginBottom="5sp"
-		
-		android:textSize="26sp"
-		android:text="State"
-		/>
-    
-	<Button android:id="@+id/fetch_zip"
-		android:layout_width="fill_parent"
-		android:layout_height="80sp"
-		
-		android:layout_marginLeft="10sp"
-		android:layout_marginRight="10sp"
-		android:layout_marginTop="5sp"
-		android:layout_marginBottom="5sp"
-		
-		android:textSize="26sp"
-		android:text="Zip Code"
-		/>
-		
-	<Button android:id="@+id/fetch_last_name"
-		
-		android:layout_width="fill_parent"
-		android:layout_height="80sp"
-		
-		android:layout_marginLeft="10sp"
-		android:layout_marginRight="10sp"
-		android:layout_marginTop="5sp"
-		android:layout_marginBottom="5sp"
-		
-		android:textSize="26sp"
-		android:text="Last Name"
-		/>
-					
-</LinearLayout>
+		<Button android:id="@+id/fetch_state"
+			
+			android:layout_width="fill_parent"
+			android:layout_height="80sp"
+			
+			android:layout_marginLeft="10sp"
+			android:layout_marginRight="10sp"
+			android:layout_marginTop="5sp"
+			android:layout_marginBottom="5sp"
+			
+			android:textSize="26sp"
+			android:text="State"
+			/>
+	    
+		<Button android:id="@+id/fetch_zip"
+			android:layout_width="fill_parent"
+			android:layout_height="80sp"
+			
+			android:layout_marginLeft="10sp"
+			android:layout_marginRight="10sp"
+			android:layout_marginTop="5sp"
+			android:layout_marginBottom="5sp"
+			
+			android:textSize="26sp"
+			android:text="Zip Code"
+			/>
+			
+		<Button android:id="@+id/fetch_last_name"
+			
+			android:layout_width="fill_parent"
+			android:layout_height="80sp"
+			
+			android:layout_marginLeft="10sp"
+			android:layout_marginRight="10sp"
+			android:layout_marginTop="5sp"
+			android:layout_marginBottom="5sp"
+			
+			android:textSize="26sp"
+			android:text="Last Name"
+			/>
+						
+	</LinearLayout>
+</ScrollView>

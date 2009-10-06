@@ -1,159 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/profile_tab"
-	android:orientation="vertical"
+
 	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"	
+	android:layout_height="fill_parent"
+	android:fillViewport="true"
 	>
 	
-	<TextView android:id="@+id/profile_name"
-	
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center"
-		android:layout_marginTop="10sp"
-		android:layout_marginBottom="15sp"
-		
-		android:textSize="26sp"
-		android:textColor="@android:color/white"
-		
-		android:text="Sen. Amyzina Klobuchar"
-		/>
-	
-	<LinearLayout android:id="@+id/profile_top"
-		android:orientation="horizontal"
-		
+	<LinearLayout
+		android:orientation="vertical"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginLeft="12sp"
+		android:layout_height="fill_parent"	
 		>
-
-	  	<ImageView android:id="@+id/profile_picture"
-	  	
-	  		android:layout_width="100px"
-	  		android:layout_height="125px"
-	  		android:layout_marginRight="15sp"
-	  		android:layout_marginBottom="10sp"
-	  		
-	  		android:src="@drawable/no_photo"
-	  		/>
-	  	
-	  	<LinearLayout android:id="@+id/profile_basic"
-	  		android:orientation="vertical"
-	  		
-	  		android:layout_height="fill_parent"
-	  		android:layout_width="fill_parent"
-	  		
-	  		android:paddingTop="10sp"
-	  		android:paddingRight="20sp"
-	  		>
-  		
-	  		<TextView android:id="@+id/profile_party"
-	  		
-		  		android:layout_width="wrap_content"
-	  			android:layout_height="wrap_content"
-	  			android:layout_marginBottom="7sp"
-	  			android:layout_gravity="center"
-	  			
-	  			android:textSize="22sp"
-	  			
-	  			android:text="Democrat"
-	  			
-		  		/>
-		  	<TextView android:id="@+id/profile_state"
+	
+		<TextView android:id="@+id/profile_name"
+		
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginTop="10sp"
+			android:layout_marginBottom="15sp"
+			
+			android:textSize="26sp"
+			android:textColor="@android:color/white"
+			
+			android:text="Sen. Amyzina Klobuchar"
+			/>
+		
+		<LinearLayout android:id="@+id/profile_top"
+			android:orientation="horizontal"
+			
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="12sp"
+			>
+	
+		  	<ImageView android:id="@+id/profile_picture"
+		  	
+		  		android:layout_width="100px"
+		  		android:layout_height="125px"
+		  		android:layout_marginRight="15sp"
+		  		android:layout_marginBottom="10sp"
 		  		
-		  		android:layout_width="wrap_content"
-		  		android:layout_height="wrap_content"
-		  		android:layout_marginBottom="7sp"
-		  		android:layout_gravity="center"
-		  		
-		  		android:textSize="22sp"
-		  		
-		  		android:text="Minnesota"
+		  		android:src="@drawable/no_photo"
 		  		/>
 		  	
-		  	<TextView android:id="@+id/profile_domain"
+		  	<LinearLayout android:id="@+id/profile_basic"
+		  		android:orientation="vertical"
 		  		
-		  		android:layout_width="wrap_content"
-	  			android:layout_height="wrap_content"
-	  			android:layout_gravity="center"
-	  			
-	  			android:textSize="22sp"
-	  			
-	  			android:text="Senior Senator"
-		  		/>
-  		
-  		</LinearLayout>
-  	
- 	</LinearLayout>
- 	
- 	<LinearLayout android:id="@+id/profile_bottom"
- 		android:orientation="vertical"
- 		
- 		android:layout_width="fill_parent"
- 		android:layout_height="wrap_content"
- 		android:layout_marginTop="30sp"
- 		
- 		android:layout_marginLeft="8sp"
- 		>
- 		
- 		<LinearLayout android:id="@+id/profile_phone_row"
- 			android:orientation="horizontal"
- 			
- 			android:layout_width="fill_parent"
- 			android:layout_height="wrap_content"
- 			android:layout_marginBottom="10sp"
- 			>
- 		
- 			<ImageView android:id="@+id/profile_phone_icon"
- 				android:src="@android:drawable/ic_menu_call"
- 			
- 				android:layout_width="48sp"
- 				android:layout_height="48sp"
- 				android:layout_marginRight="10sp"
- 				/>
- 			
-	 		<TextView 
-	  			android:id="@+id/profile_phone"
-	  			android:layout_width="wrap_content"
-	 			android:layout_height="wrap_content"
-	 			android:layout_marginTop="3sp"
-	 			 
-	  			android:textSize="30sp"
-	  			android:textColor="@android:color/white"
-	  			
-	  			android:text="555-555-1212"
-	  			/>
-  		</LinearLayout>
- 		
- 		<LinearLayout android:id="@+id/profile_website_row"
- 			android:orientation="horizontal"
- 			
- 			android:layout_width="fill_parent"
- 			android:layout_height="wrap_content"
- 			>
- 		
- 			<ImageView android:id="@+id/profile_website_icon"
- 				android:src="@android:drawable/ic_menu_mapmode"
- 				
- 				android:layout_width="48sp"
- 				android:layout_height="48sp"
- 				android:layout_marginRight="10sp"
- 				/>
- 				
- 			<TextView android:id="@+id/profile_website"
- 			
-	  			android:layout_width="wrap_content"
-	 			android:layout_height="wrap_content"
-	 			android:layout_marginTop="7sp"
-	 			
-	 			android:textSize="22sp"
-	 			android:textColor="@android:color/white"
-	 			
-	 			android:text="klobuchar.senate.gov"
-	  			/>
-  		</LinearLayout>
+		  		android:layout_height="fill_parent"
+		  		android:layout_width="fill_parent"
+		  		
+		  		android:paddingTop="10sp"
+		  		android:paddingRight="20sp"
+		  		>
+	  		
+		  		<TextView android:id="@+id/profile_party"
+		  		
+			  		android:layout_width="wrap_content"
+		  			android:layout_height="wrap_content"
+		  			android:layout_marginBottom="7sp"
+		  			android:layout_gravity="center"
+		  			
+		  			android:textSize="22sp"
+		  			
+		  			android:text="Democrat"
+		  			
+			  		/>
+			  	<TextView android:id="@+id/profile_state"
+			  		
+			  		android:layout_width="wrap_content"
+			  		android:layout_height="wrap_content"
+			  		android:layout_marginBottom="7sp"
+			  		android:layout_gravity="center"
+			  		
+			  		android:textSize="22sp"
+			  		
+			  		android:text="Minnesota"
+			  		/>
+			  	
+			  	<TextView android:id="@+id/profile_domain"
+			  		
+			  		android:layout_width="wrap_content"
+		  			android:layout_height="wrap_content"
+		  			android:layout_gravity="center"
+		  			
+		  			android:textSize="22sp"
+		  			
+		  			android:text="Senior Senator"
+			  		/>
+	  		
+	  		</LinearLayout>
 	  	
+	 	</LinearLayout>
+	 	
+	 	<LinearLayout android:id="@+id/profile_bottom"
+	 		android:orientation="vertical"
+	 		
+	 		android:layout_width="fill_parent"
+	 		android:layout_height="wrap_content"
+	 		android:layout_marginTop="30sp"
+	 		
+	 		android:layout_marginLeft="8sp"
+	 		>
+	 		
+	 		<LinearLayout android:id="@+id/profile_phone_row"
+	 			android:orientation="horizontal"
+	 			
+	 			android:layout_width="fill_parent"
+	 			android:layout_height="wrap_content"
+	 			android:layout_marginBottom="10sp"
+	 			>
+	 		
+	 			<ImageView android:id="@+id/profile_phone_icon"
+	 				android:src="@android:drawable/ic_menu_call"
+	 			
+	 				android:layout_width="48sp"
+	 				android:layout_height="48sp"
+	 				android:layout_marginRight="10sp"
+	 				/>
+	 			
+		 		<TextView 
+		  			android:id="@+id/profile_phone"
+		  			android:layout_width="wrap_content"
+		 			android:layout_height="wrap_content"
+		 			android:layout_marginTop="3sp"
+		 			 
+		  			android:textSize="30sp"
+		  			android:textColor="@android:color/white"
+		  			
+		  			android:text="555-555-1212"
+		  			/>
+	  		</LinearLayout>
+	 		
+	 		<LinearLayout android:id="@+id/profile_website_row"
+	 			android:orientation="horizontal"
+	 			
+	 			android:layout_width="fill_parent"
+	 			android:layout_height="wrap_content"
+	 			>
+	 		
+	 			<ImageView android:id="@+id/profile_website_icon"
+	 				android:src="@android:drawable/ic_menu_mapmode"
+	 				
+	 				android:layout_width="48sp"
+	 				android:layout_height="48sp"
+	 				android:layout_marginRight="10sp"
+	 				/>
+	 				
+	 			<TextView android:id="@+id/profile_website"
+	 			
+		  			android:layout_width="wrap_content"
+		 			android:layout_height="wrap_content"
+		 			android:layout_marginTop="7sp"
+		 			
+		 			android:textSize="22sp"
+		 			android:textColor="@android:color/white"
+		 			
+		 			android:text="klobuchar.senate.gov"
+		  			/>
+	  		</LinearLayout>
+		  	
+		</LinearLayout>
+		
 	</LinearLayout>
-	
-</LinearLayout>
+</ScrollView>
