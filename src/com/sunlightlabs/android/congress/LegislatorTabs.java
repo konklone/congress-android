@@ -25,8 +25,6 @@ public class LegislatorTabs extends TabActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.legislator);
         
-        loadingTabs();
-        
         String id = getIntent().getStringExtra("legislator_id");
         apiKey = getResources().getString(R.string.sunlight_api_key);
         
@@ -55,18 +53,12 @@ public class LegislatorTabs extends TabActivity {
 		showDialog(LOADING);
 	}
 	
-	public void loadingTabs() {
-		TabHost tabHost = getTabHost();
-		tabHost.addTab(tabHost.newTabSpec("profile_tab").setIndicator("Profile").setContent(R.id.tabs_loading));
-		tabHost.addTab(tabHost.newTabSpec("news_tab").setIndicator("News").setContent(R.id.tabs_loading));
-		tabHost.setCurrentTab(0);
-	}
 	
 	public void setupTabs() {
 		TabHost tabHost = getTabHost();
-		tabHost.clearAllTabs();
 		
-		tabHost.addTab(tabHost.newTabSpec("profile_tab").setIndicator("Profile").setContent(profileIntent()));
+		Intent profileIntent = profileIntent();
+		tabHost.addTab(tabHost.newTabSpec("profile_tab").setIndicator("Profile").setContent(profileIntent));
 		tabHost.addTab(tabHost.newTabSpec("news_tab").setIndicator("News").setContent(newsIntent()));
 		
 		if (!legislator.getProperty("twitter_id").equals(""))
