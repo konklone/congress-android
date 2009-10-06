@@ -76,20 +76,20 @@ public class TwitterReply extends Activity {
     final Runnable postSucceeded = new Runnable() {
         public void run() {
         	alert("Your Twitter status has been updated.");
-        	dismissDialog(TWEETING);
+        	removeDialog(TWEETING);
 			finish();
         }
     };
     final Runnable postFailed = new Runnable() {
     	public void run() {
     		alert("Could not update your Twitter status. Please verify your credentials in the Settings screen.");
-    		dismissDialog(TWEETING);
+    		removeDialog(TWEETING);
     	}
     };
     final Runnable postError = new Runnable() {
     	public void run() {
     		alert("Could not connect to Twitter. Please try again later.");
-    		dismissDialog(TWEETING);
+    		removeDialog(TWEETING);
     	}
     };
     
