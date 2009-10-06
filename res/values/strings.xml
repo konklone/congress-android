@@ -27,4 +27,7 @@
     <string name="youtube_empty">
     	No videos found, but by all means, try again.
     </string>
+    <string name="connection_failed">
+    	Couldn't connect to the network. Press refresh to try again.
+    </string>
 </resources>

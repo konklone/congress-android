@@ -1,5 +1,6 @@
 package com.sunlightlabs.android.congress;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
@@ -77,6 +79,13 @@ public class LegislatorList extends ListActivity {
         	removeDialog(LOADING);
         }
     };
+    final Runnable updateFailure = new Runnable() {
+        public void run() {
+        	alert("Couldn't connect to the network. Please try again when you have a connection.");
+			removeDialog(LOADING);
+			finish();
+        }
+    };
     
     public void setupControls() {
     	back = (Button) LegislatorList.this.findViewById(R.id.empty_back);
@@ -116,21 +125,24 @@ public class LegislatorList extends ListActivity {
 		    	String api_key = getResources().getString(R.string.sunlight_api_key);
 				ApiCall api = new ApiCall(api_key);
 				
-		    	if (zipSearch())
-		    		legislators = Legislator.getLegislatorsForZipCode(api, zipCode);
-		    	else if (locationSearch())
-		    		legislators = Legislator.getLegislatorsForLatLong(api, latitude, longitude);
-		    	else if (lastNameSearch()) {
-		    		Map<String,String> params = new HashMap<String,String>();
-		    		params.put("lastname", lastName);
-		    		legislators = Legislator.allLegislators(api, params);
-		    	} else if (stateSearch()) {
-		    		Map<String,String> params = new HashMap<String,String>();
-		    		params.put("state", state);
-		    		legislators = Legislator.allLegislators(api, params);
-		    	}
-		    	
-		    	handler.post(updateThread);
+				try {
+			    	if (zipSearch())
+			    		legislators = Legislator.getLegislatorsForZipCode(api, zipCode);
+			    	else if (locationSearch())
+			    		legislators = Legislator.getLegislatorsForLatLong(api, latitude, longitude);
+			    	else if (lastNameSearch()) {
+			    		Map<String,String> params = new HashMap<String,String>();
+			    		params.put("lastname", lastName);
+			    		legislators = Legislator.allLegislators(api, params);
+			    	} else if (stateSearch()) {
+			    		Map<String,String> params = new HashMap<String,String>();
+			    		params.put("state", state);
+			    		legislators = Legislator.allLegislators(api, params);
+			    	}
+			    	handler.post(updateThread);
+				} catch(IOException e) {
+					handler.post(updateFailure);
+				}
 	        }
     	};
     	loadingThread.start();
@@ -181,4 +193,8 @@ public class LegislatorList extends ListActivity {
             return null;
         }
     }
+    
+    public void alert(String msg) {
+		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+	}
 }

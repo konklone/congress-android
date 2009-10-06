@@ -1,5 +1,6 @@
 package com.sunlightlabs.entities;
 
+import java.io.IOException;
 import java.util.*;
 
 import org.json.*;
@@ -42,7 +43,7 @@ public class District extends JSONEntity {
 	 * @param call call non-null api caller
 	 * @return non-null array of districts
 	 */
-	public static District[] allDistricts(ApiCall call) {
+	public static District[] allDistricts(ApiCall call) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		String apiCall = "districts.getList";
 		JSONObject[] items = JSONEntity.getJSONObjects(call, params, apiCall,"districts");
@@ -56,7 +57,7 @@ public class District extends JSONEntity {
 	 * @param zipcode non-null zip code
 	 * @return non-null array of districts
 	 */
-	public static District[] getDistrictsForZipCode(ApiCall call,String zipcode) {
+	public static District[] getDistrictsForZipCode(ApiCall call,String zipcode) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("zip", zipcode);
 		String apiCall = "districts.getDistrictsFromZip";
@@ -71,7 +72,7 @@ public class District extends JSONEntity {
 	 * @param district non-null existing district number
 	 * @return non-null possibly empty array of zip codes
 	 */
-	public static String[] getZipsFromDistricts(ApiCall call,String state, String district)
+	public static String[] getZipsFromDistricts(ApiCall call,String state, String district) throws IOException
 	{
 		
 		Map<String, String> params = new HashMap<String, String>();
@@ -89,7 +90,7 @@ public class District extends JSONEntity {
 	 * @param lon district longitude as a decimal string i.e "-121.67453"
 	 * @return possibly null district
 	 */
-	public static District getDistrictFromLatLon(ApiCall call,String lat, String lon)
+	public static District getDistrictFromLatLon(ApiCall call,String lat, String lon) throws IOException
 	{
 		
 		Map<String, String> params = new HashMap<String, String>();

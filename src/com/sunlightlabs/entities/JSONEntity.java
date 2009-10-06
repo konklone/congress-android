@@ -111,12 +111,12 @@ public abstract class JSONEntity {
 	 * @return
 	 */
 	public static String[] getJSONStrings(ApiCall call,
-			Map<String, String> params, String apiCall,String arrayName) {
+			Map<String, String> params, String apiCall,String arrayName) throws IOException {
 		try {
 			JSONObject obj = call.getJSONResponse(apiCall, params);
 			JSONArray items = obj.getJSONArray(arrayName);
 			return getArrayStringItems(items);
-	} catch (JSONException e) {
+		} catch (JSONException e) {
 		    throw new RuntimeException(e);
 		}
 	}
@@ -131,7 +131,7 @@ public abstract class JSONEntity {
 	 * @return
 	 */
 	public static JSONObject[] getJSONObjects(ApiCall call,
-			Map<String, String> params, String apiCall,String arrayName) {
+			Map<String, String> params, String apiCall,String arrayName) throws IOException {
 		try {
 			JSONObject obj = call.getJSONResponse(apiCall, params);
 			JSONArray items = obj.getJSONArray(arrayName);
@@ -158,7 +158,7 @@ public abstract class JSONEntity {
 	 * @return
 	 */
 	public static JSONObject  getJSONObject(ApiCall call,
-			Map<String, String> params, String apiCall,String arrayName) {
+			Map<String, String> params, String apiCall,String arrayName) throws IOException {
 		try {
 			JSONObject obj = call.getJSONResponse(apiCall, params);
 			JSONObject ret = obj.getJSONObject(arrayName);

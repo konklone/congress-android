@@ -45,7 +45,7 @@ public class Committee extends JSONEntity {
 	 * @param chamber
 	 * @return non-null array of committees
 	 */
-	public static Committee[] allCommittees(ApiCall call,String chamber) {
+	public static Committee[] allCommittees(ApiCall call,String chamber)  throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("chamber", chamber);
 		String apiCall = "committees.getList";
@@ -61,7 +61,7 @@ public class Committee extends JSONEntity {
 	 * @param id
 	 * @return
 	 */
-	public static Committee getCommitteeById(ApiCall call, String id ) {
+	public static Committee getCommitteeById(ApiCall call, String id ) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("id", id);
 		return getCommitteeById( call,  params );
@@ -73,7 +73,7 @@ public class Committee extends JSONEntity {
 	 * @param params
 	 * @return possiblu null Commottee
 	 */
-	public static Committee getCommitteeById(ApiCall call, Map<String, String> params ) {
+	public static Committee getCommitteeById(ApiCall call, Map<String, String> params )  throws IOException {
 		String apiCall = "committees.get";
 		JSONObject item = JSONEntity.getJSONObject(call, params, apiCall,
 				getPluralEntityName());
@@ -88,7 +88,7 @@ public class Committee extends JSONEntity {
 	 * @param biocode
 	 * @return non-null array of committees
 		 */
-	public static Committee[] getCommitteesForLegislator(ApiCall call,Legislator leg) {
+	public static Committee[] getCommitteesForLegislator(ApiCall call,Legislator leg) throws IOException {
 		 return getCommitteesForLegislator( call,leg.getProperty("bioguide_id"));
 	}
 	/**
@@ -97,7 +97,7 @@ public class Committee extends JSONEntity {
 	 * @param biocode
 	 * @return non-null array of committees
 		 */
-	public static Committee[] getCommitteesForLegislator(ApiCall call,String biocode) {
+	public static Committee[] getCommitteesForLegislator(ApiCall call,String biocode) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("bioguide_id", biocode);
 		String apiCall = "committees.allForLegislator";

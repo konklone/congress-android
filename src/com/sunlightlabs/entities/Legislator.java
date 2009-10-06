@@ -1,5 +1,6 @@
 package com.sunlightlabs.entities;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,7 +86,7 @@ public class Legislator extends JSONEntity {
 	 * @param call non-null caller 
 	 * @return non-null array of Legislators
 	 */
-	public static Legislator[] allLegislators(ApiCall call) {
+	public static Legislator[] allLegislators(ApiCall call) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		String apiCall = "legislators.getList";
 		return allLegislators(call, params);
@@ -98,7 +99,7 @@ public class Legislator extends JSONEntity {
 	 * @return non-null array of Legislators
 		 */
 	public static Legislator[] allLegislators(ApiCall call,
-			Map<String, String> params) {
+			Map<String, String> params) throws IOException {
 		String apiCall = "legislators.getList";
 		JSONObject[] items = JSONEntity.getJSONObjects(call, params, apiCall,
 				getPluralEntityName());
@@ -112,7 +113,7 @@ public class Legislator extends JSONEntity {
 	 * @return
 	 */
 	public static Legislator[] getLegislatorsForZipCode(ApiCall call,
-			String zipcode) {
+			String zipcode) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("zip", zipcode);
 		String apiCall = "legislators.allForZip";
@@ -121,7 +122,7 @@ public class Legislator extends JSONEntity {
 		return buildLegislators(items);
 	}
 	
-	public static Legislator[] getLegislatorsForLatLong(ApiCall call, String latitude, String longitude) {
+	public static Legislator[] getLegislatorsForLatLong(ApiCall call, String latitude, String longitude) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("latitude", latitude);
 		params.put("longitude", longitude);
@@ -130,7 +131,7 @@ public class Legislator extends JSONEntity {
 		return buildLegislators(items);
 	}
 	
-	public static Legislator[] getLegislatorsForLatLong(ApiCall call, double latitude, double longitude) {
+	public static Legislator[] getLegislatorsForLatLong(ApiCall call, double latitude, double longitude) throws IOException {
 		return getLegislatorsForLatLong(call, latitude + "", longitude + "");
 	}
 
@@ -140,7 +141,7 @@ public class Legislator extends JSONEntity {
 	 * @param id non-null bioguide_id
 	 * @return possibly null Legislator
 	 */
-	public static Legislator getLegislatorById(ApiCall call, String id) {
+	public static Legislator getLegislatorById(ApiCall call, String id) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("bioguide_id", id);
 		return getLegislatorById(call, params );
@@ -152,14 +153,14 @@ public class Legislator extends JSONEntity {
 	 * @param params
 	 * @return
 	 */
-	public static Legislator getLegislatorById(ApiCall call, Map<String, String> params ) {
+	public static Legislator getLegislatorById(ApiCall call, Map<String, String> params ) throws IOException {
 		String apiCall = "legislators.get";
 		JSONObject item = JSONEntity.getJSONObject(call, params, apiCall,
 		"legislator");
 		return new Legislator(item);
 	}
 
-	public static Legislator getLegislator(ApiCall call, String name) {
+	public static Legislator getLegislator(ApiCall call, String name) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		String apiCall = "legislators.search";
 		JSONObject item = JSONEntity.getJSONObject(call, params, apiCall,

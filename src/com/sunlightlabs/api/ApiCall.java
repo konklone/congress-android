@@ -1,12 +1,18 @@
 package com.sunlightlabs.api;
 
-import java.util.*;
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.Map;
 
-import org.json.*;
-
-import com.sunlightlabs.entities.*;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 /**
  * API call er object - holds the API Key
@@ -43,7 +49,7 @@ public class ApiCall {
 	 * @param params
 	 * @return
 	 */
-	public String callAPI(String apiCall, Map<String, String> params) {
+	public String callAPI(String apiCall, Map<String, String> params) throws IOException {
 		String url = URL_CALL_TEMPLATE.replace("%API_CALL%", apiCall);
 		url = url.replace("%API_KEY%", getApiKey());
 		url += buildPropertyString(params);
@@ -56,7 +62,7 @@ public class ApiCall {
 	 * @param params
 	 * @return
 	 */
-	public JSONObject getJSONResponse(String apiCall, Map<String, String> params) {
+	public JSONObject getJSONResponse(String apiCall, Map<String, String> params) throws IOException {
 		String s = callAPI(apiCall, params);
 		JSONTokener tokenizer = new JSONTokener(s);
 		try {
@@ -67,7 +73,7 @@ public class ApiCall {
 		} catch (JSONException ex) {
 			throw new RuntimeException(ex);
 		}
-
+		
 	}
 
 	/**
@@ -75,7 +81,7 @@ public class ApiCall {
 	 * @param url non-null url
 	 * @return non-null String
 	 */
-	public String getUrlLines(String url) {
+	public String getUrlLines(String url) throws IOException {
 		StringBuilder sb = new StringBuilder();
 
 		try {
@@ -93,8 +99,6 @@ public class ApiCall {
 			String ret = sb.toString();
 			return ret;
 		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 

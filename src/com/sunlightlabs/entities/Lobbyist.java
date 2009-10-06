@@ -1,5 +1,6 @@
 package com.sunlightlabs.entities;
 
+import java.io.IOException;
 import java.util.*;
 
 import org.json.*;
@@ -68,7 +69,7 @@ public class Lobbyist extends JSONEntity {
 	 * @return
 	 */
 	public static Lobbyist[] allLobbyistsFiledWith(ApiCall call,
-			String clientName) {
+			String clientName) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		String apiCall = "lobbyists.getFilingList";
 		params.put("client_name", clientName);
@@ -84,7 +85,7 @@ public class Lobbyist extends JSONEntity {
 	 * @param zipcode
 	 * @return
 	 */
-	public static Lobbyist[] getLobbyistsForZipCode(ApiCall call, String zipcode) {
+	public static Lobbyist[] getLobbyistsForZipCode(ApiCall call, String zipcode) throws IOException  {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("zip", zipcode);
 		String apiCall = "lobbyists.allForZip";

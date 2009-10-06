@@ -1,5 +1,6 @@
 package com.sunlightlabs.android.congress;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
@@ -32,11 +34,18 @@ public class LegislatorTabs extends TabActivity {
 	}
 	
 	final Handler handler = new Handler();
-	final Runnable doneLoading = new Runnable() {
+	final Runnable loadingSuccess = new Runnable() {
 		public void run() {
 			setupTabs();
-			
 			removeDialog(LOADING);
+		}
+	};
+	
+	final Runnable loadingFailure = new Runnable() {
+		public void run() {
+			alert("Couldn't connect to the network. Please try again when you have a connection.");
+			removeDialog(LOADING);
+			finish();
 		}
 	};
 	
@@ -44,8 +53,12 @@ public class LegislatorTabs extends TabActivity {
 		final String id = legId;
 		Thread loadingThread = new Thread() {
 			public void run() {
-				legislator = Legislator.getLegislatorById(new ApiCall(apiKey), id);
-				handler.post(doneLoading);
+				try {
+					legislator = Legislator.getLegislatorById(new ApiCall(apiKey), id);
+					handler.post(loadingSuccess);
+				} catch(IOException e) {
+					handler.post(loadingFailure);
+				}
 			}
 		};
 		loadingThread.start();
@@ -147,6 +160,10 @@ public class LegislatorTabs extends TabActivity {
 			return username;
 		} else
 			return "";
+	}
+	
+	public void alert(String msg) {
+		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 	}
 
 }
