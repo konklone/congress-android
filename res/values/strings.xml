@@ -13,21 +13,21 @@
     	No legislators found by that last name.
     </string>
     <string name="empty_state">
-    	That state code isn't valid. Give it another shot.
+    	That state code isn\'t valid. Give it another shot.
     </string>
     <string name="empty_general">
     	No legislators found.
     </string>
     <string name="news_empty">
-    	No news found, but by all means, try again.
+    	No recent news found.
     </string>
     <string name="twitter_empty">
-    	No tweets found, but since that's ridiculous, it's probably in error.
+    	No tweets found.
     </string>
     <string name="youtube_empty">
-    	No videos found, but by all means, try again.
+    	No videos found.
     </string>
     <string name="connection_failed">
-    	Couldn't connect to the network. Press refresh to try again.
+    	Couldn\'t connect to the network. Press refresh to try again.
     </string>
 </resources>

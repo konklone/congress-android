@@ -51,7 +51,7 @@ public class LegislatorTwitter extends ListActivity {
 	}
 	
     final Handler handler = new Handler();
-    final Runnable updateThread = new Runnable() {
+    final Runnable updateSuccess = new Runnable() {
         public void run() {        	
         	setListAdapter(new TweetAdapter(LegislatorTwitter.this, tweets));
         	
@@ -64,6 +64,15 @@ public class LegislatorTwitter extends ListActivity {
         	removeDialog(LOADING);
         }
     };
+    final Runnable updateFailure = new Runnable() {
+        public void run() {
+    		TextView empty = (TextView) LegislatorTwitter.this.findViewById(R.id.twitter_empty);
+    		empty.setText(R.string.connection_failed);
+    		refresh.setVisibility(View.VISIBLE);
+    		
+        	removeDialog(LOADING);
+        }
+    };
 	
 	protected void loadTweets() {
 		Thread loadingThread = new Thread() {
@@ -71,10 +80,11 @@ public class LegislatorTwitter extends ListActivity {
 	        	try {
 	        		Twitter twitter = new Twitter();
 	        		tweets = twitter.getUserTimeline(username);
+	        		handler.post(updateSuccess);
 	        	} catch(TwitterException e) {
-	        		Toast.makeText(LegislatorTwitter.this, "Couldn't load tweets.", Toast.LENGTH_SHORT).show();
+	        		handler.post(updateFailure);
 	        	}
-	        	handler.post(updateThread);
+	        	
 	        }
 	    };
 	    loadingThread.start();

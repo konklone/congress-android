@@ -51,7 +51,7 @@ public class LegislatorNews extends ListActivity {
 	}
 	
 	final Handler handler = new Handler();
-    final Runnable updateThread = new Runnable() {
+    final Runnable updateSuccess = new Runnable() {
         public void run() {
         	setListAdapter(new NewsAdapter(LegislatorNews.this, items));
         	
@@ -61,6 +61,15 @@ public class LegislatorNews extends ListActivity {
         		refresh.setVisibility(View.VISIBLE);
         	}
         	
+        	removeDialog(LOADING);
+        }
+    };
+    final Runnable updateFailure = new Runnable() {
+        public void run() {
+    		TextView empty = (TextView) LegislatorNews.this.findViewById(R.id.news_empty);
+    		empty.setText(R.string.connection_failed);
+    		refresh.setVisibility(View.VISIBLE);
+    		
         	removeDialog(LOADING);
         }
     };
@@ -117,10 +126,10 @@ public class LegislatorNews extends ListActivity {
 	    			String apiKey = getResources().getString(R.string.yahoo_news_key);
 	    			NewsService service = new NewsService(apiKey);
 	    			items = service.fetchNewsResults(searchName);
+	    			handler.post(updateSuccess);
 	    		} catch (NewsException e) {
-	    			Toast.makeText(LegislatorNews.this, "Couldn't load news.", Toast.LENGTH_SHORT).show();
+	    			handler.post(updateFailure);
 	    		}
-	        	handler.post(updateThread);
 	        }
 	    };
 	    loadingThread.start();
