@@ -25,7 +25,7 @@ public class LegislatorList extends ListActivity {
 	private final static int LOADING = 0;
 	private Legislator[] legislators;
 	
-	private Button back;
+	private Button back, refresh;
 	
 	// whether the user has come to this activity looking to create a shortcut
 	private boolean shortcut;
@@ -59,7 +59,6 @@ public class LegislatorList extends ListActivity {
     final Runnable updateThread = new Runnable() {
         public void run() {
         	setListAdapter(new ArrayAdapter<Legislator>(LegislatorList.this, android.R.layout.simple_list_item_1, legislators));
-        	
         	TextView empty = (TextView) LegislatorList.this.findViewById(R.id.empty_msg);
         	
         	if (legislators.length <= 0) {
@@ -81,17 +80,25 @@ public class LegislatorList extends ListActivity {
     };
     final Runnable updateFailure = new Runnable() {
         public void run() {
-        	alert("Couldn't connect to the network. Please try again when you have a connection.");
+        	setListAdapter(new ArrayAdapter<Legislator>(LegislatorList.this, android.R.layout.simple_list_item_1, legislators));
+        	TextView empty = (TextView) LegislatorList.this.findViewById(R.id.empty_msg);
+        	empty.setText(R.string.connection_failed);
+        	refresh.setVisibility(View.VISIBLE);
 			removeDialog(LOADING);
-			finish();
         }
     };
     
     public void setupControls() {
-    	back = (Button) LegislatorList.this.findViewById(R.id.empty_back);
+    	back = (Button) findViewById(R.id.empty_back);
     	back.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				finish();
+			}
+		});
+    	refresh = (Button) findViewById(R.id.empty_refresh);
+    	refresh.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				loadLegislators();
 			}
 		});
     }
@@ -141,6 +148,7 @@ public class LegislatorList extends ListActivity {
 			    	}
 			    	handler.post(updateThread);
 				} catch(IOException e) {
+					legislators = new Legislator[0];
 					handler.post(updateFailure);
 				}
 	        }
@@ -193,8 +201,4 @@ public class LegislatorList extends ListActivity {
             return null;
         }
     }
-    
-    public void alert(String msg) {
-		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-	}
 }

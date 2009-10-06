@@ -39,7 +39,20 @@
 			android:text="Back"
 			android:textSize="26sp"
 			
-			android:visibility="invisible"
+			android:visibility="gone"
+			/>
+		
+		<Button android:id="@+id/empty_refresh"
+			
+			android:layout_width="120sp"
+			android:layout_height="80sp"
+			android:layout_margin="10sp"
+			android:layout_gravity="center"
+			
+			android:text="Refresh"
+			android:textSize="26sp"
+			
+			android:visibility="gone"
 			/>
 		
 	</LinearLayout>
