@@ -22,7 +22,7 @@
 	    	
 	    	android:textSize="16sp"
 	    	android:textColor="@android:color/white"
-	    	android:text="This is the original tweet from http://twitter.com, and could be quite long, or sad, or even Mexican.  Anything can go here."
+	    	android:text="This is the original tweet from http://twitter.com, and could be quite long, or sad, or even joyous.  Anything can go here."
 	    	/>
 	    
 	    <EditText android:id="@+id/twitter_message"
