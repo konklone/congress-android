@@ -61,7 +61,7 @@ public class LegislatorNews extends ListActivity {
         		refresh.setVisibility(View.VISIBLE);
         	}
         	
-        	dismissDialog(LOADING);
+        	removeDialog(LOADING);
         }
     };
     
