@@ -62,7 +62,7 @@ public class LegislatorYouTube extends ListActivity {
         		refresh.setVisibility(View.VISIBLE);
         	}
         	
-        	dismissDialog(LOADING);
+        	removeDialog(LOADING);
         }
     };
 	
