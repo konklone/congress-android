@@ -3,6 +3,7 @@
     <string name="app_name">Congress</string>
     <string name="create_shortcuts">Legislator</string>
     <string name="main_title">Find A Legislator By</string>
+    <string name="contact_subject">Android app feedback</string>
     <string name="empty_zipcode">
     	No legislators found for your zipcode.
     </string>

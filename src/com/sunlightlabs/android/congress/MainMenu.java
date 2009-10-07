@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Menu;
@@ -192,7 +193,11 @@ public class MainMenu extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId()) { 
     	case R.id.settings: 
-    		startActivity(new Intent(this, Preferences.class));  
+    		startActivity(new Intent(this, Preferences.class));
+    	case R.id.feedback:
+    		Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getResources().getString(R.string.contact_email), null));
+    		intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_subject));
+    		startActivity(intent);
     	}
     	return true;
     }
