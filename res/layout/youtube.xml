@@ -15,7 +15,7 @@
 		>
 		
 		<ImageView android:id="@+id/video_icon"
-			android:src="@android:drawable/ic_menu_upload_you_tube"
+			android:src="@drawable/video"
 			android:layout_width="48sp"
 			android:layout_height="48sp"
 			/>
