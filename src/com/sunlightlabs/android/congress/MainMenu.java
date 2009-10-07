@@ -1,5 +1,7 @@
 package com.sunlightlabs.android.congress;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
@@ -29,7 +31,6 @@ public class MainMenu extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        loadLocation();
         setupControls();
 
         String action = getIntent().getAction();
@@ -37,29 +38,31 @@ public class MainMenu extends Activity {
         	shortcut = true;
     }
 	
-	public void loadLocation() {
-		LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-		location = null;
-
-		if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
-			location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		else if (lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-			location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-	}
 	
 	public void setupControls() {
         Button fetchZip = (Button) this.findViewById(R.id.fetch_zip);
         Button fetchLocation = (Button) this.findViewById(R.id.fetch_location);
         
-    	if (location != null) {
-	    	fetchLocation.setOnClickListener(new View.OnClickListener() {
+        LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+		location = null;
+		
+		if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
+			location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		
+		if (location == null && lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+			location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        
+    	if (location == null) {
+    		fetchLocation.setEnabled(false);
+	    	fetchLocation.setText("No known location.");
+    	} else {
+    		fetchLocation.setOnClickListener(new View.OnClickListener() {
 	    		public void onClick(View v) {
 	    			if (location != null)
 	    				searchByLatLong(location.getLatitude(), location.getLongitude());
 	    		}
 	    	});
-    	} else
-    		fetchLocation.setEnabled(false);
+    	}
     	
     	fetchZip.setOnClickListener(new View.OnClickListener() {
     		public void onClick(View v) {
