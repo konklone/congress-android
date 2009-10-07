@@ -8,6 +8,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.TabHost;
@@ -70,15 +71,17 @@ public class LegislatorTabs extends TabActivity {
 	public void setupTabs() {
 		TabHost tabHost = getTabHost();
 		
+		Resources res = this.getResources();
+		
 		Intent profileIntent = profileIntent();
-		tabHost.addTab(tabHost.newTabSpec("profile_tab").setIndicator("Profile").setContent(profileIntent));
-		tabHost.addTab(tabHost.newTabSpec("news_tab").setIndicator("News").setContent(newsIntent()));
+		tabHost.addTab(tabHost.newTabSpec("profile_tab").setIndicator("Profile", res.getDrawable(R.drawable.tab_profile)).setContent(profileIntent));
+		tabHost.addTab(tabHost.newTabSpec("news_tab").setIndicator("News", res.getDrawable(R.drawable.tab_news)).setContent(newsIntent()));
 		
 		if (!legislator.getProperty("twitter_id").equals(""))
-			tabHost.addTab(tabHost.newTabSpec("twitter_tab").setIndicator("Twitter").setContent(twitterIntent()));
+			tabHost.addTab(tabHost.newTabSpec("twitter_tab").setIndicator("Twitter", res.getDrawable(R.drawable.tab_twitter)).setContent(twitterIntent()));
 		
 		if (!youtubeUsername(legislator).equals(""))
-			tabHost.addTab(tabHost.newTabSpec("youtube_tab").setIndicator("YouTube").setContent(youtubeIntent()));
+			tabHost.addTab(tabHost.newTabSpec("youtube_tab").setIndicator("YouTube", res.getDrawable(R.drawable.tab_video)).setContent(youtubeIntent()));
 		
 		tabHost.setCurrentTab(0);
 	}
