@@ -113,7 +113,7 @@
 	 			>
 	 		
 	 			<ImageView android:id="@+id/profile_phone_icon"
-	 				android:src="@android:drawable/ic_menu_call"
+	 				android:src="@drawable/phone"
 	 			
 	 				android:layout_width="48sp"
 	 				android:layout_height="48sp"
@@ -141,7 +141,7 @@
 	 			>
 	 		
 	 			<ImageView android:id="@+id/profile_website_icon"
-	 				android:src="@android:drawable/ic_menu_mapmode"
+	 				android:src="@drawable/web"
 	 				
 	 				android:layout_width="48sp"
 	 				android:layout_height="48sp"
