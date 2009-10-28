@@ -173,10 +173,12 @@ public class MainMenu extends Activity {
     	switch(item.getItemId()) { 
     	case R.id.settings: 
     		startActivity(new Intent(this, Preferences.class));
+    		break;
     	case R.id.feedback:
     		Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getResources().getString(R.string.contact_email), null));
     		intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_subject));
     		startActivity(intent);
+    		break;
     	}
     	return true;
     }
