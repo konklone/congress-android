@@ -1,7 +1,5 @@
 package com.sunlightlabs.android.congress;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
@@ -15,27 +13,17 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainMenu extends Activity {
-	private static final int MENU_PREFS = 0;
-	
 	public static final int RESULT_ZIP = 1;
 	public static final int RESULT_LASTNAME = 2;
 	public static final int RESULT_STATE = 3;
-	private static final int RESULT_SHORTCUT = 10;
 	private Location location;
 
-	// whether the user has come to this activity looking to create a shortcut
-	private boolean shortcut = false;
-	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
         setupControls();
-
-        String action = getIntent().getAction();
-        if (action != null && action.equals(Intent.ACTION_CREATE_SHORTCUT))
-        	shortcut = true;
     }
 	
 	
@@ -113,14 +101,8 @@ public class MainMenu extends Activity {
 	private void search(Bundle extras) {
 		Intent i = new Intent();
 		i.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorList");
-		
-		extras.putBoolean("shortcut", shortcut);
 		i.putExtras(extras);
-		
-		if (shortcut)
-			startActivityForResult(i, RESULT_SHORTCUT);
-		else
-			startActivity(i);
+		startActivity(i);
 	}
 	
 	private void getResponse(int requestCode) {
@@ -174,12 +156,6 @@ public class MainMenu extends Activity {
 				String state = data.getExtras().getString("response");
 				if (!state.equals(""))
 					searchByState(state);
-			}
-			break;
-		case RESULT_SHORTCUT:
-			if (resultCode == RESULT_OK) {
-				setResult(RESULT_OK, data);
-	    		finish();
 			}
 			break;
 		}
