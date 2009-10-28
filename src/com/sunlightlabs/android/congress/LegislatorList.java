@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -58,6 +59,14 @@ public class LegislatorList extends ListActivity {
     final Handler handler = new Handler();
     final Runnable updateThread = new Runnable() {
         public void run() {
+        	// if there's only one result, don't even make them click it
+        	if (legislators.length == 1) {
+        		selectLegislator(legislators[0]);
+        		removeDialog(LOADING);
+        		finish();
+        		return;
+        	}
+        	
         	setListAdapter(new ArrayAdapter<Legislator>(LegislatorList.this, android.R.layout.simple_list_item_1, legislators));
         	TextView empty = (TextView) LegislatorList.this.findViewById(R.id.empty_msg);
         	
@@ -104,7 +113,10 @@ public class LegislatorList extends ListActivity {
     }
     
     public void onListItemClick(ListView parent, View v, int position, long id) {
-    	Legislator legislator = (Legislator) parent.getItemAtPosition(position);
+    	selectLegislator((Legislator) parent.getItemAtPosition(position));
+    }
+    
+    public void selectLegislator(Legislator legislator) {
     	String legislatorId = legislator.getId();
     	Intent legislatorIntent = legislatorIntent(legislatorId);
     	
@@ -173,10 +185,6 @@ public class LegislatorList extends ListActivity {
     
     private boolean stateSearch() {
     	return state != null;
-    }
-    
-    public void launchLegislator(String id) {
-		startActivity(legislatorIntent(id));
     }
     
     public Intent legislatorIntent(String id) {
