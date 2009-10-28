@@ -6,11 +6,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -26,13 +26,10 @@ public class LegislatorProfile extends Activity {
 	public static final String PIC_MEDIUM = "100x125";
 	public static final String PIC_LARGE = "200x250";
 	
-	private String id, titledName, party, gender, state, domain, phone, website, office;
+	private String id, titledName, party, gender, state, domain, phone, website;
 	private Drawable avatar;
 	private ImageView picture;
 	
-	private boolean imageAlreadyLoaded = false;
-	
-	private static final String avatarPath = "/sdcard/sunlight-android/avatars/";
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +46,6 @@ public class LegislatorProfile extends Activity {
         domain = extras.getString("domain");
         phone = extras.getString("phone");
         website = extras.getString("website");
-        office = extras.getString("office");
         
         loadInformation();
         loadImage();
@@ -116,7 +112,7 @@ public class LegislatorProfile extends Activity {
 	public void loadImage() {		
 		Thread loadingThread = new Thread() {
 			public void run() {
-				avatar = getImage(PIC_MEDIUM, id);
+				avatar = getImage(PIC_MEDIUM, id, LegislatorProfile.this);
 				handler.post(updateThread);
 			}
 		};
@@ -128,49 +124,44 @@ public class LegislatorProfile extends Activity {
 	 * and cause them to be downloaded and cached to disk.
 	 */
 	
-	public static BitmapDrawable getImage(String size, String bioguideId) {
-		initializeDirectories(bioguideId);
-		File imageFile = new File(picPath(size, bioguideId));
+	public static BitmapDrawable getImage(String size, String bioguideId, Context context) {
+		File imageFile = new File(picPath(size, bioguideId, context));
 		
 		if (!imageFile.exists())
-			cacheImages(bioguideId);
+			cacheImages(bioguideId, context);
 		
 		if (!imageFile.exists()) // download failed for some reason
 			return null;
 		
-		return new BitmapDrawable(picPath(size, bioguideId));
+		return new BitmapDrawable(picPath(size, bioguideId, context));
 	}
 	
-	private static void initializeDirectories(String bioguideId) {
-		File avatarDir = new File(avatarPath);
-		if (!avatarDir.exists())
-			avatarDir.mkdirs();
-		
-		File legislatorDir = new File(picDir(bioguideId));
-		if (!legislatorDir.exists())
-			legislatorDir.mkdir();
-	}
+//	private static void initializeDirectories(String bioguideId, Context context) {
+//		File legislatorDir = new File(picDir(bioguideId, context));
+//		if (!legislatorDir.exists())
+//			legislatorDir.mkdir();
+//	}
 	
 	private static String picUrl(String size, String bioguideId) {
 		return "http://assets.sunlightfoundation.com/moc/" + size + "/" + bioguideId + ".jpg";
 	}
 	
-	private static String picPath(String size, String bioguideId) {
-		return picDir(bioguideId) + size + ".jpg"; 
+	private static String picPath(String size, String bioguideId, Context context) {
+		return picDir(bioguideId, context) + size + ".jpg"; 
 	}
 	
-	private static String picDir(String bioguideId) {
-		return avatarPath + bioguideId + "/";
+	private static String picDir(String bioguideId, Context context) {
+		return context.getDir(bioguideId, Context.MODE_PRIVATE).getPath();
 	}
 	
-	private static void cacheImages(String bioguideId) {
-		cacheImage(PIC_SMALL, bioguideId);
-		cacheImage(PIC_MEDIUM, bioguideId);
-		cacheImage(PIC_LARGE, bioguideId);
+	private static void cacheImages(String bioguideId, Context context) {
+		cacheImage(PIC_SMALL, bioguideId, context);
+		cacheImage(PIC_MEDIUM, bioguideId, context);
+		cacheImage(PIC_LARGE, bioguideId, context);
 	}
 	
-	private static void cacheImage(String size, String bioguideId) {
-		File outFile = new File(picPath(size, bioguideId));
+	private static void cacheImage(String size, String bioguideId, Context context) {
+		File outFile = new File(picPath(size, bioguideId, context));
 		if (outFile.exists())
 			return;
 		

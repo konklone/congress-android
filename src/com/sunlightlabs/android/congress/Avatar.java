@@ -18,7 +18,7 @@ public class Avatar extends Activity {
         String id = getIntent().getStringExtra("id");
         
         ImageView avatar = (ImageView) this.findViewById(R.id.big_avatar);
-        BitmapDrawable drawable = LegislatorProfile.getImage(LegislatorProfile.PIC_LARGE, id);
+        BitmapDrawable drawable = LegislatorProfile.getImage(LegislatorProfile.PIC_LARGE, id, this);
         avatar.setImageDrawable(drawable);
         
         avatar.setOnClickListener(new View.OnClickListener() {

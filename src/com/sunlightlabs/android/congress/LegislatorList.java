@@ -125,7 +125,7 @@ public class LegislatorList extends ListActivity {
     		// instead of bringing someone else's profile to the front who was just open
     		legislatorIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
     		
-    		BitmapDrawable drawable = LegislatorProfile.getImage(LegislatorProfile.PIC_SMALL, legislatorId);
+    		BitmapDrawable drawable = LegislatorProfile.getImage(LegislatorProfile.PIC_SMALL, legislatorId, this);
     		
     		Intent intent = new Intent();
     		intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, legislatorIntent);
