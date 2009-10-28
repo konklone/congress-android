@@ -12,16 +12,17 @@
             </intent-filter>
         </activity>
         
-        <activity-alias android:name=".CreateShortcut"
-        	android:targetActivity=".MainMenu"
-        	android:label="@string/create_shortcuts">
+        <activity android:name=".CreateShortcut"
+        	android:label="@string/create_shortcuts"
+        	android:theme="@android:style/Theme.Dialog"
+        	>
         	
         	<intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         	
-        </activity-alias>
+        </activity>
         
         <activity android:name=".LegislatorList" />
         
