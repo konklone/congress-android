@@ -42,7 +42,7 @@
 		  		android:layout_marginRight="15sp"
 		  		android:layout_marginBottom="10sp"
 		  		
-		  		android:src="@drawable/no_photo"
+		  		android:src="@drawable/loading_photo"
 		  		/>
 		  	
 		  	<LinearLayout android:id="@+id/profile_basic"

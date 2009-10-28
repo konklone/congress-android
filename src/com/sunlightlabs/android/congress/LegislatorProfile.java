@@ -26,9 +26,11 @@ public class LegislatorProfile extends Activity {
 	public static final String PIC_MEDIUM = "100x125";
 	public static final String PIC_LARGE = "200x250";
 	
-	private String id, titledName, party, state, domain, phone, website, office;
+	private String id, titledName, party, gender, state, domain, phone, website, office;
 	private Drawable avatar;
 	private ImageView picture;
+	
+	private boolean imageAlreadyLoaded = false;
 	
 	private static final String avatarPath = "/sdcard/sunlight-android/avatars/";
 	
@@ -43,6 +45,7 @@ public class LegislatorProfile extends Activity {
         titledName = extras.getString("titledName");
         party = extras.getString("party");
         state = extras.getString("state");
+        gender = extras.getString("gender");
         domain = extras.getString("domain");
         phone = extras.getString("phone");
         website = extras.getString("website");
@@ -55,18 +58,22 @@ public class LegislatorProfile extends Activity {
 	final Handler handler = new Handler();
     final Runnable updateThread = new Runnable() {
         public void run() {
-    		picture.setImageDrawable(avatar);
-    		bindAvatar();
+        	if (avatar != null) {
+	    		picture.setImageDrawable(avatar);
+	    		bindAvatar();
+        	} else {
+        		if (gender.equals("M"))
+					avatar = getResources().getDrawable(R.drawable.no_photo_male);
+				else // "F"
+					avatar = getResources().getDrawable(R.drawable.no_photo_female);
+        		picture.setImageDrawable(avatar);
+        		// do not bind a click event to the "no photo" avatar
+        	}
         }
     };
 	
 	public void loadInformation() {
 		picture = (ImageView) this.findViewById(R.id.profile_picture);
-		BitmapDrawable file = quickGetImage(PIC_MEDIUM, id);
-		if (file != null)
-			picture.setImageDrawable(file);
-		else
-			picture.setImageResource(R.drawable.loading_photo);
 		
 		TextView name = (TextView) this.findViewById(R.id.profile_name);
 		name.setText(titledName);
@@ -106,15 +113,10 @@ public class LegislatorProfile extends Activity {
 		});
 	}
 	
-	public void loadImage() {
+	public void loadImage() {		
 		Thread loadingThread = new Thread() {
 			public void run() {
-				Drawable drawable = getImage(PIC_MEDIUM, id);
-				if (drawable != null)
-					avatar = drawable;
-				else
-					avatar = getResources().getDrawable(R.drawable.no_photo);
-				
+				avatar = getImage(PIC_MEDIUM, id);
 				handler.post(updateThread);
 			}
 		};
@@ -128,21 +130,15 @@ public class LegislatorProfile extends Activity {
 	
 	public static BitmapDrawable getImage(String size, String bioguideId) {
 		initializeDirectories(bioguideId);
-		
 		File imageFile = new File(picPath(size, bioguideId));
+		
 		if (!imageFile.exists())
 			cacheImages(bioguideId);
 		
-		return new BitmapDrawable(picPath(size, bioguideId));
-	}
-	
-	// Quick checks the disk for an avatar - if it isn't loaded
-	public static BitmapDrawable quickGetImage(String size, String bioguideId) {
-		File imageFile = new File(picPath(size, bioguideId));
-		if (imageFile.exists())
-			return new BitmapDrawable(picPath(size, bioguideId));
-		else
+		if (!imageFile.exists()) // download failed for some reason
 			return null;
+		
+		return new BitmapDrawable(picPath(size, bioguideId));
 	}
 	
 	private static void initializeDirectories(String bioguideId) {
@@ -182,15 +178,6 @@ public class LegislatorProfile extends Activity {
 		downloadFile(url, outFile);
 	}
 	
-	private static InputStream fetchStream(String address) {
-		try {
-			URL url = new URL(address);
-			return ((InputStream) url.getContent());
-		} catch (Exception e) {
-			return null;
-		}
-	}
-	
 	private static void downloadFile(String url, File outputFile) {
 		try {
 			URL u = new URL(url);
@@ -208,9 +195,9 @@ public class LegislatorProfile extends Activity {
 	        fos.flush();
 	        fos.close();
 		} catch(FileNotFoundException e) {
-			throw new RuntimeException(e);
+			return; // swallow a 404, we'll throw up a No Photo image
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			return; // swallow a 404, we'll throw up a No Photo image
 		}
 	}
 	

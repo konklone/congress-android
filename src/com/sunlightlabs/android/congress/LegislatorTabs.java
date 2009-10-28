@@ -95,6 +95,7 @@ public class LegislatorTabs extends TabActivity {
 		extras.putString("titledName", legislator.titledName());
 		extras.putString("state", legislator.getProperty("state"));
 		extras.putString("party", legislator.getProperty("party"));
+		extras.putString("gender", legislator.getProperty("gender"));
 		extras.putString("domain", legislator.getDomain());
 		extras.putString("office", legislator.getProperty("congress_office"));
 		extras.putString("website", legislator.getProperty("website"));
