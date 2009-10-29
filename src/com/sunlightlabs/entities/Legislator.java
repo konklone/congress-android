@@ -31,7 +31,7 @@ public class Legislator extends JSONEntity {
 	}
 	
 	public String toString() {
-		return titledName();
+		return titledName() + " [" + getSeatSuffix() + "]";
 	}
 	
 	public String getId() {
@@ -69,6 +69,20 @@ public class Legislator extends JSONEntity {
 			return "At-Large";
 		else
 			return "District " + district;
+	}
+	
+	public String getSeatSuffix() {
+		String suffix = getProperty("state") + "-";
+		String district = getProperty("district");
+		if (district.equals("Senior Seat"))
+			suffix += "Senior";
+		else if (district.equals("Junior Seat"))
+			suffix += "Junior";
+		else if (district.equals("0"))
+			suffix += "At-Large";
+		else
+			suffix += district;
+		return suffix;
 	}
 
 	/**
