@@ -43,7 +43,11 @@ public class Legislator extends JSONEntity {
 	}
 	
 	public String titledName() {
-		return getProperty("title") + ". " + getName();
+		String name = getProperty("title") + ". " + getName();
+		String suffix = getProperty("name_suffix");
+		if (suffix != null && !suffix.equals(""))
+			name += " " + suffix;
+		return name;
 	}
 	
 	public String firstName() {
