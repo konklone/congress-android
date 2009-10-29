@@ -6,12 +6,14 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.ClipboardManager;
 import android.text.format.Time;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -148,6 +150,23 @@ public class LegislatorTwitter extends ListActivity {
         default:
             return null;
         }
+    }
+    
+    @Override 
+    public boolean onCreateOptionsMenu(Menu menu) { 
+	    super.onCreateOptionsMenu(menu); 
+	    getMenuInflater().inflate(R.menu.twitter, menu);
+	    return true;
+    }
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch(item.getItemId()) { 
+    	case R.id.settings: 
+    		startActivity(new Intent(this, Preferences.class));
+    		break;
+    	}
+    	return true;
     }
     
     protected class TweetAdapter extends BaseAdapter {
