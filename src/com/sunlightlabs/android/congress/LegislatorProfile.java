@@ -12,6 +12,7 @@ import java.net.URLConnection;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -136,11 +137,9 @@ public class LegislatorProfile extends Activity {
 		return new BitmapDrawable(picPath(size, bioguideId, context));
 	}
 	
-//	private static void initializeDirectories(String bioguideId, Context context) {
-//		File legislatorDir = new File(picDir(bioguideId, context));
-//		if (!legislatorDir.exists())
-//			legislatorDir.mkdir();
-//	}
+	public static Bitmap shortcutImage(String bioguideId, Context context) {
+		return getImage(LegislatorProfile.PIC_SMALL, bioguideId, context).getBitmap();
+	}
 	
 	private static String picUrl(String size, String bioguideId) {
 		return "http://assets.sunlightfoundation.com/moc/" + size + "/" + bioguideId + ".jpg";
