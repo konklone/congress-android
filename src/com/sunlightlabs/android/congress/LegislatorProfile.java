@@ -138,7 +138,9 @@ public class LegislatorProfile extends Activity {
 	}
 	
 	public static Bitmap shortcutImage(String bioguideId, Context context) {
-		return getImage(LegislatorProfile.PIC_SMALL, bioguideId, context).getBitmap();
+		Bitmap small = getImage(LegislatorProfile.PIC_SMALL, bioguideId, context).getBitmap();
+		// this will be a 40x50 image, that I want to turn into a 40x48 image
+		return Bitmap.createBitmap(small, 0, 1, small.getWidth(), small.getHeight()-2);
 	}
 	
 	private static String picUrl(String size, String bioguideId) {
