@@ -20,7 +20,6 @@ public class YouTube {
 		Pattern entryPattern = Pattern.compile("<entry>(.*?)</entry>", Pattern.DOTALL);
 		Matcher entryMatcher = entryPattern.matcher(xml);
 		while (entryMatcher.find()) {
-			String entry = entryMatcher.group(1);
 			videos.add(new Video(entryMatcher.group(1)));
 		}
 		

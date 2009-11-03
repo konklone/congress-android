@@ -24,8 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-import com.sunlightlabs.android.twitter.Status;
-import com.sunlightlabs.android.yahoo.news.NewsItem;
 import com.sunlightlabs.android.youtube.Video;
 import com.sunlightlabs.android.youtube.YouTube;
 import com.sunlightlabs.android.youtube.YouTubeException;
