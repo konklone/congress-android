@@ -11,7 +11,9 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Window;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sunlightlabs.api.ApiCall;
@@ -22,11 +24,16 @@ public class LegislatorTabs extends TabActivity {
 	
 	private Legislator legislator;
 	private String apiKey;
+	private TextView customTitle;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.legislator);
+        
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title);
+        customTitle = (TextView) findViewById(R.id.custom_title);
         
         String id = getIntent().getStringExtra("legislator_id");
         apiKey = getResources().getString(R.string.sunlight_api_key);
@@ -37,6 +44,7 @@ public class LegislatorTabs extends TabActivity {
 	final Handler handler = new Handler();
 	final Runnable loadingSuccess = new Runnable() {
 		public void run() {
+			customTitle.setText(legislator.titledName());
 			setupTabs();
 			removeDialog(LOADING);
 		}
@@ -159,9 +167,7 @@ public class LegislatorTabs extends TabActivity {
 		Matcher m = p.matcher(url);
 		boolean found = m.find();
 		if (found) {
-			String username = m.group(1);
-			int x = 1;
-			return username;
+			return m.group(1);
 		} else
 			return "";
 	}
