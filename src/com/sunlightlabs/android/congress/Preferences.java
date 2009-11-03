@@ -13,8 +13,20 @@ public class Preferences extends PreferenceActivity {
 		addPreferencesFromResource(R.xml.preferences); 
 	}
 	
-	public static String getString(Context context, String value) {
-		return PreferenceManager.getDefaultSharedPreferences(context).getString(value, null);
+	public static String getString(Context context, String key) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getString(key, null);
+	}
+	
+	public static boolean setString(Context context, String key, String value) {
+		return PreferenceManager.getDefaultSharedPreferences(context).edit().putString(key, value).commit();
+	}
+	
+	public static boolean getBoolean(Context context, String key) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(key, false);
+	}
+	
+	public static boolean setBoolean(Context context, String key, boolean value) {
+		return PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(key, value).commit();
 	}
 	
 }

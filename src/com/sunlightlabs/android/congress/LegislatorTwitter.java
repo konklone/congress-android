@@ -6,7 +6,6 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.ClipboardManager;
@@ -48,7 +47,6 @@ public class LegislatorTwitter extends ListActivity {
     	username = getIntent().getStringExtra("username");
     	
     	setupControls();
-    	
     	loadTweets();
 	}
 	
@@ -64,6 +62,7 @@ public class LegislatorTwitter extends ListActivity {
         	}
         	
         	removeDialog(LOADING);
+        	firstToast();
         }
     };
     final Runnable updateFailure = new Runnable() {
@@ -92,6 +91,13 @@ public class LegislatorTwitter extends ListActivity {
 	    loadingThread.start();
 	    
 		showDialog(LOADING);
+	}
+	
+	public void firstToast() {
+		if (!Preferences.getBoolean(this, "already_twittered")) {
+    		Toast.makeText(this, "Tap a tweet to reply.", Toast.LENGTH_LONG).show();
+    		Preferences.setBoolean(this, "already_twittered", true);
+    	}
 	}
 	
 	public void onListItemClick(ListView parent, View v, int position, long id) {
