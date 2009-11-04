@@ -4,13 +4,12 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Window;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -20,7 +19,7 @@ import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorTabs extends TabActivity {
-	private static final int LOADING = 0;
+	private ProgressDialog dialog = null;
 	
 	private Legislator legislator;
 	private String apiKey;
@@ -38,8 +37,6 @@ public class LegislatorTabs extends TabActivity {
         String id = getIntent().getStringExtra("legislator_id");
         apiKey = getResources().getString(R.string.sunlight_api_key);
         
-        legislator = (Legislator) getLastNonConfigurationInstance();
-        
         loadLegislator(id);
 	}
 	
@@ -48,48 +45,25 @@ public class LegislatorTabs extends TabActivity {
     	return legislator;
     }
 	
-	final Handler handler = new Handler();
-	final Runnable loadingSuccess = new Runnable() {
-		public void run() {
-			displayLegislator();
-			removeDialog(LOADING);
-		}
-	};
+	@Override
+    public void onSaveInstanceState(Bundle state) {
+    	if (dialog != null && dialog.isShowing())
+    		dialog.dismiss();
+    	super.onSaveInstanceState(state);
+    }
 	
-	final Runnable loadingFailure = new Runnable() {
-		public void run() {
-			alert("Couldn't connect to the network. Please try again when you have a connection.");
-			removeDialog(LOADING);
-			finish();
-		}
-	};
+	public void loadLegislator(String id) {
+		legislator = (Legislator) getLastNonConfigurationInstance();
+		if (legislator == null)
+        	new LoadLegislator().execute(id);
+        else
+        	displayLegislator();
+	}
 	
 	public void displayLegislator() {
 		customTitle.setText(legislator.titledName());
 		setupTabs();
-	}
-	
-	public void loadLegislator(String legId) {
-		final String id = legId;
-		Thread loadingThread = new Thread() {
-			public void run() {
-				try {
-					legislator = Legislator.getLegislatorById(new ApiCall(apiKey), id);
-					handler.post(loadingSuccess);
-				} catch(IOException e) {
-					handler.post(loadingFailure);
-				}
-			}
-		};
-		
-		if (legislator == null) {
-			loadingThread.start();
-			showDialog(LOADING);
-		} else {
-			displayLegislator();
-		}
-	}
-	
+	}	
 	
 	public void setupTabs() {
 		TabHost tabHost = getTabHost();
@@ -163,19 +137,6 @@ public class LegislatorTabs extends TabActivity {
 		return intent;
 	}
 	
-	protected Dialog onCreateDialog(int id) {
-        switch(id) {
-        case LOADING:
-            ProgressDialog dialog = new ProgressDialog(this);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("Loading...");
-            dialog.setCancelable(false);
-            return dialog;
-        default:
-            return null;
-        }
-    }
-	
 	public static String youtubeUsername(Legislator legislator) {
 		String url = legislator.getProperty("youtube_url");
 		Pattern p = Pattern.compile("http://(?:www\\.)?youtube\\.com/(?:user/)?(.*?)/?$", Pattern.CASE_INSENSITIVE);
@@ -190,5 +151,37 @@ public class LegislatorTabs extends TabActivity {
 	public void alert(String msg) {
 		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 	}
+	
+	private class LoadLegislator extends AsyncTask<String,Void,Boolean> {
+    	@Override
+    	protected void onPreExecute() {
+    		dialog = new ProgressDialog(LegislatorTabs.this);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("Loading legislator...");
+            dialog.setCancelable(false);
+			dialog.show();
+    	}
+    	
+    	@Override
+    	protected Boolean doInBackground(String... ids) {
+    		try {
+				legislator = Legislator.getLegislatorById(new ApiCall(apiKey), ids[0]);
+				return new Boolean(true);
+			} catch(IOException e) {
+				return new Boolean(false);
+			}
+    	}
+    	
+    	@Override
+    	protected void onPostExecute(Boolean result) {
+    		dialog.dismiss();
+    		if (result.booleanValue()) {
+    			displayLegislator();
+    		} else {
+    			alert("Couldn't connect to the network. Please try again when you have a connection.");
+    			finish();
+    		}
+    	}
+    }
 
 }
