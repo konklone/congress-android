@@ -43,23 +43,21 @@ public class LegislatorNews extends ListActivity {
     	
     	searchName = getIntent().getStringExtra("searchName");
     	searchName = correctExceptions(searchName);
+    	items = (NewsItem[]) getLastNonConfigurationInstance();
     	
     	setupControls();
-    	
     	loadNews();
 	}
+	
+	@Override
+    public Object onRetainNonConfigurationInstance() {
+    	return items;
+    }
 	
 	final Handler handler = new Handler();
     final Runnable updateSuccess = new Runnable() {
         public void run() {
-        	setListAdapter(new NewsAdapter(LegislatorNews.this, items));
-        	
-        	if (items.length <= 0) {
-        		TextView empty = (TextView) LegislatorNews.this.findViewById(R.id.news_empty);
-        		empty.setText(R.string.news_empty);
-        		refresh.setVisibility(View.VISIBLE);
-        	}
-        	
+        	displayNews();
         	removeDialog(LOADING);
         }
     };
@@ -117,6 +115,16 @@ public class LegislatorNews extends ListActivity {
 		});
     	registerForContextMenu(getListView());
     }
+    
+    protected void displayNews() {
+    	setListAdapter(new NewsAdapter(this, items));
+    	
+    	if (items.length <= 0) {
+    		TextView empty = (TextView) findViewById(R.id.news_empty);
+    		empty.setText(R.string.news_empty);
+    		refresh.setVisibility(View.VISIBLE);
+    	}
+    }
 	
 	protected void loadNews() {
 		Thread loadingThread = new Thread() {
@@ -131,9 +139,11 @@ public class LegislatorNews extends ListActivity {
 	    		}
 	        }
 	    };
-	    loadingThread.start();
-	    
-		showDialog(LOADING);
+	    if (items == null) {
+		    loadingThread.start();
+			showDialog(LOADING);
+	    } else
+	    	displayNews();
 	}
     
     protected Dialog onCreateDialog(int id) {
