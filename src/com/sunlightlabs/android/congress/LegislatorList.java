@@ -53,6 +53,7 @@ public class LegislatorList extends ListActivity {
     	loadLegislators();
     }
     
+    
     @Override
     public Object onRetainNonConfigurationInstance() {
     	return legislators;
@@ -174,9 +175,8 @@ public class LegislatorList extends ListActivity {
     	if (legislators == null) {
 	    	loadingThread.start();
 			showDialog(LOADING);
-    	} else {
+    	} else
     		displayLegislators();
-    	}
     }
     
     private boolean zipSearch() {
