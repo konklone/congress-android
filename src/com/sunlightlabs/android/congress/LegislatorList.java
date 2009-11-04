@@ -22,13 +22,19 @@ import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorList extends ListActivity {
 	private final static int LOADING = 0;
+	
+	private final static int SEARCH_ZIP = 0;
+	private final static int SEARCH_LOCATION = 1;
+	private final static int SEARCH_STATE = 2;
+	private final static int SEARCH_LASTNAME = 3;
+	
 	private Legislator[] legislators = null;
 	private Button back, refresh;
 	
 	// whether the user has come to this activity looking to create a shortcut
 	private boolean shortcut;
 	
-	private String zipCode, lastName, state;
+	private String zipCode, lastName, state, api_key;
 	private double latitude = -1;
 	private double longitude = -1;
     
@@ -44,6 +50,8 @@ public class LegislatorList extends ListActivity {
     	longitude = extras.getDouble("longitude");
     	lastName = extras.getString("last_name");
     	state = extras.getString("state");
+
+    	api_key = getResources().getString(R.string.sunlight_api_key);
     	
     	shortcut = extras.getBoolean("shortcut", false);
     	
@@ -58,6 +66,7 @@ public class LegislatorList extends ListActivity {
     public Object onRetainNonConfigurationInstance() {
     	return legislators;
     }
+    
     
     final Handler handler = new Handler();
     final Runnable updateThread = new Runnable() {
@@ -89,16 +98,22 @@ public class LegislatorList extends ListActivity {
     	TextView empty = (TextView) this.findViewById(R.id.empty_msg);
     	
     	if (legislators.length <= 0) {
-    		if (zipSearch())
-    			empty.setText(R.string.empty_zipcode);
-    		else if (locationSearch())
-    			empty.setText(R.string.empty_location);
-    		else if (lastNameSearch())
-    			empty.setText(R.string.empty_last_name);
-    		else if (stateSearch())
-    			empty.setText(R.string.empty_state);
-    		else
-    			empty.setText(R.string.empty_general);
+    		switch (searchType()) {
+	    		case SEARCH_ZIP:
+	    			empty.setText(R.string.empty_zipcode);
+	    			break;
+	    		case SEARCH_LOCATION:
+	    			empty.setText(R.string.empty_location);
+	    			break;
+	    		case SEARCH_LASTNAME:
+	    			empty.setText(R.string.empty_last_name);
+	    			break;
+	    		case SEARCH_STATE:
+	    			empty.setText(R.string.empty_state);
+	    			break;
+	    		default:
+	    			empty.setText(R.string.empty_general);
+    		}
     		back.setVisibility(View.VISIBLE);
     	}
     }
@@ -147,23 +162,28 @@ public class LegislatorList extends ListActivity {
     public void loadLegislators() {
     	Thread loadingThread = new Thread() {
 	        public void run() {
-		    	String api_key = getResources().getString(R.string.sunlight_api_key);
 				ApiCall api = new ApiCall(api_key);
 				
 				try {
-			    	if (zipSearch())
-			    		legislators = Legislator.getLegislatorsForZipCode(api, zipCode);
-			    	else if (locationSearch())
-			    		legislators = Legislator.getLegislatorsForLatLong(api, latitude, longitude);
-			    	else if (lastNameSearch()) {
-			    		Map<String,String> params = new HashMap<String,String>();
-			    		params.put("lastname", lastName);
-			    		legislators = Legislator.allLegislators(api, params);
-			    	} else if (stateSearch()) {
-			    		Map<String,String> params = new HashMap<String,String>();
-			    		params.put("state", state);
-			    		legislators = Legislator.allLegislators(api, params);
-			    	}
+					Map<String,String> params;
+					switch (searchType()) {
+						case SEARCH_ZIP:
+				    		legislators = Legislator.getLegislatorsForZipCode(api, zipCode);
+				    		break;
+						case SEARCH_LOCATION:
+				    		legislators = Legislator.getLegislatorsForLatLong(api, latitude, longitude);
+				    		break;
+						case SEARCH_LASTNAME:
+				    		params = new HashMap<String,String>();
+				    		params.put("lastname", lastName);
+				    		legislators = Legislator.allLegislators(api, params);
+				    		break;
+						case SEARCH_STATE:
+				    		params = new HashMap<String,String>();
+				    		params.put("state", state);
+				    		legislators = Legislator.allLegislators(api, params);
+				    		break;
+					}
 			    	handler.post(updateThread);
 				} catch(IOException e) {
 					legislators = new Legislator[0];
@@ -177,6 +197,19 @@ public class LegislatorList extends ListActivity {
 			showDialog(LOADING);
     	} else
     		displayLegislators();
+    }
+    
+    private int searchType() {
+    	if (zipSearch())
+    		return SEARCH_ZIP;
+    	else if (locationSearch())
+    		return SEARCH_LOCATION;
+    	else if (lastNameSearch())
+    		return SEARCH_LASTNAME;
+    	else if (stateSearch())
+    		return SEARCH_STATE;
+    	else
+    		return SEARCH_LOCATION;
     }
     
     private boolean zipSearch() {
