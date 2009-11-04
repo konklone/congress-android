@@ -47,7 +47,6 @@ public class LegislatorList extends ListActivity {
     	
     	shortcut = extras.getBoolean("shortcut", false);
     	
-    	// if we flipped the screen, pre-populate saved legislators
     	legislators = ((Legislator[]) getLastNonConfigurationInstance());
     	
     	setupControls();

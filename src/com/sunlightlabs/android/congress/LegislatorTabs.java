@@ -38,14 +38,20 @@ public class LegislatorTabs extends TabActivity {
         String id = getIntent().getStringExtra("legislator_id");
         apiKey = getResources().getString(R.string.sunlight_api_key);
         
+        legislator = ((Legislator) getLastNonConfigurationInstance());
+        
         loadLegislator(id);
 	}
+	
+	@Override
+    public Object onRetainNonConfigurationInstance() {
+    	return legislator;
+    }
 	
 	final Handler handler = new Handler();
 	final Runnable loadingSuccess = new Runnable() {
 		public void run() {
-			customTitle.setText(legislator.titledName());
-			setupTabs();
+			displayLegislator();
 			removeDialog(LOADING);
 		}
 	};
@@ -57,6 +63,11 @@ public class LegislatorTabs extends TabActivity {
 			finish();
 		}
 	};
+	
+	public void displayLegislator() {
+		customTitle.setText(legislator.titledName());
+		setupTabs();
+	}
 	
 	public void loadLegislator(String legId) {
 		final String id = legId;
@@ -70,9 +81,13 @@ public class LegislatorTabs extends TabActivity {
 				}
 			}
 		};
-		loadingThread.start();
 		
-		showDialog(LOADING);
+		if (legislator == null) {
+			loadingThread.start();
+			showDialog(LOADING);
+		} else {
+			displayLegislator();
+		}
 	}
 	
 	
