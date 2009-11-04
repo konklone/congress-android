@@ -9,8 +9,8 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -61,37 +61,17 @@ public class LegislatorList extends ListActivity {
     	loadLegislators();
     }
     
-    
     @Override
     public Object onRetainNonConfigurationInstance() {
     	return legislators;
     }
     
-    
-    final Handler handler = new Handler();
-    final Runnable updateThread = new Runnable() {
-        public void run() {
-        	// if there's only one result, don't even make them click it
-        	if (legislators.length == 1) {
-        		selectLegislator(legislators[0]);
-        		removeDialog(LOADING);
-        		finish();
-        		return;
-        	}
-        	
-        	displayLegislators();
-        	removeDialog(LOADING);
-        }
-    };
-    final Runnable updateFailure = new Runnable() {
-        public void run() {
-        	setListAdapter(new ArrayAdapter<Legislator>(LegislatorList.this, android.R.layout.simple_list_item_1, legislators));
-        	TextView empty = (TextView) LegislatorList.this.findViewById(R.id.empty_msg);
-        	empty.setText(R.string.connection_failed);
-        	refresh.setVisibility(View.VISIBLE);
-			removeDialog(LOADING);
-        }
-    };
+    public void loadLegislators() {
+    	if (legislators == null)
+    		new LoadLegislators().execute();
+    	else
+    		displayLegislators();
+    }
     
     public void displayLegislators() {
     	setListAdapter(new ArrayAdapter<Legislator>(this, android.R.layout.simple_list_item_1, legislators));
@@ -158,46 +138,6 @@ public class LegislatorList extends ListActivity {
     	} else
     		startActivity(legislatorIntent);
     }
-	
-    public void loadLegislators() {
-    	Thread loadingThread = new Thread() {
-	        public void run() {
-				ApiCall api = new ApiCall(api_key);
-				
-				try {
-					Map<String,String> params;
-					switch (searchType()) {
-						case SEARCH_ZIP:
-				    		legislators = Legislator.getLegislatorsForZipCode(api, zipCode);
-				    		break;
-						case SEARCH_LOCATION:
-				    		legislators = Legislator.getLegislatorsForLatLong(api, latitude, longitude);
-				    		break;
-						case SEARCH_LASTNAME:
-				    		params = new HashMap<String,String>();
-				    		params.put("lastname", lastName);
-				    		legislators = Legislator.allLegislators(api, params);
-				    		break;
-						case SEARCH_STATE:
-				    		params = new HashMap<String,String>();
-				    		params.put("state", state);
-				    		legislators = Legislator.allLegislators(api, params);
-				    		break;
-					}
-			    	handler.post(updateThread);
-				} catch(IOException e) {
-					legislators = new Legislator[0];
-					handler.post(updateFailure);
-				}
-	        }
-    	};
-    	
-    	if (legislators == null) {
-	    	loadingThread.start();
-			showDialog(LOADING);
-    	} else
-    		displayLegislators();
-    }
     
     private int searchType() {
     	if (zipSearch())
@@ -250,5 +190,63 @@ public class LegislatorList extends ListActivity {
         default:
             return null;
         }
+    }
+    
+    private class LoadLegislators extends AsyncTask<Void,Void,Boolean> {
+    	@Override
+    	protected void onPreExecute() {
+    		showDialog(LOADING);
+    	}
+    	
+    	@Override
+    	protected Boolean doInBackground(Void... nothing) {
+    		ApiCall api = new ApiCall(api_key);
+			
+			try {
+				Map<String,String> params;
+				switch (searchType()) {
+					case SEARCH_ZIP:
+			    		legislators = Legislator.getLegislatorsForZipCode(api, zipCode);
+			    		break;
+					case SEARCH_LOCATION:
+			    		legislators = Legislator.getLegislatorsForLatLong(api, latitude, longitude);
+			    		break;
+					case SEARCH_LASTNAME:
+			    		params = new HashMap<String,String>();
+			    		params.put("lastname", lastName);
+			    		legislators = Legislator.allLegislators(api, params);
+			    		break;
+					case SEARCH_STATE:
+			    		params = new HashMap<String,String>();
+			    		params.put("state", state);
+			    		legislators = Legislator.allLegislators(api, params);
+			    		break;
+				}
+		    	return new Boolean(true);
+			} catch(IOException e) {
+				legislators = new Legislator[0];
+				return new Boolean(false);
+			}
+    	}
+    	
+    	@Override
+    	protected void onPostExecute(Boolean result) {
+    		removeDialog(LOADING);
+    		
+    		if (result.booleanValue()) {
+    			// if there's only one result, don't even make them click it
+            	if (legislators.length == 1) {
+            		selectLegislator(legislators[0]);
+            		finish();
+            		return;
+            	}
+            	displayLegislators();
+    		} else {
+    			setListAdapter(new ArrayAdapter<Legislator>(LegislatorList.this, android.R.layout.simple_list_item_1, legislators));
+            	TextView empty = (TextView) LegislatorList.this.findViewById(R.id.empty_msg);
+            	empty.setText(R.string.connection_failed);
+            	refresh.setVisibility(View.VISIBLE);
+    		}
+    	}
     }
 }
