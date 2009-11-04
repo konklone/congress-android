@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -186,18 +185,6 @@ public class LegislatorList extends ListActivity {
 		
 		return i;
     }
-
-//    protected Dialog onCreateDialog(int id) {
-//        switch(id) {
-//        case LOADING:
-//            ProgressDialog dialog = new ProgressDialog(this);
-//            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//            dialog.setMessage("Finding legislators...");
-//            return dialog;
-//        default:
-//            return null;
-//        }
-//    }
     
     private class LoadLegislators extends AsyncTask<Void,Void,Boolean> {
     	@Override
