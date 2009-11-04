@@ -45,24 +45,22 @@ public class LegislatorTwitter extends ListActivity {
     	setContentView(R.layout.twitter);
     	
     	username = getIntent().getStringExtra("username");
+    	tweets = (Status[]) getLastNonConfigurationInstance();
     	
     	setupControls();
     	loadTweets();
 	}
 	
+	@Override
+    public Object onRetainNonConfigurationInstance() {
+    	return tweets;
+    }
+	
     final Handler handler = new Handler();
     final Runnable updateSuccess = new Runnable() {
         public void run() {        	
-        	setListAdapter(new TweetAdapter(LegislatorTwitter.this, tweets));
-        	
-        	if (tweets.length <= 0) {
-        		TextView empty = (TextView) LegislatorTwitter.this.findViewById(R.id.twitter_empty);
-        		empty.setText(R.string.twitter_empty);
-        		refresh.setVisibility(View.VISIBLE);
-        	}
-        	
+        	displayTweets();
         	removeDialog(LOADING);
-        	firstToast();
         }
     };
     final Runnable updateFailure = new Runnable() {
@@ -74,6 +72,18 @@ public class LegislatorTwitter extends ListActivity {
         	removeDialog(LOADING);
         }
     };
+    
+    public void displayTweets() {
+    	setListAdapter(new TweetAdapter(this, tweets));
+    	
+    	if (tweets.length <= 0) {
+    		TextView empty = (TextView) findViewById(R.id.twitter_empty);
+    		empty.setText(R.string.twitter_empty);
+    		refresh.setVisibility(View.VISIBLE);
+    	}
+    	
+    	firstToast();
+    }
 	
 	protected void loadTweets() {
 		Thread loadingThread = new Thread() {
@@ -88,9 +98,13 @@ public class LegislatorTwitter extends ListActivity {
 	        	
 	        }
 	    };
-	    loadingThread.start();
 	    
-		showDialog(LOADING);
+	    if (tweets == null) {
+		    loadingThread.start();
+			showDialog(LOADING);
+	    } else {
+	    	displayTweets();
+	    }
 	}
 	
 	public void firstToast() {

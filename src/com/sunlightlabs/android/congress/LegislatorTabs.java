@@ -38,7 +38,7 @@ public class LegislatorTabs extends TabActivity {
         String id = getIntent().getStringExtra("legislator_id");
         apiKey = getResources().getString(R.string.sunlight_api_key);
         
-        legislator = ((Legislator) getLastNonConfigurationInstance());
+        legislator = (Legislator) getLastNonConfigurationInstance();
         
         loadLegislator(id);
 	}

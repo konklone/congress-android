@@ -47,7 +47,7 @@ public class LegislatorList extends ListActivity {
     	
     	shortcut = extras.getBoolean("shortcut", false);
     	
-    	legislators = ((Legislator[]) getLastNonConfigurationInstance());
+    	legislators = (Legislator[]) getLastNonConfigurationInstance();
     	
     	setupControls();
     	loadLegislators();
