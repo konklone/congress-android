@@ -22,18 +22,15 @@ import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorList extends ListActivity {
 	private final static int LOADING = 0;
-	private Legislator[] legislators;
-	
+	private Legislator[] legislators = null;
 	private Button back, refresh;
 	
 	// whether the user has come to this activity looking to create a shortcut
 	private boolean shortcut;
 	
-	private String zipCode;
+	private String zipCode, lastName, state;
 	private double latitude = -1;
 	private double longitude = -1;
-	private String lastName;
-	private String state;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,8 +47,16 @@ public class LegislatorList extends ListActivity {
     	
     	shortcut = extras.getBoolean("shortcut", false);
     	
+    	// if we flipped the screen, pre-populate saved legislators
+    	legislators = ((Legislator[]) getLastNonConfigurationInstance());
+    	
     	setupControls();
     	loadLegislators();
+    }
+    
+    @Override
+    public Object onRetainNonConfigurationInstance() {
+    	return legislators;
     }
     
     final Handler handler = new Handler();
@@ -65,23 +70,7 @@ public class LegislatorList extends ListActivity {
         		return;
         	}
         	
-        	setListAdapter(new ArrayAdapter<Legislator>(LegislatorList.this, android.R.layout.simple_list_item_1, legislators));
-        	TextView empty = (TextView) LegislatorList.this.findViewById(R.id.empty_msg);
-        	
-        	if (legislators.length <= 0) {
-        		if (zipSearch())
-        			empty.setText(R.string.empty_zipcode);
-        		else if (locationSearch())
-        			empty.setText(R.string.empty_location);
-        		else if (lastNameSearch())
-        			empty.setText(R.string.empty_last_name);
-        		else if (stateSearch())
-        			empty.setText(R.string.empty_state);
-        		else
-        			empty.setText(R.string.empty_general);
-        		back.setVisibility(View.VISIBLE);
-        	}
-        	
+        	displayLegislators();
         	removeDialog(LOADING);
         }
     };
@@ -94,6 +83,25 @@ public class LegislatorList extends ListActivity {
 			removeDialog(LOADING);
         }
     };
+    
+    public void displayLegislators() {
+    	setListAdapter(new ArrayAdapter<Legislator>(this, android.R.layout.simple_list_item_1, legislators));
+    	TextView empty = (TextView) this.findViewById(R.id.empty_msg);
+    	
+    	if (legislators.length <= 0) {
+    		if (zipSearch())
+    			empty.setText(R.string.empty_zipcode);
+    		else if (locationSearch())
+    			empty.setText(R.string.empty_location);
+    		else if (lastNameSearch())
+    			empty.setText(R.string.empty_last_name);
+    		else if (stateSearch())
+    			empty.setText(R.string.empty_state);
+    		else
+    			empty.setText(R.string.empty_general);
+    		back.setVisibility(View.VISIBLE);
+    	}
+    }
     
     public void setupControls() {
     	back = (Button) findViewById(R.id.empty_back);
@@ -163,9 +171,13 @@ public class LegislatorList extends ListActivity {
 				}
 	        }
     	};
-    	loadingThread.start();
-	    
-		showDialog(LOADING);
+    	
+    	if (legislators == null) {
+	    	loadingThread.start();
+			showDialog(LOADING);
+    	} else {
+    		displayLegislators();
+    	}
     }
     
     private boolean zipSearch() {
