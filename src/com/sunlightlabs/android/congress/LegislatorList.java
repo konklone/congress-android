@@ -21,7 +21,7 @@ import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorList extends ListActivity {
-	private final static int LOADING = 0;
+	private ProgressDialog dialog;
 	
 	private final static int SEARCH_ZIP = 0;
 	private final static int SEARCH_LOCATION = 1;
@@ -64,6 +64,13 @@ public class LegislatorList extends ListActivity {
     @Override
     public Object onRetainNonConfigurationInstance() {
     	return legislators;
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle state) {
+    	if (dialog != null && dialog.isShowing())
+    		dialog.dismiss();
+    	super.onSaveInstanceState(state);
     }
     
     public void loadLegislators() {
@@ -180,22 +187,25 @@ public class LegislatorList extends ListActivity {
 		return i;
     }
 
-    protected Dialog onCreateDialog(int id) {
-        switch(id) {
-        case LOADING:
-            ProgressDialog dialog = new ProgressDialog(this);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("Finding legislators...");
-            return dialog;
-        default:
-            return null;
-        }
-    }
+//    protected Dialog onCreateDialog(int id) {
+//        switch(id) {
+//        case LOADING:
+//            ProgressDialog dialog = new ProgressDialog(this);
+//            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            dialog.setMessage("Finding legislators...");
+//            return dialog;
+//        default:
+//            return null;
+//        }
+//    }
     
     private class LoadLegislators extends AsyncTask<Void,Void,Boolean> {
     	@Override
     	protected void onPreExecute() {
-    		showDialog(LOADING);
+    		dialog = new ProgressDialog(LegislatorList.this);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("Finding legislators...");
+            dialog.show();
     	}
     	
     	@Override
@@ -231,7 +241,7 @@ public class LegislatorList extends ListActivity {
     	
     	@Override
     	protected void onPostExecute(Boolean result) {
-    		removeDialog(LOADING);
+    		dialog.dismiss();
     		
     		if (result.booleanValue()) {
     			// if there's only one result, don't even make them click it
