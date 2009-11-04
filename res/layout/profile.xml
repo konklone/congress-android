@@ -18,8 +18,8 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
-			android:layout_marginTop="10sp"
-			android:layout_marginBottom="15sp"
+			android:layout_marginTop="10dp"
+			android:layout_marginBottom="15dp"
 			
 			android:textSize="26sp"
 			android:textColor="@android:color/white"
@@ -32,15 +32,15 @@
 			
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginLeft="12sp"
+			android:layout_marginLeft="12dp"
 			>
 	
 		  	<ImageView android:id="@+id/profile_picture"
 		  	
 		  		android:layout_width="100px"
 		  		android:layout_height="125px"
-		  		android:layout_marginRight="15sp"
-		  		android:layout_marginBottom="10sp"
+		  		android:layout_marginRight="15dp"
+		  		android:layout_marginBottom="10dp"
 		  		
 		  		android:src="@drawable/loading_photo"
 		  		/>
@@ -51,15 +51,15 @@
 		  		android:layout_height="fill_parent"
 		  		android:layout_width="fill_parent"
 		  		
-		  		android:paddingTop="10sp"
-		  		android:paddingRight="20sp"
+		  		android:paddingTop="10dp"
+		  		android:paddingRight="20dp"
 		  		>
 	  		
 		  		<TextView android:id="@+id/profile_party"
 		  		
 			  		android:layout_width="wrap_content"
 		  			android:layout_height="wrap_content"
-		  			android:layout_marginBottom="7sp"
+		  			android:layout_marginBottom="7dp"
 		  			android:layout_gravity="center"
 		  			
 		  			android:textSize="22sp"
@@ -71,7 +71,7 @@
 			  		
 			  		android:layout_width="wrap_content"
 			  		android:layout_height="wrap_content"
-			  		android:layout_marginBottom="7sp"
+			  		android:layout_marginBottom="7dp"
 			  		android:layout_gravity="center"
 			  		
 			  		android:textSize="22sp"
@@ -99,9 +99,8 @@
 	 		
 	 		android:layout_width="fill_parent"
 	 		android:layout_height="wrap_content"
-	 		android:layout_marginTop="30sp"
-	 		
-	 		android:layout_marginLeft="8sp"
+	 		android:layout_marginTop="30dp"
+	 		android:layout_marginLeft="8dp"
 	 		>
 	 		
 	 		<LinearLayout android:id="@+id/profile_phone_row"
@@ -109,22 +108,22 @@
 	 			
 	 			android:layout_width="fill_parent"
 	 			android:layout_height="wrap_content"
-	 			android:layout_marginBottom="10sp"
+	 			android:layout_marginBottom="10dp"
 	 			>
 	 		
 	 			<ImageView android:id="@+id/profile_phone_icon"
 	 				android:src="@drawable/phone"
 	 			
-	 				android:layout_width="48sp"
-	 				android:layout_height="48sp"
-	 				android:layout_marginRight="10sp"
+	 				android:layout_width="48dp"
+	 				android:layout_height="48dp"
+	 				android:layout_marginRight="10dp"
 	 				/>
 	 			
 		 		<TextView 
 		  			android:id="@+id/profile_phone"
 		  			android:layout_width="wrap_content"
 		 			android:layout_height="wrap_content"
-		 			android:layout_marginTop="3sp"
+		 			android:layout_marginTop="3dp"
 		 			 
 		  			android:textSize="30sp"
 		  			android:textColor="@android:color/white"
@@ -143,16 +142,16 @@
 	 			<ImageView android:id="@+id/profile_website_icon"
 	 				android:src="@drawable/web"
 	 				
-	 				android:layout_width="48sp"
-	 				android:layout_height="48sp"
-	 				android:layout_marginRight="10sp"
+	 				android:layout_width="48dp"
+	 				android:layout_height="48dp"
+	 				android:layout_marginRight="10dp"
 	 				/>
 	 				
 	 			<TextView android:id="@+id/profile_website"
 	 			
 		  			android:layout_width="wrap_content"
 		 			android:layout_height="wrap_content"
-		 			android:layout_marginTop="7sp"
+		 			android:layout_marginTop="7dp"
 		 			
 		 			android:textSize="22sp"
 		 			android:textColor="@android:color/white"

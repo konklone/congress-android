@@ -9,28 +9,29 @@
 	    android:orientation="vertical"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
-	    android:padding="10sp"
+	    android:padding="10dp"
 	    >
 	    	
 	    <TextView android:id="@+id/twitter_original"
 	    	android:layout_width="fill_parent"
 	    	android:layout_height="wrap_content"
-	    	android:layout_marginTop="5sp"
-	    	android:layout_marginBottom="10sp"
+	    	android:layout_marginTop="5dp"
+	    	android:layout_marginBottom="10dp"
 	    	
 	    	android:autoLink="web"
 	    	
 	    	android:textSize="16sp"
 	    	android:textColor="@android:color/white"
+	    	
 	    	android:text="This is the original tweet from http://twitter.com, and could be quite long, or sad, or even joyous.  Anything can go here."
 	    	/>
 	    
 	    <EditText android:id="@+id/twitter_message"
 	    	android:layout_width="fill_parent"
 	    	android:layout_height="wrap_content"
+	    	android:layout_marginBottom="5dp"
 	    	android:gravity="top"
 	    	android:lines="3"
-	    	android:layout_marginBottom="5sp"
 	    	/>
 	    
 	    <LinearLayout
@@ -40,19 +41,21 @@
 	    	>
 	    	
 	    	<Button android:id="@+id/twitter_ok"
-	    		android:layout_width="100sp"
+	    		android:layout_width="100dp"
 	    		android:layout_height="wrap_content"
-	    		android:text="Reply"
+	    		android:layout_marginRight="5dp"
+	    		
 	    		android:textSize="14sp"
-	    		android:layout_marginRight="5sp"
+	    		android:text="Reply"
 	    		/>
 	    	
 	    	<Button android:id="@+id/twitter_cancel"
-	    		android:layout_width="100sp"
+	    		android:layout_width="100dp"
 	    		android:layout_height="wrap_content"
-	    		android:text="Cancel"
+	    		android:layout_marginLeft="5dp"
+	    		
 	    		android:textSize="18sp"
-	    		android:layout_marginLeft="5sp"
+	    		android:text="Cancel"
 	    		/>
 	    		
 	    </LinearLayout>

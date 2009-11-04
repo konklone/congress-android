@@ -16,8 +16,8 @@
 	    	android:layout_height="wrap_content"
 	    	android:layout_gravity="center"
 	    	
-	    	android:layout_marginTop="5sp"
-	    	android:layout_marginBottom="10sp"
+	    	android:layout_marginTop="5dp"
+	    	android:layout_marginBottom="10dp"
 	    	
 	    	android:textSize="30sp"
 	    	android:textColor="@android:color/white"
@@ -27,12 +27,12 @@
 	    <Button android:id="@+id/fetch_location"
 			
 			android:layout_width="fill_parent"
-			android:layout_height="80sp"
+			android:layout_height="80dp"
 			
-			android:layout_marginLeft="10sp"
-			android:layout_marginRight="10sp"
-			android:layout_marginTop="5sp"
-			android:layout_marginBottom="5sp"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp"
+			android:layout_marginTop="5dp"
+			android:layout_marginBottom="5dp"
 			
 			android:textSize="26sp"
 			android:text="My Location"
@@ -43,10 +43,10 @@
 			android:layout_width="fill_parent"
 			android:layout_height="80sp"
 			
-			android:layout_marginLeft="10sp"
-			android:layout_marginRight="10sp"
-			android:layout_marginTop="5sp"
-			android:layout_marginBottom="5sp"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp"
+			android:layout_marginTop="5dp"
+			android:layout_marginBottom="5dp"
 			
 			android:textSize="26sp"
 			android:text="State"
@@ -54,12 +54,12 @@
 	    
 		<Button android:id="@+id/fetch_zip"
 			android:layout_width="fill_parent"
-			android:layout_height="80sp"
+			android:layout_height="80dp"
 			
-			android:layout_marginLeft="10sp"
-			android:layout_marginRight="10sp"
-			android:layout_marginTop="5sp"
-			android:layout_marginBottom="5sp"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp"
+			android:layout_marginTop="5dp"
+			android:layout_marginBottom="5dp"
 			
 			android:textSize="26sp"
 			android:text="Zip Code"
@@ -68,12 +68,12 @@
 		<Button android:id="@+id/fetch_last_name"
 			
 			android:layout_width="fill_parent"
-			android:layout_height="80sp"
+			android:layout_height="80dp"
 			
-			android:layout_marginLeft="10sp"
-			android:layout_marginRight="10sp"
-			android:layout_marginTop="5sp"
-			android:layout_marginBottom="5sp"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp"
+			android:layout_marginTop="5dp"
+			android:layout_marginBottom="5dp"
 			
 			android:textSize="26sp"
 			android:text="Last Name"

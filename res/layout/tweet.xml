@@ -4,14 +4,14 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	
-	android:padding="5sp"
+	android:padding="5dp"
 	>
 
 	<TextView android:id="@+id/tweet_text"
 		
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="2sp"
+		android:layout_marginTop="2dp"
 		
 		android:textSize="18sp"
 		android:textColor="@android:color/white"
@@ -23,7 +23,7 @@
 		
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="3sp"
+		android:layout_marginTop="3dp"
 		
 		android:textSize="14sp"
 		

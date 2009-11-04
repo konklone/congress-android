@@ -4,7 +4,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	
-	android:padding="5sp"
+	android:padding="5dp"
 	>
 	
 	<LinearLayout
@@ -16,13 +16,13 @@
 		
 		<ImageView android:id="@+id/video_icon"
 			android:src="@drawable/video"
-			android:layout_width="48sp"
-			android:layout_height="48sp"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
 			/>
 		
 		<LinearLayout
 			android:orientation="vertical"
-			android:padding="5sp"
+			android:padding="5dp"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			>
@@ -52,7 +52,7 @@
 	<TextView android:id="@+id/video_description"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_margin="5sp"
+		android:layout_margin="5dp"
 		
 		android:textSize="14sp"
 		
