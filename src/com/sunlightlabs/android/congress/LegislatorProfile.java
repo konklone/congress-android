@@ -12,6 +12,7 @@ import java.net.URLConnection;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -31,11 +32,15 @@ public class LegislatorProfile extends Activity {
 	private Drawable avatar;
 	private ImageView picture;
 	
+	private boolean landscape;
+	
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.profile);
+        
+        landscape = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+        setContentView(landscape ? R.layout.profile_landscape : R.layout.profile);
         
         Bundle extras = getIntent().getExtras(); 
         
@@ -81,7 +86,7 @@ public class LegislatorProfile extends Activity {
 		TextView stateView = (TextView) this.findViewById(R.id.profile_state);
 		String stateName = stateName(state);
 		stateView.setText(stateName(state));
-		if (stateName.equals("District of Columbia"))
+		if (!landscape && stateName.equals("District of Columbia"))
 			stateView.setTextSize(18);
 		
 		TextView domainView = (TextView) this.findViewById(R.id.profile_domain); 
