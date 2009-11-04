@@ -102,9 +102,8 @@ public class LegislatorTwitter extends ListActivity {
 	    if (tweets == null) {
 		    loadingThread.start();
 			showDialog(LOADING);
-	    } else {
+	    } else
 	    	displayTweets();
-	    }
 	}
 	
 	public void firstToast() {

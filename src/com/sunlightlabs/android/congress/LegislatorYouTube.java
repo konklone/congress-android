@@ -43,26 +43,34 @@ public class LegislatorYouTube extends ListActivity {
     	setContentView(R.layout.youtube_list);
     	
     	username = getIntent().getStringExtra("username");
+    	videos = (Video[]) getLastNonConfigurationInstance();
     	
     	setupControls();
-    	
     	loadVideos();
 	}
 	
+	@Override
+    public Object onRetainNonConfigurationInstance() {
+    	return videos;
+    }
+	
     final Handler handler = new Handler();
     final Runnable updateThread = new Runnable() {
-        public void run() {        	
-        	setListAdapter(new VideoAdapter(LegislatorYouTube.this, videos));
-        	
-        	if (videos.length <= 0) {
-        		TextView empty = (TextView) LegislatorYouTube.this.findViewById(R.id.youtube_empty);
-        		empty.setText(R.string.youtube_empty);
-        		refresh.setVisibility(View.VISIBLE);
-        	}
-        	
+        public void run() {
+        	displayVideos();
         	removeDialog(LOADING);
         }
     };
+    
+    protected void displayVideos() {
+    	setListAdapter(new VideoAdapter(LegislatorYouTube.this, videos));
+    	
+    	if (videos.length <= 0) {
+    		TextView empty = (TextView) LegislatorYouTube.this.findViewById(R.id.youtube_empty);
+    		empty.setText(R.string.youtube_empty);
+    		refresh.setVisibility(View.VISIBLE);
+    	}
+    }
 	
 	protected void loadVideos() {
 		Thread loadingThread = new Thread() {
@@ -76,9 +84,12 @@ public class LegislatorYouTube extends ListActivity {
 	        	handler.post(updateThread);
 	        }
 	    };
-	    loadingThread.start();
 	    
-		showDialog(LOADING);
+	    if (videos == null) {
+		    loadingThread.start();
+			showDialog(LOADING);
+	    } else
+	    	displayVideos();
 	}
 	
 	@Override
