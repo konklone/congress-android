@@ -30,7 +30,7 @@ public class LegislatorProfile extends Activity {
 	public static final String PIC_LARGE = "200x250";
 	
 	// 30 day expiration time on cached legislator avatars
-	public static final long CACHE_IMAGES = 1000 * 60 * 60 * 24 * 30;
+	public static final long CACHE_IMAGES = (long) 1000 * 60 * 60 * 24 * 30;
 	
 	private String id, titledName, party, gender, state, domain, phone, website;
 	private Drawable avatar;
@@ -156,8 +156,8 @@ public class LegislatorProfile extends Activity {
 	}
 	
 	// assumes you've already checked to make sure the file exists
-	public static boolean tooOld(File file) { 
-		return (file.lastModified() + CACHE_IMAGES) < System.currentTimeMillis();
+	public static boolean tooOld(File file) {
+		return file.lastModified() < (System.currentTimeMillis() - CACHE_IMAGES);
 	}
 	
 	private static String picUrl(String size, String bioguideId) {
