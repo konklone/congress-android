@@ -18,6 +18,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.format.Time;
 import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,6 +28,9 @@ public class LegislatorProfile extends Activity {
 	public static final String PIC_SMALL = "40x50";
 	public static final String PIC_MEDIUM = "100x125";
 	public static final String PIC_LARGE = "200x250";
+	
+	// 30 day expiration time on cached legislator avatars
+	public static final long CACHE_IMAGES = 1000 * 60 * 60 * 24 * 30;
 	
 	private String id, titledName, party, gender, state, domain, phone, website;
 	private Drawable avatar;
@@ -135,6 +139,9 @@ public class LegislatorProfile extends Activity {
 		
 		if (!imageFile.exists())
 			cacheImages(bioguideId, context);
+		else if (tooOld(imageFile))
+			cacheImages(bioguideId, context);
+		
 		
 		if (!imageFile.exists()) // download failed for some reason
 			return null;
@@ -146,6 +153,11 @@ public class LegislatorProfile extends Activity {
 		Bitmap small = getImage(LegislatorProfile.PIC_SMALL, bioguideId, context).getBitmap();
 		// this will be a 40x50 image, that I want to turn into a 40x48 image
 		return Bitmap.createBitmap(small, 0, 1, small.getWidth(), small.getHeight()-2);
+	}
+	
+	// assumes you've already checked to make sure the file exists
+	public static boolean tooOld(File file) { 
+		return (file.lastModified() + CACHE_IMAGES) < System.currentTimeMillis();
 	}
 	
 	private static String picUrl(String size, String bioguideId) {
@@ -169,7 +181,7 @@ public class LegislatorProfile extends Activity {
 	private static void cacheImage(String size, String bioguideId, Context context) {
 		File outFile = new File(picPath(size, bioguideId, context));
 		if (outFile.exists())
-			return;
+			outFile.delete();
 		
 		String url = picUrl(size, bioguideId);
 		downloadFile(url, outFile);
