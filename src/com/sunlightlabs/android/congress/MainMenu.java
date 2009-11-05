@@ -1,21 +1,31 @@
 package com.sunlightlabs.android.congress;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.util.Linkify;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MainMenu extends Activity {
 	public static final int RESULT_ZIP = 1;
 	public static final int RESULT_LASTNAME = 2;
 	public static final int RESULT_STATE = 3;
+	
+	private static final int ABOUT = 0;
+	
 	private Location location;
 
 	@Override
@@ -161,6 +171,28 @@ public class MainMenu extends Activity {
 		}
 	}
 	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+        switch(id) {
+        case ABOUT:
+        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        	LayoutInflater inflater = getLayoutInflater();
+        	LinearLayout view = (LinearLayout) inflater.inflate(R.layout.about, null);
+        	
+        	TextView about2 = (TextView) view.findViewById(R.id.about_2);
+        	about2.setText(R.string.about_2);
+        	Linkify.addLinks(about2, Linkify.WEB_URLS);
+        	
+        	builder.setView(view);
+        	builder.setPositiveButton("Cool", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {}
+			});
+            return builder.create();
+        default:
+            return null;
+        }
+    }
+	
 	@Override 
     public boolean onCreateOptionsMenu(Menu menu) { 
 	    super.onCreateOptionsMenu(menu); 
@@ -178,6 +210,9 @@ public class MainMenu extends Activity {
     		Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getResources().getString(R.string.contact_email), null));
     		intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_subject));
     		startActivity(intent);
+    		break;
+    	case R.id.about:
+    		showDialog(ABOUT);
     		break;
     	}
     	return true;

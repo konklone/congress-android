@@ -32,4 +32,10 @@
     <string name="connection_failed">
     	Couldn\'t connect to the network. Press refresh to try again.
     </string>
+    <string name="about_1">
+    	This app made by Sunlight Labs, a division of the Sunlight Foundation that is dedicated to increasing government transparency through the power of technology.
+    </string>
+    <string name="about_2">
+    	News items powered by the Yahoo! News API.\nLegislator search and information powered by the Sunlight Labs API.\n\nhttp://sunlightlabs.com
+    </string>
 </resources>
