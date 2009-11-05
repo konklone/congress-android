@@ -16,68 +16,62 @@
 	    	android:layout_height="wrap_content"
 	    	android:layout_gravity="center"
 	    	
-	    	android:layout_marginTop="5dp"
-	    	android:layout_marginBottom="10dp"
+	    	android:layout_marginTop="4dp"
+	    	android:layout_marginBottom="4dp"
 	    	
 	    	android:textSize="30sp"
 	    	android:textColor="@android:color/white"
 	    	android:text="@string/main_title" 
 	    	/>
 	    
-	    <Button android:id="@+id/fetch_location"
-			
-			android:layout_width="fill_parent"
-			android:layout_height="80dp"
-			
-			android:layout_marginLeft="10dp"
-			android:layout_marginRight="10dp"
-			android:layout_marginTop="5dp"
-			android:layout_marginBottom="5dp"
-			
-			android:textSize="26sp"
-			android:text="My Location"
-			/>
-		
-		<Button android:id="@+id/fetch_state"
-			
-			android:layout_width="fill_parent"
-			android:layout_height="80sp"
-			
-			android:layout_marginLeft="10dp"
-			android:layout_marginRight="10dp"
-			android:layout_marginTop="5dp"
-			android:layout_marginBottom="5dp"
-			
-			android:textSize="26sp"
-			android:text="State"
-			/>
+	    <TableLayout
+	    	android:stretchColumns="*"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	>	    
 	    
-		<Button android:id="@+id/fetch_zip"
-			android:layout_width="fill_parent"
-			android:layout_height="80dp"
-			
-			android:layout_marginLeft="10dp"
-			android:layout_marginRight="10dp"
-			android:layout_marginTop="5dp"
-			android:layout_marginBottom="5dp"
-			
-			android:textSize="26sp"
-			android:text="Zip Code"
-			/>
-			
-		<Button android:id="@+id/fetch_last_name"
-			
-			android:layout_width="fill_parent"
-			android:layout_height="80dp"
-			
-			android:layout_marginLeft="10dp"
-			android:layout_marginRight="10dp"
-			android:layout_marginTop="5dp"
-			android:layout_marginBottom="5dp"
-			
-			android:textSize="26sp"
-			android:text="Last Name"
-			/>
-						
+	    	<TableRow>
+			    <Button android:id="@+id/fetch_location"
+					
+					android:layout_height="100dp"
+					android:layout_margin="5dp"
+					
+					android:drawableTop="@drawable/search_location"
+					android:textSize="20sp"
+					android:text="My Location"
+					/>
+				
+				<Button android:id="@+id/fetch_state"
+					
+					android:layout_height="100dp"
+					android:layout_margin="5dp"
+					
+					android:drawableTop="@drawable/search_all"
+					android:textSize="20sp"
+					android:text="State"
+					/>
+			</TableRow>
+	    	<TableRow>
+				<Button android:id="@+id/fetch_zip"
+				
+					android:layout_height="100dp"
+					android:layout_margin="5dp"
+					
+					android:drawableTop="@drawable/search_zip"
+					android:textSize="20sp"
+					android:text="Zip Code"
+					/>
+					
+				<Button android:id="@+id/fetch_last_name"
+					
+					android:layout_height="100dp"
+					android:layout_margin="5dp"
+					
+					android:drawableTop="@drawable/search_lastname"
+					android:textSize="20sp"
+					android:text="Last Name"
+					/>
+			</TableRow>
+		</TableLayout>
 	</LinearLayout>
 </ScrollView>
