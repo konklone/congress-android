@@ -65,7 +65,6 @@ public class Twitter {
 		} catch(JSONException e) {
 			throw new TwitterException(e);
 		}
-		
 		return tweets;
 	}
 	

@@ -46,7 +46,11 @@ public class LegislatorYouTube extends ListActivity {
     	videos = (Video[]) getLastNonConfigurationInstance();
     	
     	setupControls();
-    	loadVideos();
+    	
+    	if (videos == null)
+    		loadVideos();
+    	else
+    		displayVideos();
 	}
 	
 	@Override
@@ -85,11 +89,8 @@ public class LegislatorYouTube extends ListActivity {
 	        }
 	    };
 	    
-	    if (videos == null) {
-		    loadingThread.start();
-			showDialog(LOADING);
-	    } else
-	    	displayVideos();
+	    loadingThread.start();
+		showDialog(LOADING);
 	}
 	
 	@Override

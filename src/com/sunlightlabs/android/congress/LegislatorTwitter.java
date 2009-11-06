@@ -48,7 +48,11 @@ public class LegislatorTwitter extends ListActivity {
     	tweets = (Status[]) getLastNonConfigurationInstance();
     	
     	setupControls();
-    	loadTweets();
+    	
+    	if (tweets == null)
+    		loadTweets();
+    	else
+    		displayTweets();
 	}
 	
 	@Override
@@ -99,11 +103,8 @@ public class LegislatorTwitter extends ListActivity {
 	        }
 	    };
 	    
-	    if (tweets == null) {
-		    loadingThread.start();
-			showDialog(LOADING);
-	    } else
-	    	displayTweets();
+	    loadingThread.start();
+		showDialog(LOADING);
 	}
 	
 	public void firstToast() {
