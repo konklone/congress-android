@@ -130,7 +130,7 @@ public class TwitterReply extends Activity {
 	}
 	
 	public void alert(String msg) {
-		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 	}
 	
 	protected Dialog onCreateDialog(int id) {
