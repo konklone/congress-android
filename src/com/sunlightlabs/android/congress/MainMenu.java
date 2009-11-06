@@ -57,7 +57,7 @@ public class MainMenu extends Activity {
         
     	if (location == null) {
     		fetchLocation.setEnabled(false);
-	    	fetchLocation.setText("No known location.");
+	    	fetchLocation.setText(R.string.no_location);
     	} else {
     		fetchLocation.setOnClickListener(new View.OnClickListener() {
 	    		public void onClick(View v) {

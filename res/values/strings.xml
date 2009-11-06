@@ -5,33 +5,16 @@
     <string name="main_title">Find A Legislator By</string>
     <string name="contact_subject">Android app feedback</string>
     <string name="first_time_twitter">Tap a tweet to reply.</string>
-    <string name="empty_zipcode">
-    	No legislators found for your zipcode.
-    </string>
-    <string name="empty_location">
-    	No legislators found for your location.
-    </string>
-    <string name="empty_last_name">
-    	No legislators found by that last name.
-    </string>
-    <string name="empty_state">
-    	That state code isn\'t valid. Give it another shot.
-    </string>
-    <string name="empty_general">
-    	No legislators found.
-    </string>
-    <string name="news_empty">
-    	No recent news found.
-    </string>
-    <string name="twitter_empty">
-    	No tweets found.
-    </string>
-    <string name="youtube_empty">
-    	No videos found.
-    </string>
-    <string name="connection_failed">
-    	Couldn\'t connect to the network. Press refresh to try again.
-    </string>
+    <string name="no_location">No location.</string>
+    <string name="empty_zipcode">No legislators found for your zipcode.</string>
+    <string name="empty_location">No legislators found for your location.</string>
+    <string name="empty_last_name">No legislators found by that last name.</string>
+    <string name="empty_state">That state code isn\'t valid. Give it another shot.</string>
+    <string name="empty_general">No legislators found.</string>
+    <string name="news_empty">No recent news found.</string>
+    <string name="twitter_empty">No tweets found.</string>
+    <string name="youtube_empty">No videos found.</string>
+    <string name="connection_failed">Couldn\'t connect to the network. Press refresh to try again.</string>
     <string name="about_1">
     	This app made by Sunlight Labs, a division of the Sunlight Foundation that is dedicated to increasing government transparency through the power of technology.
     </string>
