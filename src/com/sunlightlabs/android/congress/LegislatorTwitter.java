@@ -107,7 +107,7 @@ public class LegislatorTwitter extends ListActivity {
 	}
 	
 	public void firstToast() {
-		if (!Preferences.getBoolean(this, "already_twittered")) {
+		if (!Preferences.getBoolean(this, "already_twittered", false)) {
     		Toast.makeText(this, R.string.first_time_twitter, Toast.LENGTH_LONG).show();
     		Preferences.setBoolean(this, "already_twittered", true);
     	}

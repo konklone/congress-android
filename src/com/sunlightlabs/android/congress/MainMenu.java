@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class MainMenu extends Activity {
@@ -25,6 +26,7 @@ public class MainMenu extends Activity {
 	public static final int RESULT_STATE = 3;
 	
 	private static final int ABOUT = 0;
+	private static final int FIRST = 1;
 	
 	private Location location;
 
@@ -34,6 +36,9 @@ public class MainMenu extends Activity {
         setContentView(R.layout.main);
         
         setupControls();
+        
+        if (firstTime())
+        	showDialog(FIRST);
     }
 	
 	
@@ -171,20 +176,38 @@ public class MainMenu extends Activity {
 		}
 	}
 	
+	public boolean firstTime() {
+		if (Preferences.getBoolean(this, "first_time", true)) {
+			Preferences.setBoolean(this, "first_time", false);
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	protected Dialog onCreateDialog(int id) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	LayoutInflater inflater = getLayoutInflater();
+    	
         switch(id) {
         case ABOUT:
-        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        	LayoutInflater inflater = getLayoutInflater();
-        	LinearLayout view = (LinearLayout) inflater.inflate(R.layout.about, null);
+        	LinearLayout aboutView = (LinearLayout) inflater.inflate(R.layout.about, null);
         	
-        	TextView about2 = (TextView) view.findViewById(R.id.about_2);
+        	TextView about2 = (TextView) aboutView.findViewById(R.id.about_2);
         	about2.setText(R.string.about_2);
         	Linkify.addLinks(about2, Linkify.WEB_URLS);
         	
-        	builder.setView(view);
-        	builder.setPositiveButton("Cool", new DialogInterface.OnClickListener() {
+        	builder.setView(aboutView);
+        	builder.setPositiveButton(R.string.about_button, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+				}
+			});
+            return builder.create();
+        case FIRST:
+        	ScrollView firstView = (ScrollView) inflater.inflate(R.layout.first_time, null);
+        	
+        	builder.setView(firstView);
+        	builder.setPositiveButton(R.string.first_button, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {}
 			});
             return builder.create();

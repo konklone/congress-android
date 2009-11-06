@@ -38,4 +38,27 @@
     <string name="about_2">
     	News items powered by the Yahoo! News API.\nLegislator search and information powered by the Sunlight Labs API.\n\nhttp://sunlightlabs.com
     </string>
+    <string name="about_button">Cool</string>
+    <string name="first_header">
+    	A few things you can do:
+    </string>
+    <string name="first_tip_1_header">
+    	Call your representatives.
+    </string>
+    <string name="first_tip_1_body">
+    	Tap "My Location" to find your district's representatives. Tap their phone number to give them a call. 
+    </string>
+    <string name="first_tip_2_header">
+    	Reply to them on Twitter.
+    </string>
+    <string name="first_tip_2_body">
+    	If a legislator tweets, read them on the Twitter tab, and tap one to reply. 
+    </string>
+    <string name="first_tip_3_header">
+    	Desktop shortcuts to legislators.
+    </string>
+    <string name="first_tip_3_body">
+    	Long press on your desktop to add a shortcut to a legislator\'s profile.
+    </string>
+    <string name="first_button">Awesome</string>
 </resources>

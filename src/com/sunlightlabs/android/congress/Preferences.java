@@ -10,7 +10,7 @@ public class Preferences extends PreferenceActivity {
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState); 
-		addPreferencesFromResource(R.xml.preferences); 
+		addPreferencesFromResource(R.xml.preferences);
 	}
 	
 	public static String getString(Context context, String key) {
@@ -21,8 +21,8 @@ public class Preferences extends PreferenceActivity {
 		return PreferenceManager.getDefaultSharedPreferences(context).edit().putString(key, value).commit();
 	}
 	
-	public static boolean getBoolean(Context context, String key) {
-		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(key, false);
+	public static boolean getBoolean(Context context, String key, boolean defaultValue) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(key, defaultValue);
 	}
 	
 	public static boolean setBoolean(Context context, String key, boolean value) {
