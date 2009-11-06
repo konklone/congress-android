@@ -46,7 +46,11 @@ public class LegislatorNews extends ListActivity {
     	items = (NewsItem[]) getLastNonConfigurationInstance();
     	
     	setupControls();
-    	loadNews();
+    	
+    	if (items == null)
+    		loadNews();
+		else
+			displayNews();
 	}
 	
 	@Override
@@ -139,11 +143,8 @@ public class LegislatorNews extends ListActivity {
 	    		}
 	        }
 	    };
-	    if (items == null) {
-		    loadingThread.start();
-			showDialog(LOADING);
-	    } else
-	    	displayNews();
+	    loadingThread.start();
+		showDialog(LOADING);
 	}
     
     protected Dialog onCreateDialog(int id) {
