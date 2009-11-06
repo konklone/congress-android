@@ -48,8 +48,8 @@
 		  	<LinearLayout android:id="@+id/profile_basic"
 		  		android:orientation="vertical"
 		  		
-		  		android:layout_height="fill_parent"
 		  		android:layout_width="fill_parent"
+		  		android:layout_height="wrap_content"
 		  		
 		  		android:paddingTop="10dp"
 		  		android:paddingRight="20dp"
