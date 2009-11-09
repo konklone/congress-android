@@ -8,6 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,7 +20,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.format.Time;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
@@ -101,8 +104,8 @@ public class LegislatorProfile extends Activity {
 		Linkify.addLinks(phoneView, Linkify.PHONE_NUMBERS);
 		
 		TextView websiteView = (TextView) this.findViewById(R.id.profile_website);
-		websiteView.setText(websiteName(website));
-		Linkify.addLinks(websiteView, Linkify.WEB_URLS);
+		websiteView.setText(Html.fromHtml(websiteLink(website)));
+		websiteView.setMovementMethod(LinkMovementMethod.getInstance());
 	}
 	
 	// needs to only be called when avatars have been downloaded and cached
@@ -210,8 +213,23 @@ public class LegislatorProfile extends Activity {
 		}
 	}
 	
+	// For URLs that use subdomains (i.e. yarmuth.house.gov) return just that.
+	// For URLs that use paths (i.e. house.gov/wu) return just that.
+	// In both cases, remove the http://, the www., and any unneeded trailing stuff.
 	private String websiteName(String url) {
-		return url.replace("http://", "").replaceAll("/$", "");
+		String noPrefix = url.replaceAll("^http://(?:www\\.)?", "");
+		
+		String noSubdomain = "^((?:senate|house)\\.gov/.*?)/";
+		Pattern pattern = Pattern.compile(noSubdomain);
+		Matcher matcher = pattern.matcher(noPrefix);
+		if (matcher.find())
+			return matcher.group(1);
+		else
+			return noPrefix.replaceAll("/.*$", "");
+	}
+	
+	private String websiteLink(String url) {
+		return "<a href=\"" + url + "\">" + websiteName(url) + "</a>";
 	}
 	
 	private String partyName(String code) {
