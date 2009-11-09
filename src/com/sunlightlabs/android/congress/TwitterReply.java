@@ -95,6 +95,9 @@ public class TwitterReply extends Activity {
 		Thread poster = new Thread() {
 			public void run() {
 				Twitter twitter = new Twitter(username, password);
+				// until we use something that implements OAuth, and then register with Twitter,
+				// the source is going to just appear as "web". But that's better than "JTwitter".
+				twitter.setSource("Congress on Android");
 				try {
 					twitter.setStatus(message.getText().toString());
 					handler.post(postSucceeded);
