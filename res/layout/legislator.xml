@@ -3,13 +3,15 @@
 	android:id="@android:id/tabhost"
   	android:orientation="horizontal"
   	android:layout_width="fill_parent"
-  	android:layout_height="wrap_content"
+  	android:layout_height="fill_parent"
   	>
   
   	<LinearLayout 
     	android:orientation="vertical"
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
+    	
+    	android:background="#333333"
     	>
 	  	<TabWidget
 	  		android:id="@android:id/tabs"

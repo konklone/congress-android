@@ -5,6 +5,7 @@
 	android:layout_height="fill_parent"
 	
 	android:padding="5dp"
+	
 	>
 
 	<TextView android:id="@+id/tweet_text"

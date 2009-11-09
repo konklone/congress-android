@@ -10,7 +10,7 @@
 	<LinearLayout
 		android:orientation="vertical"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"	
+		android:layout_height="fill_parent"
 		>
 	
 		<TextView android:id="@+id/profile_name"
@@ -63,6 +63,7 @@
 		  			android:layout_gravity="center"
 		  			
 		  			android:textSize="22sp"
+		  			android:textColor="#dddddd"
 		  			
 		  			android:text="Democrat"
 		  			
@@ -75,6 +76,7 @@
 			  		android:layout_gravity="center"
 			  		
 			  		android:textSize="22sp"
+			  		android:textColor="#dddddd"
 			  		
 			  		android:text="Minnesota"
 			  		/>
@@ -86,6 +88,7 @@
 		  			android:layout_gravity="center"
 		  			
 		  			android:textSize="22sp"
+		  			android:textColor="#dddddd"
 		  			
 		  			android:text="Senior Senator"
 			  		/>
@@ -126,7 +129,6 @@
 		 			android:layout_marginTop="3dp"
 		 			 
 		  			android:textSize="30sp"
-		  			android:textColor="@android:color/white"
 		  			
 		  			android:text="555-555-1212"
 		  			/>
@@ -154,7 +156,6 @@
 		 			android:layout_marginTop="7dp"
 		 			
 		 			android:textSize="22sp"
-		 			android:textColor="@android:color/white"
 		 			
 		 			android:text="klobuchar.senate.gov"
 		  			/>

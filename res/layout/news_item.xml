@@ -22,7 +22,7 @@
 		android:layout_height="wrap_content"
 		
 		android:textSize="16sp"
-		
+		android:textColor="#dddddd"
 		android:text="Sep 22, Example Source"
 		/>
 		
@@ -32,7 +32,7 @@
 		android:layout_marginTop="5dp"
 		
 		android:textSize="14sp"
-		
+		android:textColor="#dddddd"
 		android:text="The summary of an article could be quite long and would look daunting unless wrapped and truncated appropriately..."
 		/>			
 	

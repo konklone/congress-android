@@ -1,77 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:fillViewport="true"
-	>
-
-	<LinearLayout
-	    android:orientation="vertical"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#333333"
+    >
 	    
-	    <TextView
-	    	android:layout_width="wrap_content"
-	    	android:layout_height="wrap_content"
-	    	android:layout_gravity="center"
-	    	
-	    	android:layout_marginTop="4dp"
-	    	android:layout_marginBottom="4dp"
-	    	
-	    	android:textSize="30sp"
-	    	android:textColor="@android:color/white"
-	    	android:text="@string/main_title" 
-	    	/>
-	    
-	    <TableLayout
-	    	android:stretchColumns="*"
-	    	android:layout_width="fill_parent"
-	    	android:layout_height="wrap_content"
-	    	>	    
-	    
-	    	<TableRow>
-			    <Button android:id="@+id/fetch_location"
-					
-					android:layout_height="100dp"
-					android:layout_margin="5dp"
-					
-					android:drawableTop="@drawable/search_location"
-					android:textSize="20sp"
-					android:text="My Location"
-					/>
+    <TextView
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_gravity="center"
+    	
+    	android:layout_marginTop="4dp"
+    	android:layout_marginBottom="4dp"
+    	
+    	android:textSize="30sp"
+    	android:textColor="#eeeeee"
+    	android:text="@string/main_title" 
+    	/>
+    
+    <TableLayout
+    	android:stretchColumns="*"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	>	    
+    
+    	<TableRow>
+		    <Button android:id="@+id/fetch_location"
 				
-				<Button android:id="@+id/fetch_state"
-					
-					android:layout_height="100dp"
-					android:layout_margin="5dp"
-					
-					android:drawableTop="@drawable/search_all"
-					android:textSize="20sp"
-					android:text="State"
-					/>
-			</TableRow>
-	    	<TableRow>
-				<Button android:id="@+id/fetch_zip"
+				android:layout_height="100dp"
+				android:layout_margin="5dp"
 				
-					android:layout_height="100dp"
-					android:layout_margin="5dp"
-					
-					android:drawableTop="@drawable/search_zip"
-					android:textSize="20sp"
-					android:text="Zip Code"
-					/>
-					
-				<Button android:id="@+id/fetch_last_name"
-					
-					android:layout_height="100dp"
-					android:layout_margin="5dp"
-					
-					android:drawableTop="@drawable/search_lastname"
-					android:textSize="20sp"
-					android:text="Last Name"
-					/>
-			</TableRow>
-		</TableLayout>
-	</LinearLayout>
-</ScrollView>
+				android:drawableTop="@drawable/search_location"
+				android:textSize="20sp"
+				android:text="My Location"
+				/>
+			
+			<Button android:id="@+id/fetch_state"
+				
+				android:layout_height="100dp"
+				android:layout_margin="5dp"
+				
+				android:drawableTop="@drawable/search_all"
+				android:textSize="20sp"
+				android:text="State"
+				/>
+		</TableRow>
+    	<TableRow>
+			<Button android:id="@+id/fetch_zip"
+			
+				android:layout_height="100dp"
+				android:layout_margin="5dp"
+				
+				android:drawableTop="@drawable/search_zip"
+				android:textSize="20sp"
+				android:text="Zip Code"
+				/>
+				
+			<Button android:id="@+id/fetch_last_name"
+				
+				android:layout_height="100dp"
+				android:layout_margin="5dp"
+				
+				android:drawableTop="@drawable/search_lastname"
+				android:textSize="20sp"
+				android:text="Last Name"
+				/>
+		</TableRow>
+	</TableLayout>
+</LinearLayout>
