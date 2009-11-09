@@ -1,5 +1,12 @@
-Exceptions: This codebase makes use of Joe Lord's Java client for the Sunlight API. All files in /src/com/sunlightlabs/api and /src/com/sunlightlabs/entities are his.  The full source and any available license is at:
+Exceptions: 
+
+1) This codebase makes use of Joe Lord's Java client for the Sunlight API. All files in /src/com/sunlightlabs/api and /src/com/sunlightlabs/entities are his.  The full source and any available license is at:
 http://github.com/lordjoe/java-sunlightapi/tree/master
+
+2) This codebase makes use of Daniel Winterstein's JTwitter library. All files in /src/winterwell/jtwitter are licensed under the LGPL. The full source and license are at:
+http://www.winterwell.com/software/jtwitter.php
+
+3) In turn, JTwitter depends on Stefan Haustein's Base64Encoder class. All files in /src/lgpl/haustein are licensed under the LGPL.
 
 ==================
 

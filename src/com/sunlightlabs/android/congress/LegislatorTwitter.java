@@ -1,5 +1,7 @@
 package com.sunlightlabs.android.congress;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -25,9 +27,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-import com.sunlightlabs.android.twitter.Status;
-import com.sunlightlabs.android.twitter.Twitter;
-import com.sunlightlabs.android.twitter.TwitterException;
+import winterwell.jtwitter.Twitter;
+import winterwell.jtwitter.Twitter.Status;
+import winterwell.jtwitter.TwitterException;
 
 public class LegislatorTwitter extends ListActivity {
 	private static final int LOADING = 0;
@@ -93,8 +95,11 @@ public class LegislatorTwitter extends ListActivity {
 		Thread loadingThread = new Thread() {
 	        public void run() { 
 	        	try {
+	        		
 	        		Twitter twitter = new Twitter();
-	        		tweets = twitter.getUserTimeline(username);
+	        		List<Status> tweetList = twitter.getUserTimeline(username);
+	        		tweets = tweetList.toArray(new Status[0]);
+	        		
 	        		handler.post(updateSuccess);
 	        	} catch(TwitterException e) {
 	        		handler.post(updateFailure);
@@ -146,7 +151,7 @@ public class LegislatorTwitter extends ListActivity {
 	private void launchReplyForTweet(Status tweet) {
 		Intent intent = new Intent(this, TwitterReply.class);
 		intent.putExtra("tweet_text", tweet.text);
-		intent.putExtra("tweet_username", tweet.username);
+		intent.putExtra("tweet_username", tweet.user.screenName);
 		startActivity(intent);
 	}
 	
@@ -225,7 +230,7 @@ public class LegislatorTwitter extends ListActivity {
 			text.setText(tweet.text);
 			
 			TextView byline = (TextView) view.findViewById(R.id.tweet_byline);
-			byline.setText("posted " + timeAgoInWords(tweet.createdAtMillis) + " by @" + tweet.username);
+			byline.setText("posted " + timeAgoInWords(tweet.createdAt.getTime()) + " by @" + tweet.user.screenName);
 			
 			return view;
 		}

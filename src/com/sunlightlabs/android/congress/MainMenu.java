@@ -193,9 +193,9 @@ public class MainMenu extends Activity {
         case ABOUT:
         	LinearLayout aboutView = (LinearLayout) inflater.inflate(R.layout.about, null);
         	
-        	TextView about2 = (TextView) aboutView.findViewById(R.id.about_2);
-        	about2.setText(R.string.about_2);
-        	Linkify.addLinks(about2, Linkify.WEB_URLS);
+        	TextView about3 = (TextView) aboutView.findViewById(R.id.about_3);
+        	about3.setText(R.string.about_3);
+        	Linkify.addLinks(about3, Linkify.WEB_URLS);
         	
         	builder.setView(aboutView);
         	builder.setPositiveButton(R.string.about_button, new DialogInterface.OnClickListener() {

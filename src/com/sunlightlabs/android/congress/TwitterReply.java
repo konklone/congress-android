@@ -13,8 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sunlightlabs.android.twitter.Twitter;
-import com.sunlightlabs.android.twitter.TwitterException;
+import winterwell.jtwitter.Twitter;
+import winterwell.jtwitter.TwitterException;
 
 public class TwitterReply extends Activity {
 	private static final int RESULT_PREFS = 0;
@@ -79,7 +79,7 @@ public class TwitterReply extends Activity {
     };
     final Runnable postFailed = new Runnable() {
     	public void run() {
-    		alert("Could not update your Twitter status. Please verify your credentials in the Settings screen.");
+    		alert("Could not update your Twitter status, there was an issue with your credentials. Please verify them in the Twitter Settings screen.");
     		removeDialog(TWEETING);
     	}
     };
@@ -96,10 +96,10 @@ public class TwitterReply extends Activity {
 			public void run() {
 				Twitter twitter = new Twitter(username, password);
 				try {
-					if (twitter.update(message.getText().toString()))
-						handler.post(postSucceeded);
-					else
-						handler.post(postFailed);
+					twitter.setStatus(message.getText().toString());
+					handler.post(postSucceeded);
+				} catch(TwitterException.E403 e) {
+					handler.post(postFailed);
 				} catch(TwitterException e) {
 					handler.post(postError);
 				}

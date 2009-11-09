@@ -14,16 +14,25 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		
-		android:textSize="16sp"
+		android:textSize="18sp"
 		android:text="@string/about_1"
 		/>
 	
 	<TextView android:id="@+id/about_2"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="10dp"
+		android:layout_marginTop="15dp"
 		
-		android:textSize="16sp"
+		android:textSize="14sp"
 		android:text="@string/about_2"
+		/>
+	
+	<TextView android:id="@+id/about_3"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="15dp"
+		
+		android:textSize="14sp"
+		android:text="@string/about_3"
 		/>
 </LinearLayout>

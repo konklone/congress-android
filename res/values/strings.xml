@@ -19,7 +19,10 @@
     	This app made by Sunlight Labs, a division of the Sunlight Foundation that is dedicated to increasing government transparency through the power of technology.
     </string>
     <string name="about_2">
-    	News items powered by the Yahoo! News API.\nLegislator search and information powered by the Sunlight Labs API.\n\nhttp://sunlightlabs.com
+    	News powered by the Yahoo! News API.\nTwitter search powered by JTwitter.\nLegislator search and information powered by the Sunlight Labs API.
+    </string>
+    <string name="about_3">
+    	http://sunlightlabs.com\nhttp://www.winterwell.com/software/jtwitter.php
     </string>
     <string name="about_button">Cool</string>
     <string name="first_header">
