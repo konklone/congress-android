@@ -1,39 +1,21 @@
 package com.sunlightlabs.android.congress;
 
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.sunlightlabs.api.ApiCall;
-import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorTabs extends TabActivity {
-	private TextView customTitle;
-	
-	// Legislator fields
 	private String id, titledName, state, party, gender, domain, office, website, phone, twitter_id, youtube_id;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.legislator);
-        
-//        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title);
-//        customTitle = (TextView) findViewById(R.id.custom_title);
-        
-//        customTitle.setText(titledName);
         
         Bundle extras = getIntent().getExtras();
         id = extras.getString("id");
@@ -47,6 +29,9 @@ public class LegislatorTabs extends TabActivity {
 		phone = extras.getString("phone");
 		twitter_id = extras.getString("twitter_id");
 		youtube_id = extras.getString("youtube_id");
+		
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title);
+        ((TextView) findViewById(R.id.custom_title)).setText(titledName);
     		
         setupTabs();
 	}
