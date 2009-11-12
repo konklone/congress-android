@@ -26,13 +26,14 @@
         </activity>
         
         <activity android:name=".LegislatorList" />
-        
-        <activity android:name=".LegislatorTabs">
+        <activity android:name=".LegislatorLoader">
         	<intent-filter>
         		<action android:name="android.intent.action.MAIN" />
         		<category android:name="android.intent.category.DEFAULT" />
         	</intent-filter>
         </activity>
+        
+        <activity android:name=".LegislatorTabs" />
         
         <activity android:name=".LegislatorProfile" />
         <activity android:name=".LegislatorNews" />

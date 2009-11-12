@@ -3,6 +3,8 @@ package com.sunlightlabs.entities;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
@@ -48,6 +50,17 @@ public class Legislator extends JSONEntity {
 		if (suffix != null && !suffix.equals(""))
 			name += " " + suffix;
 		return name;
+	}
+	
+	public String youtubeUsername() {
+		String url = getProperty("youtube_url");
+		Pattern p = Pattern.compile("http://(?:www\\.)?youtube\\.com/(?:user/)?(.*?)/?$", Pattern.CASE_INSENSITIVE);
+		Matcher m = p.matcher(url);
+		boolean found = m.find();
+		if (found)
+			return m.group(1);
+		else
+			return "";
 	}
 	
 	public String firstName() {

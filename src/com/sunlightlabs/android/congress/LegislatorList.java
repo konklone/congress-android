@@ -175,14 +175,14 @@ public class LegislatorList extends ListActivity {
     }
     
     public Intent legislatorIntent(String id) {
-    	Intent i = new Intent(Intent.ACTION_MAIN);
-		i.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorTabs");
+    	Intent intent = new Intent(Intent.ACTION_MAIN);
+    	intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorLoader");
 		
 		Bundle extras = new Bundle();
 		extras.putString("legislator_id", id); 
-		i.putExtras(extras);
+		intent.putExtras(extras);
 		
-		return i;
+		return intent;
     }
     
     private class LoadLegislators extends AsyncTask<Void,Void,Boolean> {
