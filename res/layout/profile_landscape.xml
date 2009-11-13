@@ -81,7 +81,8 @@
 			 			android:layout_marginTop="3dp"
 			 			 
 			  			android:textSize="30sp"
-			  			android:textColor="@android:color/white"
+			  			android:textColor="#268bb7"
+		  				android:textColorLink="#268bb7"
 			  			
 			  			android:text="555-555-1212"
 			  			/>
@@ -109,7 +110,8 @@
 			 			android:layout_marginTop="7dp"
 			 			
 			 			android:textSize="22sp"
-			 			android:textColor="@android:color/white"
+			 			android:textColor="#268bb7"
+		  				android:textColorLink="#268bb7"
 			 			
 			 			android:text="klobuchar.senate.gov"
 			  			/>
