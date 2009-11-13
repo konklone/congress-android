@@ -42,8 +42,6 @@ public class LegislatorProfile extends Activity {
 	
 	private boolean landscape;
 	
-	private Typeface font;
-	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,10 +49,7 @@ public class LegislatorProfile extends Activity {
         landscape = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
         setContentView(landscape ? R.layout.profile_landscape : R.layout.profile);
         
-        font = Typeface.createFromAsset(getAssets(), "fonts/AlteHaasGroteskRegular.ttf");
-        
         Bundle extras = getIntent().getExtras(); 
-        
         id = extras.getString("id");
         titledName = extras.getString("titledName");
         party = extras.getString("party");
@@ -86,6 +81,8 @@ public class LegislatorProfile extends Activity {
     };
 	
 	public void loadInformation() {
+		Typeface font = Typeface.createFromAsset(getAssets(), "fonts/AlteHaasGroteskRegular.ttf");
+		
 		picture = (ImageView) this.findViewById(R.id.profile_picture);
 		
 		TextView name = (TextView) this.findViewById(R.id.profile_name);
