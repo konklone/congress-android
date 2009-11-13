@@ -21,49 +21,111 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginLeft="12dp"
+			android:layout_marginTop="8dp"
 			>
 			
-	
-		  	<ImageView android:id="@+id/profile_picture"
-		  	
-		  		android:layout_width="100px"
-		  		android:layout_height="125px"
-		  		android:layout_marginRight="15dp"
-		  		android:layout_marginBottom="10dp"
+			<FrameLayout
+				android:layout_width="108px"
+				android:layout_height="133px"
+				android:layout_marginRight="28dp"
+		  		android:layout_marginTop="4dp"
 		  		
-		  		android:src="@drawable/loading_photo"
-		  		/>
+		  		android:background="#d2d3d5"
+		  		>
+			  	<ImageView android:id="@+id/profile_picture"
+			  	
+			  		android:layout_width="100px"
+			  		android:layout_height="125px"
+			  		android:layout_gravity="center"
+			  		
+			  		android:src="@drawable/loading_photo"
+			  		/>
+			  </FrameLayout>
 		  	
 		  	<LinearLayout android:id="@+id/profile_basic"
 		  		android:orientation="vertical"
 		  		
 		  		android:layout_height="wrap_content"
 		  		android:layout_width="fill_parent"
-		  		android:layout_gravity="center"
-		  		
-		  		android:paddingRight="20dp"
 		  		>
 		  		
 		  		<TextView android:id="@+id/profile_name"
 		
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginTop="5dp"
-					android:layout_marginBottom="10dp"
-					android:layout_marginLeft="5dp"
+					
+					android:layout_marginBottom="3dp"
 					
 					android:textSize="26sp"
 					android:textColor="@android:color/white"
 					
 					android:text="Sen. Amyzina Klobuchar"
 					/>
+	  			
+	  			<View
+			 		android:layout_width="fill_parent"
+			 		android:layout_height="2dp"
+			 		android:layout_marginRight="20dp"
+			 		android:background="#5c5e5d"
+			 		/>
+	  			
+	  			<TextView android:id="@+id/profile_party"
+		  		
+			  		android:layout_width="wrap_content"
+		  			android:layout_height="wrap_content"
+		  			android:layout_marginTop="10dp"
+		  			android:layout_marginBottom="9dp"
+		  			
+		  			android:textSize="19sp"
+		  			android:textColor="#dddddd"
+		  			
+		  			android:text="Democrat"
+		  			
+			  		/>
+			  		
+			  	<TextView android:id="@+id/profile_state"
+			  		
+			  		android:layout_width="wrap_content"
+			  		android:layout_height="wrap_content"
+			  		android:layout_marginBottom="9dp"
+			  		
+			  		android:textSize="19sp"
+			  		android:textColor="#dddddd"
+			  		
+			  		android:text="District of Columbia"
+			  		/>
+			  		
+			  	<TextView android:id="@+id/profile_domain"
+			  		
+			  		android:layout_width="wrap_content"
+		  			android:layout_height="wrap_content"
+		  			
+		  			android:textSize="19sp"
+		  			android:textColor="#dddddd"
+		  			
+		  			android:text="Senior Senator"
+			  		/>
+		  		
 	  		
-	  			<LinearLayout android:id="@+id/profile_phone_row"
+	  		</LinearLayout>
+	  	
+	 	</LinearLayout>
+	 	
+	 	<LinearLayout android:id="@+id/profile_bottom"
+	 		android:orientation="horizontal"
+	 		
+	 		android:layout_width="wrap_content"
+	 		android:layout_height="wrap_content"
+	 		
+	 		android:layout_marginTop="8dp"
+	 		>
+	 		
+	 		<LinearLayout android:id="@+id/profile_phone_row"
 		 			android:orientation="horizontal"
 		 			
 		 			android:layout_width="fill_parent"
 		 			android:layout_height="wrap_content"
-		 			android:layout_marginBottom="5dp"
+		 			android:layout_marginRight="15dp"
 		 			>
 		 		
 		 			<ImageView android:id="@+id/profile_phone_icon"
@@ -71,18 +133,18 @@
 		 			
 		 				android:layout_width="48dp"
 		 				android:layout_height="48dp"
-		 				android:layout_marginRight="10dp"
+		 				android:layout_marginRight="1dp"
 		 				/>
 		 			
 			 		<TextView 
 			  			android:id="@+id/profile_phone"
 			  			android:layout_width="wrap_content"
 			 			android:layout_height="wrap_content"
-			 			android:layout_marginTop="3dp"
+			 			android:layout_marginTop="10dp"
 			 			 
-			  			android:textSize="30sp"
-			  			android:textColor="#268bb7"
-		  				android:textColorLink="#268bb7"
+			  			android:textSize="22sp"
+			  			android:textColor="#2c88b7"
+		  				android:textColorLink="#2c88b7"
 			  			
 			  			android:text="555-555-1212"
 			  			/>
@@ -100,83 +162,24 @@
 		 				
 		 				android:layout_width="48dp"
 		 				android:layout_height="48dp"
-		 				android:layout_marginRight="10dp"
+		 				android:layout_marginRight="1dp"
 		 				/>
 		 				
 		 			<TextView android:id="@+id/profile_website"
 		 			
 			  			android:layout_width="wrap_content"
 			 			android:layout_height="wrap_content"
-			 			android:layout_marginTop="7dp"
+			 			android:layout_marginTop="10dp"
 			 			
 			 			android:textSize="22sp"
-			 			android:textColor="#268bb7"
-		  				android:textColorLink="#268bb7"
+			 			android:textColor="#2c88b7"
+		  				android:textColorLink="#2c88b7"
 			 			
 			 			android:text="klobuchar.senate.gov"
 			  			/>
 		  		</LinearLayout>
-		  		
-	  		
-	  		</LinearLayout>
-	  	
-	 	</LinearLayout>
-	 	
-	 	<LinearLayout android:id="@+id/profile_bottom"
-	 		android:orientation="horizontal"
 	 		
-	 		android:layout_gravity="center"
-	 		android:layout_width="wrap_content"
-	 		android:layout_height="wrap_content"
-	 		android:layout_marginTop="10dp"
-	 		>
 	 		
-	 		<TextView android:id="@+id/profile_party"
-		  		
-		  		android:layout_width="wrap_content"
-	  			android:layout_height="wrap_content"
-	  			
-	  			android:layout_gravity="center"
-	  			
-	  			android:textSize="20sp"
-	  			
-	  			android:text="Democrat"
-	  			
-		  		/>
-		  	
-		  	<TextView
-		  		android:layout_width="wrap_content"
-		  		android:layout_height="wrap_content"
-		  		android:textSize="20sp"
-		  		android:text=", "
-		  		/>
-		  		
-		  	<TextView android:id="@+id/profile_state"
-		  		
-		  		android:layout_width="wrap_content"
-		  		android:layout_height="wrap_content"
-		  		
-		  		android:textSize="20sp"
-		  		
-		  		android:text="District of Columbia"
-		  		/>
-		  	
-		  	<TextView
-		  		android:layout_width="wrap_content"
-		  		android:layout_height="wrap_content"
-		  		android:textSize="20sp"
-		  		android:text=", "
-		  		/>
-		  	
-		  	<TextView android:id="@+id/profile_domain"
-		  		
-		  		android:layout_width="wrap_content"
-	  			android:layout_height="wrap_content"
-	  			
-	  			android:textSize="20sp"
-	  			
-	  			android:text="Senior Senator"
-		  		/>
 	 		
 		</LinearLayout>
 		
