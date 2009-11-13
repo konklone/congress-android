@@ -8,6 +8,8 @@ http://www.winterwell.com/software/jtwitter.php
 
 3) In turn, JTwitter depends on Stefan Haustein's Base64Encoder class. All files in /src/lgpl/haustein are licensed under the LGPL.
 
+4) This application makes use of the freeware Alte Haas Grotesk font, whose license and requirements are included in /assets/fonts/Alte Haas Grotesk licence.rtf.
+
 ==================
 
 All other code is covered under the following MIT License:

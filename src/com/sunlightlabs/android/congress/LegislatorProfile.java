@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ public class LegislatorProfile extends Activity {
 	
 	private boolean landscape;
 	
+	private Typeface font;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,8 @@ public class LegislatorProfile extends Activity {
         
         landscape = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
         setContentView(landscape ? R.layout.profile_landscape : R.layout.profile);
+        
+        font = Typeface.createFromAsset(getAssets(), "fonts/AlteHaasGroteskRegular.ttf");
         
         Bundle extras = getIntent().getExtras(); 
         
@@ -86,26 +90,32 @@ public class LegislatorProfile extends Activity {
 		
 		TextView name = (TextView) this.findViewById(R.id.profile_name);
 		name.setText(titledName);
+		name.setTypeface(font);
 		
 		TextView partyView = (TextView) this.findViewById(R.id.profile_party); 
 		partyView.setText(partyName(party));
+		partyView.setTypeface(font);
 		
 		TextView stateView = (TextView) this.findViewById(R.id.profile_state);
 		String stateName = stateName(state);
 		stateView.setText(stateName(state));
 		if (!landscape && stateName.equals("District of Columbia"))
 			stateView.setTextSize(18);
+		stateView.setTypeface(font);
 		
 		TextView domainView = (TextView) this.findViewById(R.id.profile_domain); 
 		domainView.setText(domainName(domain));
-
+		domainView.setTypeface(font);
+		
 		TextView phoneView = (TextView) this.findViewById(R.id.profile_phone);
 		phoneView.setText(phone);
+		phoneView.setTypeface(font);
 		Linkify.addLinks(phoneView, Linkify.PHONE_NUMBERS);
 		
 		TextView websiteView = (TextView) this.findViewById(R.id.profile_website);
 		websiteView.setText(Html.fromHtml(websiteLink(website)));
 		websiteView.setMovementMethod(LinkMovementMethod.getInstance());
+		websiteView.setTypeface(font);
 	}
 	
 	// needs to only be called when avatars have been downloaded and cached
