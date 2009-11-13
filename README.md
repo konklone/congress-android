@@ -1,6 +1,3 @@
-Congress on Android
-========
-
 Project homepage
 ----------------
 
