@@ -25,8 +25,8 @@
 			>
 			
 			<FrameLayout
-				android:layout_width="108px"
-				android:layout_height="133px"
+				android:layout_width="108dp"
+				android:layout_height="133dp"
 				android:layout_marginRight="28dp"
 		  		android:layout_marginTop="4dp"
 		  		
@@ -34,8 +34,8 @@
 		  		>
 			  	<ImageView android:id="@+id/profile_picture"
 			  	
-			  		android:layout_width="100px"
-			  		android:layout_height="125px"
+			  		android:layout_width="100dp"
+			  		android:layout_height="125dp"
 			  		android:layout_gravity="center"
 			  		
 			  		android:src="@drawable/loading_photo"
