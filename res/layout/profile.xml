@@ -50,6 +50,7 @@
 		  		
 		  		android:layout_width="fill_parent"
 		  		android:layout_height="wrap_content"
+		  		android:layout_marginLeft="20dp"
 		  		
 		  		android:paddingTop="10dp"
 		  		android:paddingRight="20dp"
@@ -60,9 +61,8 @@
 			  		android:layout_width="wrap_content"
 		  			android:layout_height="wrap_content"
 		  			android:layout_marginBottom="7dp"
-		  			android:layout_gravity="center"
 		  			
-		  			android:textSize="22sp"
+		  			android:textSize="18sp"
 		  			android:textColor="#dddddd"
 		  			
 		  			android:text="Democrat"
@@ -73,9 +73,8 @@
 			  		android:layout_width="wrap_content"
 			  		android:layout_height="wrap_content"
 			  		android:layout_marginBottom="7dp"
-			  		android:layout_gravity="center"
 			  		
-			  		android:textSize="22sp"
+			  		android:textSize="18sp"
 			  		android:textColor="#dddddd"
 			  		
 			  		android:text="Minnesota"
@@ -85,9 +84,8 @@
 			  		
 			  		android:layout_width="wrap_content"
 		  			android:layout_height="wrap_content"
-		  			android:layout_gravity="center"
 		  			
-		  			android:textSize="22sp"
+		  			android:textSize="18sp"
 		  			android:textColor="#dddddd"
 		  			
 		  			android:text="Senior Senator"
@@ -97,13 +95,19 @@
 	  	
 	 	</LinearLayout>
 	 	
+	 	<View
+	 		android:layout_width="fill_parent"
+	 		android:layout_height="2dp"
+	 		android:background="#5c5e5d"
+	 		/>
+	 	
 	 	<LinearLayout android:id="@+id/profile_bottom"
 	 		android:orientation="vertical"
 	 		
 	 		android:layout_width="fill_parent"
 	 		android:layout_height="wrap_content"
-	 		android:layout_marginTop="30dp"
-	 		android:layout_marginLeft="8dp"
+	 		android:layout_marginTop="15dp"
+	 		android:layout_marginLeft="15dp"
 	 		>
 	 		
 	 		<LinearLayout android:id="@+id/profile_phone_row"
@@ -111,7 +115,6 @@
 	 			
 	 			android:layout_width="fill_parent"
 	 			android:layout_height="wrap_content"
-	 			android:layout_marginBottom="10dp"
 	 			>
 	 		
 	 			<ImageView android:id="@+id/profile_phone_icon"
@@ -126,9 +129,9 @@
 		  			android:id="@+id/profile_phone"
 		  			android:layout_width="wrap_content"
 		 			android:layout_height="wrap_content"
-		 			android:layout_marginTop="3dp"
+		 			android:layout_marginTop="10dp"
 		 			 
-		  			android:textSize="30sp"
+		  			android:textSize="22sp"
 		  			android:textColor="#268bb7"
 		  			android:textColorLink="#268bb7"
 		  			
@@ -155,7 +158,7 @@
 	 			
 		  			android:layout_width="wrap_content"
 		 			android:layout_height="wrap_content"
-		 			android:layout_marginTop="7dp"
+		 			android:layout_marginTop="10dp"
 		 			
 		 			android:textSize="22sp"
 		 			android:textColor="#268bb7"
