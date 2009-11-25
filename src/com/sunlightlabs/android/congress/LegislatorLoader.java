@@ -113,11 +113,11 @@ public class LegislatorLoader extends Activity {
     		
     		if (legislator != null) {
     			context.launchLegislator(legislator);
-    			context.loadLegislatorTask = null;
     		} else {
     			context.alert("Couldn't connect to the network. Please try again when you have a connection.");
     			context.finish();
     		}
+    		context.loadLegislatorTask = null;
     	}
     }
 }

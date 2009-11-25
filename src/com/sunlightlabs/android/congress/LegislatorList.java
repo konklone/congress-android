@@ -28,6 +28,7 @@ public class LegislatorList extends ListActivity {
 	private final static int SEARCH_LASTNAME = 3;
 	
 	private Legislator[] legislators = null;
+	private LoadLegislatorsTask loadLegislatorsTask = null;
 	private Button back, refresh;
 	
 	// whether the user has come to this activity looking to create a shortcut
@@ -54,13 +55,27 @@ public class LegislatorList extends ListActivity {
     	
     	shortcut = extras.getBoolean("shortcut", false);
     	
+    	
+    	LegislatorListHolder holder = (LegislatorListHolder) getLastNonConfigurationInstance();
+    	if (holder != null) {
+    		legislators = holder.legislators;
+    		loadLegislatorsTask = holder.loadLegislatorsTask;
+    		if (loadLegislatorsTask != null) {
+    			loadLegislatorsTask.context = this;
+    			loadingDialog();
+    		}
+    	}
+    	
     	setupControls();
     	loadLegislators();
     }
     
     @Override
     public Object onRetainNonConfigurationInstance() {
-    	return legislators;
+    	LegislatorListHolder holder = new LegislatorListHolder();
+    	holder.legislators = this.legislators;
+    	holder.loadLegislatorsTask = this.loadLegislatorsTask;
+    	return holder;
     }
     
     @Override
@@ -71,11 +86,12 @@ public class LegislatorList extends ListActivity {
     }
     
     public void loadLegislators() {
-    	legislators = (Legislator[]) getLastNonConfigurationInstance();
-    	if (legislators == null)
-    		new LoadLegislators().execute();
-    	else
-    		displayLegislators();
+    	if (loadLegislatorsTask == null) {
+	    	if (legislators == null)
+	    		new LoadLegislatorsTask(this).execute();
+	    	else
+	    		displayLegislators();
+    	}
     }
     
     public void displayLegislators() {
@@ -186,64 +202,79 @@ public class LegislatorList extends ListActivity {
 		return intent;
     }
     
-    private class LoadLegislators extends AsyncTask<Void,Void,Boolean> {
-    	@Override
-    	protected void onPreExecute() {
-    		dialog = new ProgressDialog(LegislatorList.this);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("Finding legislators...");
-            dialog.show();
+    public void loadingDialog() {
+    	dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("Finding legislators...");
+        dialog.show();
+    }
+    
+    private class LoadLegislatorsTask extends AsyncTask<Void,Void,Legislator[]> {
+    	public LegislatorList context;
+    	
+    	public LoadLegislatorsTask(LegislatorList context) {
+    		super();
+    		this.context = context;
+    		this.context.loadLegislatorsTask = this;
     	}
     	
     	@Override
-    	protected Boolean doInBackground(Void... nothing) {
+    	protected void onPreExecute() {
+    		context.loadingDialog();
+    	}
+    	
+    	@Override
+    	protected Legislator[] doInBackground(Void... nothing) {
     		ApiCall api = new ApiCall(api_key);
 			
 			try {
 				Map<String,String> params;
 				switch (searchType()) {
 					case SEARCH_ZIP:
-			    		legislators = Legislator.getLegislatorsForZipCode(api, zipCode);
-			    		break;
+			    		return Legislator.getLegislatorsForZipCode(api, zipCode);
 					case SEARCH_LOCATION:
-			    		legislators = Legislator.getLegislatorsForLatLong(api, latitude, longitude);
-			    		break;
+			    		return Legislator.getLegislatorsForLatLong(api, latitude, longitude);
 					case SEARCH_LASTNAME:
 			    		params = new HashMap<String,String>();
 			    		params.put("lastname", lastName);
-			    		legislators = Legislator.allLegislators(api, params);
-			    		break;
+			    		return Legislator.allLegislators(api, params);
 					case SEARCH_STATE:
 			    		params = new HashMap<String,String>();
 			    		params.put("state", state);
-			    		legislators = Legislator.allLegislators(api, params);
-			    		break;
+			    		return Legislator.allLegislators(api, params);
+			    	default:
+			    		return new Legislator[0];
 				}
-		    	return new Boolean(true);
+		    	
 			} catch(IOException e) {
-				legislators = new Legislator[0];
-				return new Boolean(false);
+				return new Legislator[0];
 			}
     	}
     	
     	@Override
-    	protected void onPostExecute(Boolean result) {
-    		dialog.dismiss();
+    	protected void onPostExecute(Legislator[] legislators) {
+    		if (context.dialog != null && context.dialog.isShowing())
+    			context.dialog.dismiss();
     		
-    		if (result.booleanValue()) {
+    		context.legislators = legislators;
+    		if (context.legislators != null) {
     			// if there's only one result, don't even make them click it
             	if (legislators.length == 1) {
-            		selectLegislator(legislators[0]);
-            		finish();
-            		return;
-            	}
-            	displayLegislators();
+            		context.selectLegislator(legislators[0]);
+            		context.finish();
+            	} else
+            		context.displayLegislators();
     		} else {
-    			setListAdapter(new ArrayAdapter<Legislator>(LegislatorList.this, android.R.layout.simple_list_item_1, legislators));
-            	TextView empty = (TextView) LegislatorList.this.findViewById(R.id.empty_msg);
-            	empty.setText(R.string.connection_failed);
-            	refresh.setVisibility(View.VISIBLE);
+    			context.setListAdapter(new ArrayAdapter<Legislator>(LegislatorList.this, android.R.layout.simple_list_item_1, legislators)); 
+            	((TextView) context.findViewById(R.id.empty_msg)).setText(R.string.connection_failed);
+            	context.refresh.setVisibility(View.VISIBLE);
     		}
+    		context.loadLegislatorsTask = null;
     	}
+    }
+    
+    static class LegislatorListHolder {
+    	Legislator[] legislators;
+    	LoadLegislatorsTask loadLegislatorsTask;
     }
 }
