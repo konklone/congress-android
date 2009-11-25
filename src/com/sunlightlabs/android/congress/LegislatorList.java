@@ -131,6 +131,7 @@ public class LegislatorList extends ListActivity {
     		// instead of bringing someone else's profile to the front who was just open
     		legislatorIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
     		
+    		// TODO: #62 - this puts network activity on the UI thread - gotta move this into an AsyncTask
     		Bitmap shortcutIcon = LegislatorProfile.shortcutImage(legislatorId, this);
     		
     		Intent intent = new Intent();

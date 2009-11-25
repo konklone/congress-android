@@ -14,7 +14,10 @@ import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorLoader extends Activity {
 	private ProgressDialog dialog = null;
+	private LoadLegislatorTask loadLegislatorTask = null;
+	
 	private String apiKey;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -22,7 +25,17 @@ public class LegislatorLoader extends Activity {
 		String legislator_id = getIntent().getStringExtra("legislator_id");
         apiKey = getResources().getString(R.string.sunlight_api_key);
         
-        new LoadLegislator().execute(legislator_id);
+        loadLegislatorTask = (LoadLegislatorTask) getLastNonConfigurationInstance();
+        if (loadLegislatorTask != null) {
+        	loadLegislatorTask.context = this;
+        	loadingDialog();
+        } else
+        	new LoadLegislatorTask(this).execute(legislator_id);
+	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return loadLegislatorTask;
 	}
 	
 	public void launchLegislator(Legislator legislator) {
@@ -52,20 +65,36 @@ public class LegislatorLoader extends Activity {
 	
 	@Override
     public void onSaveInstanceState(Bundle state) {
-    	if (dialog != null && dialog.isShowing())
-    		dialog.dismiss();
+    	
     	super.onSaveInstanceState(state);
     }
 	
+	public void loadingDialog() {
+		dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("Loading legislator...");
+        dialog.setCancelable(false);
+		dialog.show();
+	}
 	
-	private class LoadLegislator extends AsyncTask<String,Void,Legislator> {
+	public void alert(String msg) {
+		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+	}
+	
+	private class LoadLegislatorTask extends AsyncTask<String,Void,Legislator> {
+		public LegislatorLoader context;
+    	
+    	public LoadLegislatorTask(LegislatorLoader context) {
+    		super();
+    		
+    		// link the task and the context
+    		this.context = context;
+    		this.context.loadLegislatorTask = this;
+    	}
+		
     	@Override
     	protected void onPreExecute() {
-    		dialog = new ProgressDialog(LegislatorLoader.this);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("Loading legislator...");
-            dialog.setCancelable(false);
-			dialog.show();
+    		context.loadingDialog();
     	}
     	
     	@Override
@@ -79,17 +108,16 @@ public class LegislatorLoader extends Activity {
     	
     	@Override
     	protected void onPostExecute(Legislator legislator) {
-    		dialog.dismiss();
+    		if (context.dialog != null && context.dialog.isShowing())
+        		context.dialog.dismiss();
+    		
     		if (legislator != null) {
-    			launchLegislator(legislator);
+    			context.launchLegislator(legislator);
+    			context.loadLegislatorTask = null;
     		} else {
-    			alert("Couldn't connect to the network. Please try again when you have a connection.");
-    			finish();
+    			context.alert("Couldn't connect to the network. Please try again when you have a connection.");
+    			context.finish();
     		}
     	}
     }
-	
-	public void alert(String msg) {
-		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-	}
 }
