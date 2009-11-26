@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -136,45 +136,25 @@ public class LegislatorYouTube extends ListActivity {
         dialog.show();
     }
     
-    protected class VideoAdapter extends BaseAdapter {
-    	private Video[] videos;
+    protected class VideoAdapter extends ArrayAdapter<Video> {
     	LayoutInflater inflater;
 
         public VideoAdapter(Activity context, Video[] videos) {
-            this.videos = videos;
-            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            super(context, 0, videos);
+            inflater = LayoutInflater.from(context);
         }
-
-		public int getCount() {
-			return videos.length;
-		}
-
-		public Object getItem(int position) {
-			return videos[position];
-		}
-
-		public long getItemId(int position) {
-			return ((long) position);
-		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LinearLayout view;
-			if (convertView == null) {
+			if (convertView == null)
 				view = (LinearLayout) inflater.inflate(R.layout.youtube, null);
-			} else {
+			else
 				view = (LinearLayout) convertView;
-			}
 			
-			Video video = (Video) getItem(position);
-			
-			TextView text = (TextView) view.findViewById(R.id.video_title);
-			text.setText(video.title);
-			
-			TextView description = (TextView) view.findViewById(R.id.video_description);
-			description.setText(video.description);
-			
-			TextView when = (TextView) view.findViewById(R.id.video_when);
-			when.setText(video.timestamp.format("%b %d"));
+			Video video = getItem(position);
+			((TextView) view.findViewById(R.id.video_title)).setText(video.title);
+			((TextView) view.findViewById(R.id.video_description)).setText(video.description);
+			((TextView) view.findViewById(R.id.video_when)).setText(video.timestamp.format("%b %d"));
 			
 			return view;
 		}

@@ -182,12 +182,9 @@ public class LegislatorTwitter extends ListActivity {
 				view = (LinearLayout) convertView;
 			
 			Status tweet = getItem(position);
-			
-			TextView text = (TextView) view.findViewById(R.id.tweet_text);
-			text.setText(tweet.text);
-			
-			TextView byline = (TextView) view.findViewById(R.id.tweet_byline);
-			byline.setText("posted " + timeAgoInWords(tweet.createdAt.getTime()) + " by @" + tweet.user.screenName);
+			((TextView) view.findViewById(R.id.tweet_text)).setText(tweet.text);
+			((TextView) view.findViewById(R.id.tweet_byline))
+				.setText("posted " + timeAgoInWords(tweet.createdAt.getTime()) + " by @" + tweet.user.screenName);
 			
 			return view;
 		}

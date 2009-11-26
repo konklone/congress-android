@@ -3,7 +3,6 @@ package com.sunlightlabs.android.congress;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,7 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -149,47 +148,27 @@ public class LegislatorNews extends ListActivity {
 			return name;
 	}
 	
-	protected class NewsAdapter extends BaseAdapter {
-    	private NewsItem[] items;
+	protected class NewsAdapter extends ArrayAdapter<NewsItem> {
     	LayoutInflater inflater;
 
         public NewsAdapter(Activity context, NewsItem[] items) {
-            this.items = items;
-            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            super(context, 0, items);
+            inflater = LayoutInflater.from(context);
         }
-
-		public int getCount() {
-			return items.length;
-		}
-
-		public Object getItem(int position) {
-			return items[position];
-		}
-
-		public long getItemId(int position) {
-			return ((long) position);
-		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LinearLayout view;
-			if (convertView == null) {
+			if (convertView == null)
 				view = (LinearLayout) inflater.inflate(R.layout.news_item, null);
-			} else {
+			else
 				view = (LinearLayout) convertView;
-			}
 			
-			NewsItem item = (NewsItem) getItem(position);
+			NewsItem item = getItem(position);
 			
-			
-			TextView text = (TextView) view.findViewById(R.id.news_item_title);
-			text.setText(item.title);
-			
-			TextView summary = (TextView) view.findViewById(R.id.news_item_summary);
-			summary.setText(item.summary);
-			
-			TextView when = (TextView) view.findViewById(R.id.news_item_when_where);
-			String time = item.timestamp.format("%b %d");
-			when.setText(time + ", " + item.source);
+			((TextView) view.findViewById(R.id.news_item_title)).setText(item.title);
+			((TextView) view.findViewById(R.id.news_item_summary)).setText(item.summary);
+			((TextView) view.findViewById(R.id.news_item_when_where))
+				.setText(item.timestamp.format("%b %d") + ", " + item.source);
 			
 			return view;
 		}
