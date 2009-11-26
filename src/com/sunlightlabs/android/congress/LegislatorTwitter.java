@@ -1,12 +1,13 @@
 package com.sunlightlabs.android.congress;
 
+import java.util.List;
+
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
 import winterwell.jtwitter.Twitter.Status;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,7 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -32,7 +33,7 @@ public class LegislatorTwitter extends ListActivity {
 	private static final int MENU_COPY = 1;
 	
 	private String username;
-	private Status[] tweets;
+	private List<Status> tweets;
 	
 	private ProgressDialog dialog = null;
 	private LoadTweetsTask loadTweetsTask = null;
@@ -78,7 +79,7 @@ public class LegislatorTwitter extends ListActivity {
     public void displayTweets() {
     	setListAdapter(new TweetAdapter(this, tweets));
     	
-    	if (tweets.length <= 0) {
+    	if (tweets.size() <= 0) {
     		TextView empty = (TextView) findViewById(R.id.twitter_empty);
     		empty.setText(R.string.twitter_empty);
     		refresh.setVisibility(View.VISIBLE);
@@ -165,27 +166,13 @@ public class LegislatorTwitter extends ListActivity {
     	return true;
     }
     
-    protected class TweetAdapter extends BaseAdapter {
-    	private Status[] tweets;
+    protected class TweetAdapter extends ArrayAdapter<Status> {
     	LayoutInflater inflater;
 
-        public TweetAdapter(Activity context, Status[] tweets) {
-            this.tweets = tweets;
-            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        public TweetAdapter(Activity context, List<Status> tweets) {
+        	super(context, 0, tweets);
+            inflater = LayoutInflater.from(context);
         }
-
-		public int getCount() {
-			return tweets.length;
-		}
-
-		public Object getItem(int position) {
-			return tweets[position];
-		}
-
-		public long getItemId(int position) {
-			Status tweet = (Status) getItem(position);
-			return tweet.id;
-		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LinearLayout view;
@@ -194,7 +181,7 @@ public class LegislatorTwitter extends ListActivity {
 			else
 				view = (LinearLayout) convertView;
 			
-			Status tweet = (Status) getItem(position);
+			Status tweet = getItem(position);
 			
 			TextView text = (TextView) view.findViewById(R.id.tweet_text);
 			text.setText(tweet.text);
@@ -233,7 +220,7 @@ public class LegislatorTwitter extends ListActivity {
 
     }
     
-    private class LoadTweetsTask extends AsyncTask<String,Void,Twitter.Status[]> {
+    private class LoadTweetsTask extends AsyncTask<String,Void,List<Twitter.Status>> {
     	public LegislatorTwitter context;
     	
     	public LoadTweetsTask(LegislatorTwitter context) {
@@ -248,16 +235,16 @@ public class LegislatorTwitter extends ListActivity {
     	}
     	
     	@Override
-    	protected Twitter.Status[] doInBackground(String... username) {
+    	protected List<Twitter.Status> doInBackground(String... username) {
     		try {
-        		return new Twitter().getUserTimeline(username[0]).toArray(new Twitter.Status[0]);
+        		return new Twitter().getUserTimeline(username[0]);
         	} catch(TwitterException e) {
         		return null;
         	}
     	}
     	
     	@Override
-    	protected void onPostExecute(Twitter.Status[] tweets) {
+    	protected void onPostExecute(List<Twitter.Status> tweets) {
     		if (context.dialog != null && context.dialog.isShowing())
     			context.dialog.dismiss();
     		
@@ -274,7 +261,7 @@ public class LegislatorTwitter extends ListActivity {
     }
 
     static class LegislatorTwitterHolder {
-    	Twitter.Status[] tweets;
+    	List<Twitter.Status> tweets;
     	LoadTweetsTask loadTweetsTask;
     }
 }
