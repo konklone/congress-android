@@ -178,11 +178,7 @@ public class LegislatorProfile extends Activity {
 	}
 	
 	private static String picDir(String bioguideId, Context context) {
-		String dir = "/sdcard/android-congress/" + bioguideId + "/";
-		File dirFile = new File(dir);
-		dirFile.mkdirs();
-		return dir;
-		//return context.getDir(bioguideId, Context.MODE_PRIVATE).getPath();
+		return context.getDir(bioguideId, Context.MODE_PRIVATE).getPath();
 	}
 	
 	private static void cacheImages(String bioguideId, Context context) {
