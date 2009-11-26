@@ -137,8 +137,8 @@ public class MainMenu extends Activity {
 			extras.putInt("inputType", InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 			break;
 		case RESULT_STATE:
-			extras.putString("ask", "2-letter state code:");
-			extras.putString("hint", "e.g. NY");
+			extras.putString("ask", "Enter a state:");
+			extras.putString("hint", "e.g. NY, New Jersey");
 			extras.putInt("inputType", InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
 			break;
 		default:
@@ -169,6 +169,11 @@ public class MainMenu extends Activity {
 		case RESULT_STATE:
 			if (resultCode == RESULT_OK) {
 				String state = data.getExtras().getString("response");
+				
+				// hope we don't allow any states with 1- or 2-letter names into the Union 
+				if (state.length() > 2)
+					state = LegislatorProfile.stateCode(state);
+				
 				if (!state.equals(""))
 					searchByState(state);
 			}
