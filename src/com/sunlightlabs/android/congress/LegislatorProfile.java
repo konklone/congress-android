@@ -19,8 +19,8 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -42,6 +42,8 @@ public class LegislatorProfile extends Activity {
 	
 	private boolean landscape;
 	
+	private LoadPhotosTask loadPhotosTask = null;
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,25 +62,32 @@ public class LegislatorProfile extends Activity {
         website = extras.getString("website");
         
         loadInformation();
-        loadImage();
+        
+        loadPhotosTask = (LoadPhotosTask) getLastNonConfigurationInstance();
+        if (loadPhotosTask != null)
+        	loadPhotosTask.context = this;
+        else
+        	new LoadPhotosTask(this).execute(id);
 	}
 	
-	final Handler handler = new Handler();
-    final Runnable updateThread = new Runnable() {
-        public void run() {
-        	if (avatar != null) {
-	    		picture.setImageDrawable(avatar);
-	    		bindAvatar();
-        	} else {
-        		if (gender.equals("M"))
-					avatar = getResources().getDrawable(R.drawable.no_photo_male);
-				else // "F"
-					avatar = getResources().getDrawable(R.drawable.no_photo_female);
-        		picture.setImageDrawable(avatar);
-        		// do not bind a click event to the "no photo" avatar
-        	}
-        }
-    };
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return loadPhotosTask;
+	}
+    
+    public void displayAvatar() {
+    	if (avatar != null) {
+    		picture.setImageDrawable(avatar);
+    		bindAvatar();
+    	} else {
+    		if (gender.equals("M"))
+				avatar = getResources().getDrawable(R.drawable.no_photo_male);
+			else // "F"
+				avatar = getResources().getDrawable(R.drawable.no_photo_female);
+    		picture.setImageDrawable(avatar);
+    		// do not bind a click event to the "no photo" avatar
+    	}
+    }
 	
 	public void loadInformation() {
 		Typeface font = Typeface.createFromAsset(getAssets(), "fonts/AlteHaasGroteskRegular.ttf");
@@ -129,16 +138,6 @@ public class LegislatorProfile extends Activity {
 		});
 	}
 	
-	public void loadImage() {		
-		Thread loadingThread = new Thread() {
-			public void run() {
-				avatar = getImage(PIC_MEDIUM, id, LegislatorProfile.this);
-				handler.post(updateThread);
-			}
-		};
-		loadingThread.start();
-	}
-	
 	/*
 	 * Various static methods that other classes can use to fetch legislator profile images,
 	 * and cause them to be downloaded and cached to disk.
@@ -179,7 +178,11 @@ public class LegislatorProfile extends Activity {
 	}
 	
 	private static String picDir(String bioguideId, Context context) {
-		return context.getDir(bioguideId, Context.MODE_PRIVATE).getPath();
+		String dir = "/sdcard/android-congress/" + bioguideId + "/";
+		File dirFile = new File(dir);
+		dirFile.mkdirs();
+		return dir;
+		//return context.getDir(bioguideId, Context.MODE_PRIVATE).getPath();
 	}
 	
 	private static void cacheImages(String bioguideId, Context context) {
@@ -368,4 +371,25 @@ public class LegislatorProfile extends Activity {
 	        return null;
 	}
 	
+	private class LoadPhotosTask extends AsyncTask<String,Void,Drawable> {
+		public LegislatorProfile context;
+		
+		public LoadPhotosTask(LegislatorProfile context) {
+			super();
+			this.context = context;
+			this.context.loadPhotosTask = this;
+		}
+		
+		@Override
+		public Drawable doInBackground(String... bioguideId) {
+			return LegislatorProfile.getImage(PIC_MEDIUM, id, context);
+		}
+		
+		@Override
+		public void onPostExecute(Drawable avatar) {
+			context.avatar = avatar;
+			context.displayAvatar();
+			context.loadPhotosTask = null;
+		}
+	}
 }
