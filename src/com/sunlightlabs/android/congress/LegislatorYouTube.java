@@ -1,14 +1,13 @@
 package com.sunlightlabs.android.congress;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.ClipboardManager;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -29,12 +28,14 @@ import com.sunlightlabs.android.youtube.YouTube;
 import com.sunlightlabs.android.youtube.YouTubeException;
 
 public class LegislatorYouTube extends ListActivity {
-	private static final int LOADING = 0;
 	private static final int MENU_WATCH = 0;
 	private static final int MENU_COPY = 1;
 	
 	private String username;
 	private Video[] videos;
+	
+	private ProgressDialog dialog = null;
+	private LoadVideosTask loadVideosTask = null;
 	
 	private Button refresh;
 	
@@ -43,28 +44,29 @@ public class LegislatorYouTube extends ListActivity {
     	setContentView(R.layout.youtube_list);
     	
     	username = getIntent().getStringExtra("username");
-    	videos = (Video[]) getLastNonConfigurationInstance();
+    	
+    	LegislatorYouTubeHolder holder = (LegislatorYouTubeHolder) getLastNonConfigurationInstance();
+    	if (holder != null) {
+    		videos = holder.videos;
+    		loadVideosTask = holder.loadVideosTask;
+    		if (loadVideosTask != null) {
+    			loadVideosTask.context = this;
+    			loadingDialog();
+    		}
+    	}
     	
     	setupControls();
-    	
-    	if (videos == null)
+    	if (loadVideosTask == null)
     		loadVideos();
-    	else
-    		displayVideos();
 	}
 	
 	@Override
     public Object onRetainNonConfigurationInstance() {
-    	return videos;
+    	LegislatorYouTubeHolder holder = new LegislatorYouTubeHolder();
+    	holder.videos = this.videos;
+    	holder.loadVideosTask = this.loadVideosTask;
+    	return holder;
     }
-	
-    final Handler handler = new Handler();
-    final Runnable updateThread = new Runnable() {
-        public void run() {
-        	displayVideos();
-        	removeDialog(LOADING);
-        }
-    };
     
     protected void displayVideos() {
     	setListAdapter(new VideoAdapter(LegislatorYouTube.this, videos));
@@ -77,20 +79,10 @@ public class LegislatorYouTube extends ListActivity {
     }
 	
 	protected void loadVideos() {
-		Thread loadingThread = new Thread() {
-	        public void run() { 
-	        	try {
-	        		YouTube youtube = new YouTube();
-	        		videos = youtube.getVideos(username);
-	        	} catch(YouTubeException e) {
-	        		Toast.makeText(LegislatorYouTube.this, "Couldn't load videos.", Toast.LENGTH_SHORT).show();
-	        	}
-	        	handler.post(updateThread);
-	        }
-	    };
-	    
-	    loadingThread.start();
-		showDialog(LOADING);
+	    if (videos == null)
+    		new LoadVideosTask(this).execute(username);
+    	else
+    		displayVideos();
 	}
 	
 	@Override
@@ -137,16 +129,11 @@ public class LegislatorYouTube extends ListActivity {
     	registerForContextMenu(getListView());
 	}
     
-    protected Dialog onCreateDialog(int id) {
-        switch(id) {
-        case LOADING:
-            ProgressDialog dialog = new ProgressDialog(this);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("Plucking videos from the air...");
-            return dialog;
-        default:
-            return null;
-        }
+    private void loadingDialog() {
+    	dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("Plucking videos from the air...");
+        dialog.show();
     }
     
     protected class VideoAdapter extends BaseAdapter {
@@ -192,4 +179,47 @@ public class LegislatorYouTube extends ListActivity {
 			return view;
 		}
     }
+    
+    private class LoadVideosTask extends AsyncTask<String,Void,Video[]> {
+    	public LegislatorYouTube context;
+    	
+    	public LoadVideosTask(LegislatorYouTube context) {
+    		super();
+    		this.context = context;
+    		this.context.loadVideosTask = this;
+    	}
+    	
+    	@Override
+    	protected void onPreExecute() {
+    		context.loadingDialog();
+    	}
+    	
+    	@Override
+    	protected Video[] doInBackground(String... usernames) {
+    		try {
+        		return new YouTube().getVideos(username);
+        	} catch(YouTubeException e) {
+        		return null;
+        	}
+    	}
+    	
+    	@Override
+    	protected void onPostExecute(Video[] videos) {
+    		if (context.dialog != null && context.dialog.isShowing())
+    			context.dialog.dismiss();
+    		context.videos = videos;
+    		
+    		if (videos != null)
+    			context.displayVideos();
+    		else
+    			Toast.makeText(context, "Couldn't load videos.", Toast.LENGTH_SHORT).show();
+    		
+    		context.loadVideosTask = null;
+    	}
+    }
+    
+    static class LegislatorYouTubeHolder {
+		Video[] videos;
+		LoadVideosTask loadVideosTask;
+	}
 }
