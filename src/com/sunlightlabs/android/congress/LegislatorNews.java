@@ -1,14 +1,13 @@
 package com.sunlightlabs.android.congress;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.ClipboardManager;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -28,14 +27,16 @@ import com.sunlightlabs.android.yahoo.news.NewsItem;
 import com.sunlightlabs.android.yahoo.news.NewsService;
 
 public class LegislatorNews extends ListActivity {
-	private static final int LOADING = 0;
 	private static final int MENU_VIEW = 0;
 	private static final int MENU_COPY = 1;
 	
 	private String searchName;
-	private NewsItem[] items;
+	private NewsItem[] items = null;
+
+	private LoadNewsTask loadNewsTask = null;
+	private ProgressDialog dialog = null;
 	
-	private Button refresh;;
+	private Button refresh;
     	
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -43,39 +44,30 @@ public class LegislatorNews extends ListActivity {
     	
     	searchName = getIntent().getStringExtra("searchName");
     	searchName = correctExceptions(searchName);
-    	items = (NewsItem[]) getLastNonConfigurationInstance();
+    	
+    	LegislatorNewsHolder holder = (LegislatorNewsHolder) getLastNonConfigurationInstance();
+    	if (holder != null) {
+    		items = holder.items;
+    		loadNewsTask = holder.loadNewsTask;
+    		if (loadNewsTask != null) {
+    			loadNewsTask.context = this;
+    			loadingDialog();
+    		}
+    	}
     	
     	setupControls();
-    	
-    	if (items == null)
+    	if (loadNewsTask == null)
     		loadNews();
-		else
-			displayNews();
 	}
 	
 	@Override
     public Object onRetainNonConfigurationInstance() {
-    	return items;
+		LegislatorNewsHolder holder = new LegislatorNewsHolder();
+		holder.items = this.items;
+		holder.loadNewsTask = this.loadNewsTask;
+    	return holder;
     }
 	
-	final Handler handler = new Handler();
-    final Runnable updateSuccess = new Runnable() {
-        public void run() {
-        	displayNews();
-        	removeDialog(LOADING);
-        }
-    };
-    final Runnable updateFailure = new Runnable() {
-        public void run() {
-    		TextView empty = (TextView) LegislatorNews.this.findViewById(R.id.news_empty);
-    		empty.setText(R.string.connection_failed);
-    		refresh.setVisibility(View.VISIBLE);
-    		
-        	removeDialog(LOADING);
-        }
-    };
-    
-
     @Override
 	public void onListItemClick(ListView parent, View view, int position, long id) {
 		NewsItem item = (NewsItem) parent.getItemAtPosition(position);
@@ -121,42 +113,31 @@ public class LegislatorNews extends ListActivity {
     }
     
     protected void displayNews() {
-    	setListAdapter(new NewsAdapter(this, items));
-    	
-    	if (items.length <= 0) {
-    		TextView empty = (TextView) findViewById(R.id.news_empty);
-    		empty.setText(R.string.news_empty);
+    	TextView empty = (TextView) findViewById(R.id.news_empty);
+    	if (items != null) {
+    		setListAdapter(new NewsAdapter(this, items));
+    		if (items.length <= 0) {
+        		empty.setText(R.string.news_empty);
+        		refresh.setVisibility(View.VISIBLE);
+        	}
+		} else { 
+			empty.setText(R.string.connection_failed);
     		refresh.setVisibility(View.VISIBLE);
-    	}
+		}
     }
 	
 	protected void loadNews() {
-		Thread loadingThread = new Thread() {
-	        public void run() { 
-	        	try {
-	    			String apiKey = getResources().getString(R.string.yahoo_news_key);
-	    			NewsService service = new NewsService(apiKey);
-	    			items = service.fetchNewsResults(searchName);
-	    			handler.post(updateSuccess);
-	    		} catch (NewsException e) {
-	    			handler.post(updateFailure);
-	    		}
-	        }
-	    };
-	    loadingThread.start();
-		showDialog(LOADING);
+	    if (items == null)
+    		new LoadNewsTask(this).execute(searchName);
+		else
+			displayNews();
 	}
     
-    protected Dialog onCreateDialog(int id) {
-        switch(id) {
-        case LOADING:
-            ProgressDialog dialog = new ProgressDialog(this);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("Plucking news from the air...");
-            return dialog;
-        default:
-            return null;
-        }
+    private void loadingDialog() {
+        dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("Plucking news from the air...");
+        dialog.show();
     }
 	
 	private String correctExceptions(String name) {
@@ -214,4 +195,44 @@ public class LegislatorNews extends ListActivity {
 		}
 
     }
+	
+	private class LoadNewsTask extends AsyncTask<String,Void,NewsItem[]> {
+		public LegislatorNews context;
+		
+		public LoadNewsTask(LegislatorNews context) {
+			super();
+			this.context = context;
+			this.context.loadNewsTask = this;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			context.loadingDialog();
+		}
+		
+		@Override
+		protected NewsItem[] doInBackground(String... searchTerm) {
+			try {
+    			String apiKey = context.getResources().getString(R.string.yahoo_news_key);
+    			return new NewsService(apiKey).fetchNewsResults(searchTerm[0]);
+    		} catch (NewsException e) {
+    			return null;
+    		}
+		}
+		
+		@Override
+		protected void onPostExecute(NewsItem[] items) {
+			if (context.dialog != null && context.dialog.isShowing())
+    			context.dialog.dismiss();
+    		
+    		context.items = items;
+    		context.displayNews();
+    		context.loadNewsTask = null;
+		}
+	}
+	
+	static class LegislatorNewsHolder{
+		NewsItem[] items;
+		LoadNewsTask loadNewsTask;
+	}
 }
