@@ -1,15 +1,15 @@
 package com.sunlightlabs.android.congress;
 
-import java.util.List;
-
+import winterwell.jtwitter.Twitter;
+import winterwell.jtwitter.TwitterException;
+import winterwell.jtwitter.Twitter.Status;
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.ClipboardManager;
 import android.text.format.Time;
 import android.view.ContextMenu;
@@ -27,18 +27,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-import winterwell.jtwitter.Twitter;
-import winterwell.jtwitter.Twitter.Status;
-import winterwell.jtwitter.TwitterException;
-
 public class LegislatorTwitter extends ListActivity {
-	private static final int LOADING = 0;
-	
 	private static final int MENU_REPLY = 0;
 	private static final int MENU_COPY = 1;
 	
 	private String username;
 	private Status[] tweets;
+	
+	private ProgressDialog dialog = null;
+	private LoadTweetsTask loadTweetsTask = null;
 	
 	private Button refresh;
 	
@@ -47,37 +44,36 @@ public class LegislatorTwitter extends ListActivity {
     	setContentView(R.layout.twitter);
     	
     	username = getIntent().getStringExtra("username");
-    	tweets = (Status[]) getLastNonConfigurationInstance();
+    
+    	LegislatorTwitterHolder holder = (LegislatorTwitterHolder) getLastNonConfigurationInstance();
+    	if (holder != null) {
+    		tweets = holder.tweets;
+    		loadTweetsTask = holder.loadTweetsTask;
+    		if (loadTweetsTask != null) {
+    			loadTweetsTask.context = this;
+    			loadingDialog();
+    		}
+    	}
     	
     	setupControls();
-    	
-    	if (tweets == null)
+    	if (loadTweetsTask == null)
     		loadTweets();
-    	else
-    		displayTweets();
 	}
 	
 	@Override
     public Object onRetainNonConfigurationInstance() {
-    	return tweets;
+		LegislatorTwitterHolder holder = new LegislatorTwitterHolder();
+		holder.tweets = tweets;
+		holder.loadTweetsTask = loadTweetsTask;
+    	return holder;
     }
-	
-    final Handler handler = new Handler();
-    final Runnable updateSuccess = new Runnable() {
-        public void run() {        	
-        	displayTweets();
-        	removeDialog(LOADING);
-        }
-    };
-    final Runnable updateFailure = new Runnable() {
-        public void run() {
-    		TextView empty = (TextView) LegislatorTwitter.this.findViewById(R.id.twitter_empty);
-    		empty.setText(R.string.connection_failed);
-    		refresh.setVisibility(View.VISIBLE);
-    		
-        	removeDialog(LOADING);
-        }
-    };
+    
+    private void loadingDialog() {
+    	dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("Plucking tweets from the air...");
+        dialog.show();
+    }
     
     public void displayTweets() {
     	setListAdapter(new TweetAdapter(this, tweets));
@@ -91,25 +87,11 @@ public class LegislatorTwitter extends ListActivity {
     	firstToast();
     }
 	
-	protected void loadTweets() {
-		Thread loadingThread = new Thread() {
-	        public void run() { 
-	        	try {
-	        		
-	        		Twitter twitter = new Twitter();
-	        		List<Status> tweetList = twitter.getUserTimeline(username);
-	        		tweets = tweetList.toArray(new Status[0]);
-	        		
-	        		handler.post(updateSuccess);
-	        	} catch(TwitterException e) {
-	        		handler.post(updateFailure);
-	        	}
-	        	
-	        }
-	    };
-	    
-	    loadingThread.start();
-		showDialog(LOADING);
+	protected void loadTweets() {	    
+	    if (tweets == null)
+    		new LoadTweetsTask(this).execute(username);
+    	else
+    		displayTweets();
 	}
 	
 	public void firstToast() {
@@ -165,18 +147,6 @@ public class LegislatorTwitter extends ListActivity {
     	registerForContextMenu(getListView());
 	}
     
-    protected Dialog onCreateDialog(int id) {
-        switch(id) {
-        case LOADING:
-            ProgressDialog dialog = new ProgressDialog(this);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("Plucking tweets from the air...");
-            return dialog;
-        default:
-            return null;
-        }
-    }
-    
     @Override 
     public boolean onCreateOptionsMenu(Menu menu) { 
 	    super.onCreateOptionsMenu(menu); 
@@ -218,11 +188,10 @@ public class LegislatorTwitter extends ListActivity {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LinearLayout view;
-			if (convertView == null) {
+			if (convertView == null)
 				view = (LinearLayout) inflater.inflate(R.layout.tweet, null); 
-			} else {
+			else
 				view = (LinearLayout) convertView;
-			}
 			
 			Status tweet = (Status) getItem(position);
 			
@@ -262,5 +231,49 @@ public class LegislatorTwitter extends ListActivity {
 		}
 
     }
+    
+    private class LoadTweetsTask extends AsyncTask<String,Void,Twitter.Status[]> {
+    	public LegislatorTwitter context;
+    	
+    	public LoadTweetsTask(LegislatorTwitter context) {
+    		super();
+    		this.context = context;
+    		this.context.loadTweetsTask = this;
+    	}
+    	
+    	@Override
+    	protected void onPreExecute() {
+    		context.loadingDialog();
+    	}
+    	
+    	@Override
+    	protected Twitter.Status[] doInBackground(String... username) {
+    		try {
+        		return new Twitter().getUserTimeline(username[0]).toArray(new Twitter.Status[0]);
+        	} catch(TwitterException e) {
+        		return null;
+        	}
+    	}
+    	
+    	@Override
+    	protected void onPostExecute(Twitter.Status[] tweets) {
+    		if (context.dialog != null && context.dialog.isShowing())
+    			context.dialog.dismiss();
+    		
+    		context.tweets = tweets;
+    		
+    		if (tweets != null)
+    			context.displayTweets();
+    		else {
+    			((TextView) context.findViewById(R.id.twitter_empty)).setText(R.string.connection_failed);
+        		context.refresh.setVisibility(View.VISIBLE);
+    		}
+    		context.loadTweetsTask = null;
+    	}
+    }
 
+    static class LegislatorTwitterHolder {
+    	Twitter.Status[] tweets;
+    	LoadTweetsTask loadTweetsTask;
+    }
 }
