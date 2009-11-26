@@ -134,6 +134,7 @@ public class LegislatorTwitter extends ListActivity {
 		Intent intent = new Intent(this, TwitterReply.class);
 		intent.putExtra("tweet_text", tweet.text);
 		intent.putExtra("tweet_username", tweet.user.screenName);
+		intent.putExtra("tweet_in_reply_to_id", tweet.id);
 		startActivity(intent);
 	}
 	

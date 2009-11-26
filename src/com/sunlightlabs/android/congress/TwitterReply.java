@@ -19,6 +19,7 @@ public class TwitterReply extends Activity {
 
 	private String username, password;
 	private String tweet_text, tweet_username;
+	private long tweet_in_reply_to_id;
 	private EditText message;
 	
 	private ProgressDialog dialog = null;
@@ -35,6 +36,7 @@ public class TwitterReply extends Activity {
         Bundle extras = getIntent().getExtras();
         tweet_text = extras.getString("tweet_text");
         tweet_username = extras.getString("tweet_username");
+        tweet_in_reply_to_id = extras.getLong("tweet_in_reply_to_id");
      
         setupControls();
         
@@ -43,7 +45,6 @@ public class TwitterReply extends Activity {
         	updateTwitterTask.context = this;
         	tweetingDialog();
         }
-        	
 	}
 	
 	@Override
@@ -134,7 +135,7 @@ public class TwitterReply extends Activity {
 			// the source is going to just appear as "web". But that's better than "JTwitter".
 			twitter.setSource("Congress on Android");
 			try {
-				twitter.setStatus(message.getText().toString());
+				twitter.setStatus(message.getText().toString(), tweet_in_reply_to_id);
 				return new Integer(SUCCESS);
 			} catch(TwitterException.E403 e) {
 				return new Integer(FAILURE);

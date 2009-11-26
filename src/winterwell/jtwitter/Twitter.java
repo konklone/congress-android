@@ -1584,6 +1584,28 @@ public class Twitter {
 	public Status setStatus(String statusText) throws TwitterException {
 		return updateStatus(statusText);
 	}
+	
+	/**
+	 * Setsthe authenticating user's status and marks it as a reply to the
+	 * tweet with the given ID.
+	 * <p>
+	 * Identical to {@link #updateStatus(String, long)}, but with a Java-style 
+	 * name (updateStatus is the Twitter API name for this method).
+	 * 
+	 * @param statusText
+	 *            The text of your status update. Must not be more than 160
+	 *            characters and should not be more than 140 characters to
+	 *            ensure optimal display.
+	 * @param inReplyToStatusId
+	 * 			  The ID of the tweet that this tweet is in response to.
+	 * 			  The statusText must contain the username (with an "@"
+	 * 			  prefix) of the owner of the tweet being replied to for 
+	 * 			  for Twitter to agree to mark the tweet as a reply.  
+	 * @return The posted status when successful.
+	 */
+	public Status setStatus(String statusText, long inReplyToStatusId) throws TwitterException {
+		return updateStatus(statusText, inReplyToStatusId);
+	}
 
 	/**
 	 * Returns information of a given user, specified by ID or screen name.
@@ -1698,6 +1720,25 @@ public class Twitter {
 	 * @return The posted status when successful.
 	 */
 	public Status updateStatus(String statusText) throws TwitterException {
+		return updateStatus(statusText, -1);
+	}
+	
+	/**
+	 * Updates the authenticating user's status and marks it as a reply to
+	 * the tweet with the given ID.
+	 * 
+	 * @param statusText
+	 *            The text of your status update. Must not be more than 160
+	 *            characters and should not be more than 140 characters to
+	 *            ensure optimal display.
+	 * @param inReplyToStatusId
+	 * 			  The ID of the tweet that this tweet is in response to.
+	 * 			  The statusText must contain the username (with an "@"
+	 * 			  prefix) of the owner of the tweet being replied to for 
+	 * 			  for Twitter to agree to mark the tweet as a reply.  
+	 * @return The posted status when successful.
+	 */
+	public Status updateStatus(String statusText, long inReplyToStatusId) throws TwitterException {
 		if (statusText.length() > 160)
 			throw new IllegalArgumentException(
 					"Status text must be 160 characters or less: "
@@ -1705,6 +1746,8 @@ public class Twitter {
 		Map<String, String> vars = asMap("status", statusText);
 		if (sourceApp != null)
 			vars.put("source", sourceApp);
+		if (inReplyToStatusId > 0)
+			vars.put("in_reply_to_status_id", inReplyToStatusId + "");
 		String result = post("http://twitter.com/statuses/update.json", vars,
 				true);
 		try {
