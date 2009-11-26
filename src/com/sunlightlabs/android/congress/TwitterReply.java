@@ -1,11 +1,12 @@
 package com.sunlightlabs.android.congress;
 
+import winterwell.jtwitter.Twitter;
+import winterwell.jtwitter.TwitterException;
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -13,17 +14,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import winterwell.jtwitter.Twitter;
-import winterwell.jtwitter.TwitterException;
-
 public class TwitterReply extends Activity {
 	private static final int RESULT_PREFS = 0;
-	
-	private static final int TWEETING = 0; 
 
 	private String username, password;
 	private String tweet_text, tweet_username;
 	private EditText message;
+	
+	private ProgressDialog dialog = null;
+	private UpdateTwitterTask updateTwitterTask = null;
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,11 +37,22 @@ public class TwitterReply extends Activity {
         tweet_username = extras.getString("tweet_username");
      
         setupControls();
+        
+        updateTwitterTask = (UpdateTwitterTask) getLastNonConfigurationInstance();
+        if (updateTwitterTask != null) {
+        	updateTwitterTask.context = this;
+        	tweetingDialog();
+        }
+        	
+	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return updateTwitterTask;
 	}
 	
 	public void setupControls() {		
-		TextView original = (TextView) findViewById(R.id.twitter_original);
-		original.setText(tweet_text);
+		((TextView) findViewById(R.id.twitter_original)).setText(tweet_text);
 		
 		message = (EditText) findViewById(R.id.twitter_message);
 		message.setText("@" + tweet_username + " ");
@@ -50,10 +60,10 @@ public class TwitterReply extends Activity {
 		Button reply = (Button) findViewById(R.id.twitter_ok);
 		reply.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				verifyHaveCredentials();
+				if (updateTwitterTask == null)
+					verifyHaveCredentials();
 			}
 		});
-		
 		
 		Button cancel = (Button) findViewById(R.id.twitter_cancel);
 		cancel.setOnClickListener(new View.OnClickListener() {
@@ -66,51 +76,7 @@ public class TwitterReply extends Activity {
 	// Gets called after verifyHaveCredentials, which doesn't truly verify that we have credentials - 
 	// it just verifies that if we didn't have them, we brought them to the preference screen once.
 	public void onHaveCredentials() {
-		postTweet();
-	}
-	
-	final Handler handler = new Handler();
-    final Runnable postSucceeded = new Runnable() {
-        public void run() {
-        	alert("Your Twitter status has been updated.");
-        	removeDialog(TWEETING);
-			finish();
-        }
-    };
-    final Runnable postFailed = new Runnable() {
-    	public void run() {
-    		alert("Could not update your Twitter status, there was an issue with your credentials. Please verify them in the Twitter Settings screen.");
-    		removeDialog(TWEETING);
-    	}
-    };
-    final Runnable postError = new Runnable() {
-    	public void run() {
-    		alert("Could not connect to Twitter. Please try again later.");
-    		removeDialog(TWEETING);
-    	}
-    };
-    
-	
-	public void postTweet() {
-		Thread poster = new Thread() {
-			public void run() {
-				Twitter twitter = new Twitter(username, password);
-				// until we use something that implements OAuth, and then register with Twitter,
-				// the source is going to just appear as "web". But that's better than "JTwitter".
-				twitter.setSource("Congress on Android");
-				try {
-					twitter.setStatus(message.getText().toString());
-					handler.post(postSucceeded);
-				} catch(TwitterException.E403 e) {
-					handler.post(postFailed);
-				} catch(TwitterException e) {
-					handler.post(postError);
-				}
-			}
-		};
-		poster.run();
-		
-		showDialog(TWEETING);
+		new UpdateTwitterTask(this).execute();
 	}
 	
 	public void verifyHaveCredentials() {
@@ -136,16 +102,67 @@ public class TwitterReply extends Activity {
 		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 	}
 	
-	protected Dialog onCreateDialog(int id) {
-        switch(id) {
-        case TWEETING:
-            ProgressDialog dialog = new ProgressDialog(this);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("Updating your status...");
-            return dialog;
-        default:
-            return null;
-        }
+	private void tweetingDialog() {
+        dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("Updating your status...");
+        dialog.show();
     }
+	
+	private class UpdateTwitterTask extends AsyncTask<Void,Void,Integer> {
+		public TwitterReply context;
+		
+		private final int SUCCESS = 0;
+		private final int FAILURE = 1;
+		private final int ERROR = 2;
+		
+		public UpdateTwitterTask(TwitterReply context) {
+			super();
+			this.context = context;
+			this.context.updateTwitterTask = this;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			context.tweetingDialog();
+		}
+		
+		@Override
+		protected Integer doInBackground(Void... nothing) {
+			Twitter twitter = new Twitter(username, password);
+			// until we use something that implements OAuth, and then register with Twitter,
+			// the source is going to just appear as "web". But that's better than "JTwitter".
+			twitter.setSource("Congress on Android");
+			try {
+				twitter.setStatus(message.getText().toString());
+				return new Integer(SUCCESS);
+			} catch(TwitterException.E403 e) {
+				return new Integer(FAILURE);
+			} catch(TwitterException e) {
+				return new Integer(ERROR);
+			}
+		}
+		
+		@Override
+		protected void onPostExecute(Integer result) {
+			if (context.dialog != null && context.dialog.isShowing())
+    			context.dialog.dismiss();
+			
+			switch(result.intValue()) {
+			case SUCCESS:
+				context.alert("Your Twitter status has been updated.");
+				context.finish();
+				break;
+			case ERROR:
+				context.alert("Could not connect to Twitter. Please try again later.");
+				break;
+			case FAILURE:
+				context.alert("Could not update your Twitter status, there was an issue with your credentials. Please verify them in the Twitter Settings screen.");
+				break;
+			}
+			
+			context.updateTwitterTask = null;
+		}
+	}
 	
 }
