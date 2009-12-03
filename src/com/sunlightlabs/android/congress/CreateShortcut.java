@@ -11,14 +11,28 @@ public class CreateShortcut extends Activity {
 	public static final int RESULT_LASTNAME = 2;
 	private static final int RESULT_SHORTCUT = 10;
 	
+	private boolean running = false;
+	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         
-        getResponse();
+        if (savedInstanceState != null)
+        	running = savedInstanceState.getBoolean("running", false);
+        
+        if (!running)
+        	getResponse();
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean("running", running);
 	}
 	
 	public void getResponse() {
+		running = true;
+		
 		Intent intent = new Intent();
 		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText");
 		Bundle extras = new Bundle();
