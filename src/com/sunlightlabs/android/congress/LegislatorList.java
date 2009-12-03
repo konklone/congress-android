@@ -56,25 +56,27 @@ public class LegislatorList extends ListActivity {
     	
     	shortcut = extras.getBoolean("shortcut", false);
     	
+    	setupControls();    	
     	
     	LegislatorListHolder holder = (LegislatorListHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
     		legislators = holder.legislators;
     		loadLegislatorsTask = holder.loadLegislatorsTask;
+    		shortcutImageTask = holder.shortcutImageTask;
+    	}
+    	
+    	if (loadLegislatorsTask == null && shortcutImageTask == null)
+			loadLegislators();
+    	else {
     		if (loadLegislatorsTask != null) {
     			loadLegislatorsTask.context = this;
     			loadingDialog();
     		}
-    		
-    		shortcutImageTask = holder.shortcutImageTask;
     		if (shortcutImageTask != null) {
     			shortcutImageTask.context = this;
     			shortcutDialog();
     		}
     	}
-    	
-    	setupControls();
-    	loadLegislators();
     }
     
     @Override
@@ -86,20 +88,11 @@ public class LegislatorList extends ListActivity {
     	return holder;
     }
     
-    @Override
-    public void onSaveInstanceState(Bundle state) {
-    	if (dialog != null && dialog.isShowing())
-    		dialog.dismiss();
-    	super.onSaveInstanceState(state);
-    }
-    
     public void loadLegislators() {
-    	if (loadLegislatorsTask == null) {
-	    	if (legislators == null)
-	    		new LoadLegislatorsTask(this).execute();
-	    	else
-	    		displayLegislators();
-    	}
+    	if (legislators == null)
+    		new LoadLegislatorsTask(this).execute();
+    	else
+    		displayLegislators();
     }
     
     public void displayLegislators() {
@@ -220,9 +213,9 @@ public class LegislatorList extends ListActivity {
     
     public void shortcutDialog() {
     	shortcutDialog = new ProgressDialog(this);
-    	dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("Creating shortcut...");
-        dialog.show();
+    	shortcutDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    	shortcutDialog.setMessage("Creating shortcut...");
+    	shortcutDialog.show();
     }
     
     private class ShortcutImageTask extends AsyncTask<Void,Void,Bitmap> {
