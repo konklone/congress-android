@@ -20,7 +20,7 @@ import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorList extends ListActivity {
-	private ProgressDialog dialog;
+	private ProgressDialog dialog, shortcutDialog;
 	
 	private final static int SEARCH_ZIP = 0;
 	private final static int SEARCH_LOCATION = 1;
@@ -29,6 +29,7 @@ public class LegislatorList extends ListActivity {
 	
 	private Legislator[] legislators = null;
 	private LoadLegislatorsTask loadLegislatorsTask = null;
+	private ShortcutImageTask shortcutImageTask = null;
 	private Button back, refresh;
 	
 	// whether the user has come to this activity looking to create a shortcut
@@ -64,6 +65,12 @@ public class LegislatorList extends ListActivity {
     			loadLegislatorsTask.context = this;
     			loadingDialog();
     		}
+    		
+    		shortcutImageTask = holder.shortcutImageTask;
+    		if (shortcutImageTask != null) {
+    			shortcutImageTask.context = this;
+    			shortcutDialog();
+    		}
     	}
     	
     	setupControls();
@@ -75,6 +82,7 @@ public class LegislatorList extends ListActivity {
     	LegislatorListHolder holder = new LegislatorListHolder();
     	holder.legislators = this.legislators;
     	holder.loadLegislatorsTask = this.loadLegislatorsTask;
+    	holder.shortcutImageTask = this.shortcutImageTask;
     	return holder;
     }
     
@@ -139,26 +147,13 @@ public class LegislatorList extends ListActivity {
     }
     
     public void selectLegislator(Legislator legislator) {
-    	String legislatorId = legislator.getId();
-    	Intent legislatorIntent = legislatorIntent(legislatorId);
-    	
     	if (shortcut) {
-    		// Make sure that shortcuts always open the desired profile, 
-    		// instead of bringing someone else's profile to the front who was just open
-    		legislatorIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-    		
-    		// TODO: #62 - this puts network activity on the UI thread - gotta move this into an AsyncTask
-    		Bitmap shortcutIcon = LegislatorProfile.shortcutImage(legislatorId, this);
-    		
-    		Intent intent = new Intent();
-    		intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, legislatorIntent);
-    		intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, legislator.getProperty("lastname"));
-    		intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, shortcutIcon);
-    		
-    		setResult(RESULT_OK, intent);
-    		finish();
-    	} else
+    		new ShortcutImageTask(this, legislator).execute();
+    	} else {
+    		String legislatorId = legislator.getId();
+        	Intent legislatorIntent = legislatorIntent(legislatorId);
     		startActivity(legislatorIntent);
+    	}
     }
     
     private int searchType() {
@@ -202,11 +197,64 @@ public class LegislatorList extends ListActivity {
 		return intent;
     }
     
+    public void returnShortcutIcon(Legislator legislator, Bitmap shortcutIcon) {
+    	String legislatorId = legislator.getId();
+    	Intent legislatorIntent = legislatorIntent(legislatorId);
+		legislatorIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+		
+		Intent intent = new Intent();
+		intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, legislatorIntent);
+		intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, legislator.getProperty("lastname"));
+		intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, shortcutIcon);
+		
+		setResult(RESULT_OK, intent);
+		finish();
+    }
+    
     public void loadingDialog() {
     	dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setMessage("Finding legislators...");
         dialog.show();
+    }
+    
+    public void shortcutDialog() {
+    	shortcutDialog = new ProgressDialog(this);
+    	dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("Creating shortcut...");
+        dialog.show();
+    }
+    
+    private class ShortcutImageTask extends AsyncTask<Void,Void,Bitmap> {
+    	public LegislatorList context;
+    	public Legislator legislator;
+    	
+    	public ShortcutImageTask(LegislatorList context, Legislator legislator) {
+    		super();
+    		this.legislator = legislator;
+    		this.context = context;
+    		this.context.shortcutImageTask = this;
+    	}
+    	
+    	@Override
+    	protected void onPreExecute() {
+    		context.shortcutDialog();
+    	}
+    	
+    	@Override
+    	protected Bitmap doInBackground(Void... nothing) {
+    		return LegislatorProfile.shortcutImage(legislator.getId(), context);
+    	}
+    	
+    	@Override
+    	protected void onPostExecute(Bitmap shortcutIcon) {
+    		if (context.shortcutDialog != null && context.shortcutDialog.isShowing())
+    			context.shortcutDialog.dismiss();
+    		
+    		context.returnShortcutIcon(legislator, shortcutIcon);
+    		
+    		context.shortcutImageTask = null;
+    	}
     }
     
     private class LoadLegislatorsTask extends AsyncTask<Void,Void,Legislator[]> {
@@ -261,7 +309,13 @@ public class LegislatorList extends ListActivity {
     			// if there's only one result, don't even make them click it
             	if (legislators.length == 1) {
             		context.selectLegislator(legislators[0]);
-            		context.finish();
+            		
+            		// if we're going on to the profile of a legislator, we want to cut the list out of the stack
+            		// but if we're generating a shortcut, the shortcut process will be spawning off 
+            		// a separate background thread, that needs a live activity while it works, 
+            		// and will call finish() on its own
+            		if (!shortcut) 
+            			context.finish();
             	} else
             		context.displayLegislators();
     		} else {
@@ -276,5 +330,6 @@ public class LegislatorList extends ListActivity {
     static class LegislatorListHolder {
     	Legislator[] legislators;
     	LoadLegislatorsTask loadLegislatorsTask;
+    	ShortcutImageTask shortcutImageTask;
     }
 }
