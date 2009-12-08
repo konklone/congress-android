@@ -368,109 +368,110 @@ public class LegislatorProfile extends Activity {
 	}
 	
 	public static String stateCode(String name) {
-	    if (name.equals("Alabama"))
+		name = name.toLowerCase();
+	    if (name.equals("alabama"))
 	        return "AL";
-	    if (name.equals("Alaska"))
+	    if (name.equals("alaska"))
 	        return "AK";
-	    if (name.equals("Arizona"))
+	    if (name.equals("arizona"))
 	        return "AZ";
-	    if (name.equals("Arkansas"))
+	    if (name.equals("arkansas"))
 	        return "AR";
-	    if (name.equals("California"))
+	    if (name.equals("california"))
 	        return "CA";
-	    if (name.equals("Colorado"))
+	    if (name.equals("colorado"))
 	        return "CO";
-	    if (name.equals("Connecticut"))
+	    if (name.equals("connecticut"))
 	        return "CT";
-	    if (name.equals("Delaware"))
+	    if (name.equals("delaware"))
 	        return "DE";
-	    if (name.equals("District of Columbia"))
+	    if (name.equals("district of columbia"))
 	        return "DC";
-	    if (name.equals("Florida"))
+	    if (name.equals("florida"))
 	        return "FL";
-	    if (name.equals("Georgia"))
+	    if (name.equals("georgia"))
 	        return "GA";
-	    if (name.equals("Hawaii"))
+	    if (name.equals("hawaii"))
 	        return "HI";
-	    if (name.equals("Idaho"))
+	    if (name.equals("idaho"))
 	        return "ID";
-	    if (name.equals("Illinois"))
+	    if (name.equals("illinois"))
 	        return "IL";
-	    if (name.equals("Indiana"))
+	    if (name.equals("indiana"))
 	        return "IN";
-	    if (name.equals("Iowa"))
+	    if (name.equals("iowa"))
 	        return "IA";
-	    if (name.equals("Kansas"))
+	    if (name.equals("kansas"))
 	        return "KS";
-	    if (name.equals("Kentucky"))
+	    if (name.equals("kentucky"))
 	        return "KY";
-	    if (name.equals("Louisiana"))
+	    if (name.equals("louisiana"))
 	        return "LA";
-	    if (name.equals("Maine"))
+	    if (name.equals("maine"))
 	        return "ME";
-	    if (name.equals("Maryland"))
+	    if (name.equals("maryland"))
 	        return "MD";
-	    if (name.equals("Massachusetts"))
+	    if (name.equals("massachusetts"))
 	        return "MA";
-	    if (name.equals("Michigan"))
+	    if (name.equals("michigan"))
 	        return "MI";
-	    if (name.equals("Minnesota"))
+	    if (name.equals("minnesota"))
 	        return "MN";
-	    if (name.equals("Mississippi"))
+	    if (name.equals("mississippi"))
 	        return "MS";
-	    if (name.equals("Missouri"))
+	    if (name.equals("missouri"))
 	        return "MO";
-	    if (name.equals("Montana"))
+	    if (name.equals("montana"))
 	        return "MT";
-	    if (name.equals("Nebraska"))
+	    if (name.equals("nebraska"))
 	        return "NE";
-	    if (name.equals("Nevada"))
+	    if (name.equals("nevada"))
 	        return "NV";
-	    if (name.equals("New Hampshire"))
+	    if (name.equals("new hampshire"))
 	        return "NH";
-	    if (name.equals("New Jersey"))
+	    if (name.equals("new jersey"))
 	        return "NJ";
-	    if (name.equals("New Mexico"))
+	    if (name.equals("new mexico"))
 	        return "NM";
-	    if (name.equals("New York"))
+	    if (name.equals("new york"))
 	        return "NY";
-	    if (name.equals("North Carolina"))
+	    if (name.equals("north carolina"))
 	        return "NC";
-	    if (name.equals("North Dakota"))
+	    if (name.equals("north dakota"))
 	        return "ND";
-	    if (name.equals("Ohio"))
+	    if (name.equals("ohio"))
 	        return "OH";
-	    if (name.equals("Oklahoma"))
+	    if (name.equals("oklahoma"))
 	        return "OK";
-	    if (name.equals("Oregon"))
+	    if (name.equals("oregon"))
 	        return "OR";
-	    if (name.equals("Pennsylvania"))
+	    if (name.equals("pennsylvania"))
 	        return "PA";
-	    if (name.equals("Puerto Rico"))
+	    if (name.equals("puerto rico"))
 	        return "PR";
-	    if (name.equals("Rhode Island"))
+	    if (name.equals("rhode island"))
 	        return "RI";
-	    if (name.equals("South Carolina"))
+	    if (name.equals("south carolina"))
 	        return "SC";
-	    if (name.equals("South Dakota"))
+	    if (name.equals("south dakota"))
 	        return "SD";
-	    if (name.equals("Tennessee"))
+	    if (name.equals("tennessee"))
 	        return "TN";
-	    if (name.equals("Texas"))
+	    if (name.equals("texas"))
 	        return "TX";
-	    if (name.equals("Utah"))
+	    if (name.equals("utah"))
 	        return "UT";
-	    if (name.equals("Vermont"))
+	    if (name.equals("vermont"))
 	        return "VT";
-	    if (name.equals("Virginia"))
+	    if (name.equals("virginia"))
 	        return "VA";
-	    if (name.equals("Washington"))
+	    if (name.equals("washington"))
 	        return "WA";
-	    if (name.equals("West Virginia"))
+	    if (name.equals("west virginia"))
 	        return "WV";
-	    if (name.equals("Wisconsin"))
+	    if (name.equals("wisconsin"))
 	        return "WI";
-	    if (name.equals("Wyoming"))
+	    if (name.equals("wyoming"))
 	        return "WY";
 	    else
 	        return null;

@@ -171,8 +171,11 @@ public class MainMenu extends Activity {
 				String state = data.getExtras().getString("response");
 				
 				// hope we don't allow any states with 1- or 2-letter names into the Union 
-				if (state.length() > 2)
-					state = LegislatorProfile.stateCode(state);
+				if (state.length() > 2) {
+					String code = LegislatorProfile.stateCode(state);
+					if (code != null)
+						state = code;
+				}
 				
 				if (!state.equals(""))
 					searchByState(state);
