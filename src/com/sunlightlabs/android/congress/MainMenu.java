@@ -139,7 +139,7 @@ public class MainMenu extends Activity {
 		case RESULT_STATE:
 			extras.putString("ask", "Enter a state:");
 			extras.putString("hint", "e.g. NY, New Jersey");
-			extras.putInt("inputType", InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+			extras.putInt("inputType", InputType.TYPE_CLASS_TEXT);
 			break;
 		default:
 			break;
