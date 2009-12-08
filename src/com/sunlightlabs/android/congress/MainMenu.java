@@ -172,7 +172,7 @@ public class MainMenu extends Activity {
 				
 				// hope we don't allow any states with 1- or 2-letter names into the Union 
 				if (state.length() > 2) {
-					String code = LegislatorProfile.stateCode(state);
+					String code = LegislatorProfile.stateCode(state.trim());
 					if (code != null)
 						state = code;
 				}
