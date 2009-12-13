@@ -9,7 +9,9 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 public class LegislatorTabs extends TabActivity {
-	private String id, titledName, state, party, gender, domain, office, website, phone, twitter_id, youtube_id;
+	private String id, titledName, state, party, 
+		gender, domain, office, website, phone, 
+		twitter_id, youtube_id;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,13 +39,10 @@ public class LegislatorTabs extends TabActivity {
 	}
 	
 	public void setupTabs() {
-		TabHost tabHost = getTabHost();
-		tabHost.getCurrentTab();
-		
 		Resources res = this.getResources();
+		TabHost tabHost = getTabHost();
 		
-		Intent profileIntent = profileIntent();
-		tabHost.addTab(tabHost.newTabSpec("profile_tab").setIndicator("Profile", res.getDrawable(R.drawable.tab_profile)).setContent(profileIntent));
+		tabHost.addTab(tabHost.newTabSpec("profile_tab").setIndicator("Profile", res.getDrawable(R.drawable.tab_profile)).setContent(profileIntent()));
 		tabHost.addTab(tabHost.newTabSpec("news_tab").setIndicator("News", res.getDrawable(R.drawable.tab_news)).setContent(newsIntent()));
 		
 		if (!(twitter_id.equals("")))
