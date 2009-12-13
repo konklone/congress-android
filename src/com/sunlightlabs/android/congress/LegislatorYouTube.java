@@ -123,6 +123,7 @@ public class LegislatorYouTube extends ListActivity {
 		refresh = (Button) this.findViewById(R.id.youtube_refresh);
     	refresh.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				videos = null;
 				loadVideos();
 			}
 		});

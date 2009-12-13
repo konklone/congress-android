@@ -143,6 +143,7 @@ public class LegislatorTwitter extends ListActivity {
 		refresh = (Button) this.findViewById(R.id.twitter_refresh);
     	refresh.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				tweets = null;
 				loadTweets();
 			}
 		});
