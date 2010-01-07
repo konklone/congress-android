@@ -54,8 +54,7 @@ public abstract class JSONEntity {
 			holder.toArray(ret);
 			return ret;
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			    throw new RuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -78,8 +77,7 @@ public abstract class JSONEntity {
 			holder.toArray(ret);
 			return ret;
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			    throw new RuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -248,8 +246,7 @@ public abstract class JSONEntity {
 				out.append(values[j].toString());
 				out.append("\n");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				    throw new RuntimeException(e);
+				throw new RuntimeException(e);
 			}
 		}
 	}

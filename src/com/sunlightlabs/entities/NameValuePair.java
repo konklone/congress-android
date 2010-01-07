@@ -69,7 +69,6 @@ public class NameValuePair {
 	 */
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return getName() + "=" + getValue();
 	}
 	
