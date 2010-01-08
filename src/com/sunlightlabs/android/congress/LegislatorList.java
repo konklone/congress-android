@@ -6,6 +6,7 @@ import java.util.Map;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -239,6 +240,14 @@ public class LegislatorList extends ListActivity {
         	dialog = new ProgressDialog(context);
         	dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         	dialog.setMessage("Creating shortcut...");
+        	
+        	dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				public void onCancel(DialogInterface dialog) {
+					cancel(true);
+    				context.finish();
+				}
+			});
+        	
         	dialog.show();
         }
     }
@@ -321,6 +330,14 @@ public class LegislatorList extends ListActivity {
         	dialog = new ProgressDialog(context);
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             dialog.setMessage("Finding legislators...");
+            
+            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				public void onCancel(DialogInterface dialog) {
+					cancel(true);
+    				context.finish();
+				}
+			});
+            
             dialog.show();
         }
     }

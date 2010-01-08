@@ -65,10 +65,9 @@ public class CreateShortcut extends Activity {
 				finish();
 			break;
 		case RESULT_SHORTCUT:
-			if (resultCode == RESULT_OK) {
+			if (resultCode == RESULT_OK)
 				setResult(RESULT_OK, data);
-	    		finish();
-			}
+			finish();
 			break;
 		}
 	}

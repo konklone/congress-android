@@ -164,6 +164,7 @@ public class TwitterReply extends Activity {
 	        dialog = new ProgressDialog(context);
 	        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 	        dialog.setMessage("Updating your status...");
+	        dialog.setCancelable(false);
 	        dialog.show();
 	    }
 	}
