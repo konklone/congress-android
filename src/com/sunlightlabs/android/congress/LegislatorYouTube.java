@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -64,12 +65,22 @@ public class LegislatorYouTube extends ListActivity {
     	return holder;
     }
     
-    protected void displayVideos() {
-    	setListAdapter(new VideoAdapter(LegislatorYouTube.this, videos));
-    	
-    	if (videos.length <= 0) {
-    		TextView empty = (TextView) LegislatorYouTube.this.findViewById(R.id.youtube_empty);
-    		empty.setText(R.string.youtube_empty);
+	protected void displayVideos() {
+		displayVideos(false);
+	}
+	
+    protected void displayVideos(boolean cancelled) {
+    	if (videos != null) {
+	    	setListAdapter(new VideoAdapter(LegislatorYouTube.this, videos));
+	    	
+	    	if (videos.length <= 0) {
+	    		TextView empty = (TextView) LegislatorYouTube.this.findViewById(R.id.youtube_empty);
+	    		empty.setText(R.string.youtube_empty);
+	    		refresh.setVisibility(View.VISIBLE);
+	    	}
+    	} else {
+    		if (!cancelled)
+    			((TextView) findViewById(R.id.youtube_empty)).setText(R.string.connection_failed);
     		refresh.setVisibility(View.VISIBLE);
     	}
     }
@@ -184,10 +195,7 @@ public class LegislatorYouTube extends ListActivity {
     			dialog.dismiss();
     		context.videos = videos;
     		
-    		if (videos != null)
-    			context.displayVideos();
-    		else
-    			Toast.makeText(context, "Couldn't load videos.", Toast.LENGTH_SHORT).show();
+    		context.displayVideos();
     		
     		context.loadVideosTask = null;
     	}
@@ -196,6 +204,14 @@ public class LegislatorYouTube extends ListActivity {
         	dialog = new ProgressDialog(context);
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             dialog.setMessage("Plucking videos from the air...");
+            
+            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				public void onCancel(DialogInterface dialog) {
+					cancel(true);
+					context.displayVideos(true);
+				}
+			});
+            
             dialog.show();
         }
     }

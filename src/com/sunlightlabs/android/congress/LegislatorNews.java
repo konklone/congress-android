@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -110,6 +111,10 @@ public class LegislatorNews extends ListActivity {
     }
     
     protected void displayNews() {
+    	displayNews(false);
+    }
+    
+    protected void displayNews(boolean cancelled) {
     	TextView empty = (TextView) findViewById(R.id.news_empty);
     	if (items != null) {
     		setListAdapter(new NewsAdapter(this, items));
@@ -117,8 +122,9 @@ public class LegislatorNews extends ListActivity {
         		empty.setText(R.string.news_empty);
         		refresh.setVisibility(View.VISIBLE);
         	}
-		} else { 
-			empty.setText(R.string.connection_failed);
+		} else {
+			if (!cancelled)
+				empty.setText(R.string.connection_failed);
     		refresh.setVisibility(View.VISIBLE);
 		}
     }
@@ -209,6 +215,14 @@ public class LegislatorNews extends ListActivity {
 	        dialog = new ProgressDialog(context);
 	        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 	        dialog.setMessage("Plucking news from the air...");
+	        
+	        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				public void onCancel(DialogInterface dialog) {
+					cancel(true);
+					context.displayNews(true);
+				}
+			});
+	        
 	        dialog.show();
 	    }
 		

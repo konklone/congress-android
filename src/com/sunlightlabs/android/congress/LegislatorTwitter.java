@@ -8,6 +8,7 @@ import winterwell.jtwitter.Twitter.Status;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -66,16 +67,26 @@ public class LegislatorTwitter extends ListActivity {
     	return holder;
     }
     
-    public void displayTweets() {
-    	setListAdapter(new TweetAdapter(this, tweets));
-    	
-    	if (tweets.size() <= 0) {
-    		TextView empty = (TextView) findViewById(R.id.twitter_empty);
-    		empty.setText(R.string.twitter_empty);
+	public void displayTweets() {
+		displayTweets(false);
+	}
+	
+    public void displayTweets(boolean cancelled) {
+    	if (tweets != null) {
+	    	setListAdapter(new TweetAdapter(this, tweets));
+	    	
+	    	if (tweets.size() <= 0) {
+	    		TextView empty = (TextView) findViewById(R.id.twitter_empty);
+	    		empty.setText(R.string.twitter_empty);
+	    		refresh.setVisibility(View.VISIBLE);
+	    	}
+	    	
+	    	firstToast();
+    	} else {
+    		if (!cancelled)
+    			((TextView) findViewById(R.id.twitter_empty)).setText(R.string.connection_failed);
     		refresh.setVisibility(View.VISIBLE);
     	}
-    	
-    	firstToast();
     }
 	
 	protected void loadTweets() {	    
@@ -242,13 +253,8 @@ public class LegislatorTwitter extends ListActivity {
     			dialog.dismiss();
     		
     		context.tweets = tweets;
+    		context.displayTweets();
     		
-    		if (tweets != null)
-    			context.displayTweets();
-    		else {
-    			((TextView) context.findViewById(R.id.twitter_empty)).setText(R.string.connection_failed);
-        		context.refresh.setVisibility(View.VISIBLE);
-    		}
     		context.loadTweetsTask = null;
     	}
     	
@@ -256,6 +262,14 @@ public class LegislatorTwitter extends ListActivity {
         	dialog = new ProgressDialog(context);
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             dialog.setMessage("Plucking tweets from the air...");
+            
+            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				public void onCancel(DialogInterface dialog) {
+					cancel(true);
+					context.displayTweets(true);
+				}
+			});
+            
             dialog.show();
         }
     }
