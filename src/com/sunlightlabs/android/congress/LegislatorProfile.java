@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,6 +50,7 @@ public class LegislatorProfile extends Activity {
         super.onCreate(savedInstanceState);
         
         landscape = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+        
         setContentView(landscape ? R.layout.profile_landscape : R.layout.profile);
         
         Bundle extras = getIntent().getExtras(); 
@@ -159,9 +161,25 @@ public class LegislatorProfile extends Activity {
 	}
 	
 	public static Bitmap shortcutImage(String bioguideId, Context context) {
-		Bitmap small = getImage(LegislatorProfile.PIC_SMALL, bioguideId, context).getBitmap();
-		// this will be a 40x50 image, that I want to turn into a 40x48 image
-		return Bitmap.createBitmap(small, 0, 1, small.getWidth(), small.getHeight()-2);
+		int density = context.getResources().getDisplayMetrics().densityDpi;
+		Bitmap profile, scaled;
+		switch (density) {
+		case DisplayMetrics.DENSITY_LOW:
+			profile = getImage(LegislatorProfile.PIC_SMALL, bioguideId, context).getBitmap();
+			scaled = Bitmap.createScaledBitmap(profile, 32, 40, true);
+			return Bitmap.createBitmap(scaled, 0, 2, scaled.getWidth(), scaled.getHeight() - 4);
+		case DisplayMetrics.DENSITY_MEDIUM:
+			// this will be a 40x50 image, that I want to turn into a 40x48 image
+			profile = getImage(LegislatorProfile.PIC_SMALL, bioguideId, context).getBitmap();
+			return Bitmap.createBitmap(profile, 0, 1, profile.getWidth(), profile.getHeight()-2);
+		case DisplayMetrics.DENSITY_HIGH:
+		default:
+			// will be a 100x125 image, I want to scale it down to 60x75, and then chop 3 lines off of it
+			profile = getImage(LegislatorProfile.PIC_MEDIUM, bioguideId, context).getBitmap();
+			scaled = Bitmap.createScaledBitmap(profile, 60, 75, true);
+			return Bitmap.createBitmap(scaled, 0, 1, scaled.getWidth(), scaled.getHeight() - 3);
+		}
+		
 	}
 	
 	// assumes you've already checked to make sure the file exists
