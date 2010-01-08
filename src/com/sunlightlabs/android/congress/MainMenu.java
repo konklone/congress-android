@@ -154,21 +154,21 @@ public class MainMenu extends Activity {
 		switch(requestCode) {
 		case RESULT_ZIP:
 			if (resultCode == RESULT_OK) {
-				String zipCode = data.getExtras().getString("response");
+				String zipCode = data.getExtras().getString("response").trim();
 				if (!zipCode.equals(""))
 					searchByZip(zipCode);
 			}
 			break;
 		case RESULT_LASTNAME:
 			if (resultCode == RESULT_OK) {
-				String lastName = data.getExtras().getString("response");
+				String lastName = data.getExtras().getString("response").trim();
 				if (!lastName.equals(""))
 					searchByLastName(lastName);
 			}
 			break;
 		case RESULT_STATE:
 			if (resultCode == RESULT_OK) {
-				String state = data.getExtras().getString("response");
+				String state = data.getExtras().getString("response").trim();
 				
 				// hope we don't allow any states with 1- or 2-letter names into the Union 
 				if (state.length() > 2) {
