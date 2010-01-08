@@ -33,7 +33,6 @@ public class LegislatorNews extends ListActivity {
 	private NewsItem[] items = null;
 
 	private LoadNewsTask loadNewsTask = null;
-	private ProgressDialog dialog = null;
 	
 	private Button refresh;
     	
@@ -48,10 +47,8 @@ public class LegislatorNews extends ListActivity {
     	if (holder != null) {
     		items = holder.items;
     		loadNewsTask = holder.loadNewsTask;
-    		if (loadNewsTask != null) {
-    			loadNewsTask.context = this;
-    			loadingDialog();
-    		}
+    		if (loadNewsTask != null)
+    			loadNewsTask.onScreenLoad(this);
     	}
     	
     	setupControls();
@@ -128,19 +125,12 @@ public class LegislatorNews extends ListActivity {
 	
 	protected void loadNews() {
 	    if (items == null)
-    		new LoadNewsTask(this).execute(searchName);
+    		loadNewsTask = (LoadNewsTask) new LoadNewsTask(this).execute(searchName);
 		else
 			displayNews();
 	}
     
-    private void loadingDialog() {
-        dialog = new ProgressDialog(this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("Plucking news from the air...");
-        dialog.show();
-    }
-	
-	private String correctExceptions(String name) {
+    private String correctExceptions(String name) {
 		if (name.equals("Rep. Nancy Pelosi"))
 			return "Speaker Nancy Pelosi";
 		else if (name.equals("Del. Eleanor Norton"))
@@ -178,16 +168,21 @@ public class LegislatorNews extends ListActivity {
 	
 	private class LoadNewsTask extends AsyncTask<String,Void,NewsItem[]> {
 		public LegislatorNews context;
+		private ProgressDialog dialog = null;
 		
 		public LoadNewsTask(LegislatorNews context) {
 			super();
 			this.context = context;
-			this.context.loadNewsTask = this;
 		}
 		
 		@Override
 		protected void onPreExecute() {
-			context.loadingDialog();
+			loadingDialog();
+		}
+		
+		public void onScreenLoad(LegislatorNews context) {
+			this.context = context;
+			loadingDialog();
 		}
 		
 		@Override
@@ -202,13 +197,21 @@ public class LegislatorNews extends ListActivity {
 		
 		@Override
 		protected void onPostExecute(NewsItem[] items) {
-			if (context.dialog != null && context.dialog.isShowing())
-    			context.dialog.dismiss();
+			if (dialog != null && dialog.isShowing())
+    			dialog.dismiss();
     		
     		context.items = items;
     		context.displayNews();
     		context.loadNewsTask = null;
 		}
+		
+		private void loadingDialog() {
+	        dialog = new ProgressDialog(context);
+	        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+	        dialog.setMessage("Plucking news from the air...");
+	        dialog.show();
+	    }
+		
 	}
 	
 	static class LegislatorNewsHolder{

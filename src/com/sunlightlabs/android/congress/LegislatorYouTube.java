@@ -33,7 +33,6 @@ public class LegislatorYouTube extends ListActivity {
 	private String username;
 	private Video[] videos;
 	
-	private ProgressDialog dialog = null;
 	private LoadVideosTask loadVideosTask = null;
 	
 	private Button refresh;
@@ -48,10 +47,8 @@ public class LegislatorYouTube extends ListActivity {
     	if (holder != null) {
     		videos = holder.videos;
     		loadVideosTask = holder.loadVideosTask;
-    		if (loadVideosTask != null) {
-    			loadVideosTask.context = this;
-    			loadingDialog();
-    		}
+    		if (loadVideosTask != null)
+    			loadVideosTask.onScreenLoad(this);
     	}
     	
     	setupControls();
@@ -79,7 +76,7 @@ public class LegislatorYouTube extends ListActivity {
 	
 	protected void loadVideos() {
 	    if (videos == null)
-    		new LoadVideosTask(this).execute(username);
+    		loadVideosTask = (LoadVideosTask) new LoadVideosTask(this).execute(username);
     	else
     		displayVideos();
 	}
@@ -129,13 +126,6 @@ public class LegislatorYouTube extends ListActivity {
     	registerForContextMenu(getListView());
 	}
     
-    private void loadingDialog() {
-    	dialog = new ProgressDialog(this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("Plucking videos from the air...");
-        dialog.show();
-    }
-    
     protected class VideoAdapter extends ArrayAdapter<Video> {
     	LayoutInflater inflater;
 
@@ -162,16 +152,21 @@ public class LegislatorYouTube extends ListActivity {
     
     private class LoadVideosTask extends AsyncTask<String,Void,Video[]> {
     	public LegislatorYouTube context;
+    	private ProgressDialog dialog = null;
     	
     	public LoadVideosTask(LegislatorYouTube context) {
     		super();
     		this.context = context;
-    		this.context.loadVideosTask = this;
     	}
     	
     	@Override
     	protected void onPreExecute() {
-    		context.loadingDialog();
+    		loadingDialog();
+    	}
+    	
+    	public void onScreenLoad(LegislatorYouTube context) {
+    		this.context = context;
+    		loadingDialog();
     	}
     	
     	@Override
@@ -185,8 +180,8 @@ public class LegislatorYouTube extends ListActivity {
     	
     	@Override
     	protected void onPostExecute(Video[] videos) {
-    		if (context.dialog != null && context.dialog.isShowing())
-    			context.dialog.dismiss();
+    		if (dialog != null && dialog.isShowing())
+    			dialog.dismiss();
     		context.videos = videos;
     		
     		if (videos != null)
@@ -196,6 +191,13 @@ public class LegislatorYouTube extends ListActivity {
     		
     		context.loadVideosTask = null;
     	}
+    	
+    	private void loadingDialog() {
+        	dialog = new ProgressDialog(context);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("Plucking videos from the air...");
+            dialog.show();
+        }
     }
     
     static class LegislatorYouTubeHolder {

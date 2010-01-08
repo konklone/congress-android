@@ -35,7 +35,6 @@ public class LegislatorTwitter extends ListActivity {
 	private String username;
 	private List<Status> tweets;
 	
-	private ProgressDialog dialog = null;
 	private LoadTweetsTask loadTweetsTask = null;
 	
 	private Button refresh;
@@ -50,10 +49,8 @@ public class LegislatorTwitter extends ListActivity {
     	if (holder != null) {
     		tweets = holder.tweets;
     		loadTweetsTask = holder.loadTweetsTask;
-    		if (loadTweetsTask != null) {
-    			loadTweetsTask.context = this;
-    			loadingDialog();
-    		}
+    		if (loadTweetsTask != null)
+    			loadTweetsTask.onScreenLoad(this);
     	}
     	
     	setupControls();
@@ -67,13 +64,6 @@ public class LegislatorTwitter extends ListActivity {
 		holder.tweets = tweets;
 		holder.loadTweetsTask = loadTweetsTask;
     	return holder;
-    }
-    
-    private void loadingDialog() {
-    	dialog = new ProgressDialog(this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("Plucking tweets from the air...");
-        dialog.show();
     }
     
     public void displayTweets() {
@@ -90,7 +80,7 @@ public class LegislatorTwitter extends ListActivity {
 	
 	protected void loadTweets() {	    
 	    if (tweets == null)
-    		new LoadTweetsTask(this).execute(username);
+    		loadTweetsTask = (LoadTweetsTask) new LoadTweetsTask(this).execute(username);
     	else
     		displayTweets();
 	}
@@ -220,16 +210,21 @@ public class LegislatorTwitter extends ListActivity {
     
     private class LoadTweetsTask extends AsyncTask<String,Void,List<Twitter.Status>> {
     	public LegislatorTwitter context;
+    	private ProgressDialog dialog = null;
     	
     	public LoadTweetsTask(LegislatorTwitter context) {
     		super();
     		this.context = context;
-    		this.context.loadTweetsTask = this;
     	}
     	
     	@Override
     	protected void onPreExecute() {
-    		context.loadingDialog();
+    		loadingDialog();
+    	}
+    	
+    	public void onScreenLoad(LegislatorTwitter context) {
+    		this.context = context;
+    		loadingDialog();
     	}
     	
     	@Override
@@ -243,8 +238,8 @@ public class LegislatorTwitter extends ListActivity {
     	
     	@Override
     	protected void onPostExecute(List<Twitter.Status> tweets) {
-    		if (context.dialog != null && context.dialog.isShowing())
-    			context.dialog.dismiss();
+    		if (dialog != null && dialog.isShowing())
+    			dialog.dismiss();
     		
     		context.tweets = tweets;
     		
@@ -256,6 +251,13 @@ public class LegislatorTwitter extends ListActivity {
     		}
     		context.loadTweetsTask = null;
     	}
+    	
+    	private void loadingDialog() {
+        	dialog = new ProgressDialog(context);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("Plucking tweets from the air...");
+            dialog.show();
+        }
     }
 
     static class LegislatorTwitterHolder {

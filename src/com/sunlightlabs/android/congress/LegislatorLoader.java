@@ -13,7 +13,6 @@ import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorLoader extends Activity {
-	private ProgressDialog dialog = null;
 	private LoadLegislatorTask loadLegislatorTask = null;
 	
 	private String apiKey;
@@ -26,11 +25,10 @@ public class LegislatorLoader extends Activity {
         apiKey = getResources().getString(R.string.sunlight_api_key);
         
         loadLegislatorTask = (LoadLegislatorTask) getLastNonConfigurationInstance();
-        if (loadLegislatorTask != null) {
-        	loadLegislatorTask.context = this;
-        	loadingDialog();
-        } else
-        	new LoadLegislatorTask(this).execute(legislator_id);
+        if (loadLegislatorTask != null)
+        	loadLegislatorTask.onScreenLoad(this);
+        else
+        	loadLegislatorTask = (LoadLegislatorTask) new LoadLegislatorTask(this).execute(legislator_id);
 	}
 	
 	@Override
@@ -69,32 +67,27 @@ public class LegislatorLoader extends Activity {
     	super.onSaveInstanceState(state);
     }
 	
-	public void loadingDialog() {
-		dialog = new ProgressDialog(this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("Loading legislator...");
-        dialog.setCancelable(false);
-		dialog.show();
-	}
-	
 	public void alert(String msg) {
 		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 	}
 	
 	private class LoadLegislatorTask extends AsyncTask<String,Void,Legislator> {
 		public LegislatorLoader context;
+		private ProgressDialog dialog = null;
     	
     	public LoadLegislatorTask(LegislatorLoader context) {
     		super();
-    		
-    		// link the task and the context
     		this.context = context;
-    		this.context.loadLegislatorTask = this;
     	}
 		
     	@Override
     	protected void onPreExecute() {
-    		context.loadingDialog();
+    		loadingDialog();
+    	}
+    	
+    	public void onScreenLoad(LegislatorLoader context) {
+    		this.context = context;
+    		loadingDialog();
     	}
     	
     	@Override
@@ -108,8 +101,8 @@ public class LegislatorLoader extends Activity {
     	
     	@Override
     	protected void onPostExecute(Legislator legislator) {
-    		if (context.dialog != null && context.dialog.isShowing())
-        		context.dialog.dismiss();
+    		if (dialog != null && dialog.isShowing())
+        		dialog.dismiss();
     		
     		if (legislator != null) {
     			context.launchLegislator(legislator);
@@ -118,6 +111,14 @@ public class LegislatorLoader extends Activity {
     			context.finish();
     		}
     		context.loadLegislatorTask = null;
+    	}
+    	
+    	private void loadingDialog() {
+    		dialog = new ProgressDialog(context);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("Loading legislator...");
+            dialog.setCancelable(false);
+    		dialog.show();
     	}
     }
 }

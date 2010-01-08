@@ -22,7 +22,6 @@ public class TwitterReply extends Activity {
 	private long tweet_in_reply_to_id;
 	private EditText message;
 	
-	private ProgressDialog dialog = null;
 	private UpdateTwitterTask updateTwitterTask = null;
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,10 +40,8 @@ public class TwitterReply extends Activity {
         setupControls();
         
         updateTwitterTask = (UpdateTwitterTask) getLastNonConfigurationInstance();
-        if (updateTwitterTask != null) {
-        	updateTwitterTask.context = this;
-        	tweetingDialog();
-        }
+        if (updateTwitterTask != null)
+        	updateTwitterTask.onScreenLoad(this);
 	}
 	
 	@Override
@@ -77,7 +74,7 @@ public class TwitterReply extends Activity {
 	// Gets called after verifyHaveCredentials, which doesn't truly verify that we have credentials - 
 	// it just verifies that if we didn't have them, we brought them to the preference screen once.
 	public void onHaveCredentials() {
-		new UpdateTwitterTask(this).execute();
+		updateTwitterTask = (UpdateTwitterTask) new UpdateTwitterTask(this).execute();
 	}
 	
 	public void verifyHaveCredentials() {
@@ -103,15 +100,9 @@ public class TwitterReply extends Activity {
 		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 	}
 	
-	private void tweetingDialog() {
-        dialog = new ProgressDialog(this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("Updating your status...");
-        dialog.show();
-    }
-	
 	private class UpdateTwitterTask extends AsyncTask<Void,Void,Integer> {
 		public TwitterReply context;
+		private ProgressDialog dialog;
 		
 		private final int SUCCESS = 0;
 		private final int FAILURE = 1;
@@ -120,12 +111,16 @@ public class TwitterReply extends Activity {
 		public UpdateTwitterTask(TwitterReply context) {
 			super();
 			this.context = context;
-			this.context.updateTwitterTask = this;
 		}
 		
 		@Override
 		protected void onPreExecute() {
-			context.tweetingDialog();
+			loadingDialog();
+		}
+		
+		public void onScreenLoad(TwitterReply context) {
+			this.context = context;
+			loadingDialog();
 		}
 		
 		@Override
@@ -146,8 +141,8 @@ public class TwitterReply extends Activity {
 		
 		@Override
 		protected void onPostExecute(Integer result) {
-			if (context.dialog != null && context.dialog.isShowing())
-    			context.dialog.dismiss();
+			if (dialog != null && dialog.isShowing())
+    			dialog.dismiss();
 			
 			switch(result.intValue()) {
 			case SUCCESS:
@@ -164,6 +159,13 @@ public class TwitterReply extends Activity {
 			
 			context.updateTwitterTask = null;
 		}
+		
+		private void loadingDialog() {
+	        dialog = new ProgressDialog(context);
+	        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+	        dialog.setMessage("Updating your status...");
+	        dialog.show();
+	    }
 	}
 	
 }

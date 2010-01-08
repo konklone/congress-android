@@ -20,8 +20,6 @@ import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorList extends ListActivity {
-	private ProgressDialog dialog, shortcutDialog;
-	
 	private final static int SEARCH_ZIP = 0;
 	private final static int SEARCH_LOCATION = 1;
 	private final static int SEARCH_STATE = 2;
@@ -68,14 +66,10 @@ public class LegislatorList extends ListActivity {
     	if (loadLegislatorsTask == null && shortcutImageTask == null)
 			loadLegislators();
     	else {
-    		if (loadLegislatorsTask != null) {
-    			loadLegislatorsTask.context = this;
-    			loadingDialog();
-    		}
-    		if (shortcutImageTask != null) {
-    			shortcutImageTask.context = this;
-    			shortcutDialog();
-    		}
+    		if (loadLegislatorsTask != null)
+    			loadLegislatorsTask.onScreenLoad(this);
+    		if (shortcutImageTask != null)
+    			shortcutImageTask.onScreenLoad(this);
     	}
     }
     
@@ -90,7 +84,7 @@ public class LegislatorList extends ListActivity {
     
     public void loadLegislators() {
     	if (legislators == null)
-    		new LoadLegislatorsTask(this).execute();
+    		loadLegislatorsTask = (LoadLegislatorsTask) new LoadLegislatorsTask(this).execute();
     	else
     		displayLegislators();
     }
@@ -140,9 +134,9 @@ public class LegislatorList extends ListActivity {
     }
     
     public void selectLegislator(Legislator legislator) {
-    	if (shortcut) {
-    		new ShortcutImageTask(this, legislator).execute();
-    	} else {
+    	if (shortcut)
+    		shortcutImageTask = (ShortcutImageTask) new ShortcutImageTask(this, legislator).execute();
+    	else {
     		String legislatorId = legislator.getId();
         	Intent legislatorIntent = legislatorIntent(legislatorId);
     		startActivity(legislatorIntent);
@@ -204,23 +198,10 @@ public class LegislatorList extends ListActivity {
 		finish();
     }
     
-    public void loadingDialog() {
-    	dialog = new ProgressDialog(this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("Finding legislators...");
-        dialog.show();
-    }
-    
-    public void shortcutDialog() {
-    	shortcutDialog = new ProgressDialog(this);
-    	shortcutDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-    	shortcutDialog.setMessage("Creating shortcut...");
-    	shortcutDialog.show();
-    }
-    
     private class ShortcutImageTask extends AsyncTask<Void,Void,Bitmap> {
     	public LegislatorList context;
     	public Legislator legislator;
+    	private ProgressDialog dialog;
     	
     	public ShortcutImageTask(LegislatorList context, Legislator legislator) {
     		super();
@@ -231,7 +212,12 @@ public class LegislatorList extends ListActivity {
     	
     	@Override
     	protected void onPreExecute() {
-    		context.shortcutDialog();
+    		loadingDialog();
+    	}
+    	
+    	public void onScreenLoad(LegislatorList context) {
+    		this.context = context;
+    		loadingDialog();
     	}
     	
     	@Override
@@ -241,27 +227,39 @@ public class LegislatorList extends ListActivity {
     	
     	@Override
     	protected void onPostExecute(Bitmap shortcutIcon) {
-    		if (context.shortcutDialog != null && context.shortcutDialog.isShowing())
-    			context.shortcutDialog.dismiss();
+    		if (dialog != null && dialog.isShowing())
+    			dialog.dismiss();
     		
     		context.returnShortcutIcon(legislator, shortcutIcon);
     		
     		context.shortcutImageTask = null;
     	}
+    	
+    	public void loadingDialog() {
+        	dialog = new ProgressDialog(context);
+        	dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        	dialog.setMessage("Creating shortcut...");
+        	dialog.show();
+        }
     }
     
     private class LoadLegislatorsTask extends AsyncTask<Void,Void,Legislator[]> {
     	public LegislatorList context;
+    	private ProgressDialog dialog;
     	
     	public LoadLegislatorsTask(LegislatorList context) {
     		super();
     		this.context = context;
-    		this.context.loadLegislatorsTask = this;
     	}
     	
     	@Override
     	protected void onPreExecute() {
-    		context.loadingDialog();
+    		loadingDialog();
+    	}
+    	
+    	public void onScreenLoad(LegislatorList context) {
+    		this.context = context;
+    		loadingDialog();
     	}
     	
     	@Override
@@ -294,8 +292,8 @@ public class LegislatorList extends ListActivity {
     	
     	@Override
     	protected void onPostExecute(Legislator[] legislators) {
-    		if (context.dialog != null && context.dialog.isShowing())
-    			context.dialog.dismiss();
+    		if (dialog != null && dialog.isShowing())
+    			dialog.dismiss();
     		
     		context.legislators = legislators;
     		if (context.legislators != null) {
@@ -318,6 +316,13 @@ public class LegislatorList extends ListActivity {
     		}
     		context.loadLegislatorsTask = null;
     	}
+    	
+    	public void loadingDialog() {
+        	dialog = new ProgressDialog(context);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("Finding legislators...");
+            dialog.show();
+        }
     }
     
     static class LegislatorListHolder {

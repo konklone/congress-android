@@ -65,9 +65,9 @@ public class LegislatorProfile extends Activity {
         
         loadPhotosTask = (LoadPhotosTask) getLastNonConfigurationInstance();
         if (loadPhotosTask != null)
-        	loadPhotosTask.context = this;
+        	loadPhotosTask.onScreenLoad(this);
         else
-        	new LoadPhotosTask(this).execute(id);
+        	loadPhotosTask = (LoadPhotosTask) new LoadPhotosTask(this).execute(id);
 	}
 	
 	@Override
@@ -483,7 +483,10 @@ public class LegislatorProfile extends Activity {
 		public LoadPhotosTask(LegislatorProfile context) {
 			super();
 			this.context = context;
-			this.context.loadPhotosTask = this;
+		}
+		
+		public void onScreenLoad(LegislatorProfile context) {
+			this.context = context;
 		}
 		
 		@Override
