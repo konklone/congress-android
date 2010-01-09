@@ -33,15 +33,12 @@ public class CreateShortcut extends Activity {
 	public void getResponse() {
 		running = true;
 		
-		Intent intent = new Intent();
-		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText");
-		Bundle extras = new Bundle();
+		Intent intent = new Intent()
+			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText")
+			.putExtra("ask", "Enter a last name:")
+			.putExtra("hint", "e.g. Schumer")
+			.putExtra("inputType", InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 		
-		extras.putString("ask", "Enter a last name:");
-		extras.putString("hint", "e.g. Schumer");
-		extras.putInt("inputType", InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-		
-		intent.putExtras(extras);
 		startActivityForResult(intent, RESULT_LASTNAME);
 	}
 	
@@ -52,12 +49,10 @@ public class CreateShortcut extends Activity {
 			if (resultCode == RESULT_OK) {
 				String lastName = data.getExtras().getString("response");
 				if (!lastName.equals("")) {
-					Bundle extras = new Bundle();
-					extras.putString("last_name", lastName);
-					Intent i = new Intent();
-					i.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorList");
-					extras.putBoolean("shortcut", true);
-					i.putExtras(extras);
+					Intent i = new Intent()
+						.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorList")
+						.putExtra("last_name", lastName)
+						.putExtra("shortcut", true);
 					startActivityForResult(i, RESULT_SHORTCUT);
 				} else
 					finish();
