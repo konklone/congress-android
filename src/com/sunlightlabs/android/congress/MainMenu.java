@@ -122,30 +122,28 @@ public class MainMenu extends Activity {
 	
 	private void getResponse(int requestCode) {
 		Intent intent = new Intent();
-		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText");
-		Bundle extras = new Bundle();
+		
 		
 		switch (requestCode) {
 		case RESULT_ZIP:
-			extras.putString("ask", "Enter a zip code:");
-			extras.putString("hint", "e.g. 11216");
-			extras.putInt("inputType", InputType.TYPE_CLASS_NUMBER);
+			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText");
+			intent.putExtra("ask", "Enter a zip code:");
+			intent.putExtra("hint", "e.g. 11216");
+			intent.putExtra("inputType", InputType.TYPE_CLASS_NUMBER);
 			break;
 		case RESULT_LASTNAME:
-			extras.putString("ask", "Enter a last name:");
-			extras.putString("hint", "e.g. Schumer");
-			extras.putInt("inputType", InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText");
+			intent.putExtra("ask", "Enter a last name:");
+			intent.putExtra("hint", "e.g. Schumer");
+			intent.putExtra("inputType", InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 			break;
 		case RESULT_STATE:
-			extras.putString("ask", "Enter a state:");
-			extras.putString("hint", "e.g. NY, New Jersey");
-			extras.putInt("inputType", InputType.TYPE_CLASS_TEXT);
+			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetState");
 			break;
 		default:
 			break;
 		}
 		
-		intent.putExtras(extras);
 		startActivityForResult(intent, requestCode);
 	}
 	
@@ -170,12 +168,9 @@ public class MainMenu extends Activity {
 			if (resultCode == RESULT_OK) {
 				String state = data.getExtras().getString("response").trim();
 				
-				// hope we don't allow any states with 1- or 2-letter names into the Union 
-				if (state.length() > 2) {
-					String code = LegislatorProfile.stateCode(state.trim());
-					if (code != null)
-						state = code;
-				}
+				String code = LegislatorProfile.stateCode(state.trim());
+				if (code != null)
+					state = code;
 				
 				if (!state.equals(""))
 					searchByState(state);

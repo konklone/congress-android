@@ -51,6 +51,9 @@
         <activity android:name=".GetText"
         	android:theme="@android:style/Theme.Dialog" 
         	/>
+        <activity android:name=".GetState"
+        	android:theme="@android:style/Theme.Dialog" 
+        	/>
         <activity android:name=".Avatar"
         	android:theme="@android:style/Theme.Dialog" 
         	/>

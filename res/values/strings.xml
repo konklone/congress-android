@@ -17,6 +17,8 @@
     <string name="youtube_empty">No videos found.</string>
     <string name="connection_failed">Connection failed. Press refresh to try again.</string>
     
+    <string name="state_prompt">Choose a state:</string>
+    
     <string name="about_1">
     	This app made by Sunlight Labs, a division of the Sunlight Foundation that is dedicated to increasing government transparency through the power of technology.
     </string>
