@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
@@ -24,9 +23,6 @@ public class GetState extends Activity {
 	
 	public void setupControls() {
 		spinner = (Spinner) findViewById(R.id.spinner);
-//		ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.states, android.R.layout.simple_spinner_item);
-//		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//		spinner.setAdapter(adapter);
 		
 		Button ok = (Button) this.findViewById(R.id.get_text_ok);
 		Button cancel = (Button) this.findViewById(R.id.get_text_cancel);
