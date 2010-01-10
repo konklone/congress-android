@@ -46,6 +46,7 @@ public class LegislatorProfile extends Activity {
 	private String apiKey;
 	private Drawable avatar;
 	private ImageView picture;
+	private ArrayList<Committee> committees;
 	
 	private boolean landscape;
 	
@@ -74,25 +75,27 @@ public class LegislatorProfile extends Activity {
         loadInformation();
         
         LegislatorProfileHolder holder = (LegislatorProfileHolder) getLastNonConfigurationInstance();
-        if (holder != null) {
-        	loadPhotosTask = holder.loadPhotosTask;
-        	loadCommitteesTask = holder.loadCommitteesTask;
-        }
+        if (holder != null)
+        	holder.loadInto(this);
         
-        if (loadPhotosTask != null)
-        	loadPhotosTask.onScreenLoad(this);
-        else
-        	loadPhotosTask = (LoadPhotosTask) new LoadPhotosTask(this).execute(id);
-        
-        if (loadCommitteesTask != null)
-        	loadCommitteesTask.onScreenLoad(this);
-        else
-        	loadCommitteesTask = (LoadCommitteesTask) new LoadCommitteesTask(this).execute(id);
+        loadPhotos();
+        loadCommittees();
 	}
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new LegislatorProfileHolder(loadPhotosTask, loadCommitteesTask);
+		return new LegislatorProfileHolder(loadPhotosTask, loadCommitteesTask, committees);
+	}
+	
+	public void loadCommittees() {
+		if (loadCommitteesTask != null)
+			loadCommitteesTask.onScreenLoad(this);
+		else {
+			if (committees != null)
+				displayCommittees();
+			else
+				loadCommitteesTask = (LoadCommitteesTask) new LoadCommitteesTask(this).execute(id);
+		}
 	}
     
 	public void onLoadCommittees(CongressException exception) {
@@ -101,7 +104,24 @@ public class LegislatorProfile extends Activity {
 	}
 	
 	public void onLoadCommittees(ArrayList<Committee> committees) {
+		this.committees = committees;
+		Utils.alert(this, "Loaded committees");
+		displayCommittees();
+	}
+	
+	public void displayCommittees() {
 		
+	}
+	
+	public void loadPhotos() {
+		if (loadPhotosTask != null)
+        	loadPhotosTask.onScreenLoad(this);
+        else {
+        	if (avatar != null)
+        		displayAvatar();
+        	else
+        		loadPhotosTask = (LoadPhotosTask) new LoadPhotosTask(this).execute(id);
+        }
 	}
 	
     public void displayAvatar() {
@@ -588,10 +608,18 @@ public class LegislatorProfile extends Activity {
 	static class LegislatorProfileHolder {
 		LoadPhotosTask loadPhotosTask;
 		LoadCommitteesTask loadCommitteesTask;
+		ArrayList<Committee> committees;
 		
-		LegislatorProfileHolder(LoadPhotosTask loadPhotosTask, LoadCommitteesTask loadCommitteesTask) {
+		LegislatorProfileHolder(LoadPhotosTask loadPhotosTask, LoadCommitteesTask loadCommitteesTask, ArrayList<Committee> committees) {
 			this.loadPhotosTask = loadPhotosTask;
 			this.loadCommitteesTask = loadCommitteesTask;
+			this.committees = committees;
+		}
+		
+		public void loadInto(LegislatorProfile context) {
+			context.loadPhotosTask = loadPhotosTask;
+			context.loadCommitteesTask = loadCommitteesTask;
+			context.committees = committees;
 		}
 	}
 
