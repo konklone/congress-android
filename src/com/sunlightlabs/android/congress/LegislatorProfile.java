@@ -101,10 +101,7 @@ public class LegislatorProfile extends Activity {
 	}
 	
 	public void onLoadCommittees(ArrayList<Committee> committees) {
-		String msg = "";
-		for (int i=0; i<committees.size(); i++)
-			msg += committees.get(i).getProperty("name") + ", ";
-		Utils.alert(this, "Got committees: " + msg);
+		
 	}
 	
     public void displayAvatar() {
