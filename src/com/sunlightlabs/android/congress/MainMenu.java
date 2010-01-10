@@ -129,7 +129,7 @@ public class MainMenu extends Activity {
 			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText");
 			intent.putExtra("ask", "Enter a zip code:");
 			intent.putExtra("hint", "e.g. 11216");
-			intent.putExtra("inputType", InputType.TYPE_CLASS_NUMBER);
+			intent.putExtra("inputType", InputType.TYPE_CLASS_PHONE);
 			break;
 		case RESULT_LASTNAME:
 			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText");
