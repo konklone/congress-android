@@ -79,7 +79,6 @@ public class LegislatorProfile extends Activity {
         	holder.loadInto(this);
         
         loadPhotos();
-        loadCommittees();
 	}
 	
 	@Override
@@ -87,6 +86,7 @@ public class LegislatorProfile extends Activity {
 		return new LegislatorProfileHolder(loadPhotosTask, loadCommitteesTask, committees);
 	}
 	
+	// committee callbacks and display function not being used at this time
 	public void loadCommittees() {
 		if (loadCommitteesTask != null)
 			loadCommitteesTask.onScreenLoad(this);
@@ -100,17 +100,13 @@ public class LegislatorProfile extends Activity {
     
 	public void onLoadCommittees(CongressException exception) {
 		Utils.alert(this, exception);
-		//change committee list message to one of failure
 	}
 	
 	public void onLoadCommittees(ArrayList<Committee> committees) {
 		this.committees = committees;
-		Utils.alert(this, "Loaded committees");
-		displayCommittees();
 	}
 	
 	public void displayCommittees() {
-		
 	}
 	
 	public void loadPhotos() {
@@ -591,6 +587,7 @@ public class LegislatorProfile extends Activity {
 			}
 			for (int i=0; i<temp.length; i++)
 				committees.add(temp[i]);
+			
 			return committees;
 		}
 		

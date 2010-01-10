@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/profile_tab"
-
+ 
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:fillViewport="true"
 	>
-	
-	<LinearLayout
+
+	<LinearLayout 
 		android:orientation="vertical"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
@@ -118,7 +118,7 @@
 	 	
 	 	<View
 	 		android:layout_width="fill_parent"
-	 		android:layout_height="2dp"
+	 		android:layout_height="1dp"
 	 		android:background="#5c5e5d"
 	 		/>
 	 	
@@ -190,6 +190,6 @@
 	  		</LinearLayout>
 		  	
 		</LinearLayout>
-		
+	 	
 	</LinearLayout>
 </ScrollView>

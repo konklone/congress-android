@@ -31,7 +31,6 @@ public class LegislatorList extends ListActivity {
 	private ShortcutImageTask shortcutImageTask = null;
 	private Button back, refresh;
 	
-	// whether the user has come to this activity looking to create a shortcut
 	private boolean shortcut;
 	
 	private String zipCode, lastName, state, api_key;
