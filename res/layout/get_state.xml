@@ -25,7 +25,7 @@
     	
     	android:drawSelectorOnTop="true"
     	android:prompt="@string/state_prompt"
-    	android:entries="@array/states"
+    	android:entries="@array/state_names"
     	/>
     
     

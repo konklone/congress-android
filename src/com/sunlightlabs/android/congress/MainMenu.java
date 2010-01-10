@@ -20,8 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.sunlightlabs.android.congress.utils.States;
-
 public class MainMenu extends Activity {
 	public static final int RESULT_ZIP = 1;
 	public static final int RESULT_LASTNAME = 2;
@@ -170,7 +168,7 @@ public class MainMenu extends Activity {
 			if (resultCode == RESULT_OK) {
 				String state = data.getExtras().getString("response").trim();
 				
-				String code = States.nameToCode(state.trim());
+				String code = Utils.stateNameToCode(this, state.trim());
 				if (code != null)
 					state = code;
 				

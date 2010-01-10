@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.CongressException;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
-import com.sunlightlabs.android.congress.utils.States;
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Committee;
 
@@ -132,7 +131,7 @@ public class LegislatorProfile extends Activity {
 		partyView.setTypeface(font);
 		
 		TextView stateView = (TextView) this.findViewById(R.id.profile_state);
-		String stateName = States.codeToName(state);
+		String stateName = Utils.stateCodeToName(this, state);
 		stateView.setText(stateName);
 		if (!landscape && stateName.equals("District of Columbia"))
 			stateView.setTextSize(16);
