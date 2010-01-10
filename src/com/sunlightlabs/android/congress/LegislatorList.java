@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
 
@@ -222,7 +223,7 @@ public class LegislatorList extends ListActivity {
     	
     	@Override
     	protected Bitmap doInBackground(Void... nothing) {
-    		return LegislatorProfile.shortcutImage(legislator.getId(), context);
+    		return LegislatorImage.shortcutImage(legislator.getId(), context);
     	}
     	
     	@Override

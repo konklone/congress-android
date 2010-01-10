@@ -1,47 +1,30 @@
 package com.sunlightlabs.android.congress;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.CongressException;
+import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Committee;
 
 public class LegislatorProfile extends Activity {
-	public static final String PIC_SMALL = "40x50";
-	public static final String PIC_MEDIUM = "100x125";
-	public static final String PIC_LARGE = "200x250";
-	
-	// 30 day expiration time on cached legislator avatars
-	public static final long CACHE_IMAGES = (long) 1000 * 60 * 60 * 24 * 30;
-	
 	private String id, titledName, party, gender, state, domain, phone, website;
 	private String apiKey;
 	private Drawable avatar;
@@ -183,107 +166,12 @@ public class LegislatorProfile extends Activity {
 		});
 	}
 	
-	/*
-	 * Various static methods that other classes can use to fetch legislator profile images,
-	 * and cause them to be downloaded and cached to disk.
-	 */
 	
-	public static BitmapDrawable getImage(String size, String bioguideId, Context context) {
-		File imageFile = new File(picPath(size, bioguideId, context));
-		
-		if (!imageFile.exists())
-			cacheImages(bioguideId, context);
-		else if (tooOld(imageFile))
-			cacheImages(bioguideId, context);
-		
-		
-		if (!imageFile.exists()) // download failed for some reason
-			return null;
-		
-		return new BitmapDrawable(picPath(size, bioguideId, context));
-	}
-	
-	public static Bitmap shortcutImage(String bioguideId, Context context) {
-		int density = context.getResources().getDisplayMetrics().densityDpi;
-		Bitmap profile, scaled;
-		switch (density) {
-		case DisplayMetrics.DENSITY_LOW:
-			profile = getImage(LegislatorProfile.PIC_SMALL, bioguideId, context).getBitmap();
-			scaled = Bitmap.createScaledBitmap(profile, 32, 40, true);
-			return Bitmap.createBitmap(scaled, 0, 2, scaled.getWidth(), scaled.getHeight() - 4);
-		case DisplayMetrics.DENSITY_MEDIUM:
-			// this will be a 40x50 image, that I want to turn into a 40x48 image
-			profile = getImage(LegislatorProfile.PIC_SMALL, bioguideId, context).getBitmap();
-			return Bitmap.createBitmap(profile, 0, 1, profile.getWidth(), profile.getHeight()-2);
-		case DisplayMetrics.DENSITY_HIGH:
-		default:
-			// will be a 100x125 image, I want to scale it down to 60x75, and then chop 3 lines off of it
-			profile = getImage(LegislatorProfile.PIC_MEDIUM, bioguideId, context).getBitmap();
-			scaled = Bitmap.createScaledBitmap(profile, 60, 75, true);
-			return Bitmap.createBitmap(scaled, 0, 1, scaled.getWidth(), scaled.getHeight() - 3);
-		}
-		
-	}
-	
-	// assumes you've already checked to make sure the file exists
-	public static boolean tooOld(File file) {
-		return file.lastModified() < (System.currentTimeMillis() - CACHE_IMAGES);
-	}
-	
-	private static String picUrl(String size, String bioguideId) {
-		return "http://assets.sunlightfoundation.com/moc/" + size + "/" + bioguideId + ".jpg";
-	}
-	
-	private static String picPath(String size, String bioguideId, Context context) {
-		return picDir(bioguideId, context) + size + ".jpg"; 
-	}
-	
-	private static String picDir(String bioguideId, Context context) {
-		return context.getDir(bioguideId, Context.MODE_PRIVATE).getPath();
-	}
-	
-	private static void cacheImages(String bioguideId, Context context) {
-		cacheImage(PIC_SMALL, bioguideId, context);
-		cacheImage(PIC_MEDIUM, bioguideId, context);
-		cacheImage(PIC_LARGE, bioguideId, context);
-	}
-	
-	private static void cacheImage(String size, String bioguideId, Context context) {
-		File outFile = new File(picPath(size, bioguideId, context));
-		if (outFile.exists())
-			outFile.delete();
-		
-		String url = picUrl(size, bioguideId);
-		downloadFile(url, outFile);
-	}
-	
-	private static void downloadFile(String url, File outputFile) {
-		try {
-			URL u = new URL(url);
-			URLConnection conn = u.openConnection();
-			int contentLength = conn.getContentLength();
-			
-			DataInputStream stream = new DataInputStream(u.openStream());
-			
-	        byte[] buffer = new byte[contentLength];
-	        stream.readFully(buffer);
-	        stream.close();
-	        
-	        DataOutputStream fos = new DataOutputStream(new FileOutputStream(outputFile));
-	        fos.write(buffer);
-	        fos.flush();
-	        fos.close();
-		} catch(FileNotFoundException e) {
-			return; // swallow a 404, we'll throw up a No Photo image
-		} catch (IOException e) {
-			return; // swallow a 404, we'll throw up a No Photo image
-		}
-	}
 	
 	// For URLs that use subdomains (i.e. yarmuth.house.gov) return just that.
 	// For URLs that use paths (i.e. house.gov/wu) return just that.
 	// In both cases, remove the http://, the www., and any unneeded trailing stuff.
-	private String websiteName(String url) {
+	public static String websiteName(String url) {
 		String noPrefix = url.replaceAll("^http://(?:www\\.)?", "");
 		
 		String noSubdomain = "^((?:senate|house)\\.gov/.*?)/";
@@ -295,11 +183,11 @@ public class LegislatorProfile extends Activity {
 			return noPrefix.replaceAll("/.*$", "");
 	}
 	
-	private String websiteLink(String url) {
+	public static String websiteLink(String url) {
 		return "<a href=\"" + url + "\">" + websiteName(url) + "</a>";
 	}
 	
-	private String partyName(String code) {
+	public static String partyName(String code) {
 		if (code.equals("D"))
 			return "Democrat";
 		if (code.equals("R"))
@@ -310,7 +198,7 @@ public class LegislatorProfile extends Activity {
 			return "";
 	}
 	
-	private String domainName(String domain) {
+	public static String domainName(String domain) {
 		if (domain.equals("Upper Seat"))
 			return "Senior Senator";
 		if (domain.equals("Lower Seat"))
@@ -552,7 +440,7 @@ public class LegislatorProfile extends Activity {
 		
 		@Override
 		public Drawable doInBackground(String... bioguideId) {
-			return LegislatorProfile.getImage(PIC_MEDIUM, bioguideId[0], context);
+			return LegislatorImage.getImage(LegislatorImage.PIC_MEDIUM, bioguideId[0], context);
 		}
 		
 		@Override

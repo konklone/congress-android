@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 
+import com.sunlightlabs.android.congress.utils.LegislatorImage;
+
 public class Avatar extends Activity {
 
 	@Override
@@ -18,7 +20,7 @@ public class Avatar extends Activity {
         String id = getIntent().getStringExtra("id");
         
         ImageView avatar = (ImageView) this.findViewById(R.id.big_avatar);
-        BitmapDrawable drawable = LegislatorProfile.getImage(LegislatorProfile.PIC_LARGE, id, this);
+        BitmapDrawable drawable = LegislatorImage.getImage(LegislatorImage.PIC_LARGE, id, this);
         avatar.setImageDrawable(drawable);
         
         avatar.setOnClickListener(new View.OnClickListener() {
