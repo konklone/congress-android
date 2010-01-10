@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +30,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.utils.CongressException;
+import com.sunlightlabs.api.ApiCall;
+import com.sunlightlabs.entities.Committee;
+
 public class LegislatorProfile extends Activity {
 	public static final String PIC_SMALL = "40x50";
 	public static final String PIC_MEDIUM = "100x125";
@@ -38,20 +43,23 @@ public class LegislatorProfile extends Activity {
 	public static final long CACHE_IMAGES = (long) 1000 * 60 * 60 * 24 * 30;
 	
 	private String id, titledName, party, gender, state, domain, phone, website;
+	private String apiKey;
 	private Drawable avatar;
 	private ImageView picture;
 	
 	private boolean landscape;
 	
 	private LoadPhotosTask loadPhotosTask = null;
+	private LoadCommitteesTask loadCommitteesTask = null;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         landscape = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
-        
         setContentView(landscape ? R.layout.profile_landscape : R.layout.profile);
+        
+        apiKey = getResources().getString(R.string.sunlight_api_key);
         
         Bundle extras = getIntent().getExtras(); 
         id = extras.getString("id");
@@ -65,18 +73,40 @@ public class LegislatorProfile extends Activity {
         
         loadInformation();
         
-        loadPhotosTask = (LoadPhotosTask) getLastNonConfigurationInstance();
+        LegislatorProfileHolder holder = (LegislatorProfileHolder) getLastNonConfigurationInstance();
+        if (holder != null) {
+        	loadPhotosTask = holder.loadPhotosTask;
+        	loadCommitteesTask = holder.loadCommitteesTask;
+        }
+        
         if (loadPhotosTask != null)
         	loadPhotosTask.onScreenLoad(this);
         else
         	loadPhotosTask = (LoadPhotosTask) new LoadPhotosTask(this).execute(id);
+        
+        if (loadCommitteesTask != null)
+        	loadCommitteesTask.onScreenLoad(this);
+        else
+        	loadCommitteesTask = (LoadCommitteesTask) new LoadCommitteesTask(this).execute(id);
 	}
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return loadPhotosTask;
+		return new LegislatorProfileHolder(loadPhotosTask, loadCommitteesTask);
 	}
     
+	public void onLoadCommittees(CongressException exception) {
+		Utils.alert(this, exception);
+		//change committee list message to one of failure
+	}
+	
+	public void onLoadCommittees(ArrayList<Committee> committees) {
+		String msg = "";
+		for (int i=0; i<committees.size(); i++)
+			msg += committees.get(i).getProperty("name") + ", ";
+		Utils.alert(this, "Got committees: " + msg);
+	}
+	
     public void displayAvatar() {
     	if (avatar != null) {
     		picture.setImageDrawable(avatar);
@@ -509,7 +539,7 @@ public class LegislatorProfile extends Activity {
 		
 		@Override
 		public Drawable doInBackground(String... bioguideId) {
-			return LegislatorProfile.getImage(PIC_MEDIUM, id, context);
+			return LegislatorProfile.getImage(PIC_MEDIUM, bioguideId[0], context);
 		}
 		
 		@Override
@@ -519,4 +549,53 @@ public class LegislatorProfile extends Activity {
 			context.loadPhotosTask = null;
 		}
 	}
+	
+	private class LoadCommitteesTask extends AsyncTask<String,Void,ArrayList<Committee>> {
+		private LegislatorProfile context;
+		private CongressException exception;
+		
+		public LoadCommitteesTask(LegislatorProfile context) {
+			this.context = context;
+		}
+		
+		public void onScreenLoad(LegislatorProfile context) {
+			this.context = context;
+		}
+		
+		@Override
+		public ArrayList<Committee> doInBackground(String... bioguideId) {
+			ArrayList<Committee> committees = new ArrayList<Committee>();
+			Committee[] temp;
+			try {
+				temp = Committee.getCommitteesForLegislator(new ApiCall(context.apiKey), bioguideId[0]);
+			} catch (IOException e) {
+				this.exception = new CongressException(e, "Error loading committees.");
+				return null;
+			}
+			for (int i=0; i<temp.length; i++)
+				committees.add(temp[i]);
+			return committees;
+		}
+		
+		@Override
+		public void onPostExecute(ArrayList<Committee> committees) {
+			context.loadCommitteesTask = null;
+			
+			if (exception != null && committees == null)
+				context.onLoadCommittees(exception);
+			else
+				context.onLoadCommittees(committees);
+		}
+	}
+	
+	static class LegislatorProfileHolder {
+		LoadPhotosTask loadPhotosTask;
+		LoadCommitteesTask loadCommitteesTask;
+		
+		LegislatorProfileHolder(LoadPhotosTask loadPhotosTask, LoadCommitteesTask loadCommitteesTask) {
+			this.loadPhotosTask = loadPhotosTask;
+			this.loadCommitteesTask = loadCommitteesTask;
+		}
+	}
+
 }

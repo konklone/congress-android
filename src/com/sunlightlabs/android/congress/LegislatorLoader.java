@@ -94,7 +94,7 @@ public class LegislatorLoader extends Activity {
     	@Override
     	protected Legislator doInBackground(String... ids) {
     		try {
-				return Legislator.getLegislatorById(new ApiCall(apiKey), ids[0]);
+				return Legislator.getLegislatorById(new ApiCall(context.apiKey), ids[0]);
 			} catch(IOException e) {
 				return null;
 			}
