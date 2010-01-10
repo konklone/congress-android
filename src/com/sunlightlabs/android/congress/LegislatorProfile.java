@@ -39,10 +39,9 @@ public class LegislatorProfile extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.profile);
         
         landscape = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
-        setContentView(landscape ? R.layout.profile_landscape : R.layout.profile);
-        
         apiKey = getResources().getString(R.string.sunlight_api_key);
         
         Bundle extras = getIntent().getExtras(); 
