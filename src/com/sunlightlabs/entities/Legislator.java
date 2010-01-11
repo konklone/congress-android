@@ -14,7 +14,7 @@ import com.sunlightlabs.api.ApiCall;
   * represents a  state legislator
 * com.sunlightlabs.entities.Legislator steve Jul 22, 2009
  */
-public class Legislator extends JSONEntity {
+public class Legislator extends JSONEntity implements Comparable<Legislator> {
 	public static Class<Legislator> THIS_CLASS = Legislator.class;
 	public static Legislator[] EMPTY_ARRAY = {};
 
@@ -227,6 +227,10 @@ public class Legislator extends JSONEntity {
 	 */
 	public String[] getKnownProperties() {
 		return KNOWN_PROPERTIES;
+	}
+
+	public int compareTo(Legislator another) {
+		return this.getProperty("lastname").compareTo(another.getProperty("lastname"));
 	}
 	
 	

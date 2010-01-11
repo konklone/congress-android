@@ -1,6 +1,8 @@
 package com.sunlightlabs.android.congress;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +32,7 @@ public class LegislatorList extends ListActivity {
 	private final static int SEARCH_LASTNAME = 3;
 	private final static int SEARCH_COMMITTEE = 4;
 	
-	private Legislator[] legislators = null;
+	private ArrayList<Legislator> legislators = null;
 	private LoadLegislatorsTask loadLegislatorsTask = null;
 	private ShortcutImageTask shortcutImageTask = null;
 	private Button back, refresh;
@@ -101,7 +103,7 @@ public class LegislatorList extends ListActivity {
     	setListAdapter(new ArrayAdapter<Legislator>(this, android.R.layout.simple_list_item_1, legislators));
     	TextView empty = (TextView) this.findViewById(R.id.empty_msg);
     	
-    	if (legislators.length <= 0) {
+    	if (legislators.size() <= 0) {
     		switch (searchType()) {
 	    		case SEARCH_ZIP:
 	    			empty.setText(R.string.empty_zipcode);
@@ -285,7 +287,7 @@ public class LegislatorList extends ListActivity {
         }
     }
     
-    private class LoadLegislatorsTask extends AsyncTask<Void,Void,Legislator[]> {
+    private class LoadLegislatorsTask extends AsyncTask<Void,Void,ArrayList<Legislator>> {
     	public LegislatorList context;
     	private ProgressDialog dialog;
     	
@@ -305,45 +307,66 @@ public class LegislatorList extends ListActivity {
     	}
     	
     	@Override
-    	protected Legislator[] doInBackground(Void... nothing) {
+    	protected ArrayList<Legislator> doInBackground(Void... nothing) {
     		ApiCall api = new ApiCall(api_key);
 			
+    		ArrayList<Legislator> legislators = new ArrayList<Legislator>();
+    		ArrayList<Legislator> lower = new ArrayList<Legislator>(); // lower house, not stature
+    		Legislator[] temp;
 			try {
 				Map<String,String> params;
 				switch (searchType()) {
 					case SEARCH_ZIP:
-			    		return Legislator.getLegislatorsForZipCode(api, zipCode);
+			    		temp = Legislator.getLegislatorsForZipCode(api, zipCode);
+			    		break;
 					case SEARCH_LOCATION:
-			    		return Legislator.getLegislatorsForLatLong(api, latitude, longitude);
+						temp = Legislator.getLegislatorsForLatLong(api, latitude, longitude);
+			    		break;
 					case SEARCH_LASTNAME:
 			    		params = new HashMap<String,String>();
 			    		params.put("lastname", lastName);
-			    		return Legislator.allLegislators(api, params);
+			    		temp = Legislator.allLegislators(api, params);
+			    		break;
 					case SEARCH_COMMITTEE:
-						return Committee.getLegislatorsForCommittee(api, committeeId);
+						temp = Committee.getLegislatorsForCommittee(api, committeeId);
+						break;
 					case SEARCH_STATE:
 			    		params = new HashMap<String,String>();
 			    		params.put("state", state);
-			    		return Legislator.allLegislators(api, params);
+			    		temp = Legislator.allLegislators(api, params);
+			    		break;
 			    	default:
-			    		return new Legislator[0];
+			    		return legislators;
 				}
+				
+				// sort legislators Senators-first
+				for (int i=0; i<temp.length; i++) {
+					if (temp[i].getProperty("title").equals("Sen"))
+						legislators.add(temp[i]);
+					else
+						lower.add(temp[i]);
+				}
+				Collections.sort(legislators);
+				Collections.sort(lower);
+				legislators.addAll(lower);
+				
+				return legislators;
 		    	
 			} catch(IOException e) {
-				return new Legislator[0];
+				return legislators;
 			}
     	}
     	
     	@Override
-    	protected void onPostExecute(Legislator[] legislators) {
+    	protected void onPostExecute(ArrayList<Legislator> legislators) {
     		if (dialog != null && dialog.isShowing())
     			dialog.dismiss();
     		
     		context.legislators = legislators;
     		if (context.legislators != null) {
     			// if there's only one result, don't even make them click it
-            	if (legislators.length == 1) {
-            		context.selectLegislator(legislators[0]);
+            	if (legislators.size() == 1) {
+            		context.selectLegislator(legislators.get(0));
             		
             		// if we're going on to the profile of a legislator, we want to cut the list out of the stack
             		// but if we're generating a shortcut, the shortcut process will be spawning off 
@@ -378,7 +401,7 @@ public class LegislatorList extends ListActivity {
     }
     
     static class LegislatorListHolder {
-    	Legislator[] legislators;
+    	ArrayList<Legislator> legislators;
     	LoadLegislatorsTask loadLegislatorsTask;
     	ShortcutImageTask shortcutImageTask;
     }
