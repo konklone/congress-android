@@ -54,9 +54,6 @@
         <activity android:name=".GetState"
         	android:theme="@android:style/Theme.Dialog" 
         	/>
-        <activity android:name=".Avatar"
-        	android:theme="@android:style/Theme.Dialog" 
-        	/>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

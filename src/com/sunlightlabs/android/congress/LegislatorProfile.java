@@ -123,10 +123,9 @@ public class LegislatorProfile extends ListActivity {
 	}
 	
     public void displayAvatar() {
-    	if (avatar != null) {
+    	if (avatar != null)
     		picture.setImageDrawable(avatar);
-    		bindAvatar();
-    	} else {
+    	else {
     		if (gender.equals("M"))
 				avatar = getResources().getDrawable(R.drawable.no_photo_male);
 			else // "F"
@@ -217,20 +216,6 @@ public class LegislatorProfile extends ListActivity {
 		adapter.addView(committeeHeader);
 		
 		setListAdapter(adapter);
-	}
-	
-	// needs to only be called when avatars have been downloaded and cached
-	private void bindAvatar() {
-		picture.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Intent avatarIntent = new Intent(LegislatorProfile.this, Avatar.class);
-				Bundle extras = new Bundle();
-				extras.putString("id", id);
-				avatarIntent.putExtras(extras);
-				
-				startActivity(avatarIntent);
-			}
-		});
 	}
 	
 	// For URLs that use subdomains (i.e. yarmuth.house.gov) return just that.
@@ -324,7 +309,7 @@ public class LegislatorProfile extends ListActivity {
 		
 		@Override
 		public Drawable doInBackground(String... bioguideId) {
-			return LegislatorImage.getImage(LegislatorImage.PIC_MEDIUM, bioguideId[0], context);
+			return LegislatorImage.getImage(LegislatorImage.PIC_LARGE, bioguideId[0], context);
 		}
 		
 		@Override

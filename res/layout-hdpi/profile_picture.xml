@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="208px"
+	android:layout_height="258px"
+	android:layout_marginTop="13dp"
+	android:layout_marginBottom="18dp"
+	android:layout_marginLeft="20dp"
+ 	android:layout_marginRight="20dp"
+ 	android:background="#d2d3d5"
+ 	>
+
+ 	<ImageView android:id="@+id/profile_picture"
+ 		android:layout_width="200px"
+ 		android:layout_height="250px"
+ 		
+ 		android:layout_gravity="center"
+ 		
+ 		android:src="@drawable/loading_photo"
+ 		/>
+</FrameLayout>
