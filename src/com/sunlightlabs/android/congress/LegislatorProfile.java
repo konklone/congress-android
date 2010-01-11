@@ -6,25 +6,30 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.CongressException;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Committee;
 
-public class LegislatorProfile extends Activity {
+public class LegislatorProfile extends ListActivity {
 	private String id, titledName, party, gender, state, domain, phone, website;
 	private String apiKey;
 	private Drawable avatar;
@@ -39,7 +44,6 @@ public class LegislatorProfile extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.profile);
         
         landscape = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
         apiKey = getResources().getString(R.string.sunlight_api_key);
@@ -54,7 +58,7 @@ public class LegislatorProfile extends Activity {
         phone = extras.getString("phone");
         website = extras.getString("website");
         
-        loadInformation();
+        setupControls();
         
         LegislatorProfileHolder holder = (LegislatorProfileHolder) getLastNonConfigurationInstance();
         if (holder != null)
@@ -115,40 +119,73 @@ public class LegislatorProfile extends Activity {
     		// do not bind a click event to the "no photo" avatar
     	}
     }
+    
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+    	String tag = (String) v.getTag();
+    	if (tag.equals("phone"))
+    		callOffice();
+    	else if (tag.equals("web"))
+    		visitWebsite();
+    }
+    
+    public void callOffice() {
+    	startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel://" + phone)));
+    }
+    
+    public void visitWebsite() {
+    	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(website)));
+    }
 	
-	public void loadInformation() {
+	public void setupControls() {
 		Typeface font = Typeface.createFromAsset(getAssets(), "fonts/AlteHaasGroteskRegular.ttf");
+		LayoutInflater inflater = LayoutInflater.from(this);
+		LinearLayout mainView = (LinearLayout) inflater.inflate(R.layout.profile, null);
+		mainView.setEnabled(false);
 		
-		picture = (ImageView) this.findViewById(R.id.profile_picture);
+		picture = (ImageView) mainView.findViewById(R.id.profile_picture);
 		
-		TextView name = (TextView) this.findViewById(R.id.profile_name);
+		TextView name = (TextView) mainView.findViewById(R.id.profile_name);
 		name.setText(titledName);
 		name.setTypeface(font);
 		
-		TextView partyView = (TextView) this.findViewById(R.id.profile_party); 
+		TextView partyView = (TextView) mainView.findViewById(R.id.profile_party); 
 		partyView.setText(partyName(party));
 		partyView.setTypeface(font);
 		
-		TextView stateView = (TextView) this.findViewById(R.id.profile_state);
+		TextView stateView = (TextView) mainView.findViewById(R.id.profile_state);
 		String stateName = Utils.stateCodeToName(this, state);
 		stateView.setText(stateName);
 		if (!landscape && stateName.equals("District of Columbia"))
 			stateView.setTextSize(16);
 		stateView.setTypeface(font);
 		
-		TextView domainView = (TextView) this.findViewById(R.id.profile_domain); 
+		TextView domainView = (TextView) mainView.findViewById(R.id.profile_domain); 
 		domainView.setText(domainName(domain));
 		domainView.setTypeface(font);
 		
-		TextView phoneView = (TextView) this.findViewById(R.id.profile_phone);
-		phoneView.setText(phone);
-		phoneView.setTypeface(font);
-		Linkify.addLinks(phoneView, Linkify.PHONE_NUMBERS);
+		LinearLayout phoneView = (LinearLayout) inflater.inflate(R.layout.profile_contact, null);
+		TextView phoneText = (TextView) phoneView.findViewById(R.id.text);
+		phoneText.setText("Call " + pronoun(gender) + " office");
+		phoneText.setTypeface(font);
+		((ImageView) phoneView.findViewById(R.id.icon)).setImageResource(R.drawable.phone);
+		phoneView.setTag("phone");
 		
-		TextView websiteView = (TextView) this.findViewById(R.id.profile_website);
-		websiteView.setText(Html.fromHtml(websiteLink(website)));
-		websiteView.setMovementMethod(LinkMovementMethod.getInstance());
-		websiteView.setTypeface(font);
+		LinearLayout websiteView = (LinearLayout) inflater.inflate(R.layout.profile_contact, null);
+		TextView websiteText = (TextView) websiteView.findViewById(R.id.text);
+		websiteText.setText("Visit " + pronoun(gender) + " website");
+		websiteText.setTypeface(font);
+		((ImageView) websiteView.findViewById(R.id.icon)).setImageResource(R.drawable.web);
+		websiteView.setTag("web");
+		
+		ArrayList<View> contactViews = new ArrayList<View>();
+		contactViews.add(phoneView);
+		contactViews.add(websiteView);
+		
+		MergeAdapter adapter = new MergeAdapter();
+		adapter.addView(mainView);
+		adapter.addAdapter(new ViewArrayAdapter(this, contactViews));
+		setListAdapter(adapter);
 	}
 	
 	// needs to only be called when avatars have been downloaded and cached
@@ -202,6 +239,27 @@ public class LegislatorProfile extends Activity {
 			return "Junior Senator";
 		else
 			return domain;
+	}
+	
+	public static String pronoun(String gender) {
+		if (gender.equals("M"))
+			return "his";
+		else // "F"
+			return "her";
+	}
+	
+	// dirt simple class, to give views the selectable appearance on click and long click
+	// that one expects from listviews, but made to be easily dumped into a MergeAdapter
+	// for use in the middle of a large scrollable pane
+	private class ViewArrayAdapter extends ArrayAdapter<View> {
+
+        public ViewArrayAdapter(Activity context, ArrayList<View> items) {
+            super(context, 0, items);
+        }
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			return getItem(position);
+		}
 	}
 	
 	private class LoadPhotosTask extends AsyncTask<String,Void,Drawable> {

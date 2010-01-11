@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:id="@+id/profile_website_row"
+	android:orientation="horizontal"
+	
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:paddingLeft="15dp"
+	android:paddingTop="10dp"
+	android:paddingBottom="10dp"
+	>
+
+	<ImageView android:id="@+id/icon"
+		android:layout_width="48dp"
+		android:layout_height="48dp"
+		android:layout_marginRight="20dp"
+		/>
+		
+	<TextView android:id="@+id/text"
+	
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		
+		android:textSize="22sp"
+		android:textColor="#dddddd"
+		
+		android:text="Contact somehow"
+		/>
+		
+</LinearLayout>
