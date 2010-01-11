@@ -2,6 +2,7 @@ package com.sunlightlabs.android.congress;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -340,6 +341,7 @@ public class LegislatorProfile extends ListActivity {
 		@Override
 		public ArrayList<Committee> doInBackground(String... bioguideId) {
 			ArrayList<Committee> committees = new ArrayList<Committee>();
+			ArrayList<Committee> joint = new ArrayList<Committee>();
 			Committee[] temp;
 			try {
 				temp = Committee.getCommitteesForLegislator(new ApiCall(context.apiKey), bioguideId[0]);
@@ -347,9 +349,15 @@ public class LegislatorProfile extends ListActivity {
 				this.exception = new CongressException(e, "Error loading committees.");
 				return null;
 			}
-			for (int i=0; i<temp.length; i++)
-				committees.add(temp[i]);
-			
+			for (int i=0; i<temp.length; i++) {
+				if (temp[i].getProperty("chamber").equals("Joint"))
+					joint.add(temp[i]);
+				else
+					committees.add(temp[i]);
+			}
+			Collections.sort(committees);
+			Collections.sort(joint);
+			committees.addAll(joint);
 			return committees;
 		}
 		

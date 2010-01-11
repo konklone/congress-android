@@ -11,7 +11,7 @@ import com.sunlightlabs.api.*;
  * represents a Committee in congress or a legislature
  * com.sunlightlabs.entities.Legislator steve Jul 22, 2009
  */
-public class Committee extends JSONEntity {
+public class Committee extends JSONEntity implements Comparable<Committee> {
 	public static Class<Committee> THIS_CLASS = Committee.class;
 	public static Committee[] EMPTY_ARRAY = {};
 
@@ -169,6 +169,10 @@ public class Committee extends JSONEntity {
 		for (int j = 0; j < values.length; j++) {
 			values[j].showProperties( out);
 		}
+	}
+
+	public int compareTo(Committee another) {
+		return this.getProperty("name").compareTo(another.getProperty("name"));
 	}
 
 }
