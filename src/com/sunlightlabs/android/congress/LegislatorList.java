@@ -136,13 +136,13 @@ public class LegislatorList extends ListActivity {
     	String windowTitle;
     	switch(searchType()) {
     	case SEARCH_ZIP:
-    		windowTitle = "Legislators for zip code " + zipCode + ":";
+    		windowTitle = "Legislators for " + zipCode + ":";
     		break;
 		case SEARCH_LOCATION:
     		windowTitle = "Legislators for your location:";
     		break;
 		case SEARCH_LASTNAME:
-    		windowTitle = "Legislators with the last name " + lastName + ":";
+    		windowTitle = "Legislators by the name of " + lastName + ":";
     		break;
 		case SEARCH_COMMITTEE:
 			windowTitle = committeeName;
