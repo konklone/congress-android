@@ -145,7 +145,7 @@ public class LegislatorList extends ListActivity {
     		windowTitle = "Legislators with the last name " + lastName + ":";
     		break;
 		case SEARCH_COMMITTEE:
-			windowTitle = "Committee:";
+			windowTitle = committeeName;
 			break;
 		case SEARCH_STATE:
     		windowTitle = "Legislators from " + Utils.stateCodeToName(this, state) + ":";

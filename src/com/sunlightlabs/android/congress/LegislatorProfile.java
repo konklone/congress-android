@@ -142,13 +142,16 @@ public class LegislatorProfile extends ListActivity {
     
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-    	String tag = (String) v.getTag();
-    	if (tag.equals("phone"))
-    		callOffice();
-    	else if (tag.equals("web"))
-    		visitWebsite();
-    	else // committee
-    		launchCommittee(tag);
+    	Object tag = v.getTag();
+    	if (tag.getClass().getSimpleName().equals("Committee")) {
+    		launchCommittee((Committee) tag);
+    	} else {
+    		String type = (String) tag;
+	    	if (type.equals("phone"))
+	    		callOffice();
+	    	else if (type.equals("web"))
+	    		visitWebsite();
+    	}
     }
     
     public void callOffice() {
@@ -159,10 +162,11 @@ public class LegislatorProfile extends ListActivity {
     	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(website)));
     }
     
-    public void launchCommittee(String committeeId) {
+    public void launchCommittee(Committee committee) {
     	Intent intent = new Intent()
     		.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorList")
-			.putExtra("committeeId", committeeId);
+			.putExtra("committeeId", committee.getProperty("id"))
+			.putExtra("committeeName", committee.getProperty("name"));
 		startActivity(intent);
     }
 	
@@ -304,9 +308,8 @@ public class LegislatorProfile extends ListActivity {
 //				view = (LinearLayout) convertView;
 				
 			Committee committee = getItem(position);
-			
 			((TextView) view.findViewById(R.id.name)).setText(committee.getProperty("name"));
-			view.setTag(committee.getProperty("id"));
+			view.setTag(committee);
 			
 			return view;
 		}
