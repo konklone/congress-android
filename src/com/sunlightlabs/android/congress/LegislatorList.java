@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -13,10 +14,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -100,7 +104,7 @@ public class LegislatorList extends ListActivity {
     }
     
     public void displayLegislators() {
-    	setListAdapter(new ArrayAdapter<Legislator>(this, android.R.layout.simple_list_item_1, legislators));
+    	setListAdapter(new LegislatorAdapter(this, legislators));
     	TextView empty = (TextView) this.findViewById(R.id.empty_msg);
     	
     	if (legislators.size() <= 0) {
@@ -232,6 +236,52 @@ public class LegislatorList extends ListActivity {
 		
 		setResult(RESULT_OK, intent);
 		finish();
+    }
+    
+    protected class LegislatorAdapter extends ArrayAdapter<Legislator> {
+		LayoutInflater inflater;
+
+        public LegislatorAdapter(Activity context, ArrayList<Legislator> items) {
+            super(context, 0, items);
+            inflater = LayoutInflater.from(context);
+        }
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LinearLayout view;
+			
+			if (convertView == null)
+				view = (LinearLayout) inflater.inflate(R.layout.legislator_item, null);
+			else
+				view = (LinearLayout) convertView;
+				
+			Legislator legislator = getItem(position);
+			((TextView) view.findViewById(R.id.name)).setText(nameFor(legislator));
+			((TextView) view.findViewById(R.id.position)).setText(positionFor(legislator));
+			
+			return view;
+		}
+		
+		public String nameFor(Legislator legislator) {
+			return legislator.lastName() + ", " + legislator.firstName();
+		}
+		
+		public String positionFor(Legislator legislator) {
+			String district = legislator.getProperty("district");
+			String stateName = Utils.stateCodeToName(LegislatorList.this, legislator.getProperty("state"));
+			
+			if (district.equals("Senior Seat"))
+				return "Senior Senator from " + stateName;
+			else if (district.equals("Junior Seat"))
+				return "Junior Senator from " + stateName;
+			else if (district.equals("0")) {
+				if (legislator.getProperty("title").equals("Rep"))
+					return "Representative for " + stateName + " At-Large";
+				else
+					return legislator.fullTitle() + " for " + stateName;
+			} else
+				return "Representative for " + stateName + "-" + district;
+		}
+		
     }
     
     private class ShortcutImageTask extends AsyncTask<Void,Void,Bitmap> {

@@ -74,6 +74,18 @@ public class Legislator extends JSONEntity implements Comparable<Legislator> {
 		return getProperty("lastname");
 	}
 	
+	public String fullTitle() {
+		String title = getProperty("title");
+		if (title.equals("Del"))
+			return "Delegate";
+		else if (title.equals("Com"))
+			return "Resident Commissioner";
+		else if (title.equals("Sen"))
+			return "Senator";
+		else // "Rep"
+			return "Representative";
+	}
+	
 	public String getDomain() {
 		String district = getProperty("district");
 		if (district.equals("Senior Seat") || district.equals("Junior Seat"))
