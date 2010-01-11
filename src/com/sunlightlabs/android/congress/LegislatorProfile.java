@@ -22,13 +22,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.CongressException;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
-import com.sunlightlabs.android.yahoo.news.NewsItem;
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Committee;
 
@@ -40,6 +40,8 @@ public class LegislatorProfile extends ListActivity {
 	private ArrayList<Committee> committees;
 	
 	private boolean landscape;
+	
+	private LinearLayout committeeHeader;
 	
 	private LoadPhotosTask loadPhotosTask = null;
 	private LoadCommitteesTask loadCommitteesTask = null;
@@ -98,13 +100,12 @@ public class LegislatorProfile extends ListActivity {
 	}
 	
 	public void displayCommittees() {
-		findViewById(R.id.loading_committees_spinner).setVisibility(View.GONE);
-		TextView empty = (TextView) findViewById(R.id.no_committees);
-		
+		committeeHeader.findViewById(R.id.loading_committees_spinner).setVisibility(View.GONE);
+		TextView empty = (TextView) committeeHeader.findViewById(R.id.no_committees);
 		
 		if (committees != null) {
 			if (committees.size() > 0) {
-				findViewById(R.id.loading_committees).setVisibility(View.GONE);
+				committeeHeader.findViewById(R.id.loading_committees).setVisibility(View.GONE);
 				MergeAdapter adapter = (MergeAdapter) getListAdapter();
 				adapter.addAdapter(new CommitteeAdapter(this, committees));
 				setListAdapter(adapter);
@@ -202,10 +203,13 @@ public class LegislatorProfile extends ListActivity {
 		contactViews.add(phoneView);
 		contactViews.add(websiteView);
 		
+		committeeHeader = (LinearLayout) inflater.inflate(R.layout.profile_committees, null);
+		
 		MergeAdapter adapter = new MergeAdapter();
 		adapter.addView(mainView);
 		adapter.addAdapter(new ViewArrayAdapter(this, contactViews));
-		adapter.addView(inflater.inflate(R.layout.profile_committees, null));
+		adapter.addView(committeeHeader);
+		
 		setListAdapter(adapter);
 	}
 	
