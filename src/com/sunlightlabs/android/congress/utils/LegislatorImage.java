@@ -12,7 +12,6 @@ import java.net.URLConnection;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.DisplayMetrics;
 
 /**
  * Various static methods that other classes can use to fetch legislator profile images,
@@ -43,24 +42,33 @@ public class LegislatorImage {
 	}
 	
 	public static Bitmap shortcutImage(String bioguideId, Context context) {
-		int density = context.getResources().getDisplayMetrics().densityDpi;
 		Bitmap profile, scaled;
-		switch (density) {
-		case DisplayMetrics.DENSITY_LOW:
-			profile = getImage(PIC_SMALL, bioguideId, context).getBitmap();
-			scaled = Bitmap.createScaledBitmap(profile, 32, 40, true);
-			return Bitmap.createBitmap(scaled, 0, 2, scaled.getWidth(), scaled.getHeight() - 4);
-		case DisplayMetrics.DENSITY_MEDIUM:
-			// this will be a 40x50 image, that I want to turn into a 40x48 image
-			profile = getImage(PIC_SMALL, bioguideId, context).getBitmap();
-			return Bitmap.createBitmap(profile, 0, 1, profile.getWidth(), profile.getHeight()-2);
-		case DisplayMetrics.DENSITY_HIGH:
-		default:
+		
+		/* This needs to stay commented until we phase out Android 1.5. 
+		 * Then, we can start making more optimized versions of the shortcut icon
+		 * for each screen resolution.
+		 * 
+		 * Specifically, we can't refer explicitly to the densityDpi value from DisplayMetrics
+		 * without causing INSANE, ARCANE, STUPID errors on Android 1.5.
+		 * 
+		 */
+//		int density = context.getResources().getDisplayMetrics().densityDpi;
+//		switch (density) {
+//		case DisplayMetrics.DENSITY_LOW:
+//			profile = getImage(PIC_SMALL, bioguideId, context).getBitmap();
+//			scaled = Bitmap.createScaledBitmap(profile, 32, 40, true);
+//			return Bitmap.createBitmap(scaled, 0, 2, scaled.getWidth(), scaled.getHeight() - 4);
+//		case DisplayMetrics.DENSITY_MEDIUM:
+//			// this will be a 40x50 image, that I want to turn into a 40x48 image
+//			profile = getImage(PIC_SMALL, bioguideId, context).getBitmap();
+//			return Bitmap.createBitmap(profile, 0, 1, profile.getWidth(), profile.getHeight()-2);
+//		case DisplayMetrics.DENSITY_HIGH:
+//		default:
 			// will be a 100x125 image, I want to scale it down to 60x75, and then chop 3 lines off of it
 			profile = getImage(PIC_MEDIUM, bioguideId, context).getBitmap();
 			scaled = Bitmap.createScaledBitmap(profile, 60, 75, true);
 			return Bitmap.createBitmap(scaled, 0, 1, scaled.getWidth(), scaled.getHeight() - 3);
-		}
+//		}
 		
 	}
 	

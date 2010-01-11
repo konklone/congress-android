@@ -337,6 +337,7 @@ public class LegislatorProfile extends ListActivity {
 			ArrayList<Committee> committees = new ArrayList<Committee>();
 			ArrayList<Committee> joint = new ArrayList<Committee>();
 			Committee[] temp;
+			
 			try {
 				temp = Committee.getCommitteesForLegislator(new ApiCall(context.apiKey), bioguideId[0]);
 			} catch (IOException e) {
