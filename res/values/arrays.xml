@@ -3,6 +3,7 @@
 	<string-array name="state_codes">
 		<item>AL</item>
         <item>AK</item>
+        <item>AS</item>
         <item>AZ</item>
         <item>AR</item>
         <item>CA</item>
@@ -12,6 +13,7 @@
         <item>DC</item>
         <item>FL</item>
         <item>GA</item>
+        <item>GU</item>
         <item>HI</item>
         <item>ID</item>
         <item>IL</item>
@@ -36,6 +38,7 @@
         <item>NY</item>
         <item>NC</item>
         <item>ND</item>
+        <item>MP</item>
         <item>OH</item>
         <item>OK</item>
         <item>OR</item>
@@ -48,6 +51,7 @@
         <item>TX</item>
         <item>UT</item>
         <item>VT</item>
+        <item>VI</item>
         <item>VA</item>
         <item>WA</item>
         <item>WV</item>
@@ -58,6 +62,7 @@
 	<string-array name="state_names">
 		<item>Alabama</item>
 		<item>Alaska</item>
+		<item>American Samoa</item>
 		<item>Arizona</item>
 		<item>Arkansas</item>
 		<item>California</item>
@@ -67,6 +72,7 @@
 		<item>District of Columbia</item>
 		<item>Florida</item>
 		<item>Georgia</item>
+		<item>Guam</item>
 		<item>Hawaii</item>
 		<item>Idaho</item>
 		<item>Illinois</item>
@@ -91,6 +97,7 @@
 		<item>New York</item>
 		<item>North Carolina</item>
 		<item>North Dakota</item>
+		<item>Northern Mariana Islands</item>
 		<item>Ohio</item>
 		<item>Oklahoma</item>
 		<item>Oregon</item>
@@ -103,6 +110,7 @@
 		<item>Texas</item>
 		<item>Utah</item>
 		<item>Vermont</item>
+		<item>Virgin Islands</item>
 		<item>Virginia</item>
 		<item>Washington</item>
 		<item>West Virginia</item>
