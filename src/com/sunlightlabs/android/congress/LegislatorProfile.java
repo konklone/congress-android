@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -15,6 +16,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -24,6 +27,7 @@ import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.CongressException;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
+import com.sunlightlabs.android.yahoo.news.NewsItem;
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Committee;
 
@@ -63,6 +67,7 @@ public class LegislatorProfile extends ListActivity {
         	holder.loadInto(this);
         
         loadPhotos();
+        loadCommittees();
 	}
 	
 	@Override
@@ -83,15 +88,31 @@ public class LegislatorProfile extends ListActivity {
 	}
     
 	public void onLoadCommittees(CongressException exception) {
-		Utils.alert(this, exception);
+		displayCommittees();
 	}
 	
 	public void onLoadCommittees(ArrayList<Committee> committees) {
 		this.committees = committees;
+		displayCommittees();
 	}
 	
 	public void displayCommittees() {
+		findViewById(R.id.loading_committees_spinner).setVisibility(View.GONE);
+		TextView empty = (TextView) findViewById(R.id.no_committees);
+		
+		
+		if (committees != null) {
+			if (committees.size() > 0) {
+				findViewById(R.id.loading_committees).setVisibility(View.GONE);
+				MergeAdapter adapter = (MergeAdapter) getListAdapter();
+				adapter.addAdapter(new CommitteeAdapter(this, committees));
+				setListAdapter(adapter);
+			} else
+				empty.setText("Belongs to no committees.");
+		} else
+			empty.setText("Error loading committees.");
 	}
+	
 	
 	public void loadPhotos() {
 		if (loadPhotosTask != null)
@@ -183,6 +204,7 @@ public class LegislatorProfile extends ListActivity {
 		MergeAdapter adapter = new MergeAdapter();
 		adapter.addView(mainView);
 		adapter.addAdapter(new ViewArrayAdapter(this, contactViews));
+		adapter.addView(inflater.inflate(R.layout.profile_committees, null));
 		setListAdapter(adapter);
 	}
 	
@@ -245,6 +267,38 @@ public class LegislatorProfile extends ListActivity {
 		else // "F"
 			return "her";
 	}
+	
+	protected class CommitteeAdapter extends ArrayAdapter<Committee> {
+		LayoutInflater inflater;
+
+        public CommitteeAdapter(Activity context, ArrayList<Committee> items) {
+            super(context, 0, items);
+            inflater = LayoutInflater.from(context);
+        }
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LinearLayout view;
+			
+//			boolean differentType = false;
+//			if (convertView != null) {
+//				String tag = (String) convertView.getTag();
+//				differentType = (tag != null && (tag.equals("phone") || tag.equals("web")));
+//			}
+//			
+//			if (convertView == null && !differentType)
+				view = (LinearLayout) inflater.inflate(R.layout.profile_committee, null);
+//			else
+//				view = (LinearLayout) convertView;
+				
+			Committee committee = getItem(position);
+			
+			((TextView) view.findViewById(R.id.name)).setText(committee.getProperty("name"));
+			view.setTag(committee.getProperty("id"));
+			
+			return view;
+		}
+
+    }
 	
 	private class LoadPhotosTask extends AsyncTask<String,Void,Drawable> {
 		public LegislatorProfile context;

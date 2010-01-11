@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	>
+  
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="1px"
+		android:background="#5c5e5d"
+		/>
+		 		
+	<TextView android:id="@+id/header"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+  		
+  		android:textSize="14sp"
+  		android:textStyle="bold"
+  		android:background="#1c1c1c"
+  		
+  		android:paddingLeft="15dp"
+  		android:paddingTop="5dp"
+  		android:paddingBottom="5dp"
+  		
+  		android:text="Committees"
+  		/>
+  	
+  	<View
+		android:layout_width="fill_parent"
+		android:layout_height="1px"
+		android:background="#5c5e5d"
+		/>
+  
+	<LinearLayout android:id="@+id/loading_committees"
+	   	android:layout_width="fill_parent"
+	   	android:layout_height="800dp"
+	   	
+	   	android:orientation="horizontal"
+	   	android:gravity="center"
+	   	
+	   	android:paddingTop="25dp"
+		android:paddingBottom="25dp"
+	   	>
+	   	
+	   	<ProgressBar android:id="@+id/loading_committees_spinner"
+	   		android:layout_width="wrap_content"
+	   		android:layout_height="wrap_content"
+	   		style="?android:attr/progressBarStyleSmallTitle"
+	   		
+	   		android:layout_marginLeft="15dp"
+	   		android:layout_marginRight="10dp"
+	   		/>
+	   		
+	   	<TextView android:id="@+id/no_committees"
+	   		android:layout_width="wrap_content"
+	   		android:layout_height="wrap_content"
+	   		
+	   		android:text="Loading committees..."
+	   		/>
+   	
+	</LinearLayout>
+  
+</LinearLayout>
