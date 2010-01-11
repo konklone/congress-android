@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -16,8 +15,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -26,6 +23,7 @@ import android.widget.TextView;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.CongressException;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
+import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Committee;
 
@@ -246,20 +244,6 @@ public class LegislatorProfile extends ListActivity {
 			return "his";
 		else // "F"
 			return "her";
-	}
-	
-	// dirt simple class, to give views the selectable appearance on click and long click
-	// that one expects from listviews, but made to be easily dumped into a MergeAdapter
-	// for use in the middle of a large scrollable pane
-	private class ViewArrayAdapter extends ArrayAdapter<View> {
-
-        public ViewArrayAdapter(Activity context, ArrayList<View> items) {
-            super(context, 0, items);
-        }
-
-		public View getView(int position, View convertView, ViewGroup parent) {
-			return getItem(position);
-		}
 	}
 	
 	private class LoadPhotosTask extends AsyncTask<String,Void,Drawable> {
