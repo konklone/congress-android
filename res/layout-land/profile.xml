@@ -75,7 +75,6 @@
 	  			android:text="Democrat"
 	  			
 		  		/>
-		  		
 		  	<TextView android:id="@+id/profile_state"
 		  		
 		  		android:layout_width="wrap_content"
@@ -99,7 +98,6 @@
 	  			android:text="Senior Senator"
 		  		/>
 	  		
-  		
   		</LinearLayout>
   	
  	</LinearLayout>
