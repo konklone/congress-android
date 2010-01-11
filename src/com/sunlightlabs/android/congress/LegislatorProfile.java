@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -38,8 +37,6 @@ public class LegislatorProfile extends ListActivity {
 	private ImageView picture;
 	private ArrayList<Committee> committees;
 	
-	private boolean landscape;
-	
 	private LinearLayout committeeHeader;
 	
 	private LoadPhotosTask loadPhotosTask = null;
@@ -49,7 +46,6 @@ public class LegislatorProfile extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        landscape = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
         apiKey = getResources().getString(R.string.sunlight_api_key);
         
         Bundle extras = getIntent().getExtras(); 
@@ -189,8 +185,6 @@ public class LegislatorProfile extends ListActivity {
 		TextView stateView = (TextView) mainView.findViewById(R.id.profile_state);
 		String stateName = Utils.stateCodeToName(this, state);
 		stateView.setText(stateName);
-		if (!landscape && stateName.equals("District of Columbia"))
-			stateView.setTextSize(16);
 		stateView.setTypeface(font);
 		
 		TextView domainView = (TextView) mainView.findViewById(R.id.profile_domain); 
