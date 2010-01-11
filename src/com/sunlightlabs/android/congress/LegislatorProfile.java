@@ -22,7 +22,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
@@ -148,6 +147,8 @@ public class LegislatorProfile extends ListActivity {
     		callOffice();
     	else if (tag.equals("web"))
     		visitWebsite();
+    	else // committee
+    		launchCommittee(tag);
     }
     
     public void callOffice() {
@@ -156,6 +157,13 @@ public class LegislatorProfile extends ListActivity {
     
     public void visitWebsite() {
     	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(website)));
+    }
+    
+    public void launchCommittee(String committeeId) {
+    	Intent intent = new Intent()
+    		.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorList")
+			.putExtra("committeeId", committeeId);
+		startActivity(intent);
     }
 	
 	public void setupControls() {

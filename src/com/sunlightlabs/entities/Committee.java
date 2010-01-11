@@ -24,6 +24,10 @@ public class Committee extends JSONEntity implements Comparable<Committee> {
 	public static String getPluralEntityName() {
 		return "committees";
 	}
+	
+	public static String getSingularEntityName() {
+		return "committee";
+	}
 
 	/**
 	 * internal function to build Committees
@@ -103,6 +107,30 @@ public class Committee extends JSONEntity implements Comparable<Committee> {
 		String apiCall = "committees.allForLegislator";
 		JSONObject[] items = JSONEntity.getJSONObjects(call, params, apiCall,getPluralEntityName());
 		return buildCommittees(items);
+	}
+	
+	public static Legislator[] getLegislatorsForCommittee(ApiCall call, String id) throws IOException {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("id", id);
+		String apiCall = "committees.get";
+		JSONObject item = JSONEntity.getJSONObject(call, params, apiCall, getSingularEntityName());
+		JSONObject[] objects;
+		
+		try {
+			JSONArray items = item.getJSONArray("members");
+			List<JSONObject> holder = new ArrayList<JSONObject>();
+			for (int i = 0; i < items.length(); i++) {
+				JSONObject js = (JSONObject)items.get(i);
+				js = getContainedJSONObject(js);
+				holder.add(js);
+			}
+			objects = holder.toArray(new JSONObject[0]);
+		} catch(JSONException e) {
+			throw new IOException("Couldn't load members.");
+		}
+		
+		Legislator[] members = Legislator.buildLegislators(objects);
+		return members;
 	}
 
 	

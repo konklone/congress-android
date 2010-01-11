@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.api.ApiCall;
+import com.sunlightlabs.entities.Committee;
 import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorList extends ListActivity {
@@ -26,6 +27,7 @@ public class LegislatorList extends ListActivity {
 	private final static int SEARCH_LOCATION = 1;
 	private final static int SEARCH_STATE = 2;
 	private final static int SEARCH_LASTNAME = 3;
+	private final static int SEARCH_COMMITTEE = 4;
 	
 	private Legislator[] legislators = null;
 	private LoadLegislatorsTask loadLegislatorsTask = null;
@@ -34,7 +36,7 @@ public class LegislatorList extends ListActivity {
 	
 	private boolean shortcut;
 	
-	private String zipCode, lastName, state, api_key;
+	private String zipCode, lastName, state, api_key, committeeId;
 	private double latitude = -1;
 	private double longitude = -1;
     
@@ -50,6 +52,7 @@ public class LegislatorList extends ListActivity {
     	longitude = extras.getDouble("longitude");
     	lastName = extras.getString("last_name");
     	state = extras.getString("state");
+    	committeeId = extras.getString("committeeId");
 
     	api_key = getResources().getString(R.string.sunlight_api_key);
     	
@@ -69,6 +72,7 @@ public class LegislatorList extends ListActivity {
     	else {
     		if (loadLegislatorsTask != null)
     			loadLegislatorsTask.onScreenLoad(this);
+    		
     		if (shortcutImageTask != null)
     			shortcutImageTask.onScreenLoad(this);
     	}
@@ -104,9 +108,6 @@ public class LegislatorList extends ListActivity {
 	    			break;
 	    		case SEARCH_LASTNAME:
 	    			empty.setText(R.string.empty_last_name);
-	    			break;
-	    		case SEARCH_STATE:
-	    			empty.setText(R.string.empty_state);
 	    			break;
 	    		default:
 	    			empty.setText(R.string.empty_general);
@@ -153,6 +154,8 @@ public class LegislatorList extends ListActivity {
     		return SEARCH_LASTNAME;
     	else if (stateSearch())
     		return SEARCH_STATE;
+    	else if (committeeSearch())
+    		return SEARCH_COMMITTEE;
     	else
     		return SEARCH_LOCATION;
     }
@@ -172,6 +175,10 @@ public class LegislatorList extends ListActivity {
     
     private boolean stateSearch() {
     	return state != null;
+    }
+    
+    private boolean committeeSearch() {
+    	return committeeId != null;
     }
     
     public Intent legislatorIntent(String id) {
@@ -286,6 +293,8 @@ public class LegislatorList extends ListActivity {
 			    		params = new HashMap<String,String>();
 			    		params.put("lastname", lastName);
 			    		return Legislator.allLegislators(api, params);
+					case SEARCH_COMMITTEE:
+						return Committee.getLegislatorsForCommittee(api, committeeId);
 					case SEARCH_STATE:
 			    		params = new HashMap<String,String>();
 			    		params.put("state", state);
