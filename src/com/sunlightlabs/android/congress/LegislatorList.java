@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -36,13 +37,14 @@ public class LegislatorList extends ListActivity {
 	
 	private boolean shortcut;
 	
-	private String zipCode, lastName, state, api_key, committeeId;
+	private String zipCode, lastName, state, api_key, committeeId, committeeName;
 	private double latitude = -1;
 	private double longitude = -1;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
+    	requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
     	setContentView(R.layout.legislator_list);
     	
 		Bundle extras = getIntent().getExtras();
@@ -53,6 +55,7 @@ public class LegislatorList extends ListActivity {
     	lastName = extras.getString("last_name");
     	state = extras.getString("state");
     	committeeId = extras.getString("committeeId");
+    	committeeName = extras.getString("committeeName");
 
     	api_key = getResources().getString(R.string.sunlight_api_key);
     	
@@ -129,6 +132,29 @@ public class LegislatorList extends ListActivity {
 				loadLegislators();
 			}
 		});
+    	
+    	String windowTitle;
+    	switch(searchType()) {
+    	case SEARCH_ZIP:
+    		windowTitle = "Legislators for zip code " + zipCode + ":";
+    		break;
+		case SEARCH_LOCATION:
+    		windowTitle = "Legislators for your location:";
+    		break;
+		case SEARCH_LASTNAME:
+    		windowTitle = "Legislators with the last name " + lastName + ":";
+    		break;
+		case SEARCH_COMMITTEE:
+			windowTitle = "Committee:";
+			break;
+		case SEARCH_STATE:
+    		windowTitle = "Legislators from " + Utils.stateCodeToName(this, state) + ":";
+    		break;
+    	default:
+    		windowTitle = "Legislator search:";
+    	}
+    	getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title);
+        ((TextView) findViewById(R.id.custom_title)).setText(windowTitle);
     }
     
     public void onListItemClick(ListView parent, View v, int position, long id) {
