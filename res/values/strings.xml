@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Congress</string>
     <string name="create_shortcuts">Legislator</string>
-    <string name="main_title">Find A Legislator By</string>
+    <string name="main_title">Congress</string>
     <string name="contact_subject">Congress app feedback</string>
     <string name="first_time_twitter">Tap a tweet to reply.</string>
     <string name="no_location">No location.</string>

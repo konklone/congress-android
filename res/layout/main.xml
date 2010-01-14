@@ -19,53 +19,6 @@
     	android:text="@string/main_title" 
     	/>
     
-    <TableLayout
-    	android:stretchColumns="*"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	>	    
+    <include layout="@layout/list_item_header" />
     
-    	<TableRow>
-		    <Button android:id="@+id/fetch_location"
-				
-				android:layout_height="100dp"
-				android:layout_margin="5dp"
-				
-				android:drawableTop="@drawable/search_location"
-				android:textSize="20sp"
-				android:text="My Location"
-				/>
-			
-			<Button android:id="@+id/fetch_state"
-				
-				android:layout_height="100dp"
-				android:layout_margin="5dp"
-				
-				android:drawableTop="@drawable/search_all"
-				android:textSize="20sp"
-				android:text="State"
-				/>
-		</TableRow>
-    	<TableRow>
-			<Button android:id="@+id/fetch_zip"
-			
-				android:layout_height="100dp"
-				android:layout_margin="5dp"
-				
-				android:drawableTop="@drawable/search_zip"
-				android:textSize="20sp"
-				android:text="Zip Code"
-				/>
-				
-			<Button android:id="@+id/fetch_last_name"
-				
-				android:layout_height="100dp"
-				android:layout_margin="5dp"
-				
-				android:drawableTop="@drawable/search_lastname"
-				android:textSize="20sp"
-				android:text="Last Name"
-				/>
-		</TableRow>
-	</TableLayout>
 </LinearLayout>

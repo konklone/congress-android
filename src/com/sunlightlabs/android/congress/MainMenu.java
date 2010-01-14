@@ -1,8 +1,10 @@
 package com.sunlightlabs.android.congress;
 
-import android.app.Activity;
+import java.util.ArrayList;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
@@ -15,14 +17,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 
-public class MainMenu extends Activity {
+public class MainMenu extends ListActivity {
 	public static final int RESULT_ZIP = 1;
 	public static final int RESULT_LASTNAME = 2;
 	public static final int RESULT_STATE = 3;
@@ -30,65 +35,94 @@ public class MainMenu extends Activity {
 	private static final int ABOUT = 0;
 	private static final int FIRST = 1;
 	
-	private Location location;
+	private static final int SEARCH_LOCATION = 1;
+	private static final int SEARCH_ZIP = 2;
+	private static final int SEARCH_STATE = 3;
+	private static final int SEARCH_NAME = 4;
 
+	private Location location;
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
         
+        location = getLocation();
         setupControls();
         
         if (firstTime())
         	showDialog(FIRST);
     }
 	
+	@Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+		int type = ((Integer) v.getTag()).intValue();
+		switch(type) {
+		case SEARCH_LOCATION:
+			searchByLatLong(location.getLatitude(), location.getLongitude());
+			break;
+		case SEARCH_ZIP:
+			getResponse(RESULT_ZIP);
+			break;
+		case SEARCH_NAME:
+			getResponse(RESULT_LASTNAME);
+			break;
+		case SEARCH_STATE:
+			getResponse(RESULT_STATE);
+			break;
+		}
+    }
 	
 	public void setupControls() {
-        Button fetchZip = (Button) this.findViewById(R.id.fetch_zip);
-        Button fetchLocation = (Button) this.findViewById(R.id.fetch_location);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        LinearLayout mainHeader = (LinearLayout) inflater.inflate(R.layout.main, null);
+        ((TextView) mainHeader.findViewById(R.id.header_text)).setText("Find Legislator By");
+        mainHeader.setEnabled(false);
         
-        LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-		location = null;
+        LinearLayout searchLocation = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
+        ((ImageView) searchLocation.findViewById(R.id.icon)).setImageResource(R.drawable.search_location);
+        ((TextView) searchLocation.findViewById(R.id.text)).setText("My Location");
+        searchLocation.setTag(SEARCH_LOCATION);
+        
+        LinearLayout searchState = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
+        ((ImageView) searchState.findViewById(R.id.icon)).setImageResource(R.drawable.search_all);
+        ((TextView) searchState.findViewById(R.id.text)).setText("State");
+        searchState.setTag(SEARCH_STATE);
+        
+        LinearLayout searchLastName = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
+        ((ImageView) searchLastName.findViewById(R.id.icon)).setImageResource(R.drawable.search_lastname);
+        ((TextView) searchLastName.findViewById(R.id.text)).setText("Last Name");
+        searchLastName.setTag(SEARCH_NAME);
+        
+        LinearLayout searchZip = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
+        ((ImageView) searchZip.findViewById(R.id.icon)).setImageResource(R.drawable.search_zip);
+        ((TextView) searchZip.findViewById(R.id.text)).setText("Zip Code");
+        searchZip.setTag(SEARCH_ZIP);
+        
+        ArrayList<View> searchViews = new ArrayList<View>();
+        searchViews.add(searchLocation);
+        searchViews.add(searchState);
+        searchViews.add(searchLastName);
+        searchViews.add(searchZip);
+        
+        MergeAdapter adapter = new MergeAdapter();
+        adapter.addView(mainHeader);
+        adapter.addAdapter(new ViewArrayAdapter(this, searchViews));
+        
+        setListAdapter(adapter);
+    }
+	
+	public Location getLocation() {
+		Location location = null;
+		LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
 		
 		if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
 			location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		
 		if (location == null && lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
 			location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        
-    	if (location == null) {
-    		fetchLocation.setEnabled(false);
-	    	fetchLocation.setText(R.string.no_location);
-    	} else {
-    		fetchLocation.setOnClickListener(new View.OnClickListener() {
-	    		public void onClick(View v) {
-	    			if (location != null)
-	    				searchByLatLong(location.getLatitude(), location.getLongitude());
-	    		}
-	    	});
-    	}
-    	
-    	fetchZip.setOnClickListener(new View.OnClickListener() {
-    		public void onClick(View v) {
-    			getResponse(RESULT_ZIP);
-    		}
-    	});
-    	
-    	Button fetchLastName = (Button) this.findViewById(R.id.fetch_last_name);
-    	fetchLastName.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				getResponse(RESULT_LASTNAME);
-			}
-		});
-    	
-    	Button fetchState = (Button) this.findViewById(R.id.fetch_state);
-    	fetchState.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				getResponse(RESULT_STATE);
-			}
-		});
-    }
+		
+		return location;
+	}
 	
 	public void searchByZip(String zipCode) {
 		Bundle extras = new Bundle();
