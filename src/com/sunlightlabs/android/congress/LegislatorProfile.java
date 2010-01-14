@@ -191,14 +191,14 @@ public class LegislatorProfile extends ListActivity {
 		domainView.setText(domainName(domain));
 		domainView.setTypeface(font);
 		
-		LinearLayout phoneView = (LinearLayout) inflater.inflate(R.layout.profile_contact, null);
+		LinearLayout phoneView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
 		TextView phoneText = (TextView) phoneView.findViewById(R.id.text);
 		phoneText.setText("Call " + pronoun(gender) + " office");
 		phoneText.setTypeface(font);
 		((ImageView) phoneView.findViewById(R.id.icon)).setImageResource(R.drawable.phone);
 		phoneView.setTag("phone");
 		
-		LinearLayout websiteView = (LinearLayout) inflater.inflate(R.layout.profile_contact, null);
+		LinearLayout websiteView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
 		TextView websiteText = (TextView) websiteView.findViewById(R.id.text);
 		websiteText.setText("Visit " + pronoun(gender) + " website");
 		websiteText.setTypeface(font);
@@ -210,6 +210,7 @@ public class LegislatorProfile extends ListActivity {
 		contactViews.add(websiteView);
 		
 		committeeHeader = (LinearLayout) inflater.inflate(R.layout.profile_committees, null);
+		((TextView) committeeHeader.findViewById(R.id.header_text)).setText("Committees");
 		
 		MergeAdapter adapter = new MergeAdapter();
 		adapter.addView(mainView);
