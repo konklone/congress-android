@@ -1,9 +1,10 @@
-package com.sunlightlabs.android.congress;
+package com.sunlightlabs.android.congress.utils;
 
 import android.content.Context;
 import android.widget.Toast;
 
-import com.sunlightlabs.android.congress.utils.CongressException;
+import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.android.congress.R.array;
 
 public class Utils {
 	public static void alert(Context context, String msg) {

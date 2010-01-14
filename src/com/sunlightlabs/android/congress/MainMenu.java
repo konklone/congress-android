@@ -1,5 +1,7 @@
 package com.sunlightlabs.android.congress;
 
+import com.sunlightlabs.android.congress.utils.Utils;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;

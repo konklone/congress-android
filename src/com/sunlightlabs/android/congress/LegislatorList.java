@@ -25,6 +25,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Committee;
 import com.sunlightlabs.entities.Legislator;
