@@ -1,7 +1,5 @@
 package com.sunlightlabs.android.congress;
 
-import com.sunlightlabs.android.congress.utils.Utils;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -21,6 +19,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.sunlightlabs.android.congress.utils.Utils;
 
 public class MainMenu extends Activity {
 	public static final int RESULT_ZIP = 1;
