@@ -30,6 +30,7 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Committee;
+import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorProfile extends ListActivity {
 	private String id, titledName, party, gender, state, domain, phone, website;
@@ -191,17 +192,23 @@ public class LegislatorProfile extends ListActivity {
 		domainView.setText(domainName(domain));
 		domainView.setTypeface(font);
 		
-		LinearLayout phoneView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
-		TextView phoneText = (TextView) phoneView.findViewById(R.id.text);
+		LinearLayout phoneView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_2, null);
+		TextView phoneText = (TextView) phoneView.findViewById(R.id.text_1);
 		phoneText.setText("Call " + pronoun(gender) + " office");
 		phoneText.setTypeface(font);
+		TextView phoneNumber = (TextView) phoneView.findViewById(R.id.text_2);
+		phoneNumber.setText(phone);
+		phoneNumber.setTypeface(font);
 		((ImageView) phoneView.findViewById(R.id.icon)).setImageResource(R.drawable.phone);
 		phoneView.setTag("phone");
 		
-		LinearLayout websiteView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
-		TextView websiteText = (TextView) websiteView.findViewById(R.id.text);
+		LinearLayout websiteView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_2, null);
+		TextView websiteText = (TextView) websiteView.findViewById(R.id.text_1);
 		websiteText.setText("Visit " + pronoun(gender) + " website");
 		websiteText.setTypeface(font);
+		TextView websiteUrl = (TextView) websiteView.findViewById(R.id.text_2);
+		websiteUrl.setText(websiteName(website));
+		websiteUrl.setTypeface(font);
 		((ImageView) websiteView.findViewById(R.id.icon)).setImageResource(R.drawable.web);
 		websiteView.setTag("web");
 		
