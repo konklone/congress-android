@@ -3,21 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#333333"
     >
-	    
-    <TextView
-    	android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
-    	android:layout_gravity="center"
-    	
-    	android:layout_marginTop="4dp"
-    	android:layout_marginBottom="4dp"
-    	
-    	android:textSize="30sp"
-    	android:textColor="#eeeeee"
-    	android:text="@string/main_title" 
-    	/>
     
     <include layout="@layout/list_item_header" />
     
