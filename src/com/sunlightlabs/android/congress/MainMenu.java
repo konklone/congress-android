@@ -78,31 +78,11 @@ public class MainMenu extends ListActivity {
         ((TextView) mainHeader.findViewById(R.id.header_text)).setText("Find Legislator By");
         mainHeader.setEnabled(false);
         
-        LinearLayout searchLocation = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
-        ((ImageView) searchLocation.findViewById(R.id.icon)).setImageResource(R.drawable.search_location);
-        ((TextView) searchLocation.findViewById(R.id.text)).setText("My Location");
-        searchLocation.setTag(SEARCH_LOCATION);
-        
-        LinearLayout searchState = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
-        ((ImageView) searchState.findViewById(R.id.icon)).setImageResource(R.drawable.search_all);
-        ((TextView) searchState.findViewById(R.id.text)).setText("State");
-        searchState.setTag(SEARCH_STATE);
-        
-        LinearLayout searchLastName = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
-        ((ImageView) searchLastName.findViewById(R.id.icon)).setImageResource(R.drawable.search_lastname);
-        ((TextView) searchLastName.findViewById(R.id.text)).setText("Last Name");
-        searchLastName.setTag(SEARCH_NAME);
-        
-        LinearLayout searchZip = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
-        ((ImageView) searchZip.findViewById(R.id.icon)).setImageResource(R.drawable.search_zip);
-        ((TextView) searchZip.findViewById(R.id.text)).setText("Zip Code");
-        searchZip.setTag(SEARCH_ZIP);
-        
-        ArrayList<View> searchViews = new ArrayList<View>();
-        searchViews.add(searchLocation);
-        searchViews.add(searchState);
-        searchViews.add(searchLastName);
-        searchViews.add(searchZip);
+        ArrayList<View> searchViews = new ArrayList<View>(4);
+        searchViews.add(Utils.makeIconListItem(inflater, SEARCH_LOCATION, R.drawable.search_location, "My Location"));
+        searchViews.add(Utils.makeIconListItem(inflater, SEARCH_STATE, R.drawable.search_all, "State"));
+        searchViews.add(Utils.makeIconListItem(inflater, SEARCH_NAME, R.drawable.search_lastname, "Last Name"));
+        searchViews.add(Utils.makeIconListItem(inflater, SEARCH_ZIP, R.drawable.search_zip, "Zip Code"));
         
         MergeAdapter adapter = new MergeAdapter();
         adapter.addView(mainHeader);
@@ -110,6 +90,8 @@ public class MainMenu extends ListActivity {
         
         setListAdapter(adapter);
     }
+	
+	
 	
 	public Location getLocation() {
 		Location location = null;

@@ -205,7 +205,7 @@ public class LegislatorProfile extends ListActivity {
 		((ImageView) websiteView.findViewById(R.id.icon)).setImageResource(R.drawable.web);
 		websiteView.setTag("web");
 		
-		ArrayList<View> contactViews = new ArrayList<View>();
+		ArrayList<View> contactViews = new ArrayList<View>(2);
 		contactViews.add(phoneView);
 		contactViews.add(websiteView);
 		

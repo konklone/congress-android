@@ -1,10 +1,13 @@
 package com.sunlightlabs.android.congress.utils;
 
 import android.content.Context;
+import android.view.LayoutInflater;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.R.array;
 
 public class Utils {
 	public static void alert(Context context, String msg) {
@@ -40,5 +43,13 @@ public class Utils {
 				return codes[i];
 		}
 		return null;
+	}
+	
+	public static LinearLayout makeIconListItem(LayoutInflater inflater, Object tag, int icon, String text) {
+		LinearLayout item = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
+        ((ImageView) item.findViewById(R.id.icon)).setImageResource(icon);
+        ((TextView) item.findViewById(R.id.text)).setText(text);
+        item.setTag(tag);
+        return item;
 	}
 }
