@@ -23,7 +23,7 @@
 		android:layout_marginTop="10dp"
 		
 		android:textSize="22sp"
-		android:textColor="#dddddd"
+		android:textColor="#666666"
 		
 		android:text="Text"
 		/>

@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -78,13 +79,20 @@ public class MainMenu extends ListActivity {
         mainHeader.setEnabled(false);
         
         ArrayList<View> searchViews = new ArrayList<View>(4);
-        searchViews.add(Utils.makeIconListItem(inflater, SEARCH_LOCATION, R.drawable.search_location, "My Location"));
+        if (location != null)
+        	searchViews.add(Utils.makeIconListItem(inflater, SEARCH_LOCATION, R.drawable.search_location, "My Location"));
         searchViews.add(Utils.makeIconListItem(inflater, SEARCH_STATE, R.drawable.search_all, "State"));
         searchViews.add(Utils.makeIconListItem(inflater, SEARCH_NAME, R.drawable.search_lastname, "Last Name"));
         searchViews.add(Utils.makeIconListItem(inflater, SEARCH_ZIP, R.drawable.search_zip, "Zip Code"));
         
         MergeAdapter adapter = new MergeAdapter();
         adapter.addView(mainHeader);
+        if (location == null) {   
+	        LinearLayout searchLocation = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1_disabled, null);
+	        ((ImageView) searchLocation.findViewById(R.id.icon)).setImageResource(R.drawable.search_location);
+	        ((TextView) searchLocation.findViewById(R.id.text)).setText("My Location");
+	        adapter.addView(searchLocation);
+        }
         adapter.addAdapter(new ViewArrayAdapter(this, searchViews));
         
         setListAdapter(adapter);
