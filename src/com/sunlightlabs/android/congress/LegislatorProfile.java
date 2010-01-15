@@ -30,7 +30,6 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Committee;
-import com.sunlightlabs.entities.Legislator;
 
 public class LegislatorProfile extends ListActivity {
 	private String id, titledName, party, gender, state, domain, phone, website;
@@ -240,10 +239,6 @@ public class LegislatorProfile extends ListActivity {
 			return matcher.group(1);
 		else
 			return noPrefix.replaceAll("/.*$", "");
-	}
-	
-	public static String websiteLink(String url) {
-		return "<a href=\"" + url + "\">" + websiteName(url) + "</a>";
 	}
 	
 	public static String partyName(String code) {

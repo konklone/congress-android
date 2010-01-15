@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.youtube.Video;
 import com.sunlightlabs.android.youtube.YouTube;
 import com.sunlightlabs.android.youtube.YouTubeException;
@@ -153,7 +154,7 @@ public class LegislatorYouTube extends ListActivity {
 			
 			Video video = getItem(position);
 			((TextView) view.findViewById(R.id.video_title)).setText(video.title);
-			((TextView) view.findViewById(R.id.video_description)).setText(video.description);
+			((TextView) view.findViewById(R.id.video_description)).setText(Utils.truncate(video.description, 150));
 			((TextView) view.findViewById(R.id.video_when)).setText(video.timestamp.format("%b %d"));
 			
 			return view;
