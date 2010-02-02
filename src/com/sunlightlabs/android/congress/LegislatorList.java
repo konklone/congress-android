@@ -164,6 +164,7 @@ public class LegislatorList extends ListActivity {
         ((TextView) findViewById(R.id.custom_title)).setText(windowTitle);
     }
     
+    @Override
     public void onListItemClick(ListView parent, View v, int position, long id) {
     	selectLegislator((Legislator) parent.getItemAtPosition(position));
     }
