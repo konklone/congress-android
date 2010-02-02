@@ -16,6 +16,8 @@
             </intent-filter>
         </activity>
         
+        <activity android:name=".MainLegislators" />
+        
         <activity android:name=".CreateShortcut"
         	android:label="@string/create_shortcuts"
         	android:theme="@android:style/Theme.Dialog"
