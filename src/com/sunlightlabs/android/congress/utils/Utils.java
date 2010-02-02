@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.congress.java.CongressException;
 
 public class Utils {
 	public static void alert(Context context, String msg) {

@@ -16,10 +16,14 @@ public class MainMenu extends TabActivity {
     public void setupTabs() {
     	TabHost tabHost = getTabHost();
 		
-    	//tabHost.addTab(tabHost.newTabSpec("activity_tab").setIndicator("Needs").setContent(needsIntent()));
+    	tabHost.addTab(tabHost.newTabSpec("activity_tab").setIndicator("Activity").setContent(activityIntent()));
 		tabHost.addTab(tabHost.newTabSpec("people_tab").setIndicator("People").setContent(peopleIntent()));
 		
 		tabHost.setCurrentTab(0);
+    }
+    
+    public Intent activityIntent() {
+    	return new Intent(this, MainActivity.class);
     }
     
     public Intent peopleIntent() {

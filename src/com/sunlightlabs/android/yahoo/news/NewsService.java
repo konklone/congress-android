@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 public class NewsService {
 	public static final String BASE_URL = "http://search.yahooapis.com/NewsSearchService/V1/newsSearch";
+	public static final String USER_AGENT = "Sunlight's Congress Android App (http://github.com/sunlightlabs/congress)";
 	public String type, sort, language, output;
 	public int results;
 	
@@ -51,7 +52,7 @@ public class NewsService {
 		String queryString = queryString(query);
 		String url = BASE_URL + "?" + queryString;
 		HttpGet request = new HttpGet(url);
-        request.addHeader("User-Agent", "Sunlight's Congress Android App (http://github.com/sunlightlabs/congress");
+        request.addHeader("User-Agent", USER_AGENT);
 		
         DefaultHttpClient client = new DefaultHttpClient();
         

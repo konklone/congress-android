@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.congress.utils;
+package com.sunlightlabs.congress.java;
 
 public class CongressException extends Exception {
 	
