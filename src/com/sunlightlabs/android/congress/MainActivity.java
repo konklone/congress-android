@@ -7,8 +7,13 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
@@ -18,6 +23,8 @@ public class MainActivity extends ListActivity {
 	
 	ArrayList<Bill> recentBills;
 	RecentBillsTask recentBillsTask;
+	
+	LinearLayout introduced;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,18 @@ public class MainActivity extends ListActivity {
 		return new MainActivityHolder(recentBills, recentBillsTask);
 	}
 	
+	public void setupControls() {
+		LayoutInflater inflater = LayoutInflater.from(this);
+		introduced = (LinearLayout) inflater.inflate(R.layout.header_loading, null);
+		((TextView) introduced.findViewById(R.id.header_text)).setText("Recently Introduced");
+		((TextView) introduced.findViewById(R.id.loading_message)).setText("Loading bills...");
+		
+		MergeAdapter adapter = new MergeAdapter();
+		adapter.addView(introduced);
+		
+		setListAdapter(adapter);
+	}
+	
 	public void loadRecentBills() {
 		if (recentBillsTask == null) {
 			if (recentBills == null)
@@ -62,26 +81,28 @@ public class MainActivity extends ListActivity {
 	}
 	
 	public void displayRecentBills() {
-		setListAdapter(new ArrayAdapter<Bill>(this, android.R.layout.simple_list_item_1, recentBills));
+		if (recentBills.size() <= 0) {
+			introduced.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
+			((TextView) introduced.findViewById(R.id.loading_message)).setText("Could not load bills.");
+		} else {
+			introduced.findViewById(R.id.loading).setVisibility(View.GONE);
+			MergeAdapter adapter = (MergeAdapter) getListAdapter();
+			adapter.addAdapter(new ArrayAdapter<Bill>(this, android.R.layout.simple_list_item_1, recentBills));
+			setListAdapter(adapter);
+		}
 	}
 	
-	public void setupControls() {
-		
-	}
 	
 	private class RecentBillsTask extends AsyncTask<Void,Void,ArrayList<Bill>> {
 		private MainActivity context;
 		private CongressException exception;
-		private ProgressDialog dialog;
 		
 		public RecentBillsTask(MainActivity context) {
 			this.context = context;
-			loadingDialog();
 		}
 		
 		public void onScreenLoad(MainActivity context) {
 			this.context = context;
-			loadingDialog();
 		}
 		
 		@Override
@@ -96,8 +117,6 @@ public class MainActivity extends ListActivity {
 		
 		@Override
 		public void onPostExecute(ArrayList<Bill> bills) {
-			if (dialog != null && dialog.isShowing())
-    			dialog.dismiss();
 			context.recentBillsTask = null;
 			
 			if (exception != null && bills == null)
@@ -105,21 +124,6 @@ public class MainActivity extends ListActivity {
 			else
 				context.onLoadRecentBills(bills);
 		}
-		
-		public void loadingDialog() {
-        	dialog = new ProgressDialog(context);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("Loading recent bills...");
-            
-            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				public void onCancel(DialogInterface dialog) {
-					cancel(true);
-    				finish();
-				}
-			});
-            
-            dialog.show();
-        }
 	}
 	
 	static class MainActivityHolder {

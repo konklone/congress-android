@@ -38,6 +38,7 @@ public class LegislatorProfile extends ListActivity {
 	private ImageView picture;
 	private ArrayList<Committee> committees;
 	
+	// need to keep this here between setupControls() and displayCommittees(), not sure why
 	private LinearLayout committeeHeader;
 	
 	private LoadPhotosTask loadPhotosTask = null;
