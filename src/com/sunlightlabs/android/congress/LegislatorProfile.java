@@ -97,19 +97,20 @@ public class LegislatorProfile extends ListActivity {
 	}
 	
 	public void displayCommittees() {
-		committeeHeader.findViewById(R.id.loading_committees_spinner).setVisibility(View.GONE);
-		TextView empty = (TextView) committeeHeader.findViewById(R.id.no_committees);
-		
 		if (committees != null) {
 			if (committees.size() > 0) {
-				committeeHeader.findViewById(R.id.loading_committees).setVisibility(View.GONE);
+				committeeHeader.findViewById(R.id.loading).setVisibility(View.GONE);
 				MergeAdapter adapter = (MergeAdapter) getListAdapter();
 				adapter.addAdapter(new CommitteeAdapter(this, committees));
 				setListAdapter(adapter);
-			} else
-				empty.setText("Belongs to no committees.");
-		} else
-			empty.setText("Error loading committees.");
+			} else {
+				committeeHeader.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
+				((TextView) committeeHeader.findViewById(R.id.loading_message)).setText("Belongs to no committees.");
+			}
+		} else {
+			committeeHeader.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
+			((TextView) committeeHeader.findViewById(R.id.loading_message)).setText("Error loading committees.");
+		}
 	}
 	
 	
@@ -216,8 +217,9 @@ public class LegislatorProfile extends ListActivity {
 		contactViews.add(phoneView);
 		contactViews.add(websiteView);
 		
-		committeeHeader = (LinearLayout) inflater.inflate(R.layout.profile_committees, null);
+		committeeHeader = (LinearLayout) inflater.inflate(R.layout.header_loading, null);
 		((TextView) committeeHeader.findViewById(R.id.header_text)).setText("Committees");
+		((TextView) committeeHeader.findViewById(R.id.loading_message)).setText("Loading committees...");
 		
 		MergeAdapter adapter = new MergeAdapter();
 		adapter.addView(mainView);

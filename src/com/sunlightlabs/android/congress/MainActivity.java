@@ -3,8 +3,6 @@ package com.sunlightlabs.android.congress;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
