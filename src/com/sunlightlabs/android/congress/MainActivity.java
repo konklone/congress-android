@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,7 +16,7 @@ import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 
 public class MainActivity extends ListActivity {
-	private static final int RECENT_BILLS = 3;
+	private static final int RECENT_BILLS = 2;
 	
 	ArrayList<Bill> recentBills;
 	RecentBillsTask recentBillsTask;
@@ -85,7 +84,7 @@ public class MainActivity extends ListActivity {
 		} else {
 			introduced.findViewById(R.id.loading).setVisibility(View.GONE);
 			MergeAdapter adapter = (MergeAdapter) getListAdapter();
-			adapter.addAdapter(new ArrayAdapter<Bill>(this, android.R.layout.simple_list_item_1, recentBills));
+			adapter.addAdapter(new BillAdapter(this, recentBills));
 			setListAdapter(adapter);
 		}
 	}
