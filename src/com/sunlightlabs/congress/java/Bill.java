@@ -57,7 +57,7 @@ public class Bill {
 	}
 	
 	public static ArrayList<Bill> recentlyIntroduced(int n) throws CongressException {
-		return billsFor(url("bills.json?sections=basic,extended,sponsor&per_page=" + n));
+		return billsFor(Server.url("bills","sections=basic,extended,sponsor&per_page=" + n));
 	}
 	
 	
@@ -78,10 +78,6 @@ public class Bill {
 		}
 		
 		return bills;
-	}
-	
-	private static String url(String path) {
-		return Server.BASE_URL + "/" + path;
 	}
 	
 	private Date getDate(JSONObject json, String key) throws JSONException, DateParseException {

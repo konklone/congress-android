@@ -19,6 +19,16 @@ public class Server {
 	
 	public static final String[] dateFormat = new String[] {"yy/MM/dd HH:mm:ss Z"};
 	
+	public static String apiKey = "";
+	public static String format = "json";
+	
+	public static String url(String method, String queryString) {
+		if (queryString.length() > 0)
+			queryString += "&";
+		queryString += "apikey=" + apiKey;
+		return Server.BASE_URL + "/" + method + "." + format + "?" + queryString;
+	}
+	
 	public static String fetchJSON(String url) throws CongressException {
 		HttpGet request = new HttpGet(url);
         request.addHeader("User-Agent", USER_AGENT);
