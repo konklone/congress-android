@@ -34,7 +34,7 @@ public class BillAdapter extends ArrayAdapter<Bill> {
 		Bill bill = getItem(position);
 		
 		((TextView) view.findViewById(R.id.byline)).setText(byline(bill));
-		((TextView) view.findViewById(R.id.title)).setText(Utils.truncate(bill.getTitle(), 130));
+		((TextView) view.findViewById(R.id.title)).setText(Utils.truncate(bill.getTitle(), 300));
 		
 		view.setTag("bill-" + bill.id);
 		
