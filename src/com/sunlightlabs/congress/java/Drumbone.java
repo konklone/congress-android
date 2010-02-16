@@ -1,18 +1,13 @@
 package com.sunlightlabs.congress.java;
 
 import java.io.IOException;
-import java.util.Date;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.cookie.DateParseException;
-import org.apache.http.impl.cookie.DateUtils;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Package of helper classes and server-wide info.
@@ -20,7 +15,7 @@ import org.json.JSONObject;
 
 public class Drumbone {
 	public static final String USER_AGENT = "Sunlight's Congress Android App (http://github.com/sunlightlabs/congress)";
-	public static final String BASE_URL = "http://drumbone.sunlightlabs.com";
+	public static final String BASE_URL = "http://drumbone.services.sunlightlabs.com";
 	
 	public static final String[] dateFormat = new String[] {"yy/MM/dd HH:mm:ss Z"};
 	
