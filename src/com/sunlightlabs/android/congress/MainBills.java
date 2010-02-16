@@ -14,7 +14,7 @@ import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
-import com.sunlightlabs.congress.java.Server;
+import com.sunlightlabs.congress.java.Drumbone;
 
 public class MainBills extends ListActivity {
 	private static final int RECENT_BILLS = 10;
@@ -28,7 +28,7 @@ public class MainBills extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		Server.apiKey = getResources().getString(R.string.sunlight_api_key);
+		Drumbone.apiKey = getResources().getString(R.string.sunlight_api_key);
 		
 		setupControls();
 		

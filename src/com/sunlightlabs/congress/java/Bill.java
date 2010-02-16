@@ -41,13 +41,13 @@ public class Bill {
 		if (!json.isNull("official_title"))
 			official_title = json.getString("official_title");
 		if (!json.isNull("introduced_at"))
-			introduced_at = getDate(json, "introduced_at");
+			introduced_at =  DateUtils.parseDate(json.getString("introduced_at"), Drumbone.dateFormat);
 		if (!json.isNull("last_action_at"))
-			last_action_at = getDate(json, "last_action_at");
+			last_action_at = DateUtils.parseDate(json.getString("last_action_at"), Drumbone.dateFormat);
 		if (!json.isNull("last_vote_at"))
-			last_vote_at = getDate(json, "last_vote_at");
+			last_vote_at = DateUtils.parseDate(json.getString("last_vote_at"), Drumbone.dateFormat);
 		if (!json.isNull("enacted_at"))
-			enacted_at = getDate(json, "enacted_at");
+			enacted_at = DateUtils.parseDate(json.getString("enacted_at"), Drumbone.dateFormat);
 		
 		if (!json.isNull("sponsor"))
 			sponsor = new Legislator(json.getJSONObject("sponsor"));
@@ -57,12 +57,12 @@ public class Bill {
 	}
 	
 	public static ArrayList<Bill> recentlyIntroduced(int n) throws CongressException {
-		return billsFor(Server.url("bills","sections=basic,extended,sponsor&per_page=" + n));
+		return billsFor(Drumbone.url("bills","sections=basic,extended,sponsor&per_page=" + n));
 	}
 	
 	
 	public static ArrayList<Bill> billsFor(String url) throws CongressException {
-		String rawJSON = Server.fetchJSON(url);
+		String rawJSON = Drumbone.fetchJSON(url);
 		ArrayList<Bill> bills = new ArrayList<Bill>();
 		try {
 			JSONArray results = new JSONObject(rawJSON).getJSONArray("bills");
@@ -80,9 +80,7 @@ public class Bill {
 		return bills;
 	}
 	
-	private Date getDate(JSONObject json, String key) throws JSONException, DateParseException {
-		return DateUtils.parseDate(json.getString(key), Server.dateFormat);
-	}
+	
 	
 	public String getTitle() {
 		if (short_title != null)
