@@ -16,14 +16,14 @@ public class MainTabs extends TabActivity {
     public void setupTabs() {
     	TabHost tabHost = getTabHost();
 		
-    	tabHost.addTab(tabHost.newTabSpec("activity_tab").setIndicator("Activity").setContent(activityIntent()));
+    	tabHost.addTab(tabHost.newTabSpec("bills_tab").setIndicator("Bills").setContent(billsIntent()));
 		tabHost.addTab(tabHost.newTabSpec("people_tab").setIndicator("People").setContent(peopleIntent()));
 		
 		tabHost.setCurrentTab(0);
     }
     
-    public Intent activityIntent() {
-    	return new Intent(this, MainActivity.class);
+    public Intent billsIntent() {
+    	return new Intent(this, MainBills.class);
     }
     
     public Intent peopleIntent() {

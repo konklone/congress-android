@@ -36,23 +36,23 @@ public class Bill {
 		session = json.getInt("session");
 		number = json.getInt("number");
 		
-		if (json.has("short_title"))
+		if (!json.isNull("short_title"))
 			short_title = json.getString("short_title");
-		if (json.has("official_title"))
+		if (!json.isNull("official_title"))
 			official_title = json.getString("official_title");
-		if (json.has("introduced_at"))
+		if (!json.isNull("introduced_at"))
 			introduced_at = getDate(json, "introduced_at");
-		if (json.has("last_action_at"))
+		if (!json.isNull("last_action_at"))
 			last_action_at = getDate(json, "last_action_at");
-		if (json.has("last_vote_at"))
+		if (!json.isNull("last_vote_at"))
 			last_vote_at = getDate(json, "last_vote_at");
-		if (json.has("enacted_at"))
+		if (!json.isNull("enacted_at"))
 			enacted_at = getDate(json, "enacted_at");
 		
-		if (json.has("sponsor"))
+		if (!json.isNull("sponsor"))
 			sponsor = new Legislator(json.getJSONObject("sponsor"));
 		
-		if (json.has("summary"))
+		if (!json.isNull("summary"))
 			summary = json.getString("summary");
 	}
 	

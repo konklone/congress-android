@@ -16,8 +16,8 @@ import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Server;
 
-public class MainActivity extends ListActivity {
-	private static final int RECENT_BILLS = 2;
+public class MainBills extends ListActivity {
+	private static final int RECENT_BILLS = 10;
 	
 	ArrayList<Bill> recentBills;
 	RecentBillsTask recentBillsTask;
@@ -94,14 +94,14 @@ public class MainActivity extends ListActivity {
 	
 	
 	private class RecentBillsTask extends AsyncTask<Void,Void,ArrayList<Bill>> {
-		private MainActivity context;
+		private MainBills context;
 		private CongressException exception;
 		
-		public RecentBillsTask(MainActivity context) {
+		public RecentBillsTask(MainBills context) {
 			this.context = context;
 		}
 		
-		public void onScreenLoad(MainActivity context) {
+		public void onScreenLoad(MainBills context) {
 			this.context = context;
 		}
 		
