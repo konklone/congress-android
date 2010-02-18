@@ -82,13 +82,13 @@ public class Bill {
 	
 	
 	
-	public String getTitle() {
+	public String displayTitle() {
 		if (short_title != null)
 			return short_title;
 		else if (official_title != null)
 			return official_title;
 		else
-			return formatCode(code);
+			return null;
 	}
 	
 	public static String formatCode(String code) {

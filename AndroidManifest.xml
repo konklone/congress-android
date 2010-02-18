@@ -19,6 +19,17 @@
         <activity android:name=".MainBills" />
         <activity android:name=".MainLegislators" />
         
+        <activity android:name=".TwitterReply" 
+        	android:theme="@android:style/Theme.Dialog" 
+        	/>
+        
+        <activity android:name=".GetText"
+        	android:theme="@android:style/Theme.Dialog" 
+        	/>
+        <activity android:name=".GetState"
+        	android:theme="@android:style/Theme.Dialog" 
+        	/>
+        
         <activity android:name=".CreateShortcut"
         	android:label="@string/create_shortcuts"
         	android:theme="@android:style/Theme.Dialog"
@@ -46,17 +57,9 @@
         <activity android:name=".LegislatorTwitter" />
         <activity android:name=".LegislatorYouTube" />
         
-        <activity android:name=".Preferences" />
-        <activity android:name=".TwitterReply" 
-        	android:theme="@android:style/Theme.Dialog" 
-        	/>
+        <activity android:name=".BillInfo" />
         
-        <activity android:name=".GetText"
-        	android:theme="@android:style/Theme.Dialog" 
-        	/>
-        <activity android:name=".GetState"
-        	android:theme="@android:style/Theme.Dialog" 
-        	/>
+        <activity android:name=".Preferences" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

@@ -3,11 +3,13 @@ package com.sunlightlabs.android.congress;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
@@ -58,6 +60,21 @@ public class MainBills extends ListActivity {
 		adapter.addView(introduced);
 		
 		setListAdapter(adapter);
+	}
+	
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+    	Object tag = v.getTag();
+    	if (tag.getClass().getSimpleName().equals("Bill"))
+    		startActivity(billIntent((Bill) tag));
+    }
+	
+	public Intent billIntent(Bill bill) {
+		return new Intent(this, BillInfo.class)
+			.putExtra("id", bill.id)
+			.putExtra("code", bill.code)
+			.putExtra("title", bill.displayTitle())
+			.putExtra("introduced_at", bill.introduced_at.getTime())
+			.putExtra("type", bill.type);
 	}
 	
 	public void loadRecentBills() {
