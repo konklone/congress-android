@@ -28,7 +28,7 @@ public class Bill {
 	public String summary;
 	
 	public Bill(JSONObject json) throws JSONException, DateParseException {
-		id = json.getString("govtrack_id");
+		id = json.getString("bill_id");
 		code = json.getString("code");
 		type = json.getString("type");
 		state = json.getString("state");
