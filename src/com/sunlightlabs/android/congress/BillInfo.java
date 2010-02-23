@@ -98,8 +98,8 @@ public class BillInfo extends ListActivity {
 		
 		header.findViewById(R.id.loading).setVisibility(View.GONE);
 		
-		LinearLayout sponsorHeader = (LinearLayout) inflater.inflate(R.layout.header_layout_small, null);
-		((TextView) sponsorHeader.findViewById(R.id.header_text)).setText("Sponsor");
+		LinearLayout sponsorHeader = (LinearLayout) inflater.inflate(R.layout.header_layout, null);
+		((TextView) sponsorHeader.findViewById(R.id.header_text)).setText("Sponsored by");
 		
 		LinearLayout sponsor = (LinearLayout) inflater.inflate(R.layout.legislator_item, null);
 		((TextView) sponsor.findViewById(R.id.name)).setText(nameFor(bill.sponsor));

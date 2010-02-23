@@ -74,7 +74,7 @@ public class MainLegislators extends ListActivity {
 	
 	public void setupControls() {
         LayoutInflater inflater = LayoutInflater.from(this);
-        LinearLayout mainHeader = (LinearLayout) inflater.inflate(R.layout.main_people, null);
+        LinearLayout mainHeader = (LinearLayout) inflater.inflate(R.layout.header_layout, null);
         ((TextView) mainHeader.findViewById(R.id.header_text)).setText("Find Legislator By");
         mainHeader.setEnabled(false);
         
