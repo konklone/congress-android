@@ -3,7 +3,6 @@ package com.sunlightlabs.android.congress;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -19,7 +18,6 @@ import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Legislator;
-import com.sunlightlabs.entities.Committee;
 
 public class BillInfo extends ListActivity {
 	private String id, code, title;

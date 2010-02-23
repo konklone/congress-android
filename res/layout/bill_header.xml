@@ -10,9 +10,9 @@
 	<TextView android:id="@+id/code"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
-		android:layout_marginBottom="5dp"
+		android:layout_marginBottom="10dp"
 		
-		android:textSize="18sp"
+		android:textSize="20sp"
 		
 		android:text="H.Res. 3200"
 		/>
@@ -20,6 +20,7 @@
 	<TextView android:id="@+id/title"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:layout_marginBottom="15dp"
 		
 		android:textColor="#ffffff"
 		android:textSize="18sp"
