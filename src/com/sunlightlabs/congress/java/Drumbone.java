@@ -44,7 +44,7 @@ public class Drumbone {
 	        	String body = EntityUtils.toString(response.getEntity());
 	        	return body;
 	        } else {
-	        	throw new CongressException("Bad status code " + statusCode + "on fetching JSON");
+	        	throw new CongressException("Bad status code " + statusCode + " on fetching JSON from " + url);
 	        }
         } catch (ClientProtocolException e) {
 	    	throw new CongressException(e, "Problem fetching JSON from " + url);

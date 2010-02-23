@@ -1,6 +1,8 @@
 package com.sunlightlabs.android.congress.utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +25,17 @@ public class Utils {
 		String message = exception == null ? "Unhandled error." : exception.getMessage();
 		Toast.makeText(context, message, Toast.LENGTH_LONG).show();
 	}
+	
+	public static Intent legislatorIntent(String id) {
+    	Intent intent = new Intent(Intent.ACTION_MAIN);
+    	intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorLoader");
+		
+		Bundle extras = new Bundle();
+		extras.putString("legislator_id", id); 
+		intent.putExtras(extras);
+		
+		return intent;
+    }
 	
 	public static String stateCodeToName(Context context, String code) {
 		String[] codes = context.getResources().getStringArray(R.array.state_codes);

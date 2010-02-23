@@ -5,6 +5,6 @@
     android:layout_height="fill_parent"
     >
     
-    <include layout="@layout/list_item_header" />
+    <include layout="@layout/header" />
     
 </LinearLayout>

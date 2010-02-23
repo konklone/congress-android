@@ -280,20 +280,11 @@ public class LegislatorProfile extends ListActivity {
         }
 
 		public View getView(int position, View convertView, ViewGroup parent) {
-			LinearLayout view;
-			
-//			boolean differentType = false;
-//			if (convertView != null) {
-//				String tag = (String) convertView.getTag();
-//				differentType = (tag != null && (tag.equals("phone") || tag.equals("web")));
-//			}
-//			
-//			if (convertView == null && !differentType)
-				view = (LinearLayout) inflater.inflate(R.layout.profile_committee, null);
-//			else
-//				view = (LinearLayout) convertView;
-				
 			Committee committee = getItem(position);
+			
+			// ignoring convertView as a recycling possibility -
+			// the list is too small to make the extra logic worth it
+			LinearLayout view = (LinearLayout) inflater.inflate(R.layout.profile_committee, null);
 			((TextView) view.findViewById(R.id.name)).setText(committee.getProperty("name"));
 			view.setTag(committee);
 			

@@ -28,13 +28,20 @@ public class Bill {
 	public String summary;
 	
 	public Bill(JSONObject json) throws JSONException, DateParseException {
-		id = json.getString("bill_id");
-		code = json.getString("code");
-		type = json.getString("type");
-		state = json.getString("state");
-		chamber = json.getString("chamber");
-		session = json.getInt("session");
-		number = json.getInt("number");
+		if (!json.isNull("bill_id"))
+			id = json.getString("bill_id");
+		if (!json.isNull("code"))
+			code = json.getString("code");
+		if (!json.isNull("type"))
+			type = json.getString("type");
+		if (!json.isNull("state"))
+			state = json.getString("state");
+		if (!json.isNull("chamber"))
+			chamber = json.getString("chamber");
+		if (!json.isNull("session"))
+			session = json.getInt("session");
+		if (!json.isNull("number"))
+			number = json.getInt("number");
 		
 		if (!json.isNull("short_title"))
 			short_title = json.getString("short_title");
@@ -60,6 +67,21 @@ public class Bill {
 		return billsFor(Drumbone.url("bills","sections=basic,extended,sponsor&per_page=" + n));
 	}
 	
+	public static Bill find(String id, String sections) throws CongressException {
+		return billFor(Drumbone.url("bill", "bill_id=" + id + "&sections=" + sections));
+	}
+	
+	public static Bill billFor(String url) throws CongressException {
+		String rawJSON = Drumbone.fetchJSON(url);
+		try {
+			JSONObject bill = new JSONObject(rawJSON).getJSONObject("bill");
+			return new Bill(bill);
+		} catch(JSONException e) {
+			throw new CongressException(e, "Problem parsing the JSON from " + url);
+		} catch(DateParseException e) {
+			throw new CongressException(e, "Problem parsing a date from the JSON from " + url);
+		}
+	}
 	
 	public static ArrayList<Bill> billsFor(String url) throws CongressException {
 		String rawJSON = Drumbone.fetchJSON(url);

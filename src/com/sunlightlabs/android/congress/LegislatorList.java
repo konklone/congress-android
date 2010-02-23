@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -14,16 +13,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.utils.LegislatorAdapter;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.api.ApiCall;
@@ -174,7 +171,7 @@ public class LegislatorList extends ListActivity {
     		shortcutImageTask = (ShortcutImageTask) new ShortcutImageTask(this, legislator).execute();
     	else {
     		String legislatorId = legislator.getId();
-        	Intent legislatorIntent = legislatorIntent(legislatorId);
+        	Intent legislatorIntent = Utils.legislatorIntent(legislatorId);
     		startActivity(legislatorIntent);
     	}
     }
@@ -215,20 +212,9 @@ public class LegislatorList extends ListActivity {
     	return committeeId != null;
     }
     
-    public Intent legislatorIntent(String id) {
-    	Intent intent = new Intent(Intent.ACTION_MAIN);
-    	intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorLoader");
-		
-		Bundle extras = new Bundle();
-		extras.putString("legislator_id", id); 
-		intent.putExtras(extras);
-		
-		return intent;
-    }
-    
     public void returnShortcutIcon(Legislator legislator, Bitmap shortcutIcon) {
     	String legislatorId = legislator.getId();
-    	Intent legislatorIntent = legislatorIntent(legislatorId);
+    	Intent legislatorIntent = Utils.legislatorIntent(legislatorId);
 		legislatorIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 		
 		Intent intent = new Intent();
@@ -240,51 +226,6 @@ public class LegislatorList extends ListActivity {
 		finish();
     }
     
-    protected class LegislatorAdapter extends ArrayAdapter<Legislator> {
-		LayoutInflater inflater;
-
-        public LegislatorAdapter(Activity context, ArrayList<Legislator> items) {
-            super(context, 0, items);
-            inflater = LayoutInflater.from(context);
-        }
-
-		public View getView(int position, View convertView, ViewGroup parent) {
-			LinearLayout view;
-			
-			if (convertView == null)
-				view = (LinearLayout) inflater.inflate(R.layout.legislator_item, null);
-			else
-				view = (LinearLayout) convertView;
-				
-			Legislator legislator = getItem(position);
-			((TextView) view.findViewById(R.id.name)).setText(nameFor(legislator));
-			((TextView) view.findViewById(R.id.position)).setText(positionFor(legislator));
-			
-			return view;
-		}
-		
-		public String nameFor(Legislator legislator) {
-			return legislator.lastName() + ", " + legislator.firstName();
-		}
-		
-		public String positionFor(Legislator legislator) {
-			String district = legislator.getProperty("district");
-			String stateName = Utils.stateCodeToName(LegislatorList.this, legislator.getProperty("state"));
-			
-			if (district.equals("Senior Seat"))
-				return "Senior Senator from " + stateName;
-			else if (district.equals("Junior Seat"))
-				return "Junior Senator from " + stateName;
-			else if (district.equals("0")) {
-				if (legislator.getProperty("title").equals("Rep"))
-					return "Representative for " + stateName + " At-Large";
-				else
-					return legislator.fullTitle() + " for " + stateName;
-			} else
-				return "Representative for " + stateName + "-" + district;
-		}
-		
-    }
     
     private class ShortcutImageTask extends AsyncTask<Void,Void,Bitmap> {
     	public LegislatorList context;

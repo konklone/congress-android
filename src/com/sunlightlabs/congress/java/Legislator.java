@@ -7,33 +7,41 @@ public class Legislator {
 	
 	public String bioguide_id, govtrack_id;
 	public String first_name, last_name, nickname, name_suffix;
-	public String title, party, state;
+	public String title, party, state, district;
 	
 	public Legislator(JSONObject json) throws JSONException {
-		bioguide_id = json.getString("bioguide_id");
-		govtrack_id = json.getString("govtrack_id");
+		if (!json.isNull("bioguide_id"))
+			bioguide_id = json.getString("bioguide_id");
+		if (!json.isNull("govtrack_id"))
+			govtrack_id = json.getString("govtrack_id");
 		
-		if (json.has("first_name"))
+		if (!json.isNull("first_name"))
 			first_name = json.getString("first_name");
-		if (json.has("last_name"))
+		if (!json.isNull("last_name"))
 			last_name = json.getString("last_name");
-		if (json.has("nickname"))
+		if (!json.isNull("nickname"))
 			nickname = json.getString("nickname");
-		if (json.has("name_suffix"))
+		if (!json.isNull("name_suffix"))
 			name_suffix = json.getString("name_suffix");
-		if (json.has("title"))
+		if (!json.isNull("title"))
 			title = json.getString("title");
-		if (json.has("party"))
+		if (!json.isNull("party"))
 			party = json.getString("party");
-		if (json.has("state"))
+		if (!json.isNull("state"))
 			state = json.getString("state");
+		if (!json.isNull("district"))
+			district = json.getString("district");
 	}
 	
 	public String getName() {
+		return firstName() + " " + last_name;
+	}
+	
+	public String firstName() {
 		if (first_name == null || first_name.length() == 0)
-			return first_name + " " + last_name;
+			return nickname;
 		else
-			return nickname +  " " + last_name;
+			return first_name;
 	}
 	
 	public String titledName() {
@@ -41,6 +49,18 @@ public class Legislator {
 		if (name_suffix != null && !name_suffix.equals(""))
 			name += " " + name_suffix;
 		return name;
+	}
+	
+	public String fullTitle() {
+		String title = this.title;
+		if (title.equals("Del"))
+			return "Delegate";
+		else if (title.equals("Com"))
+			return "Resident Commissioner";
+		else if (title.equals("Sen"))
+			return "Senator";
+		else // "Rep"
+			return "Representative";
 	}
 	
 }
