@@ -114,8 +114,10 @@ public class BillInfo extends ListActivity {
 		
 		if (bill.summary != null && bill.summary.length() > 0)
 			((TextView) summary.findViewById(R.id.summary)).setText(bill.summary);
-		else
-			((TextView) summary.findViewById(R.id.summary)).setText("No summary available.");
+		else {
+			summary.findViewById(R.id.summary).setVisibility(View.GONE);
+			summary.findViewById(R.id.no_summary).setVisibility(View.VISIBLE);
+		}
 		
 		MergeAdapter adapter = (MergeAdapter) getListAdapter();
 		adapter.addAdapter(new ViewArrayAdapter(this, sponsorViews));
