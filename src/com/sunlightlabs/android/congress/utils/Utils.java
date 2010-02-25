@@ -59,14 +59,6 @@ public class Utils {
 		return null;
 	}
 	
-	public static LinearLayout makeIconListItem(LayoutInflater inflater, Object tag, int icon, String text) {
-		LinearLayout item = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
-        ((ImageView) item.findViewById(R.id.icon)).setImageResource(icon);
-        ((TextView) item.findViewById(R.id.text)).setText(text);
-        item.setTag(tag);
-        return item;
-	}
-	
 	public static String truncate(String text, int length) {
 		if (text.length() > length)
 			return text.substring(0, length - 3) + "...";

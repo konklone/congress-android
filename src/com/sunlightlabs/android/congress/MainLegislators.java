@@ -29,12 +29,12 @@ public class MainLegislators extends ListActivity {
 	
 	private static final int ABOUT = 0;
 	
-	
+	private static final int BILLS_RECENT = 0;
 	private static final int SEARCH_LOCATION = 1;
 	private static final int SEARCH_ZIP = 2;
 	private static final int SEARCH_STATE = 3;
 	private static final int SEARCH_NAME = 4;
-
+	
 	private Location location;
 	
 	@Override
@@ -61,24 +61,64 @@ public class MainLegislators extends ListActivity {
 		case SEARCH_STATE:
 			getResponse(RESULT_STATE);
 			break;
+		default:
+			Utils.alert(this, "You touched it");
+			break;
 		}
     }
 	
 	public void setupControls() {
         LayoutInflater inflater = LayoutInflater.from(this);
-        LinearLayout mainHeader = (LinearLayout) inflater.inflate(R.layout.header_layout, null);
-        ((TextView) mainHeader.findViewById(R.id.header_text)).setText("Find Legislator By");
-        mainHeader.setEnabled(false);
+        
+        LinearLayout billsHeader = (LinearLayout) inflater.inflate(R.layout.header_layout, null);
+        ((TextView) billsHeader.findViewById(R.id.header_text)).setText("Bills");
+        
+        ArrayList<View> billViews = new ArrayList<View>(2);
+        
+        LinearLayout billsRecent = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
+        ((ImageView) billsRecent .findViewById(R.id.icon)).setVisibility(View.INVISIBLE);
+        ((TextView) billsRecent.findViewById(R.id.text)).setText("Recently Introduced");
+        billsRecent.setTag(BILLS_RECENT);
+        billViews.add(billsRecent);
+        
+        
+        LinearLayout peopleHeader = (LinearLayout) inflater.inflate(R.layout.header_layout, null);
+        ((TextView) peopleHeader.findViewById(R.id.header_text)).setText("Legislators By");
+        peopleHeader.setEnabled(false);
         
         ArrayList<View> searchViews = new ArrayList<View>(4);
-        if (location != null)
-        	searchViews.add(Utils.makeIconListItem(inflater, SEARCH_LOCATION, R.drawable.search_location, "My Location"));
-        searchViews.add(Utils.makeIconListItem(inflater, SEARCH_STATE, R.drawable.search_all, "State"));
-        searchViews.add(Utils.makeIconListItem(inflater, SEARCH_NAME, R.drawable.search_lastname, "Last Name"));
-        searchViews.add(Utils.makeIconListItem(inflater, SEARCH_ZIP, R.drawable.search_zip, "Zip Code"));
+        
+        if (location != null) {
+	        LinearLayout searchLocation = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
+	        ((ImageView) searchLocation.findViewById(R.id.icon)).setImageResource(R.drawable.search_location);
+	        ((TextView) searchLocation.findViewById(R.id.text)).setText("My Location");
+	        searchLocation.setTag(SEARCH_LOCATION);
+	        searchViews.add(searchLocation);
+        }
+        
+        LinearLayout searchState = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
+        ((ImageView) searchState.findViewById(R.id.icon)).setImageResource(R.drawable.search_all);
+        ((TextView) searchState.findViewById(R.id.text)).setText("State");
+        searchState.setTag(SEARCH_STATE);
+        searchViews.add(searchState);
+        
+        LinearLayout searchName = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
+        ((ImageView) searchName.findViewById(R.id.icon)).setImageResource(R.drawable.search_lastname);
+        ((TextView) searchName.findViewById(R.id.text)).setText("Last Name");
+        searchName.setTag(SEARCH_NAME);
+        searchViews.add(searchName);
+        
+        LinearLayout searchZip = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
+        ((ImageView) searchZip.findViewById(R.id.icon)).setImageResource(R.drawable.search_zip);
+        ((TextView) searchZip.findViewById(R.id.text)).setText("Zip Code");
+        searchZip.setTag(SEARCH_ZIP);
+        searchViews.add(searchZip);
         
         MergeAdapter adapter = new MergeAdapter();
-        adapter.addView(mainHeader);
+        adapter.addView(billsHeader);
+        adapter.addAdapter(new ViewArrayAdapter(this, billViews));
+        
+        adapter.addView(peopleHeader);
         if (location == null) {   
 	        LinearLayout searchLocation = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1_disabled, null);
 	        ((ImageView) searchLocation.findViewById(R.id.icon)).setImageResource(R.drawable.search_location);
