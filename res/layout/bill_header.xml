@@ -3,30 +3,53 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:orientation="vertical"
-	
-	android:padding="10dp"
 	>
 	
-	<TextView android:id="@+id/code"
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:layout_marginBottom="10dp"
-		
-		android:textSize="20sp"
-		
-		android:text="H.Res. 3200"
-		/>
-		
-	<TextView android:id="@+id/title"
+	<LinearLayout
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="15dp"
+		android:orientation="vertical"
 		
-		android:textColor="#ffffff"
-		android:textSize="18sp"
+		android:padding="10dp"
+		>
 		
-		android:text="@string/test_short"
-		/>
+		<TextView android:id="@+id/code"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:layout_marginBottom="5dp"
+			
+			android:textSize="20sp"
+			
+			android:text="H.Res. 3200"
+			/>
+			
+		<TextView android:id="@+id/title"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="5dp"
+			
+			android:textColor="#ffffff"
+			android:textSize="18sp"
+			
+			android:text="@string/test_short"
+			/>
+		
+		<TextView android:id="@+id/introduced"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:layout_marginBottom="5dp"
+			
+			android:textSize="14sp"
+			android:text="Introduced on Feb 12"
+			/>
+	</LinearLayout>
 	
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="1px"
+		android:background="#5c5e5d"
+		/>
+		
 	<include layout="@layout/loading" />
 </LinearLayout>

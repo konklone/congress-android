@@ -1,11 +1,12 @@
 package com.sunlightlabs.android.congress;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.app.ListActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,7 +22,7 @@ import com.sunlightlabs.congress.java.Legislator;
 
 public class BillInfo extends ListActivity {
 	private String id, code, title;
-	private Time introduced_at;
+	private long introduced_at;
 	
 	private Bill bill;
 	private LoadBillTask loadBillTask;
@@ -35,8 +36,7 @@ public class BillInfo extends ListActivity {
 		id = extras.getString("id");
 		code = extras.getString("code");
 		title = extras.getString("title");
-		introduced_at = new Time();
-		introduced_at.set(extras.getLong("introduced_at"));
+		introduced_at = extras.getLong("introduced_at");
 		
 		setupControls();
 		
@@ -80,9 +80,13 @@ public class BillInfo extends ListActivity {
 		header = (LinearLayout) inflater.inflate(R.layout.bill_header, null);
 		((TextView) header.findViewById(R.id.code)).setText(Bill.formatCode(code));
 		TextView titleView = (TextView) header.findViewById(R.id.title);
-		String truncated = truncateTitle(title);
-		titleView.setText(truncated);
-		titleView.setTextSize(sizeOfTitle(truncated));
+		
+		String displayTitle = (title.length() > 400) ? Utils.truncate(title, 400) : title;
+		titleView.setText(displayTitle);
+		titleView.setTextSize(sizeOfTitle(displayTitle));
+		
+		String date = "Introduced on " + new SimpleDateFormat("MMM dd, yyyy").format(new Date(introduced_at));
+		((TextView) header.findViewById(R.id.introduced)).setText(date);
 		
 		((TextView) header.findViewById(R.id.loading_message)).setText("Loading bill details...");
 		
@@ -93,22 +97,29 @@ public class BillInfo extends ListActivity {
 	
 	public void displayBill() {
 		LayoutInflater inflater = LayoutInflater.from(this);
+		Legislator legislator = bill.sponsor;
 		
 		header.findViewById(R.id.loading).setVisibility(View.GONE);
 		
-		LinearLayout sponsorHeader = (LinearLayout) inflater.inflate(R.layout.header_layout, null);
-		((TextView) sponsorHeader.findViewById(R.id.header_text)).setText("Sponsored by");
+		LinearLayout sponsor = (LinearLayout) inflater.inflate(R.layout.sponsor, null);
+		String name = legislator.title + ". " + legislator.getName() + " (" + legislator.party + "-" + legislator.state + ")";
+		((TextView) sponsor.findViewById(R.id.name)).setText(name);
 		
-		LinearLayout sponsor = (LinearLayout) inflater.inflate(R.layout.legislator_item, null);
-		((TextView) sponsor.findViewById(R.id.name)).setText(nameFor(bill.sponsor));
-		((TextView) sponsor.findViewById(R.id.position)).setText(positionFor(bill.sponsor));
 		sponsor.setTag("sponsor");
 		ArrayList<View> sponsorViews = new ArrayList<View>(1);
 		sponsorViews.add(sponsor);
 		
+		LinearLayout summary = (LinearLayout) inflater.inflate(R.layout.bill_summary, null);
+		((TextView) summary.findViewById(R.id.header_text)).setText("Summary");
+		
+		if (bill.summary != null && bill.summary.length() > 0)
+			((TextView) summary.findViewById(R.id.summary)).setText(bill.summary);
+		else
+			((TextView) summary.findViewById(R.id.summary)).setText("No summary available.");
+		
 		MergeAdapter adapter = (MergeAdapter) getListAdapter();
-		adapter.addView(sponsorHeader);
 		adapter.addAdapter(new ViewArrayAdapter(this, sponsorViews));
+		adapter.addView(summary);
 		setListAdapter(adapter);
 	}
 	
@@ -118,28 +129,6 @@ public class BillInfo extends ListActivity {
     	if (type.equals("sponsor"))
     		startActivity(Utils.legislatorIntent(bill.sponsor.bioguide_id));
     }
-	
-	
-	public String nameFor(Legislator legislator) {
-		return legislator.last_name + ", " + legislator.firstName();
-	}
-	
-	public String positionFor(Legislator legislator) {
-		String district = legislator.district;
-		String stateName = Utils.stateCodeToName(this, legislator.state);
-		
-		if (district.equals("Senior Seat"))
-			return "Senior Senator from " + stateName;
-		else if (district.equals("Junior Seat"))
-			return "Junior Senator from " + stateName;
-		else if (district.equals("0")) {
-			if (legislator.title.equals("Rep"))
-				return "Representative for " + stateName + " At-Large";
-			else
-				return legislator.fullTitle() + " for " + stateName;
-		} else
-			return "Representative for " + stateName + "-" + district;
-	}
 	
 	public int sizeOfTitle(String title) {
 		int length = title.length();
@@ -153,13 +142,6 @@ public class BillInfo extends ListActivity {
 			return 12;
 		else // should be truncated above this anyhow
 			return 12;
-	}
-	
-	public String truncateTitle(String title) {
-		if (title.length() > 400)
-			return Utils.truncate(title, 400);
-		else
-			return title;
 	}
 	
 	private class LoadBillTask extends AsyncTask<String,Void,Bill> {
@@ -177,7 +159,7 @@ public class BillInfo extends ListActivity {
 		@Override
 		public Bill doInBackground(String... billId) {
 			try {
-				Bill bill = Bill.find(billId[0], "basic,extended,sponsor");
+				Bill bill = Bill.find(billId[0], "basic,extended,sponsor,summary");
 				
 				return bill;
 			} catch (CongressException exception) {
