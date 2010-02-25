@@ -3,10 +3,6 @@ package com.sunlightlabs.android.congress.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sunlightlabs.android.congress.R;

@@ -2,13 +2,17 @@ package com.sunlightlabs.android.congress;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,18 +20,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 
-public class MainLegislators extends ListActivity {
+public class MainMenu extends ListActivity {
 	public static final int RESULT_ZIP = 1;
 	public static final int RESULT_LASTNAME = 2;
 	public static final int RESULT_STATE = 3;
 	
 	private static final int ABOUT = 0;
+	private static final int FIRST = 1;
 	
 	private static final int BILLS_RECENT = 0;
 	private static final int SEARCH_LOCATION = 1;
@@ -43,6 +49,9 @@ public class MainLegislators extends ListActivity {
         
         location = getLocation();
         setupControls();
+        
+        if (firstTime())
+        	showDialog(FIRST);
     }
 	
 	@Override
@@ -83,7 +92,7 @@ public class MainLegislators extends ListActivity {
         
         
         LinearLayout peopleHeader = (LinearLayout) inflater.inflate(R.layout.header_layout, null);
-        ((TextView) peopleHeader.findViewById(R.id.header_text)).setText("Legislators By");
+        ((TextView) peopleHeader.findViewById(R.id.header_text)).setText("Legislators");
         peopleHeader.setEnabled(false);
         
         ArrayList<View> searchViews = new ArrayList<View>(4);
@@ -129,8 +138,6 @@ public class MainLegislators extends ListActivity {
         
         setListAdapter(adapter);
     }
-	
-	
 	
 	public Location getLocation() {
 		Location location = null;
@@ -235,6 +242,46 @@ public class MainLegislators extends ListActivity {
 			break;
 		}
 	}
+	
+	public boolean firstTime() {
+		if (Preferences.getBoolean(this, "first_time", true)) {
+			Preferences.setBoolean(this, "first_time", false);
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	LayoutInflater inflater = getLayoutInflater();
+    	
+        switch(id) {
+        case ABOUT:
+        	LinearLayout aboutView = (LinearLayout) inflater.inflate(R.layout.about, null);
+        	
+        	TextView about3 = (TextView) aboutView.findViewById(R.id.about_3);
+        	about3.setText(R.string.about_3);
+        	Linkify.addLinks(about3, Linkify.WEB_URLS);
+        	
+        	builder.setView(aboutView);
+        	builder.setPositiveButton(R.string.about_button, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+				}
+			});
+            return builder.create();
+        case FIRST:
+        	ScrollView firstView = (ScrollView) inflater.inflate(R.layout.first_time, null);
+        	
+        	builder.setView(firstView);
+        	builder.setPositiveButton(R.string.first_button, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {}
+			});
+            return builder.create();
+        default:
+            return null;
+        }
+    }
 	
 	@Override 
     public boolean onCreateOptionsMenu(Menu menu) { 
