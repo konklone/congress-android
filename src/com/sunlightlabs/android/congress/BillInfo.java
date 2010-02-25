@@ -5,15 +5,18 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.ListActivity;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.congress.java.Bill;
@@ -26,7 +29,10 @@ public class BillInfo extends ListActivity {
 	
 	private Bill bill;
 	private LoadBillTask loadBillTask;
-	private LinearLayout header;
+	private LoadPhotoTask loadPhotoTask;
+	private LinearLayout header, sponsor;
+	
+	private Drawable sponsorPhoto;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +50,7 @@ public class BillInfo extends ListActivity {
         if (holder != null) {
         	bill = holder.bill;
         	loadBillTask = holder.loadBillTask;
+        	loadPhotoTask = holder.loadPhotoTask;
         }
 		
 		loadBill();
@@ -51,7 +58,7 @@ public class BillInfo extends ListActivity {
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new BillInfoHolder(bill, loadBillTask);
+		return new BillInfoHolder(bill, loadBillTask, loadPhotoTask);
 	}
 	
 	public void loadBill() {
@@ -65,6 +72,17 @@ public class BillInfo extends ListActivity {
 		}
 	}
 	
+	public void loadPhoto() {
+		if (loadPhotoTask != null)
+        	loadPhotoTask.onScreenLoad(this);
+        else {
+        	if (sponsorPhoto != null)
+        		displayPhoto();
+        	else
+        		loadPhotoTask = (LoadPhotoTask) new LoadPhotoTask(this).execute(bill.sponsor.bioguide_id);
+        }
+	}
+	
 	public void onLoadBill(Bill bill) {
 		this.bill = bill;
 		displayBill();
@@ -73,6 +91,18 @@ public class BillInfo extends ListActivity {
 	public void onLoadBill(CongressException exception) {
 		Utils.alert(this, exception);
 		finish();
+	}
+	
+	public void onLoadPhoto(Drawable photo) {
+		sponsorPhoto = photo;
+		loadPhotoTask = null;
+		displayPhoto();
+	}
+	
+	
+	public void displayPhoto() {
+		if (sponsorPhoto != null && sponsor != null)
+    		((ImageView) sponsor.findViewById(R.id.picture)).setImageDrawable(sponsorPhoto);
 	}
 	
 	public void setupControls() {
@@ -101,8 +131,8 @@ public class BillInfo extends ListActivity {
 		
 		header.findViewById(R.id.loading).setVisibility(View.GONE);
 		
-		LinearLayout sponsor = (LinearLayout) inflater.inflate(R.layout.sponsor, null);
-		String name = legislator.title + ". " + legislator.getName() + " (" + legislator.party + "-" + legislator.state + ")";
+		sponsor = (LinearLayout) inflater.inflate(R.layout.sponsor, null);
+		String name = legislator.title + ". " + legislator.getName();
 		((TextView) sponsor.findViewById(R.id.name)).setText(name);
 		
 		sponsor.setTag("sponsor");
@@ -123,6 +153,9 @@ public class BillInfo extends ListActivity {
 		adapter.addAdapter(new ViewArrayAdapter(this, sponsorViews));
 		adapter.addView(summary);
 		setListAdapter(adapter);
+		
+		// kick off the photo loading task after the new bill data is all displayed
+		loadPhoto();
 	}
 	
 	@Override
@@ -181,13 +214,38 @@ public class BillInfo extends ListActivity {
 		}
 	}
 	
-	static class BillInfoHolder {
-		LoadBillTask loadBillTask;
-		Bill bill;
+	private class LoadPhotoTask extends AsyncTask<String,Void,Drawable> {
+		public BillInfo context;
 		
-		public BillInfoHolder(Bill bill, LoadBillTask loadBillTask) {
+		public LoadPhotoTask(BillInfo context) {
+			super();
+			this.context = context;
+		}
+		
+		public void onScreenLoad(BillInfo context) {
+			this.context = context;
+		}
+		
+		@Override
+		public Drawable doInBackground(String... bioguideId) {
+			return LegislatorImage.getImage(LegislatorImage.PIC_LARGE, bioguideId[0], context);
+		}
+		
+		@Override
+		public void onPostExecute(Drawable photo) {
+			context.onLoadPhoto(photo);
+		}
+	}
+	
+	static class BillInfoHolder {
+		Bill bill;
+		LoadBillTask loadBillTask;
+		LoadPhotoTask loadPhotoTask;
+		
+		public BillInfoHolder(Bill bill, LoadBillTask loadBillTask, LoadPhotoTask loadPhotoTask) {
 			this.bill = bill;
 			this.loadBillTask = loadBillTask;
+			this.loadPhotoTask = loadPhotoTask;
 		}
 	}
 }

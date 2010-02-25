@@ -3,7 +3,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	
-	android:paddingLeft="15dp"
+	android:paddingLeft="10dp"
 	android:paddingTop="10dp"
 	android:paddingBottom="10dp"
 	
@@ -11,17 +11,17 @@
 	>
 
 	<FrameLayout
-		android:layout_width="44dp"
-		android:layout_height="54dp"
+		android:layout_width="54dp"
+		android:layout_height="67dp"
 	 	
-	 	android:layout_marginRight="10dp"
+	 	android:layout_marginRight="15dp"
 	 	
 	 	android:background="#d2d3d5"
 	 	>
 	 	
 		<ImageView android:id="@+id/picture"
-	 		android:layout_width="40dp"
-	 		android:layout_height="50dp"
+	 		android:layout_width="52dp"
+	 		android:layout_height="65dp"
 	 		
 	 		android:layout_gravity="center"
 	 		
@@ -35,7 +35,6 @@
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
 		
-		android:layout_gravity="center_vertical"
 		>
 		
 		<TextView android:id="@+id/byline"
@@ -52,10 +51,20 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			
-			android:textColor="@android:color/white"
-			android:textSize="20sp"
+			android:layout_marginBottom="3dp"
 			
-			android:text="Sen. Amy Klobuchar (D-CA)"
+			android:textColor="@android:color/white"
+			android:textSize="19sp"
+			
+			android:text="Sen. Kirsten Gillibrand"
+			/>
+			
+		<TextView android:id="@+id/description"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:textSize="14sp"
+			android:text="Democrat from New York"
 			/>
 	
 	</LinearLayout>
