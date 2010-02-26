@@ -54,6 +54,7 @@
         <activity android:name=".LegislatorTwitter" />
         <activity android:name=".LegislatorYouTube" />
         
+        <activity android:name=".BillList" />
         <activity android:name=".BillInfo" />
         
         <activity android:name=".Preferences" />

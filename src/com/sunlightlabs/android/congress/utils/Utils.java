@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.sunlightlabs.android.congress.BillInfo;
 import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 
 public class Utils {
@@ -32,6 +34,14 @@ public class Utils {
 		
 		return intent;
     }
+	
+	public static Intent billIntent(Context context, Bill bill) {
+		return new Intent(context, BillInfo.class)
+			.putExtra("id", bill.id)
+			.putExtra("code", bill.code)
+			.putExtra("title", bill.displayTitle())
+			.putExtra("introduced_at", bill.introduced_at.getTime());
+	}
 	
 	public static String stateCodeToName(Context context, String code) {
 		String[] codes = context.getResources().getStringArray(R.array.state_codes);

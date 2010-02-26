@@ -35,11 +35,11 @@ public class MainMenu extends ListActivity {
 	private static final int ABOUT = 0;
 	private static final int FIRST = 1;
 	
-	private static final int BILLS_RECENT = 0;
-	private static final int SEARCH_LOCATION = 1;
-	private static final int SEARCH_ZIP = 2;
-	private static final int SEARCH_STATE = 3;
-	private static final int SEARCH_NAME = 4;
+	public static final int BILLS_RECENT = 0;
+	public static final int SEARCH_LOCATION = 1;
+	public static final int SEARCH_ZIP = 2;
+	public static final int SEARCH_STATE = 3;
+	public static final int SEARCH_NAME = 4;
 	
 	private Location location;
 	
@@ -70,8 +70,9 @@ public class MainMenu extends ListActivity {
 		case SEARCH_STATE:
 			getResponse(RESULT_STATE);
 			break;
+		case BILLS_RECENT:
+			startActivity(new Intent(this, BillList.class).putExtra("type", BILLS_RECENT));
 		default:
-			Utils.alert(this, "You touched it");
 			break;
 		}
     }
@@ -178,10 +179,7 @@ public class MainMenu extends ListActivity {
 	}
 	
 	private void search(Bundle extras) {
-		Intent i = new Intent();
-		i.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorList");
-		i.putExtras(extras);
-		startActivity(i);
+		startActivity(new Intent(this, LegislatorList.class).putExtras(extras));
 	}
 	
 	private void getResponse(int requestCode) {
