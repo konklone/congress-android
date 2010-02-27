@@ -110,9 +110,13 @@ public class BillInfo extends ListActivity {
 	}
 	
 	public void setupControls() {
+		String displayCode = Bill.formatCode(code);
+		String appName = getResources().getString(R.string.app_name);
+		setTitle(appName + " - " + displayCode);
+		
 		LayoutInflater inflater = LayoutInflater.from(this);
 		header = (LinearLayout) inflater.inflate(R.layout.bill_header, null);
-		((TextView) header.findViewById(R.id.code)).setText(Bill.formatCode(code));
+		((TextView) header.findViewById(R.id.code)).setText(displayCode);
 		TextView titleView = (TextView) header.findViewById(R.id.title);
 		
 		String displayTitle = (title.length() > 400) ? Utils.truncate(title, 400) : title;

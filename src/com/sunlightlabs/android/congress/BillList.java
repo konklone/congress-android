@@ -26,10 +26,13 @@ import com.sunlightlabs.congress.java.Legislator;
 public class BillList extends ListActivity {
 	private static final int BILLS = 20;
 	
-	ArrayList<Bill> bills;
-	LoadBillsTask loadBillsTask;
+	public static final int BILLS_RECENT = 0;
+	public static final int BILLS_LAW = 1;
 	
-	LinearLayout introduced;
+	private ArrayList<Bill> bills;
+	private LoadBillsTask loadBillsTask;
+	
+	private int type;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,8 @@ public class BillList extends ListActivity {
 		
 		Drumbone.apiKey = getResources().getString(R.string.sunlight_api_key);
 		Drumbone.baseUrl = getResources().getString(R.string.drumbone_base_url);
+		
+		type = getIntent().getIntExtra("type", BILLS_RECENT);
 		
 		setupControls();
 		
@@ -58,7 +63,14 @@ public class BillList extends ListActivity {
 	}
 	
 	public void setupControls() {
-		setTitle("Last " + BILLS + " Introduced Bills");
+		switch (type) {
+		case BILLS_RECENT:
+			setTitle("Last " + BILLS + " Introduced Bills");
+			break;
+		case BILLS_LAW:
+			setTitle("Last " + BILLS + " Laws this Session");
+			break;
+		}
 	}
 	
 	protected void onListItemClick(ListView parent, View v, int position, long id) {
@@ -112,7 +124,14 @@ public class BillList extends ListActivity {
 		@Override
 		public ArrayList<Bill> doInBackground(Void... nothing) {
 			try {
-				return Bill.recentlyIntroduced(BILLS);
+				switch (context.type) {
+				case BILLS_RECENT:
+					return Bill.recentlyIntroduced(BILLS);
+				case BILLS_LAW:
+					return Bill.recentLaws(BILLS);
+				default:
+					throw new CongressException("Not sure what type of bills to find.");
+				}
 			} catch(CongressException exception) {
 				this.exception = exception;
 				return null;
@@ -158,7 +177,6 @@ public class BillList extends ListActivity {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LinearLayout view;
-			
 			if (convertView == null)
 				view = (LinearLayout) inflater.inflate(R.layout.bill_item, null);
 			else
@@ -166,15 +184,28 @@ public class BillList extends ListActivity {
 				
 			Bill bill = getItem(position);
 			
-			((TextView) view.findViewById(R.id.byline)).setText(byline(bill));
-			((TextView) view.findViewById(R.id.title)).setText(Utils.truncate(bill.displayTitle(), 300));
+			String byline;
+			if (type == BILLS_LAW)
+				byline = enactedAt(bill);
+			else //BILLS_RECENT
+				byline = introducedAt(bill);
+			
+			String title = Utils.truncate(bill.displayTitle(), 300);
+			
+			((TextView) view.findViewById(R.id.byline)).setText(byline);
+			((TextView) view.findViewById(R.id.title)).setText(title);
 			
 			view.setTag(bill);
 			
 			return view;
 		}
 		
-		private String byline(Bill bill) {
+		private String enactedAt(Bill bill) {
+			String date = new SimpleDateFormat("MMM dd").format(bill.enacted_at);
+			return date + " - " + Bill.formatCode(bill.code) + " became law:";
+		}
+		
+		private String introducedAt(Bill bill) {
 			String date = new SimpleDateFormat("MMM dd").format(bill.introduced_at);
 			
 			Legislator sponsor = bill.sponsor;

@@ -35,11 +35,10 @@ public class MainMenu extends ListActivity {
 	private static final int ABOUT = 0;
 	private static final int FIRST = 1;
 	
-	public static final int BILLS_RECENT = 0;
-	public static final int SEARCH_LOCATION = 1;
-	public static final int SEARCH_ZIP = 2;
-	public static final int SEARCH_STATE = 3;
-	public static final int SEARCH_NAME = 4;
+	public static final int SEARCH_LOCATION = 2;
+	public static final int SEARCH_ZIP = 3;
+	public static final int SEARCH_STATE = 4;
+	public static final int SEARCH_NAME = 5;
 	
 	private Location location;
 	
@@ -70,8 +69,9 @@ public class MainMenu extends ListActivity {
 		case SEARCH_STATE:
 			getResponse(RESULT_STATE);
 			break;
-		case BILLS_RECENT:
-			startActivity(new Intent(this, BillList.class).putExtra("type", BILLS_RECENT));
+		case BillList.BILLS_RECENT:
+		case BillList.BILLS_LAW:
+			startActivity(new Intent(this, BillList.class).putExtra("type", type));
 		default:
 			break;
 		}
@@ -86,10 +86,16 @@ public class MainMenu extends ListActivity {
         ArrayList<View> billViews = new ArrayList<View>(2);
         
         LinearLayout billsRecent = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
-        ((ImageView) billsRecent .findViewById(R.id.icon)).setVisibility(View.INVISIBLE);
-        ((TextView) billsRecent.findViewById(R.id.text)).setText("Recently Introduced");
-        billsRecent.setTag(BILLS_RECENT);
+        ((ImageView) billsRecent.findViewById(R.id.icon)).setVisibility(View.INVISIBLE);
+        ((TextView) billsRecent.findViewById(R.id.text)).setText("Just Introduced");
+        billsRecent.setTag(BillList.BILLS_RECENT);
         billViews.add(billsRecent);
+        
+        LinearLayout billsLaw = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
+        ((ImageView) billsLaw.findViewById(R.id.icon)).setVisibility(View.INVISIBLE);
+        ((TextView) billsLaw.findViewById(R.id.text)).setText("Made Law");
+        billsLaw.setTag(BillList.BILLS_LAW);
+        billViews.add(billsLaw);
         
         
         LinearLayout peopleHeader = (LinearLayout) inflater.inflate(R.layout.header_layout, null);
