@@ -156,9 +156,10 @@ public class BillInfo extends ListActivity {
 		LinearLayout summary = (LinearLayout) inflater.inflate(R.layout.bill_summary, null);
 		((TextView) summary.findViewById(R.id.header_text)).setText("Summary");
 		
-		if (bill.summary != null && bill.summary.length() > 0)
-			((TextView) summary.findViewById(R.id.summary)).setText(bill.summary);
-		else {
+		if (bill.summary != null && bill.summary.length() > 0) {
+			String formatted = Bill.formatSummary(bill.summary);
+			((TextView) summary.findViewById(R.id.summary)).setText(formatted);
+		} else {
 			summary.findViewById(R.id.summary).setVisibility(View.GONE);
 			summary.findViewById(R.id.no_summary).setVisibility(View.VISIBLE);
 		}

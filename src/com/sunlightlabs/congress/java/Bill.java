@@ -144,4 +144,13 @@ public class Bill {
 		else
 			return code;
 	}
+	
+	public static String formatSummary(String summary) {
+		String formatted = summary;
+		formatted = formatted.replaceFirst("^\\d+\\/\\d+\\/\\d+--.+?\\.\\s*", "");
+		formatted = formatted.replaceFirst("(\\(This measure.+?\\))\n*\\s*", "");
+		formatted = formatted.replaceAll("\n", "\n\n");
+		formatted = formatted.replaceAll(" (\\(\\d\\))", "\n\n$1");
+		return formatted;
+	}
 }
