@@ -31,7 +31,7 @@ public class BillInfo extends ListActivity {
 	private Bill bill;
 	private LoadBillTask loadBillTask;
 	private LoadPhotoTask loadPhotoTask;
-	private LinearLayout header, sponsor;
+	private LinearLayout header, sponsorView;
 	
 	private Drawable sponsorPhoto;
 	
@@ -105,8 +105,8 @@ public class BillInfo extends ListActivity {
 	
 	
 	public void displayPhoto() {
-		if (sponsorPhoto != null && sponsor != null)
-    		((ImageView) sponsor.findViewById(R.id.picture)).setImageDrawable(sponsorPhoto);
+		if (sponsorPhoto != null && sponsorView != null)
+    		((ImageView) sponsorView.findViewById(R.id.picture)).setImageDrawable(sponsorPhoto);
 	}
 	
 	public void setupControls() {
@@ -135,17 +135,23 @@ public class BillInfo extends ListActivity {
 	
 	public void displayBill() {
 		LayoutInflater inflater = LayoutInflater.from(this);
-		Legislator legislator = bill.sponsor;
+		MergeAdapter adapter = (MergeAdapter) getListAdapter();
 		
 		header.findViewById(R.id.loading).setVisibility(View.GONE);
 		
-		sponsor = (LinearLayout) inflater.inflate(R.layout.sponsor, null);
-		String name = legislator.title + ". " + legislator.getName();
-		((TextView) sponsor.findViewById(R.id.name)).setText(name);
+		Legislator sponsor = bill.sponsor;
 		
-		sponsor.setTag("sponsor");
-		ArrayList<View> sponsorViews = new ArrayList<View>(1);
-		sponsorViews.add(sponsor);
+		if (sponsor != null) {
+			sponsorView = (LinearLayout) inflater.inflate(R.layout.bill_sponsor, null);
+			String name = sponsor.title + ". " + sponsor.getName();
+			((TextView) sponsorView.findViewById(R.id.name)).setText(name);
+			
+			sponsorView.setTag("sponsor");
+			ArrayList<View> sponsorViews = new ArrayList<View>(1);
+			sponsorViews.add(sponsorView);
+			adapter.addAdapter(new ViewArrayAdapter(this, sponsorViews));
+		} else
+			adapter.addView(inflater.inflate(R.layout.bill_no_sponsor, null));
 		
 		LinearLayout summary = (LinearLayout) inflater.inflate(R.layout.bill_summary, null);
 		((TextView) summary.findViewById(R.id.header_text)).setText("Summary");
@@ -156,14 +162,13 @@ public class BillInfo extends ListActivity {
 			summary.findViewById(R.id.summary).setVisibility(View.GONE);
 			summary.findViewById(R.id.no_summary).setVisibility(View.VISIBLE);
 		}
-		
-		MergeAdapter adapter = (MergeAdapter) getListAdapter();
-		adapter.addAdapter(new ViewArrayAdapter(this, sponsorViews));
 		adapter.addView(summary);
+		
 		setListAdapter(adapter);
 		
 		// kick off the photo loading task after the new bill data is all displayed
-		loadPhoto();
+		if (sponsor != null)
+			loadPhoto();
 	}
 	
 	@Override
