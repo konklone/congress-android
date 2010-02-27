@@ -107,16 +107,6 @@ public class Bill {
 	}
 	
 	
-	
-	public String displayTitle() {
-		if (short_title != null)
-			return short_title;
-		else if (official_title != null)
-			return official_title;
-		else
-			return null;
-	}
-	
 	public static String formatCode(String code) {
 		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");
 		Matcher matcher = pattern.matcher(code);

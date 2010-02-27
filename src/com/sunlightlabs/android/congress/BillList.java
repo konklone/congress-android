@@ -21,7 +21,6 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Drumbone;
-import com.sunlightlabs.congress.java.Legislator;
 
 public class BillList extends ListActivity {
 	private static final int BILLS = 20;
@@ -189,11 +188,18 @@ public class BillList extends ListActivity {
 				byline = enactedAt(bill);
 			else //BILLS_RECENT
 				byline = introducedAt(bill);
-			
-			String title = Utils.truncate(bill.displayTitle(), 300);
-			
 			((TextView) view.findViewById(R.id.byline)).setText(byline);
-			((TextView) view.findViewById(R.id.title)).setText(title);
+			
+			TextView titleView = ((TextView) view.findViewById(R.id.title));
+			if (bill.short_title != null) {
+				String title = Utils.truncate(bill.short_title, 300);
+				titleView.setTextSize(19);
+				titleView.setText(title);
+			} else { // if (bill.official_title != null)
+				String title = Utils.truncate(bill.official_title, 300);
+				titleView.setTextSize(16);
+				titleView.setText(title);
+			} 
 			
 			view.setTag(bill);
 			
@@ -207,13 +213,7 @@ public class BillList extends ListActivity {
 		
 		private String introducedAt(Bill bill) {
 			String date = new SimpleDateFormat("MMM dd").format(bill.introduced_at);
-			
-			Legislator sponsor = bill.sponsor;
-			String name = sponsor.title + ". " + sponsor.last_name;
-			if (sponsor.name_suffix != null && sponsor.name_suffix.length() > 0)
-				name += " " + sponsor.name_suffix;
-			
-			return date + " - " + name + " introduced " + Bill.formatCode(bill.code) + ":";
+			return date + " - " + Bill.formatCode(bill.code) + " was introduced:";
 		}
 	}
 	

@@ -25,7 +25,7 @@ import com.sunlightlabs.congress.java.Drumbone;
 import com.sunlightlabs.congress.java.Legislator;
 
 public class BillInfo extends ListActivity {
-	private String id, code, title;
+	private String id, code, short_title, official_title;
 	private long introduced_at;
 	
 	private Bill bill;
@@ -45,7 +45,8 @@ public class BillInfo extends ListActivity {
 		Bundle extras = getIntent().getExtras();
 		id = extras.getString("id");
 		code = extras.getString("code");
-		title = extras.getString("title");
+		short_title = extras.getString("short_title");
+		official_title = extras.getString("official_title");
 		introduced_at = extras.getLong("introduced_at");
 		
 		setupControls();
@@ -119,9 +120,15 @@ public class BillInfo extends ListActivity {
 		((TextView) header.findViewById(R.id.code)).setText(displayCode);
 		TextView titleView = (TextView) header.findViewById(R.id.title);
 		
-		String displayTitle = (title.length() > 400) ? Utils.truncate(title, 400) : title;
-		titleView.setText(displayTitle);
-		titleView.setTextSize(sizeOfTitle(displayTitle));
+		String title;
+		if (short_title != null) {
+			title = Utils.truncate(short_title, 400);
+			titleView.setTextSize(19);
+		} else {
+			title = official_title;
+			titleView.setTextSize(16);
+		}
+		titleView.setText(title);
 		
 		String date = "Introduced on " + new SimpleDateFormat("MMM dd, yyyy").format(new Date(introduced_at));
 		((TextView) header.findViewById(R.id.introduced)).setText(date);

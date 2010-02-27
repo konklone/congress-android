@@ -37,9 +37,11 @@ public class Utils {
 	
 	public static Intent billIntent(Context context, Bill bill) {
 		return new Intent(context, BillInfo.class)
+			.putExtra("extra", true)
 			.putExtra("id", bill.id)
 			.putExtra("code", bill.code)
-			.putExtra("title", bill.displayTitle())
+			.putExtra("short_title", bill.short_title)
+			.putExtra("official_title", bill.official_title)
 			.putExtra("introduced_at", bill.introduced_at.getTime());
 	}
 	
