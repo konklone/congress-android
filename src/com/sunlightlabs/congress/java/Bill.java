@@ -135,10 +135,13 @@ public class Bill {
 			return code;
 	}
 	
-	public static String formatSummary(String summary) {
+	
+	public static String formatSummary(String summary, String short_title) {
 		String formatted = summary;
 		formatted = formatted.replaceFirst("^\\d+\\/\\d+\\/\\d+--.+?\\.\\s*", "");
 		formatted = formatted.replaceFirst("(\\(This measure.+?\\))\n*\\s*", "");
+		if (short_title != null)
+			formatted = formatted.replaceFirst("^" + short_title + " - ", "");
 		formatted = formatted.replaceAll("\n", "\n\n");
 		formatted = formatted.replaceAll(" (\\(\\d\\))", "\n\n$1");
 		return formatted;

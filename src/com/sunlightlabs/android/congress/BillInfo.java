@@ -164,7 +164,7 @@ public class BillInfo extends ListActivity {
 		((TextView) summary.findViewById(R.id.header_text)).setText("Summary");
 		
 		if (bill.summary != null && bill.summary.length() > 0) {
-			String formatted = Bill.formatSummary(bill.summary);
+			String formatted = Bill.formatSummary(bill.summary, bill.short_title);
 			((TextView) summary.findViewById(R.id.summary)).setText(formatted);
 		} else {
 			summary.findViewById(R.id.summary).setVisibility(View.GONE);
