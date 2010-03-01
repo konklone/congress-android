@@ -225,6 +225,8 @@ public class BillInfo extends ListActivity {
 			((TextView) sponsorView.findViewById(R.id.name)).setText(name);
 			
 			//TODO: Populate party line
+			String description = Legislator.partyName(sponsor_party) + " from " + Utils.stateCodeToName(this, sponsor_state);
+			((TextView) sponsorView.findViewById(R.id.description)).setText(description);
 			
 			sponsorView.setTag("sponsor");
 			ArrayList<View> sponsorViews = new ArrayList<View>(1);
