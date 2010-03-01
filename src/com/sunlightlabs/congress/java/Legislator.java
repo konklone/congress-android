@@ -63,4 +63,15 @@ public class Legislator {
 			return "Representative";
 	}
 	
+	public static String partyName(String party) {
+		if (party.equals("D"))
+			return "Democrat";
+		if (party.equals("R"))
+			return "Republican";
+		if (party.equals("I"))
+			return "Independent";
+		else
+			return "";
+	}
+	
 }

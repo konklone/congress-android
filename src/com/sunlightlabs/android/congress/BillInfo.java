@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -25,29 +26,34 @@ import com.sunlightlabs.congress.java.Drumbone;
 import com.sunlightlabs.congress.java.Legislator;
 
 public class BillInfo extends ListActivity {
-	private String id, code, short_title, official_title;
+	private String id;
+	private boolean extra;
+	
+	// fields which may come either in the extras of the Intent, or need to be fetched remotely
+	private String code, short_title, official_title;
 	private long introduced_at;
+	private String sponsor_id, sponsor_party, sponsor_state, sponsor_title;
+	private String sponsor_first_name, sponsor_last_name, sponsor_nickname;
 	
 	private Bill bill;
 	private LoadBillTask loadBillTask;
 	private LoadPhotoTask loadPhotoTask;
-	private LinearLayout header, sponsorView;
+	private LinearLayout loadingContainer, sponsorView;
 	
 	private Drawable sponsorPhoto;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		setContentView(R.layout.loading_fullscreen);
 		
 		Drumbone.apiKey = getResources().getString(R.string.sunlight_api_key);
 		Drumbone.baseUrl = getResources().getString(R.string.drumbone_base_url);
 		
 		Bundle extras = getIntent().getExtras();
 		id = extras.getString("id");
-		code = extras.getString("code");
-		short_title = extras.getString("short_title");
-		official_title = extras.getString("official_title");
-		introduced_at = extras.getLong("introduced_at");
+		extra = extras.getBoolean("extra", false);
 		
 		setupControls();
 		
@@ -111,15 +117,45 @@ public class BillInfo extends ListActivity {
 	}
 	
 	public void setupControls() {
+		MergeAdapter adapter = new MergeAdapter();
+		
+		if (extra) {
+			Bundle extras = getIntent().getExtras();
+			code = extras.getString("code");
+			short_title = extras.getString("short_title");
+			official_title = extras.getString("official_title");
+			introduced_at = extras.getLong("introduced_at");
+			sponsor_id = extras.getString("sponsor_id");
+			sponsor_title = extras.getString("sponsor_title");
+			sponsor_state = extras.getString("sponsor_state");
+			sponsor_party = extras.getString("sponsor_party");
+			sponsor_first_name = extras.getString("sponsor_first_name");
+			sponsor_nickname = extras.getString("sponsor_nickname");
+			sponsor_last_name = extras.getString("sponsor_last_name");
+			
+			loadingContainer = displayBillBasic(adapter);
+			((TextView) loadingContainer.findViewById(R.id.loading_message)).setText("Loading bill details...");
+			loadingContainer.findViewById(R.id.loading).setVisibility(View.VISIBLE);
+		} else
+			((TextView) findViewById(R.id.loading_message)).setText("Loading bill details...");
+		
+		
+		setListAdapter(adapter);
+		
+		setProgressBarIndeterminateVisibility(true);
+	}
+	
+	// abstracted out because this 
+	public LinearLayout displayBillBasic(MergeAdapter adapter) {
 		String displayCode = Bill.formatCode(code);
 		String appName = getResources().getString(R.string.app_name);
 		setTitle(appName + " - " + displayCode);
 		
 		LayoutInflater inflater = LayoutInflater.from(this);
-		header = (LinearLayout) inflater.inflate(R.layout.bill_header, null);
+		LinearLayout header = (LinearLayout) inflater.inflate(R.layout.bill_header, null);
 		((TextView) header.findViewById(R.id.code)).setText(displayCode);
-		TextView titleView = (TextView) header.findViewById(R.id.title);
 		
+		TextView titleView = (TextView) header.findViewById(R.id.title);
 		String title;
 		if (short_title != null) {
 			title = Utils.truncate(short_title, 400);
@@ -133,25 +169,15 @@ public class BillInfo extends ListActivity {
 		String date = "Introduced on " + new SimpleDateFormat("MMM dd, yyyy").format(new Date(introduced_at));
 		((TextView) header.findViewById(R.id.introduced)).setText(date);
 		
-		((TextView) header.findViewById(R.id.loading_message)).setText("Loading bill details...");
-		
-		MergeAdapter adapter = new MergeAdapter();
 		adapter.addView(header);
-		setListAdapter(adapter);
-	}
-	
-	public void displayBill() {
-		LayoutInflater inflater = LayoutInflater.from(this);
-		MergeAdapter adapter = (MergeAdapter) getListAdapter();
 		
-		header.findViewById(R.id.loading).setVisibility(View.GONE);
-		
-		Legislator sponsor = bill.sponsor;
-		
-		if (sponsor != null) {
+		if (sponsor_id != null) {
 			sponsorView = (LinearLayout) inflater.inflate(R.layout.bill_sponsor, null);
-			String name = sponsor.title + ". " + sponsor.getName();
+			String firstname = sponsor_nickname != null ? sponsor_nickname : sponsor_first_name;
+			String name = sponsor_title + ". " + firstname + " " + sponsor_last_name;
 			((TextView) sponsorView.findViewById(R.id.name)).setText(name);
+			
+			//TODO: Populate party line
 			
 			sponsorView.setTag("sponsor");
 			ArrayList<View> sponsorViews = new ArrayList<View>(1);
@@ -160,16 +186,54 @@ public class BillInfo extends ListActivity {
 		} else
 			adapter.addView(inflater.inflate(R.layout.bill_no_sponsor, null));
 		
+		LinearLayout summaryHeader = (LinearLayout) inflater.inflate(R.layout.header_loading, null);
+		((TextView) summaryHeader.findViewById(R.id.header_text)).setText("Summary");
+		summaryHeader.findViewById(R.id.loading).setVisibility(View.GONE);
+		adapter.addView(summaryHeader);
+		
+		return summaryHeader;
+	}
+	
+	public void displayBill() {
+		setProgressBarIndeterminateVisibility(false);
+		
+		LayoutInflater inflater = LayoutInflater.from(this);
+		MergeAdapter adapter;
+		
+		Legislator sponsor = bill.sponsor;
+		
+		if (extra) {
+			adapter = (MergeAdapter) getListAdapter();
+			loadingContainer.findViewById(R.id.loading).setVisibility(View.GONE);
+		} else {
+			adapter = new MergeAdapter();
+			
+			code = bill.code;
+			short_title = bill.short_title;
+			official_title = bill.official_title;
+			introduced_at = bill.introduced_at.getTime();
+			
+			if (sponsor != null) {
+				sponsor_id = sponsor.bioguide_id;
+				sponsor_title = sponsor.title;
+				sponsor_state = sponsor.state;
+				sponsor_party = sponsor.party;
+				sponsor_first_name = sponsor.first_name;
+				sponsor_nickname = sponsor.nickname;
+				sponsor_last_name = sponsor.last_name;
+			}
+			
+			displayBillBasic(adapter);
+		}
+		
+		
 		LinearLayout summary; 
-		
-		
 		if (bill.summary != null && bill.summary.length() > 0) {
 			summary = (LinearLayout) inflater.inflate(R.layout.bill_summary, null);
 			String formatted = Bill.formatSummary(bill.summary, bill.short_title);
 			((TextView) summary.findViewById(R.id.summary)).setText(formatted);
 		} else
 			summary = (LinearLayout) inflater.inflate(R.layout.bill_no_summary, null);
-		((TextView) summary.findViewById(R.id.header_text)).setText("Summary");
 		adapter.addView(summary);
 		
 		setListAdapter(adapter);
@@ -182,8 +246,8 @@ public class BillInfo extends ListActivity {
 	@Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 		String type = (String) v.getTag();
-    	if (type.equals("sponsor"))
-    		startActivity(Utils.legislatorIntent(bill.sponsor.bioguide_id));
+    	if (type.equals("sponsor") && sponsor_id != null)
+    		startActivity(Utils.legislatorIntent(sponsor_id));
     }
 	
 	public int sizeOfTitle(String title) {

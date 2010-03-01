@@ -68,7 +68,7 @@ public class Bill {
 	}
 	
 	public static ArrayList<Bill> recentLaws(int n) throws CongressException {
-		return billsFor(Drumbone.url("bills","order=enacted_at&enacted=true&sections=basic,extended&per_page=" + n));
+		return billsFor(Drumbone.url("bills","order=enacted_at&enacted=true&sections=basic,extended,sponsor&per_page=" + n));
 	}
 	
 	public static Bill find(String id, String sections) throws CongressException {
