@@ -18,5 +18,18 @@
 		
 		android:text="Summary goes here"
 		/>
-	
+		
+	<TextView
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:paddingBottom="10dp"
+		
+		android:textSize="13sp"
+		android:text="@string/summary_source"
+		
+		android:visibility="gone"
+		/>
+		
 </LinearLayout>
