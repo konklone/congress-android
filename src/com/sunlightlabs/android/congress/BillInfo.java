@@ -90,7 +90,7 @@ public class BillInfo extends ListActivity {
         	if (sponsorPhoto != null)
         		displayPhoto();
         	else
-        		loadPhotoTask = (LoadPhotoTask) new LoadPhotoTask(this).execute(bill.sponsor.bioguide_id);
+        		loadPhotoTask = (LoadPhotoTask) new LoadPhotoTask(this).execute(sponsor_id);
         }
 	}
 	
@@ -144,55 +144,6 @@ public class BillInfo extends ListActivity {
 		setListAdapter(adapter);
 	}
 	
-	// abstracted out because this 
-	public LinearLayout displayBillBasic(MergeAdapter adapter) {
-		String displayCode = Bill.formatCode(code);
-		String appName = getResources().getString(R.string.app_name);
-		setTitle(appName + " - " + displayCode);
-		
-		LayoutInflater inflater = LayoutInflater.from(this);
-		LinearLayout header = (LinearLayout) inflater.inflate(R.layout.bill_header, null);
-		((TextView) header.findViewById(R.id.code)).setText(displayCode);
-		
-		TextView titleView = (TextView) header.findViewById(R.id.title);
-		String title;
-		if (short_title != null) {
-			title = Utils.truncate(short_title, 400);
-			titleView.setTextSize(19);
-		} else {
-			title = official_title;
-			titleView.setTextSize(16);
-		}
-		titleView.setText(title);
-		
-		String date = "Introduced on " + new SimpleDateFormat("MMM dd, yyyy").format(new Date(introduced_at));
-		((TextView) header.findViewById(R.id.introduced)).setText(date);
-		
-		adapter.addView(header);
-		
-		if (sponsor_id != null) {
-			sponsorView = (LinearLayout) inflater.inflate(R.layout.bill_sponsor, null);
-			String firstname = sponsor_nickname != null ? sponsor_nickname : sponsor_first_name;
-			String name = sponsor_title + ". " + firstname + " " + sponsor_last_name;
-			((TextView) sponsorView.findViewById(R.id.name)).setText(name);
-			
-			//TODO: Populate party line
-			
-			sponsorView.setTag("sponsor");
-			ArrayList<View> sponsorViews = new ArrayList<View>(1);
-			sponsorViews.add(sponsorView);
-			adapter.addAdapter(new ViewArrayAdapter(this, sponsorViews));
-		} else
-			adapter.addView(inflater.inflate(R.layout.bill_no_sponsor, null));
-		
-		LinearLayout summaryHeader = (LinearLayout) inflater.inflate(R.layout.header_loading, null);
-		((TextView) summaryHeader.findViewById(R.id.header_text)).setText("Summary");
-		//summaryHeader.findViewById(R.id.loading).setVisibility(View.GONE);
-		adapter.addView(summaryHeader);
-		
-		return summaryHeader;
-	}
-	
 	public void displayBill() {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		MergeAdapter adapter;
@@ -224,7 +175,7 @@ public class BillInfo extends ListActivity {
 		loadingContainer.findViewById(R.id.loading).setVisibility(View.GONE);
 		setProgressBarIndeterminateVisibility(false);
 		
-		
+		// handle all the additional bill data
 		LinearLayout summary; 
 		if (bill.summary != null && bill.summary.length() > 0) {
 			summary = (LinearLayout) inflater.inflate(R.layout.bill_summary, null);
@@ -235,10 +186,61 @@ public class BillInfo extends ListActivity {
 		adapter.addView(summary);
 		
 		setListAdapter(adapter);
+	}
+	
+	public LinearLayout displayBillBasic(MergeAdapter adapter) {
+		String displayCode = Bill.formatCode(code);
+		String appName = getResources().getString(R.string.app_name);
+		setTitle(appName + " - " + displayCode);
 		
-		// kick off the photo loading task after the new bill data is all displayed
-		if (sponsor != null)
+		LayoutInflater inflater = LayoutInflater.from(this);
+		LinearLayout header = (LinearLayout) inflater.inflate(R.layout.bill_header, null);
+		((TextView) header.findViewById(R.id.code)).setText(displayCode);
+		
+		TextView titleView = (TextView) header.findViewById(R.id.title);
+		String title;
+		if (short_title != null) {
+			title = Utils.truncate(short_title, 400);
+			titleView.setTextSize(19);
+		} else {
+			title = official_title;
+			titleView.setTextSize(16);
+		}
+		titleView.setText(title);
+		
+		String date = "Introduced on " + new SimpleDateFormat("MMM dd, yyyy").format(new Date(introduced_at));
+		((TextView) header.findViewById(R.id.introduced)).setText(date);
+		
+		adapter.addView(header);
+		
+		if (sponsor_id != null) {
+			sponsorView = (LinearLayout) inflater.inflate(R.layout.bill_sponsor, null);
+			String firstname;
+			if (sponsor_nickname != null && !sponsor_nickname.equals(""))
+				firstname = sponsor_nickname;
+			else
+				firstname = sponsor_first_name;
+			
+			String name = sponsor_title + ". " + firstname + " " + sponsor_last_name;
+			((TextView) sponsorView.findViewById(R.id.name)).setText(name);
+			
+			//TODO: Populate party line
+			
+			sponsorView.setTag("sponsor");
+			ArrayList<View> sponsorViews = new ArrayList<View>(1);
+			sponsorViews.add(sponsorView);
+			adapter.addAdapter(new ViewArrayAdapter(this, sponsorViews));
+			
+			// kick off the photo loading task after the new bill data is all displayed
 			loadPhoto();
+		} else
+			adapter.addView(inflater.inflate(R.layout.bill_no_sponsor, null));
+		
+		LinearLayout summaryHeader = (LinearLayout) inflater.inflate(R.layout.header_loading, null);
+		((TextView) summaryHeader.findViewById(R.id.header_text)).setText("Summary");
+		adapter.addView(summaryHeader);
+		
+		return summaryHeader;
 	}
 	
 	@Override

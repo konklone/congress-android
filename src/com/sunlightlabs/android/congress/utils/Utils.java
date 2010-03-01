@@ -46,7 +46,7 @@ public class Utils {
 				.putExtra("sponsor_party", sponsor.party)
 				.putExtra("sponsor_state", sponsor.state)
 				.putExtra("sponsor_title", sponsor.title)
-				.putExtra("sponsor_firstname", sponsor.first_name)
+				.putExtra("sponsor_first_name", sponsor.first_name)
 				.putExtra("sponsor_nickname", sponsor.nickname)
 				.putExtra("sponsor_last_name", sponsor.last_name);
 		}
