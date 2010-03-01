@@ -149,6 +149,8 @@ public class LegislatorProfile extends ListActivity {
 	    		callOffice();
 	    	else if (type.equals("web"))
 	    		visitWebsite();
+	    	else if (type.equals("sponsored"))
+	    		sponsoredBills();
     	}
     }
     
@@ -158,6 +160,14 @@ public class LegislatorProfile extends ListActivity {
     
     public void visitWebsite() {
     	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(website)));
+    }
+    
+    public void sponsoredBills() {
+    	Intent intent = new Intent(this, BillList.class)
+    		.putExtra("type", BillList.BILLS_SPONSOR)
+    		.putExtra("sponsor_id", id)
+    		.putExtra("sponsor_name", titledName);
+    	startActivity(intent);
     }
     
     public void launchCommittee(Committee committee) {
@@ -213,9 +223,18 @@ public class LegislatorProfile extends ListActivity {
 		((ImageView) websiteView.findViewById(R.id.icon)).setImageResource(R.drawable.web);
 		websiteView.setTag("web");
 		
-		ArrayList<View> contactViews = new ArrayList<View>(2);
+		LinearLayout sponsoredView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
+		TextView sponsoredText = (TextView)  sponsoredView.findViewById(R.id.text);
+		sponsoredText.setText("Sponsored Bills");
+		sponsoredText.setTypeface(font);
+		((ImageView) sponsoredView.findViewById(R.id.icon)).setVisibility(View.INVISIBLE);
+		sponsoredView.setTag("sponsored");
+		
+		ArrayList<View> contactViews = new ArrayList<View>(3);
 		contactViews.add(phoneView);
 		contactViews.add(websiteView);
+		
+		contactViews.add(sponsoredView);
 		
 		committeeHeader = (LinearLayout) inflater.inflate(R.layout.header_loading, null);
 		((TextView) committeeHeader.findViewById(R.id.header_text)).setText("Committees");

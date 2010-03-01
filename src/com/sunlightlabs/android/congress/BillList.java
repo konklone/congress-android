@@ -27,9 +27,12 @@ public class BillList extends ListActivity {
 	
 	public static final int BILLS_RECENT = 0;
 	public static final int BILLS_LAW = 1;
+	public static final int BILLS_SPONSOR = 2;
 	
 	private ArrayList<Bill> bills;
 	private LoadBillsTask loadBillsTask;
+	
+	private String sponsor_id, sponsor_name;
 	
 	private int type;
 	
@@ -41,7 +44,11 @@ public class BillList extends ListActivity {
 		Drumbone.apiKey = getResources().getString(R.string.sunlight_api_key);
 		Drumbone.baseUrl = getResources().getString(R.string.drumbone_base_url);
 		
-		type = getIntent().getIntExtra("type", BILLS_RECENT);
+		Bundle extras = getIntent().getExtras();
+		type = extras.getInt("type", BILLS_RECENT);
+		
+		sponsor_id = extras.getString("sponsor_id");
+		sponsor_name = extras.getString("sponsor_name");
 		
 		setupControls();
 		
@@ -68,6 +75,9 @@ public class BillList extends ListActivity {
 			break;
 		case BILLS_LAW:
 			setTitle("Last " + BILLS + " Laws this Session");
+			break;
+		case BILLS_SPONSOR:
+			setTitle("Last " + BILLS + " Bills by " + sponsor_name);
 			break;
 		}
 	}
@@ -128,6 +138,8 @@ public class BillList extends ListActivity {
 					return Bill.recentlyIntroduced(BILLS);
 				case BILLS_LAW:
 					return Bill.recentLaws(BILLS);
+				case BILLS_SPONSOR:
+					return Bill.recentlySponsored(BILLS, context.sponsor_id);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
 				}
@@ -184,10 +196,16 @@ public class BillList extends ListActivity {
 			Bill bill = getItem(position);
 			
 			String byline;
-			if (type == BILLS_LAW)
+			switch (type) {
+			case BILLS_LAW:
 				byline = enactedAt(bill);
-			else //BILLS_RECENT
+				break;
+			case BILLS_RECENT:
+			case BILLS_SPONSOR:
+			default:
 				byline = introducedAt(bill);
+				break;
+			}
 			((TextView) view.findViewById(R.id.byline)).setText(byline);
 			
 			TextView titleView = ((TextView) view.findViewById(R.id.title));
