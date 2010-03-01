@@ -26,7 +26,7 @@ public class Drumbone {
 		if (queryString.length() > 0)
 			queryString += "&";
 		queryString += "apikey=" + apiKey;
-		return "http://" + baseUrl + "/" + method + "." + format + "?" + queryString;
+		return "http://" + baseUrl + "/api/" + method + "." + format + "?" + queryString;
 	}
 	
 	public static String fetchJSON(String url) throws CongressException {
