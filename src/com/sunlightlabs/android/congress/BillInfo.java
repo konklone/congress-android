@@ -139,10 +139,9 @@ public class BillInfo extends ListActivity {
 		} else
 			((TextView) findViewById(R.id.loading_message)).setText("Loading bill details...");
 		
+		setProgressBarIndeterminateVisibility(true);
 		
 		setListAdapter(adapter);
-		
-		setProgressBarIndeterminateVisibility(true);
 	}
 	
 	// abstracted out because this 
@@ -188,15 +187,13 @@ public class BillInfo extends ListActivity {
 		
 		LinearLayout summaryHeader = (LinearLayout) inflater.inflate(R.layout.header_loading, null);
 		((TextView) summaryHeader.findViewById(R.id.header_text)).setText("Summary");
-		summaryHeader.findViewById(R.id.loading).setVisibility(View.GONE);
+		//summaryHeader.findViewById(R.id.loading).setVisibility(View.GONE);
 		adapter.addView(summaryHeader);
 		
 		return summaryHeader;
 	}
 	
 	public void displayBill() {
-		setProgressBarIndeterminateVisibility(false);
-		
 		LayoutInflater inflater = LayoutInflater.from(this);
 		MergeAdapter adapter;
 		
@@ -204,7 +201,6 @@ public class BillInfo extends ListActivity {
 		
 		if (extra) {
 			adapter = (MergeAdapter) getListAdapter();
-			loadingContainer.findViewById(R.id.loading).setVisibility(View.GONE);
 		} else {
 			adapter = new MergeAdapter();
 			
@@ -223,8 +219,10 @@ public class BillInfo extends ListActivity {
 				sponsor_last_name = sponsor.last_name;
 			}
 			
-			displayBillBasic(adapter);
+			loadingContainer = displayBillBasic(adapter);
 		}
+		loadingContainer.findViewById(R.id.loading).setVisibility(View.GONE);
+		setProgressBarIndeterminateVisibility(false);
 		
 		
 		LinearLayout summary; 

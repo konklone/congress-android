@@ -75,7 +75,6 @@ public class BillList extends ListActivity {
 	protected void onListItemClick(ListView parent, View v, int position, long id) {
     	Bill bill = (Bill) parent.getItemAtPosition(position);
     	startActivity(Utils.billIntentExtra(this, bill));
-    	//startActivity(Utils.billIntent(this, bill));
     }
 	
 	public void loadBills() {
