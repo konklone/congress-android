@@ -144,6 +144,7 @@ public class Bill {
 			formatted = formatted.replaceFirst("^" + short_title + " - ", "");
 		formatted = formatted.replaceAll("\n", "\n\n");
 		formatted = formatted.replaceAll(" (\\(\\d\\))", "\n\n$1");
+		formatted = formatted.replaceAll("( [^A-Z\\s]+\\.)\\s+", "$1\n\n");
 		return formatted;
 	}
 }
