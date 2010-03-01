@@ -160,16 +160,16 @@ public class BillInfo extends ListActivity {
 		} else
 			adapter.addView(inflater.inflate(R.layout.bill_no_sponsor, null));
 		
-		LinearLayout summary = (LinearLayout) inflater.inflate(R.layout.bill_summary, null);
-		((TextView) summary.findViewById(R.id.header_text)).setText("Summary");
+		LinearLayout summary; 
+		
 		
 		if (bill.summary != null && bill.summary.length() > 0) {
+			summary = (LinearLayout) inflater.inflate(R.layout.bill_summary, null);
 			String formatted = Bill.formatSummary(bill.summary, bill.short_title);
 			((TextView) summary.findViewById(R.id.summary)).setText(formatted);
-		} else {
-			summary.findViewById(R.id.summary).setVisibility(View.GONE);
-			summary.findViewById(R.id.no_summary).setVisibility(View.VISIBLE);
-		}
+		} else
+			summary = (LinearLayout) inflater.inflate(R.layout.bill_no_summary, null);
+		((TextView) summary.findViewById(R.id.header_text)).setText("Summary");
 		adapter.addView(summary);
 		
 		setListAdapter(adapter);

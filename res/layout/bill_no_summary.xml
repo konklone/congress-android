@@ -7,16 +7,15 @@
   	>
   	
 	<include layout="@layout/header" />
-	
-	<TextView android:id="@+id/summary"
-		android:layout_width="fill_parent"
+
+  <TextView android:id="@+id/no_summary"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:padding="10dp"
+		android:layout_gravity="center"
+		android:layout_marginTop="20dp"
 		
-		android:textColor="@android:color/white"
 		android:textSize="16sp"
-		
-		android:text="Summary goes here"
+		android:text="No summary available."
 		/>
 	
 </LinearLayout>
