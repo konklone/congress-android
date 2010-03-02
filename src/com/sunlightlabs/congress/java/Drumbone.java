@@ -17,11 +17,8 @@ public class Drumbone {
 	public static final String USER_AGENT = "Sunlight's Congress Android App (http://github.com/sunlightlabs/congress)";
 	public static final String[] dateFormat = new String[] {"yy/MM/dd HH:mm:ss Z"};
 	
-	// filled in by client
 	public static String apiKey = "";
 	public static String baseUrl = "";
-	
-	public static String version = "v1";
 	public static String format = "json";
 	
 	
@@ -29,7 +26,7 @@ public class Drumbone {
 		if (queryString.length() > 0)
 			queryString += "&";
 		queryString += "apikey=" + apiKey;
-		return "http://" + baseUrl + "/" + version + "/api/" + method + "." + format + "?" + queryString;
+		return baseUrl + method + "." + format + "?" + queryString;
 	}
 	
 	public static String fetchJSON(String url) throws CongressException {
