@@ -2,6 +2,7 @@ package com.sunlightlabs.android.congress;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -9,6 +10,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Drumbone;
+import com.sunlightlabs.congress.java.Legislator;
 
 public class BillList extends ListActivity {
 	private static final int BILLS = 20;
@@ -195,18 +199,26 @@ public class BillList extends ListActivity {
 				
 			Bill bill = getItem(position);
 			
-			String byline;
+			
+			String code = Bill.formatCode(bill.code);
+			String action;
+			Date date;
 			switch (type) {
 			case BILLS_LAW:
-				byline = enactedAt(bill);
+				date = bill.enacted_at;
+				action = "became law";
 				break;
 			case BILLS_RECENT:
 			case BILLS_SPONSOR:
 			default:
-				byline = introducedAt(bill);
+				date = bill.introduced_at;
+				action = "introduced";
 				break;
 			}
+			Spanned byline = Html.fromHtml("<b>" + code + "</b> " + action + ":");
+			
 			((TextView) view.findViewById(R.id.byline)).setText(byline);
+			((TextView) view.findViewById(R.id.date)).setText(new SimpleDateFormat("MMM dd").format(date));
 			
 			TextView titleView = ((TextView) view.findViewById(R.id.title));
 			if (bill.short_title != null) {
@@ -224,14 +236,12 @@ public class BillList extends ListActivity {
 			return view;
 		}
 		
-		private String enactedAt(Bill bill) {
-			String date = new SimpleDateFormat("MMM dd").format(bill.enacted_at);
-			return date + " - " + Bill.formatCode(bill.code) + " became law:";
-		}
 		
-		private String introducedAt(Bill bill) {
-			String date = new SimpleDateFormat("MMM dd").format(bill.introduced_at);
-			return date + " - " + Bill.formatCode(bill.code) + " was introduced:";
+		private String introducedBy(Legislator sponsor) {
+			String byline = "introduced";
+			if (sponsor != null)
+				byline += " by " + sponsor.title + ". " + sponsor.last_name;
+			return byline + ":";
 		}
 	}
 	

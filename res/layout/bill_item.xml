@@ -6,20 +6,44 @@
 	
 	android:padding="10dp"
 	>
-	
-	<TextView android:id="@+id/byline"
-		android:layout_width="wrap_content"
+		
+	<LinearLayout
+		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:orientation="horizontal"
 		
-		android:textSize="16sp"
+		android:layout_marginTop="3dp"
+		>
+	
+		<TextView android:id="@+id/byline"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="5dp"
+			android:layout_weight="1"
+			android:layout_gravity="left"
+			
+			android:textSize="16sp"
+			
+			android:text="H.Res. 3222 introduced:"
+			/>
+			
+		<TextView android:id="@+id/date"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="0"
+			android:layout_gravity="right"
+			
+			android:textSize="16sp"
+			
+			android:text="Feb 22"
+			/>
 		
-		android:text="Feb 12 - Sen. Schumer introduces H.Res. 3200:"
-		/>
+	</LinearLayout>
 	
 	<TextView android:id="@+id/title"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="2dp"
+		android:layout_marginTop="3dp"
 		
 		android:textSize="16sp"
 		android:textColor="#ffffff"

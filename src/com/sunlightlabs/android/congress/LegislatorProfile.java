@@ -227,7 +227,7 @@ public class LegislatorProfile extends ListActivity {
 		TextView sponsoredText = (TextView)  sponsoredView.findViewById(R.id.text);
 		sponsoredText.setText("Sponsored Bills");
 		sponsoredText.setTypeface(font);
-		((ImageView) sponsoredView.findViewById(R.id.icon)).setVisibility(View.INVISIBLE);
+		((ImageView) sponsoredView.findViewById(R.id.icon)).setImageResource(R.drawable.bill_multiple);
 		sponsoredView.setTag("sponsored");
 		
 		ArrayList<View> contactViews = new ArrayList<View>(3);
