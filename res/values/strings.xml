@@ -52,4 +52,6 @@
     <string name="first_button">Awesome</string>
     
     <string name="summary_source">Summary by the Congressional Research Service.</string>
+    <string name="menu_bills_law">New Laws</string>
+    <string name="menu_bills_introduced">Just Introduced</string>
 </resources>

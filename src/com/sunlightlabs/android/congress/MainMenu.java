@@ -85,17 +85,17 @@ public class MainMenu extends ListActivity {
         
         ArrayList<View> billViews = new ArrayList<View>(2);
         
-        LinearLayout billsRecent = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
-        ((ImageView) billsRecent.findViewById(R.id.icon)).setVisibility(View.INVISIBLE);
-        ((TextView) billsRecent.findViewById(R.id.text)).setText("Just Introduced");
-        billsRecent.setTag(BillList.BILLS_RECENT);
-        billViews.add(billsRecent);
-        
         LinearLayout billsLaw = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
-        ((ImageView) billsLaw.findViewById(R.id.icon)).setVisibility(View.INVISIBLE);
-        ((TextView) billsLaw.findViewById(R.id.text)).setText("Made Law");
+        ((ImageView) billsLaw.findViewById(R.id.icon)).setImageResource(R.drawable.bill_law);
+        ((TextView) billsLaw.findViewById(R.id.text)).setText(R.string.menu_bills_law);
         billsLaw.setTag(BillList.BILLS_LAW);
         billViews.add(billsLaw);
+        
+        LinearLayout billsRecent = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
+        ((ImageView) billsRecent.findViewById(R.id.icon)).setImageResource(R.drawable.bill_recent);
+        ((TextView) billsRecent.findViewById(R.id.text)).setText(R.string.menu_bills_introduced);
+        billsRecent.setTag(BillList.BILLS_RECENT);
+        billViews.add(billsRecent);
         
         
         LinearLayout peopleHeader = (LinearLayout) inflater.inflate(R.layout.header_layout, null);
