@@ -1,41 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/page_container"
-	
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:padding="10dp"
-	
-	android:orientation="vertical"
 	>
 	
-	
-	<TextView android:id="@+id/about_1"
+	<LinearLayout
+		android:id="@+id/page_container"
+		
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:padding="10dp"
 		
-		android:textSize="18sp"
-		android:textColor="#dddddd"
-		android:text="@string/about_1"
-		/>
-	
-	<TextView android:id="@+id/about_2"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="15dp"
+		android:orientation="vertical"
+		>
 		
-		android:textSize="14sp"
-		android:textColor="#dddddd"
-		android:text="@string/about_2"
-		/>
-	
-	<TextView android:id="@+id/about_3"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="15dp"
 		
-		android:textSize="14sp"
-		android:textColor="#dddddd"
-		android:text="@string/about_3"
-		/>
-</LinearLayout>
+		<TextView android:id="@+id/about_1"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			
+			android:textSize="16sp"
+			android:textColorLink="#4c98d7"
+			android:textColor="@android:color/white"
+			/>
+		
+		<TextView android:id="@+id/about_2"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="10dp"
+			
+			android:textColorLink="#4c98d7"
+			android:textSize="14sp"
+			android:textColor="#cccccc"
+			/>
+		
+	</LinearLayout>
+</ScrollView>

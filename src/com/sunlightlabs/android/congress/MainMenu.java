@@ -11,8 +11,10 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.InputType;
-import android.text.util.Linkify;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -262,11 +264,25 @@ public class MainMenu extends ListActivity {
     	
         switch(id) {
         case ABOUT:
-        	LinearLayout aboutView = (LinearLayout) inflater.inflate(R.layout.about, null);
+        	ScrollView aboutView = (ScrollView) inflater.inflate(R.layout.about, null);
         	
-        	TextView about3 = (TextView) aboutView.findViewById(R.id.about_3);
-        	about3.setText(R.string.about_3);
-        	Linkify.addLinks(about3, Linkify.WEB_URLS);
+        	Spanned about1 = Html.fromHtml(
+        		"Bill information provided by <a href=\"http://govtrack.us\">GovTrack.us</a>, through the Library of Congress.  Bill summaries written by the Congressional Research Service.<br/><br/>" +
+        		"Legislator search and information powered by the <a href=\"http://services.sunlightlabs.com/api/\">Sunlight Labs API</a>.<br/><br/>" + 
+        		"News mentions provided by the <a href=\"http://developer.yahoo.com/search/news/\">Yahoo! News API</a>, and Twitter search powered by <a href=\"http://www.winterwell.com/software/jtwitter.php\">JTwitter</a>."
+        	);
+        	TextView aboutView1 = (TextView) aboutView.findViewById(R.id.about_1);
+        	aboutView1.setText(about1);
+        	aboutView1.setMovementMethod(LinkMovementMethod.getInstance());
+        	
+        	Spanned about2 = Html.fromHtml(
+        		"This app is made by <a href=\"http://sunlightlabs.com\">Sunlight Labs</a>, " + 
+        		"a division of the <a href=\"http://sunlightfoundation.com\">Sunlight Foundation</a> " +
+        		"that is dedicated to increasing government transparency through the power of technology."
+        	);
+        	TextView aboutView2 = (TextView) aboutView.findViewById(R.id.about_2);
+        	aboutView2.setText(about2);
+        	aboutView2.setMovementMethod(LinkMovementMethod.getInstance());
         	
         	builder.setView(aboutView);
         	builder.setPositiveButton(R.string.about_button, new DialogInterface.OnClickListener() {
