@@ -286,7 +286,8 @@ public class BillInfo extends ListActivity {
     		startActivity(new Intent(this, MainMenu.class));
     		break;
     	case R.id.shortcut:
-    		sendBroadcast(Utils.shortcutIntent(this, bill));
+    		sendBroadcast(Utils.shortcutIntent(this, bill)
+    				.setAction("com.android.launcher.action.INSTALL_SHORTCUT"));
     		break;
     	}
     	return true;

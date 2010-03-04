@@ -2,6 +2,7 @@ package com.sunlightlabs.android.congress.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Parcelable;
 import android.widget.Toast;
 
@@ -67,10 +68,19 @@ public class Utils {
 	
 	public static Intent shortcutIntent(Context context, Bill bill) {
 		Parcelable resource = Intent.ShortcutIconResource.fromContext(context, R.drawable.bill);
-		return new Intent("com.android.launcher.action.INSTALL_SHORTCUT")
+		return new Intent()
+			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
+				billIntent(context, bill).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
 			.putExtra(Intent.EXTRA_SHORTCUT_NAME, Bill.formatCode(bill.code))
-			.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, resource)
-			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, billIntent(context, bill));
+			.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, resource);
+	}
+	
+	public static Intent shortcutIntent(Context context, com.sunlightlabs.entities.Legislator legislator, Bitmap icon) {
+		return new Intent()
+			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
+					Utils.legislatorIntent(legislator.getId()).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
+			.putExtra(Intent.EXTRA_SHORTCUT_NAME, legislator.getProperty("lastname"))
+			.putExtra(Intent.EXTRA_SHORTCUT_ICON, icon); 
 	}
 	
 	public static String stateCodeToName(Context context, String code) {

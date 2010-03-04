@@ -212,17 +212,8 @@ public class LegislatorList extends ListActivity {
     	return committeeId != null;
     }
     
-    public void returnShortcutIcon(Legislator legislator, Bitmap shortcutIcon) {
-    	String legislatorId = legislator.getId();
-    	Intent legislatorIntent = Utils.legislatorIntent(legislatorId);
-		legislatorIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-		
-		Intent intent = new Intent();
-		intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, legislatorIntent);
-		intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, legislator.getProperty("lastname"));
-		intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, shortcutIcon);
-		
-		setResult(RESULT_OK, intent);
+    public void returnShortcutIcon(Legislator legislator, Bitmap icon) {
+    	setResult(RESULT_OK, Utils.shortcutIntent(this, legislator, icon));
 		finish();
     }
     
