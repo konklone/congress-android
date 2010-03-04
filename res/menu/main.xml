@@ -3,13 +3,17 @@
 	<item android:id="@+id/settings" 
 		android:title="Twitter Settings"
 		android:alphabeticShortcut="t"
-		android:icon="@android:drawable/ic_menu_preferences"/>
+		android:icon="@android:drawable/ic_menu_preferences" />
 	<item android:id="@+id/feedback" 
 		android:title="Feedback"
 		android:alphabeticShortcut="f"
-		android:icon="@android:drawable/ic_menu_report_image"/>
+		android:icon="@android:drawable/ic_menu_report_image" />
+	<item android:id="@+id/changelog"
+		android:title="Changelog"
+		android:alphabeticShortcut="c"
+		android:icon="@android:drawable/ic_menu_info_details" />
 	<item android:id="@+id/about"
 		android:title="About"
 		android:alphabeticShortcut="a"
-		android:icon="@android:drawable/ic_menu_help"/>
+		android:icon="@android:drawable/ic_menu_help" />
 </menu>

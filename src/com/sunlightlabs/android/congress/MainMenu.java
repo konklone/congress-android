@@ -36,6 +36,7 @@ public class MainMenu extends ListActivity {
 	
 	private static final int ABOUT = 0;
 	private static final int FIRST = 1;
+	private static final int CHANGELOG = 2;
 	
 	public static final int SEARCH_LOCATION = 2;
 	public static final int SEARCH_ZIP = 3;
@@ -298,6 +299,23 @@ public class MainMenu extends ListActivity {
 				public void onClick(DialogInterface dialog, int which) {}
 			});
             return builder.create();
+        case CHANGELOG:
+        	ScrollView changelogView = (ScrollView) inflater.inflate(R.layout.changelog, null);
+        	
+        	Spanned changelog = Html.fromHtml(
+        		"<b>&#183;</b> Added basic search and information around bills.<br/><br/>" +
+        		"<b>&#183;</b> Added \"Sponsored Bills\" button to a legislator's profile.<br/><br/>" +
+        		"<b>&#183;</b> Create home screen shortcuts for legislators and bills, from their respective menus."
+        	);
+        	((TextView) changelogView.findViewById(R.id.changelog)).setText(changelog);
+        	
+        	builder.setIcon(R.drawable.icon);
+        	builder.setTitle("Version " + getResources().getString(R.string.app_version));
+        	builder.setView(changelogView);
+        	builder.setPositiveButton(R.string.first_button, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {}
+			});
+        	return builder.create();
         default:
             return null;
         }
@@ -320,6 +338,9 @@ public class MainMenu extends ListActivity {
     		Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getResources().getString(R.string.contact_email), null));
     		intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_subject));
     		startActivity(intent);
+    		break;
+    	case R.id.changelog:
+    		showDialog(CHANGELOG);
     		break;
     	case R.id.about:
     		showDialog(ABOUT);
