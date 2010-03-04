@@ -203,6 +203,8 @@ public class LegislatorProfile extends ListActivity {
 		domainView.setText(domainName(domain));
 		domainView.setTypeface(font);
 		
+		ArrayList<View> contactViews = new ArrayList<View>(3);
+		
 		LinearLayout phoneView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_2, null);
 		TextView phoneText = (TextView) phoneView.findViewById(R.id.text_1);
 		phoneText.setText("Call " + pronoun(gender) + " office");
@@ -212,16 +214,20 @@ public class LegislatorProfile extends ListActivity {
 		phoneNumber.setTypeface(font);
 		((ImageView) phoneView.findViewById(R.id.icon)).setImageResource(R.drawable.phone);
 		phoneView.setTag("phone");
+		contactViews.add(phoneView);
 		
-		LinearLayout websiteView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_2, null);
-		TextView websiteText = (TextView) websiteView.findViewById(R.id.text_1);
-		websiteText.setText("Visit " + pronoun(gender) + " website");
-		websiteText.setTypeface(font);
-		TextView websiteUrl = (TextView) websiteView.findViewById(R.id.text_2);
-		websiteUrl.setText(websiteName(website));
-		websiteUrl.setTypeface(font);
-		((ImageView) websiteView.findViewById(R.id.icon)).setImageResource(R.drawable.web);
-		websiteView.setTag("web");
+		if (website != null && !website.equals("")) {
+			LinearLayout websiteView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_2, null);
+			TextView websiteText = (TextView) websiteView.findViewById(R.id.text_1);
+			websiteText.setText("Visit " + pronoun(gender) + " website");
+			websiteText.setTypeface(font);
+			TextView websiteUrl = (TextView) websiteView.findViewById(R.id.text_2);
+			websiteUrl.setText(websiteName(website));
+			websiteUrl.setTypeface(font);
+			((ImageView) websiteView.findViewById(R.id.icon)).setImageResource(R.drawable.web);
+			websiteView.setTag("web");
+			contactViews.add(websiteView);
+		}
 		
 		LinearLayout sponsoredView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
 		TextView sponsoredText = (TextView)  sponsoredView.findViewById(R.id.text);
@@ -229,11 +235,6 @@ public class LegislatorProfile extends ListActivity {
 		sponsoredText.setTypeface(font);
 		((ImageView) sponsoredView.findViewById(R.id.icon)).setImageResource(R.drawable.bill_multiple);
 		sponsoredView.setTag("sponsored");
-		
-		ArrayList<View> contactViews = new ArrayList<View>(3);
-		contactViews.add(phoneView);
-		contactViews.add(websiteView);
-		
 		contactViews.add(sponsoredView);
 		
 		committeeHeader = (LinearLayout) inflater.inflate(R.layout.header_loading, null);
