@@ -41,7 +41,19 @@
 			android:layout_marginBottom="5dp"
 			
 			android:textSize="14sp"
-			android:text="Introduced on Feb 12"
+			android:text="Introduced on Feb 12, 2010"
+			/>
+			
+		<TextView android:id="@+id/enacted"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:layout_marginBottom="5dp"
+			
+			android:textSize="14sp"
+			android:text="Enacted on Feb 25, 2010"
+			
+			android:visibility="gone"
 			/>
 	</LinearLayout>
 	

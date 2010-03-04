@@ -41,6 +41,9 @@ public class Utils {
 			.putExtra("short_title", bill.short_title)
 			.putExtra("official_title", bill.official_title)
 			.putExtra("introduced_at", bill.introduced_at.getTime());
+		if (bill.enacted_at != null)
+			intent.putExtra("enacted_at", bill.enacted_at.getTime());
+		
 		if (sponsor != null) {
 			intent.putExtra("sponsor_id", sponsor.bioguide_id)
 				.putExtra("sponsor_party", sponsor.party)

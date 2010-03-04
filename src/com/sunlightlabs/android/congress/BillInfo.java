@@ -31,7 +31,7 @@ public class BillInfo extends ListActivity {
 	
 	// fields which may come either in the extras of the Intent, or need to be fetched remotely
 	private String code, short_title, official_title;
-	private long introduced_at;
+	private long introduced_at, enacted_at;
 	private String sponsor_id, sponsor_party, sponsor_state, sponsor_title;
 	private String sponsor_first_name, sponsor_last_name, sponsor_nickname;
 	
@@ -124,7 +124,8 @@ public class BillInfo extends ListActivity {
 			code = extras.getString("code");
 			short_title = extras.getString("short_title");
 			official_title = extras.getString("official_title");
-			introduced_at = extras.getLong("introduced_at");
+			introduced_at = extras.getLong("introduced_at", 0);
+			enacted_at = extras.getLong("enacted_at", 0);
 			sponsor_id = extras.getString("sponsor_id");
 			sponsor_title = extras.getString("sponsor_title");
 			sponsor_state = extras.getString("sponsor_state");
@@ -159,6 +160,9 @@ public class BillInfo extends ListActivity {
 			short_title = bill.short_title;
 			official_title = bill.official_title;
 			introduced_at = bill.introduced_at.getTime();
+			
+			if (bill.enacted_at != null)
+				enacted_at = bill.enacted_at.getTime();
 			
 			if (sponsor != null) {
 				sponsor_id = sponsor.bioguide_id;
@@ -210,6 +214,12 @@ public class BillInfo extends ListActivity {
 		
 		String date = "Introduced on " + new SimpleDateFormat("MMM dd, yyyy").format(new Date(introduced_at));
 		((TextView) header.findViewById(R.id.introduced)).setText(date);
+		
+		if (enacted_at > 0) {
+			TextView enacted = (TextView) header.findViewById(R.id.enacted);
+			enacted.setText("Enacted on " + new SimpleDateFormat("MMM dd, yyyy").format(new Date(enacted_at)));
+			enacted.setVisibility(View.VISIBLE);
+		}
 		
 		adapter.addView(header);
 		

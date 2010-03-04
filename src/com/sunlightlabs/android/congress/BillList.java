@@ -24,7 +24,6 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Drumbone;
-import com.sunlightlabs.congress.java.Legislator;
 
 public class BillList extends ListActivity {
 	private static final int BILLS = 20;
@@ -212,7 +211,7 @@ public class BillList extends ListActivity {
 			case BILLS_SPONSOR:
 			default:
 				date = bill.introduced_at;
-				action = "introduced";
+				action = "was introduced";
 				break;
 			}
 			Spanned byline = Html.fromHtml("<b>" + code + "</b> " + action + ":");
@@ -234,14 +233,6 @@ public class BillList extends ListActivity {
 			view.setTag(bill);
 			
 			return view;
-		}
-		
-		
-		private String introducedBy(Legislator sponsor) {
-			String byline = "introduced";
-			if (sponsor != null)
-				byline += " by " + sponsor.title + ". " + sponsor.last_name;
-			return byline + ":";
 		}
 	}
 	
