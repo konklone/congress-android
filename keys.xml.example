@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="contact_email"></string>
+    <string name="contact_subject"></string>
     <string name="yahoo_news_key"></string>
     <string name="sunlight_api_key"></string>
     <string name="drumbone_base_url"></string>
