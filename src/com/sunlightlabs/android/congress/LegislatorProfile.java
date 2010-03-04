@@ -15,6 +15,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -250,6 +252,23 @@ public class LegislatorProfile extends ListActivity {
 		
 		setListAdapter(adapter);
 	}
+	
+	@Override 
+    public boolean onCreateOptionsMenu(Menu menu) { 
+	    super.onCreateOptionsMenu(menu); 
+	    getMenuInflater().inflate(R.menu.legislator, menu);
+	    return true;
+    }
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch(item.getItemId()) {
+    	case R.id.main:
+    		startActivity(new Intent(this, MainMenu.class));
+    		break;
+    	}
+    	return true;
+    }
 	
 	// For URLs that use subdomains (i.e. yarmuth.house.gov) return just that.
 	// For URLs that use paths (i.e. house.gov/wu) return just that.

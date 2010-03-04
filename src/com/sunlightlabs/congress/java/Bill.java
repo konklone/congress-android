@@ -151,4 +151,8 @@ public class Bill {
 		formatted = formatted.replaceAll("( [^A-Z\\s]+\\.)\\s+", "$1\n\n");
 		return formatted;
 	}
+	
+	public static String displayTitle(Bill bill) {
+		return (bill.short_title != null) ? bill.short_title : bill.official_title; 
+	}
 }

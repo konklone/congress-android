@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -71,6 +74,7 @@ public class BillInfo extends ListActivity {
 	public Object onRetainNonConfigurationInstance() {
 		return new BillInfoHolder(bill, loadBillTask, loadPhotoTask);
 	}
+	
 	
 	public void loadBill() {
 		if (loadBillTask != null)
@@ -259,6 +263,33 @@ public class BillInfo extends ListActivity {
 		String type = (String) v.getTag();
     	if (type.equals("sponsor") && sponsor_id != null)
     		startActivity(Utils.legislatorIntent(sponsor_id));
+    }
+	
+	@Override 
+    public boolean onCreateOptionsMenu(Menu menu) { 
+	    super.onCreateOptionsMenu(menu); 
+	    getMenuInflater().inflate(R.menu.bill, menu);
+	    return true;
+    }
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		menu.findItem(R.id.shortcut).setEnabled(bill != null);
+		return true;
+	}
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch(item.getItemId()) {
+    	case R.id.main:
+    		startActivity(new Intent(this, MainMenu.class));
+    		break;
+    	case R.id.shortcut:
+    		sendBroadcast(Utils.shortcutIntent(this, bill));
+    		break;
+    	}
+    	return true;
     }
 	
 	public int sizeOfTitle(String title) {

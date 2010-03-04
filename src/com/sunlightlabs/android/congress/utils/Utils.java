@@ -2,6 +2,7 @@ package com.sunlightlabs.android.congress.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.widget.Toast;
 
 import com.sunlightlabs.android.congress.BillInfo;
@@ -62,6 +63,14 @@ public class Utils {
     	intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.BillInfo");
 		intent.putExtra("extra", false).putExtra("id", bill.id);
 		return intent;
+	}
+	
+	public static Intent shortcutIntent(Context context, Bill bill) {
+		Parcelable resource = Intent.ShortcutIconResource.fromContext(context, R.drawable.bill);
+		return new Intent("com.android.launcher.action.INSTALL_SHORTCUT")
+			.putExtra(Intent.EXTRA_SHORTCUT_NAME, Bill.formatCode(bill.code))
+			.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, resource)
+			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, billIntent(context, bill));
 	}
 	
 	public static String stateCodeToName(Context context, String code) {
