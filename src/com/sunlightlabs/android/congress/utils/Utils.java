@@ -76,10 +76,14 @@ public class Utils {
 	}
 	
 	public static Intent shortcutIntent(Context context, com.sunlightlabs.entities.Legislator legislator, Bitmap icon) {
+		return shortcutIntent(context, legislator.getId(), legislator.getProperty("lastname"), icon);
+	}
+	
+	public static Intent shortcutIntent(Context context, String legislatorId, String name, Bitmap icon) {
 		return new Intent()
 			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
-					Utils.legislatorIntent(legislator.getId()).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
-			.putExtra(Intent.EXTRA_SHORTCUT_NAME, legislator.getProperty("lastname"))
+					Utils.legislatorIntent(legislatorId).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
+			.putExtra(Intent.EXTRA_SHORTCUT_NAME, name)
 			.putExtra(Intent.EXTRA_SHORTCUT_ICON, icon); 
 	}
 	

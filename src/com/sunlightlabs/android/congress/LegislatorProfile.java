@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -34,7 +35,7 @@ import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.entities.Committee;
 
 public class LegislatorProfile extends ListActivity {
-	private String id, titledName, party, gender, state, domain, phone, website;
+	private String id, titledName, lastName, party, gender, state, domain, phone, website;
 	private String apiKey;
 	private Drawable avatar;
 	private ImageView picture;
@@ -43,8 +44,9 @@ public class LegislatorProfile extends ListActivity {
 	// need to keep this here between setupControls() and displayCommittees(), not sure why
 	private LinearLayout committeeHeader;
 	
-	private LoadPhotosTask loadPhotosTask = null;
-	private LoadCommitteesTask loadCommitteesTask = null;
+	private LoadPhotosTask loadPhotosTask;
+	private LoadCommitteesTask loadCommitteesTask;
+	private ShortcutImageTask shortcutImageTask;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class LegislatorProfile extends ListActivity {
         Bundle extras = getIntent().getExtras(); 
         id = extras.getString("id");
         titledName = extras.getString("titledName");
+        lastName = extras.getString("lastName");
         party = extras.getString("party");
         state = extras.getString("state");
         gender = extras.getString("gender");
@@ -70,11 +73,13 @@ public class LegislatorProfile extends ListActivity {
         
         loadPhotos();
         loadCommittees();
+        if (shortcutImageTask != null)
+        	shortcutImageTask.onScreenLoad(this);
 	}
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new LegislatorProfileHolder(loadPhotosTask, loadCommitteesTask, committees);
+		return new LegislatorProfileHolder(loadPhotosTask, loadCommitteesTask, shortcutImageTask, committees);
 	}
 	
 	// committee callbacks and display function not being used at this time
@@ -87,6 +92,11 @@ public class LegislatorProfile extends ListActivity {
 			else
 				loadCommitteesTask = (LoadCommitteesTask) new LoadCommitteesTask(this).execute(id);
 		}
+	}
+	
+	public void installShortcutIcon(Bitmap icon) {
+		sendBroadcast(Utils.shortcutIntent(this, id, lastName, icon)
+				.setAction("com.android.launcher.action.INSTALL_SHORTCUT"));
 	}
     
 	public void onLoadCommittees(CongressException exception) {
@@ -266,6 +276,10 @@ public class LegislatorProfile extends ListActivity {
     	case R.id.main:
     		startActivity(new Intent(this, MainMenu.class));
     		break;
+    	case R.id.shortcut:
+    		if (shortcutImageTask == null)
+    			shortcutImageTask = (ShortcutImageTask) new ShortcutImageTask(this).execute(id);
+    		break;
     	}
     	return true;
     }
@@ -359,6 +373,31 @@ public class LegislatorProfile extends ListActivity {
 		}
 	}
 	
+	private class ShortcutImageTask extends AsyncTask<String,Void,Bitmap> {
+    	public LegislatorProfile context;
+    	
+    	public ShortcutImageTask(LegislatorProfile context) {
+    		super();
+    		this.context = context;
+    		this.context.shortcutImageTask = this;
+    	}
+    	
+    	public void onScreenLoad(LegislatorProfile context) {
+    		this.context = context;
+    	}
+    	
+    	@Override
+    	protected Bitmap doInBackground(String... bioguideId) {
+    		return LegislatorImage.shortcutImage(bioguideId[0], context);
+    	}
+    	
+    	@Override
+    	protected void onPostExecute(Bitmap shortcutIcon) {
+    		context.installShortcutIcon(shortcutIcon);
+    		context.shortcutImageTask = null;
+    	}
+    }
+	
 	private class LoadCommitteesTask extends AsyncTask<String,Void,ArrayList<Committee>> {
 		private LegislatorProfile context;
 		private CongressException exception;
@@ -409,17 +448,20 @@ public class LegislatorProfile extends ListActivity {
 	static class LegislatorProfileHolder {
 		LoadPhotosTask loadPhotosTask;
 		LoadCommitteesTask loadCommitteesTask;
+		ShortcutImageTask shortcutImageTask;
 		ArrayList<Committee> committees;
 		
-		LegislatorProfileHolder(LoadPhotosTask loadPhotosTask, LoadCommitteesTask loadCommitteesTask, ArrayList<Committee> committees) {
+		LegislatorProfileHolder(LoadPhotosTask loadPhotosTask, LoadCommitteesTask loadCommitteesTask, ShortcutImageTask shortcutImageTask, ArrayList<Committee> committees) {
 			this.loadPhotosTask = loadPhotosTask;
 			this.loadCommitteesTask = loadCommitteesTask;
+			this.shortcutImageTask = shortcutImageTask;
 			this.committees = committees;
 		}
 		
 		public void loadInto(LegislatorProfile context) {
 			context.loadPhotosTask = loadPhotosTask;
 			context.loadCommitteesTask = loadCommitteesTask;
+			context.shortcutImageTask = shortcutImageTask;
 			context.committees = committees;
 		}
 	}

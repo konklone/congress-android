@@ -46,6 +46,7 @@ public class LegislatorLoader extends Activity {
 		
 		extras.putString("id", legislator.getId());
 		extras.putString("titledName", legislator.titledName());
+		extras.putString("lastName", legislator.getProperty("lastname"));
 		extras.putString("state", legislator.getProperty("state"));
 		extras.putString("party", legislator.getProperty("party"));
 		extras.putString("gender", legislator.getProperty("gender"));

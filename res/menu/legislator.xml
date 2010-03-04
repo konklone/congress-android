@@ -5,4 +5,9 @@
 		android:alphabeticShortcut="m"
 		android:icon="@android:drawable/ic_menu_myplaces"
 		/>
+	<item android:id="@+id/shortcut"
+		android:title="Create Shortcut"
+		android:alphabeticShortcut="s"
+		android:icon="@android:drawable/ic_menu_add"
+		/>
 </menu>
