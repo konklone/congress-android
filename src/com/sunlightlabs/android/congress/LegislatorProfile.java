@@ -205,16 +205,18 @@ public class LegislatorProfile extends ListActivity {
 		
 		ArrayList<View> contactViews = new ArrayList<View>(3);
 		
-		LinearLayout phoneView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_2, null);
-		TextView phoneText = (TextView) phoneView.findViewById(R.id.text_1);
-		phoneText.setText("Call " + pronoun(gender) + " office");
-		phoneText.setTypeface(font);
-		TextView phoneNumber = (TextView) phoneView.findViewById(R.id.text_2);
-		phoneNumber.setText(phone);
-		phoneNumber.setTypeface(font);
-		((ImageView) phoneView.findViewById(R.id.icon)).setImageResource(R.drawable.phone);
-		phoneView.setTag("phone");
-		contactViews.add(phoneView);
+		if (phone != null && !phone.equals("")) {
+			LinearLayout phoneView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_2, null);
+			TextView phoneText = (TextView) phoneView.findViewById(R.id.text_1);
+			phoneText.setText("Call " + pronoun(gender) + " office");
+			phoneText.setTypeface(font);
+			TextView phoneNumber = (TextView) phoneView.findViewById(R.id.text_2);
+			phoneNumber.setText(phone);
+			phoneNumber.setTypeface(font);
+			((ImageView) phoneView.findViewById(R.id.icon)).setImageResource(R.drawable.phone);
+			phoneView.setTag("phone");
+			contactViews.add(phoneView);
+		}
 		
 		if (website != null && !website.equals("")) {
 			LinearLayout websiteView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_2, null);
