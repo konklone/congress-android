@@ -17,11 +17,10 @@
     <string name="connection_failed">Connection failed. Press refresh to try again.</string>
     
     <string name="state_prompt">Choose a state:</string>
-    
     <string name="about_button">Cool</string>
-    <string name="first_header">
-    	A few things you can do:
-    </string>
+    <string name="first_button">Awesome</string>
+    <string name="changelog_button">Awesome</string>
+    
     <string name="first_tip_1_header">
     	Call your representatives.
     </string>
@@ -40,9 +39,7 @@
     <string name="first_tip_3_body">
     	Tap \"Create Shortcut\" on the menu for a bill or legislator to give yourself one-tap access from your home screen. 
     </string>
-    <string name="first_button">Awesome</string>
     
-    <string name="summary_source">Summary by the Congressional Research Service.</string>
     <string name="menu_bills_law">New Laws</string>
     <string name="menu_bills_introduced">Just Introduced</string>
 </resources>

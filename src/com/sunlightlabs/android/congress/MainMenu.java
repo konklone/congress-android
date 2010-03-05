@@ -285,6 +285,8 @@ public class MainMenu extends ListActivity {
         	aboutView2.setText(about2);
         	aboutView2.setMovementMethod(LinkMovementMethod.getInstance());
         	
+        	builder.setIcon(R.drawable.icon);
+        	builder.setTitle(R.string.app_name);
         	builder.setView(aboutView);
         	builder.setPositiveButton(R.string.about_button, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
@@ -294,6 +296,8 @@ public class MainMenu extends ListActivity {
         case FIRST:
         	ScrollView firstView = (ScrollView) inflater.inflate(R.layout.first_time, null);
         	
+        	builder.setIcon(R.drawable.icon);
+        	builder.setTitle("Welcome");
         	builder.setView(firstView);
         	builder.setPositiveButton(R.string.first_button, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {}
@@ -303,16 +307,16 @@ public class MainMenu extends ListActivity {
         	ScrollView changelogView = (ScrollView) inflater.inflate(R.layout.changelog, null);
         	
         	Spanned changelog = Html.fromHtml(
-        		"<b>&#183;</b> Added basic search and information around bills.<br/><br/>" +
-        		"<b>&#183;</b> Added \"Sponsored Bills\" button to a legislator's profile.<br/><br/>" +
-        		"<b>&#183;</b> Create home screen shortcuts for legislators and bills, from their respective menus."
+        		"<b>&#183;</b> Basic information about recently introduced bills, and laws.<br/><br/>" +
+        		"<b>&#183;</b> New \"Sponsored Bills\" button on legislator profiles.<br/><br/>" +
+        		"<b>&#183;</b> Tap the menu button while viewing a legislator or bill to create a home screen shortcut."
         	);
         	((TextView) changelogView.findViewById(R.id.changelog)).setText(changelog);
         	
         	builder.setIcon(R.drawable.icon);
         	builder.setTitle("Version " + getResources().getString(R.string.app_version));
         	builder.setView(changelogView);
-        	builder.setPositiveButton(R.string.first_button, new DialogInterface.OnClickListener() {
+        	builder.setPositiveButton(R.string.changelog_button, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {}
 			});
         	return builder.create();
