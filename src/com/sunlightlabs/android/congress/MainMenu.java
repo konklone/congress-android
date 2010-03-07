@@ -52,8 +52,11 @@ public class MainMenu extends ListActivity {
         location = getLocation();
         setupControls();
         
-        if (firstTime())
+        if (firstTime()) {
+        	newVersion(); // don't need to see the changelog on first install
         	showDialog(FIRST);
+        } else if (newVersion())
+        	showDialog(CHANGELOG);
     }
 	
 	@Override
@@ -123,7 +126,7 @@ public class MainMenu extends ListActivity {
         
         LinearLayout searchName = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
         ((ImageView) searchName.findViewById(R.id.icon)).setImageResource(R.drawable.search_lastname);
-        ((TextView) searchName.findViewById(R.id.text)).setText(R.string.menu_legislators_state);
+        ((TextView) searchName.findViewById(R.id.text)).setText(R.string.menu_legislators_lastname);
         searchName.setTag(SEARCH_NAME);
         searchViews.add(searchName);
         
@@ -256,6 +259,26 @@ public class MainMenu extends ListActivity {
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean newVersion() {
+		String lastVersionSeen = getVersionSeen();
+		String currentVersion = getResources().getString(R.string.app_version);
+		if (lastVersionSeen != null && lastVersionSeen.equals(currentVersion))
+			return false;
+		else {
+			setVersionSeen(currentVersion);
+			return true;
+		}
+	}
+	
+	
+	public void setVersionSeen(String version) {
+		Preferences.setString(this, "last_version_seen", version);
+	}
+	
+	public String getVersionSeen() {
+		return Preferences.getString(this, "last_version_seen");
 	}
 	
 	@Override
