@@ -14,11 +14,12 @@ import org.apache.http.util.EntityUtils;
  */
 
 public class Drumbone {
-	public static final String USER_AGENT = "Sunlight's Congress Android App (http://github.com/sunlightlabs/congress)";
+	public static final String USER_AGENT = "sunlight-congress-";
 	public static final String[] dateFormat = new String[] {"yy/MM/dd HH:mm:ss Z"};
 	
 	public static String apiKey = "";
 	public static String baseUrl = "";
+	public static String appVersion = "";
 	public static String format = "json";
 	
 	
@@ -31,7 +32,7 @@ public class Drumbone {
 	
 	public static String fetchJSON(String url) throws CongressException {
 		HttpGet request = new HttpGet(url);
-        request.addHeader("User-Agent", USER_AGENT);
+        request.addHeader("User-Agent", USER_AGENT + appVersion);
 		
         DefaultHttpClient client = new DefaultHttpClient();
         

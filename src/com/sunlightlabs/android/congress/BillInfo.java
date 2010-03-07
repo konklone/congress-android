@@ -6,6 +6,7 @@ import java.util.Date;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -51,8 +52,10 @@ public class BillInfo extends ListActivity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.loading_fullscreen);
 		
-		Drumbone.apiKey = getResources().getString(R.string.sunlight_api_key);
-		Drumbone.baseUrl = getResources().getString(R.string.drumbone_base_url);
+		Resources resources = getResources(); 
+		Drumbone.apiKey = resources.getString(R.string.sunlight_api_key);
+		Drumbone.baseUrl = resources.getString(R.string.drumbone_base_url);
+		Drumbone.appVersion = resources.getString(R.string.app_version);
 		
 		Bundle extras = getIntent().getExtras();
 		id = extras.getString("id");

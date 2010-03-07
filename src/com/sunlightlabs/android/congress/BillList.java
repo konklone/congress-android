@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -44,8 +45,10 @@ public class BillList extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.legislator_list);
 		
-		Drumbone.apiKey = getResources().getString(R.string.sunlight_api_key);
-		Drumbone.baseUrl = getResources().getString(R.string.drumbone_base_url);
+		Resources resources = getResources(); 
+		Drumbone.apiKey = resources.getString(R.string.sunlight_api_key);
+		Drumbone.baseUrl = resources.getString(R.string.drumbone_base_url);
+		Drumbone.appVersion = resources.getString(R.string.app_version);
 		
 		Bundle extras = getIntent().getExtras();
 		type = extras.getInt("type", BILLS_RECENT);
