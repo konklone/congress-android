@@ -104,7 +104,7 @@ public class BillInfo extends ListActivity {
 	}
 	
 	public void onLoadBill(CongressException exception) {
-		Utils.alert(this, exception);
+		Utils.alert(this, R.string.error_connection);
 		finish();
 	}
 	

@@ -6,6 +6,8 @@
     <string name="create_shortcuts">Legislator</string>
     <string name="first_time_twitter">Tap a tweet to reply.</string>
     
+    <string name="error_connection">Couldn\'t connect to the network. Please try again when you have a connection.</string>
+    
     <string name="empty_zipcode">No legislators found for your zipcode.</string>
     <string name="empty_location">No legislators found for your location.</string>
     <string name="empty_last_name">No legislators found by that last name.</string>

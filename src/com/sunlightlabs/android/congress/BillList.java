@@ -105,9 +105,10 @@ public class BillList extends ListActivity {
 	}
 	
 	public void onLoadBills(CongressException exception) {
-		Utils.alert(this, exception);
-		this.bills = new ArrayList<Bill>();
-		displayBills();
+		Utils.alert(this, R.string.error_connection);
+		finish();
+//		this.bills = new ArrayList<Bill>();
+//		displayBills();
 	}
 	
 	public void displayBills() {

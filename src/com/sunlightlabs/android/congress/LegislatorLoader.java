@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.api.ApiCall;
 import com.sunlightlabs.entities.Legislator;
 
@@ -106,10 +107,10 @@ public class LegislatorLoader extends Activity {
     		if (dialog != null && dialog.isShowing())
         		dialog.dismiss();
     		
-    		if (legislator != null) {
+    		if (legislator != null)
     			context.launchLegislator(legislator);
-    		} else {
-    			context.alert("Couldn't connect to the network. Please try again when you have a connection.");
+    		else {
+    			Utils.alert(LegislatorLoader.this, R.string.error_connection);
     			context.finish();
     		}
     		context.loadLegislatorTask = null;
