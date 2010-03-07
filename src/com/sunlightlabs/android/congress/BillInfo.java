@@ -322,7 +322,7 @@ public class BillInfo extends ListActivity {
 		@Override
 		public Bill doInBackground(String... billId) {
 			try {
-				Bill bill = Bill.find(billId[0], "basic,extended,sponsor,summary");
+				Bill bill = Bill.find(billId[0], "basic,sponsor,summary");
 				
 				return bill;
 			} catch (CongressException exception) {
