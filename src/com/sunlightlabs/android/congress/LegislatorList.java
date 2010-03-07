@@ -14,7 +14,6 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -48,7 +47,6 @@ public class LegislatorList extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
     	setContentView(R.layout.legislator_list);
     	
 		Bundle extras = getIntent().getExtras();
@@ -137,28 +135,25 @@ public class LegislatorList extends ListActivity {
 			}
 		});
     	
-    	String windowTitle;
     	switch(searchType()) {
     	case SEARCH_ZIP:
-    		windowTitle = "Legislators for " + zipCode + ":";
+    		setTitle("Legislators for " + zipCode + ":");
     		break;
 		case SEARCH_LOCATION:
-    		windowTitle = "Legislators for your location:";
+    		setTitle("Legislators for your location:");
     		break;
 		case SEARCH_LASTNAME:
-    		windowTitle = "Legislators by the name of " + lastName + ":";
+    		setTitle("Legislators by the name of " + lastName + ":");
     		break;
 		case SEARCH_COMMITTEE:
-			windowTitle = committeeName;
+			setTitle(committeeName);
 			break;
 		case SEARCH_STATE:
-    		windowTitle = "Legislators from " + Utils.stateCodeToName(this, state) + ":";
+    		setTitle("Legislators from " + Utils.stateCodeToName(this, state) + ":");
     		break;
     	default:
-    		windowTitle = "Legislator search:";
+    		setTitle("Legislator search:");
     	}
-    	getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title);
-        ((TextView) findViewById(R.id.custom_title)).setText(windowTitle);
     }
     
     @Override

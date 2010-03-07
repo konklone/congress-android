@@ -4,9 +4,7 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.Window;
 import android.widget.TabHost;
-import android.widget.TextView;
 
 public class LegislatorTabs extends TabActivity {
 	private String id, titledName, lastName, state, party, 
@@ -16,7 +14,6 @@ public class LegislatorTabs extends TabActivity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.legislator);
         
         Bundle extras = getIntent().getExtras();
@@ -33,9 +30,7 @@ public class LegislatorTabs extends TabActivity {
 		twitter_id = extras.getString("twitter_id");
 		youtube_id = extras.getString("youtube_id");
 		
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title);
-        ((TextView) findViewById(R.id.custom_title)).setText(titledName);
-    		
+        setTitle(titledName);
         setupTabs();
 	}
 	
