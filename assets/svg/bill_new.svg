@@ -15,7 +15,7 @@
    version="1.1"
    inkscape:version="0.47pre4 r22446"
    sodipodi:docname="bill_new.svg"
-   inkscape:export-filename="/home/eric/space/congress/res/drawable-hdpi/bill_law.png"
+   inkscape:export-filename="/home/eric/space/congress/res/drawable-hdpi/bill_recent.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -223,7 +223,7 @@
      inkscape:label="Circle">
     <path
        sodipodi:type="star"
-       style="fill:#f9ea25;fill-opacity:1;stroke:#59584a;stroke-width:0.31857297;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#f9ea25;fill-opacity:1;stroke:#39382f;stroke-width:0.31857297000000001;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="path4489"
        sodipodi:sides="5"
        sodipodi:cx="36.07143"
