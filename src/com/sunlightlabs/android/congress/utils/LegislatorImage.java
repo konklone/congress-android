@@ -86,7 +86,9 @@ public class LegislatorImage {
 	}
 	
 	public static String picDir(String bioguideId, Context context) {
-		return context.getDir(bioguideId, Context.MODE_PRIVATE).getPath();
+		File picDir = new File(context.getCacheDir().getPath() + "/" + bioguideId);
+		picDir.mkdirs();
+		return picDir.getPath();
 	}
 	
 	public static void cacheImages(String bioguideId, Context context) {
