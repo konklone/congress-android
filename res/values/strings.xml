@@ -21,25 +21,19 @@
     <string name="first_button">Awesome</string>
     <string name="changelog_button">Awesome</string>
     
-    <string name="first_tip_1_header">
-    	Call your representatives.
-    </string>
-    <string name="first_tip_1_body">
-    	Tap \"My Location\" to find your district\'s representatives. Tap the call button to give them a call. 
-    </string>
-    <string name="first_tip_2_header">
-    	See the latest bills and laws.
-    </string>
-    <string name="first_tip_2_body">
-    	Read up on what your legislators are introducing into Congress, and the laws they\'re passing.
-    </string>
-    <string name="first_tip_3_header">
-    	Home screen shortcuts galore.
-    </string>
-    <string name="first_tip_3_body">
-    	Tap \"Create Shortcut\" on the menu for a bill or legislator to give yourself one-tap access from your home screen. 
-    </string>
+    <string name="first_tip_1_header">Call your representatives.</string>
+    <string name="first_tip_1_body">Tap \"My Location\" to find your district\'s representatives. Tap the call button to give them a call. </string>
+    <string name="first_tip_2_header">See the latest bills and laws.</string>
+    <string name="first_tip_2_body">Read up on what your legislators are introducing into Congress, and the laws they\'re passing.</string>
+    <string name="first_tip_3_header">Home screen shortcuts galore.</string>
+    <string name="first_tip_3_body">Tap \"Create Shortcut\" on the menu for a bill or legislator to give yourself one-tap access from your home screen. </string>
     
+    <string name="menu_bills_header">Bills</string>
     <string name="menu_bills_law">New Laws</string>
     <string name="menu_bills_introduced">Just Introduced</string>
+    <string name="menu_legislators_header">Legislators By</string>
+    <string name="menu_legislators_location">My Location</string>
+    <string name="menu_legislators_state">State</string>
+    <string name="menu_legislators_lastname">Last Name</string>
+    <string name="menu_legislators_zip">Zip Code</string>
 </resources>

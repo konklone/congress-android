@@ -84,7 +84,7 @@ public class MainMenu extends ListActivity {
         LayoutInflater inflater = LayoutInflater.from(this);
         
         LinearLayout billsHeader = (LinearLayout) inflater.inflate(R.layout.header_layout, null);
-        ((TextView) billsHeader.findViewById(R.id.header_text)).setText("Bills");
+        ((TextView) billsHeader.findViewById(R.id.header_text)).setText(R.string.menu_bills_header);
         
         ArrayList<View> billViews = new ArrayList<View>(2);
         
@@ -102,7 +102,7 @@ public class MainMenu extends ListActivity {
         
         
         LinearLayout peopleHeader = (LinearLayout) inflater.inflate(R.layout.header_layout, null);
-        ((TextView) peopleHeader.findViewById(R.id.header_text)).setText("Legislators");
+        ((TextView) peopleHeader.findViewById(R.id.header_text)).setText(R.string.menu_legislators_header);
         peopleHeader.setEnabled(false);
         
         ArrayList<View> searchViews = new ArrayList<View>(4);
@@ -110,26 +110,26 @@ public class MainMenu extends ListActivity {
         if (location != null) {
 	        LinearLayout searchLocation = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
 	        ((ImageView) searchLocation.findViewById(R.id.icon)).setImageResource(R.drawable.search_location);
-	        ((TextView) searchLocation.findViewById(R.id.text)).setText("My Location");
+	        ((TextView) searchLocation.findViewById(R.id.text)).setText(R.string.menu_legislators_location);
 	        searchLocation.setTag(SEARCH_LOCATION);
 	        searchViews.add(searchLocation);
         }
         
         LinearLayout searchState = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
         ((ImageView) searchState.findViewById(R.id.icon)).setImageResource(R.drawable.search_all);
-        ((TextView) searchState.findViewById(R.id.text)).setText("State");
+        ((TextView) searchState.findViewById(R.id.text)).setText(R.string.menu_legislators_state);
         searchState.setTag(SEARCH_STATE);
         searchViews.add(searchState);
         
         LinearLayout searchName = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
         ((ImageView) searchName.findViewById(R.id.icon)).setImageResource(R.drawable.search_lastname);
-        ((TextView) searchName.findViewById(R.id.text)).setText("Last Name");
+        ((TextView) searchName.findViewById(R.id.text)).setText(R.string.menu_legislators_state);
         searchName.setTag(SEARCH_NAME);
         searchViews.add(searchName);
         
         LinearLayout searchZip = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
         ((ImageView) searchZip.findViewById(R.id.icon)).setImageResource(R.drawable.search_zip);
-        ((TextView) searchZip.findViewById(R.id.text)).setText("Zip Code");
+        ((TextView) searchZip.findViewById(R.id.text)).setText(R.string.menu_legislators_zip);
         searchZip.setTag(SEARCH_ZIP);
         searchViews.add(searchZip);
         
@@ -141,7 +141,7 @@ public class MainMenu extends ListActivity {
         if (location == null) {   
 	        LinearLayout searchLocation = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1_disabled, null);
 	        ((ImageView) searchLocation.findViewById(R.id.icon)).setImageResource(R.drawable.search_location);
-	        ((TextView) searchLocation.findViewById(R.id.text)).setText("My Location");
+	        ((TextView) searchLocation.findViewById(R.id.text)).setText(R.string.menu_legislators_location);
 	        adapter.addView(searchLocation);
         }
         adapter.addAdapter(new ViewArrayAdapter(this, searchViews));
