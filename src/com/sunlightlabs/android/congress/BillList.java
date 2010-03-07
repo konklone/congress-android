@@ -74,13 +74,13 @@ public class BillList extends ListActivity {
 	public void setupControls() {
 		switch (type) {
 		case BILLS_RECENT:
-			setTitle("Last " + BILLS + " Introduced Bills");
+			setTitle("Latest Bills");
 			break;
 		case BILLS_LAW:
-			setTitle("Last " + BILLS + " Laws this Session");
+			setTitle("Latest Laws");
 			break;
 		case BILLS_SPONSOR:
-			setTitle("Last " + BILLS + " Bills by " + sponsor_name);
+			setTitle("Latest Bills by " + sponsor_name);
 			break;
 		}
 	}
