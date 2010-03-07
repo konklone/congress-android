@@ -291,7 +291,7 @@ public class MainMenu extends ListActivity {
         	ScrollView aboutView = (ScrollView) inflater.inflate(R.layout.about, null);
         	
         	Spanned about1 = Html.fromHtml(
-        		"Bill information provided by <a href=\"http://govtrack.us\">GovTrack.us</a>, through the Library of Congress.  Bill summaries written by the Congressional Research Service.<br/><br/>" +
+        		"Bill information provided by <a href=\"http://govtrack.us\">GovTrack</a>, through the Library of Congress.  Bill summaries written by the Congressional Research Service.<br/><br/>" +
         		"Legislator search and information powered by the <a href=\"http://services.sunlightlabs.com/api/\">Sunlight Labs API</a>.<br/><br/>" + 
         		"News mentions provided by the <a href=\"http://developer.yahoo.com/search/news/\">Yahoo! News API</a>, and Twitter search powered by <a href=\"http://www.winterwell.com/software/jtwitter.php\">JTwitter</a>."
         	);
@@ -320,7 +320,7 @@ public class MainMenu extends ListActivity {
         	ScrollView firstView = (ScrollView) inflater.inflate(R.layout.first_time, null);
         	
         	builder.setIcon(R.drawable.icon);
-        	builder.setTitle("Welcome");
+        	builder.setTitle(R.string.app_name);
         	builder.setView(firstView);
         	builder.setPositiveButton(R.string.first_button, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {}
@@ -337,7 +337,7 @@ public class MainMenu extends ListActivity {
         	((TextView) changelogView.findViewById(R.id.changelog)).setText(changelog);
         	
         	builder.setIcon(R.drawable.icon);
-        	builder.setTitle("Version " + getResources().getString(R.string.app_version));
+        	builder.setTitle(getResources().getString(R.string.changelog_title_prefix) + " " + getResources().getString(R.string.app_version));
         	builder.setView(changelogView);
         	builder.setPositiveButton(R.string.changelog_button, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {}

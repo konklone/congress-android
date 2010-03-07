@@ -17,8 +17,10 @@
     <string name="connection_failed">Connection failed. Press refresh to try again.</string>
     
     <string name="state_prompt">Choose a state:</string>
+    
     <string name="about_button">Cool</string>
     <string name="first_button">Awesome</string>
+    <string name="changelog_title_prefix">New In Version</string>
     <string name="changelog_button">Awesome</string>
     
     <string name="first_tip_1_header">Call your representatives.</string>
