@@ -43,7 +43,7 @@ public class BillList extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.legislator_list);
+		setContentView(R.layout.list);
 		
 		Resources resources = getResources(); 
 		Drumbone.apiKey = resources.getString(R.string.sunlight_api_key);

@@ -47,7 +47,7 @@ public class LegislatorList extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	setContentView(R.layout.legislator_list);
+    	setContentView(R.layout.list);
     	
 		Bundle extras = getIntent().getExtras();
 		
