@@ -11,8 +11,8 @@
 		android:layout_height="wrap_content"
 		android:padding="10dp"
 		
-		android:textColor="@android:color/white"
 		android:textSize="16sp"
+		android:textColor="@android:color/white"
 		
 		android:text="Summary goes here"
 		/>

@@ -18,7 +18,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="5dp"
 			
-			android:textSize="20sp"
+			android:textSize="18sp"
 			
 			android:text="H.Res. 3200"
 			/>
@@ -28,8 +28,8 @@
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="5dp"
 			
-			android:textColor="#ffffff"
-			android:textSize="18sp"
+			android:textSize="19sp"
+			android:textColor="@android:color/white"
 			
 			android:text="Title of Bill"
 			/>
@@ -38,7 +38,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			
-			android:layout_marginBottom="5dp"
+			android:layout_marginBottom="3dp"
 			
 			android:textSize="14sp"
 			android:text="Introduced on Feb 12, 2010"
@@ -48,7 +48,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			
-			android:layout_marginBottom="5dp"
+			android:layout_marginBottom="3dp"
 			
 			android:textSize="14sp"
 			android:text="Enacted on Feb 25, 2010"
