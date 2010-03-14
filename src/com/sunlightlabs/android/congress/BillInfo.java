@@ -200,13 +200,10 @@ public class BillInfo extends ListActivity {
 	}
 	
 	public LinearLayout displayBillBasic(MergeAdapter adapter) {
-		String displayCode = Bill.formatCode(code);
-		String appName = getResources().getString(R.string.app_name);
-		setTitle(appName + " - " + displayCode);
-		
 		LayoutInflater inflater = LayoutInflater.from(this);
 		LinearLayout header = (LinearLayout) inflater.inflate(R.layout.bill_header, null);
-		((TextView) header.findViewById(R.id.code)).setText(displayCode);
+		
+		((TextView) header.findViewById(R.id.title_text)).setText(Bill.formatCode(code));
 		
 		TextView titleView = (TextView) header.findViewById(R.id.title);
 		String title;

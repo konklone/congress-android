@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
+	android:layout_height="fill_parent"
+	
 	android:orientation="vertical"
 	>
+	
+	<include layout="@layout/title_bar_1" />
+	
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="1px"
+		android:background="#5c5e5d"
+		/>
 	
 	<LinearLayout
 		android:layout_width="fill_parent"
@@ -12,16 +21,6 @@
 		
 		android:padding="10dp"
 		>
-		
-		<TextView android:id="@+id/code"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="5dp"
-			
-			android:textSize="18sp"
-			
-			android:text="H.Res. 3200"
-			/>
 			
 		<TextView android:id="@+id/title"
 			android:layout_width="fill_parent"

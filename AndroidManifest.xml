@@ -57,7 +57,9 @@
         <activity android:name=".LegislatorYouTube" />
         
         <activity android:name=".BillList" />
-        <activity android:name=".BillInfo">
+        <activity android:name=".BillInfo"
+        	android:theme="@android:style/Theme.NoTitleBar"
+        	>
         	<intent-filter>
         		<action android:name="android.intent.action.MAIN" />
         		<category android:name="android.intent.category.DEFAULT" />
