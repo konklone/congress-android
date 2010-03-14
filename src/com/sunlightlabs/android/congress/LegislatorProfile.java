@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -191,40 +190,27 @@ public class LegislatorProfile extends ListActivity {
     }
 	
 	public void setupControls() {
-		Typeface font = Typeface.createFromAsset(getAssets(), "fonts/AlteHaasGroteskRegular.ttf");
 		LayoutInflater inflater = LayoutInflater.from(this);
 		LinearLayout mainView = (LinearLayout) inflater.inflate(R.layout.profile, null);
 		mainView.setEnabled(false);
 		
 		picture = (ImageView) mainView.findViewById(R.id.profile_picture);
 		
-		TextView name = (TextView) mainView.findViewById(R.id.profile_name);
-		name.setText(titledName);
-		name.setTypeface(font);
+		((TextView) mainView.findViewById(R.id.profile_name)).setText(titledName);
 		
-		TextView partyView = (TextView) mainView.findViewById(R.id.profile_party); 
-		partyView.setText(partyName(party));
-		partyView.setTypeface(font);
+		((TextView) mainView.findViewById(R.id.profile_party)).setText(partyName(party));
 		
-		TextView stateView = (TextView) mainView.findViewById(R.id.profile_state);
 		String stateName = Utils.stateCodeToName(this, state);
-		stateView.setText(stateName);
-		stateView.setTypeface(font);
+		((TextView) mainView.findViewById(R.id.profile_state)).setText(stateName);
 		
-		TextView domainView = (TextView) mainView.findViewById(R.id.profile_domain); 
-		domainView.setText(domainName(domain));
-		domainView.setTypeface(font);
+		((TextView) mainView.findViewById(R.id.profile_domain)).setText(domainName(domain));
 		
 		ArrayList<View> contactViews = new ArrayList<View>(3);
 		
 		if (phone != null && !phone.equals("")) {
 			LinearLayout phoneView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_2, null);
-			TextView phoneText = (TextView) phoneView.findViewById(R.id.text_1);
-			phoneText.setText("Call " + pronoun(gender) + " office");
-			phoneText.setTypeface(font);
-			TextView phoneNumber = (TextView) phoneView.findViewById(R.id.text_2);
-			phoneNumber.setText(phone);
-			phoneNumber.setTypeface(font);
+			((TextView) phoneView.findViewById(R.id.text_1)).setText("Call " + pronoun(gender) + " office");
+			((TextView) phoneView.findViewById(R.id.text_2)).setText(phone);
 			((ImageView) phoneView.findViewById(R.id.icon)).setImageResource(R.drawable.phone);
 			phoneView.setTag("phone");
 			contactViews.add(phoneView);
@@ -232,21 +218,15 @@ public class LegislatorProfile extends ListActivity {
 		
 		if (website != null && !website.equals("")) {
 			LinearLayout websiteView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_2, null);
-			TextView websiteText = (TextView) websiteView.findViewById(R.id.text_1);
-			websiteText.setText("Visit " + pronoun(gender) + " website");
-			websiteText.setTypeface(font);
-			TextView websiteUrl = (TextView) websiteView.findViewById(R.id.text_2);
-			websiteUrl.setText(websiteName(website));
-			websiteUrl.setTypeface(font);
+			((TextView) websiteView.findViewById(R.id.text_1)).setText("Visit " + pronoun(gender) + " website");
+			((TextView) websiteView.findViewById(R.id.text_2)).setText(websiteName(website));
 			((ImageView) websiteView.findViewById(R.id.icon)).setImageResource(R.drawable.web);
 			websiteView.setTag("web");
 			contactViews.add(websiteView);
 		}
 		
 		LinearLayout sponsoredView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
-		TextView sponsoredText = (TextView)  sponsoredView.findViewById(R.id.text);
-		sponsoredText.setText("Sponsored Bills");
-		sponsoredText.setTypeface(font);
+		((TextView) sponsoredView.findViewById(R.id.text)).setText("Sponsored Bills");
 		((ImageView) sponsoredView.findViewById(R.id.icon)).setImageResource(R.drawable.bill_multiple);
 		sponsoredView.setTag("sponsored");
 		contactViews.add(sponsoredView);
