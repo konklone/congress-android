@@ -100,13 +100,14 @@ public class LegislatorNews extends ListActivity {
 	}
     
     private void setupControls() {
-    	refresh = (Button) this.findViewById(R.id.news_refresh);
+    	refresh = (Button) this.findViewById(R.id.refresh);
     	refresh.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				items = null;
 				loadNews();
 			}
 		});
+    	
     	registerForContextMenu(getListView());
     }
     
@@ -115,7 +116,8 @@ public class LegislatorNews extends ListActivity {
     }
     
     protected void displayNews(boolean cancelled) {
-    	TextView empty = (TextView) findViewById(R.id.news_empty);
+    	TextView empty = (TextView) findViewById(R.id.empty_message);
+    	findViewById(R.id.loading).setVisibility(View.GONE);
     	if (items != null) {
     		setListAdapter(new NewsAdapter(this, items));
     		if (items.length <= 0) {

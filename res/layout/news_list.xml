@@ -11,37 +11,76 @@
 		/>
 
     <LinearLayout android:id="@id/android:empty"
-    	android:orientation="vertical"
-    	
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+    	android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:orientation="vertical"
+		
 		android:layout_gravity="center"
 		>
 		
-		<TextView android:id="@+id/news_empty"
-			
+		<LinearLayout android:id="@+id/loading"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="fill_parent"
+	    	android:layout_weight="1"
+	    	
+	    	android:orientation="horizontal"
+	    	android:gravity="center"
+	    	>
+	    	
+	    	<ProgressBar android:id="@+id/loading_spinner"
+	    		android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		style="?android:attr/progressBarStyleSmallTitle"
+	    		
+	    		android:layout_marginRight="10dp"
+	    		/>
+	    		
+	    	<TextView android:id="@+id/loading_spinner_message"
+	    		android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		
+	    		android:text="Loading..."
+	    		/>
+	    	
+	    </LinearLayout>
+		
+		<TextView android:id="@+id/empty_message"
 			android:layout_width="wrap_content" 
 			android:layout_height="wrap_content"
-			android:layout_gravity="center"
 			
+			android:layout_gravity="center"
 			android:layout_margin="10dp"
 			
 			android:textSize="30sp"
+			
+			android:visibility="gone"
 			/>
 		
-		<Button android:id="@+id/news_refresh"
-			
+		<Button android:id="@+id/refresh"
 			android:layout_width="180dp"
 			android:layout_height="80dp"
+			
 			android:layout_margin="10dp"
 			android:layout_gravity="center"
 			
 			android:text="Refresh"
 			android:textSize="26sp"
 			
-			android:visibility="invisible"
+			android:visibility="gone"
 			/>
 		
+		<Button android:id="@+id/back"
+			android:layout_width="180dp"
+			android:layout_height="80dp"
+			
+			android:layout_margin="10dp"
+			android:layout_gravity="center"
+			
+			android:text="Back"
+			android:textSize="26sp"
+			
+			android:visibility="gone"
+			/>
 	</LinearLayout>
-		
+	
 </LinearLayout>
