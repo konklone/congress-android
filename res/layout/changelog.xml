@@ -9,25 +9,37 @@
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
 		
-		android:paddingTop="5dp"
+		android:paddingTop="15dp"
 		android:paddingBottom="5dp"
 		android:paddingLeft="15dp"
 		android:paddingRight="15dp"
 		>
 		
-		<TextView android:id="@+id/title"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			
-			android:textSize="18sp"
-			android:textColor="@android:color/white"
-			android:visibility="gone"
-			/>
-		
 		<TextView android:id="@+id/changelog"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			
+			
+			android:textSize="18sp"
+			android:textColor="@android:color/white"
+			/>
+			
+		<TextView android:id="@+id/changelog_last_title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:layout_marginTop="25dp"
+			
+			android:textStyle="bold"
+			android:textSize="18sp"
+			android:textColor="@android:color/white"
+			/>
+			
+		<TextView android:id="@+id/changelog_last"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:layout_marginTop="10dp"
 			
 			android:textSize="18sp"
 			android:textColor="@android:color/white"

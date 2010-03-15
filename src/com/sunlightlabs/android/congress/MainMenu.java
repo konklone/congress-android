@@ -338,11 +338,17 @@ public class MainMenu extends ListActivity {
         	ScrollView changelogView = (ScrollView) inflater.inflate(R.layout.changelog, null);
         	
         	Spanned changelog = Html.fromHtml(
+        		"<b>&#183;</b> Made everything look nicer<br/><br/>" +
+        		"<b>&#183;</b> Legislators now load instantly when coming from a search"
+        	);
+        	Spanned changelogLast = Html.fromHtml(
         		"<b>&#183;</b> Basic information about recently introduced bills, and laws.<br/><br/>" +
         		"<b>&#183;</b> New \"Sponsored Bills\" button on legislator profiles.<br/><br/>" +
         		"<b>&#183;</b> Tap the menu button while viewing a legislator or bill to create a home screen shortcut."
         	);
         	((TextView) changelogView.findViewById(R.id.changelog)).setText(changelog);
+        	((TextView) changelogView.findViewById(R.id.changelog_last_title)).setText("Version 2.0");
+        	((TextView) changelogView.findViewById(R.id.changelog_last)).setText(changelogLast);
         	
         	builder.setIcon(R.drawable.icon);
         	builder.setTitle(getResources().getString(R.string.changelog_title_prefix) + " " + getResources().getString(R.string.app_version));
