@@ -35,7 +35,7 @@
     <string name="menu_bills_header">Bills</string>
     <string name="menu_bills_law">New Laws</string>
     <string name="menu_bills_introduced">Just Introduced</string>
-    <string name="menu_legislators_header">Legislators</string>
+    <string name="menu_legislators_header">Find Legislators By</string>
     <string name="menu_legislators_location">My Location</string>
     <string name="menu_legislators_state">State</string>
     <string name="menu_legislators_lastname">Last Name</string>
