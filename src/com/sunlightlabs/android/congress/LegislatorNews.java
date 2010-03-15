@@ -34,14 +34,11 @@ public class LegislatorNews extends ListActivity {
 
 	private LoadNewsTask loadNewsTask = null;
 	
-	private Button refresh;
-    	
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.list);
     	
-    	searchName = getIntent().getStringExtra("searchName");
-    	searchName = correctExceptions(searchName);
+    	searchName = LegislatorNews.correctExceptions(getIntent().getStringExtra("searchName"));
     	
     	LegislatorNewsHolder holder = (LegislatorNewsHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
@@ -62,6 +59,19 @@ public class LegislatorNews extends ListActivity {
 		holder.items = this.items;
 		holder.loadNewsTask = this.loadNewsTask;
     	return holder;
+    }
+	
+	private void setupControls() {
+		Utils.setLoading(this, R.string.news_loading);
+    	((Button) findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				items = null;
+				Utils.showLoading(LegislatorNews.this);
+				loadNews();
+			}
+		});
+    	
+    	registerForContextMenu(getListView());
     }
 	
     @Override
@@ -98,18 +108,12 @@ public class LegislatorNews extends ListActivity {
 		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.clickURL)));
 	}
     
-    private void setupControls() {
-    	refresh = (Button) findViewById(R.id.refresh);
-    	refresh.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				items = null;
-				Utils.showLoading(LegislatorNews.this);
-				loadNews();
-			}
-		});
-    	
-    	registerForContextMenu(getListView());
-    }
+    protected void loadNews() {
+	    if (items == null)
+    		loadNewsTask = (LoadNewsTask) new LoadNewsTask(this).execute(searchName);
+		else
+			displayNews();
+	}
     
     protected void displayNews() {
     	if (items != null && items.length > 0)
@@ -117,15 +121,9 @@ public class LegislatorNews extends ListActivity {
     	else
     		Utils.showRefresh(this, R.string.news_empty);
     }
-	
-	protected void loadNews() {
-	    if (items == null)
-    		loadNewsTask = (LoadNewsTask) new LoadNewsTask(this).execute(searchName);
-		else
-			displayNews();
-	}
     
-    private String correctExceptions(String name) {
+    
+    private static String correctExceptions(String name) {
 		if (name.equals("Rep. Nancy Pelosi"))
 			return "Speaker Nancy Pelosi";
 		else if (name.equals("Del. Eleanor Norton"))

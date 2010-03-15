@@ -2,8 +2,6 @@ package com.sunlightlabs.android.congress;
 
 import android.app.Activity;
 import android.app.ListActivity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -36,11 +34,9 @@ public class LegislatorYouTube extends ListActivity {
 	
 	private LoadVideosTask loadVideosTask = null;
 	
-	private Button refresh;
-	
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	setContentView(R.layout.youtube_list);
+    	setContentView(R.layout.list);
     	
     	username = getIntent().getStringExtra("username");
     	
@@ -64,33 +60,32 @@ public class LegislatorYouTube extends ListActivity {
     	holder.loadVideosTask = this.loadVideosTask;
     	return holder;
     }
-    
-	protected void displayVideos() {
-		displayVideos(false);
+	
+	private void setupControls() {
+		Utils.setLoading(this, R.string.youtube_loading);
+		((Button) findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				videos = null;
+				Utils.showLoading(LegislatorYouTube.this);
+				loadVideos();
+			}
+		});
+    	registerForContextMenu(getListView());
 	}
-	
-    protected void displayVideos(boolean cancelled) {
-    	if (videos != null) {
-	    	setListAdapter(new VideoAdapter(LegislatorYouTube.this, videos));
-	    	
-	    	if (videos.length <= 0) {
-	    		TextView empty = (TextView) findViewById(R.id.youtube_empty);
-	    		empty.setText(R.string.youtube_empty);
-	    		refresh.setVisibility(View.VISIBLE);
-	    	}
-    	} else {
-    		if (!cancelled)
-    			((TextView) findViewById(R.id.youtube_empty)).setText(R.string.connection_failed);
-    		refresh.setVisibility(View.VISIBLE);
-    	}
-    }
-	
+    
 	protected void loadVideos() {
 	    if (videos == null)
     		loadVideosTask = (LoadVideosTask) new LoadVideosTask(this).execute(username);
     	else
     		displayVideos();
 	}
+	
+	protected void displayVideos() {
+    	if (videos != null && videos.length > 0)
+	    	setListAdapter(new VideoAdapter(LegislatorYouTube.this, videos));
+    	else
+	    	Utils.showRefresh(this, R.string.youtube_empty);
+    }
 	
 	@Override
 	public void onListItemClick(ListView parent, View view, int position, long id) {
@@ -126,18 +121,7 @@ public class LegislatorYouTube extends ListActivity {
 		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(video.url)));
 	}
 	
-	private void setupControls() {
-		refresh = (Button) findViewById(R.id.youtube_refresh);
-    	refresh.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				videos = null;
-				loadVideos();
-			}
-		});
-    	registerForContextMenu(getListView());
-	}
-    
-    protected class VideoAdapter extends ArrayAdapter<Video> {
+	protected class VideoAdapter extends ArrayAdapter<Video> {
     	LayoutInflater inflater;
 
         public VideoAdapter(Activity context, Video[] videos) {
@@ -163,21 +147,14 @@ public class LegislatorYouTube extends ListActivity {
     
     private class LoadVideosTask extends AsyncTask<String,Void,Video[]> {
     	public LegislatorYouTube context;
-    	private ProgressDialog dialog = null;
     	
     	public LoadVideosTask(LegislatorYouTube context) {
     		super();
     		this.context = context;
     	}
     	
-    	@Override
-    	protected void onPreExecute() {
-    		loadingDialog();
-    	}
-    	
     	public void onScreenLoad(LegislatorYouTube context) {
     		this.context = context;
-    		loadingDialog();
     	}
     	
     	@Override
@@ -191,29 +168,10 @@ public class LegislatorYouTube extends ListActivity {
     	
     	@Override
     	protected void onPostExecute(Video[] videos) {
-    		if (dialog != null && dialog.isShowing())
-    			dialog.dismiss();
     		context.videos = videos;
-    		
     		context.displayVideos();
-    		
     		context.loadVideosTask = null;
     	}
-    	
-    	private void loadingDialog() {
-        	dialog = new ProgressDialog(context);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("Plucking videos from the air...");
-            
-            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				public void onCancel(DialogInterface dialog) {
-					cancel(true);
-					context.displayVideos(true);
-				}
-			});
-            
-            dialog.show();
-        }
     }
     
     static class LegislatorYouTubeHolder {

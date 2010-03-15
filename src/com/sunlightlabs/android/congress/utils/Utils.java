@@ -125,6 +125,10 @@ public class Utils {
 		activity.findViewById(R.id.loading).setVisibility(View.VISIBLE);
 	}
 	
+	public static void setLoading(Activity activity, int message) {
+		((TextView) activity.findViewById(R.id.loading_message)).setText(message);
+	}
+	
 	public static void showRefresh(Activity activity, int message) {
 		activity.findViewById(R.id.loading).setVisibility(View.GONE);
 		TextView messageView = (TextView) activity.findViewById(R.id.empty_message);
