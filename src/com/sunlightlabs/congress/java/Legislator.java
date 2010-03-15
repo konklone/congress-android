@@ -47,7 +47,7 @@ public class Legislator {
 	public String titledName() {
 		String name = title + ". " + getName();
 		if (name_suffix != null && !name_suffix.equals(""))
-			name += " " + name_suffix;
+			name += ", " + name_suffix;
 		return name;
 	}
 	
