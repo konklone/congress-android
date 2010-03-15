@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -75,6 +76,12 @@ public class BillList extends ListActivity {
 	}
 	
 	public void setupControls() {
+		((Button) findViewById(R.id.back)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				finish();
+			}
+		});
+		
 		switch (type) {
 		case BILLS_RECENT:
 			setTitle("Latest Bills");
@@ -108,10 +115,8 @@ public class BillList extends ListActivity {
 	}
 	
 	public void onLoadBills(CongressException exception) {
-		Utils.alert(this, R.string.error_connection);
-		finish();
-//		this.bills = new ArrayList<Bill>();
-//		displayBills();
+		this.bills = new ArrayList<Bill>();
+		Utils.showBack(this, R.string.error_connection);
 	}
 	
 	public void displayBills() {

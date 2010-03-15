@@ -34,7 +34,6 @@ public class LegislatorList extends ListActivity {
 	private ArrayList<Legislator> legislators = null;
 	private LoadLegislatorsTask loadLegislatorsTask = null;
 	private ShortcutImageTask shortcutImageTask = null;
-	private Button back;
 
 	private boolean shortcut;
 
@@ -120,8 +119,7 @@ public class LegislatorList extends ListActivity {
 	}
 
 	public void setupControls() {
-		back = (Button) findViewById(R.id.back);
-		back.setOnClickListener(new View.OnClickListener() {
+		((Button) findViewById(R.id.back)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				finish();
 			}
