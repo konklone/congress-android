@@ -49,7 +49,9 @@
         	</intent-filter>
         </activity>
         
-        <activity android:name=".LegislatorTabs" />
+        <activity android:name=".LegislatorTabs" 
+        	android:theme="@android:style/Theme.NoTitleBar"
+        	/>
         
         <activity android:name=".LegislatorProfile" />
         <activity android:name=".LegislatorNews" />

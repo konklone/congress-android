@@ -6,34 +6,6 @@
 	android:clickable="false"
 	>
 	
-	<FrameLayout
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:paddingTop="10dp"
-		android:paddingBottom="10dp"
-		
-		android:background="#222222"
-		>
-		<TextView android:id="@+id/profile_name"
-		
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			
-			android:textSize="26sp"
-			android:textColor="@android:color/white"
-			
-			android:text="Sen. Amyzina Klobuchar"
-			/>
-	</FrameLayout>
-	
-	<View
- 		android:layout_width="fill_parent"
- 		android:layout_height="1dp"
- 		android:background="#5c5e5d"
- 		android:layout_marginBottom="5dp"
- 		/>
- 		
 	<LinearLayout android:id="@+id/profile_top"
 		android:orientation="horizontal"
 		
@@ -59,7 +31,7 @@
 	  			android:layout_marginBottom="9dp"
 	  			
 	  			android:textSize="19sp"
-	  			android:textColor="#dddddd"
+	  			android:textColor="@android:color/white"
 	  			
 	  			android:text="Democrat"
 	  			
@@ -71,7 +43,7 @@
 		  		android:layout_marginBottom="9dp"
 		  		
 		  		android:textSize="19sp"
-		  		android:textColor="#dddddd"
+		  		android:textColor="@android:color/white"
 		  		
 		  		android:text="District of Columbia"
 		  		/>
@@ -82,7 +54,7 @@
 	  			android:layout_height="wrap_content"
 	  			
 	  			android:textSize="19sp"
-	  			android:textColor="#dddddd"
+	  			android:textColor="@android:color/white"
 	  			
 	  			android:text="Senior Senator"
 		  		/>

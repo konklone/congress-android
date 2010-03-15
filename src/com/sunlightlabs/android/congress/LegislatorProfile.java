@@ -196,13 +196,8 @@ public class LegislatorProfile extends ListActivity {
 		
 		picture = (ImageView) mainView.findViewById(R.id.profile_picture);
 		
-		((TextView) mainView.findViewById(R.id.profile_name)).setText(titledName);
-		
 		((TextView) mainView.findViewById(R.id.profile_party)).setText(partyName(party));
-		
-		String stateName = Utils.stateCodeToName(this, state);
-		((TextView) mainView.findViewById(R.id.profile_state)).setText(stateName);
-		
+		((TextView) mainView.findViewById(R.id.profile_state)).setText(Utils.stateCodeToName(this, state));
 		((TextView) mainView.findViewById(R.id.profile_domain)).setText(domainName(domain));
 		
 		ArrayList<View> contactViews = new ArrayList<View>(3);

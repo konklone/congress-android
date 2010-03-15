@@ -11,6 +11,14 @@
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
     	>
+    	
+    	<include layout="@layout/title_bar_legislator" />
+    	<View
+			android:layout_width="fill_parent"
+			android:layout_height="1px"
+			android:background="#5c5e5d"
+			/>
+    	
 	  	<TabWidget
 	  		android:id="@android:id/tabs"
 			android:layout_width="fill_parent"

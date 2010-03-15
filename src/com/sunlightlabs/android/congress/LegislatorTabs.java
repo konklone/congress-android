@@ -4,7 +4,9 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 public class LegislatorTabs extends TabActivity {
 	private String id, titledName, lastName, state, party, 
@@ -30,8 +32,15 @@ public class LegislatorTabs extends TabActivity {
 		twitter_id = extras.getString("twitter_id");
 		youtube_id = extras.getString("youtube_id");
 		
-        setTitle(titledName);
+        setupControls();
         setupTabs();
+	}
+	
+	public void setupControls() {
+		TextView nameTitle = (TextView) findViewById(R.id.title_text);
+		nameTitle.setText(titledName);
+		if (titledName.length() >= 23)
+			nameTitle.setTextSize(19);
 	}
 	
 	public void setupTabs() {
