@@ -6,47 +6,33 @@
 	
 	android:padding="5dp"
 	>
-	
+
 	<LinearLayout
-		android:orientation="horizontal"
-		android:layout_width="fill_parent"
+		android:orientation="vertical"
+		android:padding="5dp"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		
 		>
-		
-		<ImageView android:id="@+id/video_icon"
-			android:src="@drawable/video"
-			android:layout_width="48dp"
-			android:layout_height="48dp"
-			/>
-		
-		<LinearLayout
-			android:orientation="vertical"
-			android:padding="5dp"
+
+		<TextView
+			android:id="@+id/video_title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			>
-	
-			<TextView
-				android:id="@+id/video_title"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				
-				android:textSize="18sp" 
-				android:textColor="@android:color/white"
-				
-				android:text="Title of the YouTube Video And Then Some"
-				/>
-				
-			<TextView android:id="@+id/video_when"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				
-				android:textSize="15sp"
-				
-				android:text="September 22"
-				/>
-		</LinearLayout>
+			
+			android:textSize="18sp" 
+			android:textColor="@android:color/white"
+			
+			android:text="Title of the YouTube Video And Then Some"
+			/>
+			
+		<TextView android:id="@+id/video_when"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:textSize="15sp"
+			
+			android:text="September 22"
+			/>
 	</LinearLayout>
 	
 	<TextView android:id="@+id/video_description"
