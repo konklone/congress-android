@@ -17,6 +17,8 @@
     <string name="twitter_empty">No tweets found.</string>
     <string name="youtube_loading">Plucking videos from the air...</string>
     <string name="youtube_empty">No videos found.</string>
+    <string name="bills_loading">Searching for bills...</string>
+    <string name="legislators_loading">Searching for legislators...</string>
     
     <string name="error_connection">Couldn\'t connect to the network. Please try again when you have a connection.</string>
     <string name="connection_failed">Connection failed. Press refresh to try again.</string>

@@ -128,6 +128,7 @@ public class LegislatorList extends ListActivity {
 		
 		((TextView) findViewById(R.id.title_text)).setTextSize(20);
 
+		Utils.setLoading(this, R.string.legislators_loading);
 		switch (searchType()) {
 		case SEARCH_ZIP:
 			Utils.setTitle(this, "Legislators For " + zipCode);
@@ -260,24 +261,16 @@ public class LegislatorList extends ListActivity {
 		}
 	}
 
-	private class LoadLegislatorsTask extends
-			AsyncTask<Void, Void, ArrayList<Legislator>> {
+	private class LoadLegislatorsTask extends AsyncTask<Void, Void, ArrayList<Legislator>> {
 		public LegislatorList context;
-		private ProgressDialog dialog;
-
+		
 		public LoadLegislatorsTask(LegislatorList context) {
 			super();
 			this.context = context;
 		}
 
-		@Override
-		protected void onPreExecute() {
-			loadingDialog();
-		}
-
 		public void onScreenLoad(LegislatorList context) {
 			this.context = context;
-			loadingDialog();
 		}
 
 		@Override
@@ -338,9 +331,6 @@ public class LegislatorList extends ListActivity {
 
 		@Override
 		protected void onPostExecute(ArrayList<Legislator> legislators) {
-			if (dialog != null && dialog.isShowing())
-				dialog.dismiss();
-
 			context.legislators = legislators;
 
 			// if there's only one result, don't even make them click it
@@ -360,21 +350,6 @@ public class LegislatorList extends ListActivity {
 				context.displayLegislators();
 
 			context.loadLegislatorsTask = null;
-		}
-
-		public void loadingDialog() {
-			dialog = new ProgressDialog(context);
-			dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dialog.setMessage("Finding legislators...");
-
-			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				public void onCancel(DialogInterface dialog) {
-					cancel(true);
-					context.finish();
-				}
-			});
-
-			dialog.show();
 		}
 	}
 

@@ -6,8 +6,6 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.app.ListActivity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -82,6 +80,7 @@ public class BillList extends ListActivity {
 			}
 		});
 		
+		Utils.setLoading(this, R.string.bills_loading);
 		switch (type) {
 		case BILLS_RECENT:
 			Utils.setTitle(this, R.string.menu_bills_recent, R.drawable.bill_recent);
@@ -126,20 +125,13 @@ public class BillList extends ListActivity {
 	private class LoadBillsTask extends AsyncTask<Void,Void,ArrayList<Bill>> {
 		private BillList context;
 		private CongressException exception;
-		private ProgressDialog dialog;
 		
 		public LoadBillsTask(BillList context) {
 			this.context = context;
 		}
 		
-		@Override
-    	protected void onPreExecute() {
-    		loadingDialog();
-    	}
-		
 		public void onScreenLoad(BillList context) {
 			this.context = context;
-			loadingDialog();
 		}
 		
 		@Override
@@ -163,9 +155,6 @@ public class BillList extends ListActivity {
 		
 		@Override
 		public void onPostExecute(ArrayList<Bill> bills) {
-			if (dialog != null && dialog.isShowing())
-    			dialog.dismiss();
-			
 			context.loadBillsTask = null;
 			
 			if (exception != null && bills == null)
@@ -173,21 +162,6 @@ public class BillList extends ListActivity {
 			else
 				context.onLoadBills(bills);
 		}
-		
-		public void loadingDialog() {
-        	dialog = new ProgressDialog(context);
-        	dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        	dialog.setMessage("Loading bills...");
-        	
-        	dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				public void onCancel(DialogInterface dialog) {
-					cancel(true);
-    				context.finish();
-				}
-			});
-        	
-        	dialog.show();
-        }
 	}
 	
 	private class BillAdapter extends ArrayAdapter<Bill> {
