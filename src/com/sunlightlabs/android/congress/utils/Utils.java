@@ -1,9 +1,12 @@
 package com.sunlightlabs.android.congress.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Parcelable;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sunlightlabs.android.congress.BillInfo;
@@ -114,5 +117,27 @@ public class Utils {
 			return text.substring(0, length - 3) + "...";
 		else
 			return text;
+	}
+	
+	public static void showLoading(Activity activity) {
+		activity.findViewById(R.id.empty_message).setVisibility(View.GONE);
+		activity.findViewById(R.id.refresh).setVisibility(View.GONE);
+		activity.findViewById(R.id.loading).setVisibility(View.VISIBLE);
+	}
+	
+	public static void showRefresh(Activity activity, int message) {
+		activity.findViewById(R.id.loading).setVisibility(View.GONE);
+		TextView messageView = (TextView) activity.findViewById(R.id.empty_message);
+		messageView.setText(message);
+		messageView.setVisibility(View.VISIBLE);
+		activity.findViewById(R.id.refresh).setVisibility(View.VISIBLE);
+	}
+	
+	public static void showBack(Activity activity, int message) {
+		activity.findViewById(R.id.loading).setVisibility(View.GONE);
+		TextView messageView = (TextView) activity.findViewById(R.id.empty_message);
+		messageView.setText(message);
+		messageView.setVisibility(View.VISIBLE);
+		activity.findViewById(R.id.back).setVisibility(View.VISIBLE);	
 	}
 }

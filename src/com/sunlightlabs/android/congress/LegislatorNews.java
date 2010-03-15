@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.yahoo.news.NewsException;
 import com.sunlightlabs.android.yahoo.news.NewsItem;
 import com.sunlightlabs.android.yahoo.news.NewsService;
@@ -102,11 +103,7 @@ public class LegislatorNews extends ListActivity {
     	refresh.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				items = null;
-				
-				findViewById(R.id.empty_message).setVisibility(View.GONE);
-				findViewById(R.id.refresh).setVisibility(View.GONE);
-				findViewById(R.id.loading).setVisibility(View.VISIBLE);
-				
+				Utils.showLoading(LegislatorNews.this);
 				loadNews();
 			}
 		});
@@ -115,26 +112,10 @@ public class LegislatorNews extends ListActivity {
     }
     
     protected void displayNews() {
-    	displayNews(false);
-    }
-    
-    protected void displayNews(boolean cancelled) {
-    	TextView empty = (TextView) findViewById(R.id.empty_message);
-    	findViewById(R.id.loading).setVisibility(View.GONE);
-    	if (items != null) {
+    	if (items != null && items.length > 0)
     		setListAdapter(new NewsAdapter(this, items));
-    		if (items.length <= 0) {
-        		empty.setText(R.string.news_empty);
-        		empty.setVisibility(View.VISIBLE);
-        		refresh.setVisibility(View.VISIBLE);
-        	}
-		} else {
-			if (!cancelled) {
-				empty.setText(R.string.connection_failed);
-				empty.setVisibility(View.VISIBLE);
-			}
-    		refresh.setVisibility(View.VISIBLE);
-		}
+    	else
+    		Utils.showRefresh(this, R.string.news_empty);
     }
 	
 	protected void loadNews() {

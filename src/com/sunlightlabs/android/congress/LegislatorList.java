@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.LegislatorAdapter;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
@@ -99,26 +98,22 @@ public class LegislatorList extends ListActivity {
     }
     
     public void displayLegislators() {
-    	setListAdapter(new LegislatorAdapter(this, legislators));
-    	TextView empty = (TextView) findViewById(R.id.empty_message);
-    	
-    	if (legislators.size() <= 0) {
+    	if (legislators.size() > 0)
+    		setListAdapter(new LegislatorAdapter(this, legislators));
+    	else {
     		switch (searchType()) {
 	    		case SEARCH_ZIP:
-	    			empty.setText(R.string.empty_zipcode);
+	    			Utils.showBack(this, R.string.empty_zipcode);
 	    			break;
 	    		case SEARCH_LOCATION:
-	    			empty.setText(R.string.empty_location);
+	    			Utils.showBack(this, R.string.empty_location);
 	    			break;
 	    		case SEARCH_LASTNAME:
-	    			empty.setText(R.string.empty_last_name);
+	    			Utils.showBack(this, R.string.empty_last_name);
 	    			break;
 	    		default:
-	    			empty.setText(R.string.empty_general);
+	    			Utils.showBack(this, R.string.empty_general);
     		}
-    		findViewById(R.id.loading).setVisibility(View.GONE);
-    		empty.setVisibility(View.VISIBLE);
-    		back.setVisibility(View.VISIBLE);
     	}
     }
     
@@ -132,9 +127,7 @@ public class LegislatorList extends ListActivity {
     	refresh = (Button) findViewById(R.id.refresh);
     	refresh.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				findViewById(R.id.empty_message).setVisibility(View.GONE);
-				refresh.setVisibility(View.GONE);
-				findViewById(R.id.loading).setVisibility(View.VISIBLE);
+				Utils.showLoading(LegislatorList.this);
 				loadLegislators();
 			}
 		});
