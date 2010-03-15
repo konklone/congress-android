@@ -24,8 +24,8 @@ public class GetState extends Activity {
 	public void setupControls() {
 		spinner = (Spinner) findViewById(R.id.spinner);
 		
-		Button ok = (Button) this.findViewById(R.id.get_text_ok);
-		Button cancel = (Button) this.findViewById(R.id.get_text_cancel);
+		Button ok = (Button) findViewById(R.id.get_text_ok);
+		Button cancel = (Button) findViewById(R.id.get_text_cancel);
 		
 		ok.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {

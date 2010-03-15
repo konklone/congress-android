@@ -74,7 +74,7 @@ public class LegislatorYouTube extends ListActivity {
 	    	setListAdapter(new VideoAdapter(LegislatorYouTube.this, videos));
 	    	
 	    	if (videos.length <= 0) {
-	    		TextView empty = (TextView) LegislatorYouTube.this.findViewById(R.id.youtube_empty);
+	    		TextView empty = (TextView) findViewById(R.id.youtube_empty);
 	    		empty.setText(R.string.youtube_empty);
 	    		refresh.setVisibility(View.VISIBLE);
 	    	}
@@ -127,7 +127,7 @@ public class LegislatorYouTube extends ListActivity {
 	}
 	
 	private void setupControls() {
-		refresh = (Button) this.findViewById(R.id.youtube_refresh);
+		refresh = (Button) findViewById(R.id.youtube_refresh);
     	refresh.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				videos = null;

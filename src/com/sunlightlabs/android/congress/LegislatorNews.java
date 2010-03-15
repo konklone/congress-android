@@ -98,7 +98,7 @@ public class LegislatorNews extends ListActivity {
 	}
     
     private void setupControls() {
-    	refresh = (Button) this.findViewById(R.id.refresh);
+    	refresh = (Button) findViewById(R.id.refresh);
     	refresh.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				items = null;

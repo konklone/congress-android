@@ -32,19 +32,19 @@ public class GetText extends Activity {
 	
 	public void setupControls() {
 		if (ask != null) {
-			TextView askView = (TextView) this.findViewById(R.id.get_text_ask);
+			TextView askView = (TextView) findViewById(R.id.get_text_ask);
 			askView.setText(ask);
 		}
 		
-		responseField = (EditText) this.findViewById(R.id.get_text_response);
+		responseField = (EditText) findViewById(R.id.get_text_response);
 		if (hint != null)
 			responseField.setHint(hint);
 		
 		responseField.setInputType(inputType);
 		
 		
-		Button ok = (Button) this.findViewById(R.id.get_text_ok);
-		Button cancel = (Button) this.findViewById(R.id.get_text_cancel);
+		Button ok = (Button) findViewById(R.id.get_text_ok);
+		Button cancel = (Button) findViewById(R.id.get_text_cancel);
 		
 		ok.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
