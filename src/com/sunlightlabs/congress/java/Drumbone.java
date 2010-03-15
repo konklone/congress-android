@@ -14,9 +14,9 @@ import org.apache.http.util.EntityUtils;
  */
 
 public class Drumbone {
-	public static final String USER_AGENT = "sunlight-congress-";
 	public static final String[] dateFormat = new String[] {"yy/MM/dd HH:mm:ss Z"};
 	
+	public static String userAgent = "";
 	public static String apiKey = "";
 	public static String baseUrl = "";
 	public static String appVersion = "";
@@ -32,7 +32,7 @@ public class Drumbone {
 	
 	public static String fetchJSON(String url) throws CongressException {
 		HttpGet request = new HttpGet(url);
-        request.addHeader("User-Agent", USER_AGENT + appVersion);
+        request.addHeader("User-Agent", userAgent + "-" + appVersion);
 		
         DefaultHttpClient client = new DefaultHttpClient();
         
