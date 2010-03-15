@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:id="@id/android:empty"
+   	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	
+	android:layout_gravity="center"
+	>
+
+	<LinearLayout android:id="@+id/loading"
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:layout_weight="1"
+    	
+    	android:orientation="horizontal"
+    	android:gravity="center"
+    	>
+    	
+    	<ProgressBar android:id="@+id/loading_spinner"
+    		android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		style="?android:attr/progressBarStyleSmallTitle"
+    		
+    		android:layout_marginRight="10dp"
+    		/>
+    		
+    	<TextView android:id="@+id/loading_message"
+    		android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		
+    		android:text="Loading..."
+    		/>
+    	
+    </LinearLayout>
+	
+	<TextView android:id="@+id/empty_message"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		
+		android:layout_gravity="center"
+		android:layout_margin="10dp"
+		
+		android:visibility="gone"
+		/>
+	
+	<Button android:id="@+id/refresh"
+		android:layout_width="100dp"
+		android:layout_height="wrap_content"
+		
+		android:layout_margin="10dp"
+		android:layout_gravity="center"
+		
+		android:text="Refresh"
+		
+		android:visibility="gone"
+		/>
+	
+	<Button android:id="@+id/back"
+		android:layout_width="100dp"
+		android:layout_height="wrap_content"
+		
+		android:layout_margin="10dp"
+		android:layout_gravity="center"
+		
+		android:text="Back"
+		
+		android:visibility="gone"
+		/>
+		
+</LinearLayout>

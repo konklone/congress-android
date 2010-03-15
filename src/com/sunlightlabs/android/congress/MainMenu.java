@@ -100,7 +100,7 @@ public class MainMenu extends ListActivity {
         
         LinearLayout billsRecent = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
         ((ImageView) billsRecent.findViewById(R.id.icon)).setImageResource(R.drawable.bill_recent);
-        ((TextView) billsRecent.findViewById(R.id.text)).setText(R.string.menu_bills_introduced);
+        ((TextView) billsRecent.findViewById(R.id.text)).setText(R.string.menu_bills_recent);
         billsRecent.setTag(BillList.BILLS_RECENT);
         billViews.add(billsRecent);
         

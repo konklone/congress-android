@@ -3,15 +3,26 @@
     android:orientation="vertical"
     android:layout_width="fill_parent" 
     android:layout_height="fill_parent"
-    
-    android:gravity="center"
     >
+    
+    <include layout="@layout/title_bar_search" />
+    <View
+		android:layout_width="fill_parent"
+		android:layout_height="1px"
+		android:background="#5c5e5d"
+		/>
  
     <ListView android:id="@id/android:list"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="fill_parent"
 		/>
-
-	<include layout="@layout/list_empty" />
+	
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:gravity="center"
+		>
+		<include layout="@layout/list_empty" />
+	</LinearLayout>
 	
 </LinearLayout>

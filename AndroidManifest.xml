@@ -41,8 +41,13 @@
         	
         </activity>
         
-        <activity android:name=".LegislatorList" />
-        <activity android:name=".LegislatorLoader">
+        <activity android:name=".LegislatorList"
+        	 
+        	/>
+        	
+        <activity android:name=".LegislatorLoader"
+        	android:theme="@android:style/Theme.NoTitleBar"
+        	>
         	<intent-filter>
         		<action android:name="android.intent.action.MAIN" />
         		<category android:name="android.intent.category.DEFAULT" />
@@ -58,7 +63,10 @@
         <activity android:name=".LegislatorTwitter" />
         <activity android:name=".LegislatorYouTube" />
         
-        <activity android:name=".BillList" />
+        <activity android:name=".BillList" 
+        	android:theme="@android:style/Theme.NoTitleBar"
+        	/>
+        	
         <activity android:name=".BillInfo"
         	android:theme="@android:style/Theme.NoTitleBar"
         	>

@@ -44,7 +44,7 @@ public class BillList extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list);
+		setContentView(R.layout.list_titled);
 		
 		Resources resources = getResources(); 
 		Drumbone.apiKey = resources.getString(R.string.sunlight_api_key);
@@ -84,13 +84,13 @@ public class BillList extends ListActivity {
 		
 		switch (type) {
 		case BILLS_RECENT:
-			setTitle("Latest Bills");
+			Utils.setTitle(this, R.string.menu_bills_recent, R.drawable.bill_recent);
 			break;
 		case BILLS_LAW:
-			setTitle("Latest Laws");
+			Utils.setTitle(this, R.string.menu_bills_law, R.drawable.bill_law);
 			break;
 		case BILLS_SPONSOR:
-			setTitle("Latest Bills by " + sponsor_name);
+			Utils.setTitle(this, "Latest Bills by " + sponsor_name, R.drawable.bill_multiple);
 			break;
 		}
 	}

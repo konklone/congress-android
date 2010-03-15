@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Parcelable;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -143,5 +144,27 @@ public class Utils {
 		messageView.setText(message);
 		messageView.setVisibility(View.VISIBLE);
 		activity.findViewById(R.id.back).setVisibility(View.VISIBLE);	
+	}
+	
+	public static void setTitle(Activity activity, String title) {
+		((TextView) activity.findViewById(R.id.title_text)).setText(title);
+	}
+	
+	public static void setTitle(Activity activity, int title) {
+		((TextView) activity.findViewById(R.id.title_text)).setText(title);
+	}
+	
+	public static void setTitleIcon(Activity activity, int icon) {
+		((ImageView) activity.findViewById(R.id.title_icon)).setImageResource(icon);
+	}
+	
+	public static void setTitle(Activity activity, int title, int icon) {
+		setTitle(activity, title);
+		setTitleIcon(activity, icon);
+	}
+	
+	public static void setTitle(Activity activity, String title, int icon) {
+		setTitle(activity, title);
+		setTitleIcon(activity, icon);
 	}
 }
