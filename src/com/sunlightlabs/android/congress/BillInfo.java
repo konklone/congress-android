@@ -209,7 +209,7 @@ public class BillInfo extends ListActivity {
 		String title;
 		if (short_title != null) {
 			title = Utils.truncate(short_title, 400);
-			titleView.setTextSize(19);
+			titleView.setTextSize(22);
 		} else {
 			title = official_title;
 			titleView.setTextSize(16);
