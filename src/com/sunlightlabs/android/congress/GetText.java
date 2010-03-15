@@ -13,7 +13,7 @@ import android.widget.TextView;
 public class GetText extends Activity {
 	private EditText responseField;
 	
-	private String ask, hint;
+	private String ask, hint, startValue;
 	private int inputType;
 	
 	@Override
@@ -26,6 +26,7 @@ public class GetText extends Activity {
         ask = extras.getString("ask");
         hint = extras.getString("hint");
         inputType = extras.getInt("inputType", InputType.TYPE_CLASS_TEXT);
+        startValue = extras.getString("startValue");
         
         setupControls();
     }
@@ -39,6 +40,8 @@ public class GetText extends Activity {
 		responseField = (EditText) findViewById(R.id.get_text_response);
 		if (hint != null)
 			responseField.setHint(hint);
+		if (startValue != null)
+			responseField.setText(startValue);
 		
 		responseField.setInputType(inputType);
 		

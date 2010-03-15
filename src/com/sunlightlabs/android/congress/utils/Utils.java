@@ -113,6 +113,16 @@ public class Utils {
 		return null;
 	}
 	
+	public static int stateNameToPosition(Context context, String name) {
+		String[] names = context.getResources().getStringArray(R.array.state_names);
+		
+		for (int i=0; i<names.length; i++) {
+			if (names[i].equals(name))
+				return i;
+		}
+		return 0;
+	}
+	
 	public static String truncate(String text, int length) {
 		if (text.length() > length)
 			return text.substring(0, length - 3) + "...";

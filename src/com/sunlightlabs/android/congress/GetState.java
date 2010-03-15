@@ -8,8 +8,11 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.sunlightlabs.android.congress.utils.Utils;
+
 public class GetState extends Activity {
 	private Spinner spinner;
+	private String startValue;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -17,12 +20,16 @@ public class GetState extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.get_state);
         
+        startValue = getIntent().getStringExtra("startValue");
+        
         setupControls();
     }
 	
 	
 	public void setupControls() {
 		spinner = (Spinner) findViewById(R.id.spinner);
+		if (startValue != null)
+			spinner.setSelection(Utils.stateNameToPosition(this, startValue));
 		
 		Button ok = (Button) findViewById(R.id.get_text_ok);
 		Button cancel = (Button) findViewById(R.id.get_text_cancel);

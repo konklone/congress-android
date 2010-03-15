@@ -204,16 +204,19 @@ public class MainMenu extends ListActivity {
 			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText");
 			intent.putExtra("ask", "Enter a zip code:");
 			intent.putExtra("hint", "e.g. 11216");
+			intent.putExtra("startValue", Preferences.getString(this, "search_zip"));
 			intent.putExtra("inputType", InputType.TYPE_CLASS_PHONE);
 			break;
 		case RESULT_LASTNAME:
 			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText");
 			intent.putExtra("ask", "Enter a last name:");
 			intent.putExtra("hint", "e.g. Schumer");
+			intent.putExtra("startValue", Preferences.getString(this, "search_lastname"));
 			intent.putExtra("inputType", InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 			break;
 		case RESULT_STATE:
 			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetState");
+			intent.putExtra("startValue", Preferences.getString(this, "search_state"));
 			break;
 		default:
 			break;
@@ -228,27 +231,31 @@ public class MainMenu extends ListActivity {
 		case RESULT_ZIP:
 			if (resultCode == RESULT_OK) {
 				String zipCode = data.getExtras().getString("response").trim();
-				if (!zipCode.equals(""))
+				if (!zipCode.equals("")) {
+					Preferences.setString(this, "search_zip", zipCode);
 					searchByZip(zipCode);
+				}
 			}
 			break;
 		case RESULT_LASTNAME:
 			if (resultCode == RESULT_OK) {
 				String lastName = data.getExtras().getString("response").trim();
-				if (!lastName.equals(""))
+				if (!lastName.equals("")) {
+					Preferences.setString(this, "search_lastname", lastName);
 					searchByLastName(lastName);
+				}
 			}
 			break;
 		case RESULT_STATE:
 			if (resultCode == RESULT_OK) {
 				String state = data.getExtras().getString("response").trim();
-				
-				String code = Utils.stateNameToCode(this, state.trim());
-				if (code != null)
-					state = code;
-				
-				if (!state.equals(""))
-					searchByState(state);
+				if (!state.equals("")) {
+					String code = Utils.stateNameToCode(this, state.trim());
+					if (code != null) {
+						Preferences.setString(this, "search_state", state); // store the name, not the code
+						searchByState(code);
+					}
+				}
 			}
 			break;
 		}
