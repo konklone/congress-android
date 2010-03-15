@@ -337,12 +337,9 @@ public class LegislatorList extends ListActivity {
 			if (legislators.size() == 1) {
 				context.selectLegislator(legislators.get(0));
 
-				// if we're going on to the profile of a legislator, we want to
-				// cut the list out of the stack
-				// but if we're generating a shortcut, the shortcut process will
-				// be spawning off
-				// a separate background thread, that needs a live activity
-				// while it works,
+				// if we're going on to the profile of a legislator, we want to cut the list out of the stack
+				// but if we're generating a shortcut, the shortcut process will be spawning off
+				// a separate background thread, that needs a live activity while it works,
 				// and will call finish() on its own
 				if (!shortcut)
 					context.finish();
