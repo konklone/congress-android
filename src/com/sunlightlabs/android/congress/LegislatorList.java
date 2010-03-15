@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.LegislatorAdapter;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
@@ -45,7 +46,7 @@ public class LegislatorList extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list);
+		setContentView(R.layout.list_titled);
 
 		Bundle extras = getIntent().getExtras();
 
@@ -124,26 +125,27 @@ public class LegislatorList extends ListActivity {
 				finish();
 			}
 		});
+		
+		((TextView) findViewById(R.id.title_text)).setTextSize(20);
 
 		switch (searchType()) {
 		case SEARCH_ZIP:
-			setTitle("Legislators for " + zipCode + ":");
+			Utils.setTitle(this, "Legislators For " + zipCode);
 			break;
 		case SEARCH_LOCATION:
-			setTitle("Legislators for your location:");
+			Utils.setTitle(this, "Legislators For Your Location");
 			break;
 		case SEARCH_LASTNAME:
-			setTitle("Legislators by the name of " + lastName + ":");
+			Utils.setTitle(this, "Legislators Named \"" + lastName + "\"");
 			break;
 		case SEARCH_COMMITTEE:
-			setTitle(committeeName);
+			Utils.setTitle(this, committeeName);
 			break;
 		case SEARCH_STATE:
-			setTitle("Legislators from " + Utils.stateCodeToName(this, state)
-					+ ":");
+			Utils.setTitle(this, "Legislators from " + Utils.stateCodeToName(this, state));
 			break;
 		default:
-			setTitle("Legislator search:");
+			Utils.setTitle(this, "Legislator Search");
 		}
 	}
 
