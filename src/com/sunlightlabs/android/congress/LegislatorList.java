@@ -9,7 +9,6 @@ import java.util.Map;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -155,13 +154,9 @@ public class LegislatorList extends ListActivity {
 
 	public void selectLegislator(Legislator legislator) {
 		if (shortcut)
-			shortcutImageTask = (ShortcutImageTask) new ShortcutImageTask(this,
-					legislator).execute();
-		else {
-			String legislatorId = legislator.getId();
-			Intent legislatorIntent = Utils.legislatorIntent(legislatorId);
-			startActivity(legislatorIntent);
-		}
+			shortcutImageTask = (ShortcutImageTask) new ShortcutImageTask(this, legislator).execute();
+		else
+			startActivity(Utils.legislatorIntent(this, legislator));
 	}
 
 	private int searchType() {

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sunlightlabs.android.congress.BillInfo;
+import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
@@ -29,12 +30,30 @@ public class Utils {
 		Toast.makeText(context, message, Toast.LENGTH_LONG).show();
 	}
 	
+	// Suitable for a legislator desktop shortcut, load a legislator by ID only
 	public static Intent legislatorIntent(String id) {
     	Intent intent = new Intent(Intent.ACTION_MAIN);
     	intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorLoader");
 		intent.putExtra("legislator_id", id); 
 		return intent;
     }
+	
+	// Suitable for a direct link to a legislator, bypassing the LegislatorLoader entirely
+	public static Intent legislatorIntent(Context context, com.sunlightlabs.entities.Legislator legislator) {
+		return new Intent(context, LegislatorTabs.class)
+			.putExtra("id", legislator.getId())
+			.putExtra("titledName", legislator.titledName())
+			.putExtra("lastName", legislator.getProperty("lastname"))
+			.putExtra("state", legislator.getProperty("state"))
+			.putExtra("party", legislator.getProperty("party"))
+			.putExtra("gender", legislator.getProperty("gender"))
+			.putExtra("domain", legislator.getDomain())
+			.putExtra("office", legislator.getProperty("congress_office"))
+			.putExtra("website", legislator.getProperty("website"))
+			.putExtra("phone", legislator.getProperty("phone"))
+			.putExtra("twitter_id", legislator.getProperty("twitter_id"))
+			.putExtra("youtube_id", legislator.youtubeUsername());
+	}
 	
 	// suitable for going from a list to the bill display page
 	// not suitable for shortcut intents
