@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.LegislatorAdapter;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
@@ -126,9 +125,8 @@ public class LegislatorList extends ListActivity {
 			}
 		});
 		
-		((TextView) findViewById(R.id.title_text)).setTextSize(20);
-
 		Utils.setLoading(this, R.string.legislators_loading);
+		Utils.setTitleSize(this, 20);
 		switch (searchType()) {
 		case SEARCH_ZIP:
 			Utils.setTitle(this, "Legislators For " + zipCode);

@@ -167,4 +167,8 @@ public class Utils {
 		setTitle(activity, title);
 		setTitleIcon(activity, icon);
 	}
+	
+	public static void setTitleSize(Activity activity, float size) {
+		((TextView) activity.findViewById(R.id.title_text)).setTextSize(size);
+	}
 }

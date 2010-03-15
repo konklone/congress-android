@@ -90,6 +90,7 @@ public class BillList extends ListActivity {
 			break;
 		case BILLS_SPONSOR:
 			Utils.setTitle(this, "Latest Bills by " + sponsor_name, R.drawable.bill_multiple);
+			Utils.setTitleSize(this, 20);
 			break;
 		}
 	}
