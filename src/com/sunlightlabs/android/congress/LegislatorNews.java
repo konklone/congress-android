@@ -2,8 +2,6 @@ package com.sunlightlabs.android.congress;
 
 import android.app.Activity;
 import android.app.ListActivity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -39,7 +37,7 @@ public class LegislatorNews extends ListActivity {
     	
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	setContentView(R.layout.news_list);
+    	setContentView(R.layout.list);
     	
     	searchName = getIntent().getStringExtra("searchName");
     	searchName = correctExceptions(searchName);
@@ -104,6 +102,11 @@ public class LegislatorNews extends ListActivity {
     	refresh.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				items = null;
+				
+				findViewById(R.id.empty_message).setVisibility(View.GONE);
+				findViewById(R.id.refresh).setVisibility(View.GONE);
+				findViewById(R.id.loading).setVisibility(View.VISIBLE);
+				
 				loadNews();
 			}
 		});
@@ -122,11 +125,14 @@ public class LegislatorNews extends ListActivity {
     		setListAdapter(new NewsAdapter(this, items));
     		if (items.length <= 0) {
         		empty.setText(R.string.news_empty);
+        		empty.setVisibility(View.VISIBLE);
         		refresh.setVisibility(View.VISIBLE);
         	}
 		} else {
-			if (!cancelled)
+			if (!cancelled) {
 				empty.setText(R.string.connection_failed);
+				empty.setVisibility(View.VISIBLE);
+			}
     		refresh.setVisibility(View.VISIBLE);
 		}
     }
@@ -176,21 +182,14 @@ public class LegislatorNews extends ListActivity {
 	
 	private class LoadNewsTask extends AsyncTask<String,Void,NewsItem[]> {
 		public LegislatorNews context;
-		private ProgressDialog dialog = null;
 		
 		public LoadNewsTask(LegislatorNews context) {
 			super();
 			this.context = context;
 		}
 		
-		@Override
-		protected void onPreExecute() {
-			loadingDialog();
-		}
-		
 		public void onScreenLoad(LegislatorNews context) {
 			this.context = context;
-			loadingDialog();
 		}
 		
 		@Override
@@ -204,30 +203,11 @@ public class LegislatorNews extends ListActivity {
 		}
 		
 		@Override
-		protected void onPostExecute(NewsItem[] items) {
-			if (dialog != null && dialog.isShowing())
-    			dialog.dismiss();
-    		
+		protected void onPostExecute(NewsItem[] items) {    		
     		context.items = items;
     		context.displayNews();
     		context.loadNewsTask = null;
 		}
-		
-		private void loadingDialog() {
-	        dialog = new ProgressDialog(context);
-	        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-	        dialog.setMessage("Plucking news from the air...");
-	        
-	        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				public void onCancel(DialogInterface dialog) {
-					cancel(true);
-					context.displayNews(true);
-				}
-			});
-	        
-	        dialog.show();
-	    }
-		
 	}
 	
 	static class LegislatorNewsHolder{

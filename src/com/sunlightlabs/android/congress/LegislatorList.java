@@ -14,7 +14,6 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -101,7 +100,7 @@ public class LegislatorList extends ListActivity {
     
     public void displayLegislators() {
     	setListAdapter(new LegislatorAdapter(this, legislators));
-    	TextView empty = (TextView) this.findViewById(R.id.empty_msg);
+    	TextView empty = (TextView) findViewById(R.id.empty_message);
     	
     	if (legislators.size() <= 0) {
     		switch (searchType()) {
@@ -117,20 +116,25 @@ public class LegislatorList extends ListActivity {
 	    		default:
 	    			empty.setText(R.string.empty_general);
     		}
+    		findViewById(R.id.loading).setVisibility(View.GONE);
+    		empty.setVisibility(View.VISIBLE);
     		back.setVisibility(View.VISIBLE);
     	}
     }
     
     public void setupControls() {
-    	back = (Button) findViewById(R.id.empty_back);
+    	back = (Button) findViewById(R.id.back);
     	back.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				finish();
 			}
 		});
-    	refresh = (Button) findViewById(R.id.empty_refresh);
+    	refresh = (Button) findViewById(R.id.refresh);
     	refresh.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				findViewById(R.id.empty_message).setVisibility(View.GONE);
+				refresh.setVisibility(View.GONE);
+				findViewById(R.id.loading).setVisibility(View.VISIBLE);
 				loadLegislators();
 			}
 		});
@@ -342,24 +346,20 @@ public class LegislatorList extends ListActivity {
     			dialog.dismiss();
     		
     		context.legislators = legislators;
-    		if (context.legislators != null) {
-    			// if there's only one result, don't even make them click it
-            	if (legislators.size() == 1) {
-            		context.selectLegislator(legislators.get(0));
-            		
-            		// if we're going on to the profile of a legislator, we want to cut the list out of the stack
-            		// but if we're generating a shortcut, the shortcut process will be spawning off 
-            		// a separate background thread, that needs a live activity while it works, 
-            		// and will call finish() on its own
-            		if (!shortcut) 
-            			context.finish();
-            	} else
-            		context.displayLegislators();
-    		} else {
-    			context.setListAdapter(new ArrayAdapter<Legislator>(LegislatorList.this, android.R.layout.simple_list_item_1, legislators)); 
-            	((TextView) context.findViewById(R.id.empty_msg)).setText(R.string.connection_failed);
-            	context.refresh.setVisibility(View.VISIBLE);
-    		}
+    		
+			// if there's only one result, don't even make them click it
+        	if (legislators.size() == 1) {
+        		context.selectLegislator(legislators.get(0));
+        		
+        		// if we're going on to the profile of a legislator, we want to cut the list out of the stack
+        		// but if we're generating a shortcut, the shortcut process will be spawning off 
+        		// a separate background thread, that needs a live activity while it works, 
+        		// and will call finish() on its own
+        		if (!shortcut) 
+        			context.finish();
+        	} else
+        		context.displayLegislators();
+        	
     		context.loadLegislatorsTask = null;
     	}
     	
