@@ -1,7 +1,7 @@
 Summer of Code 2010
 --------
 
-*Attention Students* - If you're looking at this project and wondering what Sunlight is looking for from an applicant, please refer to the description posted on [Sunlight's GSOC 2010 wiki page(http://wiki.sunlightlabs.com/GSOC_2010#Congress_Android_App) about it.  Do not use the Issues page here on Github as an indicator of what features Sunlight is looking for students to add; they are just there to help the lead developer remember things.
+_Attention Students_ - If you're looking at this project and wondering what Sunlight is looking for from an applicant, please refer to the description posted on [Sunlight's GSOC 2010 wiki page](http://wiki.sunlightlabs.com/GSOC_2010#Congress_Android_App) about it.  Do not use the Issues page here on Github as an indicator of what features Sunlight is looking for students to add; they are just there to help the lead developer remember things.
 
 Features
 --------
