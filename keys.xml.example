@@ -5,5 +5,5 @@
     <string name="yahoo_news_key"></string>
     <string name="sunlight_api_key"></string>
     <string name="drumbone_base_url"></string>
-    <string name="drumbone_user_agent"><string>
+    <string name="drumbone_user_agent"></string>
 </resources>
