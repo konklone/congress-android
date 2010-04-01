@@ -18,6 +18,10 @@ Setup
 
 When setting this up, make sure to copy keys.xml.example to res/values/keys.xml and fill in your Sunlight API key and Yahoo News API key.
 
+To fetch bill information, you will need to enter a base URL for the Drumbone API.  You can use the following URL fragment as the value for "drumbone_base_url":
+
+http://drumbone.services.sunlightlabs.com/v1/api/
+
 
 Issue Tracking
 ------
