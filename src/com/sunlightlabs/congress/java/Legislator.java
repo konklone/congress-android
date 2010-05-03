@@ -1,5 +1,8 @@
 package com.sunlightlabs.congress.java;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -8,6 +11,7 @@ public class Legislator {
 	public String bioguide_id, govtrack_id;
 	public String first_name, last_name, nickname, name_suffix;
 	public String title, party, state, district;
+	public String gender, congress_office, website, phone, twitter_id, youtube_url;
 	
 	public Legislator(JSONObject json) throws JSONException {
 		if (!json.isNull("bioguide_id"))
@@ -31,6 +35,19 @@ public class Legislator {
 			state = json.getString("state");
 		if (!json.isNull("district"))
 			district = json.getString("district");
+		
+		if (!json.isNull("gender"))
+			gender = json.getString("gender");
+		if (!json.isNull("congress_office"))
+			gender = json.getString("congress_office");
+		if (!json.isNull("website"))
+			gender = json.getString("website");
+		if (!json.isNull("phone"))
+			gender = json.getString("phone");
+		if (!json.isNull("youtube_url"))
+			gender = json.getString("youtube_url");
+		if (!json.isNull("twitter_id"))
+			gender = json.getString("twitter_id");
 	}
 	
 	public String getName() {
@@ -61,6 +78,27 @@ public class Legislator {
 			return "Senator";
 		else // "Rep"
 			return "Representative";
+	}
+	
+	public String getDomain() {
+		String district = this.district;
+		if (district.equals("Senior Seat") || district.equals("Junior Seat"))
+			return district;
+		else if (district.equals("0"))
+			return "At-Large";
+		else
+			return "District " + district;
+	}
+	
+	public String youtubeUsername() {
+		String url = this.youtube_url;
+		Pattern p = Pattern.compile("http://(?:www\\.)?youtube\\.com/(?:user/)?(.*?)/?$", Pattern.CASE_INSENSITIVE);
+		Matcher m = p.matcher(url);
+		boolean found = m.find();
+		if (found)
+			return m.group(1);
+		else
+			return "";
 	}
 	
 	public static String partyName(String party) {
