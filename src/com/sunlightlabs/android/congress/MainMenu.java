@@ -38,6 +38,8 @@ public class MainMenu extends ListActivity {
 	private static final int FIRST = 1;
 	private static final int CHANGELOG = 2;
 	
+	public static final int BILLS_LAW = 0;
+	public static final int BILLS_RECENT = 1;
 	public static final int SEARCH_LOCATION = 2;
 	public static final int SEARCH_ZIP = 3;
 	public static final int SEARCH_STATE = 4;
@@ -76,9 +78,12 @@ public class MainMenu extends ListActivity {
 		case SEARCH_STATE:
 			getResponse(RESULT_STATE);
 			break;
-		case BillList.BILLS_RECENT:
-		case BillList.BILLS_LAW:
-			startActivity(new Intent(this, BillList.class).putExtra("type", type));
+		case BILLS_RECENT:
+			startActivity(new Intent(this, BillList.class).putExtra("type", BillList.BILLS_RECENT));
+			break;
+		case BILLS_LAW:
+			startActivity(new Intent(this, BillList.class).putExtra("type", BillList.BILLS_LAW));
+			break;
 		default:
 			break;
 		}

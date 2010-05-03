@@ -28,8 +28,8 @@ import com.sunlightlabs.congress.java.Drumbone;
 public class BillList extends ListActivity {
 	private static final int BILLS = 20;
 	
-	public static final int BILLS_RECENT = 0;
-	public static final int BILLS_LAW = 1;
+	public static final int BILLS_LAW = 0;
+	public static final int BILLS_RECENT = 1;
 	public static final int BILLS_SPONSOR = 2;
 	
 	private ArrayList<Bill> bills;
