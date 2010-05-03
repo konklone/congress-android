@@ -24,24 +24,16 @@
 			
 			android:text="Title of the YouTube Video And Then Some"
 			/>
-			
-		<TextView android:id="@+id/video_when"
+						
+		<TextView android:id="@+id/video_description"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			
-			android:textSize="15sp"
-			
-			android:text="September 22"
+			android:layout_margin="5dp"
+		
+			android:textSize="14sp"
+			android:text="September 22 - The summary of a video could be quite long and would look daunting unless wrapped and truncated appropriately.  Be sure to do this in all cases."
 			/>
 	</LinearLayout>
 	
-	<TextView android:id="@+id/video_description"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_margin="5dp"
-		
-		android:textSize="14sp"
-		
-		android:text="The summary of a video could be quite long and would look daunting unless wrapped and truncated appropriately.  Be sure to do this in all cases."
-		/>			
+				
 </LinearLayout>

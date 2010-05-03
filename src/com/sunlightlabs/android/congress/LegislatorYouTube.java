@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.ClipboardManager;
+import android.text.Html;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -138,8 +139,15 @@ public class LegislatorYouTube extends ListActivity {
 			
 			Video video = getItem(position);
 			((TextView) view.findViewById(R.id.video_title)).setText(video.title);
-			((TextView) view.findViewById(R.id.video_description)).setText(Utils.truncate(video.description, 150));
-			((TextView) view.findViewById(R.id.video_when)).setText(video.timestamp.format("%b %d"));
+			
+			// make the date stand out in the description using bold text
+			StringBuilder full_desc = new StringBuilder("<b>").append(video.timestamp.format("%b %d")).append("</b>");
+			String video_desc = video.description != null ? video.description.trim() : "";
+			
+			if(!video_desc.equals("")) { // check to see if the video has a non-empty description first
+				full_desc.append(" - ").append(video_desc);
+			}
+			((TextView) view.findViewById(R.id.video_description)).setText(Html.fromHtml(Utils.truncate(full_desc.toString(), 150)));
 			
 			return view;
 		}
