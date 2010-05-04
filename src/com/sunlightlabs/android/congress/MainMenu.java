@@ -40,10 +40,11 @@ public class MainMenu extends ListActivity {
 	
 	public static final int BILLS_LAW = 0;
 	public static final int BILLS_RECENT = 1;
-	public static final int SEARCH_LOCATION = 2;
-	public static final int SEARCH_ZIP = 3;
-	public static final int SEARCH_STATE = 4;
-	public static final int SEARCH_NAME = 5;
+	public static final int BILLS_LATEST_VOTES = 2;
+	public static final int SEARCH_LOCATION = 3;
+	public static final int SEARCH_ZIP = 4;
+	public static final int SEARCH_STATE = 5;
+	public static final int SEARCH_NAME = 6;
 	
 	private Location location;
 	
@@ -84,6 +85,9 @@ public class MainMenu extends ListActivity {
 		case BILLS_LAW:
 			startActivity(new Intent(this, BillList.class).putExtra("type", BillList.BILLS_LAW));
 			break;
+		case BILLS_LATEST_VOTES:
+			startActivity(new Intent(this, BillList.class).putExtra("type", BillList.BILLS_LATEST_VOTES));
+			break;
 		default:
 			break;
 		}
@@ -100,15 +104,20 @@ public class MainMenu extends ListActivity {
         LinearLayout billsLaw = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
         ((ImageView) billsLaw.findViewById(R.id.icon)).setImageResource(R.drawable.bill_law);
         ((TextView) billsLaw.findViewById(R.id.text)).setText(R.string.menu_bills_law);
-        billsLaw.setTag(BillList.BILLS_LAW);
+        billsLaw.setTag(BILLS_LAW);
         billViews.add(billsLaw);
         
         LinearLayout billsRecent = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
         ((ImageView) billsRecent.findViewById(R.id.icon)).setImageResource(R.drawable.bill_recent);
         ((TextView) billsRecent.findViewById(R.id.text)).setText(R.string.menu_bills_recent);
-        billsRecent.setTag(BillList.BILLS_RECENT);
+        billsRecent.setTag(BILLS_RECENT);
         billViews.add(billsRecent);
         
+        LinearLayout billsLatestVotes = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
+        ((ImageView) billsLatestVotes.findViewById(R.id.icon)).setImageResource(R.drawable.bill_recent);
+        ((TextView) billsLatestVotes.findViewById(R.id.text)).setText(R.string.menu_bills_latest_votes);
+        billsLatestVotes.setTag(BILLS_LATEST_VOTES);
+        billViews.add(billsLatestVotes);
         
         LinearLayout peopleHeader = (LinearLayout) inflater.inflate(R.layout.header_layout, null);
         ((TextView) peopleHeader.findViewById(R.id.header_text)).setText(R.string.menu_legislators_header);

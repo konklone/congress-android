@@ -31,6 +31,7 @@ public class BillList extends ListActivity {
 	public static final int BILLS_LAW = 0;
 	public static final int BILLS_RECENT = 1;
 	public static final int BILLS_SPONSOR = 2;
+	public static final int BILLS_LATEST_VOTES = 3;
 	
 	private ArrayList<Bill> bills;
 	private LoadBillsTask loadBillsTask;
@@ -93,6 +94,9 @@ public class BillList extends ListActivity {
 			Utils.setTitle(this, "Latest Bills by " + sponsor_name, R.drawable.bill_multiple);
 			Utils.setTitleSize(this, 20);
 			break;
+		case BILLS_LATEST_VOTES:
+			Utils.setTitle(this, R.string.menu_bills_latest_votes, R.drawable.bill_recent);
+			break;
 		}
 	}
 	
@@ -144,6 +148,8 @@ public class BillList extends ListActivity {
 					return Bill.recentlyIntroduced(BILLS);
 				case BILLS_LAW:
 					return Bill.recentLaws(BILLS);
+				case BILLS_LATEST_VOTES:
+					return Bill.latestVotes(BILLS);
 				case BILLS_SPONSOR:
 					return Bill.recentlySponsored(BILLS, context.sponsor_id);
 				default:
@@ -186,11 +192,15 @@ public class BillList extends ListActivity {
 			
 			String code = Bill.formatCode(bill.code);
 			String action;
-			Date date;
+			Date date = null;
 			switch (type) {
 			case BILLS_LAW:
 				date = bill.enacted_at;
 				action = "became law";
+				break;
+			case BILLS_LATEST_VOTES:
+				date = bill.last_vote_at;
+				action = (bill.passed ? "passed at " : "failed in the ") + Utils.capitalize(bill.chamber);
 				break;
 			case BILLS_RECENT:
 			case BILLS_SPONSOR:
@@ -200,9 +210,10 @@ public class BillList extends ListActivity {
 				break;
 			}
 			Spanned byline = Html.fromHtml("<b>" + code + "</b> " + action + ":");
-			
 			((TextView) view.findViewById(R.id.byline)).setText(byline);
-			((TextView) view.findViewById(R.id.date)).setText(new SimpleDateFormat("MMM dd").format(date));
+			
+			if(date != null)
+				((TextView) view.findViewById(R.id.date)).setText(new SimpleDateFormat("MMM dd").format(date));
 			
 			TextView titleView = ((TextView) view.findViewById(R.id.title));
 			if (bill.short_title != null) {

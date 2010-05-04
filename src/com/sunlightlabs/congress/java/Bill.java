@@ -16,6 +16,7 @@ public class Bill {
 	// basic
 	public String id, code, type, state, chamber;
 	public int session, number;
+	public boolean passed;
 	
 	// extended
 	public String short_title, official_title;
@@ -42,6 +43,8 @@ public class Bill {
 			session = json.getInt("session");
 		if (!json.isNull("number"))
 			number = json.getInt("number");
+		if(!json.isNull("passed")) 
+			passed = json.getBoolean("passed");
 		
 		if (!json.isNull("short_title"))
 			short_title = json.getString("short_title");
@@ -55,7 +58,7 @@ public class Bill {
 			last_vote_at = DateUtils.parseDate(json.getString("last_vote_at"), Drumbone.dateFormat);
 		if (!json.isNull("enacted_at"))
 			enacted_at = DateUtils.parseDate(json.getString("enacted_at"), Drumbone.dateFormat);
-		
+				
 		if (!json.isNull("sponsor"))
 			sponsor = new Legislator(json.getJSONObject("sponsor"));
 		
@@ -73,6 +76,10 @@ public class Bill {
 	
 	public static ArrayList<Bill> recentlySponsored(int n, String sponsor_id) throws CongressException {
 		return billsFor(Drumbone.url("bills","order=introduced_at&sponsor_id=" + sponsor_id + "&sections=basic,sponsor&per_page=" + n));
+	}
+	
+	public static ArrayList<Bill> latestVotes(int n) throws CongressException {
+		return billsFor(Drumbone.url("bills","order=last_vote_at&sections=basic,sponsor&per_page=" + n));
 	}
 	
 	public static Bill find(String id, String sections) throws CongressException {
@@ -155,4 +162,6 @@ public class Bill {
 	public static String displayTitle(Bill bill) {
 		return (bill.short_title != null) ? bill.short_title : bill.official_title; 
 	}
+
+	
 }

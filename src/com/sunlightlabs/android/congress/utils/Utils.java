@@ -200,4 +200,14 @@ public class Utils {
 	public static void setTitleSize(Activity activity, float size) {
 		((TextView) activity.findViewById(R.id.title_text)).setTextSize(size);
 	}
+	
+	public static String capitalize(String text) {
+		if(text == null) 
+			return "";
+		if(text.length() == 0)
+			return text;
+		if(text.length() == 1) 
+			return text.toUpperCase();
+		return text.substring(0, 1).toUpperCase() + text.substring(1);
+	}
 }
