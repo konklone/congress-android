@@ -212,9 +212,15 @@ public class BillList extends ListActivity {
 			Spanned byline = Html.fromHtml("<b>" + code + "</b> " + action + ":");
 			((TextView) view.findViewById(R.id.byline)).setText(byline);
 			
-			if(date != null)
-				((TextView) view.findViewById(R.id.date)).setText(new SimpleDateFormat("MMM dd").format(date));
-			
+			if(date != null) {
+				SimpleDateFormat format = null;
+				if(date.getYear() == new Date().getYear()) 
+					format = new SimpleDateFormat("MMM dd");
+				else
+					format = new SimpleDateFormat("MMM dd, yyyy");
+				((TextView) view.findViewById(R.id.date)).setText(format.format(date));
+			}
+				
 			TextView titleView = ((TextView) view.findViewById(R.id.title));
 			if (bill.short_title != null) {
 				String title = Utils.truncate(bill.short_title, 300);
