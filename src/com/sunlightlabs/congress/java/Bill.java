@@ -99,7 +99,7 @@ public class Bill {
 	}
 	
 	public static ArrayList<Bill> latestVotes(int n) throws CongressException {
-		return billsFor(Drumbone.url("bills","order=last_vote_at&sections=basic,votes&per_page=" + n));
+		return billsFor(Drumbone.url("bills","order=last_vote_at&sections=basic,sponsor,votes&per_page=" + n));
 	}
 	
 	public static Bill find(String id, String sections) throws CongressException {
