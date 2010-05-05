@@ -200,7 +200,7 @@ public class BillList extends ListActivity {
 				break;
 			case BILLS_LATEST_VOTES:
 				date = bill.last_vote_at;
-				action = (bill.passed ? "passed at " : "failed in the ") + Utils.capitalize(bill.chamber);
+				action = (bill.last_vote_result.equals("pass") ? "passed the " : "failed in the ") + Utils.capitalize(bill.last_vote_chamber);
 				break;
 			case BILLS_RECENT:
 			case BILLS_SPONSOR:

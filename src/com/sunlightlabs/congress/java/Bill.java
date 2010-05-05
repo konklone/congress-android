@@ -28,6 +28,10 @@ public class Bill {
 	// summary
 	public String summary;
 	
+	// votes
+	public String last_vote_result;
+	public String last_vote_chamber;
+	
 	public Bill(JSONObject json) throws JSONException, DateParseException {
 		if (!json.isNull("bill_id"))
 			id = json.getString("bill_id");
@@ -43,7 +47,7 @@ public class Bill {
 			session = json.getInt("session");
 		if (!json.isNull("number"))
 			number = json.getInt("number");
-		if(!json.isNull("passed")) 
+		if (!json.isNull("passed"))
 			passed = json.getBoolean("passed");
 		
 		if (!json.isNull("short_title"))
@@ -64,8 +68,24 @@ public class Bill {
 		
 		if (!json.isNull("summary"))
 			summary = json.getString("summary");
+		
+		if(!json.isNull("votes")) {
+			JSONArray votes = json.getJSONArray("votes");
+			int length = votes.length();
+			
+			for(int i = 0; i < length; i++) {
+				JSONObject vote = votes.getJSONObject(i);
+				
+				// find the last vote (same date and year as the 'last_vote_at')
+				if(DateUtils.parseDate(vote.getString("voted_at"), Drumbone.dateFormat).equals(last_vote_at)) { 					
+					last_vote_chamber = vote.getString("chamber");
+					last_vote_result = vote.getString("result");
+					break;
+				}
+			}
+		}
 	}
-	
+		
 	public static ArrayList<Bill> recentlyIntroduced(int n) throws CongressException {
 		return billsFor(Drumbone.url("bills","order=introduced_at&sections=basic,sponsor&per_page=" + n));
 	}
@@ -79,7 +99,7 @@ public class Bill {
 	}
 	
 	public static ArrayList<Bill> latestVotes(int n) throws CongressException {
-		return billsFor(Drumbone.url("bills","order=last_vote_at&sections=basic,sponsor&per_page=" + n));
+		return billsFor(Drumbone.url("bills","order=last_vote_at&sections=basic,votes&per_page=" + n));
 	}
 	
 	public static Bill find(String id, String sections) throws CongressException {
@@ -116,8 +136,7 @@ public class Bill {
 		
 		return bills;
 	}
-	
-	
+			
 	public static String formatCode(String code) {
 		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");
 		Matcher matcher = pattern.matcher(code);
