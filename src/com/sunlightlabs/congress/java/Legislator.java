@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,15 +20,15 @@ public class Legislator implements Comparable<Legislator> {
 	
 	// all legislators meeting one condition
 	public static ArrayList<Legislator> allWhere(String key, String value) throws CongressException {
-		return null;
+		return legislatorsFor(Sunlight.url("legislators.getList", key + "=" + value));
 	}
 	
 	public static ArrayList<Legislator> allForZipCode(String zip) throws CongressException {
-		return null;		
+		return legislatorsFor(Sunlight.url("legislators.allForZip", "zip=" + zip));
 	}
 	
 	public static ArrayList<Legislator> allForLatLong(double latitude, double longitude) throws CongressException {
-		return null;
+		return legislatorsFor(Sunlight.url("legislators.allForLatLong", "latitude=" + latitude + "&longitude=" + longitude));
 	}
 	
 	public static Legislator findByBioguideId(String bioguide_id) throws CongressException {
@@ -41,6 +42,23 @@ public class Legislator implements Comparable<Legislator> {
 		} catch(JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);
 		}
+	}
+	
+	private static ArrayList<Legislator> legislatorsFor(String url) throws CongressException {
+		String rawJSON = Sunlight.fetchJSON(url);
+		ArrayList<Legislator> legislators = new ArrayList<Legislator>();
+		try {
+			JSONArray results = new JSONObject(rawJSON).getJSONObject("response").getJSONArray("legislators");
+			
+			int length = results.length();
+			for (int i = 0; i<length; i++)
+				legislators.add(Legislator.fromSunlight(results.getJSONObject(i).getJSONObject("legislator")));
+				
+		} catch(JSONException e) {
+			throw new CongressException(e, "Problem parsing the JSON from " + url);
+		}
+		
+		return legislators;
 	}
 	
 	public static Legislator fromDrumbone(JSONObject json) throws JSONException {
