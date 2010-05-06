@@ -122,19 +122,19 @@ public class Bill {
 		if (match.equals("hr"))
 			return "H.R. " + number;
 		else if (match.equals("hres"))
-			return "H.Res. " + number;
+			return "House Res. " + number;
 		else if (match.equals("hjres"))
-			return "H.J.Res. " + number;
+			return "House Joint Res. " + number;
 		else if (match.equals("hcres"))
-			return "H.C.Res. " + number;
+			return "House Con. Res. " + number;
 		else if (match.equals("s"))
 			return "S. " + number;
 		else if (match.equals("sres"))
-			return "S.Res. " + number;
+			return "Senate Res. " + number;
 		else if (match.equals("sjres"))
-			return "S.J.Res. " + number;
+			return "Senate Joint Res. " + number;
 		else if (match.equals("scres"))
-			return "S.C.Res. " + number;
+			return "Senate Con. Res. " + number;
 		else
 			return code;
 	}
