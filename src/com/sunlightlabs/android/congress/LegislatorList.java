@@ -280,7 +280,7 @@ public class LegislatorList extends ListActivity {
 					temp = Legislator.allWhere("lastname", lastName);
 					break;
 				case SEARCH_COMMITTEE:
-					temp = Committee.legislatorsForCommittee(committeeId);
+					temp = Committee.find(committeeId).members;
 					break;
 				case SEARCH_STATE:
 					temp = Legislator.allWhere("state", state);

@@ -68,7 +68,7 @@ public class LegislatorProfile extends ListActivity {
         	holder.loadInto(this);
         
         loadPhotos();
-        //loadCommittees();
+        loadCommittees();
         if (shortcutImageTask != null)
         	shortcutImageTask.onScreenLoad(this);
 	}
@@ -388,12 +388,12 @@ public class LegislatorProfile extends ListActivity {
 			ArrayList<Committee> joint = new ArrayList<Committee>();
 			ArrayList<Committee> temp;
 			
-//			try {
+			try {
 				temp = Committee.forLegislator(bioguideId[0]);
-//			} catch (IOException e) {
-//				this.exception = new CongressException(e, "Error loading committees.");
-//				return null;
-//			}
+			} catch (CongressException e) {
+				this.exception = new CongressException(e, "Error loading committees.");
+				return null;
+			}
 			for (int i=0; i<temp.size(); i++) {
 				if (temp.get(i).chamber.equals("Joint"))
 					joint.add(temp.get(i));

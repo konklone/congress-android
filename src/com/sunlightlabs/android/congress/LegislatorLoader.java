@@ -65,7 +65,7 @@ public class LegislatorLoader extends Activity {
     	@Override
     	protected Legislator doInBackground(String... ids) {
     		try {
-				return Legislator.findByBioguideId(ids[0]);
+				return Legislator.find(ids[0]);
 			} catch(CongressException exception) {
 				return null;
 			}

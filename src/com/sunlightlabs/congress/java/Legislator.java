@@ -31,7 +31,7 @@ public class Legislator implements Comparable<Legislator> {
 		return legislatorsFor(Sunlight.url("legislators.allForLatLong", "latitude=" + latitude + "&longitude=" + longitude));
 	}
 	
-	public static Legislator findByBioguideId(String bioguide_id) throws CongressException {
+	public static Legislator find(String bioguide_id) throws CongressException {
 		return legislatorFor(Sunlight.url("legislators.get", "bioguide_id=" + bioguide_id));
 	}
 	
