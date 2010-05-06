@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.entities.Legislator;
+import com.sunlightlabs.congress.java.Legislator;
 
 public class LegislatorAdapter extends ArrayAdapter<Legislator> {
 	LayoutInflater inflater;
@@ -39,19 +39,19 @@ public class LegislatorAdapter extends ArrayAdapter<Legislator> {
 	}
 	
 	public String nameFor(Legislator legislator) {
-		return legislator.lastName() + ", " + legislator.firstName();
+		return legislator.last_name + ", " + legislator.firstName();
 	}
 	
 	public String positionFor(Legislator legislator) {
-		String district = legislator.getProperty("district");
-		String stateName = Utils.stateCodeToName(context, legislator.getProperty("state"));
+		String district = legislator.district;
+		String stateName = Utils.stateCodeToName(context, legislator.state);
 		
 		if (district.equals("Senior Seat"))
 			return "Senior Senator from " + stateName;
 		else if (district.equals("Junior Seat"))
 			return "Junior Senator from " + stateName;
 		else if (district.equals("0")) {
-			if (legislator.getProperty("title").equals("Rep"))
+			if (legislator.title.equals("Rep"))
 				return "Representative for " + stateName + " At-Large";
 			else
 				return legislator.fullTitle() + " for " + stateName;

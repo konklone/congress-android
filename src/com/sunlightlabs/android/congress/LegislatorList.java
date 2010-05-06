@@ -1,10 +1,7 @@
 package com.sunlightlabs.android.congress;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -19,9 +16,9 @@ import android.widget.ListView;
 import com.sunlightlabs.android.congress.utils.LegislatorAdapter;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.api.ApiCall;
-import com.sunlightlabs.entities.Committee;
-import com.sunlightlabs.entities.Legislator;
+import com.sunlightlabs.congress.java.Committee;
+import com.sunlightlabs.congress.java.CongressException;
+import com.sunlightlabs.congress.java.Legislator;
 
 public class LegislatorList extends ListActivity {
 	private final static int SEARCH_ZIP = 0;
@@ -36,8 +33,7 @@ public class LegislatorList extends ListActivity {
 
 	private boolean shortcut;
 
-	private String zipCode, lastName, state, api_key, committeeId,
-			committeeName;
+	private String zipCode, lastName, state, committeeId, committeeName;
 	private double latitude = -1;
 	private double longitude = -1;
 
@@ -45,6 +41,8 @@ public class LegislatorList extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_titled);
+		
+		Utils.setupSunlight(this);
 
 		Bundle extras = getIntent().getExtras();
 
@@ -55,8 +53,6 @@ public class LegislatorList extends ListActivity {
 		state = extras.getString("state");
 		committeeId = extras.getString("committeeId");
 		committeeName = extras.getString("committeeName");
-
-		api_key = getResources().getString(R.string.sunlight_api_key);
 
 		shortcut = extras.getBoolean("shortcut", false);
 
@@ -225,7 +221,7 @@ public class LegislatorList extends ListActivity {
 
 		@Override
 		protected Bitmap doInBackground(Void... nothing) {
-			return LegislatorImage.shortcutImage(legislator.getId(), context);
+			return LegislatorImage.shortcutImage(legislator.bioguide_id, context);
 		}
 
 		@Override
@@ -268,48 +264,37 @@ public class LegislatorList extends ListActivity {
 
 		@Override
 		protected ArrayList<Legislator> doInBackground(Void... nothing) {
-			ApiCall api = new ApiCall(api_key);
-
 			ArrayList<Legislator> legislators = new ArrayList<Legislator>();
-			ArrayList<Legislator> lower = new ArrayList<Legislator>(); // lower
-																		// house,
-																		// not
-																		// stature
-			Legislator[] temp;
+			ArrayList<Legislator> lower = new ArrayList<Legislator>();
+																		
+			ArrayList<Legislator> temp;
 			try {
-				Map<String, String> params;
 				switch (searchType()) {
 				case SEARCH_ZIP:
-					temp = Legislator.getLegislatorsForZipCode(api, zipCode);
+					temp = Legislator.allForZipCode(zipCode);
 					break;
 				case SEARCH_LOCATION:
-					temp = Legislator.getLegislatorsForLatLong(api, latitude,
-							longitude);
+					temp = Legislator.allForLatLong(latitude, longitude);
 					break;
 				case SEARCH_LASTNAME:
-					params = new HashMap<String, String>();
-					params.put("lastname", lastName);
-					temp = Legislator.allLegislators(api, params);
+					temp = Legislator.allWhere("lastname", lastName);
 					break;
 				case SEARCH_COMMITTEE:
-					temp = Committee.getLegislatorsForCommittee(api,
-							committeeId);
+					temp = Committee.legislatorsForCommittee(committeeId);
 					break;
 				case SEARCH_STATE:
-					params = new HashMap<String, String>();
-					params.put("state", state);
-					temp = Legislator.allLegislators(api, params);
+					temp = Legislator.allWhere("state", state);
 					break;
 				default:
 					return legislators;
 				}
 
 				// sort legislators Senators-first
-				for (int i = 0; i < temp.length; i++) {
-					if (temp[i].getProperty("title").equals("Sen"))
-						legislators.add(temp[i]);
+				for (int i = 0; i < temp.size(); i++) {
+					if (temp.get(i).title.equals("Sen"))
+						legislators.add(temp.get(i));
 					else
-						lower.add(temp[i]);
+						lower.add(temp.get(i));
 				}
 				Collections.sort(legislators);
 				Collections.sort(lower);
@@ -317,7 +302,7 @@ public class LegislatorList extends ListActivity {
 
 				return legislators;
 
-			} catch (IOException e) {
+			} catch (CongressException exception) {
 				return legislators;
 			}
 		}

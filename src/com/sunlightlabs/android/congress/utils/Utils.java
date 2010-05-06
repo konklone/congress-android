@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Parcelable;
 import android.view.View;
@@ -15,8 +16,25 @@ import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
+import com.sunlightlabs.congress.java.Drumbone;
+import com.sunlightlabs.congress.java.Legislator;
+import com.sunlightlabs.congress.java.Sunlight;
 
 public class Utils {
+	public static void setupDrumbone(Context context) {
+		Resources resources = context.getResources();
+		Drumbone.userAgent = resources.getString(R.string.drumbone_user_agent);
+		Drumbone.apiKey = resources.getString(R.string.sunlight_api_key);
+		Drumbone.baseUrl = resources.getString(R.string.drumbone_base_url);
+		Drumbone.appVersion = resources.getString(R.string.app_version);
+	}
+	
+	public static void setupSunlight(Context context) {
+		Resources resources = context.getResources();
+		Sunlight.apiKey = resources.getString(R.string.sunlight_api_key);
+		Sunlight.appVersion = resources.getString(R.string.app_version);
+	}
+	
 	public static void alert(Context context, String msg) {
 		Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
 	}
@@ -39,19 +57,19 @@ public class Utils {
     }
 	
 	// Suitable for a direct link to a legislator, bypassing the LegislatorLoader entirely
-	public static Intent legislatorIntent(Context context, com.sunlightlabs.entities.Legislator legislator) {
+	public static Intent legislatorIntent(Context context, Legislator legislator) {
 		return new Intent(context, LegislatorTabs.class)
-			.putExtra("id", legislator.getId())
+			.putExtra("id", legislator.bioguide_id)
 			.putExtra("titledName", legislator.titledName())
-			.putExtra("lastName", legislator.getProperty("lastname"))
-			.putExtra("state", legislator.getProperty("state"))
-			.putExtra("party", legislator.getProperty("party"))
-			.putExtra("gender", legislator.getProperty("gender"))
+			.putExtra("lastName", legislator.last_name)
+			.putExtra("state", legislator.state)
+			.putExtra("party", legislator.party)
+			.putExtra("gender", legislator.gender)
 			.putExtra("domain", legislator.getDomain())
-			.putExtra("office", legislator.getProperty("congress_office"))
-			.putExtra("website", legislator.getProperty("website"))
-			.putExtra("phone", legislator.getProperty("phone"))
-			.putExtra("twitter_id", legislator.getProperty("twitter_id"))
+			.putExtra("office", legislator.congress_office)
+			.putExtra("website", legislator.website)
+			.putExtra("phone", legislator.phone)
+			.putExtra("twitter_id", legislator.twitter_id)
 			.putExtra("youtube_id", legislator.youtubeUsername());
 	}
 	
@@ -98,8 +116,8 @@ public class Utils {
 			.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, resource);
 	}
 	
-	public static Intent shortcutIntent(Context context, com.sunlightlabs.entities.Legislator legislator, Bitmap icon) {
-		return shortcutIntent(context, legislator.getId(), legislator.getProperty("lastname"), icon);
+	public static Intent shortcutIntent(Context context, Legislator legislator, Bitmap icon) {
+		return shortcutIntent(context, legislator.bioguide_id, legislator.last_name, icon);
 	}
 	
 	public static Intent shortcutIntent(Context context, String legislatorId, String name, Bitmap icon) {

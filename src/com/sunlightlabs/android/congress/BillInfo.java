@@ -6,7 +6,6 @@ import java.util.Date;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,7 +25,6 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
-import com.sunlightlabs.congress.java.Drumbone;
 import com.sunlightlabs.congress.java.Legislator;
 
 public class BillInfo extends ListActivity {
@@ -52,11 +50,7 @@ public class BillInfo extends ListActivity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.loading_fullscreen);
 		
-		Resources resources = getResources();
-		Drumbone.userAgent = resources.getString(R.string.drumbone_user_agent);
-		Drumbone.apiKey = resources.getString(R.string.sunlight_api_key);
-		Drumbone.baseUrl = resources.getString(R.string.drumbone_base_url);
-		Drumbone.appVersion = resources.getString(R.string.app_version);
+		Utils.setupDrumbone(this);
 		
 		Bundle extras = getIntent().getExtras();
 		id = extras.getString("id");

@@ -1,6 +1,5 @@
 package com.sunlightlabs.android.congress;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.regex.Matcher;
@@ -29,13 +28,11 @@ import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
-import com.sunlightlabs.api.ApiCall;
+import com.sunlightlabs.congress.java.Committee;
 import com.sunlightlabs.congress.java.CongressException;
-import com.sunlightlabs.entities.Committee;
 
 public class LegislatorProfile extends ListActivity {
 	private String id, titledName, lastName, party, gender, state, domain, phone, website;
-	private String apiKey;
 	private Drawable avatar;
 	private ImageView picture;
 	private ArrayList<Committee> committees;
@@ -51,7 +48,7 @@ public class LegislatorProfile extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        apiKey = getResources().getString(R.string.sunlight_api_key);
+        Utils.setupSunlight(this);
         
         Bundle extras = getIntent().getExtras(); 
         id = extras.getString("id");
@@ -71,7 +68,7 @@ public class LegislatorProfile extends ListActivity {
         	holder.loadInto(this);
         
         loadPhotos();
-        loadCommittees();
+        //loadCommittees();
         if (shortcutImageTask != null)
         	shortcutImageTask.onScreenLoad(this);
 	}
@@ -184,8 +181,8 @@ public class LegislatorProfile extends ListActivity {
     public void launchCommittee(Committee committee) {
     	Intent intent = new Intent()
     		.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorList")
-			.putExtra("committeeId", committee.getProperty("id"))
-			.putExtra("committeeName", committee.getProperty("name"));
+			.putExtra("committeeId", committee.id)
+			.putExtra("committeeName", committee.name);
 		startActivity(intent);
     }
 	
@@ -315,7 +312,7 @@ public class LegislatorProfile extends ListActivity {
 			// ignoring convertView as a recycling possibility -
 			// the list is too small to make the extra logic worth it
 			LinearLayout view = (LinearLayout) inflater.inflate(R.layout.profile_committee, null);
-			((TextView) view.findViewById(R.id.name)).setText(committee.getProperty("name"));
+			((TextView) view.findViewById(R.id.name)).setText(committee.name);
 			view.setTag(committee);
 			
 			return view;
@@ -389,19 +386,19 @@ public class LegislatorProfile extends ListActivity {
 		public ArrayList<Committee> doInBackground(String... bioguideId) {
 			ArrayList<Committee> committees = new ArrayList<Committee>();
 			ArrayList<Committee> joint = new ArrayList<Committee>();
-			Committee[] temp;
+			ArrayList<Committee> temp;
 			
-			try {
-				temp = Committee.getCommitteesForLegislator(new ApiCall(context.apiKey), bioguideId[0]);
-			} catch (IOException e) {
-				this.exception = new CongressException(e, "Error loading committees.");
-				return null;
-			}
-			for (int i=0; i<temp.length; i++) {
-				if (temp[i].getProperty("chamber").equals("Joint"))
-					joint.add(temp[i]);
+//			try {
+				temp = Committee.forLegislator(bioguideId[0]);
+//			} catch (IOException e) {
+//				this.exception = new CongressException(e, "Error loading committees.");
+//				return null;
+//			}
+			for (int i=0; i<temp.size(); i++) {
+				if (temp.get(i).chamber.equals("Joint"))
+					joint.add(temp.get(i));
 				else
-					committees.add(temp[i]);
+					committees.add(temp.get(i));
 			}
 			Collections.sort(committees);
 			Collections.sort(joint);

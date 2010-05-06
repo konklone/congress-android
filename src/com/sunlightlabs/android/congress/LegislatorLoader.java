@@ -1,7 +1,5 @@
 package com.sunlightlabs.android.congress;
 
-import java.io.IOException;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -9,20 +7,20 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.api.ApiCall;
-import com.sunlightlabs.entities.Legislator;
+import com.sunlightlabs.congress.java.CongressException;
+import com.sunlightlabs.congress.java.Legislator;
 
 public class LegislatorLoader extends Activity {
 	private LoadLegislatorTask loadLegislatorTask = null;
-	
-	private String apiKey;
 	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		Utils.setupSunlight(this);
+		
 		String legislator_id = getIntent().getStringExtra("legislator_id");
-        apiKey = getResources().getString(R.string.sunlight_api_key);
         
         loadLegislatorTask = (LoadLegislatorTask) getLastNonConfigurationInstance();
         if (loadLegislatorTask != null)
@@ -67,8 +65,8 @@ public class LegislatorLoader extends Activity {
     	@Override
     	protected Legislator doInBackground(String... ids) {
     		try {
-				return Legislator.getLegislatorById(new ApiCall(context.apiKey), ids[0]);
-			} catch(IOException e) {
+				return Legislator.findByBioguideId(ids[0]);
+			} catch(CongressException exception) {
 				return null;
 			}
     	}

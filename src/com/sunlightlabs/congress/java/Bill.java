@@ -17,8 +17,6 @@ public class Bill {
 	public String id, code, type, state, chamber;
 	public int session, number;
 	public boolean passed;
-	
-	// extended
 	public String short_title, official_title;
 	public Date introduced_at, last_action_at, last_vote_at, enacted_at;
 	
@@ -64,7 +62,7 @@ public class Bill {
 			enacted_at = DateUtils.parseDate(json.getString("enacted_at"), Drumbone.dateFormat);
 				
 		if (!json.isNull("sponsor"))
-			sponsor = new Legislator(json.getJSONObject("sponsor"));
+			sponsor = Legislator.fromDrumbone(json.getJSONObject("sponsor"));
 		
 		if (!json.isNull("summary"))
 			summary = json.getString("summary");
@@ -109,8 +107,7 @@ public class Bill {
 	public static Bill billFor(String url) throws CongressException {
 		String rawJSON = Drumbone.fetchJSON(url);
 		try {
-			JSONObject bill = new JSONObject(rawJSON).getJSONObject("bill");
-			return new Bill(bill);
+			return new Bill(new JSONObject(rawJSON).getJSONObject("bill"));
 		} catch(JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);
 		} catch(DateParseException e) {

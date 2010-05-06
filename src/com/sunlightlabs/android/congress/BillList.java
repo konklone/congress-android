@@ -6,7 +6,6 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.app.ListActivity;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -23,7 +22,6 @@ import android.widget.TextView;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
-import com.sunlightlabs.congress.java.Drumbone;
 
 public class BillList extends ListActivity {
 	private static final int BILLS = 20;
@@ -45,15 +43,10 @@ public class BillList extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_titled);
 		
-		Resources resources = getResources(); 
-		Drumbone.userAgent = resources.getString(R.string.drumbone_user_agent);
-		Drumbone.apiKey = resources.getString(R.string.sunlight_api_key);
-		Drumbone.baseUrl = resources.getString(R.string.drumbone_base_url);
-		Drumbone.appVersion = resources.getString(R.string.app_version);
+		Utils.setupDrumbone(this);
 		
 		Bundle extras = getIntent().getExtras();
 		type = extras.getInt("type", BILLS_RECENT);
-		
 		sponsor_id = extras.getString("sponsor_id");
 		sponsor_name = extras.getString("sponsor_name");
 		
