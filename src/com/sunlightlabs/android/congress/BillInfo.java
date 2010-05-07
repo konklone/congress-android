@@ -10,6 +10,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -188,8 +190,12 @@ public class BillInfo extends ListActivity {
 			summary = (LinearLayout) inflater.inflate(R.layout.bill_summary, null);
 			String formatted = Bill.formatSummary(bill.summary, bill.short_title);
 			((TextView) summary.findViewById(R.id.summary)).setText(formatted);
-		} else
+		} else {
 			summary = (LinearLayout) inflater.inflate(R.layout.bill_no_summary, null);
+			TextView noSummary = (TextView) summary.findViewById(R.id.no_summary);
+			noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\"" + Bill.thomasUrl(bill) + "\">Read the text of this bill on THOMAS.</a>"));
+        	noSummary.setMovementMethod(LinkMovementMethod.getInstance());
+		}
 		adapter.addView(summary);
 		
 		setListAdapter(adapter);
