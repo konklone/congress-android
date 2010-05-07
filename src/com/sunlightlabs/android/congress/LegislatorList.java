@@ -277,7 +277,7 @@ public class LegislatorList extends ListActivity {
 					temp = Legislator.allForLatLong(latitude, longitude);
 					break;
 				case SEARCH_LASTNAME:
-					temp = Legislator.allWhere("lastname", lastName);
+					temp = Legislator.allWhere("lastname__istartswith", lastName);
 					break;
 				case SEARCH_COMMITTEE:
 					temp = Committee.find(committeeId).members;

@@ -212,25 +212,24 @@ public class MainMenu extends ListActivity {
 	private void getResponse(int requestCode) {
 		Intent intent = new Intent();
 		
-		
 		switch (requestCode) {
 		case RESULT_ZIP:
-			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText");
-			intent.putExtra("ask", "Enter a zip code:");
-			intent.putExtra("hint", "e.g. 11216");
-			intent.putExtra("startValue", Preferences.getString(this, "search_zip"));
-			intent.putExtra("inputType", InputType.TYPE_CLASS_PHONE);
+			intent.setClass(this, GetText.class)
+				.putExtra("ask", "Enter a zip code:")
+				.putExtra("hint", "e.g. 11216")
+				.putExtra("startValue", Preferences.getString(this, "search_zip"))
+				.putExtra("inputType", InputType.TYPE_CLASS_PHONE);
 			break;
 		case RESULT_LASTNAME:
-			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetText");
-			intent.putExtra("ask", "Enter a last name:");
-			intent.putExtra("hint", "e.g. Schumer");
-			intent.putExtra("startValue", Preferences.getString(this, "search_lastname"));
-			intent.putExtra("inputType", InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+			intent.setClass(this, GetText.class)
+				.putExtra("ask", "Enter a last name:")
+				.putExtra("hint", "e.g. Schumer")
+				.putExtra("startValue", Preferences.getString(this, "search_lastname"))
+				.putExtra("inputType", InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 			break;
 		case RESULT_STATE:
-			intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.GetState");
-			intent.putExtra("startValue", Preferences.getString(this, "search_state"));
+			intent.setClass(this, GetState.class)
+				.putExtra("startValue", Preferences.getString(this, "search_state"));
 			break;
 		default:
 			break;
