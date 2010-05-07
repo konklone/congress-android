@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?> 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"> 
-	<item android:id="@+id/main" 
-		android:title="Main Menu"
-		android:alphabeticShortcut="m"
-		android:icon="@android:drawable/ic_menu_myplaces"
-		/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:id="@+id/shortcut"
 		android:title="Create Shortcut"
 		android:alphabeticShortcut="s"
 		android:icon="@android:drawable/ic_menu_add"
+		/> 
+	<item android:id="@+id/main" 
+		android:title="Main Menu"
+		android:alphabeticShortcut="m"
+		android:icon="@android:drawable/ic_menu_myplaces"
 		/>
 </menu>

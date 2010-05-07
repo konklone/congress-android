@@ -162,6 +162,30 @@ public class Bill {
 			return code;
 	}
 	
+	public static String thomasType(String type) {
+		if (type.equals("hr"))
+			return "h";
+		else if (type.equals("hres"))
+			return "hr";
+		else if (type.equals("hjres"))
+			return "hj";
+		else if (type.equals("hcres"))
+			return "hc";
+		else if (type.equals("s"))
+			return "s";
+		else if (type.equals("sres"))
+			return "sr";
+		else if (type.equals("sjres"))
+			return "sj";
+		else if (type.equals("scres"))
+			return "sc";
+		else
+			return type;
+	}
+	
+	public static String thomasUrl(Bill bill) {
+		return "http://thomas.loc.gov/cgi-bin/query/z?c" + bill.session + ":" + thomasType(bill.type) + bill.number + ":";
+	}
 	
 	public static String formatSummary(String summary, String short_title) {
 		String formatted = summary;

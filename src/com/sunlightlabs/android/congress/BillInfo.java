@@ -7,6 +7,7 @@ import java.util.Date;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -271,6 +272,7 @@ public class BillInfo extends ListActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 		menu.findItem(R.id.shortcut).setEnabled(bill != null);
+		menu.findItem(R.id.thomas).setEnabled(bill != null);
 		return true;
 	}
 	
@@ -283,6 +285,9 @@ public class BillInfo extends ListActivity {
     	case R.id.shortcut:
     		sendBroadcast(Utils.shortcutIntent(this, bill)
     				.setAction("com.android.launcher.action.INSTALL_SHORTCUT"));
+    		break;
+    	case R.id.thomas:
+    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.thomasUrl(bill))));
     		break;
     	}
     	return true;
