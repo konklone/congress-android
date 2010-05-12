@@ -25,7 +25,7 @@ import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 
 public class BillList extends ListActivity {
-	private static final int BILLS = 3;
+	private static final int BILLS = 20;
 	
 	public static final int BILLS_LAW = 0;
 	public static final int BILLS_RECENT = 1;
