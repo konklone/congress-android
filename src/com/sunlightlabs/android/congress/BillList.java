@@ -25,7 +25,7 @@ import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 
 public class BillList extends ListActivity {
-	private static final int BILLS = 20;
+	private static final int BILLS = 3;
 	
 	public static final int BILLS_LAW = 0;
 	public static final int BILLS_RECENT = 1;
@@ -39,7 +39,7 @@ public class BillList extends ListActivity {
 	private String sponsor_id, sponsor_name;
 	private int type;
 	private boolean loading = false;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,24 +53,28 @@ public class BillList extends ListActivity {
 		sponsor_name = extras.getString("sponsor_name");
 		
 		setupControls();
-		
+
 		MainActivityHolder holder = (MainActivityHolder) getLastNonConfigurationInstance();
 
 		if (holder != null) {
 			this.bills = holder.bills;
 			this.loadBillsTask = holder.loadBillsTask;
+
 			if (loadBillsTask != null)
 				loadBillsTask.onScreenLoad(this);
 		}
-		
-		bills = new ArrayList<Bill>();
+
+		if (bills == null) {
+			bills = new ArrayList<Bill>();
+		}
 
 		// create and bind to the adapter
 		billsAdapter = new BillAdapter(this, bills);
 		setListAdapter(billsAdapter);
 
-		// load the bills
-		loadBills();
+		if (bills.size() == 0) {
+			loadBills();
+		}
 	}
 	
 	@Override
@@ -115,17 +119,17 @@ public class BillList extends ListActivity {
 		// create a new task and start it
 		if (loadBillsTask == null) {
 			loadBillsTask = new LoadBillsTask(this);
+			loadBillsTask.execute();
 		}
-		loadBillsTask.execute();
 	}
 	
 
 	public void onLoadBills(ArrayList<Bill> bills) {
 		// remove the placeholder and add the new bills in the array
 		if (this.bills.size() > 0) {
-			int lastIndx = this.bills.size() - 1;
-			if (this.bills.get(lastIndx) == null) {
-				this.bills.remove(lastIndx);
+			int lastIndex = this.bills.size() - 1;
+			if (this.bills.get(lastIndex) == null) {
+				this.bills.remove(lastIndex);
 			}
 		}
 		this.bills.addAll(bills);
@@ -244,7 +248,7 @@ public class BillList extends ListActivity {
 				view = (LinearLayout) convertView;
 			}
 
-			// if it's not already loading, make another task to load the next bills
+			// make another task to load the next bills
 			if (!loading) {
 				BillList.this.loadBills();
 			}
