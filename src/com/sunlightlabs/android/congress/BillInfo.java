@@ -47,6 +47,8 @@ public class BillInfo extends ListActivity {
 	
 	private Drawable sponsorPhoto;
 	
+	private SimpleDateFormat timelineFormat = new SimpleDateFormat("MMM dd, yyyy");
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -218,14 +220,7 @@ public class BillInfo extends ListActivity {
 		}
 		titleView.setText(title);
 		
-		String date = "Introduced on " + new SimpleDateFormat("MMM dd, yyyy").format(new Date(introduced_at));
-		((TextView) header.findViewById(R.id.introduced)).setText(date);
-		
-		if (enacted_at > 0) {
-			TextView enacted = (TextView) header.findViewById(R.id.enacted);
-			enacted.setText("Enacted on " + new SimpleDateFormat("MMM dd, yyyy").format(new Date(enacted_at)));
-			enacted.setVisibility(View.VISIBLE);
-		}
+		header = addBillTimeline(header);
 		
 		adapter.addView(header);
 		
@@ -258,6 +253,27 @@ public class BillInfo extends ListActivity {
 		adapter.addView(summaryHeader);
 		
 		return summaryHeader;
+	}
+	
+	// Take the layout view given, and append all applicable bill_event TextViews
+	// describing the basic timeline of the bill
+	public LinearLayout addBillTimeline(LinearLayout header) {
+		LayoutInflater inflater = LayoutInflater.from(this);
+		LinearLayout contents = (LinearLayout) header.findViewById(R.id.contents);
+		
+		String introduced_date = "Introduced on " +timelineFormat.format(new Date(introduced_at));
+		TextView introduced = (TextView) inflater.inflate(R.layout.bill_event, null);
+		introduced.setText(introduced_date);
+		contents.addView(introduced);
+		
+		if (enacted_at > 0) {
+			String enacted_date = "Enacted on " + timelineFormat.format(new Date(enacted_at));
+			TextView enacted = (TextView) inflater.inflate(R.layout.bill_event, null);
+			enacted.setText(enacted_date);
+			contents.addView(enacted);
+		}
+		
+		return header;
 	}
 	
 	@Override

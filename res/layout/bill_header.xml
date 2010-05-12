@@ -14,7 +14,7 @@
 		android:background="#5c5e5d"
 		/>
 	
-	<LinearLayout
+	<LinearLayout android:id="@+id/contents"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
@@ -32,28 +32,7 @@
 			
 			android:text="Title of Bill"
 			/>
-		
-		<TextView android:id="@+id/introduced"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
 			
-			android:layout_marginBottom="3dp"
-			
-			android:textSize="14sp"
-			android:text="Introduced on Feb 12, 2010"
-			/>
-			
-		<TextView android:id="@+id/enacted"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			
-			android:layout_marginBottom="3dp"
-			
-			android:textSize="14sp"
-			android:text="Enacted on Feb 25, 2010"
-			
-			android:visibility="gone"
-			/>
 	</LinearLayout>
 	
 	<View
