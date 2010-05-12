@@ -38,6 +38,7 @@ public class BillList extends ListActivity {
 	
 	private String sponsor_id, sponsor_name;
 	private int type;
+	private boolean loading = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -166,6 +167,7 @@ public class BillList extends ListActivity {
 		@Override
 		public ArrayList<Bill> doInBackground(Void... nothing) {
 			try {
+				loading = true;
 				int page = (this.context.bills.size() / BILLS) + 1;
 
 				switch (context.type) {
@@ -194,6 +196,8 @@ public class BillList extends ListActivity {
 				context.onLoadBills(exception);
 			else
 				context.onLoadBills(bills);
+
+			loading = false;
 		}
 	}
 	
@@ -240,8 +244,10 @@ public class BillList extends ListActivity {
 				view = (LinearLayout) convertView;
 			}
 
-			// make another task to load the next bills
-			BillList.this.loadBills();
+			// if it's not already loading, make another task to load the next bills
+			if (!loading) {
+				BillList.this.loadBills();
+			}
 
 			return view;
 		}
