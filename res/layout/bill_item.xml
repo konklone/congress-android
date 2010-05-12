@@ -1,54 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:orientation="vertical"
-	
 	android:padding="10dp"
 	>
-		
-	<LinearLayout
-		android:layout_width="fill_parent"
+
+	<TextView android:id="@+id/byline"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		
+		android:layout_marginRight="5dp"
+		android:layout_weight="1"
+		android:layout_gravity="left"
 		android:layout_marginTop="3dp"
-		>
-	
-		<TextView android:id="@+id/byline"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginRight="5dp"
-			android:layout_weight="1"
-			android:layout_gravity="left"
-			
-			android:textSize="16sp"
-			
-			android:text="H.Res. 3222 introduced:"
-			/>
-			
-		<TextView android:id="@+id/date"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="0"
-			android:layout_gravity="right"
-			
-			android:textSize="16sp"
-			
-			android:text="Feb 22"
-			/>
+		android:textSize="16sp"
 		
-	</LinearLayout>
-	
+		android:text="H.Res. 3222 introduced:"
+		/>
+		
+	<TextView android:id="@+id/date"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_weight="0"
+		android:layout_alignParentRight="true"
+		android:layout_alignTop="@id/byline"
+		android:textSize="16sp"
+		
+		android:text="Feb 22"
+		/>
+		
 	<TextView android:id="@+id/title"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="5dp"
-		
+		android:layout_below="@+id/byline"
 		android:textSize="16sp"
 		android:textColor="#ffffff"
 		
 		android:text="Title Of The Bill And Such"
-		/>
-		
-</LinearLayout>
+		/>		
+</RelativeLayout>

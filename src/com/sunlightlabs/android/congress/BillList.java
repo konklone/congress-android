@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -33,9 +34,9 @@ public class BillList extends ListActivity {
 	
 	private ArrayList<Bill> bills;
 	private LoadBillsTask loadBillsTask;
+	private BillAdapter billsAdapter;
 	
 	private String sponsor_id, sponsor_name;
-	
 	private int type;
 	
 	@Override
@@ -53,6 +54,7 @@ public class BillList extends ListActivity {
 		setupControls();
 		
 		MainActivityHolder holder = (MainActivityHolder) getLastNonConfigurationInstance();
+
 		if (holder != null) {
 			this.bills = holder.bills;
 			this.loadBillsTask = holder.loadBillsTask;
@@ -60,6 +62,13 @@ public class BillList extends ListActivity {
 				loadBillsTask.onScreenLoad(this);
 		}
 		
+		bills = new ArrayList<Bill>();
+
+		// create and bind to the adapter
+		billsAdapter = new BillAdapter(this, bills);
+		setListAdapter(billsAdapter);
+
+		// load the bills
 		loadBills();
 	}
 	
@@ -95,32 +104,53 @@ public class BillList extends ListActivity {
 	
 	protected void onListItemClick(ListView parent, View v, int position, long id) {
     	Bill bill = (Bill) parent.getItemAtPosition(position);
-    	startActivity(Utils.billIntentExtra(this, bill));
+		// skip the placeholder
+		if (bill != null) {
+			startActivity(Utils.billIntentExtra(this, bill));
+		}
     }
 	
 	public void loadBills() {
+		// create a new task and start it
 		if (loadBillsTask == null) {
-			if (bills == null)
-				loadBillsTask = (LoadBillsTask) new LoadBillsTask(this).execute();
-			else
-				displayBills();
+			loadBillsTask = new LoadBillsTask(this);
 		}
+		loadBillsTask.execute();
 	}
 	
+
 	public void onLoadBills(ArrayList<Bill> bills) {
-		this.bills = bills;
-		displayBills();
+		// remove the placeholder and add the new bills in the array
+		if (this.bills.size() > 0) {
+			int lastIndx = this.bills.size() - 1;
+			if (this.bills.get(lastIndx) == null) {
+				this.bills.remove(lastIndx);
+			}
+		}
+		this.bills.addAll(bills);
+
+		// if the query returned the requested number of bills,
+		// it means there could still be some bills to query for, so
+		// add a null element at the end of the array, 
+		// to be a placeholder for the loading progress
+		// else, it means there are no more bills to retrieve from the server
+
+		//TODO in case the total number of bills is divisible by BILLS,
+		// the loading progress will unnecessarily appear once more;
+		// this can be fixed if we return the total number of bills in JSON
+		if (bills.size() == BILLS) {
+			this.bills.add(null);
+		}
+
+		// notify the adapter the changes
+		this.billsAdapter.notifyDataSetChanged();
 	}
 	
 	public void onLoadBills(CongressException exception) {
 		this.bills = new ArrayList<Bill>();
 		Utils.showBack(this, R.string.error_connection);
 	}
-	
-	public void displayBills() {
-		setListAdapter(new BillAdapter(this, bills));
-	}
-	
+
 	private class LoadBillsTask extends AsyncTask<Void,Void,ArrayList<Bill>> {
 		private BillList context;
 		private CongressException exception;
@@ -136,15 +166,17 @@ public class BillList extends ListActivity {
 		@Override
 		public ArrayList<Bill> doInBackground(Void... nothing) {
 			try {
+				int page = (this.context.bills.size() / BILLS) + 1;
+
 				switch (context.type) {
 				case BILLS_RECENT:
-					return Bill.recentlyIntroduced(BILLS);
+					return Bill.recentlyIntroduced(BILLS, page);
 				case BILLS_LAW:
-					return Bill.recentLaws(BILLS);
+					return Bill.recentLaws(BILLS, page);
 				case BILLS_LATEST_VOTES:
-					return Bill.latestVotes(BILLS);
+					return Bill.latestVotes(BILLS, page);
 				case BILLS_SPONSOR:
-					return Bill.recentlySponsored(BILLS, context.sponsor_id);
+					return Bill.recentlySponsored(BILLS, context.sponsor_id, page);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
 				}
@@ -158,7 +190,7 @@ public class BillList extends ListActivity {
 		public void onPostExecute(ArrayList<Bill> bills) {
 			context.loadBillsTask = null;
 			
-			if (exception != null && bills == null)
+			if (exception != null)
 				context.onLoadBills(exception);
 			else
 				context.onLoadBills(bills);
@@ -173,15 +205,53 @@ public class BillList extends ListActivity {
 	        inflater = LayoutInflater.from(context);
 	    }
 
+		@Override
+		public boolean areAllItemsEnabled() {
+			return false;
+		}
+
+		@Override
+		public boolean isEnabled(int position) {
+			if (position == bills.size() - 1) {
+				return false;
+			}
+			return true;
+		}
+
+		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			LinearLayout view;
-			if (convertView == null)
-				view = (LinearLayout) inflater.inflate(R.layout.bill_item, null);
-			else
-				view = (LinearLayout) convertView;
-				
 			Bill bill = getItem(position);
-			
+			if (bill == null) {
+				return getLoadMoreView(position, convertView, parent);
+			} else {
+				return getBillView(position, convertView, parent);
+			}
+		}
+
+		private View getLoadMoreView(int position, View convertView, ViewGroup parent) {
+			LinearLayout view;
+			// try to reuse the view if possible to display the loading progress
+			if (convertView == null || !(convertView instanceof LinearLayout)) {
+				view = (LinearLayout) inflater.inflate(R.layout.loading, null);
+			} else {
+				view = (LinearLayout) convertView;
+			}
+
+			// make another task to load the next bills
+			BillList.this.loadBills();
+
+			return view;
+		}
+
+		private View getBillView(int position, View convertView, ViewGroup parent) {
+			RelativeLayout view;
+			if (convertView == null || !(convertView instanceof RelativeLayout)) {
+				view = (RelativeLayout) inflater.inflate(R.layout.bill_item, null);
+			} else {
+				view = (RelativeLayout) convertView;
+			}
+
+			Bill bill = getItem(position);
 			
 			String code = Bill.formatCode(bill.code);
 			String action;
@@ -234,6 +304,7 @@ public class BillList extends ListActivity {
 	static class MainActivityHolder {
 		ArrayList<Bill> bills;
 		LoadBillsTask loadBillsTask;
+
 		public MainActivityHolder(ArrayList<Bill> bills, LoadBillsTask loadBillsTask) {
 			this.bills = bills;
 			this.loadBillsTask = loadBillsTask;

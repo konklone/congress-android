@@ -84,20 +84,27 @@ public class Bill {
 		}
 	}
 		
-	public static ArrayList<Bill> recentlyIntroduced(int n) throws CongressException {
-		return billsFor(Drumbone.url("bills","order=introduced_at&sections=basic,sponsor&per_page=" + n));
+	public static ArrayList<Bill> recentlyIntroduced(int n, int p)
+			throws CongressException {
+		return billsFor(Drumbone.url("bills",
+				"order=introduced_at&sections=basic,sponsor&per_page=" + n + "&page=" + p));
 	}
 	
-	public static ArrayList<Bill> recentLaws(int n) throws CongressException {
-		return billsFor(Drumbone.url("bills","order=enacted_at&enacted=true&sections=basic,sponsor&per_page=" + n));
+	public static ArrayList<Bill> recentLaws(int n, int p) throws CongressException {
+		return billsFor(Drumbone
+				.url("bills", "order=enacted_at&enacted=true&sections=basic,sponsor&per_page=" + n
+						+ "&page=" + p));
 	}
 	
-	public static ArrayList<Bill> recentlySponsored(int n, String sponsor_id) throws CongressException {
-		return billsFor(Drumbone.url("bills","order=introduced_at&sponsor_id=" + sponsor_id + "&sections=basic,sponsor&per_page=" + n));
+	public static ArrayList<Bill> recentlySponsored(int n, String sponsor_id, int p)
+			throws CongressException {
+		return billsFor(Drumbone.url("bills", "order=introduced_at&sponsor_id=" + sponsor_id
+				+ "&sections=basic,sponsor&per_page=" + n + "&page=" + p));
 	}
 	
-	public static ArrayList<Bill> latestVotes(int n) throws CongressException {
-		return billsFor(Drumbone.url("bills","order=last_vote_at&sections=basic,sponsor,votes&per_page=" + n));
+	public static ArrayList<Bill> latestVotes(int n, int p) throws CongressException {
+		return billsFor(Drumbone.url("bills",
+				"order=last_vote_at&sections=basic,sponsor,votes&per_page=" + n + "&page=" + p));
 	}
 	
 	public static Bill find(String id, String sections) throws CongressException {
