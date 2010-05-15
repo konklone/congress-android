@@ -100,10 +100,8 @@ public class BillList extends ListActivity {
 	
 	protected void onListItemClick(ListView parent, View v, int position, long id) {
     	Bill bill = (Bill) parent.getItemAtPosition(position);
-		// skip the placeholder
-		if (bill != null) {
+		if (bill != null)
 			startActivity(Utils.billIntentExtra(this, bill));
-		}
     }
 	
 	public void loadBills() {
@@ -120,6 +118,7 @@ public class BillList extends ListActivity {
 				this.bills.remove(lastIndex);
 			}
 		}
+		
 		this.bills.addAll(bills);
 
 		// if we got back a full page of bills, there may be more yet to come
