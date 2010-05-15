@@ -169,7 +169,7 @@ public class Bill {
 			return code;
 	}
 	
-	public static String thomasType(String type) {
+	public static String govTrackType(String type) {
 		if (type.equals("hr"))
 			return "h";
 		else if (type.equals("hres"))
@@ -191,15 +191,15 @@ public class Bill {
 	}
 	
 	public static String thomasUrl(Bill bill) {
-		return "http://thomas.loc.gov/cgi-bin/query/z?c" + bill.session + ":" + thomasType(bill.type) + bill.number + ":";
+		return "http://thomas.loc.gov/cgi-bin/query/z?c" + bill.session + ":" + bill.type + bill.number + ":";
 	}
 	
 	public static String openCongressUrl(Bill bill) {
-		return "http://www.opencongress.org/bill/" + bill.session + "-" + thomasType(bill.type) + bill.number + "/show";
+		return "http://www.opencongress.org/bill/" + bill.session + "-" + govTrackType(bill.type) + bill.number + "/show";
 	}
 	
 	public static String govTrackUrl(Bill bill) {
-		return "http://www.govtrack.us/congress/bill.xpd?bill=" + thomasType(bill.type) + bill.session + "-" + bill.number;
+		return "http://www.govtrack.us/congress/bill.xpd?bill=" + govTrackType(bill.type) + bill.session + "-" + bill.number;
 	}
 	
 	public static String formatSummary(String summary, String short_title) {
