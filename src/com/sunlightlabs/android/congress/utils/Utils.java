@@ -75,8 +75,9 @@ public class Utils {
 			.putExtra("govtrack_id", legislator.govtrack_id);
 	}
 	
-	// suitable for going from a list to the bill display page
-	// not suitable for shortcut intents
+	// Suitable for going from a list to the bill display page.
+	// Assumes the "basic" section of a bill has been loaded.
+	// Not suitable for shortcut intents.
 	public static Intent billIntentExtra(Context context, Bill bill) {
 		Legislator sponsor = bill.sponsor;
 		Intent intent = new Intent(context, BillInfo.class)
@@ -85,7 +86,30 @@ public class Utils {
 			.putExtra("code", bill.code)
 			.putExtra("short_title", bill.short_title)
 			.putExtra("official_title", bill.official_title)
-			.putExtra("introduced_at", bill.introduced_at.getTime());
+			.putExtra("introduced_at", bill.introduced_at.getTime())
+			.putExtra("house_result", bill.house_result)
+			.putExtra("senate_result", bill.senate_result)
+			.putExtra("passed", bill.passed)
+			.putExtra("vetoed", bill.vetoed)
+			.putExtra("override_house_result", bill.override_house_result)
+			.putExtra("override_senate_result", bill.override_senate_result)
+			.putExtra("awaiting_signature", bill.awaiting_signature)
+			.putExtra("enacted", bill.enacted);
+		
+		if (bill.house_result_at != null)
+			intent.putExtra("house_result_at", bill.house_result_at.getTime());
+		if (bill.senate_result_at != null)
+			intent.putExtra("senate_result_at", bill.senate_result_at.getTime());
+		if (bill.passed_at != null)
+			intent.putExtra("passed_at", bill.passed_at.getTime());
+		if (bill.vetoed_at != null)
+			intent.putExtra("vetoed_at", bill.vetoed_at.getTime());
+		if (bill.override_house_result_at != null)
+			intent.putExtra("override_house_result_at", bill.override_house_result_at.getTime());
+		if (bill.override_senate_result_at != null)
+			intent.putExtra("override_senate_result_at", bill.override_senate_result_at.getTime());
+		if (bill.awaiting_signature_since != null)
+			intent.putExtra("awaiting_signature_since", bill.awaiting_signature_since.getTime());
 		if (bill.enacted_at != null)
 			intent.putExtra("enacted_at", bill.enacted_at.getTime());
 		
@@ -98,6 +122,7 @@ public class Utils {
 				.putExtra("sponsor_nickname", sponsor.nickname)
 				.putExtra("sponsor_last_name", sponsor.last_name);
 		}
+		
 		return intent;
 	}
 	

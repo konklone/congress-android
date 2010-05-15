@@ -14,7 +14,7 @@
 		android:background="#5c5e5d"
 		/>
 	
-	<LinearLayout android:id="@+id/contents"
+	<LinearLayout android:id="@+id/header_inner"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"

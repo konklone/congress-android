@@ -16,9 +16,15 @@ public class Bill {
 	// basic
 	public String id, code, type, state, chamber;
 	public int session, number;
-	public boolean passed;
 	public String short_title, official_title;
-	public Date introduced_at, last_action_at, last_vote_at, enacted_at;
+	public Date last_action_at, last_vote_at;
+	
+	public Date introduced_at, house_result_at, senate_result_at, passed_at;
+	public Date vetoed_at, override_house_result_at, override_senate_result_at;
+	public Date awaiting_signature_since, enacted_at;
+	
+	public boolean passed, vetoed, awaiting_signature, enacted;
+	public String house_result, senate_result, override_house_result, override_senate_result;
 	
 	// sponsor
 	public Legislator sponsor;
@@ -45,22 +51,55 @@ public class Bill {
 			session = json.getInt("session");
 		if (!json.isNull("number"))
 			number = json.getInt("number");
-		if (!json.isNull("passed"))
-			passed = json.getBoolean("passed");
+		
 		
 		if (!json.isNull("short_title"))
 			short_title = json.getString("short_title");
 		if (!json.isNull("official_title"))
 			official_title = json.getString("official_title");
-		if (!json.isNull("introduced_at"))
-			introduced_at =  DateUtils.parseDate(json.getString("introduced_at"), Drumbone.dateFormat);
 		if (!json.isNull("last_action_at"))
 			last_action_at = DateUtils.parseDate(json.getString("last_action_at"), Drumbone.dateFormat);
 		if (!json.isNull("last_vote_at"))
 			last_vote_at = DateUtils.parseDate(json.getString("last_vote_at"), Drumbone.dateFormat);
+		
+		// timeline dates
+		if (!json.isNull("introduced_at"))
+			introduced_at =  DateUtils.parseDate(json.getString("introduced_at"), Drumbone.dateFormat);
+		if (!json.isNull("house_result_at"))
+			house_result_at = DateUtils.parseDate(json.getString("house_result_at"), Drumbone.dateFormat);
+		if (!json.isNull("senate_result_at"))
+			senate_result_at = DateUtils.parseDate(json.getString("senate_result_at"), Drumbone.dateFormat);
+		if (!json.isNull("passed_at"))
+			passed_at =  DateUtils.parseDate(json.getString("passed_at"), Drumbone.dateFormat);
+		if (!json.isNull("vetoed_at"))
+			vetoed_at =  DateUtils.parseDate(json.getString("vetoed_at"), Drumbone.dateFormat);
+		if (!json.isNull("override_house_result_at"))
+			override_house_result_at = DateUtils.parseDate(json.getString("override_house_result_at"), Drumbone.dateFormat);
+		if (!json.isNull("override_senate_result_at"))
+			override_senate_result_at = DateUtils.parseDate(json.getString("override_senate_result_at"), Drumbone.dateFormat);
+		if (!json.isNull("awaiting_signature_since"))
+			awaiting_signature_since =  DateUtils.parseDate(json.getString("awaiting_signature_since"), Drumbone.dateFormat);
 		if (!json.isNull("enacted_at"))
 			enacted_at = DateUtils.parseDate(json.getString("enacted_at"), Drumbone.dateFormat);
-				
+		
+		// timeline flags and values
+		if (!json.isNull("house_result"))
+			house_result = json.getString("house_result");
+		if (!json.isNull("senate_result"))
+			senate_result = json.getString("senate_result");
+		if (!json.isNull("passed"))
+			passed = json.getBoolean("passed");
+		if (!json.isNull("vetoed"))
+			vetoed = json.getBoolean("vetoed");
+		if (!json.isNull("override_house_result"))
+			override_house_result = json.getString("override_house_result");
+		if (!json.isNull("override_senate_result"))
+			override_senate_result = json.getString("override_senate_result");
+		if (!json.isNull("awaiting_signature"))
+			awaiting_signature = json.getBoolean("awaiting_signature");
+		if (!json.isNull("enacted"))
+			enacted = json.getBoolean("enacted");
+		
 		if (!json.isNull("sponsor"))
 			sponsor = Legislator.fromDrumbone(json.getJSONObject("sponsor"));
 		

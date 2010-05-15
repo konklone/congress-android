@@ -36,7 +36,12 @@ public class BillInfo extends ListActivity {
 	
 	// fields which may come either in the extras of the Intent, or need to be fetched remotely
 	private String code, short_title, official_title;
-	private long introduced_at, enacted_at;
+	private boolean passed, vetoed, awaiting_signature, enacted;
+	private String house_result, senate_result, override_house_result, override_senate_result;
+	private long introduced_at, house_result_at, senate_result_at, passed_at;
+	private long vetoed_at, override_house_result_at, override_senate_result_at;
+	private long awaiting_signature_since, enacted_at;
+	
 	private String sponsor_id, sponsor_party, sponsor_state, sponsor_title;
 	private String sponsor_first_name, sponsor_last_name, sponsor_nickname;
 	
@@ -131,8 +136,26 @@ public class BillInfo extends ListActivity {
 			code = extras.getString("code");
 			short_title = extras.getString("short_title");
 			official_title = extras.getString("official_title");
+			
+			// my god
 			introduced_at = extras.getLong("introduced_at", 0);
+			house_result = extras.getString("house_result");
+			house_result_at = extras.getLong("house_result_at", 0);
+			senate_result = extras.getString("senate_result");
+			senate_result_at = extras.getLong("senate_result_at", 0);
+			passed = extras.getBoolean("passed", false);
+			passed_at = extras.getLong("passed_at", 0);
+			vetoed = extras.getBoolean("vetoed", false);
+			vetoed_at = extras.getLong("vetoed_at", 0);
+			override_house_result = extras.getString("override_house_result");
+			override_house_result_at = extras.getLong("override_house_result_at", 0);
+			override_senate_result = extras.getString("override_senate_result");
+			override_senate_result_at = extras.getLong("override_senate_result_at", 0);
+			awaiting_signature = extras.getBoolean("awaiting_signature", false);
+			awaiting_signature_since = extras.getLong("awaiting_signature_since", 0);
+			enacted = extras.getBoolean("enacted", false);
 			enacted_at = extras.getLong("enacted_at", 0);
+			
 			sponsor_id = extras.getString("sponsor_id");
 			sponsor_title = extras.getString("sponsor_title");
 			sponsor_state = extras.getString("sponsor_state");
@@ -166,8 +189,31 @@ public class BillInfo extends ListActivity {
 			code = bill.code;
 			short_title = bill.short_title;
 			official_title = bill.official_title;
-			introduced_at = bill.introduced_at.getTime();
 			
+			house_result = bill.house_result;
+			senate_result = bill.senate_result;
+			passed = bill.passed;
+			vetoed = bill.vetoed;
+			override_house_result = bill.override_house_result;
+			override_senate_result = bill.override_senate_result;
+			awaiting_signature = bill.awaiting_signature;
+			enacted = bill.enacted;
+			
+			introduced_at = bill.introduced_at.getTime();
+			if (bill.house_result_at != null)
+				house_result_at = bill.house_result_at.getTime();
+			if (bill.senate_result_at != null)
+				senate_result_at = bill.senate_result_at.getTime();
+			if (bill.passed_at != null)
+				passed_at = bill.passed_at.getTime();
+			if (bill.vetoed_at != null)
+				vetoed_at = bill.vetoed_at.getTime();
+			if (bill.override_house_result_at != null)
+				override_house_result_at = bill.override_house_result_at.getTime();
+			if (bill.override_senate_result_at != null)
+				override_senate_result_at = bill.override_senate_result_at.getTime();
+			if (bill.awaiting_signature_since != null)
+				awaiting_signature_since = bill.awaiting_signature_since.getTime();
 			if (bill.enacted_at != null)
 				enacted_at = bill.enacted_at.getTime();
 			
@@ -259,18 +305,18 @@ public class BillInfo extends ListActivity {
 	// describing the basic timeline of the bill
 	public LinearLayout addBillTimeline(LinearLayout header) {
 		LayoutInflater inflater = LayoutInflater.from(this);
-		LinearLayout contents = (LinearLayout) header.findViewById(R.id.contents);
+		LinearLayout inner = (LinearLayout) header.findViewById(R.id.header_inner);
 		
 		String introduced_date = "Introduced on " +timelineFormat.format(new Date(introduced_at));
 		TextView introduced = (TextView) inflater.inflate(R.layout.bill_event, null);
 		introduced.setText(introduced_date);
-		contents.addView(introduced);
+		inner.addView(introduced);
 		
 		if (enacted_at > 0) {
 			String enacted_date = "Enacted on " + timelineFormat.format(new Date(enacted_at));
 			TextView enacted = (TextView) inflater.inflate(R.layout.bill_event, null);
 			enacted.setText(enacted_date);
-			contents.addView(enacted);
+			inner.addView(enacted);
 		}
 		
 		return header;
