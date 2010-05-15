@@ -194,6 +194,14 @@ public class Bill {
 		return "http://thomas.loc.gov/cgi-bin/query/z?c" + bill.session + ":" + thomasType(bill.type) + bill.number + ":";
 	}
 	
+	public static String openCongressUrl(Bill bill) {
+		return "http://www.opencongress.org/bill/" + bill.session + "-" + thomasType(bill.type) + bill.number + "/show";
+	}
+	
+	public static String govTrackUrl(Bill bill) {
+		return "http://www.govtrack.us/congress/bill.xpd?bill=" + thomasType(bill.type) + bill.session + "-" + bill.number;
+	}
+	
 	public static String formatSummary(String summary, String short_title) {
 		String formatted = summary;
 		formatted = formatted.replaceFirst("^\\d+\\/\\d+\\/\\d+--.+?\\.\\s*", "");

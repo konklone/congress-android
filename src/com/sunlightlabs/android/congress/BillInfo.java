@@ -293,8 +293,12 @@ public class BillInfo extends ListActivity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		menu.findItem(R.id.shortcut).setEnabled(bill != null);
-		menu.findItem(R.id.thomas).setEnabled(bill != null);
+		if (bill != null) {
+			menu.findItem(R.id.shortcut).setEnabled(true);
+			menu.findItem(R.id.thomas).setEnabled(true);
+			menu.findItem(R.id.govtrack).setEnabled(true);
+			menu.findItem(R.id.opencongress).setEnabled(true);
+		}
 		return true;
 	}
 	
@@ -310,6 +314,12 @@ public class BillInfo extends ListActivity {
     		break;
     	case R.id.thomas:
     		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.thomasUrl(bill))));
+    		break;
+    	case R.id.govtrack:
+    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.govTrackUrl(bill))));
+    		break;
+    	case R.id.opencongress:
+    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.openCongressUrl(bill))));
     		break;
     	}
     	return true;
