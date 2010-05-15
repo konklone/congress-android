@@ -140,9 +140,6 @@ public class BillList extends ListActivity {
 		// to be a placeholder for the loading progress
 		// else, it means there are no more bills to retrieve from the server
 
-		//TODO in case the total number of bills is divisible by BILLS,
-		// the loading progress will unnecessarily appear once more;
-		// this can be fixed if we return the total number of bills in JSON
 		if (bills.size() == BILLS) {
 			this.bills.add(null);
 		}
@@ -240,14 +237,8 @@ public class BillList extends ListActivity {
 		}
 
 		private View getLoadMoreView(int position, View convertView, ViewGroup parent) {
-			LinearLayout view;
-			// try to reuse the view if possible to display the loading progress
-			if (convertView == null || !(convertView instanceof LinearLayout)) {
-				view = (LinearLayout) inflater.inflate(R.layout.loading, null);
-			} else {
-				view = (LinearLayout) convertView;
-			}
-
+			LinearLayout view = (LinearLayout) inflater.inflate(R.layout.loading, null);
+			
 			// make another task to load the next bills
 			if (!loading) {
 				BillList.this.loadBills();
