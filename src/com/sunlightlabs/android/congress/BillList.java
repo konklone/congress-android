@@ -195,13 +195,7 @@ public class BillList extends ListActivity {
 
 		@Override
 		public boolean isEnabled(int position) {
-			// disable selection on loading progress and message
-			if (position == bills.size() - 1) {
-				if (bills.get(position) == null) {
-					return false;
-				}
-			}
-			return true;
+			return !((position == bills.size() - 1) && bills.get(position) == null);
 		}
 
 		@Override
