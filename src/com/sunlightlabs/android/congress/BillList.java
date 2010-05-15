@@ -218,21 +218,23 @@ public class BillList extends ListActivity {
 			else
 				view = (RelativeLayout) convertView;
 			
-			String code = Bill.formatCode(bill.code);
-			String action;
+			String code, action;
 			Date date = null;
 			switch (type) {
 			case BILLS_LAW:
+				code = Bill.formatCode(bill.code);
 				date = bill.enacted_at;
 				action = "became law";
 				break;
 			case BILLS_LATEST_VOTES:
+				code = Bill.formatCodeShort(bill.code);
 				date = bill.last_vote_at;
 				action = (bill.last_vote_result.equals("pass") ? "passed the " : "failed in the ") + Utils.capitalize(bill.last_vote_chamber);
 				break;
 			case BILLS_RECENT:
 			case BILLS_SPONSOR:
 			default:
+				code = Bill.formatCode(bill.code);
 				date = bill.introduced_at;
 				action = "was introduced";
 				break;

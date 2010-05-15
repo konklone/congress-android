@@ -169,6 +169,35 @@ public class Bill {
 			return code;
 	}
 	
+	// for when you need that extra space
+	public static String formatCodeShort(String code) {
+		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");
+		Matcher matcher = pattern.matcher(code);
+		if (!matcher.matches())
+			return code;
+		
+		String match = matcher.group(1);
+		String number = matcher.group(2);
+		if (match.equals("hr"))
+			return "H.R. " + number;
+		else if (match.equals("hres"))
+			return "H. Res. " + number;
+		else if (match.equals("hjres"))
+			return "H.J. Res. " + number;
+		else if (match.equals("hcres"))
+			return "H.C. Res. " + number;
+		else if (match.equals("s"))
+			return "S. " + number;
+		else if (match.equals("sres"))
+			return "S. Res. " + number;
+		else if (match.equals("sjres"))
+			return "S.J. Res. " + number;
+		else if (match.equals("scres"))
+			return "S.C. Res. " + number;
+		else
+			return code;
+	}
+	
 	public static String govTrackType(String type) {
 		if (type.equals("hr"))
 			return "h";
