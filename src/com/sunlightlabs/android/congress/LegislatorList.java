@@ -87,8 +87,7 @@ public class LegislatorList extends ListActivity {
 
 	public void loadLegislators() {
 		if (legislators == null)
-			loadLegislatorsTask = (LoadLegislatorsTask) new LoadLegislatorsTask(
-					this).execute();
+			loadLegislatorsTask = (LoadLegislatorsTask) new LoadLegislatorsTask(this).execute();
 		else
 			displayLegislators();
 	}

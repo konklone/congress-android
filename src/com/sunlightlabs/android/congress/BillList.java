@@ -61,18 +61,13 @@ public class BillList extends ListActivity {
 
 			if (loadBillsTask != null)
 				loadBillsTask.onScreenLoad(this);
-		}
-
-		if (bills == null) {
+		} else
 			bills = new ArrayList<Bill>();
-		}
-
-		// create and bind to the adapter
+		
 		setListAdapter(new BillAdapter(this, bills));
-
-		if (bills.size() == 0) {
+		
+		if (bills.size() == 0)
 			loadBills();
-		}
 	}
 	
 	@Override
@@ -114,11 +109,8 @@ public class BillList extends ListActivity {
     }
 	
 	public void loadBills() {
-		// create a new task and start it
-		if (loadBillsTask == null) {
-			loadBillsTask = new LoadBillsTask(this);
-			loadBillsTask.execute();
-		}
+		if (loadBillsTask == null)
+			loadBillsTask = (LoadBillsTask) new LoadBillsTask(this).execute();
 	}
 	
 
@@ -132,17 +124,10 @@ public class BillList extends ListActivity {
 		}
 		this.bills.addAll(bills);
 
-		// if the query returned the requested number of bills,
-		// it means there could still be some bills to query for, so
-		// add a null element at the end of the array, 
-		// to be a placeholder for the loading progress
-		// else, it means there are no more bills to retrieve from the server
-
-		if (bills.size() == BILLS) {
+		// if we got back a full page of bills, there may be more yet to come
+		if (bills.size() == BILLS)
 			this.bills.add(null);
-		}
 
-		// notify the adapter the changes
 		((BillAdapter) getListAdapter()).notifyDataSetChanged();
 	}
 	
@@ -166,8 +151,8 @@ public class BillList extends ListActivity {
 		@Override
 		public ArrayList<Bill> doInBackground(Void... nothing) {
 			try {
-				loading = true;
-				int page = (this.context.bills.size() / BILLS) + 1;
+				context.loading = true;
+				int page = (context.bills.size() / BILLS) + 1;
 
 				switch (context.type) {
 				case BILLS_RECENT:
@@ -196,7 +181,7 @@ public class BillList extends ListActivity {
 			else
 				context.onLoadBills(bills);
 
-			loading = false;
+			context.loading = false;
 		}
 	}
 	
