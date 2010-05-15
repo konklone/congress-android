@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,7 +36,6 @@ public class BillList extends ListActivity {
 	
 	private String sponsor_id, sponsor_name;
 	private int type;
-	private boolean loading = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -151,7 +149,6 @@ public class BillList extends ListActivity {
 		@Override
 		public ArrayList<Bill> doInBackground(Void... nothing) {
 			try {
-				context.loading = true;
 				int page = (context.bills.size() / BILLS) + 1;
 
 				switch (context.type) {
@@ -180,8 +177,6 @@ public class BillList extends ListActivity {
 				context.onLoadBills(exception);
 			else
 				context.onLoadBills(bills);
-
-			context.loading = false;
 		}
 	}
 	
@@ -212,33 +207,23 @@ public class BillList extends ListActivity {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			Bill bill = getItem(position);
-			if (bill == null) {
-				return getLoadMoreView(position, convertView, parent);
-			} else {
-				return getBillView(position, convertView, parent);
-			}
+			if (bill == null)
+				return getLoadMoreView();
+			else
+				return getBillView(bill, convertView);
 		}
 
-		private View getLoadMoreView(int position, View convertView, ViewGroup parent) {
-			LinearLayout view = (LinearLayout) inflater.inflate(R.layout.loading, null);
-			
-			// make another task to load the next bills
-			if (!loading) {
-				BillList.this.loadBills();
-			}
-
-			return view;
+		private View getLoadMoreView() {
+			BillList.this.loadBills();
+			return inflater.inflate(R.layout.loading, null);
 		}
 
-		private View getBillView(int position, View convertView, ViewGroup parent) {
+		private View getBillView(Bill bill, View convertView) {
 			RelativeLayout view;
-			if (convertView == null || !(convertView instanceof RelativeLayout)) {
+			if (convertView == null || !(convertView instanceof RelativeLayout))
 				view = (RelativeLayout) inflater.inflate(R.layout.bill_item, null);
-			} else {
+			else
 				view = (RelativeLayout) convertView;
-			}
-
-			Bill bill = getItem(position);
 			
 			String code = Bill.formatCode(bill.code);
 			String action;
