@@ -34,7 +34,6 @@ public class BillList extends ListActivity {
 	
 	private ArrayList<Bill> bills;
 	private LoadBillsTask loadBillsTask;
-	private BillAdapter billsAdapter;
 	
 	private String sponsor_id, sponsor_name;
 	private int type;
@@ -69,8 +68,7 @@ public class BillList extends ListActivity {
 		}
 
 		// create and bind to the adapter
-		billsAdapter = new BillAdapter(this, bills);
-		setListAdapter(billsAdapter);
+		setListAdapter(new BillAdapter(this, bills));
 
 		if (bills.size() == 0) {
 			loadBills();
@@ -145,7 +143,7 @@ public class BillList extends ListActivity {
 		}
 
 		// notify the adapter the changes
-		this.billsAdapter.notifyDataSetChanged();
+		((BillAdapter) getListAdapter()).notifyDataSetChanged();
 	}
 	
 	public void onLoadBills(CongressException exception) {
