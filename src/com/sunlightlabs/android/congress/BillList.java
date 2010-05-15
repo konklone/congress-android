@@ -93,7 +93,7 @@ public class BillList extends ListActivity {
 			Utils.setTitleSize(this, 20);
 			break;
 		case BILLS_LATEST_VOTES:
-			Utils.setTitle(this, R.string.menu_bills_latest_votes, R.drawable.bill_recent);
+			Utils.setTitle(this, R.string.menu_bills_latest_votes, R.drawable.bill_vote);
 			break;
 		}
 	}

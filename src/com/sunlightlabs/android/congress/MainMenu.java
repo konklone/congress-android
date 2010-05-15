@@ -114,7 +114,7 @@ public class MainMenu extends ListActivity {
         billViews.add(billsRecent);
         
         LinearLayout billsLatestVotes = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
-        ((ImageView) billsLatestVotes.findViewById(R.id.icon)).setImageResource(R.drawable.bill_recent);
+        ((ImageView) billsLatestVotes.findViewById(R.id.icon)).setImageResource(R.drawable.bill_vote);
         ((TextView) billsLatestVotes.findViewById(R.id.text)).setText(R.string.menu_bills_latest_votes);
         billsLatestVotes.setTag(BILLS_LATEST_VOTES);
         billViews.add(billsLatestVotes);
