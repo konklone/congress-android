@@ -30,9 +30,11 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.congress.java.Committee;
 import com.sunlightlabs.congress.java.CongressException;
+import com.sunlightlabs.congress.java.Legislator;
 
 public class LegislatorProfile extends ListActivity {
 	private String id, titledName, lastName, party, gender, state, domain, phone, website;
+	private String bioguide_id, govtrack_id;
 	private Drawable avatar;
 	private ImageView picture;
 	private ArrayList<Committee> committees;
@@ -60,6 +62,8 @@ public class LegislatorProfile extends ListActivity {
         domain = extras.getString("domain");
         phone = extras.getString("phone");
         website = extras.getString("website");
+        bioguide_id = extras.getString("bioguide_id");
+        govtrack_id = extras.getString("govtrack_id");
         
         setupControls();
         
@@ -251,6 +255,15 @@ public class LegislatorProfile extends ListActivity {
     	case R.id.shortcut:
     		if (shortcutImageTask == null)
     			shortcutImageTask = (ShortcutImageTask) new ShortcutImageTask(this).execute(id);
+    		break;
+    	case R.id.govtrack:
+    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.govTrackUrl(govtrack_id))));
+    		break;
+    	case R.id.opencongress:
+    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.openCongressUrl(govtrack_id))));
+    		break;
+    	case R.id.bioguide:
+    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.bioguideUrl(bioguide_id))));
     		break;
     	}
     	return true;

@@ -70,13 +70,15 @@ public class Utils {
 			.putExtra("website", legislator.website)
 			.putExtra("phone", legislator.phone)
 			.putExtra("twitter_id", legislator.twitter_id)
-			.putExtra("youtube_id", legislator.youtubeUsername());
+			.putExtra("youtube_id", legislator.youtubeUsername())
+			.putExtra("bioguide_id", legislator.bioguide_id)
+			.putExtra("govtrack_id", legislator.govtrack_id);
 	}
 	
 	// suitable for going from a list to the bill display page
 	// not suitable for shortcut intents
 	public static Intent billIntentExtra(Context context, Bill bill) {
-		com.sunlightlabs.congress.java.Legislator sponsor = bill.sponsor;
+		Legislator sponsor = bill.sponsor;
 		Intent intent = new Intent(context, BillInfo.class)
 			.putExtra("extra", true)
 			.putExtra("id", bill.id)

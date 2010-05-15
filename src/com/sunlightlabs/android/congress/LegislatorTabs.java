@@ -10,7 +10,7 @@ import android.widget.TextView;
 public class LegislatorTabs extends TabActivity {
 	private String id, titledName, lastName, state, party, 
 		gender, domain, office, website, phone, 
-		twitter_id, youtube_id;
+		twitter_id, youtube_id, bioguide_id, govtrack_id;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,6 +30,8 @@ public class LegislatorTabs extends TabActivity {
 		phone = extras.getString("phone");
 		twitter_id = extras.getString("twitter_id");
 		youtube_id = extras.getString("youtube_id");
+		bioguide_id = extras.getString("bioguide_id");
+		govtrack_id = extras.getString("govtrack_id");
 		
         setupControls();
         setupTabs();
@@ -59,56 +61,34 @@ public class LegislatorTabs extends TabActivity {
 	}
 	
 	public Intent profileIntent() {
-		Intent intent = new Intent();
-		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorProfile");
-		
-		Bundle extras = new Bundle();
-		extras.putString("id", id);
-		extras.putString("titledName", titledName);
-		extras.putString("lastName", lastName);
-		extras.putString("state", state);
-		extras.putString("party", party);
-		extras.putString("gender", gender);
-		extras.putString("domain", domain);
-		extras.putString("office", office);
-		extras.putString("website", website);
-		extras.putString("phone", phone);
-		
-		intent.putExtras(extras);
-		return intent;
+		return new Intent(this, LegislatorProfile.class)
+			.putExtra("id", id)
+			.putExtra("titledName", titledName)
+			.putExtra("lastName", lastName)
+			.putExtra("state", state)
+			.putExtra("party", party)
+			.putExtra("gender", gender)
+			.putExtra("domain", domain)
+			.putExtra("office", office)
+			.putExtra("website", website)
+			.putExtra("phone", phone)
+			.putExtra("bioguide_id", bioguide_id)
+			.putExtra("govtrack_id", govtrack_id);
 	}
 	
 	public Intent newsIntent() {
-		Intent intent = new Intent();
-		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorNews");
-		
-		Bundle extras = new Bundle();
-		extras.putString("searchName", titledName);
-		
-		intent.putExtras(extras);
-		return intent;
+		return new Intent(this, LegislatorNews.class)
+			.putExtra("searchName", titledName);
 	}
 	
 	public Intent twitterIntent() {
-		Intent intent = new Intent();
-		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorTwitter");
-		
-		Bundle extras = new Bundle();
-		extras.putString("username", twitter_id);
-		
-		intent.putExtras(extras);
-		return intent;
+		return new Intent(this, LegislatorTwitter.class)
+			.putExtra("username", twitter_id);
 	}
 	
 	public Intent youtubeIntent() {
-		Intent intent = new Intent();
-		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorYouTube");
-		
-		Bundle extras = new Bundle();
-		extras.putString("username", youtube_id);
-		
-		intent.putExtras(extras);
-		return intent;
+		return new Intent(this, LegislatorYouTube.class)
+			.putExtra("username", youtube_id);
 	}
 
 }

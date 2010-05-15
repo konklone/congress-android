@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:id="@+id/bioguide"
+		android:title="Congressional Biography"
+		android:alphabeticShortcut="b"
+		android:icon="@android:drawable/ic_menu_info_details"
+		/> 
+	<item android:id="@+id/govtrack"
+		android:title="More at GovTrack"
+		android:alphabeticShortcut="g"
+		android:icon="@drawable/govtrack"
+		/>
+	<item android:id="@+id/opencongress"
+		android:title="More at OpenCongress"
+		android:alphabeticShortcut="o"
+		android:icon="@drawable/opencongress"
+		/>
 	<item android:id="@+id/shortcut"
 		android:title="Create Shortcut"
 		android:alphabeticShortcut="s"
