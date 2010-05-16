@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -24,13 +25,15 @@ import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
+import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
+import com.sunlightlabs.android.congress.utils.LoadsPhoto;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Legislator;
 
-public class BillInfo extends ListActivity {
+public class BillInfo extends ListActivity implements LoadsPhoto {
 	private String id;
 	private boolean extra;
 	
@@ -102,7 +105,7 @@ public class BillInfo extends ListActivity {
         	if (sponsorPhoto != null)
         		displayPhoto();
         	else
-        		loadPhotoTask = (LoadPhotoTask) new LoadPhotoTask(this).execute(sponsor_id);
+        		loadPhotoTask = (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_LARGE).execute(sponsor_id);
         }
 	}
 	
@@ -120,6 +123,10 @@ public class BillInfo extends ListActivity {
 		sponsorPhoto = photo;
 		loadPhotoTask = null;
 		displayPhoto();
+	}
+	
+	public Context photoContext() {
+		return this;
 	}
 	
 	
@@ -431,29 +438,6 @@ public class BillInfo extends ListActivity {
 				context.onLoadBill(exception);
 			else
 				context.onLoadBill(bill);
-		}
-	}
-	
-	private class LoadPhotoTask extends AsyncTask<String,Void,Drawable> {
-		public BillInfo context;
-		
-		public LoadPhotoTask(BillInfo context) {
-			super();
-			this.context = context;
-		}
-		
-		public void onScreenLoad(BillInfo context) {
-			this.context = context;
-		}
-		
-		@Override
-		public Drawable doInBackground(String... bioguideId) {
-			return LegislatorImage.getImage(LegislatorImage.PIC_LARGE, bioguideId[0], context);
-		}
-		
-		@Override
-		public void onPostExecute(Drawable photo) {
-			context.onLoadPhoto(photo);
 		}
 	}
 	
