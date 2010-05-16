@@ -2,25 +2,38 @@ package com.sunlightlabs.android.congress;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import com.sunlightlabs.android.congress.utils.LegislatorAdapter;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
+import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
+import com.sunlightlabs.android.congress.utils.LoadsPhoto;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.Committee;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Legislator;
 
-public class LegislatorList extends ListActivity {
+public class LegislatorList extends ListActivity implements LoadsPhoto {
 	private final static int SEARCH_ZIP = 0;
 	private final static int SEARCH_LOCATION = 1;
 	private final static int SEARCH_STATE = 2;
@@ -30,6 +43,8 @@ public class LegislatorList extends ListActivity {
 	private ArrayList<Legislator> legislators = null;
 	private LoadLegislatorsTask loadLegislatorsTask = null;
 	private ShortcutImageTask shortcutImageTask = null;
+	
+	private HashMap<String,LoadPhotoTask> loadPhotoTasks = new HashMap<String,LoadPhotoTask>();
 
 	private boolean shortcut;
 
@@ -63,6 +78,13 @@ public class LegislatorList extends ListActivity {
 			legislators = holder.legislators;
 			loadLegislatorsTask = holder.loadLegislatorsTask;
 			shortcutImageTask = holder.shortcutImageTask;
+			loadPhotoTasks = holder.loadPhotoTasks;
+			
+			if (loadPhotoTasks != null) {
+				Iterator<LoadPhotoTask> iterator = loadPhotoTasks.values().iterator();
+				while (iterator.hasNext())
+					iterator.next().onScreenLoad(this);
+			}
 		}
 
 		if (loadLegislatorsTask == null && shortcutImageTask == null)
@@ -82,6 +104,7 @@ public class LegislatorList extends ListActivity {
 		holder.legislators = this.legislators;
 		holder.loadLegislatorsTask = this.loadLegislatorsTask;
 		holder.shortcutImageTask = this.shortcutImageTask;
+		holder.loadPhotoTasks = this.loadPhotoTasks;
 		return holder;
 	}
 
@@ -110,6 +133,27 @@ public class LegislatorList extends ListActivity {
 				Utils.showBack(this, R.string.empty_general);
 			}
 		}
+	}
+	
+	public void loadPhoto(String bioguide_id) {
+		if (!loadPhotoTasks.containsKey(bioguide_id))
+			loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
+	}
+	
+	public void onLoadPhoto(Drawable photo, Object tag) {
+		loadPhotoTasks.remove((String) tag);
+		
+		View result = getListView().findViewWithTag(tag);
+		if (result != null) {
+			if (photo != null)
+				((ImageView) result.findViewById(R.id.photo)).setImageDrawable(photo);
+			else // leave as loading, no better solution I can think of right now
+				((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.loading_photo);
+		}
+	}
+	
+	public Context photoContext() {
+		return this;
 	}
 
 	public void setupControls() {
@@ -194,6 +238,68 @@ public class LegislatorList extends ListActivity {
 	public void returnShortcutIcon(Legislator legislator, Bitmap icon) {
 		setResult(RESULT_OK, Utils.shortcutIntent(this, legislator, icon));
 		finish();
+	}
+	
+	private class LegislatorAdapter extends ArrayAdapter<Legislator> {
+		LayoutInflater inflater;
+		Activity context;
+
+	    public LegislatorAdapter(Activity context, ArrayList<Legislator> items) {
+	        super(context, 0, items);
+	        this.context = context;
+	        inflater = LayoutInflater.from(context);
+	    }
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			Legislator legislator = getItem(position);
+			
+			LinearLayout view;
+			if (convertView == null)
+				view = (LinearLayout) inflater.inflate(R.layout.legislator_item, null);
+			else
+				view = (LinearLayout) convertView;
+			
+			// used as the hook to get the legislator image in place when it's loaded
+			view.setTag(legislator.bioguide_id);
+			
+			((TextView) view.findViewById(R.id.name)).setText(nameFor(legislator));
+			((TextView) view.findViewById(R.id.position)).setText(positionFor(legislator));
+			
+			ImageView photoView = (ImageView) view.findViewById(R.id.photo); 
+			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_LARGE, legislator.bioguide_id, context);
+			if (photo != null)
+				photoView.setImageDrawable(photo);
+			else {
+				photoView.setImageResource(R.drawable.loading_photo);
+				LegislatorList.this.loadPhoto(legislator.bioguide_id);
+			}
+			
+			return view;
+		}
+		
+		
+		
+		public String nameFor(Legislator legislator) {
+			return legislator.last_name + ", " + legislator.firstName();
+		}
+		
+		public String positionFor(Legislator legislator) {
+			String district = legislator.district;
+			String stateName = Utils.stateCodeToName(context, legislator.state);
+			
+			if (district.equals("Senior Seat"))
+				return "Senior Senator from " + stateName;
+			else if (district.equals("Junior Seat"))
+				return "Junior Senator from " + stateName;
+			else if (district.equals("0")) {
+				if (legislator.title.equals("Rep"))
+					return "Representative for " + stateName + " At-Large";
+				else
+					return legislator.fullTitle() + " for " + stateName;
+			} else
+				return "Representative for " + stateName + "-" + district;
+		}
+		
 	}
 
 	private class ShortcutImageTask extends AsyncTask<Void, Void, Bitmap> {
@@ -331,5 +437,6 @@ public class LegislatorList extends ListActivity {
 		ArrayList<Legislator> legislators;
 		LoadLegislatorsTask loadLegislatorsTask;
 		ShortcutImageTask shortcutImageTask;
+		HashMap<String,LoadPhotoTask> loadPhotoTasks;
 	}
 }
