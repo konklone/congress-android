@@ -26,13 +26,14 @@ public class LegislatorImage {
 	// 30 day expiration time on cached legislator avatars
 	public static final long CACHE_IMAGES = (long) 1000 * 60 * 60 * 24 * 30;
 	
+	// should be called from within a background task, as this performs a network call
 	public static BitmapDrawable getImage(String size, String bioguideId, Context context) {
 		File imageFile = new File(picPath(size, bioguideId, context));
 		
 		if (!imageFile.exists())
-			cacheImages(bioguideId, context);
+			cacheImage(size, bioguideId, context);
 		else if (tooOld(imageFile))
-			cacheImages(bioguideId, context);
+			cacheImage(size, bioguideId, context);
 		
 		
 		if (!imageFile.exists()) // download failed for some reason
@@ -89,12 +90,6 @@ public class LegislatorImage {
 		File picDir = new File(context.getCacheDir().getPath() + "/" + bioguideId);
 		picDir.mkdirs();
 		return picDir.getPath();
-	}
-	
-	public static void cacheImages(String bioguideId, Context context) {
-		cacheImage(PIC_SMALL, bioguideId, context);
-		cacheImage(PIC_MEDIUM, bioguideId, context);
-		cacheImage(PIC_LARGE, bioguideId, context);
 	}
 	
 	public static void cacheImage(String size, String bioguideId, Context context) {
