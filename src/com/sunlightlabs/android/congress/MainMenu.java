@@ -351,16 +351,18 @@ public class MainMenu extends ListActivity {
         	ScrollView changelogView = (ScrollView) inflater.inflate(R.layout.changelog, null);
         	
         	Spanned changelog = Html.fromHtml(
-        		"<b>&#183;</b> Made everything look nicer<br/><br/>" +
-        		"<b>&#183;</b> Legislators now load instantly when coming from a search"
+        		"<b>&#183;</b> New \"Latest Votes\" listing for bills and resolutions that just got a vote<br/><br/>" +
+        		"<b>&#183;</b> Menu links to THOMAS, OpenCongress, GovTrack, and the Bioguide<br/><br/>" +
+        		"<b>&#183;</b> Slightly better timeline for bills<br/><br/>" +
+        		"<b>&#183;</b> Endless scrolling for bills, thumbnails for legislators"
         	);
         	Spanned changelogLast = Html.fromHtml(
-        		"<b>&#183;</b> Basic information about recently introduced bills, and laws.<br/><br/>" +
-        		"<b>&#183;</b> New \"Sponsored Bills\" button on legislator profiles.<br/><br/>" +
-        		"<b>&#183;</b> Tap the menu button while viewing a legislator or bill to create a home screen shortcut."
+        		"<b>&#183;</b> Basic information about bills and laws<br/><br/>" +
+        		"<b>&#183;</b> New \"Sponsored Bills\" button on legislator profiles<br/><br/>" +
+        		"<b>&#183;</b> Made everything look nicer"
         	);
         	((TextView) changelogView.findViewById(R.id.changelog)).setText(changelog);
-        	((TextView) changelogView.findViewById(R.id.changelog_last_title)).setText("Version 2.0");
+        	((TextView) changelogView.findViewById(R.id.changelog_last_title)).setText("Version 2.0 - 2.1");
         	((TextView) changelogView.findViewById(R.id.changelog_last)).setText(changelogLast);
         	
         	builder.setIcon(R.drawable.icon);
