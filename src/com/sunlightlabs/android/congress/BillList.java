@@ -132,7 +132,7 @@ public class BillList extends ListActivity {
 		this.bills = new ArrayList<Bill>();
 		Utils.showBack(this, R.string.error_connection);
 	}
-
+	
 	private class LoadBillsTask extends AsyncTask<Void,Void,ArrayList<Bill>> {
 		private BillList context;
 		private CongressException exception;
