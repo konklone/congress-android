@@ -4,6 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 public interface LoadsPhoto {
-	public void onLoadPhoto(Drawable photo);
+	public void onLoadPhoto(Drawable photo, Object tag);
 	public Context photoContext();
 }

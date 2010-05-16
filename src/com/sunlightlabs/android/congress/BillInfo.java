@@ -119,7 +119,7 @@ public class BillInfo extends ListActivity implements LoadsPhoto {
 		finish();
 	}
 	
-	public void onLoadPhoto(Drawable photo) {
+	public void onLoadPhoto(Drawable photo, Object tag) {
 		sponsorPhoto = photo;
 		loadPhotoTask = null;
 		displayPhoto();

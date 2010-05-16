@@ -140,7 +140,7 @@ public class LegislatorProfile extends ListActivity implements LoadsPhoto {
         }
 	}
 	
-	public void onLoadPhoto(Drawable avatar) {
+	public void onLoadPhoto(Drawable avatar, Object tag) {
 		loadPhotoTask = null;
 		this.avatar = avatar;
 		displayAvatar();

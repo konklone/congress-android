@@ -6,11 +6,19 @@ import android.os.AsyncTask;
 public class LoadPhotoTask extends AsyncTask<String,Void,Drawable> {
 	public LoadsPhoto context;
 	public String size;
+	public Object tag = null;
 	
 	public LoadPhotoTask(LoadsPhoto context, String size) {
 		super();
 		this.context = context;
 		this.size = size;
+	}
+	
+	public LoadPhotoTask(LoadsPhoto context, String size, Object tag) {
+		super();
+		this.context = context;
+		this.size = size;
+		this.tag = tag;
 	}
 	
 	public void onScreenLoad(LoadsPhoto context) {
@@ -24,6 +32,6 @@ public class LoadPhotoTask extends AsyncTask<String,Void,Drawable> {
 	
 	@Override
 	public void onPostExecute(Drawable photo) {
-		context.onLoadPhoto(photo);
+		context.onLoadPhoto(photo, tag);
 	}
 }
