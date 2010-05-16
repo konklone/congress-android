@@ -266,7 +266,7 @@ public class BillInfo extends ListActivity {
 		}
 		titleView.setText(title);
 		
-		header = addBillTimeline(header);
+		addBillTimeline(header);
 		
 		adapter.addView(header);
 		
@@ -303,23 +303,37 @@ public class BillInfo extends ListActivity {
 	
 	// Take the layout view given, and append all applicable bill_event TextViews
 	// describing the basic timeline of the bill
-	public LinearLayout addBillTimeline(LinearLayout header) {
-		LayoutInflater inflater = LayoutInflater.from(this);
+	public void addBillTimeline(LinearLayout header) {
 		LinearLayout inner = (LinearLayout) header.findViewById(R.id.header_inner);
 		
-		String introduced_date = "Introduced on " +timelineFormat.format(new Date(introduced_at));
-		TextView introduced = (TextView) inflater.inflate(R.layout.bill_event, null);
-		introduced.setText(introduced_date);
-		inner.addView(introduced);
+		addTimelinePiece(inner, "Introduced on", introduced_at);
 		
-		if (enacted_at > 0) {
-			String enacted_date = "Enacted on " + timelineFormat.format(new Date(enacted_at));
-			TextView enacted = (TextView) inflater.inflate(R.layout.bill_event, null);
-			enacted.setText(enacted_date);
-			inner.addView(enacted);
+		if (house_result != null && house_result_at > 0) {
+			if (house_result.equals("pass"))
+				addTimelinePiece(inner, "Passed the House on", house_result_at);
+			else if (house_result.equals("fail"))
+				addTimelinePiece(inner, "Failed the House on", house_result_at);
 		}
 		
-		return header;
+		if (senate_result != null && senate_result_at > 0) {
+			if (senate_result.equals("pass"))
+				addTimelinePiece(inner, "Passed the Senate on", senate_result_at);
+			else if (senate_result.equals("fail"))
+				addTimelinePiece(inner, "Failed the Senate on", senate_result_at);
+		}
+		
+		if (awaiting_signature && awaiting_signature_since > 0)
+			addTimelinePiece(inner, "Awaiting signature since", awaiting_signature_since);
+		
+		if (enacted && enacted_at > 0)
+			addTimelinePiece(inner, "Enacted on", enacted_at);
+	}
+	
+	public void addTimelinePiece(LinearLayout container, String prefix, long timestamp) {
+		String date = prefix + " " + timelineFormat.format(new Date(timestamp));
+		TextView piece = (TextView) LayoutInflater.from(this).inflate(R.layout.bill_event, null);
+		piece.setText(date);
+		container.addView(piece);
 	}
 	
 	@Override
