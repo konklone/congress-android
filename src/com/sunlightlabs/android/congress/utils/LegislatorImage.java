@@ -28,18 +28,21 @@ public class LegislatorImage {
 	
 	// should be called from within a background task, as this performs a network call
 	public static BitmapDrawable getImage(String size, String bioguideId, Context context) {
+		BitmapDrawable drawable = quickGetImage(size, bioguideId, context);
+		if (drawable == null) {
+			cacheImage(size, bioguideId, context);
+			drawable = quickGetImage(size, bioguideId, context);
+		}
+		return drawable;
+	}
+	
+	// will not make a network call, if file exists on disk you get the drawable, otherwise null
+	public static BitmapDrawable quickGetImage(String size, String bioguideId, Context context) {
 		File imageFile = new File(picPath(size, bioguideId, context));
-		
-		if (!imageFile.exists())
-			cacheImage(size, bioguideId, context);
-		else if (tooOld(imageFile))
-			cacheImage(size, bioguideId, context);
-		
-		
-		if (!imageFile.exists()) // download failed for some reason
+		if (!imageFile.exists() || tooOld(imageFile))
 			return null;
-		
-		return new BitmapDrawable(picPath(size, bioguideId, context));
+		else
+			return new BitmapDrawable(picPath(size, bioguideId, context));
 	}
 	
 	public static Bitmap shortcutImage(String bioguideId, Context context) {
