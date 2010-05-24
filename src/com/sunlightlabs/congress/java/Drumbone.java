@@ -43,6 +43,8 @@ public class Drumbone {
 	        if (statusCode == HttpStatus.SC_OK) {
 	        	String body = EntityUtils.toString(response.getEntity());
 	        	return body;
+	        } else if (statusCode == HttpStatus.SC_NOT_FOUND){
+	        	throw new CongressException.NotFound("404 Not Found from " + url);
 	        } else {
 	        	throw new CongressException("Bad status code " + statusCode + " on fetching JSON from " + url);
 	        }

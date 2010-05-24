@@ -127,10 +127,14 @@ public class Utils {
 	}
 	
 	// suitable for shortcut intents, standalone, bill ID only
-	public static Intent billIntent(Context context, Bill bill) {
+	public static Intent billIntent(Bill bill) {
+		return billIntent(bill.id);
+	}
+	
+	public static Intent billIntent(String billId) {
 		Intent intent = new Intent(Intent.ACTION_MAIN);
     	intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.BillInfo");
-		intent.putExtra("extra", false).putExtra("id", bill.id);
+		intent.putExtra("extra", false).putExtra("id", billId);
 		return intent;
 	}
 	
@@ -138,7 +142,7 @@ public class Utils {
 		Parcelable resource = Intent.ShortcutIconResource.fromContext(context, R.drawable.bill);
 		return new Intent()
 			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
-				billIntent(context, bill).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
+				billIntent(bill).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
 			.putExtra(Intent.EXTRA_SHORTCUT_NAME, Bill.formatCode(bill.code))
 			.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, resource);
 	}

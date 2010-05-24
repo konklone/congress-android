@@ -179,7 +179,17 @@ public class Bill {
 		
 		return bills;
 	}
-			
+	
+	// takes a potentially user entered, variably formatted code and transforms it into a bill_id
+	public static String codeToBillId(String code) {
+		return code.toLowerCase().replace(" ", "").replace(".", "") + "-" + currentSession();
+	}
+	
+	public static String currentSession() {
+		int year = new Date().getYear();
+		return "" + (((year + 1901) / 2) - 894);
+	}
+	
 	public static String formatCode(String code) {
 		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");
 		Matcher matcher = pattern.matcher(code);

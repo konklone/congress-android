@@ -115,7 +115,10 @@ public class BillInfo extends ListActivity implements LoadsPhoto {
 	}
 	
 	public void onLoadBill(CongressException exception) {
-		Utils.alert(this, R.string.error_connection);
+		if (exception instanceof CongressException.NotFound)
+			Utils.alert(this, "No bill found by that code.");
+		else
+			Utils.alert(this, R.string.error_connection);
 		finish();
 	}
 	
@@ -421,9 +424,7 @@ public class BillInfo extends ListActivity implements LoadsPhoto {
 		@Override
 		public Bill doInBackground(String... billId) {
 			try {
-				Bill bill = Bill.find(billId[0], "basic,sponsor,summary");
-				
-				return bill;
+				return Bill.find(billId[0], "basic,sponsor,summary");
 			} catch (CongressException exception) {
 				this.exception = exception;
 				return null;

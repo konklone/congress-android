@@ -18,4 +18,11 @@ public class CongressException extends Exception {
     public String getMessage() {
     	return this.msg;
     }
+    
+    public static class NotFound extends CongressException {
+    	public NotFound(String msg) {
+    		super(msg);
+    	}
+    	private static final long serialVersionUID = -2623309261327198188L;
+    }
 }

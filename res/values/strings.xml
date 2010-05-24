@@ -41,6 +41,7 @@
     <string name="menu_bills_law">New Laws</string>
     <string name="menu_bills_recent">Just Introduced</string>
     <string name="menu_bills_latest_votes">Latest Votes</string>
+    <string name="menu_bills_code">By Bill Code</string>
     <string name="menu_legislators_header">Find Legislators By</string>
     <string name="menu_legislators_location">My Location</string>
     <string name="menu_legislators_state">State</string>

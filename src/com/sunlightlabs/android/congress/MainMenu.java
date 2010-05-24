@@ -28,11 +28,13 @@ import android.widget.TextView;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
+import com.sunlightlabs.congress.java.Bill;
 
 public class MainMenu extends ListActivity {
 	public static final int RESULT_ZIP = 1;
 	public static final int RESULT_LASTNAME = 2;
 	public static final int RESULT_STATE = 3;
+	public static final int RESULT_BILL_CODE = 4;
 	
 	private static final int ABOUT = 0;
 	private static final int FIRST = 1;
@@ -41,10 +43,11 @@ public class MainMenu extends ListActivity {
 	public static final int BILLS_LAW = 0;
 	public static final int BILLS_RECENT = 1;
 	public static final int BILLS_LATEST_VOTES = 2;
-	public static final int SEARCH_LOCATION = 3;
-	public static final int SEARCH_ZIP = 4;
-	public static final int SEARCH_STATE = 5;
-	public static final int SEARCH_NAME = 6;
+	public static final int BILLS_CODE = 3;
+	public static final int SEARCH_LOCATION = 4;
+	public static final int SEARCH_ZIP = 5;
+	public static final int SEARCH_STATE = 6;
+	public static final int SEARCH_NAME = 7;
 	
 	private Location location;
 	
@@ -88,6 +91,9 @@ public class MainMenu extends ListActivity {
 		case BILLS_LATEST_VOTES:
 			startActivity(new Intent(this, BillList.class).putExtra("type", BillList.BILLS_LATEST_VOTES));
 			break;
+		case BILLS_CODE:
+			getResponse(RESULT_BILL_CODE);
+			break;
 		default:
 			break;
 		}
@@ -118,6 +124,12 @@ public class MainMenu extends ListActivity {
         ((TextView) billsLatestVotes.findViewById(R.id.text)).setText(R.string.menu_bills_latest_votes);
         billsLatestVotes.setTag(BILLS_LATEST_VOTES);
         billViews.add(billsLatestVotes);
+        
+        LinearLayout billsCode = (LinearLayout) inflater.inflate(R.layout.main_menu_item, null);
+        ((ImageView) billsCode.findViewById(R.id.icon)).setImageResource(R.drawable.bill_code);
+        ((TextView) billsCode.findViewById(R.id.text)).setText(R.string.menu_bills_code);
+        billsCode.setTag(BILLS_CODE);
+        billViews.add(billsCode);
         
         LinearLayout peopleHeader = (LinearLayout) inflater.inflate(R.layout.header_layout, null);
         ((TextView) peopleHeader.findViewById(R.id.header_text)).setText(R.string.menu_legislators_header);
@@ -180,26 +192,26 @@ public class MainMenu extends ListActivity {
 		return location;
 	}
 	
-	public void searchByZip(String zipCode) {
+	private void searchByZip(String zipCode) {
 		Bundle extras = new Bundle();
 		extras.putString("zip_code", zipCode);
 		search(extras);
     }
 	
-	public void searchByLatLong(double latitude, double longitude) {
+	private void searchByLatLong(double latitude, double longitude) {
 		Bundle extras = new Bundle();
 		extras.putDouble("latitude", latitude);
 		extras.putDouble("longitude", longitude);
 		search(extras);
 	}
 	
-	public void searchByLastName(String lastName) {
+	private void searchByLastName(String lastName) {
 		Bundle extras = new Bundle();
 		extras.putString("last_name", lastName);
 		search(extras);
 	}
 	
-	public void searchByState(String state) {
+	private void searchByState(String state) {
 		Bundle extras = new Bundle();
 		extras.putString("state", state);
 		search(extras);
@@ -207,6 +219,10 @@ public class MainMenu extends ListActivity {
 	
 	private void search(Bundle extras) {
 		startActivity(new Intent(this, LegislatorList.class).putExtras(extras));
+	}
+	
+	private void searchByBillId(String billId) {
+		startActivity(Utils.billIntent(billId));
 	}
 	
 	private void getResponse(int requestCode) {
@@ -230,6 +246,13 @@ public class MainMenu extends ListActivity {
 		case RESULT_STATE:
 			intent.setClass(this, GetState.class)
 				.putExtra("startValue", Preferences.getString(this, "search_state"));
+			break;
+		case RESULT_BILL_CODE:
+			intent.setClass(this, GetText.class)
+				.putExtra("ask", "Enter a bill code:")
+				.putExtra("hint", "e.g. \"HR 4136\", \"S 782\"")
+				.putExtra("startValue", Preferences.getString(this, "search_bill_code"))
+				.putExtra("inputType", InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
 			break;
 		default:
 			break;
@@ -263,10 +286,22 @@ public class MainMenu extends ListActivity {
 			if (resultCode == RESULT_OK) {
 				String state = data.getExtras().getString("response").trim();
 				if (!state.equals("")) {
-					String code = Utils.stateNameToCode(this, state.trim());
+					String code = Utils.stateNameToCode(this, state);
 					if (code != null) {
 						Preferences.setString(this, "search_state", state); // store the name, not the code
 						searchByState(code);
+					}
+				}
+			}
+			break;
+		case RESULT_BILL_CODE:
+			if (resultCode == RESULT_OK) {
+				String code = data.getExtras().getString("response").trim();
+				if (!code.equals("")) {
+					String billId = Bill.codeToBillId(code);
+					if (billId != null) {
+						Preferences.setString(this, "search_bill_code", code); // store the code, not the bill_id
+						searchByBillId(billId);
 					}
 				}
 			}
