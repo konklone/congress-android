@@ -8,7 +8,8 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 public class LegislatorTabs extends TabActivity {
-	private String id, titledName, lastName, state, party, 
+	private String id, state, party,
+		titledName, lastName, firstName, nickname, nameSuffix, title, 
 		gender, domain, office, website, phone, 
 		twitter_id, youtube_id, bioguide_id, govtrack_id;
 	
@@ -16,11 +17,14 @@ public class LegislatorTabs extends TabActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.legislator);
-        
         Bundle extras = getIntent().getExtras();
         id = extras.getString("id");
 		titledName = extras.getString("titledName");
 		lastName = extras.getString("lastName");
+		firstName = extras.getString("firstName");
+		nickname = extras.getString("nickname");
+		nameSuffix = extras.getString("nameSuffix");
+		title = extras.getString("title");
 		state = extras.getString("state");
 		party = extras.getString("party");
 		gender = extras.getString("gender");
@@ -78,7 +82,10 @@ public class LegislatorTabs extends TabActivity {
 	
 	public Intent newsIntent() {
 		return new Intent(this, LegislatorNews.class)
-			.putExtra("searchName", titledName);
+			.putExtra("firstName", firstName)
+			.putExtra("nickname", nickname)
+			.putExtra("lastName", lastName)
+			.putExtra("title", title);
 	}
 	
 	public Intent twitterIntent() {

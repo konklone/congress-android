@@ -38,7 +38,13 @@ public class LegislatorNews extends ListActivity {
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.list);
     	
-    	searchName = LegislatorNews.correctExceptions(getIntent().getStringExtra("searchName"));
+    	Bundle extras = getIntent().getExtras();
+    	String title = extras.getString("title");
+    	String firstName = extras.getString("firstName");
+    	String nickname = extras.getString("nickname");
+    	String lastName = extras.getString("lastName");
+    	searchName = LegislatorNews.searchNameFor(title, firstName, nickname, lastName); 
+    	searchName = LegislatorNews.correctExceptions(searchName);
     	
     	LegislatorNewsHolder holder = (LegislatorNewsHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
@@ -122,6 +128,14 @@ public class LegislatorNews extends ListActivity {
     		Utils.showRefresh(this, R.string.news_empty);
     }
     
+    private static String searchNameFor(String title, String firstName, String nickname, String lastName) {
+    	String first;
+    	if (nickname != null && !nickname.equals(""))
+    		first = nickname;
+    	else
+    		first = firstName;
+    	return title + ". " + first + " " + lastName;
+    }
     
     private static String correctExceptions(String name) {
 		if (name.equals("Rep. Nancy Pelosi"))
