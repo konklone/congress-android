@@ -109,6 +109,8 @@ public class LegislatorImage {
 			URL u = new URL(url);
 			URLConnection conn = u.openConnection();
 			int contentLength = conn.getContentLength();
+			if (contentLength < 0)
+				return; // bad connection, I guess - return null to throw up the No Photo image
 			
 			DataInputStream stream = new DataInputStream(u.openStream());
 			
@@ -120,7 +122,7 @@ public class LegislatorImage {
 	        fos.write(buffer);
 	        fos.flush();
 	        fos.close();
-		} catch(FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			return; // swallow a 404, we'll throw up a No Photo image
 		} catch (IOException e) {
 			return; // swallow a 404, we'll throw up a No Photo image
