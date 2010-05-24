@@ -2,7 +2,6 @@ package winterwell.jtwitter;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,14 +14,13 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import lgpl.haustein.Base64Encoder;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import lgpl.haustein.Base64Encoder;
 
 /**
  * A simple http client that uses the built in URLConnection class.
@@ -264,6 +262,8 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient {
 				output.append((char) c);
 			}
 			return output.toString();
+		} catch (SocketTimeoutException ex) {
+			throw new TwitterException(ex);
 		} catch (IOException ex) {
 			throw new RuntimeException(ex);
 		} finally {
