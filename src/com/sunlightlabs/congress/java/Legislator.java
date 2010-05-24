@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.net.Uri;
+
 public class Legislator implements Comparable<Legislator> {
 	
 	public String bioguide_id, govtrack_id;
@@ -20,11 +22,11 @@ public class Legislator implements Comparable<Legislator> {
 	
 	// all legislators meeting one condition
 	public static ArrayList<Legislator> allWhere(String key, String value) throws CongressException {
-		return legislatorsFor(Sunlight.url("legislators.getList", key + "=" + value));
+		return legislatorsFor(Sunlight.url("legislators.getList", key + "=" + Uri.encode(value))); // encode user entered data
 	}
 	
 	public static ArrayList<Legislator> allForZipCode(String zip) throws CongressException {
-		return legislatorsFor(Sunlight.url("legislators.allForZip", "zip=" + zip));
+		return legislatorsFor(Sunlight.url("legislators.allForZip", "zip=" + Uri.encode(zip))); // encode user entered data
 	}
 	
 	public static ArrayList<Legislator> allForLatLong(double latitude, double longitude) throws CongressException {
