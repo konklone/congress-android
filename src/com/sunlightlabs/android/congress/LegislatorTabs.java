@@ -64,7 +64,7 @@ public class LegislatorTabs extends TabActivity {
 	}
 	
 	public Intent profileIntent() {
-		return new Intent(this, LegislatorInfo.class)
+		return new Intent(this, LegislatorProfile.class)
 			.putExtra("id", id)
 			.putExtra("titledName", titledName)
 			.putExtra("lastName", lastName)
