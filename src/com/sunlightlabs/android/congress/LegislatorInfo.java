@@ -35,7 +35,7 @@ import com.sunlightlabs.congress.java.Committee;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Legislator;
 
-public class LegislatorProfile extends ListActivity implements LoadsPhoto {
+public class LegislatorInfo extends ListActivity implements LoadsPhoto {
 	private String id, titledName, lastName, party, gender, state, domain, phone, website;
 	private String bioguide_id, govtrack_id;
 	private Drawable avatar;
@@ -347,15 +347,15 @@ public class LegislatorProfile extends ListActivity implements LoadsPhoto {
     }
 	
 	private class ShortcutImageTask extends AsyncTask<String,Void,Bitmap> {
-    	public LegislatorProfile context;
+    	public LegislatorInfo context;
     	
-    	public ShortcutImageTask(LegislatorProfile context) {
+    	public ShortcutImageTask(LegislatorInfo context) {
     		super();
     		this.context = context;
     		this.context.shortcutImageTask = this;
     	}
     	
-    	public void onScreenLoad(LegislatorProfile context) {
+    	public void onScreenLoad(LegislatorInfo context) {
     		this.context = context;
     	}
     	
@@ -372,14 +372,14 @@ public class LegislatorProfile extends ListActivity implements LoadsPhoto {
     }
 	
 	private class LoadCommitteesTask extends AsyncTask<String,Void,ArrayList<Committee>> {
-		private LegislatorProfile context;
+		private LegislatorInfo context;
 		private CongressException exception;
 		
-		public LoadCommitteesTask(LegislatorProfile context) {
+		public LoadCommitteesTask(LegislatorInfo context) {
 			this.context = context;
 		}
 		
-		public void onScreenLoad(LegislatorProfile context) {
+		public void onScreenLoad(LegislatorInfo context) {
 			this.context = context;
 		}
 		
@@ -431,7 +431,7 @@ public class LegislatorProfile extends ListActivity implements LoadsPhoto {
 			this.committees = committees;
 		}
 		
-		public void loadInto(LegislatorProfile context) {
+		public void loadInto(LegislatorInfo context) {
 			context.loadPhotoTask = loadPhotoTask;
 			context.loadCommitteesTask = loadCommitteesTask;
 			context.shortcutImageTask = shortcutImageTask;

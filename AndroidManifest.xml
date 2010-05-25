@@ -58,7 +58,7 @@
         	android:theme="@android:style/Theme.NoTitleBar"
         	/>
         
-        <activity android:name=".LegislatorProfile" />
+        <activity android:name=".LegislatorInfo" />
         <activity android:name=".LegislatorNews" />
         <activity android:name=".LegislatorTwitter" />
         <activity android:name=".LegislatorYouTube" />
