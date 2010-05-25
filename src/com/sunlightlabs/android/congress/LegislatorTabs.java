@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 public class LegislatorTabs extends TabActivity {
 	private String id, state, party,
-		titledName, lastName, firstName, nickname, nameSuffix, title, 
+		titledName, lastName, firstName, nickname, title, 
 		gender, domain, office, website, phone, 
 		twitter_id, youtube_id, bioguide_id, govtrack_id;
 	
@@ -23,7 +23,6 @@ public class LegislatorTabs extends TabActivity {
 		lastName = extras.getString("lastName");
 		firstName = extras.getString("firstName");
 		nickname = extras.getString("nickname");
-		nameSuffix = extras.getString("nameSuffix");
 		title = extras.getString("title");
 		state = extras.getString("state");
 		party = extras.getString("party");
