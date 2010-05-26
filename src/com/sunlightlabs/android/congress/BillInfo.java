@@ -222,6 +222,7 @@ public class BillInfo extends ListActivity implements LoadsPhoto, LoadsBill {
 	
 	public void onLoadBill(Bill bill) {
 		this.loadBillTask = null;
+		this.summary = bill.summary;
 		displaySummary();
 	}
 	
