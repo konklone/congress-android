@@ -101,7 +101,7 @@ public class BillList extends ListActivity {
 	protected void onListItemClick(ListView parent, View v, int position, long id) {
     	Bill bill = (Bill) parent.getItemAtPosition(position);
 		if (bill != null)
-			startActivity(Utils.loadBillIntent(this, BillTabs.class, bill));
+			startActivity(Utils.billIntent(this, bill));
     }
 	
 	public void loadBills() {

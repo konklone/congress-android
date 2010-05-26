@@ -18,8 +18,6 @@ public class LegislatorLoader extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		Utils.setupSunlight(this);
-		
 		String legislator_id = getIntent().getStringExtra("legislator_id");
         
         loadLegislatorTask = (LoadLegislatorTask) getLastNonConfigurationInstance();
@@ -38,7 +36,7 @@ public class LegislatorLoader extends Activity {
 		if (legislator != null)
 			startActivity(Utils.legislatorIntent(this, legislator));
 		else
-			Utils.alert(LegislatorLoader.this, R.string.error_connection);
+			Utils.alert(this, R.string.error_connection);
 		
 		finish();
 	}
@@ -50,6 +48,7 @@ public class LegislatorLoader extends Activity {
     	public LoadLegislatorTask(LegislatorLoader context) {
     		super();
     		this.context = context;
+    		Utils.setupSunlight(context);
     	}
 		
     	@Override

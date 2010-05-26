@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sunlightlabs.android.congress.BillTabs;
 import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.congress.java.Bill;
@@ -83,10 +84,9 @@ public class Utils {
 	// Not suitable for shortcut intents.
 	
 	// so tedious that I want a method to load up an Intent for any class
-	// used to prepare for BillLoader or BillTabs (from BillList)
-	public static Intent loadBillIntent(Context context, Class<?> klass, Bill bill) {
+	public static Intent billIntent(Context context, Bill bill) {
 		Legislator sponsor = bill.sponsor;
-		Intent intent = new Intent(context, klass)
+		Intent intent = new Intent(context, BillTabs.class)
 			.putExtra("id", bill.id)
 			.putExtra("type", bill.type)
 			.putExtra("number", bill.number)
@@ -134,14 +134,9 @@ public class Utils {
 		return intent;
 	}
 	
-	// suitable for shortcut intents, standalone, bill ID only
-	public static Intent billIntent(Bill bill) {
-		return billIntent(bill.id);
-	}
-	
 	public static Intent billIntent(String billId) {
 		Intent intent = new Intent(Intent.ACTION_MAIN);
-    	intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.BillInfo");
+    	intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.BillLoader");
 		intent.putExtra("extra", false).putExtra("id", billId);
 		return intent;
 	}
