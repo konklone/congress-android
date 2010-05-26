@@ -250,7 +250,7 @@ public class MainMenu extends ListActivity {
 		case RESULT_BILL_CODE:
 			intent.setClass(this, GetText.class)
 				.putExtra("ask", "Enter a bill code:")
-				.putExtra("hint", "e.g. \"HR 4136\", \"S 782\"")
+				.putExtra("hint", "e.g. \"HR 4136\", \"s 782\"")
 				.putExtra("startValue", Preferences.getString(this, "search_bill_code"))
 				.putExtra("inputType", InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
 			break;
