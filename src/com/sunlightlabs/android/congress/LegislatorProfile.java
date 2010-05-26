@@ -146,7 +146,7 @@ public class LegislatorProfile extends ListActivity implements LoadsPhoto {
 		displayAvatar();
 	}
 	
-	public Context photoContext() {
+	public Context getContext() {
 		return this;
 	}
 	

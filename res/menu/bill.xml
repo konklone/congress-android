@@ -4,25 +4,21 @@
 		android:title="Full text at THOMAS"
 		android:alphabeticShortcut="t"
 		android:icon="@android:drawable/ic_menu_info_details"
-		android:enabled="false"
 		/> 
 	<item android:id="@+id/govtrack"
 		android:title="More at GovTrack"
 		android:alphabeticShortcut="g"
 		android:icon="@drawable/govtrack"
-		android:enabled="false"
 		/>
 	<item android:id="@+id/opencongress"
 		android:title="More at OpenCongress"
 		android:alphabeticShortcut="o"
 		android:icon="@drawable/opencongress"
-		android:enabled="false"
 		/>
 	<item android:id="@+id/shortcut"
 		android:title="Create Shortcut"
 		android:alphabeticShortcut="s"
 		android:icon="@android:drawable/ic_menu_add"
-		android:enabled="false"
 		/>
 	<item android:id="@+id/main" 
 		android:title="Main Menu"

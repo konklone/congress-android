@@ -152,7 +152,7 @@ public class LegislatorList extends ListActivity implements LoadsPhoto {
 		}
 	}
 	
-	public Context photoContext() {
+	public Context getContext() {
 		return this;
 	}
 

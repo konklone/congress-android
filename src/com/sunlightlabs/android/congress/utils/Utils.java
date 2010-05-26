@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sunlightlabs.android.congress.BillInfo;
 import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.congress.java.Bill;
@@ -82,11 +81,16 @@ public class Utils {
 	// Suitable for going from a list to the bill display page.
 	// Assumes the "basic" section of a bill has been loaded.
 	// Not suitable for shortcut intents.
-	public static Intent billIntentExtra(Context context, Bill bill) {
+	
+	// so tedious that I want a method to load up an Intent for any class
+	// used to prepare for BillLoader or BillTabs (from BillList)
+	public static Intent loadBillIntent(Context context, Class<?> klass, Bill bill) {
 		Legislator sponsor = bill.sponsor;
-		Intent intent = new Intent(context, BillInfo.class)
-			.putExtra("extra", true)
+		Intent intent = new Intent(context, klass)
 			.putExtra("id", bill.id)
+			.putExtra("type", bill.type)
+			.putExtra("number", bill.number)
+			.putExtra("session", bill.session)
 			.putExtra("code", bill.code)
 			.putExtra("short_title", bill.short_title)
 			.putExtra("official_title", bill.official_title)
@@ -142,12 +146,12 @@ public class Utils {
 		return intent;
 	}
 	
-	public static Intent shortcutIntent(Context context, Bill bill) {
+	public static Intent shortcutIntent(Context context, String billId, String code) {
 		Parcelable resource = Intent.ShortcutIconResource.fromContext(context, R.drawable.bill);
 		return new Intent()
 			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
-				billIntent(bill).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
-			.putExtra(Intent.EXTRA_SHORTCUT_NAME, Bill.formatCode(bill.code))
+				billIntent(billId).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
+			.putExtra(Intent.EXTRA_SHORTCUT_NAME, Bill.formatCode(code))
 			.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, resource);
 	}
 	

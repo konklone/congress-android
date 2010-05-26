@@ -47,4 +47,6 @@
     <string name="menu_legislators_state">State</string>
     <string name="menu_legislators_lastname">Last Name</string>
     <string name="menu_legislators_zip">Zip Code</string>
+    
+    <string name="bill_loading_error">Error loading bill data. Please try again later.</string>
 </resources>

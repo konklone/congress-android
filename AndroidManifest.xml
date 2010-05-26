@@ -67,7 +67,7 @@
         	android:theme="@android:style/Theme.NoTitleBar"
         	/>
         	
-        <activity android:name=".BillInfo"
+        <activity android:name=".BillLoader"
         	android:theme="@android:style/Theme.NoTitleBar"
         	>
         	<intent-filter>
@@ -75,6 +75,12 @@
         		<category android:name="android.intent.category.DEFAULT" />
         	</intent-filter>
         </activity>
+        
+        <activity android:name=".BillTabs" 
+        	android:theme="@android:style/Theme.NoTitleBar"
+        	/>
+        	
+        <activity android:name=".BillInfo" />
         
         <activity android:name=".Preferences" />
     </application>

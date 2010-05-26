@@ -268,16 +268,16 @@ public class Bill {
 			return type;
 	}
 	
-	public static String thomasUrl(Bill bill) {
-		return "http://thomas.loc.gov/cgi-bin/query/z?c" + bill.session + ":" + bill.type + bill.number + ":";
+	public static String thomasUrl(String type, int number, int session) {
+		return "http://thomas.loc.gov/cgi-bin/query/z?c" + session + ":" + type + number + ":";
 	}
 	
-	public static String openCongressUrl(Bill bill) {
-		return "http://www.opencongress.org/bill/" + bill.session + "-" + govTrackType(bill.type) + bill.number + "/show";
+	public static String openCongressUrl(String type, int number, int session) {
+		return "http://www.opencongress.org/bill/" + session + "-" + govTrackType(type) + number + "/show";
 	}
 	
-	public static String govTrackUrl(Bill bill) {
-		return "http://www.govtrack.us/congress/bill.xpd?bill=" + govTrackType(bill.type) + bill.session + "-" + bill.number;
+	public static String govTrackUrl(String type, int number, int session) {
+		return "http://www.govtrack.us/congress/bill.xpd?bill=" + govTrackType(type) + session + "-" + number;
 	}
 	
 	public static String formatSummary(String summary, String short_title) {

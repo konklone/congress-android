@@ -6,14 +6,6 @@
 	android:orientation="vertical"
 	>
 	
-	<include layout="@layout/title_bar_1" />
-	
-	<View
-		android:layout_width="fill_parent"
-		android:layout_height="1px"
-		android:background="#5c5e5d"
-		/>
-	
 	<LinearLayout android:id="@+id/header_inner"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
