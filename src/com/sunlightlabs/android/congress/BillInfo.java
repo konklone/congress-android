@@ -228,10 +228,7 @@ public class BillInfo extends ListActivity implements LoadsPhoto, LoadsBill {
 	
 	public void onLoadBill(CongressException exception) {
 		this.loadBillTask = null;
-		if (exception instanceof CongressException.NotFound)
-			Utils.alert(this, R.string.bill_loading_error);
-		else
-			Utils.alert(this, R.string.error_connection);
+		Utils.alert(this, R.string.error_connection);
 		finish();
 	}
 	

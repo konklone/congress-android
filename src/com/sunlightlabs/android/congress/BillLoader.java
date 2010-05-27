@@ -47,7 +47,10 @@ public class BillLoader extends Activity implements LoadsBill {
 	}
 	
 	public void onLoadBill(CongressException exception) {
-		Utils.alert(this, R.string.error_connection);
+		if (exception instanceof CongressException.NotFound)
+			Utils.alert(this, R.string.bill_not_found);
+		else
+			Utils.alert(this, R.string.error_connection);
 		finish();
 	}
 	
