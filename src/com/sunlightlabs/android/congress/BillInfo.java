@@ -264,6 +264,23 @@ public class BillInfo extends ListActivity implements LoadsPhoto, LoadsBill {
 				addTimelinePiece(inner, "Failed the Senate on", senate_result_at);
 		}
 		
+		if (vetoed && vetoed_at > 0)
+			addTimelinePiece(inner, "Vetoed on", vetoed_at);
+		
+		if (override_house_result != null && override_house_result_at > 0) {
+			if (override_house_result.equals("pass"))
+				addTimelinePiece(inner, "Override passed in the House on", override_house_result_at);
+			else if (override_house_result.equals("fail"))
+				addTimelinePiece(inner, "Override failed in the House on", override_house_result_at);
+		}
+		
+		if (override_senate_result != null && override_senate_result_at > 0) {
+			if (override_senate_result.equals("pass"))
+				addTimelinePiece(inner, "Override passed in the Senate on", override_senate_result_at);
+			else if (override_senate_result.equals("fail"))
+				addTimelinePiece(inner, "Override failed in the Senate on", override_senate_result_at);
+		}
+		
 		if (awaiting_signature && awaiting_signature_since > 0)
 			addTimelinePiece(inner, "Awaiting signature since", awaiting_signature_since);
 		
