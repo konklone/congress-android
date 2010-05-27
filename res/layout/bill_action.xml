@@ -5,45 +5,45 @@
 	android:padding="10dp"
 	>
 
-	<TextView android:id="@+id/byline"
+	<TextView android:id="@+id/acted_at"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		
 		android:layout_weight="1"
-		android:layout_gravity="left"
-		
 		android:layout_marginTop="3dp"
-		android:layout_marginRight="5dp"
 		
 		android:textSize="16sp"
+		android:textColor="#dddddd"
 		
-		android:text="H.Res. 3222 introduced:"
+		android:text="May 24, 2010"
 		/>
 		
-	<TextView android:id="@+id/date"
+	<TextView android:id="@+id/type"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		
 		android:layout_weight="0"
+		android:layout_alignTop="@id/acted_at"
 		android:layout_alignParentRight="true"
-		android:layout_alignTop="@id/byline"
 		
 		android:textSize="16sp"
+		android:textStyle="bold"
 		
-		android:text="Feb 22"
+		android:text="Action"
+		android:textColor="#ffffff"
 		/>
 		
-	<TextView android:id="@+id/title"
+	<TextView android:id="@+id/text"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		
-		android:layout_below="@+id/byline"
+		android:layout_below="@+id/acted_at"
 		
-		android:layout_marginTop="5dp"
+		android:layout_marginTop="7dp"
 		
 		android:textSize="16sp"
-		android:textColor="#ffffff"
+		android:textColor="@android:color/white"
 		
-		android:text="Title Of The Bill And Such"
+		android:text="DEBATE - The House proceeded with forty minutes of debate on H.R. 5160."
 		/>
 </RelativeLayout>

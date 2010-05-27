@@ -16,15 +16,15 @@ public class BillLoader extends Activity implements LoadsBill {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.loading);
+		setContentView(R.layout.loading_fullscreen);
 		
-		String billId = getIntent().getStringExtra("id");
+		String id = getIntent().getStringExtra("id");
 		
 		loadBillTask = (LoadBillTask) getLastNonConfigurationInstance();
 		if (loadBillTask != null)
 			loadBillTask.onScreenLoad(this);
 		else
-			loadBillTask = (LoadBillTask) new LoadBillTask(this, billId).execute("basic,sponsor");
+			loadBillTask = (LoadBillTask) new LoadBillTask(this, id).execute("basic,sponsor");
 	}
 	
 	public Object onRetainNonConfigurationInstance() {

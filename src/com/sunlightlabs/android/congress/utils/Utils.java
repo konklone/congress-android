@@ -227,6 +227,14 @@ public class Utils {
 		activity.findViewById(R.id.back).setVisibility(View.VISIBLE);	
 	}
 	
+	public static void showEmpty(Activity activity, int message) {
+		activity.findViewById(R.id.loading).setVisibility(View.GONE);
+		activity.findViewById(R.id.back).setVisibility(View.GONE);
+		TextView messageView = (TextView) activity.findViewById(R.id.empty_message);
+		messageView.setText(message);
+		messageView.setVisibility(View.VISIBLE);
+	}
+	
 	public static void setTitle(Activity activity, String title) {
 		((TextView) activity.findViewById(R.id.title_text)).setText(title);
 	}

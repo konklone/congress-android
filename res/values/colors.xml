@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="action_vote">#f1ef34</color>
+	<color name="action_enacted">#4ac956</color>
+	<color name="action_vetoed">#ef2f25</color>
+</resources>

@@ -81,6 +81,7 @@
         	/>
         	
         <activity android:name=".BillInfo" />
+        <activity android:name=".BillHistory" />
         
         <activity android:name=".Preferences" />
     </application>

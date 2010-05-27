@@ -73,12 +73,12 @@ public class BillTabs extends TabActivity {
 		Resources res = getResources();
 		TabHost tabHost = getTabHost();
 		tabHost.addTab(tabHost.newTabSpec("info_tab").setIndicator("Details", res.getDrawable(R.drawable.tab_profile)).setContent(detailsIntent()));
+		tabHost.addTab(tabHost.newTabSpec("history_tab").setIndicator("History", res.getDrawable(R.drawable.tab_news)).setContent(historyIntent()));
 		tabHost.setCurrentTab(0);
 	}
 	
 	public Intent detailsIntent() {
 		return new Intent(this, BillInfo.class)
-			.putExtra("extra", true)
 			.putExtra("id", id)
 			.putExtra("type", type)
 			.putExtra("number", number)
@@ -110,5 +110,10 @@ public class BillTabs extends TabActivity {
 			.putExtra("sponsor_first_name", sponsor_first_name)
 			.putExtra("sponsor_nickname", sponsor_nickname)
 			.putExtra("sponsor_last_name", sponsor_last_name);
+	}
+	
+	public Intent historyIntent() {
+		return new Intent(this, BillHistory.class)
+			.putExtra("id", id);
 	}
 }

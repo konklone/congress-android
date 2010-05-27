@@ -49,4 +49,5 @@
     <string name="menu_legislators_zip">Zip Code</string>
     
     <string name="bill_loading_error">Error loading bill data. Please try again later.</string>
+    <string name="bill_actions_empty">This bill has no action history at this time.</string>
 </resources>

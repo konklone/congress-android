@@ -36,6 +36,9 @@ public class Bill {
 	public String last_vote_result;
 	public String last_vote_chamber;
 	
+	// actions
+	public ArrayList<Bill.Action> actions = new ArrayList<Bill.Action>();
+	
 	public Bill(JSONObject json) throws JSONException, DateParseException {
 		if (!json.isNull("bill_id"))
 			id = json.getString("bill_id");
@@ -106,22 +109,43 @@ public class Bill {
 		if (!json.isNull("summary"))
 			summary = json.getString("summary");
 		
-		if(!json.isNull("votes")) {
+		if (!json.isNull("votes")) {
 			JSONArray votes = json.getJSONArray("votes");
 			int length = votes.length();
 			
-			for(int i = 0; i < length; i++) {
+			for (int i = 0; i < length; i++) {
 				JSONObject vote = votes.getJSONObject(i);
 				
 				// find the last vote (same date and year as the 'last_vote_at')
-				if(DateUtils.parseDate(vote.getString("voted_at"), Drumbone.dateFormat).equals(last_vote_at)) { 					
+				if (DateUtils.parseDate(vote.getString("voted_at"), Drumbone.dateFormat).equals(last_vote_at)) { 					
 					last_vote_chamber = vote.getString("chamber");
 					last_vote_result = vote.getString("result");
 					break;
 				}
 			}
 		}
+		
+		if (!json.isNull("actions")) {
+			JSONArray actionObjects = json.getJSONArray("actions");
+			int length = actionObjects.length();
+			
+			// load in reverse order
+			for (int i = 0; i < length; i++)
+				actions.add(0, new Bill.Action(actionObjects.getJSONObject(i)));
+		}
 	}
+	
+	public class Action {
+		public String type, text;
+		public Date acted_at;
+		
+		public Action(JSONObject json) throws JSONException, DateParseException {
+			text = json.getString("text");
+			type = json.getString("type");
+			acted_at = DateUtils.parseDate(json.getString("acted_at"), Drumbone.dateFormat);
+		}
+	}
+	
 		
 	public static ArrayList<Bill> recentlyIntroduced(int n, int p)
 			throws CongressException {
@@ -295,6 +319,5 @@ public class Bill {
 	public static String displayTitle(Bill bill) {
 		return (bill.short_title != null) ? bill.short_title : bill.official_title; 
 	}
-
-	
+		
 }
