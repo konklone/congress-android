@@ -215,6 +215,7 @@ public class Bill {
 	}
 	
 	public static String formatCode(String code) {
+		code = code.toLowerCase().replace(" ", "").replace(".", "");
 		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");
 		Matcher matcher = pattern.matcher(code);
 		if (!matcher.matches())
@@ -244,6 +245,7 @@ public class Bill {
 	
 	// for when you need that extra space
 	public static String formatCodeShort(String code) {
+		code = code.toLowerCase().replace(" ", "").replace(".", "");
 		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");
 		Matcher matcher = pattern.matcher(code);
 		if (!matcher.matches())

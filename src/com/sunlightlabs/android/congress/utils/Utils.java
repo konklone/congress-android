@@ -134,19 +134,25 @@ public class Utils {
 		return intent;
 	}
 	
-	public static Intent billIntent(String billId) {
+	public static Intent billIntent(String billId, String code) {
 		Intent intent = new Intent(Intent.ACTION_MAIN);
     	intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.BillLoader");
-		intent.putExtra("extra", false).putExtra("id", billId);
+		intent.putExtra("extra", false)
+			.putExtra("id", billId)
+			.putExtra("code", code);
 		return intent;
+	}
+	
+	public static Intent billIntent(String billId) {
+		return billIntent(billId, null);
 	}
 	
 	public static Intent shortcutIntent(Context context, String billId, String code) {
 		Parcelable resource = Intent.ShortcutIconResource.fromContext(context, R.drawable.bill);
 		return new Intent()
 			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
-				billIntent(billId).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
-			.putExtra(Intent.EXTRA_SHORTCUT_NAME, Bill.formatCode(code))
+				billIntent(billId, code).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
+			.putExtra(Intent.EXTRA_SHORTCUT_NAME, Bill.formatCodeShort(code))
 			.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, resource);
 	}
 	

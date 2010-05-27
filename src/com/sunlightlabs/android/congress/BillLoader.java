@@ -12,19 +12,29 @@ import com.sunlightlabs.congress.java.CongressException;
 
 public class BillLoader extends Activity implements LoadsBill {
 	private LoadBillTask loadBillTask;
+	private String id, code;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading_fullscreen);
 		
-		String id = getIntent().getStringExtra("id");
+		Bundle extras = getIntent().getExtras();
+		id = extras.getString("id");
+		code = extras.getString("code");
 		
 		loadBillTask = (LoadBillTask) getLastNonConfigurationInstance();
 		if (loadBillTask != null)
 			loadBillTask.onScreenLoad(this);
 		else
 			loadBillTask = (LoadBillTask) new LoadBillTask(this, id).execute("basic,sponsor");
+		
+		setupControls();
+	}
+	
+	public void setupControls() {
+		if (code != null && !code.equals(""))
+			Utils.setTitle(this, Bill.formatCode(code));
 	}
 	
 	public Object onRetainNonConfigurationInstance() {

@@ -221,8 +221,8 @@ public class MainMenu extends ListActivity {
 		startActivity(new Intent(this, LegislatorList.class).putExtras(extras));
 	}
 	
-	private void searchByBillId(String billId) {
-		startActivity(Utils.billIntent(billId));
+	private void searchByBillId(String billId, String code) {
+		startActivity(Utils.billIntent(billId, code));
 	}
 	
 	private void getResponse(int requestCode) {
@@ -301,7 +301,7 @@ public class MainMenu extends ListActivity {
 					String billId = Bill.codeToBillId(code);
 					if (billId != null) {
 						Preferences.setString(this, "search_bill_code", code); // store the code, not the bill_id
-						searchByBillId(billId);
+						searchByBillId(billId, code);
 					}
 				}
 			}
