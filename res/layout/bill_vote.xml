@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	>
+
+	<TextView android:id="@+id/result"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		
+		android:layout_weight="1"
+		android:layout_marginTop="10dp"
+		android:layout_marginLeft="10dp"
+		
+		android:textSize="16sp"
+		android:textColor="@color/bill_passed"
+		android:textStyle="bold"
+		
+		android:text="Passed"
+		/>
+	
+	<TextView android:id="@+id/chamber"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		
+		android:layout_weight="1"
+		android:layout_marginLeft="5dp"
+		android:layout_alignTop="@id/result"
+		android:layout_toRightOf="@id/result"
+		
+		android:textSize="16sp"
+		android:textColor="@android:color/white"
+		
+		android:text="the House"
+		/>
+		
+	<TextView android:id="@+id/voted_at"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		
+		android:layout_weight="0"
+		android:layout_alignTop="@id/result"
+		android:layout_alignParentRight="true"
+		android:layout_marginRight="10dp"
+		
+		android:textSize="16sp"
+		android:textColor="#dddddd"
+		
+		android:text="May 24, 2010"
+		/>
+		
+	<TextView android:id="@+id/text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		
+		android:layout_below="@id/voted_at"
+		android:layout_alignLeft="@id/result"
+		android:layout_marginTop="7dp"
+		android:layout_marginRight="10dp"
+		
+		android:textSize="14sp"
+		android:textColor="#dddddd"
+		
+		android:text="On motion to suspend the rules and pass the bill Agreed to by the Yeas and Nays: (2/3 required): 416 - 0 (Roll no. 768). (text: CR 10/7/2009 H10550)"
+		/>
+	
+	<TextView android:id="@+id/type_message"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		
+		android:layout_below="@id/text"
+		android:layout_alignLeft="@id/result"
+		android:layout_marginTop="5dp"
+		
+		android:textSize="16sp"
+		android:textColor="@android:color/white"
+		android:textStyle="bold"
+		
+		android:text="@string/bill_vote_roll"
+		/>
+	
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="1px"
+		android:layout_below="@id/type_message"
+		android:layout_marginTop="10dp"
+		android:background="#5c5e5d"
+		/>
+		
+</RelativeLayout>

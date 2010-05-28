@@ -51,4 +51,7 @@
     <string name="bill_not_found">No bill found by that code.</string>
     <string name="bill_actions_empty">This bill has no history at this time.</string>
     <string name="bill_votes_empty">No votes have taken place on this bill yet.</string>
+    
+    <string name="bill_vote_roll">Tap to see how each legislator voted.</string>
+    <string name="bill_vote_not_roll">No roll call was taken for this vote.</string>
 </resources>

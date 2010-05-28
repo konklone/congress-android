@@ -156,6 +156,7 @@ public class Bill {
 			how = json.getString("how");
 			type = json.getString("type");
 			chamber = json.getString("chamber");
+			voted_at = DateUtils.parseDate(json.getString("voted_at"), Drumbone.dateFormat);
 			
 			if (!json.isNull("roll_id"))
 				roll_id = json.getString("roll_id");

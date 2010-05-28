@@ -3,4 +3,6 @@
 	<color name="action_vote">#f1ef34</color>
 	<color name="action_enacted">#4ac956</color>
 	<color name="action_vetoed">#ef2f25</color>
+	<color name="bill_passed">#4ac956</color>
+	<color name="bill_failed">#ef2f25</color>
 </resources>

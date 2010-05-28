@@ -1,17 +1,20 @@
 package com.sunlightlabs.android.congress;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.BillHistory.BillHistoryHolder;
 import com.sunlightlabs.android.congress.utils.LoadBillTask;
@@ -52,7 +55,7 @@ public class BillVotes extends ListActivity implements LoadsBill {
 	}
 	
 	public Object onRetainNonConfigurationInstance() {
-		return new BillHistoryHolder(loadBillTask, bill);
+		return new BillVotesHolder(loadBillTask, bill);
 	}
 	
 	public Context getContext() {
@@ -70,7 +73,6 @@ public class BillVotes extends ListActivity implements LoadsBill {
 	}
 	
 	public void displayBill() {
-		Utils.alert(this, "Loaded " + bill.votes.size() + " votes");
 		if (bill.votes.size() > 0)
 			setListAdapter(new BillVoteAdapter(this, bill.votes));
 		else
@@ -89,7 +91,7 @@ public class BillVotes extends ListActivity implements LoadsBill {
         
         @Override
         public boolean isEnabled(int position) {
-        	return false;
+        	return ((Bill.Vote) getItem(position)).roll_id != null;
         }
         
         @Override
@@ -105,9 +107,38 @@ public class BillVotes extends ListActivity implements LoadsBill {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			RelativeLayout view;
 			if (convertView == null)
-				view = (RelativeLayout) inflater.inflate(R.layout.bill_action, null);
+				view = (RelativeLayout) inflater.inflate(R.layout.bill_vote, null);
 			else
 				view = (RelativeLayout) convertView;
+			
+			Bill.Vote vote = getItem(position);
+			
+			String timestamp = new SimpleDateFormat("MMM dd, yyyy").format(vote.voted_at);
+			((TextView) view.findViewById(R.id.voted_at)).setText(timestamp);
+			((TextView) view.findViewById(R.id.text)).setText(vote.text);
+			((TextView) view.findViewById(R.id.chamber)).setText("the " + Utils.capitalize(vote.chamber));
+			
+			TextView resultView = (TextView) view.findViewById(R.id.result);
+			String result = vote.result;
+			if (result.equals("pass")) {
+				resultView.setTextColor(resources.getColor(R.color.bill_passed));
+				resultView.setText("Passed");
+			} else if (result.equals("fail")) {
+				resultView.setTextColor(resources.getColor(R.color.bill_failed));
+				resultView.setText("Failed");
+			}
+			
+			String roll_id = vote.roll_id;
+			TextView typeMessage = (TextView) view.findViewById(R.id.type_message);
+			if (roll_id != null) {
+				typeMessage.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+				typeMessage.setText(R.string.bill_vote_roll);
+				view.setTag(vote.roll_id);
+			} else {
+				typeMessage.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+				typeMessage.setText(R.string.bill_vote_not_roll);
+				view.setTag(null);
+			}
 			
 			return view;
 		}
