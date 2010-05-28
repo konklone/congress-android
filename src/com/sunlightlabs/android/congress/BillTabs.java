@@ -1,13 +1,13 @@
 package com.sunlightlabs.android.congress;
 
-import com.sunlightlabs.congress.java.Bill;
-
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TabHost;
 import android.widget.TextView;
+
+import com.sunlightlabs.congress.java.Bill;
 
 public class BillTabs extends TabActivity {
 	private String id, type, code, short_title, official_title;
@@ -17,6 +17,7 @@ public class BillTabs extends TabActivity {
 	private long introduced_at, house_result_at, senate_result_at, passed_at;
 	private long vetoed_at, override_house_result_at, override_senate_result_at;
 	private long awaiting_signature_since, enacted_at;
+	private long last_vote_at;
 	
 	private String sponsor_id, sponsor_party, sponsor_state, sponsor_title;
 	private String sponsor_first_name, sponsor_last_name, sponsor_nickname;
@@ -34,6 +35,8 @@ public class BillTabs extends TabActivity {
 		code = extras.getString("code");
 		short_title = extras.getString("short_title");
 		official_title = extras.getString("official_title");
+		
+		last_vote_at = extras.getLong("last_vote_at", 0);
 		
 		introduced_at = extras.getLong("introduced_at", 0);
 		house_result = extras.getString("house_result");
@@ -74,6 +77,10 @@ public class BillTabs extends TabActivity {
 		TabHost tabHost = getTabHost();
 		tabHost.addTab(tabHost.newTabSpec("info_tab").setIndicator("Details", res.getDrawable(R.drawable.tab_profile)).setContent(detailsIntent()));
 		tabHost.addTab(tabHost.newTabSpec("history_tab").setIndicator("History", res.getDrawable(R.drawable.tab_news)).setContent(historyIntent()));
+		
+		if (last_vote_at > 0)
+			tabHost.addTab(tabHost.newTabSpec("votes_tab").setIndicator("Votes", res.getDrawable(R.drawable.tab_news)).setContent(votesIntent()));
+		
 		tabHost.setCurrentTab(0);
 	}
 	
@@ -114,6 +121,11 @@ public class BillTabs extends TabActivity {
 	
 	public Intent historyIntent() {
 		return new Intent(this, BillHistory.class)
+			.putExtra("id", id);
+	}
+	
+	public Intent votesIntent() {
+		return new Intent(this, BillVotes.class)
 			.putExtra("id", id);
 	}
 }

@@ -35,6 +35,7 @@ public class Bill {
 	// votes
 	public String last_vote_result;
 	public String last_vote_chamber;
+	public ArrayList<Bill.Vote> votes = new ArrayList<Bill.Vote>();
 	
 	// actions
 	public ArrayList<Bill.Action> actions = new ArrayList<Bill.Action>();
@@ -110,18 +111,17 @@ public class Bill {
 			summary = json.getString("summary");
 		
 		if (!json.isNull("votes")) {
-			JSONArray votes = json.getJSONArray("votes");
-			int length = votes.length();
+			JSONArray voteObjects = json.getJSONArray("votes");
+			int length = voteObjects.length();
 			
-			for (int i = 0; i < length; i++) {
-				JSONObject vote = votes.getJSONObject(i);
-				
-				// find the last vote (same date and year as the 'last_vote_at')
-				if (DateUtils.parseDate(vote.getString("voted_at"), Drumbone.dateFormat).equals(last_vote_at)) { 					
-					last_vote_chamber = vote.getString("chamber");
-					last_vote_result = vote.getString("result");
-					break;
-				}
+			// load in descending order
+			for (int i = 0; i < length; i++)
+				votes.add(0, new Bill.Vote(voteObjects.getJSONObject(i)));
+			
+			if (!votes.isEmpty()) {
+				Bill.Vote vote = votes.get(votes.size() - 1);
+				last_vote_result = vote.result;
+				last_vote_chamber = vote.chamber;
 			}
 		}
 		
@@ -129,7 +129,7 @@ public class Bill {
 			JSONArray actionObjects = json.getJSONArray("actions");
 			int length = actionObjects.length();
 			
-			// load in reverse order
+			// load in descending order
 			for (int i = 0; i < length; i++)
 				actions.add(0, new Bill.Action(actionObjects.getJSONObject(i)));
 		}
@@ -143,6 +143,22 @@ public class Bill {
 			text = json.getString("text");
 			type = json.getString("type");
 			acted_at = DateUtils.parseDate(json.getString("acted_at"), Drumbone.dateFormat);
+		}
+	}
+	
+	public class Vote {
+		public String result, text, how, type, chamber, roll_id;
+		public Date voted_at;
+		
+		public Vote(JSONObject json) throws JSONException, DateParseException {
+			result = json.getString("result");
+			text = json.getString("text");
+			how = json.getString("how");
+			type = json.getString("type");
+			chamber = json.getString("chamber");
+			
+			if (!json.isNull("roll_id"))
+				roll_id = json.getString("roll_id");
 		}
 	}
 	

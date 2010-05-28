@@ -94,7 +94,6 @@ public class Utils {
 			.putExtra("code", bill.code)
 			.putExtra("short_title", bill.short_title)
 			.putExtra("official_title", bill.official_title)
-			.putExtra("introduced_at", bill.introduced_at.getTime())
 			.putExtra("house_result", bill.house_result)
 			.putExtra("senate_result", bill.senate_result)
 			.putExtra("passed", bill.passed)
@@ -104,6 +103,13 @@ public class Utils {
 			.putExtra("awaiting_signature", bill.awaiting_signature)
 			.putExtra("enacted", bill.enacted);
 		
+		if (bill.last_vote_at != null)
+			intent.putExtra("last_vote_at", bill.last_vote_at.getTime());
+		if (bill.last_action_at != null)
+			intent.putExtra("last_action_at", bill.last_action_at.getTime());
+		
+		if (bill.introduced_at != null)
+			intent.putExtra("introduced_at", bill.introduced_at.getTime());
 		if (bill.house_result_at != null)
 			intent.putExtra("house_result_at", bill.house_result_at.getTime());
 		if (bill.senate_result_at != null)
