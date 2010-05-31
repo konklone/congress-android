@@ -38,9 +38,9 @@ public class BillInfo extends ListActivity implements LoadsPhoto, LoadsBill {
 	// fields from the intent 
 	private String id, type, code, short_title, official_title;
 	private int number, session;
-	private boolean passed, vetoed, awaiting_signature, enacted;
+	private boolean vetoed, awaiting_signature, enacted;
 	private String house_result, senate_result, override_house_result, override_senate_result;
-	private long introduced_at, house_result_at, senate_result_at, passed_at;
+	private long introduced_at, house_result_at, senate_result_at;
 	private long vetoed_at, override_house_result_at, override_senate_result_at;
 	private long awaiting_signature_since, enacted_at;
 	private String sponsor_id, sponsor_party, sponsor_state, sponsor_title;
@@ -76,8 +76,6 @@ public class BillInfo extends ListActivity implements LoadsPhoto, LoadsBill {
 		house_result_at = extras.getLong("house_result_at", 0);
 		senate_result = extras.getString("senate_result");
 		senate_result_at = extras.getLong("senate_result_at", 0);
-		passed = extras.getBoolean("passed", false);
-		passed_at = extras.getLong("passed_at", 0);
 		vetoed = extras.getBoolean("vetoed", false);
 		vetoed_at = extras.getLong("vetoed_at", 0);
 		override_house_result = extras.getString("override_house_result");
