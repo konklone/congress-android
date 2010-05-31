@@ -13,10 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sunlightlabs.android.congress.BillHistory.BillHistoryHolder;
 import com.sunlightlabs.android.congress.utils.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.LoadsBill;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -78,6 +78,13 @@ public class BillVotes extends ListActivity implements LoadsBill {
 		else
 			Utils.showEmpty(this, R.string.bill_votes_empty);
 	}
+	
+	@Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+		String rollId = (String) v.getTag();
+    	if (rollId != null)
+    		startActivity(Utils.rollIntent(this, rollId));
+    }
 	
 	protected class BillVoteAdapter extends ArrayAdapter<Bill.Vote> {
     	LayoutInflater inflater;

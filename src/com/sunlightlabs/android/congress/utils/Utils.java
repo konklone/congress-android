@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.sunlightlabs.android.congress.BillTabs;
 import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.android.congress.RollInfo;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Drumbone;
@@ -151,6 +152,11 @@ public class Utils {
 	
 	public static Intent billIntent(String billId) {
 		return billIntent(billId, null);
+	}
+	
+	public static Intent rollIntent(Context context, String rollId) {
+		return new Intent(context, RollInfo.class)
+			.putExtra("id", rollId);
 	}
 	
 	public static Intent shortcutIntent(Context context, String billId, String code) {

@@ -84,6 +84,10 @@
         <activity android:name=".BillHistory" />
         <activity android:name=".BillVotes" />
         
+        <activity android:name=".RollInfo" 
+        	android:theme="@android:style/Theme.NoTitleBar"
+        	/>
+        
         <activity android:name=".Preferences" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
