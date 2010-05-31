@@ -150,7 +150,7 @@ public class Legislator implements Comparable<Legislator> {
 	}
 	
 	public String firstName() {
-		if (first_name == null || first_name.length() == 0)
+		if (nickname != null && nickname.length() > 0)
 			return nickname;
 		else
 			return first_name;
