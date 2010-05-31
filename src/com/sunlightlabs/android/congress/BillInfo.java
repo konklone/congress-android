@@ -60,7 +60,6 @@ public class BillInfo extends ListActivity implements LoadsPhoto, LoadsBill {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		
 		Bundle extras = getIntent().getExtras();
 		id = extras.getString("id");
@@ -158,7 +157,6 @@ public class BillInfo extends ListActivity implements LoadsPhoto, LoadsBill {
 		
 		((TextView) loadingContainer.findViewById(R.id.loading_message)).setText("Loading summary...");
 		loadingContainer.findViewById(R.id.loading).setVisibility(View.VISIBLE);
-		setProgressBarIndeterminateVisibility(true);
 		
 		setListAdapter(adapter);
 	}
@@ -173,7 +171,6 @@ public class BillInfo extends ListActivity implements LoadsPhoto, LoadsBill {
 		MergeAdapter adapter = (MergeAdapter) getListAdapter();
 		
 		loadingContainer.findViewById(R.id.loading).setVisibility(View.GONE);
-		setProgressBarIndeterminateVisibility(false);
 		
 		LinearLayout summaryView; 
 		if (summary != null && summary.length() > 0) {
