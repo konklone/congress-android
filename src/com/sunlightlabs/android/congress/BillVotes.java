@@ -139,10 +139,12 @@ public class BillVotes extends ListActivity implements LoadsBill {
 			TextView typeMessage = (TextView) view.findViewById(R.id.type_message);
 			if (roll_id != null) {
 				typeMessage.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+				typeMessage.setTextColor(resources.getColor(android.R.color.white));
 				typeMessage.setText(R.string.bill_vote_roll);
 				view.setTag(vote.roll_id);
 			} else {
 				typeMessage.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+				typeMessage.setTextColor(resources.getColor(R.color.faded_grey));
 				typeMessage.setText(R.string.bill_vote_not_roll);
 				view.setTag(null);
 			}
