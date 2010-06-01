@@ -15,9 +15,14 @@
 		android:alphabeticShortcut="o"
 		android:icon="@drawable/opencongress"
 		/>
+	<item android:id="@+id/share"
+		android:title="Share"
+		android:alphabeticShortcut="s"
+		android:icon="@android:drawable/ic_menu_share"
+		/>
 	<item android:id="@+id/shortcut"
 		android:title="Create Shortcut"
-		android:alphabeticShortcut="s"
+		android:alphabeticShortcut="c"
 		android:icon="@android:drawable/ic_menu_add"
 		/>
 	<item android:id="@+id/main" 
