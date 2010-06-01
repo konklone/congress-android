@@ -61,9 +61,7 @@ public class LocationUpdater implements LocationListener {
 
 	private boolean isGpsEnabled() {
 		Iterator<GpsSatellite> satellites = manager.getGpsStatus(null).getSatellites().iterator();
-		if(satellites == null)
-			return false;
-		return satellites.hasNext();
+		return (satellites == null) ? false : satellites.hasNext();
 	}
 
 	public void requestLocationUpdate() {
