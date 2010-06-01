@@ -21,37 +21,21 @@
 		android:text="On Passage As Amended of H R 4489 Daniel Pearl Freedom of the Press Act"
 		/>
 	
-	<RelativeLayout 
-		android:layout_width="fill_parent"
+	<TextView android:id="@+id/voted_at"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		
 		android:layout_marginBottom="10dp"
 		android:paddingLeft="10dp"
 		android:paddingRight="10dp"
 		
-		>
-		<TextView android:id="@+id/voted_at"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentLeft="true"
-			
-			android:textSize="14sp"
-			
-			android:text="May 29, 2010"
-			/>
-			
-		<TextView android:id="@+id/required"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			
-			android:textSize="14sp"
-			
-			android:text="1/2 Required"
-			/>
-	</RelativeLayout>
+		android:textSize="14sp"
+		
+		android:text="May 29, 2010"
+		/>
 	
 	<include layout="@layout/line" />
-	<include layout="@layout/header_alone" android:id="@+id/result_header" />
+	<include layout="@layout/header_alone_2" android:id="@+id/result_header" />
 	<include layout="@layout/line" />
 	
 	<TextView android:id="@+id/result"

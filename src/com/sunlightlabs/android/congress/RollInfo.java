@@ -122,8 +122,11 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		LinearLayout header = (LinearLayout) inflater.inflate(R.layout.roll_basic, null);
 		((TextView) header.findViewById(R.id.question)).setText(roll.question);
 		((TextView) header.findViewById(R.id.voted_at)).setText(new SimpleDateFormat("MMM dd, yyyy").format(roll.voted_at));
-		((TextView) header.findViewById(R.id.required)).setText(roll.required + " required");
-		((TextView) header.findViewById(R.id.result_header)).setText("Results");
+		
+		View resultHeader = header.findViewById(R.id.result_header);
+		((TextView) resultHeader.findViewById(R.id.header_text)).setText("Results");
+		((TextView) resultHeader.findViewById(R.id.header_text_right)).setText(roll.required + " majority required");
+		
 		((TextView) header.findViewById(R.id.result)).setText(roll.result);
 		
 		((TextView) header.findViewById(R.id.ayes)).setText(roll.ayes + "");
