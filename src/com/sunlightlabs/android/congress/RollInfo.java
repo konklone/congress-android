@@ -46,7 +46,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list_titled);
+		setContentView(R.layout.list_titled_fastscroll);
 		
 		Bundle extras = getIntent().getExtras();
 		id = extras.getString("id");
