@@ -39,12 +39,22 @@
 			
 			android:text="Johnson, John"
 			/>
+		
+		<TextView android:id="@+id/position"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:layout_marginBottom="3dp"
+			
+			android:textSize="14sp"
+			android:text="Democrat from New York"
+			/>
 			
 		<TextView android:id="@+id/vote"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			
-			android:textSize="18sp"
+			android:textSize="16sp"
 			
 			android:text="Aye"
 			android:textStyle="bold"

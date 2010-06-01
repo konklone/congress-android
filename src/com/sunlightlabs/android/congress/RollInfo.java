@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
@@ -66,6 +67,13 @@ public class RollInfo extends ListActivity {
 		Roll tempRoll = Roll.splitRollId(id);
 		String title = Utils.capitalize(tempRoll.chamber) + " Roll No. " + tempRoll.number;
 		((TextView) findViewById(R.id.title_text)).setText(title);
+	}
+	
+	@Override
+	public void onListItemClick(ListView parent, View v, int position, long id) {
+		String voter_id = (String) v.getTag();
+    	if (voter_id != null)
+    		startActivity(Utils.legislatorIntent(voter_id));
 	}
 	
 	public void onLoadRoll(String tag, Roll roll) {
@@ -218,9 +226,11 @@ public class RollInfo extends ListActivity {
 				view = (LinearLayout) convertView;
 			
 			// used as the hook to get the legislator image in place when it's loaded
-			view.setTag(legislator.bioguide_id);
+			// and to link to the legislator's activity
+			view.setTag(vote.voter_id);
 			
 			((TextView) view.findViewById(R.id.name)).setText(nameFor(legislator));
+			((TextView) view.findViewById(R.id.position)).setText(positionFor(legislator));
 			
 			TextView voteView = (TextView) view.findViewById(R.id.vote);
 			int value = vote.vote;
@@ -267,6 +277,23 @@ public class RollInfo extends ListActivity {
 		
 		public String nameFor(Legislator legislator) {
 			return legislator.last_name + ", " + legislator.firstName();
+		}
+		
+		public String positionFor(Legislator legislator) {
+			String district = legislator.district;
+			String stateName = Utils.stateCodeToName(context, legislator.state);
+			
+			if (district.equals("Senior Seat"))
+				return "Senior Senator from " + stateName;
+			else if (district.equals("Junior Seat"))
+				return "Junior Senator from " + stateName;
+			else if (district.equals("0")) {
+				if (legislator.title.equals("Rep"))
+					return "Representative for " + stateName + " At-Large";
+				else
+					return legislator.fullTitle() + " for " + stateName;
+			} else
+				return "Representative for " + stateName + "-" + district;
 		}
 		
 	}
