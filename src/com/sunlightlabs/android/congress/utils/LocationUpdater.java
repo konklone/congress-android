@@ -1,9 +1,13 @@
 package com.sunlightlabs.android.congress.utils;
 
+import java.util.Iterator;
+
 import android.content.Context;
+import android.location.GpsSatellite;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import com.sunlightlabs.congress.java.CongressException;
@@ -11,6 +15,7 @@ import com.sunlightlabs.congress.java.CongressException;
 public class LocationUpdater implements LocationListener {
 	private String provider;
 	private LocationManager manager;
+	private ConnectivityManager connectivityManager;
 	private LocationUpdateable<? extends Context> context;
 	private boolean processing;
 
@@ -27,6 +32,7 @@ public class LocationUpdater implements LocationListener {
 	private void init() {
 		processing = false;
 		manager = (LocationManager) ((Context)context).getSystemService(Context.LOCATION_SERVICE);
+		connectivityManager = (ConnectivityManager) ((Context)context).getSystemService(Context.CONNECTIVITY_SERVICE);
 		provider = getProvider();
 	}
 
@@ -49,8 +55,37 @@ public class LocationUpdater implements LocationListener {
 		return null;	
 	}
 
+	private boolean isWiFiEnabled() {
+		return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected();
+	}
+
+	private boolean isGpsEnabled() {
+		Iterator<GpsSatellite> satellites = manager.getGpsStatus(null).getSatellites().iterator();
+		if(satellites == null)
+			return false;
+		int count = 0;
+		while(satellites.hasNext()) {
+			count++;
+			satellites.next();
+		}
+		return count > 0;
+	}
+
 	public void requestLocationUpdate() {
 		if(provider != null) {
+			// check to see if the connectivity is enabled
+			if(provider == LocationManager.NETWORK_PROVIDER) {
+				if(!isWiFiEnabled()) {
+					context.onLocationUpdateError(new CongressException("Cannot update the current location. Wi-fi is disabled."));
+					return;
+				}
+			}
+			else if(provider == LocationManager.GPS_PROVIDER) {
+				if(!isGpsEnabled()) {
+					context.onLocationUpdateError(new CongressException("Cannot update the current location. Gps is disabled."));
+					return;
+				}
+			}
 			processing = true;
 			manager.requestLocationUpdates(provider, 0, 0, this);
 		}
