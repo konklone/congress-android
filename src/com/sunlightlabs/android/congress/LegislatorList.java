@@ -265,7 +265,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			((TextView) view.findViewById(R.id.position)).setText(positionFor(legislator));
 			
 			ImageView photoView = (ImageView) view.findViewById(R.id.photo); 
-			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_LARGE, legislator.bioguide_id, context);
+			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_MEDIUM, legislator.bioguide_id, context);
 			if (photo != null)
 				photoView.setImageDrawable(photo);
 			else {
