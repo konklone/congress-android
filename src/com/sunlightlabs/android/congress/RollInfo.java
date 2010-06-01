@@ -1,19 +1,40 @@
 package com.sunlightlabs.android.congress;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+
+import android.app.Activity;
 import android.app.ListActivity;
+import android.content.res.Resources;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.commonsware.cwac.merge.MergeAdapter;
+import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.CongressException;
+import com.sunlightlabs.congress.java.Legislator;
 import com.sunlightlabs.congress.java.Roll;
 
 public class RollInfo extends ListActivity {
 	private String id;
-	private Roll roll;
 	
-	private LoadRollTask loadRollTask;
+	private Roll roll;
+	private HashMap<String,Roll.Vote> voters;
+	
+	private LoadRollTask loadRollTask, loadVotersTask;
+	private View loadingView;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -27,8 +48,10 @@ public class RollInfo extends ListActivity {
 		
 		RollInfoHolder holder = (RollInfoHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
-			this.roll = holder.roll;
 			this.loadRollTask = holder.loadRollTask;
+			this.roll = holder.roll;
+			this.loadVotersTask = holder.loadVotersTask;
+			this.voters = holder.voters;
 		}
 		
 		loadRoll();
@@ -36,31 +59,78 @@ public class RollInfo extends ListActivity {
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new RollInfoHolder(loadRollTask, roll);
+		return new RollInfoHolder(loadRollTask, roll, loadVotersTask, voters);
 	}
 	
 	public void setupControls() {
 		Roll tempRoll = Roll.splitRollId(id);
-		String title = Utils.capitalize(tempRoll.chamber) + " Roll No. " + tempRoll.number + ", " + tempRoll.year;
+		String title = Utils.capitalize(tempRoll.chamber) + " Roll No. " + tempRoll.number;
 		((TextView) findViewById(R.id.title_text)).setText(title);
 	}
 	
-	public void onLoadRoll(Roll roll) {
-		this.loadRollTask = null;
-		this.roll = roll;
-		
-		Utils.alert(this, "Loaded roll:\n" + roll.question);
-		displayRoll();
+	public void onLoadRoll(String tag, Roll roll) {
+		if (tag.equals("basic")) {
+			this.loadRollTask = null;
+			this.roll = roll;
+			displayRoll();
+		} else if (tag.equals("voters")) {
+			this.loadVotersTask = null;
+			this.voters = roll.voters;
+			displayVoters();
+		}
 	}
 	
-	public void onLoadRoll(CongressException exception) {
-		this.loadRollTask = null;
+	public void onLoadRoll(String tag, CongressException exception) {
 		Utils.alert(this, R.string.error_connection);
-		finish();
+		if (tag.equals("basic")) {
+			this.loadRollTask = null;
+			finish();
+		} else if (tag.equals("voters")) {
+			this.loadVotersTask = null;
+			
+			View loadingView = findViewById(R.id.loading_votes);
+			loadingView.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
+			((TextView) loadingView.findViewById(R.id.loading_message)).setText("Error loading votes.");
+		}
 	}
 	
 	public void displayRoll() {
-		Utils.alert(this, "displayRoll()");
+		LayoutInflater inflater = LayoutInflater.from(this);
+		MergeAdapter adapter = new MergeAdapter();
+		
+		LinearLayout header = (LinearLayout) inflater.inflate(R.layout.roll_basic, null);
+		((TextView) header.findViewById(R.id.question)).setText(roll.question);
+		((TextView) header.findViewById(R.id.voted_at)).setText(new SimpleDateFormat("MMM dd, yyyy").format(roll.voted_at));
+		((TextView) header.findViewById(R.id.required)).setText(roll.required + " required");
+		((TextView) header.findViewById(R.id.result_header)).setText("Results");
+		((TextView) header.findViewById(R.id.result)).setText(roll.result);
+		
+		((TextView) header.findViewById(R.id.ayes)).setText(roll.ayes + "");
+		((TextView) header.findViewById(R.id.nays)).setText(roll.nays + "");
+		((TextView) header.findViewById(R.id.present)).setText(roll.present + "");
+		((TextView) header.findViewById(R.id.not_voting)).setText(roll.not_voting + "");
+		
+		((TextView) header.findViewById(R.id.voters_header)).setText("Votes");
+		loadingView = header.findViewById(R.id.loading_votes);
+		((TextView) loadingView.findViewById(R.id.loading_message)).setText("Loading votes...");
+		
+		adapter.addView(header);
+		setListAdapter(adapter);
+		
+		// kick off vote loading
+		loadVotes();
+	}
+	
+	public void displayVoters() {
+		MergeAdapter adapter = (MergeAdapter) getListAdapter();
+		
+		ArrayList<Roll.Vote> voterArray = new ArrayList<Roll.Vote>(voters.values());
+		Collections.sort(voterArray);
+		adapter.addAdapter(new VoterAdapter(this, voterArray));
+		
+		loadingView.setVisibility(View.GONE);
+		
+		setListAdapter(adapter);
 	}
 	
 	public void loadRoll() {
@@ -70,7 +140,18 @@ public class RollInfo extends ListActivity {
 			if (roll != null)
 				displayRoll();
 			else
-				loadRollTask = (LoadRollTask) new LoadRollTask(this, id).execute("basic,bill");
+				loadRollTask = (LoadRollTask) new LoadRollTask(this, id, "basic").execute("basic,bill");
+		}
+	}
+	
+	public void loadVotes() {
+		if (loadVotersTask != null)
+			loadVotersTask.onScreenLoad(this);
+		else {
+			if (voters != null)
+				displayVoters();
+			else
+				loadVotersTask = (LoadRollTask) new LoadRollTask(this, id, "voters").execute("voters");
 		}
 	}
 	
@@ -78,11 +159,12 @@ public class RollInfo extends ListActivity {
 	private class LoadRollTask extends AsyncTask<String,Void,Roll> {
 		private RollInfo context;
 		private CongressException exception;
-		private String rollId;
+		private String rollId, tag;
 		
-		public LoadRollTask(RollInfo context, String rollId) {
+		public LoadRollTask(RollInfo context, String rollId, String tag) {
 			this.context = context;
 			this.rollId = rollId;
+			this.tag = tag;
 			Utils.setupDrumbone(context);
 		}
 		
@@ -103,19 +185,102 @@ public class RollInfo extends ListActivity {
 		@Override
 		public void onPostExecute(Roll roll) {
 			if (exception != null && roll == null)
-				context.onLoadRoll(exception);
+				context.onLoadRoll(tag, exception);
 			else
-				context.onLoadRoll(roll);
+				context.onLoadRoll(tag, roll);
 		}
 	}
 	
-	static class RollInfoHolder {
-		private LoadRollTask loadRollTask;
-		private Roll roll;
+	private class VoterAdapter extends ArrayAdapter<Roll.Vote> {
+		LayoutInflater inflater;
+		Activity context;
+		Resources resources;
+
+	    public VoterAdapter(Activity context, ArrayList<Roll.Vote> items) {
+	        super(context, 0, items);
+	        this.context = context;
+	        this.resources = context.getResources();
+	        this.inflater = LayoutInflater.from(context);
+	    }
+	    
+	    public boolean areAllItemsEnabled() {
+	    	return true;
+	    }
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			Roll.Vote vote = getItem(position);
+			Legislator legislator = vote.voter;
+			
+			LinearLayout view;
+			if (convertView == null)
+				view = (LinearLayout) inflater.inflate(R.layout.legislator_voter, null);
+			else
+				view = (LinearLayout) convertView;
+			
+			// used as the hook to get the legislator image in place when it's loaded
+			view.setTag(legislator.bioguide_id);
+			
+			((TextView) view.findViewById(R.id.name)).setText(nameFor(legislator));
+			
+			TextView voteView = (TextView) view.findViewById(R.id.vote);
+			int value = vote.vote;
+			switch (value) {
+			case Roll.AYE:
+				voteView.setText("Aye");
+				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+				voteView.setTextColor(resources.getColor(R.color.aye));
+				break;
+			case Roll.NAY:
+				voteView.setText("Nay");
+				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+				voteView.setTextColor(resources.getColor(R.color.nay));
+				break;
+			case Roll.PRESENT:
+				voteView.setText("Present");
+				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+				voteView.setTextColor(resources.getColor(R.color.present));
+				break;
+			case Roll.NOT_VOTING:
+				voteView.setText("Not Voting");
+				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+				voteView.setTextColor(resources.getColor(R.color.not_voting));
+				break;
+			case Roll.OTHER:
+			default:
+				voteView.setText(vote.vote_name);
+				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+				voteView.setTextColor(resources.getColor(android.R.color.white));
+				break;
+			}
+			
+			ImageView photoView = (ImageView) view.findViewById(R.id.photo); 
+			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_LARGE, legislator.bioguide_id, context);
+			if (photo != null)
+				photoView.setImageDrawable(photo);
+			else {
+				photoView.setImageResource(R.drawable.loading_photo);
+				// LegislatorList.this.loadPhoto(legislator.bioguide_id);
+			}
+			
+			return view;
+		}
 		
-		public RollInfoHolder(LoadRollTask loadRollTask, Roll roll) {
+		public String nameFor(Legislator legislator) {
+			return legislator.last_name + ", " + legislator.firstName();
+		}
+		
+	}
+	
+	static class RollInfoHolder {
+		private LoadRollTask loadRollTask, loadVotersTask;
+		private Roll roll;
+		private HashMap<String,Roll.Vote> voters;
+		
+		public RollInfoHolder(LoadRollTask loadRollTask, Roll roll, LoadRollTask loadVotersTask, HashMap<String,Roll.Vote> voters) {
 			this.loadRollTask = loadRollTask;
 			this.roll = roll;
+			this.loadVotersTask = loadVotersTask;
+			this.voters = voters;
 		}
 	}
 }

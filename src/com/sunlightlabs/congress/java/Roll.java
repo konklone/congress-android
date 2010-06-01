@@ -2,6 +2,7 @@ package com.sunlightlabs.congress.java;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,13 +22,17 @@ public class Roll {
 	public String id, chamber, type, question, result, bill_id, required; 
 	public int session, number, year;
 	public Date voted_at;
-	public HashMap<String,Integer> vote_breakdown;
+	public int ayes, nays, present, not_voting;
+	public HashMap<String,Integer> otherVotes = new HashMap<String,Integer>();
 	
 	// bill
 	public Bill bill;
 	
-	// voters or voter_ids
+	// voters
 	public HashMap<String,Vote> voters;
+	
+	// voter_ids
+	public HashMap<String,Vote> voter_ids;
 	
 	public Roll() {}
 	
@@ -57,6 +62,44 @@ public class Roll {
 		
 		if (!json.isNull("bill"))
 			bill = new Bill(json.getJSONObject("bill"));
+		
+		if (!json.isNull("vote_breakdown")) {
+			JSONObject vote_breakdown = json.getJSONObject("vote_breakdown");
+			Iterator<?> iter = vote_breakdown.keys();
+			while (iter.hasNext()) {
+				String key = (String) iter.next();
+				if (key.equals("ayes"))
+					ayes = vote_breakdown.getInt(key);
+				else if (key.equals("nays"))
+					nays = vote_breakdown.getInt(key);
+				else if (key.equals("present"))
+					present = vote_breakdown.getInt(key);
+				else if (key.equals("not_voting"))
+					not_voting = vote_breakdown.getInt(key);
+				else
+					otherVotes.put(key, vote_breakdown.getInt(key));
+			}
+		}
+		
+		if (!json.isNull("voters")) {
+			voters = new HashMap<String,Vote>();
+			JSONObject votersObject = json.getJSONObject("voters");
+			Iterator<?> iter = votersObject.keys();
+			while (iter.hasNext()) {
+				String voter_id = (String) iter.next();
+				voters.put(voter_id, new Vote(voter_id, votersObject.getJSONObject(voter_id)));
+			}
+		}
+		
+		if (!json.isNull("voter_ids")) {
+			voter_ids = new HashMap<String,Vote>();
+			JSONObject voterIdsObject = json.getJSONObject("voter_ids");
+			Iterator<?> iter = voterIdsObject.keys();
+			while (iter.hasNext()) {
+				String voter_id = (String) iter.next();
+				voters.put(voter_id, new Vote(voter_id, voterIdsObject.getString(voter_id)));
+			}
+		}
 	}
 	
 	/**
@@ -71,7 +114,7 @@ public class Roll {
 	 * The 'legislator' field may be null here, in which case you will need to use the bioguide_id
 	 * to look up more information about the legislator.
 	 */
-	public class Vote {
+	public class Vote implements Comparable<Vote> {
 		public String voter_id; // bioguide ID
 		
 		public String vote_name;
@@ -90,6 +133,10 @@ public class Roll {
 			this.voter_id = voter_id;
 			this.vote_name = vote_name;
 			this.vote = Roll.voteForName(vote_name);
+		}
+		
+		public int compareTo(Vote another) {
+			return this.voter.compareTo(another.voter);
 		}
 	}
 	

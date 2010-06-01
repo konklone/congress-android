@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	
+	android:orientation="vertical"
+	>
+	
+	<TextView android:id="@+id/question"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		
+		android:layout_marginTop="10dp"
+		android:layout_marginBottom="10dp"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		
+		android:textSize="16sp"
+		android:textColor="@android:color/white"
+		
+		android:text="On Passage As Amended of H R 4489 Daniel Pearl Freedom of the Press Act"
+		/>
+	
+	<RelativeLayout 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="10dp"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		
+		>
+		<TextView android:id="@+id/voted_at"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			
+			android:textSize="14sp"
+			
+			android:text="May 29, 2010"
+			/>
+			
+		<TextView android:id="@+id/required"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			
+			android:textSize="14sp"
+			
+			android:text="1/2 Required"
+			/>
+	</RelativeLayout>
+	
+	<include layout="@layout/line" />
+	<include layout="@layout/header_alone" android:id="@+id/result_header" />
+	<include layout="@layout/line" />
+	
+	<TextView android:id="@+id/result"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:padding="10dp"
+		
+		android:textSize="16sp"
+		android:textColor="@android:color/white"
+		
+		android:text="Passed"
+		/>
+	
+		
+	<TableLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		
+		android:layout_marginBottom="10dp"
+		>
+		<TableRow android:id="@+id/vote_types"
+			
+			>
+			<TextView android:id="@+id/ayes_header"
+				android:textColor="@android:color/white"
+				android:textStyle="bold"
+				android:text="Ayes"
+				android:textSize="16dp"
+				
+				android:layout_gravity="center"
+				
+				android:paddingRight="10dp"
+				/>
+			<TextView android:id="@+id/nays_header"
+				android:textColor="@android:color/white"
+				android:textStyle="bold"
+				android:text="Nays"
+				android:textSize="16dp"
+				
+				android:layout_gravity="center"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				/>
+			<TextView android:id="@+id/present_header"
+				android:textColor="@android:color/white"
+				android:textStyle="bold"
+				android:text="Present"
+				android:textSize="16dp"
+				
+				android:layout_gravity="center"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				/>
+			<TextView android:id="@+id/not_voting_header"
+				android:textColor="@android:color/white"
+				android:textStyle="bold"
+				android:text="Not Voting"
+				android:textSize="16dp"
+				
+				android:layout_gravity="center"
+				android:paddingLeft="10dp"
+
+				/>
+		</TableRow>
+		<TableRow android:id="@+id/vote_values"
+			
+			>
+			<TextView
+				android:id="@+id/ayes"
+				android:layout_gravity="center"
+				
+				android:textColor="@color/grey"
+				android:textSize="16dp"
+				
+				android:text="240"
+				/>
+			<TextView
+				android:id="@+id/nays"
+				android:layout_gravity="center"
+				
+				android:textColor="@color/grey"
+				android:textSize="16dp"
+				
+				android:text="200"
+				/>
+			<TextView
+				android:id="@+id/present"
+				android:layout_gravity="center"
+				
+				android:textColor="@color/grey"
+				android:textSize="16dp"
+				
+				android:text="4"
+				/>
+			<TextView
+				android:id="@+id/not_voting"
+				android:layout_gravity="center"
+				
+				android:textColor="@color/grey"
+				android:textSize="16dp"
+				
+				android:text="1"
+				/>
+		</TableRow>
+	</TableLayout>
+	
+	<include layout="@layout/line" />
+	<include layout="@layout/header_alone" android:id="@+id/voters_header" />
+	<include layout="@layout/line" />
+	
+	<include layout="@layout/loading" android:id="@+id/loading_votes" />
+	
+</LinearLayout>
