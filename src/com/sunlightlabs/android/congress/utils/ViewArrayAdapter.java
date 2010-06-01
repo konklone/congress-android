@@ -14,11 +14,26 @@ import android.widget.ArrayAdapter;
  */
 public class ViewArrayAdapter extends ArrayAdapter<View> {
 
-    public ViewArrayAdapter(Activity context, ArrayList<View> items) {
-        super(context, 0, items);
-    }
+	public ViewArrayAdapter(Activity context, ArrayList<View> items) {
+		super(context, 0, items);
+	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		return getItem(position);
+	}
+
+	@Override
+	public boolean areAllItemsEnabled() {
+		return false; // allow items to be enabled/disabled programmatically
+	}
+
+	@Override
+	public boolean isEnabled(int position) {
+		View view = getItem(position);
+		if(view.getTag() instanceof ViewWrapper) {
+			ViewWrapper viewWrapper = (ViewWrapper) view.getTag(); 
+			return viewWrapper.isEnabled();
+		}
+		return true; // if we don't use the ViewWrapper class, all items are enabled
 	}
 }

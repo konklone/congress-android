@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,15 +25,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.sunlightlabs.android.congress.utils.AddressUpdater;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
+import com.sunlightlabs.android.congress.utils.LocationUpdater;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.android.congress.utils.AddressUpdater.AddressUpdateable;
+import com.sunlightlabs.android.congress.utils.LocationUpdater.LocationUpdateable;
 import com.sunlightlabs.congress.java.Committee;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Legislator;
 
-public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsPhoto {
+public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsPhoto, LocationUpdateable<LegislatorList>, AddressUpdateable<LegislatorList> {
+
 	private final static int SEARCH_ZIP = 0;
 	private final static int SEARCH_LOCATION = 1;
 	private final static int SEARCH_STATE = 2;
@@ -42,7 +49,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	private ArrayList<Legislator> legislators = null;
 	private LoadLegislatorsTask loadLegislatorsTask = null;
 	private ShortcutImageTask shortcutImageTask = null;
-	
+
 	private HashMap<String,LoadPhotoTask> loadPhotoTasks = new HashMap<String,LoadPhotoTask>();
 
 	private boolean shortcut;
@@ -51,11 +58,19 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	private double latitude = -1;
 	private double longitude = -1;
 
+	private String address;
+
+	private LocationUpdater locationUpdater;
+	private AddressUpdater addressUpdater;
+	private boolean relocating = false;
+
+	private HeaderViewWrapper headerWrapper;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list_titled);
-		
+		setContentView(R.layout.list_titled_header);
+
 		Utils.setupSunlight(this);
 
 		Bundle extras = getIntent().getExtras();
@@ -63,6 +78,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		zipCode = extras.getString("zip_code");
 		latitude = extras.getDouble("latitude");
 		longitude = extras.getDouble("longitude");
+		address = extras.getString("address");
 		lastName = extras.getString("last_name");
 		state = extras.getString("state");
 		committeeId = extras.getString("committeeId");
@@ -70,20 +86,23 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 		shortcut = extras.getBoolean("shortcut", false);
 
-		setupControls();
-
 		LegislatorListHolder holder = (LegislatorListHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
 			legislators = holder.legislators;
 			loadLegislatorsTask = holder.loadLegislatorsTask;
 			shortcutImageTask = holder.shortcutImageTask;
 			loadPhotoTasks = holder.loadPhotoTasks;
-			
+
 			if (loadPhotoTasks != null) {
 				Iterator<LoadPhotoTask> iterator = loadPhotoTasks.values().iterator();
 				while (iterator.hasNext())
 					iterator.next().onScreenLoad(this);
 			}
+
+			locationUpdater = holder.locationUpdater;
+			addressUpdater = holder.addressUpdater;
+			address = holder.address;
+			relocating = holder.relocating;
 		}
 
 		if (loadLegislatorsTask == null && shortcutImageTask == null)
@@ -95,6 +114,19 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			if (shortcutImageTask != null)
 				shortcutImageTask.onScreenLoad(this);
 		}
+
+		if(locationUpdater == null)
+			locationUpdater = new LocationUpdater(this);
+		else
+			locationUpdater.onScreenLoad(this);
+
+		if(addressUpdater != null)
+			addressUpdater.onScreenLoad(this);
+
+		setupControls();
+
+		if(relocating)
+			toggleRelocating(true);
 	}
 
 	@Override
@@ -104,6 +136,11 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		holder.loadLegislatorsTask = this.loadLegislatorsTask;
 		holder.shortcutImageTask = this.shortcutImageTask;
 		holder.loadPhotoTasks = this.loadPhotoTasks;
+
+		holder.addressUpdater = addressUpdater;
+		holder.locationUpdater = locationUpdater;
+		holder.address = address;
+		holder.relocating = relocating;
 		return holder;
 	}
 
@@ -133,15 +170,15 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			}
 		}
 	}
-	
+
 	public void loadPhoto(String bioguide_id) {
 		if (!loadPhotoTasks.containsKey(bioguide_id))
 			loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
 	}
-	
+
 	public void onLoadPhoto(Drawable photo, Object tag) {
-		loadPhotoTasks.remove((String) tag);
-		
+		loadPhotoTasks.remove(tag);
+
 		View result = getListView().findViewWithTag(tag);
 		if (result != null) {
 			if (photo != null)
@@ -150,7 +187,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 				((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.loading_photo);
 		}
 	}
-	
+
 	public Context getContext() {
 		return this;
 	}
@@ -161,7 +198,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 				finish();
 			}
 		});
-		
+
 		Utils.setLoading(this, R.string.legislators_loading);
 		Utils.setTitleSize(this, 20);
 		switch (searchType()) {
@@ -169,6 +206,8 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			Utils.setTitle(this, "Legislators For " + zipCode);
 			break;
 		case SEARCH_LOCATION:
+			showHeader(); // make the location update header visible
+			displayAddress(address);
 			Utils.setTitle(this, "Legislators For Your Location");
 			break;
 		case SEARCH_LASTNAME:
@@ -238,32 +277,32 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		setResult(RESULT_OK, Utils.shortcutIntent(this, legislator, icon));
 		finish();
 	}
-	
+
 	private class LegislatorAdapter extends ArrayAdapter<Legislator> {
 		LayoutInflater inflater;
 		Activity context;
 
-	    public LegislatorAdapter(Activity context, ArrayList<Legislator> items) {
-	        super(context, 0, items);
-	        this.context = context;
-	        inflater = LayoutInflater.from(context);
-	    }
+		public LegislatorAdapter(Activity context, ArrayList<Legislator> items) {
+			super(context, 0, items);
+			this.context = context;
+			inflater = LayoutInflater.from(context);
+		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			Legislator legislator = getItem(position);
-			
+
 			LinearLayout view;
 			if (convertView == null)
 				view = (LinearLayout) inflater.inflate(R.layout.legislator_item, null);
 			else
 				view = (LinearLayout) convertView;
-			
+
 			// used as the hook to get the legislator image in place when it's loaded
 			view.setTag(legislator.bioguide_id);
-			
+
 			((TextView) view.findViewById(R.id.name)).setText(nameFor(legislator));
 			((TextView) view.findViewById(R.id.position)).setText(positionFor(legislator));
-			
+
 			ImageView photoView = (ImageView) view.findViewById(R.id.photo); 
 			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_MEDIUM, legislator.bioguide_id, context);
 			if (photo != null)
@@ -272,21 +311,21 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 				photoView.setImageResource(R.drawable.loading_photo);
 				LegislatorList.this.loadPhoto(legislator.bioguide_id);
 			}
-			
+
 			return view;
 		}
-		
-		
-		
+
+
+
 		public String nameFor(Legislator legislator) {
 			return legislator.last_name + ", " + legislator.firstName();
 		}
-		
+
 		public String positionFor(Legislator legislator) {
 			String district = legislator.district;
-			String stateName = Utils.stateCodeToName(context, legislator.state);
-			
+			String stateName = Utils.stateCodeToName(context, legislator.state);			
 			String position = "";
+
 			if (district.equals("Senior Seat"))
 				position = "Senior Senator from " + stateName;
 			else if (district.equals("Junior Seat"))
@@ -301,7 +340,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			
 			return "(" + legislator.party + ") " + position; 
 		}
-		
+
 	}
 
 	private class ShortcutImageTask extends AsyncTask<Void, Void, Bitmap> {
@@ -359,7 +398,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 	private class LoadLegislatorsTask extends AsyncTask<Void, Void, ArrayList<Legislator>> {
 		public LegislatorList context;
-		
+
 		public LoadLegislatorsTask(LegislatorList context) {
 			super();
 			this.context = context;
@@ -373,7 +412,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		protected ArrayList<Legislator> doInBackground(Void... nothing) {
 			ArrayList<Legislator> legislators = new ArrayList<Legislator>();
 			ArrayList<Legislator> lower = new ArrayList<Legislator>();
-																		
+
 			ArrayList<Legislator> temp;
 			try {
 				switch (searchType()) {
@@ -417,20 +456,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		@Override
 		protected void onPostExecute(ArrayList<Legislator> legislators) {
 			context.legislators = legislators;
-
-			// if there's only one result, don't even make them click it
-			if (legislators.size() == 1) {
-				context.selectLegislator(legislators.get(0));
-
-				// if we're going on to the profile of a legislator, we want to cut the list out of the stack
-				// but if we're generating a shortcut, the shortcut process will be spawning off
-				// a separate background thread, that needs a live activity while it works,
-				// and will call finish() on its own
-				if (!shortcut)
-					context.finish();
-			} else
-				context.displayLegislators();
-
+			context.displayLegislators();
 			context.loadLegislatorsTask = null;
 		}
 	}
@@ -440,5 +466,93 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		LoadLegislatorsTask loadLegislatorsTask;
 		ShortcutImageTask shortcutImageTask;
 		HashMap<String,LoadPhotoTask> loadPhotoTasks;
+
+		AddressUpdater addressUpdater;
+		LocationUpdater locationUpdater;
+		String address;
+		boolean relocating;
+	}
+
+	private class HeaderViewWrapper {
+		private TextView txt;
+		private View base;
+
+		public HeaderViewWrapper(View base) {
+			this.base = base;
+		}
+		public View getBase() {
+			return base;
+		}
+		public TextView getTxt() {
+			return (txt == null ? txt = (TextView) base.findViewById(R.id.text_2) : txt);
+		}
+	}
+
+	private void showHeader() {
+		headerWrapper = new HeaderViewWrapper(findViewById(R.id.list_header));
+		headerWrapper.getBase().setVisibility(View.VISIBLE);
+		((TextView) headerWrapper.getBase().findViewById(R.id.text_1)).setText(R.string.location_not_accurate);
+		TextView txt = headerWrapper.getTxt();
+		txt.setText(R.string.update);
+		txt.setClickable(true);
+		txt.setFocusable(true);
+		txt.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				updateLocation();
+			}
+		});
+	}
+
+	private void toggleRelocating(boolean updating) {
+		headerWrapper.getTxt().setText(updating ? R.string.updating : R.string.update);
+		headerWrapper.getTxt().setEnabled(updating ? false : true);
+	}
+
+	private void updateLocation() {
+		relocating = true;
+		locationUpdater.requestLocationUpdate();
+		toggleRelocating(true);
+	}
+
+	private void displayAddress(String address) {
+		Utils.setTitle(this, "Legislators For " + address == null || address.equals("") ? "Your Location" : address);
+	}
+
+	private void reloadLegislators() {
+		legislators = null;
+		loadLegislators();
+	}
+
+	public void onLocationUpdate(Location location) {
+		toggleRelocating(false);
+		latitude = location.getLatitude();
+		longitude = location.getLongitude();
+		addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
+	}
+
+	public void onLocationUpdateError(CongressException e) {
+		Toast.makeText(this, R.string.location_update_fail, Toast.LENGTH_SHORT).show();
+		toggleRelocating(false);
+		relocating = false;
+	}
+
+	public void onAddressUpdate(String address) {
+		this.address = address;
+		displayAddress(address);
+
+		addressUpdater = null;
+		toggleRelocating(false);
+		relocating = false;
+
+		reloadLegislators();
+	}
+
+	public void onAddressUpdateError(CongressException e) {
+		this.address = "";
+		displayAddress(address);
+
+		addressUpdater = null;
+		toggleRelocating(false);
+		relocating = false;
 	}
 }

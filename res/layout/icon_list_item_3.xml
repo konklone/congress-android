@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/profile_website_row"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			>
+	<include android:id="@+id/row_content" layout="@layout/icon_list_item_2" />	
+	<include android:id="@+id/row_loading" layout="@layout/loading" android:visibility="gone" />
+</FrameLayout>
