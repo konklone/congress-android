@@ -27,13 +27,12 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
-import com.sunlightlabs.android.congress.utils.LoadsPhoto;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.Committee;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Legislator;
 
-public class LegislatorList extends ListActivity implements LoadsPhoto {
+public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private final static int SEARCH_ZIP = 0;
 	private final static int SEARCH_LOCATION = 1;
 	private final static int SEARCH_STATE = 2;

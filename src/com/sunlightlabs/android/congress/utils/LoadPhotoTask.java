@@ -1,5 +1,6 @@
 package com.sunlightlabs.android.congress.utils;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 
@@ -33,5 +34,10 @@ public class LoadPhotoTask extends AsyncTask<String,Void,Drawable> {
 	@Override
 	public void onPostExecute(Drawable photo) {
 		context.onLoadPhoto(photo, tag);
+	}
+	
+	public interface LoadsPhoto {
+		public void onLoadPhoto(Drawable photo, Object tag);
+		public Context getContext();
 	}
 }

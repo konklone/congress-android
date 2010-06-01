@@ -27,13 +27,12 @@ import android.widget.TextView;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
-import com.sunlightlabs.android.congress.utils.LoadsPhoto;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Legislator;
 import com.sunlightlabs.congress.java.Roll;
 
-public class RollInfo extends ListActivity implements LoadsPhoto {
+public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private String id;
 	
 	private Roll roll;

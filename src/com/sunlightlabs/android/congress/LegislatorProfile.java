@@ -28,14 +28,13 @@ import android.widget.TextView;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
-import com.sunlightlabs.android.congress.utils.LoadsPhoto;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.congress.java.Committee;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Legislator;
 
-public class LegislatorProfile extends ListActivity implements LoadsPhoto {
+public class LegislatorProfile extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private String id, titledName, lastName, party, gender, state, domain, phone, website;
 	private String bioguide_id, govtrack_id;
 	private Drawable avatar;

@@ -1,5 +1,6 @@
 package com.sunlightlabs.android.congress.utils;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.sunlightlabs.congress.java.Bill;
@@ -36,5 +37,11 @@ public class LoadBillTask extends AsyncTask<String,Void,Bill> {
 			context.onLoadBill(exception);
 		else
 			context.onLoadBill(bill);
+	}
+	
+	public interface LoadsBill {
+		public void onLoadBill(Bill bill);
+		public void onLoadBill(CongressException exception);
+		public Context getContext();
 	}
 }

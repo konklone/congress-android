@@ -16,12 +16,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.LoadBillTask;
-import com.sunlightlabs.android.congress.utils.LoadsBill;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 
-public class BillHistory extends ListActivity implements LoadsBill {
+public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill {
 	private LoadBillTask loadBillTask;
 	private Bill bill;
 	private String id;

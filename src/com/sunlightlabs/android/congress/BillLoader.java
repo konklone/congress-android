@@ -5,12 +5,11 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.sunlightlabs.android.congress.utils.LoadBillTask;
-import com.sunlightlabs.android.congress.utils.LoadsBill;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 
-public class BillLoader extends Activity implements LoadsBill {
+public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 	private LoadBillTask loadBillTask;
 	private String id, code;
 	
