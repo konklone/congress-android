@@ -15,6 +15,7 @@ import android.text.Html;
 import android.text.InputType;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -527,18 +528,25 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	}
 
 	private void toggleLocationEnabled(boolean enabled) {
+		Log.v("======MM========", "SLV66=" + searchLocationView);
 		searchLocationView.getWrapperTag().setEnabled(enabled);
 		searchLocationAdapter.notifyDataSetChanged();
 		searchLocationView.getText1().setTextColor(enabled == true ? Color.parseColor("#dddddd") : Color.parseColor("#666666"));
 	}
 
 	private void toggleLocationLoading(boolean visible) {
+		Log.v("======MM========", "SLV1=" + searchLocationView.getLoading());
+		Log.v("======MM========", "SLV2=" + searchLocationView.getContent());
 		searchLocationView.getLoading().setVisibility(visible ? View.VISIBLE : View.GONE);
+		Log.v("======MM========", "SLV1=" + searchLocationView.getLoading().getVisibility());
 		searchLocationView.getContent().setVisibility(visible ? View.GONE : View.VISIBLE);
+		Log.v("======MM========", "SLV2=" + searchLocationView.getContent().getVisibility());
 	}
 
 	private void displayAddress(String address) {
+		Log.v("========== MM ==========", "DISPLAY ADDRESS");
 		searchLocationView.getText2().setText(address);
+		Log.v("========== MM ==========", "DISPLAY ADDRESS FINISH");
 	}
 
 	public void onLocationUpdate(Location location) {
@@ -547,10 +555,13 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	}
 
 	public void onLocationUpdateError(CongressException e) {
+		Log.v("========== MM =======", "ERROR");
 		displayAddress(this.getString(R.string.menu_location_no_location));
-
+		Log.v("========== MM =======", "ERROR 2");
 		toggleLocationLoading(false);
-		toggleLocationEnabled(false);		
+		Log.v("========== MM =======", "ERROR 3");
+		toggleLocationEnabled(false);
+		Log.v("========== MM =======", "ERROR 4");
 	}
 
 	public void onAddressUpdate(String address) {

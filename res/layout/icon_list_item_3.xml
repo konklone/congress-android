@@ -4,6 +4,6 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			>
-	<include android:id="@+id/row_content" layout="@layout/icon_list_item_2" />	
+	<include android:id="@+id/row_content" layout="@layout/icon_list_item_2" android:visibility="visible" />	
 	<include android:id="@+id/row_loading" layout="@layout/loading" android:visibility="gone" />
 </FrameLayout>
