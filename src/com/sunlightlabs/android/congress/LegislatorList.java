@@ -548,7 +548,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	}
 
 	public void onAddressUpdateError(CongressException e) {
-		this.address = getString(R.string.location_update_fail);
+		this.address = "";
 		displayAddress(address);
 
 		addressUpdater = null;
