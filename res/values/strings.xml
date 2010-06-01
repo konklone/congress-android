@@ -47,7 +47,16 @@
     <string name="menu_legislators_state">State</string>
     <string name="menu_legislators_lastname">Last Name</string>
     <string name="menu_legislators_zip">Zip Code</string>
+    <string name="menu_location_no_location">Cannot update location</string>
+    <string name="menu_location_updating">Updating location...</string>
     
     <string name="bill_not_found">No bill found by that code.</string>
     <string name="bill_actions_empty">This bill has no action history at this time.</string>
+    
+    <string name="update">Update</string>
+    <string name="updating">Updating...</string>
+       
+    <string name="location_not_accurate">Location not accurate?</string>
+    <string name="location_relocate">Relocating you...</string>
+    <string name="location_update_fail">Cannot update location</string>
 </resources>
