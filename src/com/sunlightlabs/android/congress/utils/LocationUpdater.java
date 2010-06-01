@@ -63,12 +63,7 @@ public class LocationUpdater implements LocationListener {
 		Iterator<GpsSatellite> satellites = manager.getGpsStatus(null).getSatellites().iterator();
 		if(satellites == null)
 			return false;
-		int count = 0;
-		while(satellites.hasNext()) {
-			count++;
-			satellites.next();
-		}
-		return count > 0;
+		return satellites.hasNext();
 	}
 
 	public void requestLocationUpdate() {
