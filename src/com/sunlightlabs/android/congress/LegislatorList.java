@@ -528,9 +528,9 @@ public class LegislatorList extends ListActivity implements LoadsPhoto, Location
 	}
 
 	public void onLocationUpdateError(CongressException e) {
-		Toast.makeText(this, R.string.location_update_fail, Toast.LENGTH_SHORT).show();
 		toggleRelocating(false);
 		relocating = false;
+		Toast.makeText(this, R.string.location_update_fail, Toast.LENGTH_SHORT).show();		
 	}
 
 	public void onAddressUpdate(String address) {
@@ -545,7 +545,7 @@ public class LegislatorList extends ListActivity implements LoadsPhoto, Location
 	}
 
 	public void onAddressUpdateError(CongressException e) {
-		this.address = "";
+		this.address = getString(R.string.location_update_fail);
 		displayAddress(address);
 
 		addressUpdater = null;
