@@ -564,7 +564,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	}
 
 	public void onAddressUpdateError(CongressException e) {
-		this.address = "";
+		this.address = getString(R.string.location_update_fail);
 		displayAddress(address);
 
 		addressUpdater = null;
