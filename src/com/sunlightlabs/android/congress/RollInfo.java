@@ -4,12 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,12 +26,14 @@ import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
+import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
+import com.sunlightlabs.android.congress.utils.LoadsPhoto;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Legislator;
 import com.sunlightlabs.congress.java.Roll;
 
-public class RollInfo extends ListActivity {
+public class RollInfo extends ListActivity implements LoadsPhoto {
 	private String id;
 	
 	private Roll roll;
@@ -36,6 +41,8 @@ public class RollInfo extends ListActivity {
 	
 	private LoadRollTask loadRollTask, loadVotersTask;
 	private View loadingView;
+	
+	private HashMap<String,LoadPhotoTask> loadPhotoTasks = new HashMap<String,LoadPhotoTask>();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,13 @@ public class RollInfo extends ListActivity {
 			this.roll = holder.roll;
 			this.loadVotersTask = holder.loadVotersTask;
 			this.voters = holder.voters;
+			this.loadPhotoTasks = holder.loadPhotoTasks;
+			
+			if (loadPhotoTasks != null) {
+				Iterator<LoadPhotoTask> iterator = loadPhotoTasks.values().iterator();
+				while (iterator.hasNext())
+					iterator.next().onScreenLoad(this);
+			}
 		}
 		
 		loadRoll();
@@ -60,7 +74,7 @@ public class RollInfo extends ListActivity {
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new RollInfoHolder(loadRollTask, roll, loadVotersTask, voters);
+		return new RollInfoHolder(loadRollTask, roll, loadVotersTask, voters, loadPhotoTasks);
 	}
 	
 	public void setupControls() {
@@ -161,6 +175,27 @@ public class RollInfo extends ListActivity {
 			else
 				loadVotersTask = (LoadRollTask) new LoadRollTask(this, id, "voters").execute("voters");
 		}
+	}
+	
+	public void loadPhoto(String bioguide_id) {
+		if (!loadPhotoTasks.containsKey(bioguide_id))
+			loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
+	}
+	
+	public void onLoadPhoto(Drawable photo, Object tag) {
+		loadPhotoTasks.remove((String) tag);
+		
+		View result = getListView().findViewWithTag(tag);
+		if (result != null) {
+			if (photo != null)
+				((ImageView) result.findViewById(R.id.photo)).setImageDrawable(photo);
+			else // leave as loading, no better solution I can think of right now
+				((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.loading_photo);
+		}
+	}
+	
+	public Context getContext() {
+		return this;
 	}
 	
 	
@@ -269,7 +304,7 @@ public class RollInfo extends ListActivity {
 				photoView.setImageDrawable(photo);
 			else {
 				photoView.setImageResource(R.drawable.loading_photo);
-				// LegislatorList.this.loadPhoto(legislator.bioguide_id);
+				RollInfo.this.loadPhoto(legislator.bioguide_id);
 			}
 			
 			return view;
@@ -302,12 +337,14 @@ public class RollInfo extends ListActivity {
 		private LoadRollTask loadRollTask, loadVotersTask;
 		private Roll roll;
 		private HashMap<String,Roll.Vote> voters;
+		HashMap<String,LoadPhotoTask> loadPhotoTasks;
 		
-		public RollInfoHolder(LoadRollTask loadRollTask, Roll roll, LoadRollTask loadVotersTask, HashMap<String,Roll.Vote> voters) {
+		public RollInfoHolder(LoadRollTask loadRollTask, Roll roll, LoadRollTask loadVotersTask, HashMap<String,Roll.Vote> voters, HashMap<String,LoadPhotoTask> loadPhotoTasks) {
 			this.loadRollTask = loadRollTask;
 			this.roll = roll;
 			this.loadVotersTask = loadVotersTask;
 			this.voters = voters;
+			this.loadPhotoTasks = loadPhotoTasks;
 		}
 	}
 }
