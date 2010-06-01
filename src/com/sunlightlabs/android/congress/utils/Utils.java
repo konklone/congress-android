@@ -173,11 +173,19 @@ public class Utils {
 	}
 	
 	public static Intent shortcutIntent(Context context, String legislatorId, String name, Bitmap icon) {
-		return new Intent()
+		Intent intent = new Intent()
 			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
 					Utils.legislatorIntent(legislatorId).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
-			.putExtra(Intent.EXTRA_SHORTCUT_NAME, name)
-			.putExtra(Intent.EXTRA_SHORTCUT_ICON, icon); 
+			.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
+		
+		if (icon != null)
+			intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, icon);
+		else {
+			Parcelable resource = Intent.ShortcutIconResource.fromContext(context, R.drawable.no_photo_male);
+			intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, resource);
+		}
+		
+		return intent;
 	}
 	
 	public static String stateCodeToName(Context context, String code) {

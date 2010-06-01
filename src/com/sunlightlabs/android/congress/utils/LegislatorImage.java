@@ -69,7 +69,11 @@ public class LegislatorImage {
 //		case DisplayMetrics.DENSITY_HIGH:
 //		default:
 			// will be a 100x125 image, I want to scale it down to 60x75, and then chop 3 lines off of it
-			profile = getImage(PIC_MEDIUM, bioguideId, context).getBitmap();
+			BitmapDrawable drawable = getImage(PIC_MEDIUM, bioguideId, context);
+			if (drawable == null)
+				return null;
+			
+			profile = drawable.getBitmap();
 			scaled = Bitmap.createScaledBitmap(profile, 60, 75, true);
 			return Bitmap.createBitmap(scaled, 0, 1, scaled.getWidth(), scaled.getHeight() - 3);
 //		}
