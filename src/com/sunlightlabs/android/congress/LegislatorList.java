@@ -475,7 +475,20 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		@Override
 		protected void onPostExecute(ArrayList<Legislator> legislators) {
 			context.legislators = legislators;
-			context.displayLegislators();
+			
+			// if there's only one result, don't even make them click it
+			if (legislators.size() == 1 && searchType() != SEARCH_LOCATION) {
+				context.selectLegislator(legislators.get(0));
+
+				// if we're going on to the profile of a legislator, we want to cut the list out of the stack
+				// but if we're generating a shortcut, the shortcut process will be spawning off
+				// a separate background thread, that needs a live activity while it works,
+				// and will call finish() on its own
+				if (!shortcut)
+					context.finish();
+			} else
+				context.displayLegislators();
+			
 			context.loadLegislatorsTask = null;
 		}
 	}
