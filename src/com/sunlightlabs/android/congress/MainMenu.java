@@ -164,7 +164,6 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	private class SearchViewWrapper {
 		private View base;
 		private View loading;
-		private View content;
 		private TextView text1;
 		private TextView text2;		
 
@@ -179,9 +178,6 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		}
 		public View getLoading() {
 			return (loading == null) ? loading = this.base.findViewById(R.id.row_loading) : loading;
-		}
-		public View getContent() {
-			return (content == null) ? content = this.base.findViewById(R.id.row_content) : content;
 		}
 		public View getBase() {
 			return base;
@@ -555,7 +551,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	private void toggleLocationLoading(boolean visible) {
 		Log.d(TAG, "toggleLocationLoading(): visible=" + visible + "; thread=" + Thread.currentThread().getName());
 		searchLocationView.getLoading().setVisibility(visible ? View.VISIBLE : View.GONE);
-		searchLocationView.getContent().setVisibility(visible ? View.GONE : View.VISIBLE);
+		searchLocationView.getText2().setVisibility(visible ? View.GONE : View.VISIBLE);
 	}
 
 	private void displayAddress(String address, boolean enabled) {
@@ -590,7 +586,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 
 	public void onAddressUpdateError(CongressException e) {
 		Log.d(TAG, "onAddressUpdateError(): e=" + e + "; thread=" + Thread.currentThread().getName());
-		this.address = getString(R.string.address_update_fail);
+		this.address = "";
 		displayAddress(address, false);
 
 		addressUpdater = null;
@@ -599,7 +595,6 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		toggleLocationLoading(false);	
 	}
 
-	@Override
 	public Handler getHandler() {
 		return handler;
 	}

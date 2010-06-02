@@ -580,7 +580,6 @@ public class LegislatorList extends ListActivity implements LoadsPhoto, Location
 		relocating = false;
 	}
 
-	@Override
 	public Handler getHandler() {
 		return handler;
 	}
