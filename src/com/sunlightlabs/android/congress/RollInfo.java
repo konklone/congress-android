@@ -42,6 +42,10 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private View loadingView;
 	
 	private HashMap<String,LoadPhotoTask> loadPhotoTasks = new HashMap<String,LoadPhotoTask>();
+	private ArrayList<String> queuedPhotos = new ArrayList<String>();
+	
+	private static final int MAX_PHOTO_TASKS = 10;
+	private static final int MAX_QUEUE_TASKS = 10;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -180,8 +184,20 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	}
 	
 	public void loadPhoto(String bioguide_id) {
-		if (!loadPhotoTasks.containsKey(bioguide_id))
-			loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
+		if (!loadPhotoTasks.containsKey(bioguide_id)) {
+			// if we have free space, fetch the photo
+			if (loadPhotoTasks.size() <= MAX_PHOTO_TASKS) 
+				loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
+
+			// otherwise, add it to the queue for later
+			else {
+				if (queuedPhotos.size() > MAX_QUEUE_TASKS)
+					queuedPhotos.clear();
+				
+				if (!queuedPhotos.contains(bioguide_id))
+					queuedPhotos.add(bioguide_id);
+			}
+		}
 	}
 	
 	public void onLoadPhoto(Drawable photo, Object tag) {
@@ -194,6 +210,10 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			else // leave as loading, no better solution I can think of right now
 				((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.loading_photo);
 		}
+		
+		// if there's any in the queue, send the next one
+		if (!queuedPhotos.isEmpty())
+			loadPhoto(queuedPhotos.remove(0));
 	}
 	
 	public Context getContext() {
