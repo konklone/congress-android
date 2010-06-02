@@ -157,14 +157,15 @@ public class BillList extends ListActivity {
 
 	public void onLoadBills(CongressException exception) {
 		if (bills != null && bills.size() > 0) {
+			
 			lw.getLoading().setVisibility(View.GONE);
-
-			View retryContainer = lw.getRetryContainer();
-			retryContainer.setVisibility(View.VISIBLE);
+			lw.getRetryContainer().setVisibility(View.VISIBLE);
 			
 			Button retry = lw.getRetry();
 			retry.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
+					lw.getRetryContainer().setVisibility(View.GONE);
+					lw.getLoading().setVisibility(View.VISIBLE);
 					loadBills();
 				}
 			});
