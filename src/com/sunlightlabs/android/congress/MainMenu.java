@@ -11,10 +11,13 @@ import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Html;
 import android.text.InputType;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,6 +57,9 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	public static final int SEARCH_STATE = 6;
 	public static final int SEARCH_NAME = 7;
 
+	private static final String TAG = "Congress";
+	private static final int MSG_TIMEOUT = 100;
+
 	private Location location;
 	private String address;
 
@@ -62,6 +68,16 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 
 	private SearchViewWrapper searchLocationView;
 	private ViewArrayAdapter searchLocationAdapter;
+
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.arg1 == MSG_TIMEOUT) {
+				Log.d(TAG, "handleMessage(): received message=" + msg);
+				onLocationUpdateError((CongressException) msg.obj);
+			}
+		}
+	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -503,58 +519,68 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 
 	private void updateCurrentLocation() {
 		if(address != null) {
-			displayAddress(address);
+			Log.d(TAG, "updateCurrentLocation(): address=" + address);
+			displayAddress(address, true);
 			return;
 		}
 
 		location = locationUpdater.getLastKnownLocation();
+		Log.d(TAG, "updateCurrentLocation(): location=" + location);
 
-		if(location == null) {
+		if (location == null) {
 			toggleLocationEnabled(false);
 			toggleLocationLoading(true);
 			locationUpdater.requestLocationUpdate();
 		}
 		else { 
 			address = AddressUpdater.getFromCache(location); 
+			Log.d(TAG, "updateCurrentLocation(): address=" + address);
 			if(address == null) {
 				toggleLocationEnabled(false);
 				toggleLocationLoading(true);
 				addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
 			}
 			else
-				displayAddress(address);
+				displayAddress(address, true);
 		}
 	}
 
 	private void toggleLocationEnabled(boolean enabled) {
+		Log.d(TAG, "toggleLocationEnabled(): enabled=" + enabled + "; thread=" + Thread.currentThread().getName());
 		searchLocationView.getWrapperTag().setEnabled(enabled);
 		searchLocationAdapter.notifyDataSetChanged();
 		searchLocationView.getText1().setTextColor(enabled == true ? Color.parseColor("#dddddd") : Color.parseColor("#666666"));
 	}
 
 	private void toggleLocationLoading(boolean visible) {
+		Log.d(TAG, "toggleLocationLoading(): visible=" + visible + "; thread=" + Thread.currentThread().getName());
 		searchLocationView.getLoading().setVisibility(visible ? View.VISIBLE : View.GONE);
 		searchLocationView.getContent().setVisibility(visible ? View.GONE : View.VISIBLE);
 	}
 
-	private void displayAddress(String address) {
+	private void displayAddress(String address, boolean enabled) {
+		Log.d(TAG, "displayAddress(): address=" + address);
+		searchLocationView.getText2().setTextColor(enabled ? Color.parseColor("#dddddd") : Color.parseColor("#666666"));
 		searchLocationView.getText2().setText(address);
 	}
 
 	public void onLocationUpdate(Location location) {
+		Log.d(TAG, "onLocationUpdate(): location=" + location + "; thread=" + Thread.currentThread().getName());
 		this.location = location;
 		addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
 	}
 
 	public void onLocationUpdateError(CongressException e) {
-		displayAddress(this.getString(R.string.menu_location_no_location));
+		Log.d(TAG, "onLocationUpdateError(): e=" + e + "; thread=" + Thread.currentThread().getName());
+		displayAddress(this.getString(R.string.menu_location_no_location), false);
 		toggleLocationLoading(false);
 		toggleLocationEnabled(false);
 	}
 
 	public void onAddressUpdate(String address) {
+		Log.d(TAG, "onAddressUpdate(): address=" + address + "; thread=" + Thread.currentThread().getName());
 		this.address =  address;
-		displayAddress(address);	
+		displayAddress(address, true);	
 
 		addressUpdater = null;
 
@@ -563,12 +589,18 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	}
 
 	public void onAddressUpdateError(CongressException e) {
-		this.address = getString(R.string.location_update_fail);
-		displayAddress(address);
+		Log.d(TAG, "onAddressUpdateError(): e=" + e + "; thread=" + Thread.currentThread().getName());
+		this.address = getString(R.string.address_update_fail);
+		displayAddress(address, false);
 
 		addressUpdater = null;
 
 		toggleLocationEnabled(true);
 		toggleLocationLoading(false);	
+	}
+
+	@Override
+	public Handler getHandler() {
+		return handler;
 	}
 }

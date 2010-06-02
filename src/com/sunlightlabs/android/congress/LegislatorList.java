@@ -16,6 +16,9 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +49,10 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	private final static int SEARCH_LASTNAME = 3;
 	private final static int SEARCH_COMMITTEE = 4;
 
+	private static final int MSG_TIMEOUT = 100;
+
+	private final static String TAG = "Congress";
+
 	private ArrayList<Legislator> legislators = null;
 	private LoadLegislatorsTask loadLegislatorsTask = null;
 	private ShortcutImageTask shortcutImageTask = null;
@@ -66,6 +73,16 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 	private HeaderViewWrapper headerWrapper;
 
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.arg1 == MSG_TIMEOUT) {
+				Log.d(TAG, "handleMessage(): received message=" + msg);
+				onLocationUpdateError((CongressException) msg.obj);
+			}
+		}
+	};
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -83,8 +100,9 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		state = extras.getString("state");
 		committeeId = extras.getString("committeeId");
 		committeeName = extras.getString("committeeName");
-
 		shortcut = extras.getBoolean("shortcut", false);
+
+		Log.d(TAG, "onCreate(): latitude=" + latitude + ",longitude=" + longitude + ",address=" + address);
 
 		LegislatorListHolder holder = (LegislatorListHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
@@ -125,8 +143,10 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 		setupControls();
 
-		if(relocating)
+		if (relocating) {
+			Log.d(TAG, "onCreate(): relocating=" + relocating);
 			toggleRelocating(true);
+		}
 	}
 
 	@Override
@@ -208,7 +228,6 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		case SEARCH_LOCATION:
 			showHeader(); // make the location update header visible
 			displayAddress(address);
-			Utils.setTitle(this, "Legislators For Your Location");
 			break;
 		case SEARCH_LASTNAME:
 			Utils.setTitle(this, "Legislators Named \"" + lastName + "\"");
@@ -509,34 +528,41 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	}
 
 	private void updateLocation() {
+		Log.d(TAG, "updateLocation(): relocating=true");
 		relocating = true;
 		locationUpdater.requestLocationUpdate();
 		toggleRelocating(true);
 	}
 
 	private void displayAddress(String address) {
-		Utils.setTitle(this, "Legislators For " + address == null || address.equals("") ? "Your Location" : address);
+		Log.d(TAG, "displayAddress(): address=" + address);
+		Utils.setTitle(this, "Legislators For " + ((address == null || address.equals("")) ? "Your Location" : address));
 	}
 
 	private void reloadLegislators() {
+		Log.d(TAG, "reloadLegislators()");
 		legislators = null;
 		loadLegislators();
 	}
 
 	public void onLocationUpdate(Location location) {
-		toggleRelocating(false);
+		Log.d(TAG, "onLocationUpdate(): location=" + location);
 		latitude = location.getLatitude();
 		longitude = location.getLongitude();
 		addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
 	}
 
 	public void onLocationUpdateError(CongressException e) {
-		toggleRelocating(false);
-		relocating = false;
-		Toast.makeText(this, R.string.location_update_fail, Toast.LENGTH_SHORT).show();		
+		Log.d(TAG, "onLocationUpdateError(): e=" + e + ", relocating=" + relocating);
+		if(relocating) {
+			toggleRelocating(false);
+			relocating = false;
+			Toast.makeText(this, R.string.location_update_fail, Toast.LENGTH_SHORT).show();	
+		}
 	}
 
 	public void onAddressUpdate(String address) {
+		Log.d(TAG, "onAddressUpdate(): address=" + address);
 		this.address = address;
 		displayAddress(address);
 
@@ -548,11 +574,17 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	}
 
 	public void onAddressUpdateError(CongressException e) {
+		Log.d(TAG, "onAddressUpdateError(): e=" + e);
 		this.address = "";
 		displayAddress(address);
 
 		addressUpdater = null;
 		toggleRelocating(false);
 		relocating = false;
+	}
+
+	@Override
+	public Handler getHandler() {
+		return handler;
 	}
 }
