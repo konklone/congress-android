@@ -25,30 +25,51 @@ import com.sunlightlabs.congress.java.CongressException;
 
 public class BillList extends ListActivity {
 	private static final int BILLS = 20;
-	
+
 	public static final int BILLS_LAW = 0;
 	public static final int BILLS_RECENT = 1;
 	public static final int BILLS_SPONSOR = 2;
 	public static final int BILLS_LATEST_VOTES = 3;
-	
+
 	private ArrayList<Bill> bills;
 	private LoadBillsTask loadBillsTask;
-	
+
 	private String sponsor_id, sponsor_name;
 	private int type;
+
+	private LoadingWrapper lw;
+
+	private class LoadingWrapper {
+		private View base;
+		private View loading;
+		private Button retry;
+
+		public LoadingWrapper(View base) {
+			this.base = base;
+		}
+		public View getLoading() {
+			return loading == null ? loading = base.findViewById(R.id.loading_layout) : loading;
+		}
+		public Button getRetry() {
+			return retry == null ? retry = (Button) base.findViewById(R.id.retry) : retry;
+		}
+		public View getBase() {
+			return base;
+		}
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_titled);
-		
+
 		Utils.setupDrumbone(this);
-		
+
 		Bundle extras = getIntent().getExtras();
 		type = extras.getInt("type", BILLS_RECENT);
 		sponsor_id = extras.getString("sponsor_id");
 		sponsor_name = extras.getString("sponsor_name");
-		
+
 		setupControls();
 
 		MainActivityHolder holder = (MainActivityHolder) getLastNonConfigurationInstance();
@@ -61,25 +82,25 @@ public class BillList extends ListActivity {
 				loadBillsTask.onScreenLoad(this);
 		} else
 			bills = new ArrayList<Bill>();
-		
+
 		setListAdapter(new BillAdapter(this, bills));
-		
+
 		if (bills.size() == 0)
 			loadBills();
 	}
-	
+
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		return new MainActivityHolder(bills, loadBillsTask);
 	}
-	
+
 	public void setupControls() {
 		((Button) findViewById(R.id.back)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				finish();
 			}
 		});
-		
+
 		Utils.setLoading(this, R.string.bills_loading);
 		switch (type) {
 		case BILLS_RECENT:
@@ -97,18 +118,18 @@ public class BillList extends ListActivity {
 			break;
 		}
 	}
-	
+
 	protected void onListItemClick(ListView parent, View v, int position, long id) {
-    	Bill bill = (Bill) parent.getItemAtPosition(position);
+		Bill bill = (Bill) parent.getItemAtPosition(position);
 		if (bill != null)
 			startActivity(Utils.billIntent(this, bill));
-    }
-	
+	}
+
 	public void loadBills() {
 		if (loadBillsTask == null)
 			loadBillsTask = (LoadBillsTask) new LoadBillsTask(this).execute();
 	}
-	
+
 
 	public void onLoadBills(ArrayList<Bill> bills) {
 		// remove the placeholder and add the new bills in the array
@@ -118,7 +139,7 @@ public class BillList extends ListActivity {
 				this.bills.remove(lastIndex);
 			}
 		}
-		
+
 		this.bills.addAll(bills);
 
 		// if we got back a full page of bills, there may be more yet to come
@@ -127,24 +148,35 @@ public class BillList extends ListActivity {
 
 		((BillAdapter) getListAdapter()).notifyDataSetChanged();
 	}
-	
+
 	public void onLoadBills(CongressException exception) {
-		this.bills = new ArrayList<Bill>();
-		Utils.showBack(this, R.string.error_connection);
+		if (bills != null && bills.size() > 0) {
+			lw.getLoading().setVisibility(View.GONE);
+			Button retry = lw.getRetry();
+			retry.setVisibility(View.VISIBLE);
+			retry.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					loadBills();
+				}
+			});
+
+		} else
+			Utils.showBack(this, R.string.error_connection);
 	}
-	
+
 	private class LoadBillsTask extends AsyncTask<Void,Void,ArrayList<Bill>> {
 		private BillList context;
 		private CongressException exception;
-		
+
 		public LoadBillsTask(BillList context) {
 			this.context = context;
 		}
-		
+
 		public void onScreenLoad(BillList context) {
 			this.context = context;
 		}
-		
+
 		@Override
 		public ArrayList<Bill> doInBackground(Void... nothing) {
 			try {
@@ -167,25 +199,25 @@ public class BillList extends ListActivity {
 				return null;
 			}
 		}
-		
+
 		@Override
 		public void onPostExecute(ArrayList<Bill> bills) {
 			context.loadBillsTask = null;
-			
+
 			if (exception != null)
 				context.onLoadBills(exception);
 			else
 				context.onLoadBills(bills);
 		}
 	}
-	
+
 	private class BillAdapter extends ArrayAdapter<Bill> {
 		LayoutInflater inflater;
 
-	    public BillAdapter(Activity context, ArrayList<Bill> bills) {
-	        super(context, 0, bills);
-	        inflater = LayoutInflater.from(context);
-	    }
+		public BillAdapter(Activity context, ArrayList<Bill> bills) {
+			super(context, 0, bills);
+			inflater = LayoutInflater.from(context);
+		}
 
 		@Override
 		public boolean areAllItemsEnabled() {
@@ -200,6 +232,7 @@ public class BillList extends ListActivity {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			Bill bill = getItem(position);
+
 			if (bill == null)
 				return getLoadMoreView();
 			else
@@ -208,16 +241,17 @@ public class BillList extends ListActivity {
 
 		private View getLoadMoreView() {
 			BillList.this.loadBills();
-			return inflater.inflate(R.layout.loading, null);
+			lw = new  LoadingWrapper(inflater.inflate(R.layout.loading_retry, null));
+			return lw.getBase();
 		}
 
 		private View getBillView(Bill bill, View convertView) {
-			RelativeLayout view;
+			View view;
 			if (convertView == null || !(convertView instanceof RelativeLayout))
-				view = (RelativeLayout) inflater.inflate(R.layout.bill_item, null);
+				view = inflater.inflate(R.layout.bill_item, null);
 			else
-				view = (RelativeLayout) convertView;
-			
+				view = convertView;
+
 			String code, action;
 			Date date = null;
 			switch (type) {
@@ -241,7 +275,7 @@ public class BillList extends ListActivity {
 			}
 			Spanned byline = Html.fromHtml("<b>" + code + "</b> " + action + ":");
 			((TextView) view.findViewById(R.id.byline)).setText(byline);
-			
+
 			if(date != null) {
 				SimpleDateFormat format = null;
 				if(date.getYear() == new Date().getYear()) 
@@ -250,7 +284,7 @@ public class BillList extends ListActivity {
 					format = new SimpleDateFormat("MMM dd, yyyy");
 				((TextView) view.findViewById(R.id.date)).setText(format.format(date));
 			}
-				
+
 			TextView titleView = ((TextView) view.findViewById(R.id.title));
 			if (bill.short_title != null) {
 				String title = Utils.truncate(bill.short_title, 300);
@@ -261,13 +295,13 @@ public class BillList extends ListActivity {
 				titleView.setTextSize(16);
 				titleView.setText(title);
 			} 
-			
+
 			view.setTag(bill);
-			
+
 			return view;
 		}
 	}
-	
+
 	static class MainActivityHolder {
 		ArrayList<Bill> bills;
 		LoadBillsTask loadBillsTask;
