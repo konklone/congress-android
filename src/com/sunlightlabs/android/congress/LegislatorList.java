@@ -492,6 +492,7 @@ public class LegislatorList extends ListActivity implements LoadsPhoto, Location
 	private class HeaderViewWrapper {
 		private TextView txt;
 		private View base;
+		private View loading;
 
 		public HeaderViewWrapper(View base) {
 			this.base = base;
@@ -501,6 +502,11 @@ public class LegislatorList extends ListActivity implements LoadsPhoto, Location
 		}
 		public TextView getTxt() {
 			return (txt == null ? txt = (TextView) base.findViewById(R.id.text_2) : txt);
+		}
+
+		public View getLoading() {
+			return (loading == null ? loading = base
+					.findViewById(R.id.updating_spinner) : loading);
 		}
 	}
 
@@ -522,6 +528,7 @@ public class LegislatorList extends ListActivity implements LoadsPhoto, Location
 	private void toggleRelocating(boolean updating) {
 		headerWrapper.getTxt().setText(updating ? R.string.updating : R.string.update);
 		headerWrapper.getTxt().setEnabled(updating ? false : true);
+		headerWrapper.getLoading().setVisibility(updating ? View.VISIBLE : View.GONE);
 	}
 
 	private void updateLocation() {

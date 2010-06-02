@@ -54,7 +54,7 @@
     <string name="bill_actions_empty">This bill has no action history at this time.</string>
     
     <string name="update">Update</string>
-    <string name="updating">Updating...</string>
+    <string name="updating">Updating</string>
        
     <string name="location_not_accurate">Location not accurate?</string>
     <string name="location_update_fail">Cannot update location</string>
