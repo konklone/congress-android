@@ -54,4 +54,6 @@
     
     <string name="bill_vote_roll">Tap to see how each legislator voted.</string>
     <string name="bill_vote_not_roll">No roll call was taken for this vote.</string>
+    
+    <string name="roll_loading">Loading roll call details...</string>
 </resources>
