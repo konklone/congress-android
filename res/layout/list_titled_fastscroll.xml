@@ -6,11 +6,7 @@
     >
     
     <include layout="@layout/title_bar_search" />
-    <View
-		android:layout_width="fill_parent"
-		android:layout_height="1px"
-		android:background="#5c5e5d"
-		/>
+    <include layout="@layout/line" />
  
     <ListView android:id="@id/android:list"
 	    android:layout_width="fill_parent" 
