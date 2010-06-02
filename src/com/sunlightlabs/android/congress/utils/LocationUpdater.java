@@ -16,7 +16,7 @@ import com.sunlightlabs.congress.java.CongressException;
 
 public class LocationUpdater implements LocationListener {
 	private static final String TAG = "CONGRESS";
-	private static final long TIMEOUT = 10000;
+	private static final long TIMEOUT = 20000;
 	private static final int MSG_TIMEOUT = 100;
 
 	private String provider;

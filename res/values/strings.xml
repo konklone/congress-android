@@ -57,5 +57,5 @@
     <string name="updating">Updating</string>
        
     <string name="location_not_accurate">Location not accurate?</string>
-    <string name="location_update_fail">Cannot update location</string>
+    <string name="location_update_fail">Couldn\'t update your location. Please try again later.</string>
 </resources>
