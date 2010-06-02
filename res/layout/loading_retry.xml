@@ -12,6 +12,8 @@
 		android:paddingBottom="25dp"
 	  	android:orientation="horizontal"
 	  	android:gravity="center"
+	  	
+	  	
 	  	>
 	  	
 	  	<ProgressBar android:id="@+id/loading_spinner"
@@ -31,12 +33,36 @@
 	  	
 	</LinearLayout>
 	
-	<Button android:id="@+id/retry"
-		android:layout_width="wrap_content"
+	<LinearLayout
+		android:id="@+id/retry_container"
+	  	android:layout_width="fill_parent"
 	  	android:layout_height="wrap_content"
-	  	android:layout_gravity="center"  	
-	  	android:layout_centerInParent="true"	
-	  	android:text="Network error. Retry" 
-	  	android:visibility="gone" />
-
+	  	android:paddingTop="25dp"
+		android:paddingBottom="25dp"
+	  	android:orientation="horizontal"
+	  	android:gravity="center"
+	  	android:layout_centerInParent="true"
+	  	
+	  	android:visibility="gone"
+		>
+		
+		<TextView android:id="@+id/loading_message"
+	  		android:layout_width="wrap_content"
+	  		android:layout_height="wrap_content"  		
+	  		android:text="@string/bills_retry_note"
+	  		android:layout_marginRight="10dp"
+	  		android:layout_marginLeft="15dp"
+	  		/>
+		
+		<Button android:id="@+id/retry"
+			android:layout_width="wrap_content"
+		  	android:layout_height="wrap_content"
+		  	android:layout_gravity="center"
+		  	
+		  	android:paddingLeft="20dp"
+		  	android:paddingRight="20dp"
+		  	
+		  	android:text="@string/bills_retry_button"
+		  	/>
+	</LinearLayout>
 </FrameLayout>

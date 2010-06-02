@@ -42,6 +42,7 @@ public class BillList extends ListActivity {
 	private class LoadingWrapper {
 		private View base;
 		private View loading;
+		private View retryContainer;
 		private Button retry;
 
 		public LoadingWrapper(View base) {
@@ -53,6 +54,11 @@ public class BillList extends ListActivity {
 		public Button getRetry() {
 			return retry == null ? retry = (Button) base.findViewById(R.id.retry) : retry;
 		}
+		
+		public View getRetryContainer() {
+			return retryContainer == null ? retryContainer = base.findViewById(R.id.retry_container) : retryContainer;
+		}
+		
 		public View getBase() {
 			return base;
 		}
@@ -153,8 +159,10 @@ public class BillList extends ListActivity {
 		if (bills != null && bills.size() > 0) {
 			lw.getLoading().setVisibility(View.GONE);
 
+			View retryContainer = lw.getRetryContainer();
+			retryContainer.setVisibility(View.VISIBLE);
+			
 			Button retry = lw.getRetry();
-			retry.setVisibility(View.VISIBLE);
 			retry.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					loadBills();
