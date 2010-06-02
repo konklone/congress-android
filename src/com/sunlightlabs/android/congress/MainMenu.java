@@ -323,7 +323,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		case RESULT_BILL_CODE:
 			intent.setClass(this, GetText.class)
 			.putExtra("ask", "Enter a bill code:")
-			.putExtra("hint", "e.g. \"HR 4136\", \"s 782\"")
+			.putExtra("hint", "e.g. \"hr4136\", \"s782\"")
 			.putExtra("startValue", Preferences.getString(this, "search_bill_code"))
 			.putExtra("inputType", InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
 			break;
@@ -459,18 +459,21 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 			ScrollView changelogView = (ScrollView) inflater.inflate(R.layout.changelog, null);
 
 			Spanned changelog = Html.fromHtml(
-					"<b>&#183;</b> New \"Latest Votes\" listing for bills and resolutions that just got a vote<br/><br/>" +
-					"<b>&#183;</b> Menu links to THOMAS, OpenCongress, GovTrack, and the Bioguide<br/><br/>" +
-					"<b>&#183;</b> Slightly better timeline for bills<br/><br/>" +
-					"<b>&#183;</b> Endless scrolling for bills, thumbnails for legislators"
+				"<b>&#183;</b> See full history and voting records on bills<br/><br/>" +
+				"<b>&#183;</b> Search by bill code<br/><br/>" +	
+				"<b>&#183;</b> Better location searching <br/><br/>" +
+				"<b>&#183;</b> New app icon, other visual improvements<br/><br/>" +
+				"<b>&#183;</b> Various bugfixes"
 			);
 			Spanned changelogLast = Html.fromHtml(
-					"<b>&#183;</b> Basic information about bills and laws<br/><br/>" +
-					"<b>&#183;</b> New \"Sponsored Bills\" button on legislator profiles<br/><br/>" +
-					"<b>&#183;</b> Made everything look nicer"
+				"<b>&#183;</b> New \"Latest Votes\" listing for bills and resolutions that just got a vote<br/><br/>" +
+				"<b>&#183;</b> Endless scrolling for bills, thumbnails for legislators" +
+				"<b>&#183;</b> Menu links to THOMAS, OpenCongress, GovTrack, and the Bioguide<br/><br/>" +
+				"<b>&#183;</b> New \"Sponsored Bills\" button on legislator profiles<br/><br/>" +
+				"<b>&#183;</b> Basic information about bills and laws"
 			);
 			((TextView) changelogView.findViewById(R.id.changelog)).setText(changelog);
-			((TextView) changelogView.findViewById(R.id.changelog_last_title)).setText("Version 2.0 - 2.1");
+			((TextView) changelogView.findViewById(R.id.changelog_last_title)).setText(R.string.app_version_older);
 			((TextView) changelogView.findViewById(R.id.changelog_last)).setText(changelogLast);
 
 			builder.setIcon(R.drawable.icon);
