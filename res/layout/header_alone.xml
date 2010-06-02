@@ -13,5 +13,7 @@
 	
 	android:background="@drawable/header_gradient"
 	
+	android:textColor="@color/header_text"
+	
 	android:text="Header Text"
 	/>

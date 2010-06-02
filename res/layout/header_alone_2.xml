@@ -19,6 +19,7 @@
 		
 		android:textSize="16sp"
 		android:textStyle="bold"
+		android:textColor="@color/header_text"
 		
 		android:text="Header Text"
 		/>
@@ -33,6 +34,7 @@
 		android:layout_centerVertical="true"
 		
 		android:textSize="14sp"
+		android:textColor="@color/header_text"
 		
 		android:text="Header Text"
 		/>

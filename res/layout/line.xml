@@ -2,5 +2,5 @@
 <View xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="1px"
-	android:background="#5c5e5d"
+	android:background="@color/header_line"
 	/>
