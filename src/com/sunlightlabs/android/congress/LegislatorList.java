@@ -583,7 +583,6 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		relocating = false;
 	}
 
-	@Override
 	public Handler getHandler() {
 		return handler;
 	}

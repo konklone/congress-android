@@ -1,9 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			android:id="@+id/profile_website_row"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:id="@+id/profile_website_row"
+	android:orientation="horizontal"
+	
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:paddingLeft="10dp"
+	android:paddingTop="15dp"
+	android:paddingBottom="10dp"
+	>
+
+	<ImageView android:id="@+id/icon"
+		android:layout_width="48dp"
+		android:layout_height="48dp"
+		android:layout_marginRight="20dp"
+		/>
+	
+	<LinearLayout 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		>
+		
+		<TextView android:id="@+id/text_1"
+		
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:textSize="22sp"
+			android:textColor="@android:color/white"
+			
+			android:text="Text"
+			/>
+		
+		<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			>
-	<include android:id="@+id/row_content" layout="@layout/icon_list_item_2" android:visibility="visible" />	
-	<include android:id="@+id/row_loading" layout="@layout/loading" android:visibility="gone" />
-</FrameLayout>
+			
+			<TextView android:id="@+id/text_2"			
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:textSize="12sp"
+				android:text="Subtext"
+			/>
+			
+			<include android:id="@+id/row_loading" layout="@layout/loading_small" android:visibility="gone" />
+		</FrameLayout>
+		
+		
+	</LinearLayout>	
+</LinearLayout>
+

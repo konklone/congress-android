@@ -65,5 +65,4 @@
        
     <string name="location_not_accurate">Location not accurate?</string>
     <string name="location_update_fail">Cannot update location</string>
-    <string name="address_update_fail">Cannot update location area</string>
 </resources>
