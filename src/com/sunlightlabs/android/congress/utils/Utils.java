@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Parcelable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -295,5 +296,12 @@ public class Utils {
 		if(text.length() == 1) 
 			return text.toUpperCase();
 		return text.substring(0, 1).toUpperCase() + text.substring(1);
+	}
+	
+	public static View tabView(Context context, String name) {
+		LayoutInflater inflater = LayoutInflater.from(context);
+		View tab = inflater.inflate(R.layout.tab_minimal, null);
+		((TextView) tab.findViewById(R.id.tab_name)).setText(name);
+		return tab;
 	}
 }

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.utils.Utils;
+
 public class LegislatorTabs extends TabActivity {
 	private String id, state, party,
 		titledName, lastName, firstName, nickname, title, 
@@ -51,15 +53,24 @@ public class LegislatorTabs extends TabActivity {
 		Resources res = this.getResources();
 		TabHost tabHost = getTabHost();
 		
-		tabHost.addTab(tabHost.newTabSpec("profile_tab").setIndicator("Profile", res.getDrawable(R.drawable.tab_profile)).setContent(profileIntent()));
-		tabHost.addTab(tabHost.newTabSpec("news_tab").setIndicator("News", res.getDrawable(R.drawable.tab_news)).setContent(newsIntent()));
+		tabHost.addTab(tabHost.newTabSpec("profile_tab")
+				.setIndicator(Utils.tabView(this, "Profile"))
+				.setContent(profileIntent()));
+		tabHost.addTab(tabHost.newTabSpec("news_tab")
+				.setIndicator(Utils.tabView(this, "News"))
+				.setContent(newsIntent()));
 		
-		if (twitter_id != null && !(twitter_id.equals("")))
-			tabHost.addTab(tabHost.newTabSpec("twitter_tab").setIndicator("Twitter", res.getDrawable(R.drawable.tab_twitter)).setContent(twitterIntent()));
+		if (twitter_id != null && !(twitter_id.equals(""))) {
+			tabHost.addTab(tabHost.newTabSpec("twitter_tab")
+					.setIndicator(Utils.tabView(this, "Twitter"))
+					.setContent(twitterIntent()));
+		}
 		
-		if (youtube_id != null && !(youtube_id.equals("")))
-			tabHost.addTab(tabHost.newTabSpec("youtube_tab").setIndicator("YouTube", res.getDrawable(R.drawable.tab_video)).setContent(youtubeIntent()));
-		
+		if (youtube_id != null && !(youtube_id.equals(""))) {
+			tabHost.addTab(tabHost.newTabSpec("youtube_tab")
+					.setIndicator(Utils.tabView(this, "YouTube"))
+					.setContent(youtubeIntent()));
+		}
 		tabHost.setCurrentTab(0);
 	}
 	

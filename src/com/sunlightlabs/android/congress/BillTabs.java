@@ -4,11 +4,10 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.Bill;
 
 public class BillTabs extends TabActivity {
@@ -78,27 +77,21 @@ public class BillTabs extends TabActivity {
 		Resources res = getResources();
 		TabHost tabHost = getTabHost();
 		tabHost.addTab(tabHost.newTabSpec("info_tab")
-				.setIndicator(tabView("Details"))
+				.setIndicator(Utils.tabView(this, "Details"))
 				.setContent(detailsIntent()));
 		tabHost.addTab(tabHost.newTabSpec("history_tab")
-				.setIndicator(tabView("History"))
+				.setIndicator(Utils.tabView(this, "History"))
 				.setContent(historyIntent()));
 		
 		if (last_vote_at > 0) {
 			tabHost.addTab(tabHost.newTabSpec("votes_tab")
-					.setIndicator(tabView("Votes"))
+					.setIndicator(Utils.tabView(this, "Votes"))
 					.setContent(votesIntent()));
 		}
 		
 		tabHost.setCurrentTab(0);
 	}
 	
-	public View tabView(String name) {
-		LayoutInflater inflater = LayoutInflater.from(this);
-		View tab = inflater.inflate(R.layout.tab_minimal, null);
-		((TextView) tab.findViewById(R.id.tab_name)).setText(name);
-		return tab;
-	}
 	
 	public Intent detailsIntent() {
 		return new Intent(this, BillInfo.class)

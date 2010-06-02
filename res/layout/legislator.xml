@@ -17,7 +17,7 @@
     	<View
 			android:layout_width="fill_parent"
 			android:layout_height="1px"
-			android:background="#5c5e5d"
+			android:background="@color/tab_top"
 			/>
     	
 	  	<TabWidget
