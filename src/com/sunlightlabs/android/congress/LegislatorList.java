@@ -42,7 +42,6 @@ import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Legislator;
 
 public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsPhoto, LocationUpdateable<LegislatorList>, AddressUpdateable<LegislatorList> {
-
 	private final static int SEARCH_ZIP = 0;
 	private final static int SEARCH_LOCATION = 1;
 	private final static int SEARCH_STATE = 2;
