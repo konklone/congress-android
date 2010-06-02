@@ -45,7 +45,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private ArrayList<String> queuedPhotos = new ArrayList<String>();
 	
 	private static final int MAX_PHOTO_TASKS = 10;
-	private static final int MAX_QUEUE_TASKS = 10;
+	private static final int MAX_QUEUE_TASKS = 20;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

@@ -4,6 +4,8 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -75,13 +77,27 @@ public class BillTabs extends TabActivity {
 	public void setupTabs() {
 		Resources res = getResources();
 		TabHost tabHost = getTabHost();
-		tabHost.addTab(tabHost.newTabSpec("info_tab").setIndicator("Details", res.getDrawable(R.drawable.tab_profile)).setContent(detailsIntent()));
-		tabHost.addTab(tabHost.newTabSpec("history_tab").setIndicator("History", res.getDrawable(R.drawable.tab_news)).setContent(historyIntent()));
+		tabHost.addTab(tabHost.newTabSpec("info_tab")
+				.setIndicator(tabView("Details"))
+				.setContent(detailsIntent()));
+		tabHost.addTab(tabHost.newTabSpec("history_tab")
+				.setIndicator(tabView("History"))
+				.setContent(historyIntent()));
 		
-		if (last_vote_at > 0)
-			tabHost.addTab(tabHost.newTabSpec("votes_tab").setIndicator("Votes", res.getDrawable(R.drawable.tab_news)).setContent(votesIntent()));
+		if (last_vote_at > 0) {
+			tabHost.addTab(tabHost.newTabSpec("votes_tab")
+					.setIndicator(tabView("Votes"))
+					.setContent(votesIntent()));
+		}
 		
 		tabHost.setCurrentTab(0);
+	}
+	
+	public View tabView(String name) {
+		LayoutInflater inflater = LayoutInflater.from(this);
+		View tab = inflater.inflate(R.layout.tab_minimal, null);
+		((TextView) tab.findViewById(R.id.tab_name)).setText(name);
+		return tab;
 	}
 	
 	public Intent detailsIntent() {

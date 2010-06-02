@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal"
+	
+	android:background="@drawable/tab_gradient"
+	>
+	
+	<View 
+		android:layout_width="1px"
+		android:layout_height="fill_parent"
+		android:background="@color/tab_edges"
+		/>
+	
+	<TextView android:id="@+id/tab_name"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		
+		android:paddingTop="10dp"
+		android:paddingBottom="10dp"
+		
+		android:gravity="center"
+		
+		android:textSize="14dp"
+		android:textColor="@color/tab_text_color"
+		android:textStyle="bold"
+		
+		android:text="Name"
+		/>
+	
+	<View 
+		android:layout_width="1px"
+		android:layout_height="fill_parent"
+		android:background="@color/tab_edges"
+		/>
+		
+</LinearLayout>
