@@ -4,10 +4,7 @@
 	>
 	<gradient
 		android:startColor="@color/tab_dim_top"
-		android:centerColor="@color/tab_dim_center"
 		android:endColor="@color/tab_dim_bottom"
-		
-		android:centerX="0.75"
 		
 		android:angle="270"
 		/>

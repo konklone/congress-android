@@ -4,10 +4,8 @@
 	>
 	<gradient
 		android:startColor="@color/pressed_top"
-		android:centerColor="@color/pressed_center"
 		android:endColor="@color/pressed_bottom"
 		
-		android:centerX="0.75"
 		android:angle="270"
 		/>
 		

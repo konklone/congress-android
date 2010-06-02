@@ -16,22 +16,19 @@
 	<color name="tab_top">#04081a</color>
 	
 	<color name="pressed_top">#f58525</color>
-	<color name="pressed_center">#a55515</color>
 	<color name="pressed_bottom">#c56520</color>
 	
 	<color name="tab_selected_top">#234065</color>
-	<color name="tab_selected_center">#09264f</color>
-	<color name="tab_selected_bottom">#163255</color>
+	<color name="tab_selected_bottom">#09264f</color>
 	
 	<color name="tab_dim_top">#082048</color>
-	<color name="tab_dim_center">#02112f</color>
-	<color name="tab_dim_bottom">#051638</color>
+	<color name="tab_dim_bottom">#02112f</color>
 	
-	<color name="tab_text_deselected">#bbbbbb</color>
+	<color name="tab_text_deselected">#aaaaaa</color>
 	<color name="tab_text_selected">#f5f5f5</color>
 	
-	<color name="header_top">#02081f</color>
-	<color name="header_bottom">#091537</color>
+	<color name="header_top">#010413</color>
+	<color name="header_bottom">#051026</color>
 	
 	<color name="header_line">#3E445f</color>
 	<color name="header_text">#cccccc</color>

@@ -4,10 +4,7 @@
 	>
 	<gradient
 		android:startColor="@color/tab_selected_top"
-		android:centerColor="@color/tab_selected_center"
 		android:endColor="@color/tab_selected_bottom"
-		
-		android:centerX="0.75"
 		
 		android:angle="270"
 		/>
