@@ -3,13 +3,8 @@ package com.sunlightlabs.congress.java;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sunlightlabs.congress.java.service.CongressLegislatorService;
-import com.sunlightlabs.congress.java.service.LegislatorService;
-
 public class Legislator implements Comparable<Legislator> {
 	
-	public static LegislatorService service = new CongressLegislatorService();
-
 	public String bioguide_id, govtrack_id;
 	public String first_name, last_name, nickname, name_suffix;
 	public String title, party, state, district;

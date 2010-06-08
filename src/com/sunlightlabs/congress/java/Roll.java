@@ -9,8 +9,7 @@ import org.apache.http.impl.cookie.DateParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sunlightlabs.congress.java.service.CongressRollService;
-import com.sunlightlabs.congress.java.service.RollService;
+import com.sunlightlabs.congress.java.service.Services;
 
 public class Roll {
 	public static final int OTHER = -1;
@@ -18,8 +17,6 @@ public class Roll {
 	public static final int NAY = 1;
 	public static final int NOT_VOTING = 2;
 	public static final int PRESENT = 3;
-	
-	public static RollService service = new CongressRollService();
 
 	// basic
 	public String id, chamber, type, question, result, bill_id, required; 
@@ -63,7 +60,7 @@ public class Roll {
 			this.voter_id = voter_id;
 			this.vote_name = json.getString("vote");
 			this.vote = Roll.voteForName(this.vote_name);
-			this.voter = Legislator.service.fromDrumbone(json.getJSONObject("voter"));
+			this.voter = Services.legislator.fromDrumbone(json.getJSONObject("voter"));
 		}
 		
 		public Vote(String voter_id, String vote_name) {

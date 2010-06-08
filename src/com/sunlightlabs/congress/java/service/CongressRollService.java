@@ -8,7 +8,6 @@ import org.apache.http.impl.cookie.DateUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Drumbone;
 import com.sunlightlabs.congress.java.Roll;
@@ -44,7 +43,7 @@ public class CongressRollService implements RollService {
 						.parseDate(json.getString("voted_at"), Drumbone.dateFormat);
 
 			if (!json.isNull("bill"))
-				roll.bill = Bill.service.fromDrumbone(json.getJSONObject("bill"));
+				roll.bill = Services.bill.fromDrumbone(json.getJSONObject("bill"));
 
 			if (!json.isNull("vote_breakdown")) {
 				JSONObject vote_breakdown = json.getJSONObject("vote_breakdown");

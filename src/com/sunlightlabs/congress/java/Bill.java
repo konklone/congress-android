@@ -10,12 +10,7 @@ import org.apache.http.impl.cookie.DateUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sunlightlabs.congress.java.service.BillService;
-import com.sunlightlabs.congress.java.service.CongressBillService;
-
 public class Bill {
-
-	public static BillService service = new CongressBillService();
 
 	// basic
 	public String id, code, type, state, chamber;

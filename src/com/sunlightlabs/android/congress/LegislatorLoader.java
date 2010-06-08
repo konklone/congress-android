@@ -9,6 +9,7 @@ import android.os.Bundle;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Legislator;
+import com.sunlightlabs.congress.java.service.Services;
 
 public class LegislatorLoader extends Activity {
 	private LoadLegislatorTask loadLegislatorTask = null;
@@ -64,7 +65,7 @@ public class LegislatorLoader extends Activity {
     	@Override
     	protected Legislator doInBackground(String... ids) {
     		try {
-				return Legislator.service.find(ids[0]);
+				return Services.legislator.find(ids[0]);
 			} catch(CongressException exception) {
 				return null;
 			}
