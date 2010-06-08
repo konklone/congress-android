@@ -40,7 +40,7 @@ import com.sunlightlabs.android.congress.utils.LocationUpdater.LocationUpdateabl
 import com.sunlightlabs.congress.java.Committee;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Legislator;
-import com.sunlightlabs.congress.java.service.Services;
+import com.sunlightlabs.services.Services;
 
 public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsPhoto, LocationUpdateable<LegislatorList>, AddressUpdateable<LegislatorList> {
 	private final static int SEARCH_ZIP = 0;
@@ -436,19 +436,19 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			try {
 				switch (searchType()) {
 				case SEARCH_ZIP:
-					temp = Services.legislator.allForZipCode(zipCode);
+					temp = Services.legislators.allForZipCode(zipCode);
 					break;
 				case SEARCH_LOCATION:
-					temp = Services.legislator.allForLatLong(latitude, longitude);
+					temp = Services.legislators.allForLatLong(latitude, longitude);
 					break;
 				case SEARCH_LASTNAME:
-					temp = Services.legislator.allWhere("lastname__istartswith", lastName);
+					temp = Services.legislators.allWhere("lastname__istartswith", lastName);
 					break;
 				case SEARCH_COMMITTEE:
 					temp = Committee.find(committeeId).members;
 					break;
 				case SEARCH_STATE:
-					temp = Services.legislator.allWhere("state", state);
+					temp = Services.legislators.allWhere("state", state);
 					break;
 				default:
 					return legislators;

@@ -1,4 +1,4 @@
-package com.sunlightlabs.congress.java.service;
+package com.sunlightlabs.services.congress;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,8 @@ import org.json.JSONObject;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Drumbone;
+import com.sunlightlabs.services.BillService;
+import com.sunlightlabs.services.Services;
 
 public class CongressBillService implements BillService {
 
@@ -92,7 +94,7 @@ public class CongressBillService implements BillService {
 				bill.enacted = json.getBoolean("enacted");
 
 			if (!json.isNull("sponsor"))
-				bill.sponsor = Services.legislator.fromDrumbone(json.getJSONObject("sponsor"));
+				bill.sponsor = Services.legislators.fromDrumbone(json.getJSONObject("sponsor"));
 
 			if (!json.isNull("summary"))
 				bill.summary = json.getString("summary");

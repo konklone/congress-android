@@ -31,7 +31,7 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Legislator;
 import com.sunlightlabs.congress.java.Roll;
-import com.sunlightlabs.congress.java.service.Services;
+import com.sunlightlabs.services.Services;
 
 public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private String id;
@@ -242,7 +242,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		@Override
 		public Roll doInBackground(String... sections) {
 			try {
-				return Services.roll.find(rollId, sections[0]);
+				return Services.rolls.find(rollId, sections[0]);
 			} catch (CongressException exception) {
 				this.exception = exception;
 				return null;

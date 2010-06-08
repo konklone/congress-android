@@ -1,4 +1,4 @@
-package com.sunlightlabs.congress.java.service;
+package com.sunlightlabs.services;
 
 import java.util.ArrayList;
 

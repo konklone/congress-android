@@ -1,4 +1,4 @@
-package com.sunlightlabs.congress.java.service;
+package com.sunlightlabs.services.congress;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,7 @@ import android.net.Uri;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Legislator;
 import com.sunlightlabs.congress.java.Sunlight;
+import com.sunlightlabs.services.LegislatorService;
 
 public class CongressLegislatorService implements LegislatorService {
 

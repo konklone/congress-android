@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
-import com.sunlightlabs.congress.java.service.Services;
+import com.sunlightlabs.services.Services;
 
 public class BillList extends ListActivity {
 	private static final int BILLS = 20;
@@ -194,13 +194,13 @@ public class BillList extends ListActivity {
 
 				switch (context.type) {
 				case BILLS_RECENT:
-					return Services.bill.recentlyIntroduced(BILLS, page);
+					return Services.bills.recentlyIntroduced(BILLS, page);
 				case BILLS_LAW:
-					return Services.bill.recentLaws(BILLS, page);
+					return Services.bills.recentLaws(BILLS, page);
 				case BILLS_LATEST_VOTES:
-					return Services.bill.latestVotes(BILLS, page);
+					return Services.bills.latestVotes(BILLS, page);
 				case BILLS_SPONSOR:
-					return Services.bill.recentlySponsored(BILLS, context.sponsor_id, page);
+					return Services.bills.recentlySponsored(BILLS, context.sponsor_id, page);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
 				}

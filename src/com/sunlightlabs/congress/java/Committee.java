@@ -6,7 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sunlightlabs.congress.java.service.Services;
+import com.sunlightlabs.services.Services;
 
 public class Committee implements Comparable<Committee> {
 
@@ -30,7 +30,7 @@ public class Committee implements Comparable<Committee> {
 			members = new ArrayList<Legislator>();
 			JSONArray memberList = json.getJSONArray("members");
 			for (int i=0; i<memberList.length(); i++)
-				members.add(Services.legislator.fromSunlight(memberList.getJSONObject(i)
+				members.add(Services.legislators.fromSunlight(memberList.getJSONObject(i)
 						.getJSONObject("legislator")));
 		}
 	}

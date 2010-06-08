@@ -1,4 +1,4 @@
-package com.sunlightlabs.congress.java.service;
+package com.sunlightlabs.services.congress;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,6 +12,8 @@ import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Drumbone;
 import com.sunlightlabs.congress.java.Roll;
 import com.sunlightlabs.congress.java.Roll.Vote;
+import com.sunlightlabs.services.RollService;
+import com.sunlightlabs.services.Services;
 
 public class CongressRollService implements RollService {
 
@@ -43,7 +45,7 @@ public class CongressRollService implements RollService {
 						.parseDate(json.getString("voted_at"), Drumbone.dateFormat);
 
 			if (!json.isNull("bill"))
-				roll.bill = Services.bill.fromDrumbone(json.getJSONObject("bill"));
+				roll.bill = Services.bills.fromDrumbone(json.getJSONObject("bill"));
 
 			if (!json.isNull("vote_breakdown")) {
 				JSONObject vote_breakdown = json.getJSONObject("vote_breakdown");
