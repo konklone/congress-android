@@ -435,19 +435,19 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			try {
 				switch (searchType()) {
 				case SEARCH_ZIP:
-					temp = Legislator.allForZipCode(zipCode);
+					temp = Legislator.service.allForZipCode(zipCode);
 					break;
 				case SEARCH_LOCATION:
-					temp = Legislator.allForLatLong(latitude, longitude);
+					temp = Legislator.service.allForLatLong(latitude, longitude);
 					break;
 				case SEARCH_LASTNAME:
-					temp = Legislator.allWhere("lastname__istartswith", lastName);
+					temp = Legislator.service.allWhere("lastname__istartswith", lastName);
 					break;
 				case SEARCH_COMMITTEE:
 					temp = Committee.find(committeeId).members;
 					break;
 				case SEARCH_STATE:
-					temp = Legislator.allWhere("state", state);
+					temp = Legislator.service.allWhere("state", state);
 					break;
 				default:
 					return legislators;

@@ -64,7 +64,7 @@ public class LegislatorLoader extends Activity {
     	@Override
     	protected Legislator doInBackground(String... ids) {
     		try {
-				return Legislator.find(ids[0]);
+				return Legislator.service.find(ids[0]);
 			} catch(CongressException exception) {
 				return null;
 			}

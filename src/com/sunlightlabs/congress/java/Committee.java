@@ -20,7 +20,7 @@ public class Committee implements Comparable<Committee> {
 		return committeeFor(Sunlight.url("committees.get", "id=" + id));
 	}
 	
-	public Committee(JSONObject json) throws JSONException {
+	public Committee(JSONObject json) throws JSONException, CongressException {
 		id = json.getString("id");
 		name = json.getString("name");
 		chamber = json.getString("chamber");
@@ -29,7 +29,8 @@ public class Committee implements Comparable<Committee> {
 			members = new ArrayList<Legislator>();
 			JSONArray memberList = json.getJSONArray("members");
 			for (int i=0; i<memberList.length(); i++)
-				members.add(Legislator.fromSunlight(memberList.getJSONObject(i).getJSONObject("legislator")));
+				members.add(Legislator.service.fromSunlight(memberList.getJSONObject(i)
+						.getJSONObject("legislator")));
 		}
 	}
 	

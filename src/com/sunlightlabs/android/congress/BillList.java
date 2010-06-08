@@ -193,13 +193,13 @@ public class BillList extends ListActivity {
 
 				switch (context.type) {
 				case BILLS_RECENT:
-					return Bill.recentlyIntroduced(BILLS, page);
+					return Bill.service.recentlyIntroduced(BILLS, page);
 				case BILLS_LAW:
-					return Bill.recentLaws(BILLS, page);
+					return Bill.service.recentLaws(BILLS, page);
 				case BILLS_LATEST_VOTES:
-					return Bill.latestVotes(BILLS, page);
+					return Bill.service.latestVotes(BILLS, page);
 				case BILLS_SPONSOR:
-					return Bill.recentlySponsored(BILLS, context.sponsor_id, page);
+					return Bill.service.recentlySponsored(BILLS, context.sponsor_id, page);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
 				}

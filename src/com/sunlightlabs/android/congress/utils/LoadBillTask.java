@@ -24,7 +24,7 @@ public class LoadBillTask extends AsyncTask<String,Void,Bill> {
 	@Override
 	public Bill doInBackground(String... sections) {
 		try {
-			return Bill.find(billId, sections[0]);
+			return Bill.service.find(billId, sections[0]);
 		} catch (CongressException exception) {
 			this.exception = exception;
 			return null;

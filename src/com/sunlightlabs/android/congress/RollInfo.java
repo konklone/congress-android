@@ -241,7 +241,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		@Override
 		public Roll doInBackground(String... sections) {
 			try {
-				return Roll.find(rollId, sections[0]);
+				return Roll.service.find(rollId, sections[0]);
 			} catch (CongressException exception) {
 				this.exception = exception;
 				return null;
