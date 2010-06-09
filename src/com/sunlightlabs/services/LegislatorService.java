@@ -2,16 +2,10 @@ package com.sunlightlabs.services;
 
 import java.util.ArrayList;
 
-import org.json.JSONObject;
-
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Legislator;
 
 public interface LegislatorService {
-	Legislator fromDrumbone(JSONObject json) throws CongressException;
-
-	Legislator fromSunlight(JSONObject json) throws CongressException;
-
 	ArrayList<Legislator> allWhere(String key, String value) throws CongressException;
 
 	ArrayList<Legislator> allForZipCode(String zip) throws CongressException;

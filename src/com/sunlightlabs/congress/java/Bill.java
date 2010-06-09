@@ -5,11 +5,6 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.http.impl.cookie.DateParseException;
-import org.apache.http.impl.cookie.DateUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class Bill {
 
 	// basic
@@ -43,29 +38,11 @@ public class Bill {
 	public static class Action {
 		public String type, text;
 		public Date acted_at;
-		
-		public Action(JSONObject json) throws JSONException, DateParseException {
-			text = json.getString("text");
-			type = json.getString("type");
-			acted_at = DateUtils.parseDate(json.getString("acted_at"), Drumbone.dateFormat);
-		}
 	}
 	
 	public static class Vote {
 		public String result, text, how, type, chamber, roll_id;
 		public Date voted_at;
-		
-		public Vote(JSONObject json) throws JSONException, DateParseException {
-			result = json.getString("result");
-			text = json.getString("text");
-			how = json.getString("how");
-			type = json.getString("type");
-			chamber = json.getString("chamber");
-			voted_at = DateUtils.parseDate(json.getString("voted_at"), Drumbone.dateFormat);
-			
-			if (!json.isNull("roll_id"))
-				roll_id = json.getString("roll_id");
-		}
 	}
 	
 	// takes a potentially user entered, variably formatted code and transforms it into a bill_id

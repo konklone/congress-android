@@ -2,14 +2,10 @@ package com.sunlightlabs.services;
 
 import java.util.ArrayList;
 
-import org.json.JSONObject;
-
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 
 public interface BillService {
-	Bill fromDrumbone(JSONObject json) throws CongressException;
-	
 	ArrayList<Bill> recentlyIntroduced(int n, int p) throws CongressException;
 
 	ArrayList<Bill> recentLaws(int n, int p) throws CongressException;

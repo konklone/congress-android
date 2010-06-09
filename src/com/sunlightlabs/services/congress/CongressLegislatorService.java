@@ -54,7 +54,7 @@ public class CongressLegislatorService implements LegislatorService {
 			if (!json.isNull("twitter_id"))
 				legislator.twitter_id = json.getString("twitter_id");
 		} catch (JSONException e) {
-			throw new CongressException(e, "Could not instantiate a new Legislator from Drumbone.");
+			throw new CongressException(e, "Could not parse a Legislator from JSON.");
 		}
 
 		return legislator;

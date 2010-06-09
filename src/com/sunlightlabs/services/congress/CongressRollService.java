@@ -3,7 +3,6 @@ package com.sunlightlabs.services.congress;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,9 +12,10 @@ import com.sunlightlabs.congress.java.Drumbone;
 import com.sunlightlabs.congress.java.Roll;
 import com.sunlightlabs.congress.java.Roll.Vote;
 import com.sunlightlabs.services.RollService;
-import com.sunlightlabs.services.Services;
 
 public class CongressRollService implements RollService {
+	private CongressBillService billService = new CongressBillService();
+	private CongressLegislatorService legislatorService = new CongressLegislatorService();
 
 	public Roll fromDrumbone(JSONObject json) throws CongressException {
 		Roll roll = new Roll();
@@ -45,7 +45,7 @@ public class CongressRollService implements RollService {
 						.parseDate(json.getString("voted_at"), Drumbone.dateFormat);
 
 			if (!json.isNull("bill"))
-				roll.bill = Services.bills.fromDrumbone(json.getJSONObject("bill"));
+				roll.bill = billService.fromDrumbone(json.getJSONObject("bill"));
 
 			if (!json.isNull("vote_breakdown")) {
 				JSONObject vote_breakdown = json.getJSONObject("vote_breakdown");
@@ -71,8 +71,9 @@ public class CongressRollService implements RollService {
 				Iterator<?> iter = votersObject.keys();
 				while (iter.hasNext()) {
 					String voter_id = (String) iter.next();
-					roll.voters.put(voter_id, new Vote(voter_id, votersObject
-							.getJSONObject(voter_id)));
+					Vote vote = voteFromDrumbone(votersObject.getJSONObject(voter_id));
+					vote.voter_id = voter_id;
+					roll.voters.put(voter_id, vote);
 				}
 			}
 
@@ -86,11 +87,8 @@ public class CongressRollService implements RollService {
 							new Vote(voter_id, voterIdsObject.getString(voter_id)));
 				}
 			}
-		} catch (JSONException e) {
-
-		} catch (DateParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new CongressException(e, "Could not parse a Roll from JSON.");
 		}
 
 		return roll;
@@ -107,6 +105,19 @@ public class CongressRollService implements RollService {
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);
 		}
+	}
+
+	public Vote voteFromDrumbone(JSONObject json) throws CongressException {
+		try {
+			Vote vote = new Vote();
+			vote.vote_name = json.getString("vote");
+			vote.vote = Roll.voteForName(vote.vote_name);
+			vote.voter = legislatorService.fromDrumbone(json.getJSONObject("voter"));
+			return vote;
+		} catch (JSONException e) {
+			throw new CongressException(e, "Could not parse a Roll.Vote from JSON.");
+		}
+
 	}
 
 }

@@ -2,7 +2,6 @@ package com.sunlightlabs.services.congress;
 
 import java.util.ArrayList;
 
-import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,10 +10,12 @@ import org.json.JSONObject;
 import com.sunlightlabs.congress.java.Bill;
 import com.sunlightlabs.congress.java.CongressException;
 import com.sunlightlabs.congress.java.Drumbone;
+import com.sunlightlabs.congress.java.Bill.Action;
+import com.sunlightlabs.congress.java.Bill.Vote;
 import com.sunlightlabs.services.BillService;
-import com.sunlightlabs.services.Services;
 
 public class CongressBillService implements BillService {
+	private CongressLegislatorService legislatorService = new CongressLegislatorService();
 
 	public Bill fromDrumbone(JSONObject json) throws CongressException {
 		Bill bill = new Bill();
@@ -94,7 +95,7 @@ public class CongressBillService implements BillService {
 				bill.enacted = json.getBoolean("enacted");
 
 			if (!json.isNull("sponsor"))
-				bill.sponsor = Services.legislators.fromDrumbone(json.getJSONObject("sponsor"));
+				bill.sponsor = legislatorService.fromDrumbone(json.getJSONObject("sponsor"));
 
 			if (!json.isNull("summary"))
 				bill.summary = json.getString("summary");
@@ -105,7 +106,7 @@ public class CongressBillService implements BillService {
 
 				// load in descending order
 				for (int i = 0; i < length; i++)
-					bill.votes.add(0, new Bill.Vote(voteObjects.getJSONObject(i)));
+					bill.votes.add(0, voteFromDrumbone(voteObjects.getJSONObject(i)));
 
 				if (!bill.votes.isEmpty()) {
 					Bill.Vote vote = bill.votes.get(bill.votes.size() - 1);
@@ -120,12 +121,10 @@ public class CongressBillService implements BillService {
 
 				// load in descending order
 				for (int i = 0; i < length; i++)
-					bill.actions.add(0, new Bill.Action(actionObjects.getJSONObject(i)));
+					bill.actions.add(0, actionFromJson(actionObjects.getJSONObject(i)));
 			}
-		} catch (JSONException e) {
-			throw new CongressException(e, "Could not instantiate a new Bill from Drumbone.");
-		} catch (DateParseException e) {
-			throw new CongressException(e, "Could not instantiate a new Bill from Drumbone.");
+		} catch (Exception e) {
+			throw new CongressException(e, "Could not parse a Bill from JSON.");
 		}
 
 		return bill;
@@ -180,6 +179,36 @@ public class CongressBillService implements BillService {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);
 		}
 		return bills;
+	}
+
+	public Vote voteFromDrumbone(JSONObject json) throws CongressException {
+		try {
+			Vote vote = new Vote();
+			vote.result = json.getString("result");
+			vote.text = json.getString("text");
+			vote.how = json.getString("how");
+			vote.type = json.getString("type");
+			vote.chamber = json.getString("chamber");
+			vote.voted_at = DateUtils.parseDate(json.getString("voted_at"), Drumbone.dateFormat);
+
+			if (!json.isNull("roll_id"))
+				vote.roll_id = json.getString("roll_id");
+			return vote;
+		} catch (Exception e) {
+			throw new CongressException(e, "Could not parse a Bill.Vote from JSON");
+		}
+	}
+
+	public Action actionFromJson(JSONObject json) throws CongressException {
+		try {
+			Action action = new Action();
+			action.text = json.getString("text");
+			action.type = json.getString("type");
+			action.acted_at = DateUtils.parseDate(json.getString("acted_at"), Drumbone.dateFormat);
+			return action;
+		} catch (Exception e) {
+			throw new CongressException(e, "Could not parse a Bill.Action from JSON.");
+		}
 	}
 
 }

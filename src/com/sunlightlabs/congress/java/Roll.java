@@ -5,12 +5,6 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.http.impl.cookie.DateParseException;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.sunlightlabs.services.Services;
-
 public class Roll {
 	public static final int OTHER = -1;
 	public static final int AYE = 0;
@@ -55,12 +49,7 @@ public class Roll {
 		
 		public Legislator voter;
 		
-		public Vote(String voter_id, JSONObject json) throws JSONException, DateParseException,
-				CongressException {
-			this.voter_id = voter_id;
-			this.vote_name = json.getString("vote");
-			this.vote = Roll.voteForName(this.vote_name);
-			this.voter = Services.legislators.fromDrumbone(json.getJSONObject("voter"));
+		public Vote() {
 		}
 		
 		public Vote(String voter_id, String vote_name) {
