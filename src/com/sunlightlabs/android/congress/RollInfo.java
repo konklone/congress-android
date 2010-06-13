@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -25,7 +24,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
-import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -91,9 +89,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
-		String voter_id = (String) v.getTag();
-    	if (voter_id != null)
-    		startActivity(Utils.legislatorIntent(voter_id));
+		VoterAdapter.ViewHolder tag = (VoterAdapter.ViewHolder) v.getTag();
+		if (tag != null && tag instanceof VoterAdapter.ViewHolder)
+    		startActivity(Utils.legislatorIntent(tag.bioguide_id));
 	}
 	
 	public void onLoadRoll(String tag, Roll roll) {
@@ -188,6 +186,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	
 	public void loadPhoto(String bioguide_id) {
 		if (!loadPhotoTasks.containsKey(bioguide_id)) {
+			
 			// if we have free space, fetch the photo
 			if (loadPhotoTasks.size() <= MAX_PHOTO_TASKS) 
 				loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
@@ -206,7 +205,10 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	public void onLoadPhoto(Drawable photo, Object tag) {
 		loadPhotoTasks.remove((String) tag);
 		
-		View result = getListView().findViewWithTag(tag);
+		VoterAdapter.ViewHolder holder = new VoterAdapter.ViewHolder();
+		holder.bioguide_id = (String) tag;
+		
+		View result = getListView().findViewWithTag(holder);
 		if (result != null) {
 			if (photo != null)
 				((ImageView) result.findViewById(R.id.photo)).setImageDrawable(photo);
@@ -259,12 +261,12 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		}
 	}
 	
-	private class VoterAdapter extends ArrayAdapter<Roll.Vote> {
+	private static class VoterAdapter extends ArrayAdapter<Roll.Vote> {
 		LayoutInflater inflater;
-		Activity context;
+		RollInfo context;
 		Resources resources;
 
-	    public VoterAdapter(Activity context, ArrayList<Roll.Vote> items) {
+	    public VoterAdapter(RollInfo context, ArrayList<Roll.Vote> items) {
 	        super(context, 0, items);
 	        this.context = context;
 	        this.resources = context.getResources();
@@ -276,23 +278,34 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	    }
 
 		public View getView(int position, View convertView, ViewGroup parent) {
+			View view;
+			ViewHolder holder;
+			if (convertView == null) {
+				view = inflater.inflate(R.layout.legislator_voter, null);
+				
+				holder = new ViewHolder();
+				holder.name = (TextView) view.findViewById(R.id.name);
+				holder.position = (TextView) view.findViewById(R.id.position);
+				holder.vote = (TextView) view.findViewById(R.id.vote);
+				holder.photo = (ImageView) view.findViewById(R.id.photo);
+				
+				view.setTag(holder);
+			} else {
+				view = convertView;
+				holder = (ViewHolder) view.getTag();
+			}
+			
 			Roll.Vote vote = getItem(position);
 			Legislator legislator = vote.voter;
 			
-			LinearLayout view;
-			if (convertView == null)
-				view = (LinearLayout) inflater.inflate(R.layout.legislator_voter, null);
-			else
-				view = (LinearLayout) convertView;
-			
 			// used as the hook to get the legislator image in place when it's loaded
 			// and to link to the legislator's activity
-			view.setTag(vote.voter_id);
+			holder.bioguide_id = vote.voter_id;
 			
-			((TextView) view.findViewById(R.id.name)).setText(nameFor(legislator));
-			((TextView) view.findViewById(R.id.position)).setText(positionFor(legislator));
+			holder.name.setText(nameFor(legislator));
+			holder.position.setText(positionFor(legislator));
 			
-			TextView voteView = (TextView) view.findViewById(R.id.vote);
+			TextView voteView = holder.vote;
 			int value = vote.vote;
 			switch (value) {
 			case Roll.YEA:
@@ -322,14 +335,13 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 				voteView.setTextColor(resources.getColor(android.R.color.white));
 				break;
 			}
-			
-			ImageView photoView = (ImageView) view.findViewById(R.id.photo); 
+			 
 			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_MEDIUM, legislator.bioguide_id, context);
 			if (photo != null)
-				photoView.setImageDrawable(photo);
+				holder.photo.setImageDrawable(photo);
 			else {
-				photoView.setImageResource(R.drawable.loading_photo);
-				RollInfo.this.loadPhoto(legislator.bioguide_id);
+				holder.photo.setImageResource(R.drawable.loading_photo);
+				context.loadPhoto(legislator.bioguide_id);
 			}
 			
 			return view;
@@ -357,6 +369,18 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 				position = "Representative for " + stateName + "-" + district;
 			
 			return "(" + legislator.party + ") " + position; 
+		}
+		
+		static class ViewHolder {
+			TextView name, position, vote;
+			ImageView photo;
+			String bioguide_id;
+			
+			@Override
+			public boolean equals(Object holder) {
+				ViewHolder other = (ViewHolder) holder;
+				return other != null && other instanceof ViewHolder && this.bioguide_id.equals(other.bioguide_id);
+			}
 		}
 		
 	}

@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
@@ -184,9 +183,9 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	}
 
 	public void onLoadPhoto(Drawable photo, Object tag) {
-		loadPhotoTasks.remove(tag);
+		loadPhotoTasks.remove((String) tag);
 		
-		LegislatorAdapter.ViewHolder holder = ((LegislatorAdapter) getListAdapter()).new ViewHolder();
+		LegislatorAdapter.ViewHolder holder = new LegislatorAdapter.ViewHolder();
 		holder.bioguide_id = (String) tag;
 
 		View result = getListView().findViewWithTag(holder);
@@ -280,11 +279,11 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	}
 
 
-	private class LegislatorAdapter extends ArrayAdapter<Legislator> {
+	private static class LegislatorAdapter extends ArrayAdapter<Legislator> {
 		LayoutInflater inflater;
-		Activity context;
+		LegislatorList context;
 
-		public LegislatorAdapter(Activity context, ArrayList<Legislator> items) {
+		public LegislatorAdapter(LegislatorList context, ArrayList<Legislator> items) {
 			super(context, 0, items);
 			this.context = context;
 			inflater = LayoutInflater.from(context);
@@ -320,7 +319,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 				holder.photo.setImageDrawable(photo);
 			else {
 				holder.photo.setImageResource(R.drawable.loading_photo);
-				LegislatorList.this.loadPhoto(legislator.bioguide_id);
+				context.loadPhoto(legislator.bioguide_id);
 			}
 
 			return view;
@@ -350,7 +349,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			return "(" + legislator.party + ") " + position; 
 		}
 		
-		public class ViewHolder {
+		static class ViewHolder {
 			TextView name, position;
 			ImageView photo;
 			String bioguide_id;
