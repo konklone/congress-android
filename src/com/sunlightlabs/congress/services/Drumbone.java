@@ -15,11 +15,13 @@ import com.sunlightlabs.congress.models.CongressException;
 public class Drumbone {
 	public static final String[] dateFormat = new String[] {"yy/MM/dd HH:mm:ss Z"};
 	
-	public static String userAgent = "";
+	public static final String baseUrl = "http://drumbone.services.sunlightlabs.com/v1/api/";
+	public static final String format = "json";
+	
+	// filled in by the client
+	public static String userAgent = "com.sunlightlabs.congress.services.Drumbone";
+	public static String appVersion = "unversioned";
 	public static String apiKey = "";
-	public static String baseUrl = "";
-	public static String appVersion = "";
-	public static String format = "json";
 	
 	
 	public static String url(String method, String queryString) {

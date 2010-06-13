@@ -27,7 +27,6 @@ public class Utils {
 		Resources resources = context.getResources();
 		Drumbone.userAgent = resources.getString(R.string.drumbone_user_agent);
 		Drumbone.apiKey = resources.getString(R.string.sunlight_api_key);
-		Drumbone.baseUrl = resources.getString(R.string.drumbone_base_url);
 		Drumbone.appVersion = resources.getString(R.string.app_version);
 	}
 
