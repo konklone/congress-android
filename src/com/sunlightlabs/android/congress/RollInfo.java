@@ -210,8 +210,8 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		if (result != null) {
 			if (photo != null)
 				((ImageView) result.findViewById(R.id.photo)).setImageDrawable(photo);
-			else // leave as loading, no better solution I can think of right now
-				((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.loading_photo);
+			else // don't know the gender from here, default to female (to balance out how the shortcut image defaults to male)
+				((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.no_photo_female);
 		}
 		
 		// if there's any in the queue, send the next one
