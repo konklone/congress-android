@@ -3,9 +3,9 @@ package com.sunlightlabs.android.congress.utils;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.sunlightlabs.congress.java.Bill;
-import com.sunlightlabs.congress.java.CongressException;
-import com.sunlightlabs.services.Services;
+import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.services.BillService;
 
 public class LoadBillTask extends AsyncTask<String,Void,Bill> {
 	private LoadsBill context;
@@ -25,7 +25,7 @@ public class LoadBillTask extends AsyncTask<String,Void,Bill> {
 	@Override
 	public Bill doInBackground(String... sections) {
 		try {
-			return Services.bills.find(billId, sections[0]);
+			return BillService.find(billId, sections[0]);
 		} catch (CongressException exception) {
 			this.exception = exception;
 			return null;

@@ -27,9 +27,9 @@ import com.sunlightlabs.android.congress.utils.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
-import com.sunlightlabs.congress.java.Bill;
-import com.sunlightlabs.congress.java.CongressException;
-import com.sunlightlabs.congress.java.Legislator;
+import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.Legislator;
 
 public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, LoadBillTask.LoadsBill {	
 	// fields from the intent 

@@ -17,8 +17,8 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.congress.java.Bill;
-import com.sunlightlabs.congress.java.CongressException;
+import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.CongressException;
 
 public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill {
 	private LoadBillTask loadBillTask;

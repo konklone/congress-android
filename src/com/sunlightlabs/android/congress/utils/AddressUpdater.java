@@ -10,7 +10,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 
-import com.sunlightlabs.congress.java.CongressException;
+import com.sunlightlabs.congress.models.CongressException;
 
 public class AddressUpdater extends AsyncTask<Location, Void, String> {
 	// cache the addresses obtained for different locations

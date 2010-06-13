@@ -35,8 +35,8 @@ import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.android.congress.utils.ViewWrapper;
 import com.sunlightlabs.android.congress.utils.AddressUpdater.AddressUpdateable;
 import com.sunlightlabs.android.congress.utils.LocationUpdater.LocationUpdateable;
-import com.sunlightlabs.congress.java.Bill;
-import com.sunlightlabs.congress.java.CongressException;
+import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.CongressException;
 
 public class MainMenu extends ListActivity implements LocationUpdateable<MainMenu>, AddressUpdateable<MainMenu> {
 	public static final int RESULT_ZIP = 1;

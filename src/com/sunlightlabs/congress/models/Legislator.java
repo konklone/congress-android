@@ -1,4 +1,4 @@
-package com.sunlightlabs.congress.java;
+package com.sunlightlabs.congress.models;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -20,9 +20,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.congress.java.Bill;
-import com.sunlightlabs.congress.java.CongressException;
-import com.sunlightlabs.services.Services;
+import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.services.BillService;
 
 public class BillList extends ListActivity {
 	private static final int BILLS = 20;
@@ -194,13 +194,13 @@ public class BillList extends ListActivity {
 
 				switch (context.type) {
 				case BILLS_RECENT:
-					return Services.bills.recentlyIntroduced(BILLS, page);
+					return BillService.recentlyIntroduced(BILLS, page);
 				case BILLS_LAW:
-					return Services.bills.recentLaws(BILLS, page);
+					return BillService.recentLaws(BILLS, page);
 				case BILLS_LATEST_VOTES:
-					return Services.bills.latestVotes(BILLS, page);
+					return BillService.latestVotes(BILLS, page);
 				case BILLS_SPONSOR:
-					return Services.bills.recentlySponsored(BILLS, context.sponsor_id, page);
+					return BillService.recentlySponsored(BILLS, context.sponsor_id, page);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
 				}

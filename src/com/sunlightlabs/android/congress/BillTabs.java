@@ -7,7 +7,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.congress.java.Bill;
+import com.sunlightlabs.congress.models.Bill;
 
 public class BillTabs extends TabActivity {
 	private String id, type, code, short_title, official_title;

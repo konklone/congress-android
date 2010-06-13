@@ -12,7 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.sunlightlabs.congress.java.CongressException;
+import com.sunlightlabs.congress.models.CongressException;
 
 public class LocationUpdater implements LocationListener {
 	private static final String TAG = "CONGRESS";

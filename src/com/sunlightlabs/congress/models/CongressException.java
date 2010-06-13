@@ -1,4 +1,4 @@
-package com.sunlightlabs.congress.java;
+package com.sunlightlabs.congress.models;
 
 public class CongressException extends Exception {
 	

@@ -30,10 +30,10 @@ import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
-import com.sunlightlabs.congress.java.Committee;
-import com.sunlightlabs.congress.java.CongressException;
-import com.sunlightlabs.congress.java.Legislator;
-import com.sunlightlabs.services.Services;
+import com.sunlightlabs.congress.models.Committee;
+import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.Legislator;
+import com.sunlightlabs.congress.services.CommitteeService;
 
 public class LegislatorProfile extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private String id, titledName, lastName, party, gender, state, domain, phone, website;
@@ -390,7 +390,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 			ArrayList<Committee> temp;
 			
 			try {
-				temp = Services.committees.forLegislator(bioguideId[0]);
+				temp = CommitteeService.forLegislator(bioguideId[0]);
 			} catch (CongressException e) {
 				this.exception = new CongressException(e, "Error loading committees.");
 				return null;

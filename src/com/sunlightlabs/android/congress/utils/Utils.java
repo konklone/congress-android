@@ -16,11 +16,11 @@ import com.sunlightlabs.android.congress.BillTabs;
 import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.RollInfo;
-import com.sunlightlabs.congress.java.Bill;
-import com.sunlightlabs.congress.java.CongressException;
-import com.sunlightlabs.congress.java.Drumbone;
-import com.sunlightlabs.congress.java.Legislator;
-import com.sunlightlabs.congress.java.Sunlight;
+import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.Legislator;
+import com.sunlightlabs.congress.services.Drumbone;
+import com.sunlightlabs.congress.services.Sunlight;
 
 public class Utils {
 	public static void setupDrumbone(Context context) {
