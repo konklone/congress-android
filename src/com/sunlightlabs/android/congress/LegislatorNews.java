@@ -15,12 +15,10 @@ import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.yahoo.news.NewsException;
 import com.sunlightlabs.yahoo.news.NewsItem;
@@ -165,12 +163,9 @@ public class LegislatorNews extends ListActivity {
         	return 1;
         }
 
-		public View getView(int position, View convertView, ViewGroup parent) {
-			LinearLayout view;
-			if (convertView == null)
-				view = (LinearLayout) inflater.inflate(R.layout.news_item, null);
-			else
-				view = (LinearLayout) convertView;
+		public View getView(int position, View view, ViewGroup parent) {
+			if (view == null)
+				view = inflater.inflate(R.layout.news_item, null);
 			
 			NewsItem item = getItem(position);
 			

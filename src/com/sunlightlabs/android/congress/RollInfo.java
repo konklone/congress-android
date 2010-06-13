@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -124,7 +123,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		MergeAdapter adapter = new MergeAdapter();
 		
-		LinearLayout header = (LinearLayout) inflater.inflate(R.layout.roll_basic, null);
+		View header = inflater.inflate(R.layout.roll_basic, null);
 		((TextView) header.findViewById(R.id.question)).setText(roll.question);
 		((TextView) header.findViewById(R.id.voted_at)).setText(new SimpleDateFormat("MMM dd, yyyy").format(roll.voted_at));
 		

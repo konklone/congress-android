@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -117,12 +116,9 @@ public class LegislatorTwitter extends ListActivity {
         	return 1;
         }
 
-		public View getView(int position, View convertView, ViewGroup parent) {
-			LinearLayout view;
-			if (convertView == null)
-				view = (LinearLayout) inflater.inflate(R.layout.tweet, null); 
-			else
-				view = (LinearLayout) convertView;
+		public View getView(int position, View view, ViewGroup parent) {
+			if (view == null)
+				view = inflater.inflate(R.layout.tweet, null); 
 			
 			Status tweet = getItem(position);
 			((TextView) view.findViewById(R.id.tweet_text)).setText(tweet.text);

@@ -24,11 +24,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
-import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
 import com.sunlightlabs.android.congress.utils.LocationUpdater;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -418,7 +416,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 
 		switch(id) {
 		case ABOUT:
-			ScrollView aboutView = (ScrollView) inflater.inflate(R.layout.about, null);
+			View aboutView = inflater.inflate(R.layout.about, null);
 
 			Spanned about1 = Html.fromHtml(
 					"Bill information provided by <a href=\"http://govtrack.us\">GovTrack</a>, through the Library of Congress.  Bill summaries written by the Congressional Research Service.<br/><br/>" +
@@ -447,7 +445,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 			});
 			return builder.create();
 		case FIRST:
-			ScrollView firstView = (ScrollView) inflater.inflate(R.layout.first_time, null);
+			View firstView = inflater.inflate(R.layout.first_time, null);
 
 			builder.setIcon(R.drawable.icon);
 			builder.setTitle(R.string.app_name);
@@ -457,7 +455,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 			});
 			return builder.create();
 		case CHANGELOG:
-			ScrollView changelogView = (ScrollView) inflater.inflate(R.layout.changelog, null);
+			View changelogView = inflater.inflate(R.layout.changelog, null);
 
 			Spanned changelog = Html.fromHtml(
 				"<b>&#183;</b> See full history and voting records on bills<br/><br/>" +

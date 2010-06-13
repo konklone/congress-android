@@ -14,10 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
@@ -111,12 +109,9 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
         	return 1;
         }
 
-		public View getView(int position, View convertView, ViewGroup parent) {
-			RelativeLayout view;
-			if (convertView == null)
-				view = (RelativeLayout) inflater.inflate(R.layout.bill_vote, null);
-			else
-				view = (RelativeLayout) convertView;
+		public View getView(int position, View view, ViewGroup parent) {
+			if (view == null)
+				view = inflater.inflate(R.layout.bill_vote, null);
 			
 			Bill.Vote vote = getItem(position);
 			

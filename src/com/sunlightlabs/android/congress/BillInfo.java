@@ -16,13 +16,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
-import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
@@ -49,7 +48,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	
 	private LoadBillTask loadBillTask;
 	private LoadPhotoTask loadPhotoTask;
-	private LinearLayout loadingContainer, sponsorView;
+	private View loadingContainer, sponsorView;
 	
 	private Drawable sponsorPhoto;
 	
@@ -108,7 +107,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		LayoutInflater inflater = LayoutInflater.from(this);
 		MergeAdapter adapter = new MergeAdapter();
 		
-		LinearLayout header = (LinearLayout) inflater.inflate(R.layout.bill_header, null);
+		View header = inflater.inflate(R.layout.bill_header, null);
 		
 		TextView titleView = (TextView) header.findViewById(R.id.title);
 		String title;
@@ -126,7 +125,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		adapter.addView(header);
 		
 		if (sponsor_id != null) {
-			sponsorView = (LinearLayout) inflater.inflate(R.layout.bill_sponsor, null);
+			sponsorView = inflater.inflate(R.layout.bill_sponsor, null);
 			String firstname;
 			if (sponsor_nickname != null && !sponsor_nickname.equals(""))
 				firstname = sponsor_nickname;
@@ -149,7 +148,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		} else
 			adapter.addView(inflater.inflate(R.layout.bill_no_sponsor, null));
 		
-		loadingContainer = (LinearLayout) inflater.inflate(R.layout.header_loading, null);
+		loadingContainer = inflater.inflate(R.layout.header_loading, null);
 		((TextView) loadingContainer.findViewById(R.id.header_text)).setText("Summary");
 		adapter.addView(loadingContainer);
 		
@@ -170,13 +169,13 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		
 		loadingContainer.findViewById(R.id.loading).setVisibility(View.GONE);
 		
-		LinearLayout summaryView; 
+		View summaryView; 
 		if (summary != null && summary.length() > 0) {
-			summaryView = (LinearLayout) inflater.inflate(R.layout.bill_summary, null);
+			summaryView = inflater.inflate(R.layout.bill_summary, null);
 			String formatted = Bill.formatSummary(summary, short_title);
 			((TextView) summaryView.findViewById(R.id.summary)).setText(formatted);
 		} else {
-			summaryView = (LinearLayout) inflater.inflate(R.layout.bill_no_summary, null);
+			summaryView = inflater.inflate(R.layout.bill_no_summary, null);
 			TextView noSummary = (TextView) summaryView.findViewById(R.id.no_summary);
 			noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\"" + Bill.thomasUrl(type, number, session) + "\">Read the text of this bill on THOMAS.</a>"));
         	noSummary.setMovementMethod(LinkMovementMethod.getInstance());
@@ -238,8 +237,8 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	
 	// Take the layout view given, and append all applicable bill_event TextViews
 	// describing the basic timeline of the bill
-	public void addBillTimeline(LinearLayout header) {
-		LinearLayout inner = (LinearLayout) header.findViewById(R.id.header_inner);
+	public void addBillTimeline(View header) {
+		ViewGroup inner = (ViewGroup) header.findViewById(R.id.header_inner);
 		
 		addTimelinePiece(inner, "Introduced on", introduced_at);
 		
@@ -281,7 +280,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 			addTimelinePiece(inner, "Enacted on", enacted_at);
 	}
 	
-	public void addTimelinePiece(LinearLayout container, String prefix, long timestamp) {
+	public void addTimelinePiece(ViewGroup container, String prefix, long timestamp) {
 		String date = prefix + " " + timelineFormat.format(new Date(timestamp));
 		TextView piece = (TextView) LayoutInflater.from(this).inflate(R.layout.bill_event, null);
 		piece.setText(date);

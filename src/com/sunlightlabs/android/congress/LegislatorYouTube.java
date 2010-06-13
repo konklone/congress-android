@@ -16,12 +16,10 @@ import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.youtube.Video;
 import com.sunlightlabs.youtube.YouTube;
@@ -141,24 +139,22 @@ public class LegislatorYouTube extends ListActivity {
         	return 1;
         }
 
-		public View getView(int position, View convertView, ViewGroup parent) {
-			LinearLayout view;
-			if (convertView == null)
-				view = (LinearLayout) inflater.inflate(R.layout.youtube, null);
-			else
-				view = (LinearLayout) convertView;
+		public View getView(int position, View view, ViewGroup parent) {
+			if (view == null)
+				view = inflater.inflate(R.layout.youtube, null);
 			
 			Video video = getItem(position);
+			
 			((TextView) view.findViewById(R.id.video_title)).setText(video.title);
 			
 			// make the date stand out in the description using bold text
-			StringBuilder full_desc = new StringBuilder("<b>").append(video.timestamp.format("%b %d")).append("</b>");
-			String video_desc = video.description != null ? video.description.trim() : "";
+			StringBuilder full = new StringBuilder("<b>").append(video.timestamp.format("%b %d")).append("</b>");
+			String description = video.description != null ? video.description.trim() : "";
 			
-			if(!video_desc.equals("")) { // check to see if the video has a non-empty description first
-				full_desc.append(" - ").append(video_desc);
-			}
-			((TextView) view.findViewById(R.id.video_description)).setText(Html.fromHtml(Utils.truncate(full_desc.toString(), 150)));
+			if (!description.equals("")) // check to see if the video has a non-empty description first
+				full.append(" - ").append(description);
+			
+			((TextView) view.findViewById(R.id.video_description)).setText(Html.fromHtml(Utils.truncate(full.toString(), 150)));
 			
 			return view;
 		}

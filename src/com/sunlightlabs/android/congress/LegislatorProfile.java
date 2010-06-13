@@ -21,12 +21,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
-import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -44,7 +42,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 	private ArrayList<Committee> committees;
 	
 	// need to keep this here between setupControls() and displayCommittees(), not sure why
-	private LinearLayout committeeHeader;
+	private View committeeHeader;
 	
 	private LoadPhotoTask loadPhotoTask;
 	private LoadCommitteesTask loadCommitteesTask;
@@ -206,7 +204,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 	
 	public void setupControls() {
 		LayoutInflater inflater = LayoutInflater.from(this);
-		LinearLayout mainView = (LinearLayout) inflater.inflate(R.layout.profile, null);
+		View mainView = inflater.inflate(R.layout.profile, null);
 		mainView.setEnabled(false);
 		
 		picture = (ImageView) mainView.findViewById(R.id.profile_picture);
@@ -218,7 +216,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		ArrayList<View> contactViews = new ArrayList<View>(3);
 		
 		if (phone != null && !phone.equals("")) {
-			LinearLayout phoneView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_2, null);
+			View phoneView = inflater.inflate(R.layout.icon_list_item_2, null);
 			((TextView) phoneView.findViewById(R.id.text_1)).setText("Call " + pronoun(gender) + " office");
 			((TextView) phoneView.findViewById(R.id.text_2)).setText(phone);
 			((ImageView) phoneView.findViewById(R.id.icon)).setImageResource(R.drawable.phone);
@@ -227,7 +225,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		}
 		
 		if (website != null && !website.equals("")) {
-			LinearLayout websiteView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_2, null);
+			View websiteView = inflater.inflate(R.layout.icon_list_item_2, null);
 			((TextView) websiteView.findViewById(R.id.text_1)).setText("Visit " + pronoun(gender) + " website");
 			((TextView) websiteView.findViewById(R.id.text_2)).setText(websiteName(website));
 			((ImageView) websiteView.findViewById(R.id.icon)).setImageResource(R.drawable.web);
@@ -235,13 +233,13 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 			contactViews.add(websiteView);
 		}
 		
-		LinearLayout sponsoredView = (LinearLayout) inflater.inflate(R.layout.icon_list_item_1, null);
+		View sponsoredView = inflater.inflate(R.layout.icon_list_item_1, null);
 		((TextView) sponsoredView.findViewById(R.id.text)).setText("Sponsored Bills");
 		((ImageView) sponsoredView.findViewById(R.id.icon)).setImageResource(R.drawable.bill_multiple);
 		sponsoredView.setTag("sponsored");
 		contactViews.add(sponsoredView);
 		
-		committeeHeader = (LinearLayout) inflater.inflate(R.layout.header_loading, null);
+		committeeHeader = inflater.inflate(R.layout.header_loading, null);
 		((TextView) committeeHeader.findViewById(R.id.header_text)).setText("Committees");
 		((TextView) committeeHeader.findViewById(R.id.loading_message)).setText("Loading committees...");
 		
@@ -333,12 +331,11 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
             inflater = LayoutInflater.from(context);
         }
 
+        // ignoring convertView as a recycling possibility, too small a list to be worth it
 		public View getView(int position, View convertView, ViewGroup parent) {
 			Committee committee = getItem(position);
 			
-			// ignoring convertView as a recycling possibility -
-			// the list is too small to make the extra logic worth it
-			LinearLayout view = (LinearLayout) inflater.inflate(R.layout.profile_committee, null);
+			View view = inflater.inflate(R.layout.profile_committee, null);
 			((TextView) view.findViewById(R.id.name)).setText(committee.name);
 			view.setTag(committee);
 			
