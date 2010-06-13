@@ -56,9 +56,9 @@
 			
 			android:textSize="16sp"
 			
-			android:text="Aye"
+			android:text="Yea"
 			android:textStyle="bold"
-			android:textColor="@color/aye"
+			android:textColor="@color/yea"
 			/>
 	   
 	</LinearLayout>

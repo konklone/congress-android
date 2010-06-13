@@ -62,10 +62,10 @@
 		<TableRow android:id="@+id/vote_types"
 			
 			>
-			<TextView android:id="@+id/ayes_header"
+			<TextView android:id="@+id/yeas_header"
 				android:textColor="@android:color/white"
 				android:textStyle="bold"
-				android:text="Ayes"
+				android:text="Yeas"
 				android:textSize="16dp"
 				
 				android:layout_gravity="center"
@@ -107,7 +107,7 @@
 			
 			>
 			<TextView
-				android:id="@+id/ayes"
+				android:id="@+id/yeas"
 				android:layout_gravity="center"
 				
 				android:textColor="@color/grey"

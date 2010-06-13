@@ -7,7 +7,7 @@
 	<color name="bill_failed">#ef2f25</color>
 	<color name="grey">#dddddd</color>
 	<color name="faded_grey">#999999</color>
-	<color name="aye">#4ac956</color>
+	<color name="yea">#4ac956</color>
 	<color name="nay">#ef2f25</color>
 	<color name="present">#dddddd</color>
 	<color name="not_voting">#dddddd</color>

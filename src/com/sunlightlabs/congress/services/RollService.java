@@ -57,8 +57,8 @@ public class RollService {
 			Iterator<?> iter = vote_breakdown.keys();
 			while (iter.hasNext()) {
 				String key = (String) iter.next();
-				if (key.equals("ayes"))
-					roll.ayes = vote_breakdown.getInt(key);
+				if (key.equals("ayes")) // yeah, I made a mistake in the key name in Drumbone :( 
+					roll.yeas = vote_breakdown.getInt(key);
 				else if (key.equals("nays"))
 					roll.nays = vote_breakdown.getInt(key);
 				else if (key.equals("present"))

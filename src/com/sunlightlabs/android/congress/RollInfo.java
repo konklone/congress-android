@@ -136,7 +136,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		((TextView) header.findViewById(R.id.result)).setText(roll.result);
 		
-		((TextView) header.findViewById(R.id.ayes)).setText(roll.ayes + "");
+		((TextView) header.findViewById(R.id.yeas)).setText(roll.yeas + "");
 		((TextView) header.findViewById(R.id.nays)).setText(roll.nays + "");
 		((TextView) header.findViewById(R.id.present)).setText(roll.present + "");
 		((TextView) header.findViewById(R.id.not_voting)).setText(roll.not_voting + "");
@@ -295,10 +295,10 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			TextView voteView = (TextView) view.findViewById(R.id.vote);
 			int value = vote.vote;
 			switch (value) {
-			case Roll.AYE:
-				voteView.setText("Aye");
+			case Roll.YEA:
+				voteView.setText("Yea");
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-				voteView.setTextColor(resources.getColor(R.color.aye));
+				voteView.setTextColor(resources.getColor(R.color.yea));
 				break;
 			case Roll.NAY:
 				voteView.setText("Nay");

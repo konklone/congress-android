@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class Roll {
 	public static final int OTHER = -1;
-	public static final int AYE = 0;
+	public static final int YEA = 0;
 	public static final int NAY = 1;
 	public static final int NOT_VOTING = 2;
 	public static final int PRESENT = 3;
@@ -16,7 +16,7 @@ public class Roll {
 	public String id, chamber, type, question, result, bill_id, required; 
 	public int session, number, year;
 	public Date voted_at;
-	public int ayes, nays, present, not_voting;
+	public int yeas, nays, present, not_voting;
 	public HashMap<String,Integer> otherVotes = new HashMap<String,Integer>();
 	
 	// bill
@@ -65,7 +65,7 @@ public class Roll {
 	
 	public static int voteForName(String name) {
 		if (name.equals("+"))
-			return Roll.AYE;
+			return Roll.YEA;
 		else if (name.equals("-"))
 			return Roll.NAY;
 		else if (name.equals("P"))
