@@ -16,10 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
@@ -224,6 +222,8 @@ public class BillList extends ListActivity {
 
 	private class BillAdapter extends ArrayAdapter<Bill> {
 		LayoutInflater inflater;
+		private static final int BILL = 0;
+		private static final int LOADING = 1;
 
 		public BillAdapter(Activity context, ArrayList<Bill> bills) {
 			super(context, 0, bills);
@@ -239,29 +239,39 @@ public class BillList extends ListActivity {
 		public boolean isEnabled(int position) {
 			return !((position == bills.size() - 1) && bills.get(position) == null);
 		}
+		
+		@Override
+		public int getItemViewType(int position) {
+			if (getItem(position) != null)
+				return BILL;
+			else
+				return LOADING;
+		}
+		
+		@Override
+		public int getViewTypeCount() {
+			return 2;
+		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			Bill bill = getItem(position);
 
 			if (bill == null)
-				return getLoadMoreView();
+				return getLoadingView();
 			else
 				return getBillView(bill, convertView);
 		}
 
-		private View getLoadMoreView() {
+		private View getLoadingView() {
 			BillList.this.loadBills();
-			lw = new  LoadingWrapper(inflater.inflate(R.layout.loading_retry, null));
-			return lw.getBase();
+			BillList.this.lw = new LoadingWrapper(inflater.inflate(R.layout.loading_retry, null));
+			return BillList.this.lw.getBase();
 		}
 
-		private View getBillView(Bill bill, View convertView) {
-			View view;
-			if (convertView == null || !(convertView instanceof RelativeLayout))
+		private View getBillView(Bill bill, View view) {
+			if (view == null)
 				view = inflater.inflate(R.layout.bill_item, null);
-			else
-				view = convertView;
 
 			String code, action;
 			Date date = null;
@@ -305,9 +315,7 @@ public class BillList extends ListActivity {
 				String title = Utils.truncate(bill.official_title, 300);
 				titleView.setTextSize(16);
 				titleView.setText(title);
-			} 
-
-			view.setTag(bill);
+			}
 
 			return view;
 		}
