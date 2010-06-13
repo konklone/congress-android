@@ -169,18 +169,23 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		public SearchViewWrapper(View base) {
 			this.base = base;
 		}
+		
 		public TextView getText1() {
 			return (text1 == null) ? text1 = (TextView) this.base.findViewById(R.id.text_1) : text1;
 		}
+		
 		public TextView getText2() {
 			return (text2 == null) ? text2 = (TextView) this.base.findViewById(R.id.text_2) : text2;
 		}
+		
 		public View getLoading() {
 			return (loading == null) ? loading = this.base.findViewById(R.id.row_loading) : loading;
 		}
+		
 		public View getBase() {
 			return base;
 		}
+		
 		public ViewWrapper getWrapperTag() {
 			return (ViewWrapper) base.getTag();
 		}	
@@ -458,6 +463,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 			View changelogView = inflater.inflate(R.layout.changelog, null);
 
 			Spanned changelog = Html.fromHtml(
+				"<b>&#183;</b> 2.5.1 - Re-enable Android 1.5 support<br/><br/>" +
 				"<b>&#183;</b> See full history and voting records on bills<br/><br/>" +
 				"<b>&#183;</b> Search by bill code<br/><br/>" +	
 				"<b>&#183;</b> Better location searching <br/><br/>" +
