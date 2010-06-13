@@ -288,6 +288,16 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			this.context = context;
 			inflater = LayoutInflater.from(context);
 		}
+		
+		@Override
+        public boolean areAllItemsEnabled() {
+        	return true;
+        }
+        
+        @Override
+        public int getViewTypeCount() {
+        	return 1;
+        }
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view;

@@ -130,6 +130,16 @@ public class LegislatorYouTube extends ListActivity {
             super(context, 0, videos);
             inflater = LayoutInflater.from(context);
         }
+        
+        @Override
+        public boolean areAllItemsEnabled() {
+        	return true;
+        }
+        
+        @Override
+        public int getViewTypeCount() {
+        	return 1;
+        }
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LinearLayout view;

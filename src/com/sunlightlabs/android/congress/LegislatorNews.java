@@ -154,6 +154,16 @@ public class LegislatorNews extends ListActivity {
             super(context, 0, items);
             inflater = LayoutInflater.from(context);
         }
+        
+        @Override
+        public boolean areAllItemsEnabled() {
+        	return true;
+        }
+        
+        @Override
+        public int getViewTypeCount() {
+        	return 1;
+        }
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LinearLayout view;

@@ -276,6 +276,11 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	    public boolean areAllItemsEnabled() {
 	    	return true;
 	    }
+        
+        @Override
+        public int getViewTypeCount() {
+        	return 1;
+        }
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view;
