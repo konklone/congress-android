@@ -331,10 +331,10 @@ public class Utils {
 	
 	// check for existence of TabHost.TabSpec#setIndicator(View)
 	private static void checkCustomTabs() {
-       try {
-           setView = TabHost.TabSpec.class.getMethod("setIndicator", new Class[] { View.class } );
+		try {
+    	   setView = TabHost.TabSpec.class.getMethod("setIndicator", new Class[] { View.class } );
        } catch (NoSuchMethodException nsme) {}
-   }
+	}
 	
 	public static void addTab(Activity activity, TabHost tabHost, String tag, String name, Intent intent, Drawable backup) {
 		TabHost.TabSpec tab = tabHost.newTabSpec(tag).setContent(intent);

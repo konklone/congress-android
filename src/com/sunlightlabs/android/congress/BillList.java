@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,33 +35,8 @@ public class BillList extends ListActivity {
 
 	private String sponsor_id, sponsor_name;
 	private int type;
-
+	
 	private LoadingWrapper lw;
-
-	private class LoadingWrapper {
-		private View base;
-		private View loading;
-		private View retryContainer;
-		private Button retry;
-
-		public LoadingWrapper(View base) {
-			this.base = base;
-		}
-		public View getLoading() {
-			return loading == null ? loading = base.findViewById(R.id.loading_layout) : loading;
-		}
-		public Button getRetry() {
-			return retry == null ? retry = (Button) base.findViewById(R.id.retry) : retry;
-		}
-		
-		public View getRetryContainer() {
-			return retryContainer == null ? retryContainer = base.findViewById(R.id.retry_container) : retryContainer;
-		}
-		
-		public View getBase() {
-			return base;
-		}
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -220,14 +194,17 @@ public class BillList extends ListActivity {
 		}
 	}
 
-	private class BillAdapter extends ArrayAdapter<Bill> {
-		LayoutInflater inflater;
+	private static class BillAdapter extends ArrayAdapter<Bill> {
+		private LayoutInflater inflater;
+		private BillList context;
+		
 		private static final int BILL = 0;
 		private static final int LOADING = 1;
 
-		public BillAdapter(Activity context, ArrayList<Bill> bills) {
+		public BillAdapter(BillList context, ArrayList<Bill> bills) {
 			super(context, 0, bills);
-			inflater = LayoutInflater.from(context);
+			this.inflater = LayoutInflater.from(context);
+			this.context = context;
 		}
 
 		@Override
@@ -237,7 +214,7 @@ public class BillList extends ListActivity {
 
 		@Override
 		public boolean isEnabled(int position) {
-			return !((position == bills.size() - 1) && bills.get(position) == null);
+			return !((position == getCount() - 1) && getItem(position) == null);
 		}
 		
 		@Override
@@ -264,18 +241,28 @@ public class BillList extends ListActivity {
 		}
 
 		private View getLoadingView() {
-			BillList.this.loadBills();
-			BillList.this.lw = new LoadingWrapper(inflater.inflate(R.layout.loading_retry, null));
-			return BillList.this.lw.getBase();
+			context.loadBills();
+			context.lw = new LoadingWrapper(inflater.inflate(R.layout.loading_retry, null));
+			return context.lw.getBase();
 		}
 
 		private View getBillView(Bill bill, View view) {
-			if (view == null)
+			ViewHolder holder;
+			if (view == null) {
 				view = inflater.inflate(R.layout.bill_item, null);
-
+				
+				holder = new ViewHolder();
+				holder.byline = (TextView) view.findViewById(R.id.byline);
+				holder.date = (TextView) view.findViewById(R.id.date);
+				holder.title = (TextView) view.findViewById(R.id.title);
+				
+				view.setTag(holder);
+			} else
+				holder = (ViewHolder) view.getTag();
+			
 			String code, action;
 			Date date = null;
-			switch (type) {
+			switch (context.type) {
 			case BILLS_LAW:
 				code = Bill.formatCode(bill.code);
 				date = bill.enacted_at;
@@ -295,29 +282,32 @@ public class BillList extends ListActivity {
 				break;
 			}
 			Spanned byline = Html.fromHtml("<b>" + code + "</b> " + action + ":");
-			((TextView) view.findViewById(R.id.byline)).setText(byline);
+			holder.byline.setText(byline);
 
-			if(date != null) {
+			if (date != null) {
 				SimpleDateFormat format = null;
 				if(date.getYear() == new Date().getYear()) 
 					format = new SimpleDateFormat("MMM dd");
 				else
 					format = new SimpleDateFormat("MMM dd, yyyy");
-				((TextView) view.findViewById(R.id.date)).setText(format.format(date));
+				holder.date.setText(format.format(date));
 			}
 
-			TextView titleView = ((TextView) view.findViewById(R.id.title));
 			if (bill.short_title != null) {
 				String title = Utils.truncate(bill.short_title, 300);
-				titleView.setTextSize(19);
-				titleView.setText(title);
+				holder.title.setTextSize(19);
+				holder.title.setText(title);
 			} else { // if (bill.official_title != null)
 				String title = Utils.truncate(bill.official_title, 300);
-				titleView.setTextSize(16);
-				titleView.setText(title);
+				holder.title.setTextSize(16);
+				holder.title.setText(title);
 			}
 
 			return view;
+		}
+		
+		static class ViewHolder {
+			TextView byline, date, title;
 		}
 	}
 
@@ -328,6 +318,31 @@ public class BillList extends ListActivity {
 		public MainActivityHolder(ArrayList<Bill> bills, LoadBillsTask loadBillsTask) {
 			this.bills = bills;
 			this.loadBillsTask = loadBillsTask;
+		}
+	}
+	
+	static class LoadingWrapper {
+		private View base;
+		private View loading;
+		private View retryContainer;
+		private Button retry;
+
+		public LoadingWrapper(View base) {
+			this.base = base;
+		}
+		public View getLoading() {
+			return loading == null ? loading = base.findViewById(R.id.loading_layout) : loading;
+		}
+		public Button getRetry() {
+			return retry == null ? retry = (Button) base.findViewById(R.id.retry) : retry;
+		}
+		
+		public View getRetryContainer() {
+			return retryContainer == null ? retryContainer = base.findViewById(R.id.retry_container) : retryContainer;
+		}
+		
+		public View getBase() {
+			return base;
 		}
 	}
 }
