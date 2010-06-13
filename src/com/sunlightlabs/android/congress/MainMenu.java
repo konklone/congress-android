@@ -28,6 +28,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
 import com.sunlightlabs.android.congress.utils.LocationUpdater;
 import com.sunlightlabs.android.congress.utils.Utils;

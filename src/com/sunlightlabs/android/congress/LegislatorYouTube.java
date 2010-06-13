@@ -21,10 +21,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.android.youtube.Video;
-import com.sunlightlabs.android.youtube.YouTube;
-import com.sunlightlabs.android.youtube.YouTubeException;
+import com.sunlightlabs.youtube.Video;
+import com.sunlightlabs.youtube.YouTube;
+import com.sunlightlabs.youtube.YouTubeException;
 
 public class LegislatorYouTube extends ListActivity {
 	private static final int MENU_WATCH = 0;

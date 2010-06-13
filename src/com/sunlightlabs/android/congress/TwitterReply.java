@@ -1,5 +1,7 @@
 package com.sunlightlabs.android.congress;
 
+import com.sunlightlabs.android.congress.R;
+
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
 import android.app.Activity;

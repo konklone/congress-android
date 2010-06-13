@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class LegislatorTwitter extends ListActivity {

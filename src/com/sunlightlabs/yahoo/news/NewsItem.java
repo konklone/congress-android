@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.yahoo.news;
+package com.sunlightlabs.yahoo.news;
 
 import org.json.JSONException;
 import org.json.JSONObject;

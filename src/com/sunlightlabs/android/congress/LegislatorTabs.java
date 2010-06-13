@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class LegislatorTabs extends TabActivity {

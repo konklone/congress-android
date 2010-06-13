@@ -8,6 +8,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class GetState extends Activity {

@@ -1,5 +1,7 @@
 package com.sunlightlabs.android.congress;
 
+import com.sunlightlabs.android.congress.R;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;

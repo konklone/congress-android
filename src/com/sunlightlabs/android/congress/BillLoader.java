@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;

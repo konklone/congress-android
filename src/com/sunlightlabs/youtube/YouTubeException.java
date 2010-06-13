@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.youtube;
+package com.sunlightlabs.youtube;
 
 public class YouTubeException extends Exception {
 	private static final long serialVersionUID = -2623309231327497087L;

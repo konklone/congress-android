@@ -20,10 +20,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.android.yahoo.news.NewsException;
-import com.sunlightlabs.android.yahoo.news.NewsItem;
-import com.sunlightlabs.android.yahoo.news.NewsService;
+import com.sunlightlabs.yahoo.news.NewsException;
+import com.sunlightlabs.yahoo.news.NewsItem;
+import com.sunlightlabs.yahoo.news.NewsService;
 
 public class LegislatorNews extends ListActivity {
 	private static final int MENU_VIEW = 0;

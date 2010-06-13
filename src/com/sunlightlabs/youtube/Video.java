@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.youtube;
+package com.sunlightlabs.youtube;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

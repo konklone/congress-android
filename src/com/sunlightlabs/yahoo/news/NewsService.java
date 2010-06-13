@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.yahoo.news;
+package com.sunlightlabs.yahoo.news;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

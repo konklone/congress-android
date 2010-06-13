@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;

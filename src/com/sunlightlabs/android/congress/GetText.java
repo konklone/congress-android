@@ -1,5 +1,7 @@
 package com.sunlightlabs.android.congress;
 
+import com.sunlightlabs.android.congress.R;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
