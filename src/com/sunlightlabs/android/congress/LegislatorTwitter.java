@@ -90,8 +90,7 @@ public class LegislatorTwitter extends ListActivity {
 	}
 	
 	public void onListItemClick(ListView parent, View v, int position, long id) {
-		Status tweet = (Status) parent.getItemAtPosition(position);
-		launchReplyForTweet(tweet);
+		launchReplyForTweet((Status) parent.getItemAtPosition(position));
 	}
 	
 	private void launchReplyForTweet(Status tweet) {
