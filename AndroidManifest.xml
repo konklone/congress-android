@@ -29,18 +29,6 @@
         	android:theme="@android:style/Theme.Dialog" 
         	/>
         
-        <activity android:name=".CreateShortcut"
-        	android:label="@string/create_shortcuts"
-        	android:theme="@android:style/Theme.Dialog"
-        	>
-        	
-        	<intent-filter>
-                <action android:name="android.intent.action.CREATE_SHORTCUT" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        	
-        </activity>
-        
         <activity android:name=".LegislatorList"
         	android:theme="@android:style/Theme.NoTitleBar" 
         	/>
