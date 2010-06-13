@@ -307,25 +307,25 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 			intent.setClass(this, GetText.class)
 			.putExtra("ask", "Enter a zip code:")
 			.putExtra("hint", "e.g. 11216")
-			.putExtra("startValue", Preferences.getString(this, "search_zip"))
+			.putExtra("startValue", Utils.getStringPreference(this, "search_zip"))
 			.putExtra("inputType", InputType.TYPE_CLASS_PHONE);
 			break;
 		case RESULT_LASTNAME:
 			intent.setClass(this, GetText.class)
 			.putExtra("ask", "Enter a last name:")
 			.putExtra("hint", "e.g. Schumer")
-			.putExtra("startValue", Preferences.getString(this, "search_lastname"))
+			.putExtra("startValue", Utils.getStringPreference(this, "search_lastname"))
 			.putExtra("inputType", InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 			break;
 		case RESULT_STATE:
 			intent.setClass(this, GetState.class)
-			.putExtra("startValue", Preferences.getString(this, "search_state"));
+			.putExtra("startValue", Utils.getStringPreference(this, "search_state"));
 			break;
 		case RESULT_BILL_CODE:
 			intent.setClass(this, GetText.class)
 			.putExtra("ask", "Enter a bill code:")
 			.putExtra("hint", "e.g. \"hr4136\", \"s782\"")
-			.putExtra("startValue", Preferences.getString(this, "search_bill_code"))
+			.putExtra("startValue", Utils.getStringPreference(this, "search_bill_code"))
 			.putExtra("inputType", InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
 			break;
 		default:
@@ -342,7 +342,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 			if (resultCode == RESULT_OK) {
 				String zipCode = data.getExtras().getString("response").trim();
 				if (!zipCode.equals("")) {
-					Preferences.setString(this, "search_zip", zipCode);
+					Utils.setStringPreference(this, "search_zip", zipCode);
 					searchByZip(zipCode);
 				}
 			}
@@ -351,7 +351,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 			if (resultCode == RESULT_OK) {
 				String lastName = data.getExtras().getString("response").trim();
 				if (!lastName.equals("")) {
-					Preferences.setString(this, "search_lastname", lastName);
+					Utils.setStringPreference(this, "search_lastname", lastName);
 					searchByLastName(lastName);
 				}
 			}
@@ -362,7 +362,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 				if (!state.equals("")) {
 					String code = Utils.stateNameToCode(this, state);
 					if (code != null) {
-						Preferences.setString(this, "search_state", state); // store the name, not the code
+						Utils.setStringPreference(this, "search_state", state); // store the name, not the code
 						searchByState(code);
 					}
 				}
@@ -374,7 +374,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 				if (!code.equals("")) {
 					String billId = Bill.codeToBillId(code);
 					if (billId != null) {
-						Preferences.setString(this, "search_bill_code", code); // store the code, not the bill_id
+						Utils.setStringPreference(this, "search_bill_code", code); // store the code, not the bill_id
 						searchByBillId(billId, code);
 					}
 				}
@@ -384,8 +384,8 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	}
 
 	public boolean firstTime() {
-		if (Preferences.getBoolean(this, "first_time", true)) {
-			Preferences.setBoolean(this, "first_time", false);
+		if (Utils.getBooleanPreference(this, "first_time", true)) {
+			Utils.setBooleanPreference(this, "first_time", false);
 			return true;
 		}
 		return false;
@@ -404,11 +404,11 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 
 
 	public void setVersionSeen(String version) {
-		Preferences.setString(this, "last_version_seen", version);
+		Utils.setStringPreference(this, "last_version_seen", version);
 	}
 
 	public String getVersionSeen() {
-		return Preferences.getString(this, "last_version_seen");
+		return Utils.getStringPreference(this, "last_version_seen");
 	}
 
 	@Override
@@ -499,9 +499,6 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) { 
-		case R.id.settings: 
-			startActivity(new Intent(this, Preferences.class));
-			break;
 		case R.id.feedback:
 			Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getResources().getString(R.string.contact_email), null));
 			intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_subject));

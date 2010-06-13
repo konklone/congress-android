@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -302,5 +303,21 @@ public class Utils {
 		View tab = inflater.inflate(R.layout.tab_minimal, null);
 		((TextView) tab.findViewById(R.id.tab_name)).setText(name);
 		return tab;
+	}
+	
+	public static String getStringPreference(Context context, String key) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getString(key, null);
+	}
+	
+	public static boolean setStringPreference(Context context, String key, String value) {
+		return PreferenceManager.getDefaultSharedPreferences(context).edit().putString(key, value).commit();
+	}
+	
+	public static boolean getBooleanPreference(Context context, String key, boolean defaultValue) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(key, defaultValue);
+	}
+	
+	public static boolean setBooleanPreference(Context context, String key, boolean value) {
+		return PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(key, value).commit();
 	}
 }
