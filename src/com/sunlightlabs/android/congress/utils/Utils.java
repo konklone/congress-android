@@ -1,15 +1,20 @@
 package com.sunlightlabs.android.congress.utils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +29,8 @@ import com.sunlightlabs.congress.services.Drumbone;
 import com.sunlightlabs.congress.services.Sunlight;
 
 public class Utils {
+	private static Method setView = null;
+	
 	public static void setupDrumbone(Context context) {
 		Resources resources = context.getResources();
 		Drumbone.userAgent = resources.getString(R.string.drumbone_user_agent);
@@ -298,13 +305,6 @@ public class Utils {
 		return text.substring(0, 1).toUpperCase() + text.substring(1);
 	}
 	
-	public static View tabView(Context context, String name) {
-		LayoutInflater inflater = LayoutInflater.from(context);
-		View tab = inflater.inflate(R.layout.tab_minimal, null);
-		((TextView) tab.findViewById(R.id.tab_name)).setText(name);
-		return tab;
-	}
-	
 	public static String getStringPreference(Context context, String key) {
 		return PreferenceManager.getDefaultSharedPreferences(context).getString(key, null);
 	}
@@ -319,5 +319,49 @@ public class Utils {
 	
 	public static boolean setBooleanPreference(Context context, String key, boolean value) {
 		return PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(key, value).commit();
+	}
+	
+	/* 
+	 * Using reflection to support custom tabs for 1.6 and up, and default to regular tabs for 1.5.
+	 */
+	
+	static {
+		checkCustomTabs();
+	}
+	
+	// check for existence of TabHost.TabSpec#setIndicator(View)
+	private static void checkCustomTabs() {
+       try {
+           setView = TabHost.TabSpec.class.getMethod("setIndicator", new Class[] { View.class } );
+       } catch (NoSuchMethodException nsme) {}
+   }
+	
+	public static void addTab(Activity activity, TabHost tabHost, String tag, String name, Intent intent, Drawable backup) {
+		TabHost.TabSpec tab = tabHost.newTabSpec(tag).setContent(intent);
+		if (setView != null) {
+			try {
+				setView.invoke(tab, tabView(activity, name));
+			} catch (IllegalAccessException ie) {
+				throw new RuntimeException(ie);
+			} catch (InvocationTargetException ite) {
+				Throwable cause = ite.getCause();
+				if (cause instanceof RuntimeException)
+					throw (RuntimeException) cause;
+				else if (cause instanceof Error)
+					throw (Error) cause;
+				else
+					throw new RuntimeException(ite);
+			}
+		} else // default 1.5 tabs
+			tab.setIndicator(name, backup);
+		
+		tabHost.addTab(tab);
+	}
+	
+	public static View tabView(Context context, String name) {
+		LayoutInflater inflater = LayoutInflater.from(context);
+		View tab = inflater.inflate(R.layout.tab_minimal, null);
+		((TextView) tab.findViewById(R.id.tab_name)).setText(name);
+		return tab;
 	}
 }

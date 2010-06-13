@@ -2,6 +2,7 @@ package com.sunlightlabs.android.congress;
 
 import android.app.TabActivity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -50,26 +51,18 @@ public class LegislatorTabs extends TabActivity {
 	}
 	
 	public void setupTabs() {
+		Resources res = getResources();
 		TabHost tabHost = getTabHost();
 		
-		tabHost.addTab(tabHost.newTabSpec("profile_tab")
-				.setIndicator(Utils.tabView(this, "Profile"))
-				.setContent(profileIntent()));
-		tabHost.addTab(tabHost.newTabSpec("news_tab")
-				.setIndicator(Utils.tabView(this, "News"))
-				.setContent(newsIntent()));
+		Utils.addTab(this, tabHost, "profile_tab", "Profile", profileIntent(), res.getDrawable(R.drawable.tab_profile));
+		Utils.addTab(this, tabHost, "news_tab", "News", newsIntent(), res.getDrawable(R.drawable.tab_news));
 		
-		if (twitter_id != null && !(twitter_id.equals(""))) {
-			tabHost.addTab(tabHost.newTabSpec("twitter_tab")
-					.setIndicator(Utils.tabView(this, "Twitter"))
-					.setContent(twitterIntent()));
-		}
+		if (twitter_id != null && !(twitter_id.equals("")))
+			Utils.addTab(this, tabHost, "twitter_tab", "Twitter", twitterIntent(), res.getDrawable(R.drawable.tab_twitter));
 		
-		if (youtube_id != null && !(youtube_id.equals(""))) {
-			tabHost.addTab(tabHost.newTabSpec("youtube_tab")
-					.setIndicator(Utils.tabView(this, "YouTube"))
-					.setContent(youtubeIntent()));
-		}
+		if (youtube_id != null && !(youtube_id.equals("")))
+			Utils.addTab(this, tabHost, "youtube_tab", "YouTube", youtubeIntent(), res.getDrawable(R.drawable.tab_video));
+			
 		tabHost.setCurrentTab(0);
 	}
 	

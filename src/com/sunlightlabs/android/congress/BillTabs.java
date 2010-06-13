@@ -2,11 +2,11 @@ package com.sunlightlabs.android.congress;
 
 import android.app.TabActivity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 
@@ -74,19 +74,14 @@ public class BillTabs extends TabActivity {
 	}
 	
 	public void setupTabs() {
+		Resources res = getResources();
 		TabHost tabHost = getTabHost();
-		tabHost.addTab(tabHost.newTabSpec("info_tab")
-				.setIndicator(Utils.tabView(this, "Details"))
-				.setContent(detailsIntent()));
-		tabHost.addTab(tabHost.newTabSpec("history_tab")
-				.setIndicator(Utils.tabView(this, "History"))
-				.setContent(historyIntent()));
 		
-		if (last_vote_at > 0) {
-			tabHost.addTab(tabHost.newTabSpec("votes_tab")
-					.setIndicator(Utils.tabView(this, "Votes"))
-					.setContent(votesIntent()));
-		}
+		Utils.addTab(this, tabHost, "info_tab", "Details", detailsIntent(), res.getDrawable(R.drawable.tab_profile));
+		Utils.addTab(this, tabHost, "history_tab", "History", historyIntent(), res.getDrawable(R.drawable.tab_news));
+		
+		if (last_vote_at > 0)
+			Utils.addTab(this, tabHost, "voted_tab", "Votes", votesIntent(), res.getDrawable(R.drawable.tab_video));
 		
 		tabHost.setCurrentTab(0);
 	}
