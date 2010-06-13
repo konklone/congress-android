@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -186,8 +185,11 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 	public void onLoadPhoto(Drawable photo, Object tag) {
 		loadPhotoTasks.remove(tag);
+		
+		LegislatorAdapter.ViewHolder holder = ((LegislatorAdapter) getListAdapter()).new ViewHolder();
+		holder.bioguide_id = (String) tag;
 
-		View result = getListView().findViewWithTag(tag);
+		View result = getListView().findViewWithTag(holder);
 		if (result != null) {
 			if (photo != null)
 				((ImageView) result.findViewById(R.id.photo)).setImageDrawable(photo);
@@ -289,33 +291,40 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
+			View view;
+			ViewHolder holder;
+			if (convertView == null) {
+				view = inflater.inflate(R.layout.legislator_item, null);
+				
+				holder = new ViewHolder();
+				holder.name = (TextView) view.findViewById(R.id.name);
+				holder.position = (TextView) view.findViewById(R.id.position);
+				holder.photo = (ImageView) view.findViewById(R.id.photo);
+				
+				view.setTag(holder);
+			} else {
+				view = convertView;
+				holder = (ViewHolder) view.getTag();
+			}
+			
 			Legislator legislator = getItem(position);
 
-			LinearLayout view;
-			if (convertView == null)
-				view = (LinearLayout) inflater.inflate(R.layout.legislator_item, null);
-			else
-				view = (LinearLayout) convertView;
-
 			// used as the hook to get the legislator image in place when it's loaded
-			view.setTag(legislator.bioguide_id);
+			holder.bioguide_id = legislator.bioguide_id;
 
-			((TextView) view.findViewById(R.id.name)).setText(nameFor(legislator));
-			((TextView) view.findViewById(R.id.position)).setText(positionFor(legislator));
+			holder.name.setText(nameFor(legislator));
+			holder.position.setText(positionFor(legislator));
 
-			ImageView photoView = (ImageView) view.findViewById(R.id.photo); 
 			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_MEDIUM, legislator.bioguide_id, context);
 			if (photo != null)
-				photoView.setImageDrawable(photo);
+				holder.photo.setImageDrawable(photo);
 			else {
-				photoView.setImageResource(R.drawable.loading_photo);
+				holder.photo.setImageResource(R.drawable.loading_photo);
 				LegislatorList.this.loadPhoto(legislator.bioguide_id);
 			}
 
 			return view;
 		}
-
-
 
 		public String nameFor(Legislator legislator) {
 			return legislator.last_name + ", " + legislator.firstName();
@@ -339,6 +348,18 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 				position = "Representative for " + stateName + "-" + district;
 			
 			return "(" + legislator.party + ") " + position; 
+		}
+		
+		public class ViewHolder {
+			TextView name, position;
+			ImageView photo;
+			String bioguide_id;
+			
+			@Override
+			public boolean equals(Object holder) {
+				ViewHolder other = (ViewHolder) holder;
+				return other != null && other instanceof ViewHolder && this.bioguide_id.equals(other.bioguide_id);
+			}
 		}
 
 	}
