@@ -14,14 +14,17 @@ import android.util.Log;
 
 import com.sunlightlabs.congress.models.CongressException;
 
-public class LocationUpdater implements LocationListener {
+public class LocationUpdater {
 	private static final String TAG = "CONGRESS";
 	private static final long TIMEOUT = 20000;
+	private static final long MIN_TIME = 6000; // 6 seconds between updates
 	private static final int MSG_TIMEOUT = 100;
+
 
 	private String provider;
 	private LocationManager manager;
 	private LocationUpdateable<? extends Context> context;
+	private LocationListener listener;
 	private boolean processing = false;
 
 	private Timer timeout;
@@ -34,6 +37,7 @@ public class LocationUpdater implements LocationListener {
 
 	public LocationUpdater(LocationUpdateable<? extends Context> context) {
 		this.context = context;
+		this.listener = (LocationListener) context;
 		init();
 	}
 
@@ -90,8 +94,8 @@ public class LocationUpdater implements LocationListener {
 		if(provider != null) {
 			processing = true;
 			prepareTimeout();
-			manager.requestLocationUpdates(provider, 0, 0, this);
-			Log.d(TAG, "requestLocationUpdate(): provoder=" + provider);
+			manager.requestLocationUpdates(provider, MIN_TIME, 0, listener);
+			Log.d(TAG, "requestLocationUpdate(): provider=" + provider);
 		}
 		else {
 			context.onLocationUpdateError(new CongressException("Cannot update the current location. All providers are disabled."));
@@ -102,7 +106,6 @@ public class LocationUpdater implements LocationListener {
 	public void onLocationChanged(Location location) {
 		Log.d(TAG, "onLocationChanged(): location=" + location + "; thread=" + Thread.currentThread().getName());
 		context.onLocationUpdate(location);
-		manager.removeUpdates(this);
 		processing = false;
 		cancelTimeout();
 	}
@@ -117,6 +120,12 @@ public class LocationUpdater implements LocationListener {
 				cancelTimeout();
 			}
 		}
+	}
+
+	public void requestLocationUpdateHalt() {
+		Log.d(TAG, "Removing update listener " + listener);
+		if (manager != null)
+			manager.removeUpdates(listener);
 	}
 
 	public void onProviderEnabled(String provider) {}

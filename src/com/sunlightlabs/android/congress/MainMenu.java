@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,7 +38,8 @@ import com.sunlightlabs.android.congress.utils.LocationUpdater.LocationUpdateabl
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 
-public class MainMenu extends ListActivity implements LocationUpdateable<MainMenu>, AddressUpdateable<MainMenu> {
+public class MainMenu extends ListActivity implements LocationUpdateable<MainMenu>,
+		LocationListener, AddressUpdateable<MainMenu> {
 	public static final int RESULT_ZIP = 1;
 	public static final int RESULT_LASTNAME = 2;
 	public static final int RESULT_STATE = 3;
@@ -74,6 +76,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 			if (msg.arg1 == MSG_TIMEOUT) {
 				Log.d(TAG, "handleMessage(): received message=" + msg);
 				onLocationUpdateError((CongressException) msg.obj);
+				locationUpdater.requestLocationUpdateHalt();
 			}
 		}
 	};
@@ -123,6 +126,27 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		holder.location = location;
 		holder.address = address;
 		return holder;
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG, "Destroying activity. Remove location updates");
+		locationUpdater.requestLocationUpdateHalt();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG, "Pausing activity. Remove location updates");
+		locationUpdater.requestLocationUpdateHalt();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG, "Resuming activity.");
+		locationUpdater.requestLocationUpdate();
 	}
 
 	@Override
@@ -547,7 +571,6 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	}
 
 	private void toggleLocationEnabled(boolean enabled) {
-		Log.d(TAG, "toggleLocationEnabled(): enabled=" + enabled + "; thread=" + Thread.currentThread().getName());
 		searchLocationView.getWrapperTag().setEnabled(enabled);
 		searchLocationAdapter.notifyDataSetChanged();
 		searchLocationView.getText1().setTextColor(enabled == true ? Color.parseColor("#dddddd") : Color.parseColor("#666666"));
@@ -602,5 +625,21 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 
 	public Handler getHandler() {
 		return handler;
+	}
+
+	public void onLocationChanged(Location location) {
+		locationUpdater.onLocationChanged(location);
+	}
+
+	public void onProviderDisabled(String provider) {
+		locationUpdater.onProviderDisabled(provider);
+	}
+
+	public void onProviderEnabled(String provider) {
+		locationUpdater.onProviderEnabled(provider);
+	}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		locationUpdater.onStatusChanged(provider, status, extras);
 	}
 }

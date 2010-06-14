@@ -10,6 +10,7 @@ import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.location.LocationListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,7 +38,8 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.CommitteeService;
 import com.sunlightlabs.congress.services.LegislatorService;
 
-public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsPhoto, LocationUpdateable<LegislatorList>, AddressUpdateable<LegislatorList> {
+public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsPhoto,
+		LocationUpdateable<LegislatorList>, LocationListener, AddressUpdateable<LegislatorList> {
 	private final static int SEARCH_ZIP = 0;
 	private final static int SEARCH_LOCATION = 1;
 	private final static int SEARCH_STATE = 2;
@@ -71,6 +73,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			if (msg.arg1 == MSG_TIMEOUT) {
 				Log.d(TAG, "handleMessage(): received message=" + msg);
 				onLocationUpdateError((CongressException) msg.obj);
+				locationUpdater.requestLocationUpdateHalt();
 			}
 		}
 	};
@@ -148,6 +151,27 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		holder.address = address;
 		holder.relocating = relocating;
 		return holder;
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG, "Destroying activity. Remove location updates");
+		locationUpdater.requestLocationUpdateHalt();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG, "Pausing activity. Remove location updates");
+		locationUpdater.requestLocationUpdateHalt();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG, "Resuming activity. Request location update");
+		locationUpdater.requestLocationUpdate();
 	}
 
 	public void loadLegislators() {
@@ -554,5 +578,21 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 	public Handler getHandler() {
 		return handler;
+	}
+
+	public void onLocationChanged(Location location) {
+		locationUpdater.onLocationChanged(location);
+	}
+
+	public void onProviderDisabled(String provider) {
+		locationUpdater.onProviderDisabled(provider);
+	}
+
+	public void onProviderEnabled(String provider) {
+		locationUpdater.onProviderEnabled(provider);
+	}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		locationUpdater.onStatusChanged(provider, status, extras);
 	}
 }
