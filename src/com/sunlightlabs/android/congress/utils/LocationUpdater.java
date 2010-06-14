@@ -1,5 +1,6 @@
 package com.sunlightlabs.android.congress.utils;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,18 +21,22 @@ public class LocationUpdater {
 	private static final long MIN_TIME = 6000; // 6 seconds between updates
 	private static final int MSG_TIMEOUT = 100;
 
-
 	private String provider;
 	private LocationManager manager;
 	private LocationUpdateable<? extends Context> context;
 	private LocationListener listener;
 	private boolean processing = false;
 
+	private ArrayList<String> triedProviders;
+	private ArrayList<String> availableProviders;
+
 	private Timer timeout;
 
 	public interface LocationUpdateable<C extends Context> {
 		Handler getHandler();
+
 		void onLocationUpdate(Location location);
+
 		void onLocationUpdateError(CongressException e);
 	}
 
@@ -42,8 +47,11 @@ public class LocationUpdater {
 	}
 
 	private void init() {
-		manager = (LocationManager) ((Context)context).getSystemService(Context.LOCATION_SERVICE);
-		provider = getProvider();
+		manager = (LocationManager) ((Context) context).getSystemService(Context.LOCATION_SERVICE);
+		triedProviders = new ArrayList<String>();
+		availableProviders = new ArrayList<String>();
+		getAvailableProviders();
+		getProvider();
 	}
 
 	public void onScreenLoad(LocationUpdateable<? extends Context> context) {
@@ -51,13 +59,30 @@ public class LocationUpdater {
 		Log.d(TAG, "onScreenLoad(): context changed to " + context);
 	}
 
-	private String getProvider() {
-		String provider = null;
+	private void getAvailableProviders() {
 		if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-			provider = LocationManager.GPS_PROVIDER;
-		else if (manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-			provider = LocationManager.NETWORK_PROVIDER;
-		return provider;
+			availableProviders.add(LocationManager.GPS_PROVIDER);
+		if (manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+			availableProviders.add(LocationManager.NETWORK_PROVIDER);
+	}
+
+	private void getProvider() {
+		if (availableProviders.size() > 0) {
+			provider = availableProviders.get(0);
+			triedProviders.add(provider);
+		}
+	}
+
+	private String switchProvider(String lastProvider) {
+		getAvailableProviders();
+		for (int i = 0; i < availableProviders.size(); i++) {
+			String prov = availableProviders.get(i);
+			if (!triedProviders.contains(prov)) {
+				triedProviders.add(prov);
+				return prov;
+			}
+		}
+		return lastProvider;
 	}
 
 	public Location getLastKnownLocation() {
@@ -67,14 +92,23 @@ public class LocationUpdater {
 	}
 
 	private void prepareTimeout() {
-		TimerTask task = new TimerTask() {			
+		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
-				Message msg = new Message();
-				msg.arg1 = MSG_TIMEOUT;
-				msg.obj = new CongressException("Could not update location. Timeout.");
-				Log.d(TAG, "prepareTimeout(): sending message=" + msg);
-				context.getHandler().sendMessage(msg);
+				String newProvider = switchProvider(provider);
+				// try another provider before quitting
+				if (!provider.equals(newProvider)) {
+					provider = newProvider;
+					Log.d(TAG, "New provider is " + provider + ". Requesting a new update.");
+					requestLocationUpdate();
+				}
+				else {
+					Message msg = new Message();
+					msg.arg1 = MSG_TIMEOUT;
+					msg.obj = new CongressException("Could not update location. Timeout.");
+					Log.d(TAG, "prepareTimeout(): sending message=" + msg);
+					context.getHandler().sendMessage(msg);
+				}
 			}
 		};
 		cancelTimeout();
@@ -91,31 +125,35 @@ public class LocationUpdater {
 	}
 
 	public void requestLocationUpdate() {
-		if(provider != null) {
+		if (provider != null) {
 			processing = true;
 			prepareTimeout();
 			manager.requestLocationUpdates(provider, MIN_TIME, 0, listener);
 			Log.d(TAG, "requestLocationUpdate(): provider=" + provider);
-		}
-		else {
-			context.onLocationUpdateError(new CongressException("Cannot update the current location. All providers are disabled."));
+		} else {
+			context.onLocationUpdateError(new CongressException(
+					"Cannot update the current location. All providers are disabled."));
 			Log.d(TAG, "requestLocationUpdate(): provider=null");
 		}
 	}
 
 	public void onLocationChanged(Location location) {
-		Log.d(TAG, "onLocationChanged(): location=" + location + "; thread=" + Thread.currentThread().getName());
+		Log.d(TAG, "onLocationChanged(): location=" + location + "; thread="
+				+ Thread.currentThread().getName());
 		context.onLocationUpdate(location);
 		processing = false;
 		cancelTimeout();
 	}
 
-	public void onProviderDisabled(String provider) {		
-		if(processing) { // currently is processing a request and the provider gets disabled
-			provider = getProvider(); // check for other enabled providers
-			if(provider == null) {
-				Log.d(TAG, "onProviderDisabled(): provider=null; thread=" + Thread.currentThread().getName());
-				context.onLocationUpdateError(new CongressException("Cannot update the current location. All providers are disabled."));
+	public void onProviderDisabled(String provider) {
+		if (processing) { // currently is processing a request and the provider
+							// gets disabled
+			getProvider(); // check for other enabled providers
+			if (provider == null) {
+				Log.d(TAG, "onProviderDisabled(): provider=null; thread="
+						+ Thread.currentThread().getName());
+				context.onLocationUpdateError(new CongressException(
+						"Cannot update the current location. All providers are disabled."));
 				processing = false;
 				cancelTimeout();
 			}
@@ -128,6 +166,9 @@ public class LocationUpdater {
 			manager.removeUpdates(listener);
 	}
 
-	public void onProviderEnabled(String provider) {}
-	public void onStatusChanged(String provider, int status, Bundle extras) {}
+	public void onProviderEnabled(String provider) {
+	}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+	}
 }

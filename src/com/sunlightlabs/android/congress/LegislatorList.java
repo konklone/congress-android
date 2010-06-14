@@ -48,7 +48,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 	private static final int MSG_TIMEOUT = 100;
 
-	private final static String TAG = "Congress";
+	private final static String TAG = "CONGRESS";
 
 	private ArrayList<Legislator> legislators = null;
 	private LoadLegislatorsTask loadLegislatorsTask = null;
@@ -543,6 +543,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		latitude = location.getLatitude();
 		longitude = location.getLongitude();
 		addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
+		locationUpdater.requestLocationUpdateHalt();
 	}
 
 	public void onLocationUpdateError(CongressException e) {

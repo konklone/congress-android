@@ -58,7 +58,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	public static final int SEARCH_STATE = 6;
 	public static final int SEARCH_NAME = 7;
 
-	private static final String TAG = "Congress";
+	private static final String TAG = "CONGRESS";
 	private static final int MSG_TIMEOUT = 100;
 
 	private Location location;
@@ -592,6 +592,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		Log.d(TAG, "onLocationUpdate(): location=" + location + "; thread=" + Thread.currentThread().getName());
 		this.location = location;
 		addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
+		locationUpdater.requestLocationUpdateHalt();
 	}
 
 	public void onLocationUpdateError(CongressException e) {
