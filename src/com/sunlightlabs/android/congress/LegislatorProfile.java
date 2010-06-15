@@ -35,8 +35,7 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.CommitteeService;
 
 public class LegislatorProfile extends ListActivity implements LoadPhotoTask.LoadsPhoto {
-	private String id, titledName, lastName, party, gender, state, domain, phone, website;
-	private String bioguide_id, govtrack_id;
+	private Legislator legislator;
 	private Drawable avatar;
 	private ImageView picture;
 	private ArrayList<Committee> committees;
@@ -55,17 +54,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
         Utils.setupSunlight(this);
         
         Bundle extras = getIntent().getExtras(); 
-        id = extras.getString("id");
-        titledName = extras.getString("titledName");
-        lastName = extras.getString("lastName");
-        party = extras.getString("party");
-        state = extras.getString("state");
-        gender = extras.getString("gender");
-        domain = extras.getString("domain");
-        phone = extras.getString("phone");
-        website = extras.getString("website");
-        bioguide_id = extras.getString("bioguide_id");
-        govtrack_id = extras.getString("govtrack_id");
+		legislator = (Legislator) extras.getSerializable("legislator");
         
         setupControls();
         
@@ -92,12 +81,13 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 			if (committees != null)
 				displayCommittees();
 			else
-				loadCommitteesTask = (LoadCommitteesTask) new LoadCommitteesTask(this).execute(id);
+				loadCommitteesTask = (LoadCommitteesTask) new LoadCommitteesTask(this)
+						.execute(legislator.getId());
 		}
 	}
 	
 	public void installShortcutIcon(Bitmap icon) {
-		sendBroadcast(Utils.shortcutIntent(this, id, lastName, icon)
+		sendBroadcast(Utils.shortcutIntent(this, legislator.getId(), legislator.last_name, icon)
 				.setAction("com.android.launcher.action.INSTALL_SHORTCUT"));
 	}
     
@@ -135,7 +125,8 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
         	if (avatar != null)
         		displayAvatar();
         	else
-        		loadPhotoTask = (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_LARGE).execute(id);
+				loadPhotoTask = (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_LARGE)
+						.execute(legislator.getId());
         }
 	}
 	
@@ -153,7 +144,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
     	if (avatar != null)
     		picture.setImageDrawable(avatar);
     	else {
-    		if (gender.equals("M"))
+    		if (legislator.gender.equals("M"))
 				avatar = getResources().getDrawable(R.drawable.no_photo_male);
 			else // "F"
 				avatar = getResources().getDrawable(R.drawable.no_photo_female);
@@ -179,18 +170,18 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
     }
     
     public void callOffice() {
-    	startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel://" + phone)));
+    	startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel://" + legislator.phone)));
     }
     
     public void visitWebsite() {
-    	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(website)));
+    	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(legislator.website)));
     }
     
     public void sponsoredBills() {
     	Intent intent = new Intent(this, BillList.class)
     		.putExtra("type", BillList.BILLS_SPONSOR)
-    		.putExtra("sponsor_id", id)
-    		.putExtra("sponsor_name", titledName);
+    		.putExtra("sponsor_id", legislator.getId())
+    		.putExtra("sponsor_name", legislator.titledName());
     	startActivity(intent);
     }
     
@@ -209,24 +200,26 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		
 		picture = (ImageView) mainView.findViewById(R.id.profile_picture);
 		
-		((TextView) mainView.findViewById(R.id.profile_party)).setText(partyName(party));
-		((TextView) mainView.findViewById(R.id.profile_state)).setText(Utils.stateCodeToName(this, state));
-		((TextView) mainView.findViewById(R.id.profile_domain)).setText(domainName(domain));
+		((TextView) mainView.findViewById(R.id.profile_party)).setText(partyName(legislator.party));
+		((TextView) mainView.findViewById(R.id.profile_state)).setText(Utils.stateCodeToName(this, legislator.state));
+		((TextView) mainView.findViewById(R.id.profile_domain)).setText(domainName(legislator.getDomain()));
 		
 		ArrayList<View> contactViews = new ArrayList<View>(3);
 		
+		String phone = legislator.phone;
 		if (phone != null && !phone.equals("")) {
 			View phoneView = inflater.inflate(R.layout.icon_list_item_2, null);
-			((TextView) phoneView.findViewById(R.id.text_1)).setText("Call " + pronoun(gender) + " office");
+			((TextView) phoneView.findViewById(R.id.text_1)).setText("Call " + pronoun(legislator.gender) + " office");
 			((TextView) phoneView.findViewById(R.id.text_2)).setText(phone);
 			((ImageView) phoneView.findViewById(R.id.icon)).setImageResource(R.drawable.phone);
 			phoneView.setTag("phone");
 			contactViews.add(phoneView);
 		}
 		
+		String website = legislator.website;
 		if (website != null && !website.equals("")) {
 			View websiteView = inflater.inflate(R.layout.icon_list_item_2, null);
-			((TextView) websiteView.findViewById(R.id.text_1)).setText("Visit " + pronoun(gender) + " website");
+			((TextView) websiteView.findViewById(R.id.text_1)).setText("Visit " + pronoun(legislator.gender) + " website");
 			((TextView) websiteView.findViewById(R.id.text_2)).setText(websiteName(website));
 			((ImageView) websiteView.findViewById(R.id.icon)).setImageResource(R.drawable.web);
 			websiteView.setTag("web");
@@ -266,16 +259,16 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
     		break;
     	case R.id.shortcut:
     		if (shortcutImageTask == null)
-    			shortcutImageTask = (ShortcutImageTask) new ShortcutImageTask(this).execute(id);
+    			shortcutImageTask = (ShortcutImageTask) new ShortcutImageTask(this).execute(legislator.getId());
     		break;
     	case R.id.govtrack:
-    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.govTrackUrl(govtrack_id))));
+    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.govTrackUrl(legislator.govtrack_id))));
     		break;
     	case R.id.opencongress:
-    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.openCongressUrl(govtrack_id))));
+    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.openCongressUrl(legislator.govtrack_id))));
     		break;
     	case R.id.bioguide:
-    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.bioguideUrl(bioguide_id))));
+    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.bioguideUrl(legislator.bioguide_id))));
     		break;
     	}
     	return true;
