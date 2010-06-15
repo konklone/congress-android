@@ -40,9 +40,9 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	private long introduced_at, house_result_at, senate_result_at;
 	private long vetoed_at, override_house_result_at, override_senate_result_at;
 	private long awaiting_signature_since, enacted_at;
-	private String sponsor_id, sponsor_party, sponsor_state, sponsor_title;
-	private String sponsor_first_name, sponsor_last_name, sponsor_nickname;
 	
+	private Legislator sponsor;
+
 	// fields fetched remotely
 	private String summary;
 	
@@ -83,13 +83,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		enacted = extras.getBoolean("enacted", false);
 		enacted_at = extras.getLong("enacted_at", 0);
 		
-		sponsor_id = extras.getString("sponsor_id");
-		sponsor_title = extras.getString("sponsor_title");
-		sponsor_state = extras.getString("sponsor_state");
-		sponsor_party = extras.getString("sponsor_party");
-		sponsor_first_name = extras.getString("sponsor_first_name");
-		sponsor_nickname = extras.getString("sponsor_nickname");
-		sponsor_last_name = extras.getString("sponsor_last_name");
+		sponsor = (Legislator) extras.getSerializable("sponsor");
 		
 		setupControls();
 		
@@ -124,18 +118,14 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		
 		adapter.addView(header);
 		
-		if (sponsor_id != null) {
+		if (sponsor != null) {
 			sponsorView = inflater.inflate(R.layout.bill_sponsor, null);
-			String firstname;
-			if (sponsor_nickname != null && !sponsor_nickname.equals(""))
-				firstname = sponsor_nickname;
-			else
-				firstname = sponsor_first_name;
 			
-			String name = sponsor_title + ". " + firstname + " " + sponsor_last_name;
+			String name = sponsor.title + ". " + sponsor.firstName() + " " + sponsor.last_name;
 			((TextView) sponsorView.findViewById(R.id.name)).setText(name);
 			
-			String description = Legislator.partyName(sponsor_party) + " from " + Utils.stateCodeToName(this, sponsor_state);
+			String description = Legislator.partyName(sponsor.party) + " from "
+					+ Utils.stateCodeToName(this, sponsor.state);
 			((TextView) sponsorView.findViewById(R.id.description)).setText(description);
 			
 			sponsorView.setTag("sponsor");
@@ -208,7 +198,8 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
         	if (sponsorPhoto != null)
         		displayPhoto();
         	else
-        		loadPhotoTask = (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_LARGE).execute(sponsor_id);
+				loadPhotoTask = (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_LARGE)
+						.execute(sponsor.getId());
         }
 	}
 	
@@ -290,8 +281,8 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	@Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 		String type = (String) v.getTag();
-    	if (type.equals("sponsor") && sponsor_id != null)
-    		startActivity(Utils.legislatorIntent(sponsor_id));
+		if (type.equals("sponsor") && sponsor != null)
+			startActivity(Utils.legislatorIntent(sponsor.getId()));
     }
 	
 	@Override 

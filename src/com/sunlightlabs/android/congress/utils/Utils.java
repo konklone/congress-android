@@ -65,27 +65,15 @@ public class Utils {
 		return intent;
 	}
 
-	// Suitable for a direct link to a legislator, bypassing the LegislatorLoader entirely
+	// Suitable for a direct link to a legislator, bypassing the
+	// LegislatorLoader entirely
 	public static Intent legislatorIntent(Context context, Legislator legislator) {
-		return new Intent(context, LegislatorTabs.class)
-		.putExtra("id", legislator.bioguide_id)
-		.putExtra("titledName", legislator.titledName())
-		.putExtra("lastName", legislator.last_name)
-		.putExtra("firstName", legislator.first_name)
-		.putExtra("nickname", legislator.nickname)
-		.putExtra("nameSuffix", legislator.name_suffix)
-		.putExtra("title", legislator.title)
-		.putExtra("state", legislator.state)
-		.putExtra("party", legislator.party)
-		.putExtra("gender", legislator.gender)
-		.putExtra("domain", legislator.getDomain())
-		.putExtra("office", legislator.congress_office)
-		.putExtra("website", legislator.website)
-		.putExtra("phone", legislator.phone)
-		.putExtra("twitter_id", legislator.twitter_id)
-		.putExtra("youtube_id", legislator.youtubeUsername())
-		.putExtra("bioguide_id", legislator.bioguide_id)
-		.putExtra("govtrack_id", legislator.govtrack_id);
+		return new Intent(context, LegislatorTabs.class).putExtra("legislator", legislator);
+	}
+
+	public static Intent legislatorIntent(Context context, Class<?> activityClass,
+			Legislator legislator) {
+		return new Intent(context, activityClass).putExtra("legislator", legislator);
 	}
 
 	// Suitable for going from a list to the bill display page.
@@ -94,7 +82,6 @@ public class Utils {
 
 	// so tedious that I want a method to load up an Intent for any class
 	public static Intent billIntent(Context context, Bill bill) {
-		Legislator sponsor = bill.sponsor;
 		Intent intent = new Intent(context, BillTabs.class)
 		.putExtra("id", bill.id)
 		.putExtra("type", bill.type)
@@ -136,14 +123,9 @@ public class Utils {
 		if (bill.enacted_at != null)
 			intent.putExtra("enacted_at", bill.enacted_at.getTime());
 
+		Legislator sponsor = bill.sponsor;
 		if (sponsor != null) {
-			intent.putExtra("sponsor_id", sponsor.bioguide_id)
-			.putExtra("sponsor_party", sponsor.party)
-			.putExtra("sponsor_state", sponsor.state)
-			.putExtra("sponsor_title", sponsor.title)
-			.putExtra("sponsor_first_name", sponsor.first_name)
-			.putExtra("sponsor_nickname", sponsor.nickname)
-			.putExtra("sponsor_last_name", sponsor.last_name);
+			intent.putExtra("sponsor", sponsor);
 		}
 
 		return intent;
