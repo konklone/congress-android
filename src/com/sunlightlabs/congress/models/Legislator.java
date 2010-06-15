@@ -1,9 +1,11 @@
 package com.sunlightlabs.congress.models;
 
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Legislator implements Comparable<Legislator> {
+public class Legislator implements Comparable<Legislator>, Serializable {
+	private static final long serialVersionUID = 1L;
 	
 	public String bioguide_id, govtrack_id;
 	public String first_name, last_name, nickname, name_suffix;

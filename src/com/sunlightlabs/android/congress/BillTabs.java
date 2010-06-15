@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.Legislator;
 
 public class BillTabs extends TabActivity {
 	private String id, type, code, short_title, official_title;
@@ -20,8 +21,7 @@ public class BillTabs extends TabActivity {
 	private long awaiting_signature_since, enacted_at;
 	private long last_vote_at;
 	
-	private String sponsor_id, sponsor_party, sponsor_state, sponsor_title;
-	private String sponsor_first_name, sponsor_last_name, sponsor_nickname;
+	private Legislator sponsor;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,13 +57,7 @@ public class BillTabs extends TabActivity {
 		enacted = extras.getBoolean("enacted", false);
 		enacted_at = extras.getLong("enacted_at", 0);
 		
-		sponsor_id = extras.getString("sponsor_id");
-		sponsor_title = extras.getString("sponsor_title");
-		sponsor_state = extras.getString("sponsor_state");
-		sponsor_party = extras.getString("sponsor_party");
-		sponsor_first_name = extras.getString("sponsor_first_name");
-		sponsor_nickname = extras.getString("sponsor_nickname");
-		sponsor_last_name = extras.getString("sponsor_last_name");
+		sponsor = (Legislator) extras.getSerializable("sponsor");
 		
 		setupControls();
 		setupTabs();
@@ -113,13 +107,7 @@ public class BillTabs extends TabActivity {
 			.putExtra("override_senate_result_at", override_senate_result_at)
 			.putExtra("awaiting_signature_since", awaiting_signature_since)
 			.putExtra("enacted_at", enacted_at)
-			.putExtra("sponsor_id", sponsor_id)
-			.putExtra("sponsor_party", sponsor_party)
-			.putExtra("sponsor_state", sponsor_state)
-			.putExtra("sponsor_title", sponsor_title)
-			.putExtra("sponsor_first_name", sponsor_first_name)
-			.putExtra("sponsor_nickname", sponsor_nickname)
-			.putExtra("sponsor_last_name", sponsor_last_name);
+			.putExtra("sponsor", sponsor);
 	}
 	
 	public Intent historyIntent() {
