@@ -32,7 +32,6 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, LoadBillTask.LoadsBill {	
-	// fields from the intent 
 	private Bill bill;
 	private Legislator sponsor;
 
@@ -51,8 +50,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		Bundle extras = getIntent().getExtras();
-		bill = (Bill) extras.getSerializable("bill");
+		bill = (Bill) getIntent().getExtras().getSerializable("bill");
 		sponsor = bill.sponsor;
 		
 		setupControls();

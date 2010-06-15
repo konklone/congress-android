@@ -82,7 +82,7 @@ public class Utils {
 
 	// so tedious that I want a method to load up an Intent for any class
 	public static Intent billIntent(Context context, Bill bill) {
-		return new Intent(context, BillTabs.class).putExtra("bill", bill);
+		return billIntent(context, BillTabs.class, bill);
 	}
 
 	public static Intent billIntent(Context context, Class<?> cls, Bill bill) {

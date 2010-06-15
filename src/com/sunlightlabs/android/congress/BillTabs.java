@@ -12,13 +12,14 @@ import com.sunlightlabs.congress.models.Bill;
 
 public class BillTabs extends TabActivity {
 	private Bill bill;
-	
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bill);
 		
 		Bundle extras = getIntent().getExtras();
+
 		bill = (Bill) extras.getSerializable("bill");
 		
 		setupControls();
