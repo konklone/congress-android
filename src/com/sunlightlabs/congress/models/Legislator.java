@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class Legislator implements Comparable<Legislator>, Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	public String bioguide_id, govtrack_id;
+	public String id, bioguide_id, govtrack_id;
 	public String first_name, last_name, nickname, name_suffix;
 	public String title, party, state, district;
 	public String gender, congress_office, website, phone, twitter_id, youtube_url;
@@ -31,6 +31,10 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 		return name;
 	}
 	
+	public String getOfficialName() {
+		return last_name + ", " + firstName();
+	}
+
 	public String fullTitle() {
 		String title = this.title;
 		if (title.equals("Del"))
@@ -77,6 +81,26 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 			return "";
 	}
 	
+	public String getPosition(String stateName) {
+		String district = this.district;
+
+		String position = "";
+
+		if (district.equals("Senior Seat"))
+			position = "Senior Senator from " + stateName;
+		else if (district.equals("Junior Seat"))
+			position = "Junior Senator from " + stateName;
+		else if (district.equals("0")) {
+			if (title.equals("Rep"))
+				position = "Representative for " + stateName + " At-Large";
+			else
+				position = fullTitle() + " for " + stateName;
+		} else
+			position = "Representative for " + stateName + "-" + district;
+
+		return "(" + party + ") " + position;
+	}
+
 	public static String bioguideUrl(String bioguide_id) {
 		return "http://bioguide.congress.gov/scripts/biodisplay.pl?index=" + bioguide_id;
 	}
@@ -89,8 +113,12 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 		return "http://www.govtrack.us/congress/person.xpd?id=" + govtrack_id;
 	}
 	
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public String getId() {
-		return bioguide_id;
+		return id;
 	}
 	
 	public String toString() {
