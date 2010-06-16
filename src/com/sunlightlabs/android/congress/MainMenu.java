@@ -1,14 +1,18 @@
 package com.sunlightlabs.android.congress;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +34,8 @@ import android.widget.TextView;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
 import com.sunlightlabs.android.congress.utils.FavoriteLegislatorsAdapter;
+import com.sunlightlabs.android.congress.utils.LegislatorImage;
+import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.LocationUpdater;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
@@ -41,7 +47,8 @@ import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class MainMenu extends ListActivity implements LocationUpdateable<MainMenu>, AddressUpdateable<MainMenu> {
+public class MainMenu extends ListActivity implements LocationUpdateable<MainMenu>,
+		AddressUpdateable<MainMenu>, LoadPhotoTask.LoadsPhoto {
 	public static final int RESULT_ZIP = 1;
 	public static final int RESULT_LASTNAME = 2;
 	public static final int RESULT_STATE = 3;
@@ -79,6 +86,9 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	private Database database;
 	private Cursor lc;
 
+	private HashMap<String, LoadPhotoTask> loadPhotoTasks = new HashMap<String, LoadPhotoTask>();
+	private HashMap<String, FavoriteLegislatorWrapper> favPeopleWrappers = new HashMap<String, FavoriteLegislatorWrapper>();
+
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -104,6 +114,15 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 			addressUpdater = holder.addressUpdater;
 			location = holder.location;
 			address = holder.address;
+
+			loadPhotoTasks = holder.loadPhotoTasks;
+
+			if (loadPhotoTasks != null) {
+				Iterator<LoadPhotoTask> iterator = loadPhotoTasks.values().iterator();
+				while (iterator.hasNext())
+					iterator.next().onScreenLoad(this);
+			}
+			favPeopleWrappers = holder.favPeopleWrappers;
 		}
 
 		if(locationUpdater == null)
@@ -142,6 +161,8 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		LocationUpdater locationUpdater;
 		Location location;
 		String address;
+		HashMap<String, LoadPhotoTask> loadPhotoTasks;
+		HashMap<String, FavoriteLegislatorWrapper> favPeopleWrappers;
 	}
 
 	@Override
@@ -151,6 +172,8 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		holder.locationUpdater = locationUpdater;
 		holder.location = location;
 		holder.address = address;
+		holder.loadPhotoTasks = loadPhotoTasks;
+		holder.favPeopleWrappers = favPeopleWrappers;
 		return holder;
 	}
 
@@ -239,8 +262,8 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		
 		toggleFavoritePeopleHeader();
 
-		FavoriteLegislatorsAdapter favLegislatorAdapter = new FavoriteLegislatorsAdapter(this, lc);
-		adapter.addAdapter(favLegislatorAdapter);
+		FavoriteLegislatorsAdapter favoritePeopleAdapter = new FavoriteLegislatorsAdapter(this, lc);
+		adapter.addAdapter(favoritePeopleAdapter);
 
 		View peopleHeader = inflateHeader(inflater, R.string.menu_legislators_header);
 		adapter.addView(peopleHeader);
@@ -652,5 +675,23 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		return handler;
 	}
 
+	public void loadPhoto(String bioguide_id, FavoriteLegislatorWrapper wrapper) {
+		if (!loadPhotoTasks.containsKey(bioguide_id)) {
+			loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this,
+					LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
+			favPeopleWrappers.put(bioguide_id, wrapper);
+		}
+	}
+
+	public Context getContext() {
+		return this;
+	}
+
+	public void onLoadPhoto(Drawable photo, Object tag) {
+		String bioguide_id = (String) tag;
+		loadPhotoTasks.remove(bioguide_id);
+		favPeopleWrappers.get(bioguide_id).onLoadPhoto(photo, bioguide_id);
+		favPeopleWrappers.remove(bioguide_id);
+	}
 
 }

@@ -33,14 +33,7 @@ import com.sunlightlabs.congress.models.Legislator;
 
 public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, LoadBillTask.LoadsBill {	
 	// fields from the intent 
-	private String id, type, code, short_title, official_title;
-	private int number, session;
-	private boolean vetoed, awaiting_signature, enacted;
-	private String house_result, senate_result, override_house_result, override_senate_result;
-	private long introduced_at, house_result_at, senate_result_at;
-	private long vetoed_at, override_house_result_at, override_senate_result_at;
-	private long awaiting_signature_since, enacted_at;
-	
+	private Bill bill;
 	private Legislator sponsor;
 
 	// fields fetched remotely
@@ -59,31 +52,8 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		super.onCreate(savedInstanceState);
 		
 		Bundle extras = getIntent().getExtras();
-		id = extras.getString("id");
-		type = extras.getString("type");
-		number = extras.getInt("number");
-		session = extras.getInt("session");
-		code = extras.getString("code");
-		short_title = extras.getString("short_title");
-		official_title = extras.getString("official_title");
-		
-		introduced_at = extras.getLong("introduced_at", 0);
-		house_result = extras.getString("house_result");
-		house_result_at = extras.getLong("house_result_at", 0);
-		senate_result = extras.getString("senate_result");
-		senate_result_at = extras.getLong("senate_result_at", 0);
-		vetoed = extras.getBoolean("vetoed", false);
-		vetoed_at = extras.getLong("vetoed_at", 0);
-		override_house_result = extras.getString("override_house_result");
-		override_house_result_at = extras.getLong("override_house_result_at", 0);
-		override_senate_result = extras.getString("override_senate_result");
-		override_senate_result_at = extras.getLong("override_senate_result_at", 0);
-		awaiting_signature = extras.getBoolean("awaiting_signature", false);
-		awaiting_signature_since = extras.getLong("awaiting_signature_since", 0);
-		enacted = extras.getBoolean("enacted", false);
-		enacted_at = extras.getLong("enacted_at", 0);
-		
-		sponsor = (Legislator) extras.getSerializable("sponsor");
+		bill = (Bill) extras.getSerializable("bill");
+		sponsor = bill.sponsor;
 		
 		setupControls();
 		
@@ -105,11 +75,12 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		
 		TextView titleView = (TextView) header.findViewById(R.id.title);
 		String title;
+		String short_title = bill.short_title;
 		if (short_title != null) {
 			title = Utils.truncate(short_title, 400);
 			titleView.setTextSize(22);
 		} else {
-			title = official_title;
+			title = bill.official_title;
 			titleView.setTextSize(16);
 		}
 		titleView.setText(title);
@@ -162,12 +133,14 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		View summaryView; 
 		if (summary != null && summary.length() > 0) {
 			summaryView = inflater.inflate(R.layout.bill_summary, null);
-			String formatted = Bill.formatSummary(summary, short_title);
+			String formatted = Bill.formatSummary(summary, bill.short_title);
 			((TextView) summaryView.findViewById(R.id.summary)).setText(formatted);
 		} else {
 			summaryView = inflater.inflate(R.layout.bill_no_summary, null);
 			TextView noSummary = (TextView) summaryView.findViewById(R.id.no_summary);
-			noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\"" + Bill.thomasUrl(type, number, session) + "\">Read the text of this bill on THOMAS.</a>"));
+			noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\""
+					+ Bill.thomasUrl(bill.type, bill.number, bill.session)
+					+ "\">Read the text of this bill on THOMAS.</a>"));
         	noSummary.setMovementMethod(LinkMovementMethod.getInstance());
 		}
 		adapter.addView(summaryView);
@@ -187,7 +160,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 			if (summary != null)
 				displaySummary();
 			else
-				loadBillTask = (LoadBillTask) new LoadBillTask(this, id).execute("summary");
+				loadBillTask = (LoadBillTask) new LoadBillTask(this, bill.id).execute("summary");
 		}
 	}
 	
@@ -231,8 +204,10 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	public void addBillTimeline(View header) {
 		ViewGroup inner = (ViewGroup) header.findViewById(R.id.header_inner);
 		
-		addTimelinePiece(inner, "Introduced on", introduced_at);
+		addTimelinePiece(inner, "Introduced on", bill.introduced_at.getTime());
 		
+		String house_result = bill.house_result;
+		long house_result_at = bill.house_result_at == null ? 0 : bill.house_result_at.getTime();
 		if (house_result != null && house_result_at > 0) {
 			if (house_result.equals("pass"))
 				addTimelinePiece(inner, "Passed the House on", house_result_at);
@@ -240,6 +215,8 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 				addTimelinePiece(inner, "Failed the House on", house_result_at);
 		}
 		
+		String senate_result = bill.senate_result;
+		long senate_result_at = bill.senate_result_at == null ? 0 : bill.senate_result_at.getTime();
 		if (senate_result != null && senate_result_at > 0) {
 			if (senate_result.equals("pass"))
 				addTimelinePiece(inner, "Passed the Senate on", senate_result_at);
@@ -247,9 +224,12 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 				addTimelinePiece(inner, "Failed the Senate on", senate_result_at);
 		}
 		
-		if (vetoed && vetoed_at > 0)
+		long vetoed_at = bill.vetoed_at == null ? 0 : bill.vetoed_at.getTime();
+		if (bill.vetoed && vetoed_at > 0)
 			addTimelinePiece(inner, "Vetoed on", vetoed_at);
 		
+		String override_house_result = bill.override_house_result;
+		long override_house_result_at = bill.override_house_result_at == null ? 0 : bill.override_house_result_at.getTime();
 		if (override_house_result != null && override_house_result_at > 0) {
 			if (override_house_result.equals("pass"))
 				addTimelinePiece(inner, "Override passed in the House on", override_house_result_at);
@@ -257,6 +237,8 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 				addTimelinePiece(inner, "Override failed in the House on", override_house_result_at);
 		}
 		
+		String override_senate_result = bill.override_senate_result;
+		long override_senate_result_at = bill.override_house_result_at == null ? 0 : bill.override_senate_result_at.getTime();
 		if (override_senate_result != null && override_senate_result_at > 0) {
 			if (override_senate_result.equals("pass"))
 				addTimelinePiece(inner, "Override passed in the Senate on", override_senate_result_at);
@@ -264,10 +246,12 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 				addTimelinePiece(inner, "Override failed in the Senate on", override_senate_result_at);
 		}
 		
-		if (awaiting_signature && awaiting_signature_since > 0)
+		long awaiting_signature_since = bill.awaiting_signature_since == null ? 0 : bill.awaiting_signature_since.getTime();
+		if (bill.awaiting_signature && awaiting_signature_since > 0)
 			addTimelinePiece(inner, "Awaiting signature since", awaiting_signature_since);
 		
-		if (enacted && enacted_at > 0)
+		long enacted_at = bill.enacted_at == null ? 0 : bill.enacted_at.getTime();
+		if (bill.enacted && enacted_at > 0)
 			addTimelinePiece(inner, "Enacted on", enacted_at);
 	}
 	
@@ -299,17 +283,20 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
     		startActivity(new Intent(this, MainMenu.class));
     		break;
     	case R.id.shortcut:
-    		sendBroadcast(Utils.shortcutIntent(this, id, code)
+			sendBroadcast(Utils.shortcutIntent(this, bill.id, bill.code)
     				.setAction("com.android.launcher.action.INSTALL_SHORTCUT"));
     		break;
     	case R.id.thomas:
-    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.thomasUrl(type, number, session))));
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.thomasUrl(bill.type,
+					bill.number, bill.session))));
     		break;
     	case R.id.govtrack:
-    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.govTrackUrl(type, number, session))));
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.govTrackUrl(bill.type,
+					bill.number, bill.session))));
     		break;
     	case R.id.opencongress:
-    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.openCongressUrl(type, number, session))));
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.openCongressUrl(bill.type,
+					bill.number, bill.session))));
     		break;
     	case R.id.share:
     		Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, shareText());
@@ -320,11 +307,12 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
     }
 	
 	public String shareText() {
-		String url = Bill.thomasUrl(type, number, session);
+		String url = Bill.thomasUrl(bill.type, bill.number, bill.session);
+		String short_title = bill.short_title;
 		if (short_title != null && !short_title.equals(""))
 			return "Check out the " + short_title + " on THOMAS: " + url;
 		else
-			return "Check out the bill " + Bill.formatCode(code) + " on THOMAS: " + url;
+			return "Check out the bill " + Bill.formatCode(bill.code) + " on THOMAS: " + url;
 	}
 	
 	public int sizeOfTitle(String title) {
