@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -29,14 +30,17 @@ import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
+import com.sunlightlabs.android.congress.utils.FavoriteLegislatorsAdapter;
 import com.sunlightlabs.android.congress.utils.LocationUpdater;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.android.congress.utils.ViewWrapper;
 import com.sunlightlabs.android.congress.utils.AddressUpdater.AddressUpdateable;
+import com.sunlightlabs.android.congress.utils.FavoriteLegislatorsAdapter.FavoriteLegislatorWrapper;
 import com.sunlightlabs.android.congress.utils.LocationUpdater.LocationUpdateable;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.Legislator;
 
 public class MainMenu extends ListActivity implements LocationUpdateable<MainMenu>,
 		LocationListener, AddressUpdateable<MainMenu> {
@@ -70,6 +74,13 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	private SearchViewWrapper searchLocationView;
 	private ViewArrayAdapter searchLocationAdapter;
 
+	private View favoritePeopleHeader;
+
+	MergeAdapter adapter;
+
+	private Database database;
+	private Cursor lc;
+
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -85,6 +96,10 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
+
+		// open the database to get the favorites
+		database = new Database(this);
+		database.open();
 
 		MainMenuHolder holder = (MainMenuHolder) getLastNonConfigurationInstance();
 		if(holder != null) {
@@ -133,6 +148,8 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		super.onDestroy();
 		Log.d(TAG, "Destroying activity. Remove location updates");
 		locationUpdater.requestLocationUpdateHalt();
+		
+		database.close();
 	}
 
 	@Override
@@ -147,39 +164,51 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		super.onResume();
 		Log.d(TAG, "Resuming activity.");
 		locationUpdater.requestLocationUpdate();
+		
+		lc.requery();
+		adapter.notifyDataSetChanged();
+		toggleFavoritePeopleHeader();
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		ViewWrapper wrapper = (ViewWrapper) v.getTag();		
-		int type = ((Integer) wrapper.getTag()).intValue();
-		switch(type) {
-		case SEARCH_LOCATION:
-			searchByLatLong(location.getLatitude(), location.getLongitude(), address);
-			break;
-		case SEARCH_ZIP:
-			getResponse(RESULT_ZIP);
-			break;
-		case SEARCH_NAME:
-			getResponse(RESULT_LASTNAME);
-			break;
-		case SEARCH_STATE:
-			getResponse(RESULT_STATE);
-			break;
-		case BILLS_RECENT:
-			startActivity(new Intent(this, BillList.class).putExtra("type", BillList.BILLS_RECENT));
-			break;
-		case BILLS_LAW:
-			startActivity(new Intent(this, BillList.class).putExtra("type", BillList.BILLS_LAW));
-			break;
-		case BILLS_LATEST_VOTES:
-			startActivity(new Intent(this, BillList.class).putExtra("type", BillList.BILLS_LATEST_VOTES));
-			break;
-		case BILLS_CODE:
-			getResponse(RESULT_BILL_CODE);
-			break;
-		default:
-			break;
+		Object tag = v.getTag();
+		if (tag instanceof ViewWrapper) {
+			ViewWrapper wrapper = (ViewWrapper) v.getTag();
+			int type = ((Integer) wrapper.getTag()).intValue();
+			switch (type) {
+			case SEARCH_LOCATION:
+				searchByLatLong(location.getLatitude(), location.getLongitude(), address);
+				break;
+			case SEARCH_ZIP:
+				getResponse(RESULT_ZIP);
+				break;
+			case SEARCH_NAME:
+				getResponse(RESULT_LASTNAME);
+				break;
+			case SEARCH_STATE:
+				getResponse(RESULT_STATE);
+				break;
+			case BILLS_RECENT:
+				startActivity(new Intent(this, BillList.class).putExtra("type",	BillList.BILLS_RECENT));
+				break;
+			case BILLS_LAW:
+				startActivity(new Intent(this, BillList.class).putExtra("type", BillList.BILLS_LAW));
+				break;
+			case BILLS_LATEST_VOTES:
+				startActivity(new Intent(this, BillList.class).putExtra("type", BillList.BILLS_LATEST_VOTES));
+				break;
+			case BILLS_CODE:
+				getResponse(RESULT_BILL_CODE);
+				break;
+			default:
+				break;
+			}
+		}
+		else if (tag instanceof FavoriteLegislatorWrapper) {
+			FavoriteLegislatorWrapper wrapper = (FavoriteLegislatorWrapper) tag;
+			Legislator legislator = wrapper.getLegislator();
+			startActivity(Utils.legislatorIntent(this, legislator));
 		}
 	}
 
@@ -192,24 +221,19 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 
 		public SearchViewWrapper(View base) {
 			this.base = base;
-		}
-		
+		}		
 		public TextView getText1() {
 			return (text1 == null) ? text1 = (TextView) this.base.findViewById(R.id.text_1) : text1;
-		}
-		
+		}		
 		public TextView getText2() {
 			return (text2 == null) ? text2 = (TextView) this.base.findViewById(R.id.text_2) : text2;
-		}
-		
+		}		
 		public View getLoading() {
 			return (loading == null) ? loading = this.base.findViewById(R.id.row_loading) : loading;
-		}
-		
+		}		
 		public View getBase() {
 			return base;
-		}
-		
+		}		
 		public ViewWrapper getWrapperTag() {
 			return (ViewWrapper) base.getTag();
 		}	
@@ -217,16 +241,25 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 
 	public void setupControls() {
 		LayoutInflater inflater = LayoutInflater.from(this);
+		adapter = new MergeAdapter();
 
 		View billsHeader = inflateHeader(inflater, R.string.menu_bills_header);
-		View peopleHeader = inflateHeader(inflater, R.string.menu_legislators_header);
-		peopleHeader.setEnabled(false);
-
-		MergeAdapter adapter = new MergeAdapter();
 		adapter.addView(billsHeader);
 		adapter.addAdapter(new ViewArrayAdapter(this, setupBillMenu(inflater)));
 
-		adapter.addView(peopleHeader);		
+		favoritePeopleHeader = inflateHeader(inflater, R.string.menu_favorite_legislators);
+		adapter.addView(favoritePeopleHeader);
+		
+		lc = database.getLegislators();
+		startManagingCursor(lc);
+		
+		toggleFavoritePeopleHeader();
+
+		FavoriteLegislatorsAdapter favLegislatorAdapter = new FavoriteLegislatorsAdapter(this, lc);
+		adapter.addAdapter(favLegislatorAdapter);
+
+		View peopleHeader = inflateHeader(inflater, R.string.menu_legislators_header);
+		adapter.addView(peopleHeader);
 		searchLocationAdapter = new ViewArrayAdapter(this, setupSearchMenu(inflater));
 		adapter.addAdapter(searchLocationAdapter);
 
@@ -582,6 +615,13 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		searchLocationView.getText2().setVisibility(visible ? View.GONE : View.VISIBLE);
 	}
 
+	private void toggleFavoritePeopleHeader() {
+		if (lc.getCount() == 0)
+			favoritePeopleHeader.setVisibility(View.GONE);
+		else
+			favoritePeopleHeader.setVisibility(View.VISIBLE);
+	}
+
 	private void displayAddress(String address, boolean enabled) {
 		Log.d(TAG, "displayAddress(): address=" + address);
 		searchLocationView.getText2().setTextColor(enabled ? Color.parseColor("#dddddd") : Color.parseColor("#666666"));
@@ -643,4 +683,5 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		locationUpdater.onStatusChanged(provider, status, extras);
 	}
+
 }
