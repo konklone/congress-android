@@ -692,14 +692,6 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		return handler;
 	}
 
-	public void onLocationChanged(Location location) {
-		locationUpdater.onLocationChanged(location);
-	}
-
-	public void onProviderDisabled(String provider) {
-		locationUpdater.onProviderDisabled(provider);
-	}
-	
 	public void loadPhoto(String bioguide_id, FavoriteLegislatorWrapper wrapper) {
 		if (!loadPhotoTasks.containsKey(bioguide_id)) {
 			loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this,
@@ -719,6 +711,14 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		favPeopleWrappers.remove(bioguide_id);
 	}
 
+	public void onLocationChanged(Location location) {
+		locationUpdater.onLocationChanged(location);
+	}
+
+	public void onProviderDisabled(String provider) {
+		locationUpdater.onProviderDisabled(provider);
+	}
+	
 	public void onProviderEnabled(String provider) {
 		locationUpdater.onProviderEnabled(provider);
 	}
