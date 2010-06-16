@@ -169,6 +169,9 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		
+		database.close();
+		
 		Log.d(TAG, "Destroying activity. Remove location updates");
 		locationUpdater.requestLocationUpdateHalt();
 		
@@ -185,6 +188,11 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		lc.requery();
+		adapter.notifyDataSetChanged();
+		toggleFavoritePeopleHeader();
+		
 		Log.d(TAG, "Resuming activity.");
 		locationUpdater.requestLocationUpdate();
 		
@@ -278,8 +286,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		
 		toggleFavoritePeopleHeader();
 
-		FavoriteLegislatorsAdapter favoritePeopleAdapter = new FavoriteLegislatorsAdapter(this, lc);
-		adapter.addAdapter(favoritePeopleAdapter);
+		adapter.addAdapter(new FavoriteLegislatorsAdapter(this, lc));
 
 		View peopleHeader = inflateHeader(inflater, R.string.menu_legislators_header);
 		adapter.addView(peopleHeader);

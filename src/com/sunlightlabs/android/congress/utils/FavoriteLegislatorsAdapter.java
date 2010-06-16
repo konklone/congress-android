@@ -29,7 +29,8 @@ public class FavoriteLegislatorsAdapter extends CursorAdapter {
 		FavoriteLegislatorWrapper wrapper = (FavoriteLegislatorWrapper) view.getTag();
 		wrapper.populateFrom(cursor);
 	}
-
+	
+	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		LayoutInflater inflater = LayoutInflater.from(context);
 		View row = inflater.inflate(R.layout.legislator_item, null);
@@ -59,8 +60,7 @@ public class FavoriteLegislatorsAdapter extends CursorAdapter {
 		}
 
 		public TextView getPosition() {
-			return position == null ? position = (TextView) row.findViewById(R.id.position)
-					: position;
+			return position == null ? position = (TextView) row.findViewById(R.id.position) : position;
 		}
 
 		public Legislator getLegislator() {
