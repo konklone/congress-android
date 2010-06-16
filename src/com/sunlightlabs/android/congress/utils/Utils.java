@@ -82,53 +82,11 @@ public class Utils {
 
 	// so tedious that I want a method to load up an Intent for any class
 	public static Intent billIntent(Context context, Bill bill) {
-		Intent intent = new Intent(context, BillTabs.class)
-		.putExtra("id", bill.id)
-		.putExtra("type", bill.type)
-		.putExtra("number", bill.number)
-		.putExtra("session", bill.session)
-		.putExtra("code", bill.code)
-		.putExtra("short_title", bill.short_title)
-		.putExtra("official_title", bill.official_title)
-		.putExtra("house_result", bill.house_result)
-		.putExtra("senate_result", bill.senate_result)
-		.putExtra("passed", bill.passed)
-		.putExtra("vetoed", bill.vetoed)
-		.putExtra("override_house_result", bill.override_house_result)
-		.putExtra("override_senate_result", bill.override_senate_result)
-		.putExtra("awaiting_signature", bill.awaiting_signature)
-		.putExtra("enacted", bill.enacted);
+		return new Intent(context, BillTabs.class).putExtra("bill", bill);
+	}
 
-		if (bill.last_vote_at != null)
-			intent.putExtra("last_vote_at", bill.last_vote_at.getTime());
-		if (bill.last_action_at != null)
-			intent.putExtra("last_action_at", bill.last_action_at.getTime());
-
-		if (bill.introduced_at != null)
-			intent.putExtra("introduced_at", bill.introduced_at.getTime());
-		if (bill.house_result_at != null)
-			intent.putExtra("house_result_at", bill.house_result_at.getTime());
-		if (bill.senate_result_at != null)
-			intent.putExtra("senate_result_at", bill.senate_result_at.getTime());
-		if (bill.passed_at != null)
-			intent.putExtra("passed_at", bill.passed_at.getTime());
-		if (bill.vetoed_at != null)
-			intent.putExtra("vetoed_at", bill.vetoed_at.getTime());
-		if (bill.override_house_result_at != null)
-			intent.putExtra("override_house_result_at", bill.override_house_result_at.getTime());
-		if (bill.override_senate_result_at != null)
-			intent.putExtra("override_senate_result_at", bill.override_senate_result_at.getTime());
-		if (bill.awaiting_signature_since != null)
-			intent.putExtra("awaiting_signature_since", bill.awaiting_signature_since.getTime());
-		if (bill.enacted_at != null)
-			intent.putExtra("enacted_at", bill.enacted_at.getTime());
-
-		Legislator sponsor = bill.sponsor;
-		if (sponsor != null) {
-			intent.putExtra("sponsor", sponsor);
-		}
-
-		return intent;
+	public static Intent billIntent(Context context, Class<?> cls, Bill bill) {
+		return new Intent(context, cls).putExtra("bill", bill);
 	}
 
 	public static Intent billIntent(String billId, String code) {

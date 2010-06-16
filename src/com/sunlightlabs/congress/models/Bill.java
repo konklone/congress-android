@@ -1,11 +1,13 @@
 package com.sunlightlabs.congress.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Bill {
+public class Bill implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	// basic
 	public String id, code, type, state, chamber;
@@ -35,12 +37,14 @@ public class Bill {
 	public ArrayList<Bill.Action> actions = new ArrayList<Bill.Action>();
 	
 
-	public static class Action {
+	public static class Action implements Serializable {
+		private static final long serialVersionUID = 1L;
 		public String type, text;
 		public Date acted_at;
 	}
 	
-	public static class Vote {
+	public static class Vote implements Serializable {
+		private static final long serialVersionUID = 1L;
 		public String result, text, how, type, chamber, roll_id;
 		public Date voted_at;
 	}

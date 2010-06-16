@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +11,15 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.MainMenu;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.LegislatorService;
 
 public class FavoriteLegislatorsAdapter extends CursorAdapter {
-	private Context context;
+	private MainMenu context;
 
-	public FavoriteLegislatorsAdapter(Context context, Cursor c) {
+	public FavoriteLegislatorsAdapter(MainMenu context, Cursor c) {
 		super(context, c);
 		this.context = context;
 	}
@@ -76,8 +78,21 @@ public class FavoriteLegislatorsAdapter extends CursorAdapter {
 					legislator.bioguide_id, context);
 			if (picture != null)
 				getPhoto().setImageDrawable(picture);
+			else {
+				getPhoto().setImageResource(R.drawable.loading_photo);
+				context.loadPhoto(legislator.bioguide_id, this);
+			}
+		}
+
+		public void onLoadPhoto(Drawable photo, String bioguideId) {
+			if (photo != null)
+				((ImageView) row.findViewById(R.id.photo)).setImageDrawable(photo);
 			else
-				photo.setImageResource(R.drawable.loading_photo);
+				// don't know the gender from here, default to female (to
+				// balance out how the shortcut image defaults to male)
+				((ImageView) row.findViewById(R.id.photo))
+						.setImageResource(R.drawable.no_photo_female);
+
 		}
 	}
 
