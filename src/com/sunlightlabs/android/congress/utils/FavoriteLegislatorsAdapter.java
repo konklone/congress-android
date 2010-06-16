@@ -86,13 +86,9 @@ public class FavoriteLegislatorsAdapter extends CursorAdapter {
 
 		public void onLoadPhoto(Drawable photo, String bioguideId) {
 			if (photo != null)
-				((ImageView) row.findViewById(R.id.photo)).setImageDrawable(photo);
+				getPhoto().setImageDrawable(photo);
 			else
-				// don't know the gender from here, default to female (to
-				// balance out how the shortcut image defaults to male)
-				((ImageView) row.findViewById(R.id.photo))
-						.setImageResource(R.drawable.no_photo_female);
-
+				getPhoto().setImageResource(R.drawable.no_photo_female);
 		}
 	}
 
