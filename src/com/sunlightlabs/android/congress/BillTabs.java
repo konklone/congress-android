@@ -18,9 +18,7 @@ public class BillTabs extends TabActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bill);
 		
-		Bundle extras = getIntent().getExtras();
-
-		bill = (Bill) extras.getSerializable("bill");
+		bill = (Bill) getIntent().getExtras().getSerializable("bill");
 		
 		setupControls();
 		setupTabs();
