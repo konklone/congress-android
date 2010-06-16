@@ -162,6 +162,7 @@ public class LocationUpdater {
 
 	public void requestLocationUpdateHalt() {
 		Log.d(TAG, "Removing update listener " + listener);
+		cancelTimeout();
 		if (manager != null)
 			manager.removeUpdates(listener);
 	}
