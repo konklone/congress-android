@@ -50,6 +50,8 @@
     <string name="menu_legislators_zip">Zip Code</string>
     <string name="menu_location_no_location">Cannot update location</string>
     <string name="menu_location_updating">Updating location...</string>
+    <string name="menu_favorite_legislators">Favorite Legislators</string>
+    <string name="menu_favorite_bills">Favorite Bills</string>
     
     <string name="bill_not_found">No bill found by that code.</string>
     <string name="bills_retry_note">Couldn\'t load bills.</string>
@@ -68,4 +70,7 @@
        
     <string name="location_not_accurate">Location not accurate?</string>
     <string name="location_update_fail">Couldn\'t update your location. Please try again later.</string>
+    
+    <string name="favorites_add">Add to Favorites</string>
+    <string name="favorites_remove">Remove from Favorites</string>
 </resources>
