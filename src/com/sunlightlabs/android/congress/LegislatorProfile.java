@@ -9,7 +9,6 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -47,10 +46,6 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 	private LoadPhotoTask loadPhotoTask;
 	private LoadCommitteesTask loadCommitteesTask;
 	private ShortcutImageTask shortcutImageTask;
-	
-	private Database database;
-	private Menu menu;
-	private Cursor c;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,13 +66,8 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
         loadCommittees();
         if (shortcutImageTask != null)
         	shortcutImageTask.onScreenLoad(this);
-
-		database = new Database(this);
-		database.open();
-		c = database.getLegislator(legislator.getId());
-		startManagingCursor(c);
 	}
-	
+
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		return new LegislatorProfileHolder(loadPhotoTask, loadCommitteesTask, shortcutImageTask, committees);
@@ -258,8 +248,6 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
     public boolean onCreateOptionsMenu(Menu menu) { 
 	    super.onCreateOptionsMenu(menu); 
 	    getMenuInflater().inflate(R.menu.legislator, menu);
-		this.menu = menu;
-		toggleFavoriteMenu(!(c.getCount() == 1));
 	    return true;
     }
 	
@@ -282,9 +270,6 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
     	case R.id.bioguide:
     		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.bioguideUrl(legislator.bioguide_id))));
     		break;
-		case R.id.favorite:
-			toggleDatabaseFavorite();
-			break;
     	}
     	return true;
     }
@@ -442,31 +427,6 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 			context.loadCommitteesTask = loadCommitteesTask;
 			context.shortcutImageTask = shortcutImageTask;
 			context.committees = committees;
-		}
-	}
-
-	private void toggleFavoriteMenu(boolean enabled) {
-		if (enabled)
-			menu.findItem(R.id.favorite).setTitle(R.string.favorites_add);
-		else
-			menu.findItem(R.id.favorite).setTitle(R.string.favorites_remove);
-	}
-
-	private void toggleDatabaseFavorite() {
-		String id = legislator.getId();
-		c.requery();
-		if (c.getCount() == 1) {
-			int result = database.removeLegislator(id);
-			if (result != 0) {
-				Utils.alert(this, "Legislator was removed from favorites.");
-				toggleFavoriteMenu(true);
-			}
-		} else {
-			long result = database.addLegislator(legislator);
-			if (result != -1) {
-				Utils.alert(this, "Legislator was added to favorites.");
-				toggleFavoriteMenu(false);
-			}
 		}
 	}
 }

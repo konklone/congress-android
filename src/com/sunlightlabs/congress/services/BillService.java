@@ -1,6 +1,7 @@
 package com.sunlightlabs.congress.services;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
@@ -43,6 +44,9 @@ public class BillService {
 		return billFor(Drumbone.url("bill", "bill_id=" + id + "&sections=" + sections));
 	}
 	
+	public static Date parseDate(String date) throws DateParseException {
+		return DateUtils.parseDate(date, Drumbone.dateFormat);
+	}
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
 
