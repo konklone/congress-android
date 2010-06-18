@@ -30,9 +30,4 @@
 		android:alphabeticShortcut="m"
 		android:icon="@android:drawable/ic_menu_myplaces"
 		/>
-	<item android:id="@+id/favorite" 
-		android:title="Add to Favorites"
-		android:alphabeticShortcut="f"
-		android:icon="@drawable/favorite"
-		/>
 </menu>

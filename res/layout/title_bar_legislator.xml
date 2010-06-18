@@ -13,13 +13,12 @@
 	android:background="@drawable/main_menu_gradient"
 	>
 	
-	<ImageView android:id="@+id/title_icon"
+	<ImageView android:id="@+id/favorite"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginLeft="5dp"
-   		android:layout_marginRight="12dp"
-   		
-		android:src="@drawable/icon"
+   		android:layout_marginRight="12dp"   		
+		android:src="@drawable/star_off"
 		/>
 		
 	<TextView android:id="@+id/title_text"

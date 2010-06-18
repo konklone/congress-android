@@ -1,10 +1,15 @@
 package com.sunlightlabs.congress.models;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import android.database.Cursor;
+
+import com.sunlightlabs.android.congress.Database;
 
 public class Bill implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -166,5 +171,56 @@ public class Bill implements Serializable {
 	public static String displayTitle(Bill bill) {
 		return (bill.short_title != null) ? bill.short_title : bill.official_title; 
 	}
+
+	private static Date parseDate(Cursor c, String col) throws ParseException {
+		return Database.parseDate(c.getString(c.getColumnIndex(col)));
+	}
 		
+	public static Bill fromCursor(Cursor c) throws CongressException {
+		Bill bill = new Bill();
+		bill.id = c.getString(c.getColumnIndex("id"));
+		bill.type = c.getString(c.getColumnIndex("type"));
+		bill.number = c.getInt(c.getColumnIndex("number"));
+		bill.session = c.getInt(c.getColumnIndex("session"));
+		bill.code = c.getString(c.getColumnIndex("code"));
+		bill.short_title = c.getString(c.getColumnIndex("short_title"));
+		bill.official_title = c.getString(c.getColumnIndex("official_title"));
+		bill.house_result = c.getString(c.getColumnIndex("house_result"));
+		bill.senate_result = c.getString(c.getColumnIndex("senate_result"));
+		bill.passed = Boolean.parseBoolean(c.getString(c.getColumnIndex("passed")));
+		bill.vetoed = Boolean.parseBoolean(c.getString(c.getColumnIndex("vetoed")));
+		bill.override_house_result = c.getString(c.getColumnIndex("override_house_result"));
+		bill.override_senate_result = c.getString(c.getColumnIndex("override_senate_result"));
+		bill.awaiting_signature = Boolean.parseBoolean(c.getString(c
+				.getColumnIndex("awaiting_signature")));
+		bill.enacted = Boolean.parseBoolean(c.getString(c.getColumnIndex("enacted")));
+
+		try {
+			bill.last_vote_at = parseDate(c, "last_vote_at");
+			bill.last_action_at = parseDate(c, "last_action_at");
+			bill.introduced_at = parseDate(c, "introduced_at");
+			bill.house_result_at = parseDate(c, "house_result_at");
+			bill.senate_result_at = parseDate(c, "senate_result_at");
+			bill.passed_at = parseDate(c, "passed_at");
+			bill.vetoed_at = parseDate(c, "vetoed_at");
+			bill.override_house_result_at = parseDate(c, "override_house_result_at");
+			bill.override_senate_result_at = parseDate(c, "override_senate_result_at");
+			bill.awaiting_signature_since = parseDate(c, "awaiting_signature_since");
+			bill.enacted_at = parseDate(c, "enacted_at");
+			
+		} catch (ParseException e) {
+			throw new CongressException(e, "Cannot parse a date for a Bill taken from the database.");
+		}
+		Legislator sponsor = new Legislator();
+		sponsor.id = c.getString(c.getColumnIndex("sponsor_id"));
+		sponsor.party = c.getString(c.getColumnIndex("sponsor_party"));
+		sponsor.state = c.getString(c.getColumnIndex("sponsor_state"));
+		sponsor.title = c.getString(c.getColumnIndex("sponsor_title"));
+		sponsor.first_name = c.getString(c.getColumnIndex("sponsor_first_name"));
+		sponsor.last_name = c.getString(c.getColumnIndex("sponsor_last_name"));
+		sponsor.nickname = c.getString(c.getColumnIndex("sponsor_nickname"));
+		bill.sponsor = sponsor;
+
+		return bill;
+	}
 }

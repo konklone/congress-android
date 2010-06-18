@@ -3,7 +3,10 @@ package com.sunlightlabs.android.congress;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -12,7 +15,12 @@ import com.sunlightlabs.congress.models.Legislator;
 
 public class LegislatorTabs extends TabActivity {
 	private Legislator legislator;
+
+	private Database database;
+	private Cursor cursor;
 	
+	ImageView star;
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,11 +28,26 @@ public class LegislatorTabs extends TabActivity {
         Bundle extras = getIntent().getExtras();
 		legislator = (Legislator) extras.getSerializable("legislator");
 		
+		database = new Database(this);
+		database.open();
+		cursor = database.getLegislator(legislator.getId());
+		startManagingCursor(cursor);
+
         setupControls();
         setupTabs();
 	}
 	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		database.close();
+	}
+
 	public void setupControls() {
+		star = (ImageView) findViewById(R.id.favorite);
+		star.setOnClickListener(starClickListener);
+		toggleFavoriteStar(cursor.getCount() == 1);
+
 		TextView nameTitle = (TextView) findViewById(R.id.title_text);
 		String titledName = legislator.titledName();
 		nameTitle.setText(titledName);
@@ -32,6 +55,37 @@ public class LegislatorTabs extends TabActivity {
 			nameTitle.setTextSize(19);
 	}
 	
+	private View.OnClickListener starClickListener = new View.OnClickListener() {
+		public void onClick(View v) {
+			toggleDatabaseFavorite();
+		}
+	};
+
+	private void toggleFavoriteStar(boolean enabled) {
+		if (enabled)
+			star.setImageResource(R.drawable.star_on);
+		else
+			star.setImageResource(R.drawable.star_off);
+	}
+
+	private void toggleDatabaseFavorite() {
+		String id = legislator.getId();
+		cursor.requery();
+		if (cursor.getCount() == 1) {
+			int result = database.removeLegislator(id);
+			if (result != 0) {
+				Utils.alert(this, R.string.legislator_favorites_removed);
+				toggleFavoriteStar(false);
+			}
+		} else {
+			long result = database.addLegislator(legislator);
+			if (result != -1) {
+				Utils.alert(this, R.string.legislator_favorites_added);
+				toggleFavoriteStar(true);
+			}
+		}
+	}
+
 	public void setupTabs() {
 		Resources res = getResources();
 		TabHost tabHost = getTabHost();

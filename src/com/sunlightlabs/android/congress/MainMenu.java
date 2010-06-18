@@ -34,7 +34,8 @@ import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
-import com.sunlightlabs.android.congress.utils.FavoriteLegislatorsAdapter;
+import com.sunlightlabs.android.congress.utils.FavBillsAdapter;
+import com.sunlightlabs.android.congress.utils.FavLegislatorsAdapter;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.LocationUpdater;
@@ -42,7 +43,8 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.android.congress.utils.ViewWrapper;
 import com.sunlightlabs.android.congress.utils.AddressUpdater.AddressUpdateable;
-import com.sunlightlabs.android.congress.utils.FavoriteLegislatorsAdapter.FavoriteLegislatorWrapper;
+import com.sunlightlabs.android.congress.utils.FavBillsAdapter.FavBillWrapper;
+import com.sunlightlabs.android.congress.utils.FavLegislatorsAdapter.FavLegislatorWrapper;
 import com.sunlightlabs.android.congress.utils.LocationUpdater.LocationUpdateable;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
@@ -80,15 +82,16 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	private SearchViewWrapper searchLocationView;
 	private ViewArrayAdapter searchLocationAdapter;
 
-	private View favoritePeopleHeader;
+	private View favPeopleHeader;
+	private View favBillsHeader;
 
 	MergeAdapter adapter;
 
 	private Database database;
-	private Cursor lc;
+	private Cursor peopleCursor, billCursor;
 
 	private HashMap<String, LoadPhotoTask> loadPhotoTasks = new HashMap<String, LoadPhotoTask>();
-	private HashMap<String, FavoriteLegislatorWrapper> favPeopleWrappers = new HashMap<String, FavoriteLegislatorWrapper>();
+	private HashMap<String, FavLegislatorWrapper> favPeopleWrappers = new HashMap<String, FavLegislatorWrapper>();
 
 	private Handler handler = new Handler() {
 		@Override
@@ -150,7 +153,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		Location location;
 		String address;
 		HashMap<String, LoadPhotoTask> loadPhotoTasks;
-		HashMap<String, FavoriteLegislatorWrapper> favPeopleWrappers;
+		HashMap<String, FavLegislatorWrapper> favPeopleWrappers;
 	}
 
 	@Override
@@ -168,9 +171,8 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
 		database.close();
-		
+
 		Log.d(TAG, "Destroying activity. Remove location updates");
 		locationUpdater.requestLocationUpdateHalt();
 		
@@ -188,16 +190,14 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	protected void onResume() {
 		super.onResume();
 		
-		lc.requery();
+		peopleCursor.requery();
+		billCursor.requery();
 		adapter.notifyDataSetChanged();
-		toggleFavoritePeopleHeader();
+		toggleFavPeopleHeader();
+		toggleFavBillsHeader();
 		
 		Log.d(TAG, "Resuming activity.");
 		locationUpdater.requestLocationUpdate();
-		
-		lc.requery();
-		adapter.notifyDataSetChanged();
-		toggleFavoritePeopleHeader();
 	}
 
 	@Override
@@ -235,10 +235,15 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 				break;
 			}
 		}
-		else if (tag instanceof FavoriteLegislatorWrapper) {
-			FavoriteLegislatorWrapper wrapper = (FavoriteLegislatorWrapper) tag;
+		else if (tag instanceof FavLegislatorWrapper) {
+			FavLegislatorWrapper wrapper = (FavLegislatorWrapper) tag;
 			Legislator legislator = wrapper.getLegislator();
 			startActivity(Utils.legislatorIntent(this, legislator));
+		}
+		else if (tag instanceof FavBillWrapper) {
+			FavBillWrapper wrapper = (FavBillWrapper) tag;
+			Bill bill = wrapper.getBill();
+			startActivity(Utils.billIntent(this, bill));
 		}
 	}
 
@@ -277,23 +282,34 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		adapter.addView(billsHeader);
 		adapter.addAdapter(new ViewArrayAdapter(this, setupBillMenu(inflater)));
 
-		favoritePeopleHeader = inflateHeader(inflater, R.string.menu_favorite_legislators);
-		adapter.addView(favoritePeopleHeader);
-		
-		lc = database.getLegislators();
-		startManagingCursor(lc);
-		
-		toggleFavoritePeopleHeader();
-
-		adapter.addAdapter(new FavoriteLegislatorsAdapter(this, lc));
-
 		View peopleHeader = inflateHeader(inflater, R.string.menu_legislators_header);
 		adapter.addView(peopleHeader);
 		searchLocationAdapter = new ViewArrayAdapter(this, setupSearchMenu(inflater));
 		adapter.addAdapter(searchLocationAdapter);
+		
+		
+		favBillsHeader = inflateHeader(inflater, R.string.menu_favorite_bills);
+		adapter.addView(favBillsHeader);
+
+		billCursor = database.getBills();
+		startManagingCursor(billCursor);
+		toggleFavBillsHeader();
+
+		FavBillsAdapter favBillsAdapter = new FavBillsAdapter(this, billCursor);
+		adapter.addAdapter(favBillsAdapter);
+
+		favPeopleHeader = inflateHeader(inflater, R.string.menu_favorite_legislators);
+		adapter.addView(favPeopleHeader);
+		
+		peopleCursor = database.getLegislators();
+		startManagingCursor(peopleCursor);
+		
+		toggleFavPeopleHeader();
+		FavLegislatorsAdapter favPeopleAdapter = new FavLegislatorsAdapter(this, peopleCursor);
+		adapter.addAdapter(favPeopleAdapter);
+
 
 		setListAdapter(adapter);
-
 		updateCurrentLocation();		
 	}
 
@@ -644,11 +660,26 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		searchLocationView.getText2().setVisibility(visible ? View.GONE : View.VISIBLE);
 	}
 
-	private void toggleFavoritePeopleHeader() {
-		if (lc.getCount() == 0)
-			favoritePeopleHeader.setVisibility(View.GONE);
-		else
-			favoritePeopleHeader.setVisibility(View.VISIBLE);
+	private void toggleFavPeopleHeader() {
+		if (peopleCursor.getCount() == 0) {
+			favPeopleHeader.setVisibility(View.GONE);
+			favPeopleHeader.findViewById(R.id.header_text).setVisibility(View.GONE);
+		}
+		else {
+			favPeopleHeader.setVisibility(View.VISIBLE);
+			favPeopleHeader.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
+		}
+	}
+
+	private void toggleFavBillsHeader() {
+		if (billCursor.getCount() == 0) {
+			favBillsHeader.setVisibility(View.GONE);
+			favBillsHeader.findViewById(R.id.header_text).setVisibility(View.GONE);
+		}
+		else {
+			favBillsHeader.setVisibility(View.VISIBLE);
+			favBillsHeader.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
+		}
 	}
 
 	private void displayAddress(String address, boolean enabled) {
@@ -713,7 +744,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		locationUpdater.onStatusChanged(provider, status, extras);
 	}
 	
-	public void loadPhoto(String bioguide_id, FavoriteLegislatorWrapper wrapper) {
+	public void loadPhoto(String bioguide_id, FavLegislatorWrapper wrapper) {
 		if (!loadPhotoTasks.containsKey(bioguide_id)) {
 			loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
 			favPeopleWrappers.put(bioguide_id, wrapper);

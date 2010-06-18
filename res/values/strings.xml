@@ -73,4 +73,8 @@
     
     <string name="favorites_add">Add to Favorites</string>
     <string name="favorites_remove">Remove from Favorites</string>
+    <string name="bill_favorites_added">Bill added to favorites</string>
+    <string name="bill_favorites_removed">Bill removed from favorites</string>
+    <string name="legislator_favorites_added">Legislator added to favorites</string>
+    <string name="legislator_favorites_removed">Legislator removed from favorites</string>
 </resources>
