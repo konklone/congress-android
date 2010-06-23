@@ -34,9 +34,7 @@ public class LocationUpdater {
 
 	public interface LocationUpdateable<C extends Context> {
 		Handler getHandler();
-
 		void onLocationUpdate(Location location);
-
 		void onLocationUpdateError(CongressException e);
 	}
 
@@ -56,6 +54,7 @@ public class LocationUpdater {
 
 	public void onScreenLoad(LocationUpdateable<? extends Context> context) {
 		this.context = context;
+		this.listener = (LocationListener) context;
 		Log.d(TAG, "onScreenLoad(): context changed to " + context);
 	}
 
@@ -86,8 +85,14 @@ public class LocationUpdater {
 	}
 
 	public Location getLastKnownLocation() {
-		if (provider != null)
-			return manager.getLastKnownLocation(provider);
+		// check the last known location for all the available providers
+		for(int i = 0; i < availableProviders.size(); i++) {
+			Location loc = manager.getLastKnownLocation(availableProviders.get(i));
+			if (loc != null) {
+				Log.d(TAG, "Last known location is " + loc);
+				return loc;
+			}
+		}
 		return null;
 	}
 
@@ -108,6 +113,7 @@ public class LocationUpdater {
 					msg.obj = new CongressException("Could not update location. Timeout.");
 					Log.d(TAG, "prepareTimeout(): sending message=" + msg);
 					context.getHandler().sendMessage(msg);
+					processing = false;
 				}
 			}
 		};
@@ -121,6 +127,7 @@ public class LocationUpdater {
 			Log.d(TAG, "cancelTimeout(): canceling");
 			timeout.cancel();
 			timeout = null;
+			processing = false;
 		}
 	}
 
@@ -146,8 +153,7 @@ public class LocationUpdater {
 	}
 
 	public void onProviderDisabled(String provider) {
-		if (processing) { // currently is processing a request and the provider
-							// gets disabled
+		if (processing) { // currently is processing a request and the provider gets disabled
 			getProvider(); // check for other enabled providers
 			if (provider == null) {
 				Log.d(TAG, "onProviderDisabled(): provider=null; thread="
@@ -171,5 +177,9 @@ public class LocationUpdater {
 	}
 
 	public void onStatusChanged(String provider, int status, Bundle extras) {
+	}
+
+	public boolean getProcessing() {
+		return processing;
 	}
 }
