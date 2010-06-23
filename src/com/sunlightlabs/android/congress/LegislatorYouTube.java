@@ -1,8 +1,14 @@
 package com.sunlightlabs.android.congress;
 
+import java.util.HashMap;
+import java.util.Iterator;
+
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,16 +22,21 @@ import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import com.sunlightlabs.android.congress.LegislatorYouTube.VideoAdapter.VideoHolder;
+import com.sunlightlabs.android.congress.utils.ImageUtils;
+import com.sunlightlabs.android.congress.utils.LoadYoutubeThumbTask;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.android.congress.utils.LoadYoutubeThumbTask.LoadsThumb;
 import com.sunlightlabs.youtube.Video;
 import com.sunlightlabs.youtube.YouTube;
 import com.sunlightlabs.youtube.YouTubeException;
 
-public class LegislatorYouTube extends ListActivity {
+public class LegislatorYouTube extends ListActivity implements LoadsThumb {
 	private static final int MENU_WATCH = 0;
 	private static final int MENU_COPY = 1;
 	
@@ -33,6 +44,7 @@ public class LegislatorYouTube extends ListActivity {
 	private Video[] videos;
 	
 	private LoadVideosTask loadVideosTask = null;
+	private HashMap<Integer, LoadYoutubeThumbTask> loadThumbTasks = new HashMap<Integer, LoadYoutubeThumbTask>();
 	
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -46,6 +58,13 @@ public class LegislatorYouTube extends ListActivity {
     		loadVideosTask = holder.loadVideosTask;
     		if (loadVideosTask != null)
     			loadVideosTask.onScreenLoad(this);
+
+			loadThumbTasks = holder.loadThumbTasks;
+			if (loadThumbTasks != null) {
+				Iterator<LoadYoutubeThumbTask> iterator = loadThumbTasks.values().iterator();
+				while (iterator.hasNext())
+					iterator.next().onScreenLoad(this);
+			}
     	}
     	
     	setupControls();
@@ -58,6 +77,7 @@ public class LegislatorYouTube extends ListActivity {
     	LegislatorYouTubeHolder holder = new LegislatorYouTubeHolder();
     	holder.videos = this.videos;
     	holder.loadVideosTask = this.loadVideosTask;
+		holder.loadThumbTasks = this.loadThumbTasks;
     	return holder;
     }
 	
@@ -122,10 +142,12 @@ public class LegislatorYouTube extends ListActivity {
 	}
 	
 	protected class VideoAdapter extends ArrayAdapter<Video> {
-    	LayoutInflater inflater;
+		LayoutInflater inflater;
+		LegislatorYouTube context;
 
-        public VideoAdapter(Activity context, Video[] videos) {
+        public VideoAdapter(LegislatorYouTube context, Video[] videos) {
             super(context, 0, videos);
+			this.context = context;
             inflater = LayoutInflater.from(context);
         }
         
@@ -144,8 +166,14 @@ public class LegislatorYouTube extends ListActivity {
 				view = inflater.inflate(R.layout.youtube, null);
 			
 			Video video = getItem(position);
+
+			VideoHolder holder = new VideoHolder();
+			holder.url = video.thumbnailUrl;
+			holder.hash = holder.url == null ? null : holder.url.hashCode();
 			
-			((TextView) view.findViewById(R.id.video_title)).setText(video.title);
+			TextView title = (TextView) view.findViewById(R.id.video_title);
+			title.setText(video.title);
+			holder.title = title;
 			
 			// make the date stand out in the description using bold text
 			StringBuilder full = new StringBuilder("<b>").append(video.timestamp.format("%b %d")).append("</b>");
@@ -154,9 +182,45 @@ public class LegislatorYouTube extends ListActivity {
 			if (!description.equals("")) // check to see if the video has a non-empty description first
 				full.append(" - ").append(description);
 			
-			((TextView) view.findViewById(R.id.video_description)).setText(Html.fromHtml(Utils.truncate(full.toString(), 150)));
+			TextView desc = (TextView) view.findViewById(R.id.video_description);
+			desc.setText(Html.fromHtml(Utils.truncate(full.toString(), 150)));
+			holder.description = desc;
 			
+			ImageView thumb = (ImageView) view.findViewById(R.id.thumbnail);
+			holder.thumb = thumb;
+
+			if (holder.hash != null) {
+				BitmapDrawable pic = ImageUtils.quickGetImage(ImageUtils.YOUTUBE_THUMB, holder.hash, context);
+				if (pic != null) {
+					holder.thumb.setImageDrawable(pic);
+				} else {
+					holder.thumb.setImageResource(R.drawable.loading_photo);
+					context.loadThumb(holder);
+				}
+			}
+			else 
+				holder.thumb.setImageResource(R.drawable.youtube_thumb);
+			
+			view.setTag(holder);
 			return view;
+		}
+		
+		class VideoHolder {
+			Integer hash;
+			String url;
+			ImageView thumb;
+			TextView title;
+			TextView description;
+
+			@Override
+			public boolean equals(Object o) {
+				if (!(o instanceof VideoHolder))
+					return false;
+				VideoHolder ov = (VideoHolder) o;
+				if (ov == null)
+					return this == null;
+				return ov.hash.equals(this.hash);
+			}
 		}
     }
     
@@ -192,5 +256,33 @@ public class LegislatorYouTube extends ListActivity {
     static class LegislatorYouTubeHolder {
 		Video[] videos;
 		LoadVideosTask loadVideosTask;
+		HashMap<Integer, LoadYoutubeThumbTask> loadThumbTasks;
+	}
+
+	
+
+	public void loadThumb(VideoAdapter.VideoHolder holder) {
+		int hash = holder.url.hashCode();
+		if (!loadThumbTasks.containsKey(hash))
+			loadThumbTasks.put(hash, (LoadYoutubeThumbTask) new LoadYoutubeThumbTask(this,
+					ImageUtils.YOUTUBE_THUMB, holder).execute(holder.url));
+	}
+
+	public void onLoadThumb(Drawable thumb, Object tag) {
+		VideoAdapter.VideoHolder holder = (VideoHolder) tag;
+
+		loadThumbTasks.remove(holder.hash);
+
+		View result = getListView().findViewWithTag(holder);
+		if (result != null) {
+			if (thumb != null)
+				holder.thumb.setImageDrawable(thumb);
+			else
+				holder.thumb.setImageResource(R.drawable.youtube_thumb);
+		}
+	}
+
+	public Context getContext() {
+		return this;
 	}
 }
