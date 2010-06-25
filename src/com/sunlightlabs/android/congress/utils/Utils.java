@@ -30,7 +30,6 @@ import com.sunlightlabs.congress.services.Sunlight;
 
 public class Utils {
 	private static Method setView = null;
-	public static String politiwidgetsBaseUrl;
 	
 	public static void setupDrumbone(Context context) {
 		Resources resources = context.getResources();

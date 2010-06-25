@@ -53,7 +53,6 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
         super.onCreate(savedInstanceState);
         
         Utils.setupSunlight(this);
-		Utils.setupPolitiwidgets(this);
         
         Bundle extras = getIntent().getExtras(); 
 		legislator = (Legislator) extras.getSerializable("legislator");
