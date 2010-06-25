@@ -30,12 +30,18 @@ import com.sunlightlabs.congress.services.Sunlight;
 
 public class Utils {
 	private static Method setView = null;
+	public static String politiwidgetsBaseUrl;
 	
 	public static void setupDrumbone(Context context) {
 		Resources resources = context.getResources();
 		Drumbone.userAgent = resources.getString(R.string.drumbone_user_agent);
 		Drumbone.apiKey = resources.getString(R.string.sunlight_api_key);
 		Drumbone.appVersion = resources.getString(R.string.app_version);
+	}
+
+	public static void setupPolitiwidgets(Context context) {
+		Resources resources = context.getResources();
+		politiwidgetsBaseUrl = resources.getString(R.string.politiwidgets_base_url);
 	}
 
 	public static void setupSunlight(Context context) {
@@ -70,6 +76,7 @@ public class Utils {
 		return new Intent(context, LegislatorTabs.class)
 		.putExtra("id", legislator.bioguide_id)
 		.putExtra("titledName", legislator.titledName())
+		.putExtra("title", legislator.title)
 		.putExtra("lastName", legislator.last_name)
 		.putExtra("firstName", legislator.first_name)
 		.putExtra("nickname", legislator.nickname)
@@ -79,6 +86,7 @@ public class Utils {
 		.putExtra("party", legislator.party)
 		.putExtra("gender", legislator.gender)
 		.putExtra("domain", legislator.getDomain())
+		.putExtra("district", legislator.district)
 		.putExtra("office", legislator.congress_office)
 		.putExtra("website", legislator.website)
 		.putExtra("phone", legislator.phone)
@@ -363,5 +371,16 @@ public class Utils {
 		View tab = inflater.inflate(R.layout.tab_minimal, null);
 		((TextView) tab.findViewById(R.id.tab_name)).setText(name);
 		return tab;
+	}
+
+	public static String politiwidgetsUrl(String title, String state, String district) {
+		String url = politiwidgetsBaseUrl;
+		if (title.equals("Sen")) 
+			url += "states/" + state;
+		else
+			url += "cds/110/" + state + "-" + district;
+		
+		url += ".kml";
+		return url;
 	}
 }
