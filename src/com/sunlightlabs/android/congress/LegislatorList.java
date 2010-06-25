@@ -123,7 +123,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 				loadLegislatorsTask.onScreenLoad(this);
 		}
 
-		if(locationUpdater == null)
+		if (locationUpdater == null)
 			locationUpdater = new LocationUpdater(this);
 		else
 			locationUpdater.onScreenLoad(this);
@@ -548,7 +548,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 	public void onLocationUpdateError(CongressException e) {
 		Log.d(TAG, "onLocationUpdateError(): e=" + e + ", relocating=" + relocating);
-		if(relocating) {
+		if (relocating) {
 			toggleRelocating(false);
 			relocating = false;
 			Toast.makeText(this, R.string.location_update_fail, Toast.LENGTH_SHORT).show();	
