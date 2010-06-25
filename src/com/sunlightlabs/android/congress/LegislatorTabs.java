@@ -18,6 +18,7 @@ public class LegislatorTabs extends TabActivity {
 
 	private Database database;
 	private Cursor cursor;
+
 	
 	ImageView star;
 

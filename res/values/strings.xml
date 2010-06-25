@@ -28,6 +28,12 @@
     <string name="committees_joint">Joint Committees</string>
     <string name="committees_emtpy">No committees found.</string>
     
+    <string name="sponsored_bills">Sponsored Bills</string>
+    <string name="committees">Committees</string>
+    <string name="loading_committees">Loading committees...</string>
+    <string name="district_map">District Map</string>
+    <string name="view_legislator_district">View Legislator District</string>
+    
     <string name="error_connection">Couldn\'t connect to the network. Please try again when you have a connection.</string>
     <string name="connection_failed">Connection failed. Press refresh to try again.</string>
     

@@ -30,12 +30,18 @@ import com.sunlightlabs.congress.services.Sunlight;
 
 public class Utils {
 	private static Method setView = null;
+	public static String politiwidgetsBaseUrl;
 	
 	public static void setupDrumbone(Context context) {
 		Resources resources = context.getResources();
 		Drumbone.userAgent = resources.getString(R.string.drumbone_user_agent);
 		Drumbone.apiKey = resources.getString(R.string.sunlight_api_key);
 		Drumbone.appVersion = resources.getString(R.string.app_version);
+	}
+
+	public static void setupPolitiwidgets(Context context) {
+		Resources resources = context.getResources();
+		politiwidgetsBaseUrl = resources.getString(R.string.politiwidgets_base_url);
 	}
 
 	public static void setupSunlight(Context context) {
@@ -71,8 +77,7 @@ public class Utils {
 		return new Intent(context, LegislatorTabs.class).putExtra("legislator", legislator);
 	}
 
-	public static Intent legislatorIntent(Context context, Class<?> activityClass,
-			Legislator legislator) {
+	public static Intent legislatorIntent(Context context, Class<?> activityClass, Legislator legislator) {
 		return new Intent(context, activityClass).putExtra("legislator", legislator);
 	}
 
@@ -311,5 +316,16 @@ public class Utils {
 		View tab = inflater.inflate(R.layout.tab_minimal, null);
 		((TextView) tab.findViewById(R.id.tab_name)).setText(name);
 		return tab;
+	}
+
+	public static String politiwidgetsUrl(String title, String state, String district) {
+		String url = politiwidgetsBaseUrl;
+		if (title.equals("Sen")) 
+			url += "states/" + state;
+		else
+			url += "cds/110/" + state + "-" + district;
+		
+		url += ".kml";
+		return url;
 	}
 }
