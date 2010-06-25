@@ -13,7 +13,7 @@ import com.sunlightlabs.android.congress.utils.Utils;
 public class LegislatorTabs extends TabActivity {
 	private String id, state, party,
 		titledName, lastName, firstName, nickname, title, 
-		gender, domain, office, website, phone, 
+		gender, domain, district, office, website, phone, 
 		twitter_id, youtube_id, bioguide_id, govtrack_id;
 	
 	@Override
@@ -31,6 +31,7 @@ public class LegislatorTabs extends TabActivity {
 		party = extras.getString("party");
 		gender = extras.getString("gender");
 		domain = extras.getString("domain");
+		district = extras.getString("district");
 		office = extras.getString("office");
 		website = extras.getString("website");
 		phone = extras.getString("phone");
@@ -70,11 +71,13 @@ public class LegislatorTabs extends TabActivity {
 		return new Intent(this, LegislatorProfile.class)
 			.putExtra("id", id)
 			.putExtra("titledName", titledName)
+			.putExtra("title", title)
 			.putExtra("lastName", lastName)
 			.putExtra("state", state)
 			.putExtra("party", party)
 			.putExtra("gender", gender)
 			.putExtra("domain", domain)
+			.putExtra("district", district)
 			.putExtra("office", office)
 			.putExtra("website", website)
 			.putExtra("phone", phone)

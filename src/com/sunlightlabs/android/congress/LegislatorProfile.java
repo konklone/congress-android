@@ -35,7 +35,7 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.CommitteeService;
 
 public class LegislatorProfile extends ListActivity implements LoadPhotoTask.LoadsPhoto {
-	private String id, titledName, lastName, party, gender, state, domain, phone, website;
+	private String id, titledName, title, lastName, party, gender, state, domain, phone, website, district;
 	private String bioguide_id, govtrack_id;
 	private Drawable avatar;
 	private ImageView picture;
@@ -53,15 +53,18 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
         super.onCreate(savedInstanceState);
         
         Utils.setupSunlight(this);
+		Utils.setupPolitiwidgets(this);
         
         Bundle extras = getIntent().getExtras(); 
         id = extras.getString("id");
+		title = extras.getString("title");
         titledName = extras.getString("titledName");
         lastName = extras.getString("lastName");
         party = extras.getString("party");
         state = extras.getString("state");
         gender = extras.getString("gender");
         domain = extras.getString("domain");
+		district = extras.getString("district");
         phone = extras.getString("phone");
         website = extras.getString("website");
         bioguide_id = extras.getString("bioguide_id");
@@ -175,6 +178,8 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 	    		visitWebsite();
 	    	else if (type.equals("sponsored"))
 	    		sponsoredBills();
+			else if (type.equals("districtMap"))
+				districtMap();
     	}
     }
     
@@ -201,6 +206,14 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 			.putExtra("committeeName", committee.name);
 		startActivity(intent);
     }
+
+	public void districtMap() {
+		String url = Utils.politiwidgetsUrl(title, state, district);
+		Uri uri = Uri.parse("geo:0,0?q=" + url);
+		Intent mapIntent = new Intent(Intent.ACTION_VIEW, uri); 
+		mapIntent.setData(uri); 
+		startActivity(Intent.createChooser(mapIntent, getString(R.string.view_legislator_district)));
+	}
 	
 	public void setupControls() {
 		LayoutInflater inflater = LayoutInflater.from(this);
@@ -234,14 +247,20 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		}
 		
 		View sponsoredView = inflater.inflate(R.layout.icon_list_item_1, null);
-		((TextView) sponsoredView.findViewById(R.id.text)).setText("Sponsored Bills");
+		((TextView) sponsoredView.findViewById(R.id.text)).setText(R.string.sponsored_bills);
 		((ImageView) sponsoredView.findViewById(R.id.icon)).setImageResource(R.drawable.bill_multiple);
 		sponsoredView.setTag("sponsored");
 		contactViews.add(sponsoredView);
 		
+		View districtMap = inflater.inflate(R.layout.icon_list_item_1, null);
+		((TextView) districtMap.findViewById(R.id.text)).setText(R.string.district_map);
+		((ImageView) districtMap.findViewById(R.id.icon)).setImageResource(R.drawable.globe);
+		districtMap.setTag("districtMap");
+		contactViews.add(districtMap);
+		
 		committeeHeader = inflater.inflate(R.layout.header_loading, null);
-		((TextView) committeeHeader.findViewById(R.id.header_text)).setText("Committees");
-		((TextView) committeeHeader.findViewById(R.id.loading_message)).setText("Loading committees...");
+		((TextView) committeeHeader.findViewById(R.id.header_text)).setText(R.string.committees);
+		((TextView) committeeHeader.findViewById(R.id.loading_message)).setText(R.string.loading_committees);
 		
 		MergeAdapter adapter = new MergeAdapter();
 		adapter.addView(mainView);
