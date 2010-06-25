@@ -18,7 +18,6 @@ public class LegislatorTabs extends TabActivity {
 
 	private Database database;
 	private Cursor cursor;
-
 	
 	ImageView star;
 
@@ -26,6 +25,7 @@ public class LegislatorTabs extends TabActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.legislator);
+
         Bundle extras = getIntent().getExtras();
 		legislator = (Legislator) extras.getSerializable("legislator");
 		
