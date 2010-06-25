@@ -53,7 +53,6 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
         super.onCreate(savedInstanceState);
         
         Utils.setupSunlight(this);
-		Utils.setupPolitiwidgets(this);
         
         Bundle extras = getIntent().getExtras(); 
         id = extras.getString("id");
@@ -208,7 +207,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
     }
 
 	public void districtMap() {
-		String url = Utils.politiwidgetsUrl(title, state, district);
+		String url = Utils.districtMapUrl(title, state, district);
 		Uri uri = Uri.parse("geo:0,0?q=" + url);
 		Intent mapIntent = new Intent(Intent.ACTION_VIEW, uri); 
 		mapIntent.setData(uri); 

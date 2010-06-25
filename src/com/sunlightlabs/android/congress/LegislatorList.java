@@ -122,7 +122,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 				loadLegislatorsTask.onScreenLoad(this);
 		}
 
-		if(locationUpdater == null)
+		if (locationUpdater == null)
 			locationUpdater = new LocationUpdater(this);
 		else
 			locationUpdater.onScreenLoad(this);
