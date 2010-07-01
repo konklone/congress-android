@@ -96,7 +96,6 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		committeeId = extras.getString("committeeId");
 		committeeName = extras.getString("committeeName");
 
-		Log.d(TAG, "onCreate(): latitude=" + latitude + ",longitude=" + longitude + ",address=" + address);
 
 		LegislatorListHolder holder = (LegislatorListHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
@@ -133,8 +132,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 		setupControls();
 
-		if (relocating) {
-			Log.d(TAG, "onCreate(): relocating=" + relocating);
+		if (relocating && searchType() == SEARCH_LOCATION) {
 			toggleRelocating(true);
 		}
 	}
@@ -539,6 +537,9 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	}
 
 	public void onLocationUpdate(Location location) {
+		if (searchType() != SEARCH_LOCATION)
+			return;
+
 		Log.d(TAG, "onLocationUpdate(): location=" + location);
 		latitude = location.getLatitude();
 		longitude = location.getLongitude();
@@ -547,6 +548,9 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	}
 
 	public void onLocationUpdateError(CongressException e) {
+		if (searchType() != SEARCH_LOCATION)
+			return;
+
 		Log.d(TAG, "onLocationUpdateError(): e=" + e + ", relocating=" + relocating);
 		if(relocating) {
 			toggleRelocating(false);
@@ -556,6 +560,9 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	}
 
 	public void onAddressUpdate(String address) {
+		if (searchType() != SEARCH_LOCATION)
+			return;
+
 		Log.d(TAG, "onAddressUpdate(): address=" + address);
 		this.address = address;
 		displayAddress(address);
@@ -568,7 +575,9 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	}
 
 	public void onAddressUpdateError(CongressException e) {
-		Log.d(TAG, "onAddressUpdateError(): e=" + e);
+		if (searchType() != SEARCH_LOCATION)
+			return;
+
 		this.address = "";
 		displayAddress(address);
 
