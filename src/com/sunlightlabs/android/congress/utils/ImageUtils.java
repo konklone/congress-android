@@ -15,9 +15,6 @@ import android.graphics.drawable.BitmapDrawable;
 public class ImageUtils {
 	public static final String YOUTUBE_THUMB = "120x90";
 
-	// 30 day expiration time on cached images
-	public static final long CACHE_IMAGES = (long) 1000 * 60 * 60 * 24 * 30;
-
 	// should be called from within a background task, as this performs a
 	// network call
 	public static BitmapDrawable getImage(String size, String url, Context context) {
@@ -34,15 +31,10 @@ public class ImageUtils {
 	// drawable, otherwise null
 	public static BitmapDrawable quickGetImage(String size, int hash, Context context) {
 		File imageFile = new File(picPath(size, hash, context));
-		if (!imageFile.exists() || tooOld(imageFile))
+		if (!imageFile.exists())
 			return null;
 		else
 			return new BitmapDrawable(picPath(size, hash, context));
-	}
-
-	// assumes you've already checked to make sure the file exists
-	public static boolean tooOld(File file) {
-		return file.lastModified() < (System.currentTimeMillis() - CACHE_IMAGES);
 	}
 
 	public static String picPath(String size, int hash, Context context) {
