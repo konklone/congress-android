@@ -132,7 +132,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 		setupControls();
 
-		if (relocating && searchType() == SEARCH_LOCATION) {
+		if (relocating) {
 			toggleRelocating(true);
 		}
 	}
