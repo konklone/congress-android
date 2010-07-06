@@ -537,22 +537,18 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	}
 
 	public void onLocationUpdate(Location location) {
-		if (searchType() != SEARCH_LOCATION)
-			return;
-
 		Log.d(TAG, "onLocationUpdate(): location=" + location);
-		latitude = location.getLatitude();
-		longitude = location.getLongitude();
-		addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
-		locationUpdater.requestLocationUpdateHalt();
+		if (searchType() == SEARCH_LOCATION) {
+			latitude = location.getLatitude();
+			longitude = location.getLongitude();
+			addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
+			locationUpdater.requestLocationUpdateHalt();
+		}
 	}
 
 	public void onLocationUpdateError(CongressException e) {
-		if (searchType() != SEARCH_LOCATION)
-			return;
-
 		Log.d(TAG, "onLocationUpdateError(): e=" + e + ", relocating=" + relocating);
-		if(relocating) {
+		if (searchType() == SEARCH_LOCATION && relocating) {
 			toggleRelocating(false);
 			relocating = false;
 			Toast.makeText(this, R.string.location_update_fail, Toast.LENGTH_SHORT).show();	
@@ -560,30 +556,29 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	}
 
 	public void onAddressUpdate(String address) {
-		if (searchType() != SEARCH_LOCATION)
-			return;
-
 		Log.d(TAG, "onAddressUpdate(): address=" + address);
-		this.address = address;
-		displayAddress(address);
-
-		addressUpdater = null;
-		toggleRelocating(false);
-		relocating = false;
-
-		reloadLegislators();
+		if (searchType() == SEARCH_LOCATION) {
+			this.address = address;
+			displayAddress(address);
+	
+			addressUpdater = null;
+			toggleRelocating(false);
+			relocating = false;
+	
+			reloadLegislators();
+		}
 	}
 
 	public void onAddressUpdateError(CongressException e) {
-		if (searchType() != SEARCH_LOCATION)
-			return;
-
-		this.address = "";
-		displayAddress(address);
-
-		addressUpdater = null;
-		toggleRelocating(false);
-		relocating = false;
+		Log.d(TAG, "onAddressUpdateError(): e=" + e + ", relocating=" + relocating);
+		if (searchType() != SEARCH_LOCATION) {
+			this.address = "";
+			displayAddress(address);
+	
+			addressUpdater = null;
+			toggleRelocating(false);
+			relocating = false;
+		}
 	}
 
 	public Handler getHandler() {
