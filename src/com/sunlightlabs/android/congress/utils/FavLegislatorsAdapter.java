@@ -44,22 +44,22 @@ public class FavLegislatorsAdapter extends CursorAdapter {
 		private ImageView photo;
 		private TextView name;
 		private TextView position;
-		private Legislator legislator;
+		public Legislator legislator;
 
 		public FavLegislatorWrapper(View row) {
 			this.row = row;
 		}
+		
 		public ImageView getPhoto() {
 			return photo == null ? photo = (ImageView) row.findViewById(R.id.photo) : photo;
 		}
+		
 		public TextView getName() {
 			return name == null ? name = (TextView) row.findViewById(R.id.name) : name;
 		}
+		
 		public TextView getPosition() {
 			return position == null ? position = (TextView) row.findViewById(R.id.position) : position;
-		}
-		public Legislator getLegislator() {
-			return legislator;
 		}
 
 		void populateFrom(Cursor c) {

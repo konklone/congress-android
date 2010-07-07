@@ -42,7 +42,8 @@ public class FavBillsAdapter extends CursorAdapter {
 	public class FavBillWrapper {
 		private View row;
 		private TextView byline, date, title;
-		private Bill bill;
+		
+		public Bill bill;
 		
 		public FavBillWrapper(View row) {
 			this.row = row;
@@ -55,10 +56,6 @@ public class FavBillsAdapter extends CursorAdapter {
 		}
 		public TextView getTitle() {
 			return title == null ? (TextView) row.findViewById(R.id.title) : title;
-		}
-
-		public Bill getBill() {
-			return bill;
 		}
 
 		public void populateFrom(Cursor c) {
