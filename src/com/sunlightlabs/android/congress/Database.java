@@ -162,9 +162,9 @@ public class Database {
 			sql.setLength(0); // clear
 			sql.append("CREATE TABLE " + BILLS_TABLE).append(
 					" (_id INTEGER PRIMARY KEY AUTOINCREMENT");
-			for (int i = 0; i < BILL_COLUMNS.length; i++) {
+			for (int i = 0; i < BILL_COLUMNS.length; i++)
 				sql.append(", " + BILL_COLUMNS[i] + " TEXT");
-			}
+			
 			sql.append(");");
 			db.execSQL(sql.toString());
 		}
