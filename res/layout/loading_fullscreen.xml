@@ -6,7 +6,7 @@
 	android:orientation="vertical"
 	>
 	
-	<include layout="@layout/title_bar_1" />
+	<include layout="@layout/title_bar_main" />
 	
 	<LinearLayout 
 		android:orientation="horizontal"

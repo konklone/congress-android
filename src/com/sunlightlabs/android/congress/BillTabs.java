@@ -45,18 +45,16 @@ public class BillTabs extends TabActivity {
 
 	public void setupControls() {
 		star = (ImageView) findViewById(R.id.favorite);
-		star.setOnClickListener(starClickListener);
+		star.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				toggleDatabaseFavorite();
+			}
+		});
 		toggleFavoriteStar(cursor.getCount() == 1);
 
 		((TextView) findViewById(R.id.title_text)).setText(Bill.formatCode(bill.code));
 	}
 	
-	private View.OnClickListener starClickListener = new View.OnClickListener() {
-		public void onClick(View v) {
-			toggleDatabaseFavorite();
-		}
-	};
-
 	private void toggleFavoriteStar(boolean enabled) {
 		if (enabled)
 			star.setImageResource(R.drawable.star_on);
@@ -67,17 +65,18 @@ public class BillTabs extends TabActivity {
 	private void toggleDatabaseFavorite() {
 		String id = bill.id;
 		cursor.requery();
+		
 		if (cursor.getCount() == 1) {
-			int result = database.removeBill(id);
-			if (result != 0) {
-				Utils.alert(this, R.string.bill_favorites_removed);
+			if (database.removeBill(id) != 0)
 				toggleFavoriteStar(false);
-			}
 		} else {
-			long result = database.addBill(bill);
-			if (result != -1) {
-				Utils.alert(this, R.string.bill_favorites_added);
+			if (database.addBill(bill) != -1) {
 				toggleFavoriteStar(true);
+				
+				if (!Utils.hasShownFavoritesMessage(this)) {
+					Utils.alert(this, R.string.bill_favorites_message);
+					Utils.markShownFavoritesMessage(this);
+				}
 			}
 		}
 	}

@@ -45,7 +45,12 @@ public class LegislatorTabs extends TabActivity {
 
 	public void setupControls() {
 		star = (ImageView) findViewById(R.id.favorite);
-		star.setOnClickListener(starClickListener);
+		star.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				toggleDatabaseFavorite();
+			}
+		});
+		
 		toggleFavoriteStar(cursor.getCount() == 1);
 
 		TextView nameTitle = (TextView) findViewById(R.id.title_text);
@@ -54,12 +59,6 @@ public class LegislatorTabs extends TabActivity {
 		if (titledName.length() >= 23)
 			nameTitle.setTextSize(19);
 	}
-	
-	private View.OnClickListener starClickListener = new View.OnClickListener() {
-		public void onClick(View v) {
-			toggleDatabaseFavorite();
-		}
-	};
 
 	private void toggleFavoriteStar(boolean enabled) {
 		if (enabled)
@@ -72,16 +71,16 @@ public class LegislatorTabs extends TabActivity {
 		String id = legislator.getId();
 		cursor.requery();
 		if (cursor.getCount() == 1) {
-			int result = database.removeLegislator(id);
-			if (result != 0) {
-				Utils.alert(this, R.string.legislator_favorites_removed);
+			if (database.removeLegislator(id) != 0)
 				toggleFavoriteStar(false);
-			}
 		} else {
-			long result = database.addLegislator(legislator);
-			if (result != -1) {
-				Utils.alert(this, R.string.legislator_favorites_added);
+			if (database.addLegislator(legislator) != -1) {
 				toggleFavoriteStar(true);
+				
+				if (!Utils.hasShownFavoritesMessage(this)) {
+					Utils.alert(this, R.string.legislator_favorites_message);
+					Utils.markShownFavoritesMessage(this);
+				}
 			}
 		}
 	}
