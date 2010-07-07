@@ -50,7 +50,8 @@ import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class MainMenu extends ListActivity implements LocationUpdateable<MainMenu>, LocationListener, AddressUpdateable<MainMenu>, LoadPhotoTask.LoadsPhoto {
+public class MainMenu extends ListActivity implements LocationUpdateable<MainMenu>, 
+	LocationListener, AddressUpdateable<MainMenu>, LoadPhotoTask.LoadsPhoto {
 
 	public static final int RESULT_ZIP = 1;
 	public static final int RESULT_LASTNAME = 2;

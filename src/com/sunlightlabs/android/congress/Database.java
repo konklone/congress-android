@@ -57,7 +57,11 @@ public class Database {
 				cv.put(column, (String) cls.getDeclaredField(column).get(legislator));
 			}
 			return database.insert(LEGISLATORS_TABLE, null, cv);
-		} catch (Exception e) {
+		} catch (ClassNotFoundException e) {
+			return -1;
+		} catch (IllegalAccessException e) {
+			return -1;
+		} catch (NoSuchFieldException e) {
 			return -1;
 		}
 	}
