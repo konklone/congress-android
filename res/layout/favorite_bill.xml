@@ -13,6 +13,7 @@
 		android:layout_width="48dp"
 		android:layout_height="48dp"
 		android:layout_marginRight="20dp"
+		android:src="@drawable/bill"
 		/>
 		
 	<TextView android:id="@+id/text"
