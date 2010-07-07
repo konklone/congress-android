@@ -19,7 +19,7 @@ public class Database {
 	private static final String TAG = "CongressDatabase";
 
 	private static final String DATABASE_NAME = "congress.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 
 	private static final String LEGISLATORS_TABLE = "legislators";
 	private static final String BILLS_TABLE = "bills";
@@ -148,9 +148,9 @@ public class Database {
 			StringBuilder sql = new StringBuilder("CREATE TABLE " + LEGISLATORS_TABLE);
 			sql.append(" (_id INTEGER PRIMARY KEY AUTOINCREMENT");
 
-			for (int i = 0; i < LEGISLATOR_COLUMNS.length; i++) {
+			for (int i = 0; i < LEGISLATOR_COLUMNS.length; i++)
 				sql.append(", " + LEGISLATOR_COLUMNS[i] + " TEXT");
-			}
+			
 			sql.append(");");
 			db.execSQL(sql.toString());
 

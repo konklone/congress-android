@@ -130,12 +130,12 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 			favPeopleWrappers = holder.favPeopleWrappers;
 		}
 
-		if(locationUpdater == null)
+		if (locationUpdater == null)
 			locationUpdater = new LocationUpdater(this);
 		else
 			locationUpdater.onScreenLoad(this);
 
-		if(addressUpdater != null)
+		if (addressUpdater != null)
 			addressUpdater.onScreenLoad(this);
 
 		setupControls();
@@ -171,7 +171,6 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		database.close();
 
 		Log.d(TAG, "Destroying activity. Remove location updates");
 		locationUpdater.requestLocationUpdateHalt();
