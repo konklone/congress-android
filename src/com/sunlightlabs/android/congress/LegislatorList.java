@@ -10,7 +10,7 @@ import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,26 +29,25 @@ import android.widget.Toast;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
-import com.sunlightlabs.android.congress.utils.LocationUpdater;
+import com.sunlightlabs.android.congress.utils.LocationUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.AddressUpdater.AddressUpdateable;
-import com.sunlightlabs.android.congress.utils.LocationUpdater.LocationUpdateable;
+import com.sunlightlabs.android.congress.utils.LocationUtils.LocationListenerTimeout;
+import com.sunlightlabs.android.congress.utils.LocationUtils.LocationTimer;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.CommitteeService;
 import com.sunlightlabs.congress.services.LegislatorService;
 
 public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsPhoto,
-		LocationUpdateable<LegislatorList>, LocationListener, AddressUpdateable<LegislatorList> {
+		LocationListenerTimeout, AddressUpdateable<LegislatorList> {
 	private final static int SEARCH_ZIP = 0;
 	private final static int SEARCH_LOCATION = 1;
 	private final static int SEARCH_STATE = 2;
 	private final static int SEARCH_LASTNAME = 3;
 	private final static int SEARCH_COMMITTEE = 4;
 
-	private static final int MSG_TIMEOUT = 100;
-
-	private final static String TAG = "CONGRESS";
+	public final static String TAG = "CONGRESS";
 
 	private ArrayList<Legislator> legislators = null;
 	private LoadLegislatorsTask loadLegislatorsTask = null;
@@ -59,9 +58,8 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	private double latitude = -1;
 	private double longitude = -1;
 
+	private LocationTimer timer;
 	private String address;
-
-	private LocationUpdater locationUpdater;
 	private AddressUpdater addressUpdater;
 	private boolean relocating = false;
 
@@ -70,11 +68,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			if (msg.arg1 == MSG_TIMEOUT) {
-				Log.d(TAG, "handleMessage(): received message=" + msg);
-				onLocationUpdateError((CongressException) msg.obj);
-				locationUpdater.requestLocationUpdateHalt();
-			}
+			onTimeout((String) msg.obj);
 		}
 	};
 
@@ -109,7 +103,6 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 					iterator.next().onScreenLoad(this);
 			}
 
-			locationUpdater = holder.locationUpdater;
 			addressUpdater = holder.addressUpdater;
 			address = holder.address;
 			relocating = holder.relocating;
@@ -122,19 +115,10 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 				loadLegislatorsTask.onScreenLoad(this);
 		}
 
-		if(locationUpdater == null)
-			locationUpdater = new LocationUpdater(this);
-		else
-			locationUpdater.onScreenLoad(this);
-
 		if(addressUpdater != null)
 			addressUpdater.onScreenLoad(this);
 
 		setupControls();
-
-		if (relocating) {
-			toggleRelocating(true);
-		}
 	}
 
 	@Override
@@ -145,31 +129,19 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		holder.loadPhotoTasks = this.loadPhotoTasks;
 
 		holder.addressUpdater = addressUpdater;
-		holder.locationUpdater = locationUpdater;
 		holder.address = address;
 		holder.relocating = relocating;
 		return holder;
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		Log.d(TAG, "Destroying activity. Remove location updates");
-		locationUpdater.requestLocationUpdateHalt();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		Log.d(TAG, "Pausing activity. Remove location updates");
-		locationUpdater.requestLocationUpdateHalt();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		Log.d(TAG, "Resuming activity. Request location update");
-		locationUpdater.requestLocationUpdate();
+	protected void onStop() {
+		super.onStop();
+		if (searchType() == SEARCH_LOCATION) {
+			cancelTimer();
+			relocating = false;
+			toggleRelocating();
+		}
 	}
 
 	public void loadLegislators() {
@@ -474,7 +446,6 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		HashMap<String,LoadPhotoTask> loadPhotoTasks;
 
 		AddressUpdater addressUpdater;
-		LocationUpdater locationUpdater;
 		String address;
 		boolean relocating;
 	}
@@ -515,16 +486,24 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		});
 	}
 
-	private void toggleRelocating(boolean updating) {
-		headerWrapper.getTxt().setText(updating ? R.string.updating : R.string.update);
-		headerWrapper.getTxt().setEnabled(updating ? false : true);
-		headerWrapper.getLoading().setVisibility(updating ? View.VISIBLE : View.GONE);
+	private void toggleRelocating() {
+		Log.d(TAG, "LegislatorList - toggleRelocating(): relocating is " + relocating);
+		headerWrapper.getTxt().setText(relocating ? R.string.updating : R.string.update);
+		headerWrapper.getTxt().setEnabled(relocating ? false : true);
+		headerWrapper.getLoading().setVisibility(relocating ? View.VISIBLE : View.GONE);
+	}
+
+	private void cancelTimer() {
+		if (timer != null) {
+			timer.cancel();
+			Log.d(TAG, "LegislatorList - cancelTimer(): end updating timer");
+		}
 	}
 
 	private void updateLocation() {
 		relocating = true;
-		locationUpdater.requestLocationUpdate();
-		toggleRelocating(true);
+		toggleRelocating();
+		timer = LocationUtils.requestLocationUpdate(this, handler, LocationManager.GPS_PROVIDER);
 	}
 
 	private void displayAddress(String address) {
@@ -536,68 +515,55 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		loadLegislators();
 	}
 
-	public void onLocationUpdate(Location location) {
-		Log.d(TAG, "onLocationUpdate(): location=" + location);
-		if (searchType() == SEARCH_LOCATION) {
-			latitude = location.getLatitude();
-			longitude = location.getLongitude();
-			addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
-			locationUpdater.requestLocationUpdateHalt();
-		}
-	}
-
-	public void onLocationUpdateError(CongressException e) {
-		Log.d(TAG, "onLocationUpdateError(): e=" + e + ", relocating=" + relocating);
-		if (searchType() == SEARCH_LOCATION && relocating) {
-			toggleRelocating(false);
-			relocating = false;
-			Toast.makeText(this, R.string.location_update_fail, Toast.LENGTH_SHORT).show();	
-		}
-	}
-
 	public void onAddressUpdate(String address) {
-		Log.d(TAG, "onAddressUpdate(): address=" + address);
-		if (searchType() == SEARCH_LOCATION) {
-			this.address = address;
-			displayAddress(address);
-	
-			addressUpdater = null;
-			toggleRelocating(false);
-			relocating = false;
-	
-			reloadLegislators();
-		}
+		this.address = address;
+		addressUpdater = null;
+		relocating = false;
+		toggleRelocating();
+
+		displayAddress(address);
+		reloadLegislators();
 	}
 
 	public void onAddressUpdateError(CongressException e) {
-		Log.d(TAG, "onAddressUpdateError(): e=" + e + ", relocating=" + relocating);
-		if (searchType() != SEARCH_LOCATION) {
-			this.address = "";
-			displayAddress(address);
+		this.address = "";
+		addressUpdater = null;
+		relocating = false;
+		toggleRelocating();
+
+		displayAddress(address);
+	}
 	
-			addressUpdater = null;
-			toggleRelocating(false);
+	public void onLocationUpdateError() {
+		if (relocating) {
+			Log.d(TAG, "LegislatorList - onLocationUpdateError(): cannot update location");
 			relocating = false;
+			toggleRelocating();
+
+			Toast.makeText(this, R.string.location_update_fail, Toast.LENGTH_SHORT).show();
 		}
 	}
-
-	public Handler getHandler() {
-		return handler;
-	}
-
+	
 	public void onLocationChanged(Location location) {
-		locationUpdater.onLocationChanged(location);
+		latitude = location.getLatitude();
+		longitude = location.getLongitude();
+		addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
+		cancelTimer();
 	}
 
-	public void onProviderDisabled(String provider) {
-		locationUpdater.onProviderDisabled(provider);
-	}
+	public void onProviderDisabled(String provider) {}
 
-	public void onProviderEnabled(String provider) {
-		locationUpdater.onProviderEnabled(provider);
-	}
+	public void onProviderEnabled(String provider) {}
 
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-		locationUpdater.onStatusChanged(provider, status, extras);
+	public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+	public void onTimeout(String provider) {
+		Log.d(TAG, "LegislatorList - onTimeout(): timeout for provider " + provider);
+		if (provider.equals(LocationManager.GPS_PROVIDER)) {
+			timer = LocationUtils.requestLocationUpdate(this, handler,
+					LocationManager.NETWORK_PROVIDER);
+			Log.d(TAG, "LegislatorList - onTimeout(): requesting update from network");
+		} else
+			onLocationUpdateError();
 	}
 }

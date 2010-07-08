@@ -15,7 +15,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,18 +41,19 @@ import com.sunlightlabs.android.congress.MainMenu.FavoriteLegislatorsAdapter.Fav
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
-import com.sunlightlabs.android.congress.utils.LocationUpdater;
+import com.sunlightlabs.android.congress.utils.LocationUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.android.congress.utils.ViewWrapper;
 import com.sunlightlabs.android.congress.utils.AddressUpdater.AddressUpdateable;
-import com.sunlightlabs.android.congress.utils.LocationUpdater.LocationUpdateable;
+import com.sunlightlabs.android.congress.utils.LocationUtils.LocationListenerTimeout;
+import com.sunlightlabs.android.congress.utils.LocationUtils.LocationTimer;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class MainMenu extends ListActivity implements LocationUpdateable<MainMenu>, 
-	LocationListener, AddressUpdateable<MainMenu>, LoadPhotoTask.LoadsPhoto {
+public class MainMenu extends ListActivity implements LocationListenerTimeout,
+		AddressUpdateable<MainMenu>, LoadPhotoTask.LoadsPhoto {
 
 	public static final int RESULT_ZIP = 1;
 	public static final int RESULT_LASTNAME = 2;
@@ -72,13 +73,11 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	public static final int SEARCH_STATE = 6;
 	public static final int SEARCH_NAME = 7;
 
-	private static final String TAG = "CONGRESS";
-	private static final int MSG_TIMEOUT = 100;
+	public static final String TAG = "CONGRESS";
 
 	private Location location;
+	private LocationTimer timer;
 	private String address;
-
-	private LocationUpdater locationUpdater;
 	private AddressUpdater addressUpdater;
 
 	private SearchViewWrapper searchLocationView;
@@ -95,11 +94,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			if (msg.arg1 == MSG_TIMEOUT) {
-				Log.d(TAG, "handleMessage(): received message=" + msg);
-				onLocationUpdateError((CongressException) msg.obj);
-				locationUpdater.requestLocationUpdateHalt();
-			}
+			onTimeout((String) msg.obj);
 		}
 	};
 
@@ -120,7 +115,6 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 
 		MainMenuHolder holder = (MainMenuHolder) getLastNonConfigurationInstance();
 		if(holder != null) {
-			locationUpdater = holder.locationUpdater;
 			addressUpdater = holder.addressUpdater;
 			location = holder.location;
 			address = holder.address;
@@ -135,16 +129,10 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 			favoritePeopleWrappers = holder.favoritePeopleWrappers;
 		}
 
-		if (locationUpdater == null)
-			locationUpdater = new LocationUpdater(this);
-		else
-			locationUpdater.onScreenLoad(this);
-
 		if (addressUpdater != null)
 			addressUpdater.onScreenLoad(this);
 
 		setupControls();
-		updateCurrentLocation();
 
 		if (firstTime()) {
 			newVersion(); // don't need to see the changelog on first install
@@ -155,7 +143,6 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 
 	static class MainMenuHolder {
 		AddressUpdater addressUpdater;
-		LocationUpdater locationUpdater;
 		Location location;
 		String address;
 		HashMap<String, LoadPhotoTask> loadPhotoTasks;
@@ -166,7 +153,6 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	public Object onRetainNonConfigurationInstance() {
 		MainMenuHolder holder = new MainMenuHolder();
 		holder.addressUpdater = addressUpdater;
-		holder.locationUpdater = locationUpdater;
 		holder.location = location;
 		holder.address = address;
 		holder.loadPhotoTasks = loadPhotoTasks;
@@ -175,32 +161,31 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-
-		Log.d(TAG, "Destroying activity. Remove location updates");
-		locationUpdater.requestLocationUpdateHalt();
-		
-		database.close();
+	protected void onStart() {
+		super.onStart();
+		setupLocation();
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
-		Log.d(TAG, "Pausing activity. Remove location updates");
-		locationUpdater.requestLocationUpdateHalt();
+	protected void onDestroy() {
+		super.onDestroy();
+		database.close();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
 		peopleCursor.requery();
 		billCursor.requery();
 		adapter.notifyDataSetChanged();
-		
-		Log.d(TAG, "Resuming activity.");
-		locationUpdater.requestLocationUpdate();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		cancelTimer();
+		toggleLocationEnabled(true);
+		toggleLocationLoading(false);
 	}
 
 	@Override
@@ -598,28 +583,29 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		return true;
 	}
 
-	private void updateCurrentLocation() {
+	private void setupLocation() {
 		if(address != null) {
-			Log.d(TAG, "updateCurrentLocation(): address=" + address);
 			displayAddress(address, true);
 			return;
 		}
 
-		location = locationUpdater.getLastKnownLocation();
-		Log.d(TAG, "updateCurrentLocation(): location=" + location);
+		location = LocationUtils.getLastKnownLocation(this);
+		Log.d(TAG, "MainMenu - setupLocation(): last known location is " + location);
 
 		if (location == null) {
 			toggleLocationEnabled(false);
 			toggleLocationLoading(true);
-			locationUpdater.requestLocationUpdate();
+			timer = LocationUtils
+					.requestLocationUpdate(this, handler, LocationManager.GPS_PROVIDER);
+			Log.d(TAG, "MainMenu - setupLocation(): request update from GPS");
 		}
 		else { 
 			address = AddressUpdater.getFromCache(location); 
-			Log.d(TAG, "updateCurrentLocation(): address=" + address);
 			if(address == null) {
 				toggleLocationEnabled(false);
 				toggleLocationLoading(true);
 				addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
+				Log.d(TAG, "MainMenu - setupLocation(): request address update for location");
 			}
 			else
 				displayAddress(address, true);
@@ -638,50 +624,66 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		searchLocationView.getText2().setVisibility(visible ? View.GONE : View.VISIBLE);
 	}
 
+	private void cancelTimer() {
+		if (timer != null) {
+			timer.cancel();
+			Log.d(TAG, "MainMenu - cancelTimer(): cancel updating timer");
+		}
+	}
+
 	private void displayAddress(String address, boolean enabled) {
 		Log.d(TAG, "displayAddress(): address=" + address);
 		searchLocationView.getText2().setTextColor(enabled ? Color.parseColor("#dddddd") : Color.parseColor("#666666"));
 		searchLocationView.getText2().setText(address);
 	}
 
-	public void onLocationUpdate(Location location) {
-		Log.d(TAG, "onLocationUpdate(): location=" + location + "; thread=" + Thread.currentThread().getName());
-		this.location = location;
-		addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
-		locationUpdater.requestLocationUpdateHalt();
-	}
-
-	public void onLocationUpdateError(CongressException e) {
-		Log.d(TAG, "onLocationUpdateError(): e=" + e + "; thread=" + Thread.currentThread().getName());
+	public void onLocationUpdateError() {
+		Log.d(TAG, "MainMenu - onLocationUpdateError(): cannot update location");
 		displayAddress(this.getString(R.string.menu_location_no_location), false);
 		toggleLocationLoading(false);
 		toggleLocationEnabled(false);
 	}
 
+	public void onLocationChanged(Location location) {
+		Log.d(TAG, "MainMenu - onLocationChanged(): " + location);
+		this.location = location;
+		addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
+		cancelTimer();
+	}
+
+	public void onProviderDisabled(String provider) {}
+
+	public void onProviderEnabled(String provider) {}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+	public void onTimeout(String provider) {
+		Log.d(TAG, "MainMenu - onTimeout(): for provider " + provider);
+		if (provider.equals(LocationManager.GPS_PROVIDER)) {
+			timer = LocationUtils.requestLocationUpdate(this, handler,
+					LocationManager.NETWORK_PROVIDER);
+		} else
+			onLocationUpdateError();
+	}
+
 	public void onAddressUpdate(String address) {
-		Log.d(TAG, "onAddressUpdate(): address=" + address + "; thread=" + Thread.currentThread().getName());
+		Log.d(TAG, "MainMenu - onAddressUpdate(): " + address);
 		this.address =  address;
+		addressUpdater = null;
 		displayAddress(address, true);	
 
-		addressUpdater = null;
-
 		toggleLocationEnabled(true);
-		toggleLocationLoading(false);		
+		toggleLocationLoading(false);
 	}
 
 	public void onAddressUpdateError(CongressException e) {
-		Log.d(TAG, "onAddressUpdateError(): e=" + e + "; thread=" + Thread.currentThread().getName());
+		Log.d(TAG, "MainMenu - onAddressUpdateError(): " + e);
 		this.address = "";
+		addressUpdater = null;
 		displayAddress(address, false);
 
-		addressUpdater = null;
-
 		toggleLocationEnabled(true);
-		toggleLocationLoading(false);	
-	}
-
-	public Handler getHandler() {
-		return handler;
+		toggleLocationLoading(false);
 	}
 
 	public void loadPhoto(String bioguide_id, FavoriteLegislatorWrapper wrapper) {
@@ -702,23 +704,6 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		favoritePeopleWrappers.get(bioguide_id).onLoadPhoto(photo, bioguide_id);
 		favoritePeopleWrappers.remove(bioguide_id);
 	}
-
-	public void onLocationChanged(Location location) {
-		locationUpdater.onLocationChanged(location);
-	}
-
-	public void onProviderDisabled(String provider) {
-		locationUpdater.onProviderDisabled(provider);
-	}
-	
-	public void onProviderEnabled(String provider) {
-		locationUpdater.onProviderEnabled(provider);
-	}
-
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-		locationUpdater.onStatusChanged(provider, status, extras);
-	}
-	
 	
 	// Favorite bills adapter for the menu
 	public class FavoriteBillsAdapter extends CursorAdapter {
