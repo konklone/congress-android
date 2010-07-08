@@ -25,51 +25,46 @@ public class FavLegislatorsAdapter extends CursorAdapter {
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		FavLegislatorWrapper wrapper = (FavLegislatorWrapper) view.getTag();
-		wrapper.populateFrom(cursor);
+		((FavLegislatorWrapper) view.getTag()).populateFrom(cursor);
 	}
 	
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		LayoutInflater inflater = LayoutInflater.from(context);
-		View row = inflater.inflate(R.layout.legislator_item, null);
+		View row = LayoutInflater.from(context).inflate(R.layout.favorite_legislator, null);
 		FavLegislatorWrapper wrapper = new FavLegislatorWrapper(row);
-		row.setTag(wrapper);
+		
 		wrapper.populateFrom(cursor);
+		row.setTag(wrapper);
+		
 		return row;
 	}
 
 	public class FavLegislatorWrapper {
 		private View row;
+		private TextView text;
 		private ImageView photo;
-		private TextView name;
-		private TextView position;
+		
 		public Legislator legislator;
 
 		public FavLegislatorWrapper(View row) {
 			this.row = row;
 		}
 		
-		public ImageView getPhoto() {
+		private TextView getText() {
+			return text == null ? text = (TextView) row.findViewById(R.id.text) : text;
+		}
+		
+		private ImageView getPhoto() {
 			return photo == null ? photo = (ImageView) row.findViewById(R.id.photo) : photo;
-		}
-		
-		public TextView getName() {
-			return name == null ? name = (TextView) row.findViewById(R.id.name) : name;
-		}
-		
-		public TextView getPosition() {
-			return position == null ? position = (TextView) row.findViewById(R.id.position) : position;
 		}
 
 		void populateFrom(Cursor c) {
 			legislator = Legislator.fromCursor(c);
-
-			getName().setText(legislator.getOfficialName());
-			getPosition().setText(legislator.getPosition(Utils.stateCodeToName(context, legislator.state)));
-
+			getText().setText(legislator.titledName());
+			
 			BitmapDrawable picture = LegislatorImage.quickGetImage(LegislatorImage.PIC_MEDIUM,
 					legislator.bioguide_id, context);
+			
 			if (picture != null)
 				getPhoto().setImageDrawable(picture);
 			else {

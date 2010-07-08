@@ -61,6 +61,5 @@ public class FavBillsAdapter extends CursorAdapter {
 			return text == null ? text = (TextView) row.findViewById(R.id.text) : text;
 		}
 	}
-	
-	
+		
 }

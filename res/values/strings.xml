@@ -51,6 +51,7 @@
     <string name="menu_location_no_location">Cannot update location</string>
     <string name="menu_location_updating">Updating location...</string>
     <string name="menu_favorite_bill_error">Error loading starred bills.</string>
+    <string name="menu_favorite_legislator_error">Error loading starred legislators.</string>
     
     <string name="bill_not_found">No bill found by that code.</string>
     <string name="bills_retry_note">Couldn\'t load bills.</string>

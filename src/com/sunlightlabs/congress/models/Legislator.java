@@ -133,6 +133,7 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	
 	public static Legislator fromCursor(Cursor c) {
 		Legislator legislator = new Legislator();
+		
 		legislator.id = c.getString(c.getColumnIndex("id"));
 		legislator.bioguide_id = c.getString(c.getColumnIndex("bioguide_id"));
 		legislator.govtrack_id = c.getString(c.getColumnIndex("govtrack_id"));
