@@ -40,9 +40,9 @@
 			android:layout_height="wrap_content"
 			
 			android:textSize="12sp"
-			android:text="Subtext"
+			android:textColor="#cccccc"
 			
-			android:layout_marginTop="2dp"
+			android:text="Subtext"
 			/>
 		
 	</LinearLayout>

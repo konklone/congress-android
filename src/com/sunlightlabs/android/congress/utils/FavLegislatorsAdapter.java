@@ -25,7 +25,7 @@ public class FavLegislatorsAdapter extends CursorAdapter {
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		((FavLegislatorWrapper) view.getTag()).populateFrom(cursor);
+		((FavLegislatorWrapper) view.getTag()).populateFrom(cursor, context);
 	}
 	
 	@Override
@@ -33,7 +33,7 @@ public class FavLegislatorsAdapter extends CursorAdapter {
 		View row = LayoutInflater.from(context).inflate(R.layout.favorite_legislator, null);
 		FavLegislatorWrapper wrapper = new FavLegislatorWrapper(row);
 		
-		wrapper.populateFrom(cursor);
+		wrapper.populateFrom(cursor, context);
 		row.setTag(wrapper);
 		
 		return row;
@@ -41,7 +41,7 @@ public class FavLegislatorsAdapter extends CursorAdapter {
 
 	public class FavLegislatorWrapper {
 		private View row;
-		private TextView text;
+		private TextView name, position;
 		private ImageView photo;
 		
 		public Legislator legislator;
@@ -50,17 +50,13 @@ public class FavLegislatorsAdapter extends CursorAdapter {
 			this.row = row;
 		}
 		
-		private TextView getText() {
-			return text == null ? text = (TextView) row.findViewById(R.id.text) : text;
-		}
-		
-		private ImageView getPhoto() {
-			return photo == null ? photo = (ImageView) row.findViewById(R.id.photo) : photo;
-		}
-
-		void populateFrom(Cursor c) {
+		void populateFrom(Cursor c, Context context) {
 			legislator = Legislator.fromCursor(c);
-			getText().setText(legislator.titledName());
+			
+			getName().setText(legislator.titledName());
+			String position = Legislator.partyName(legislator.party) + " from " 
+				+ Utils.stateCodeToName(context, legislator.state);
+			getPosition().setText(position);
 			
 			BitmapDrawable picture = LegislatorImage.quickGetImage(LegislatorImage.PIC_MEDIUM,
 					legislator.bioguide_id, context);
@@ -86,6 +82,18 @@ public class FavLegislatorsAdapter extends CursorAdapter {
 				getPhoto().setImageDrawable(photo);
 			else
 				getPhoto().setImageResource(R.drawable.no_photo_female);
+		}
+		
+		private TextView getName() {
+			return name == null ? name = (TextView) row.findViewById(R.id.name) : name;
+		}
+		
+		private TextView getPosition() {
+			return position == null ? position = (TextView) row.findViewById(R.id.position) : position;
+		}
+		
+		private ImageView getPhoto() {
+			return photo == null ? photo = (ImageView) row.findViewById(R.id.photo) : photo;
 		}
 	}
 
