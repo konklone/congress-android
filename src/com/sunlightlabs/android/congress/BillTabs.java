@@ -50,8 +50,9 @@ public class BillTabs extends TabActivity {
 				toggleDatabaseFavorite();
 			}
 		});
-		toggleFavoriteStar(cursor.getCount() == 1);
 
+		toggleFavoriteStar(cursor.getCount() == 1);
+		
 		((TextView) findViewById(R.id.title_text)).setText(Bill.formatCode(bill.code));
 	}
 	

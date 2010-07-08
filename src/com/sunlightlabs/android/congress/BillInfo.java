@@ -32,6 +32,7 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, LoadBillTask.LoadsBill {	
+	// fields from the intent 
 	private Bill bill;
 	private Legislator sponsor;
 

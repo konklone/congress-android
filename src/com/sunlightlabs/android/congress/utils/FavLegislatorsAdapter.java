@@ -16,11 +16,9 @@ import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class FavLegislatorsAdapter extends CursorAdapter {
-	private Context context;
 
 	public FavLegislatorsAdapter(Context context, Cursor c) {
 		super(context, c);
-		this.context = context;
 	}
 
 	@Override
@@ -41,6 +39,7 @@ public class FavLegislatorsAdapter extends CursorAdapter {
 
 	public class FavLegislatorWrapper {
 		private View row;
+
 		private TextView name, position;
 		private ImageView photo;
 		
@@ -49,7 +48,7 @@ public class FavLegislatorsAdapter extends CursorAdapter {
 		public FavLegislatorWrapper(View row) {
 			this.row = row;
 		}
-		
+
 		void populateFrom(Cursor c, Context context) {
 			legislator = Legislator.fromCursor(c);
 			

@@ -154,7 +154,7 @@ public class Database {
 
 			for (int i = 0; i < LEGISLATOR_COLUMNS.length; i++)
 				sql.append(", " + LEGISLATOR_COLUMNS[i] + " TEXT");
-			
+
 			sql.append(");");
 			db.execSQL(sql.toString());
 
@@ -164,7 +164,7 @@ public class Database {
 					" (_id INTEGER PRIMARY KEY AUTOINCREMENT");
 			for (int i = 0; i < BILL_COLUMNS.length; i++)
 				sql.append(", " + BILL_COLUMNS[i] + " TEXT");
-			
+
 			sql.append(");");
 			db.execSQL(sql.toString());
 		}

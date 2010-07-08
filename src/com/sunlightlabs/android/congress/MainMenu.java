@@ -109,7 +109,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		// open the database to get the favorites
 		database = new Database(this);
 		database.open();
-		
+
 		billCursor = database.getBills();
 		startManagingCursor(billCursor);
 		
@@ -253,24 +253,19 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 
 		public SearchViewWrapper(View base) {
 			this.base = base;
-		}
-		
+		}		
 		public TextView getText1() {
 			return (text1 == null) ? text1 = (TextView) this.base.findViewById(R.id.text_1) : text1;
-		}
-		
+		}		
 		public TextView getText2() {
 			return (text2 == null) ? text2 = (TextView) this.base.findViewById(R.id.text_2) : text2;
-		}
-		
+		}		
 		public View getLoading() {
 			return (loading == null) ? loading = this.base.findViewById(R.id.row_loading) : loading;
-		}
-		
+		}		
 		public View getBase() {
 			return base;
-		}
-		
+		}		
 		public ViewWrapper getWrapperTag() {
 			return (ViewWrapper) base.getTag();
 		}	
@@ -687,25 +682,10 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		return handler;
 	}
 
-	public void onLocationChanged(Location location) {
-		locationUpdater.onLocationChanged(location);
-	}
-
-	public void onProviderDisabled(String provider) {
-		locationUpdater.onProviderDisabled(provider);
-	}
-
-	public void onProviderEnabled(String provider) {
-		locationUpdater.onProviderEnabled(provider);
-	}
-
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-		locationUpdater.onStatusChanged(provider, status, extras);
-	}
-	
 	public void loadPhoto(String bioguide_id, FavLegislatorWrapper wrapper) {
 		if (!loadPhotoTasks.containsKey(bioguide_id)) {
-			loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
+			loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this,
+					LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
 			favPeopleWrappers.put(bioguide_id, wrapper);
 		}
 	}
@@ -719,6 +699,22 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		loadPhotoTasks.remove(bioguide_id);
 		favPeopleWrappers.get(bioguide_id).onLoadPhoto(photo, bioguide_id);
 		favPeopleWrappers.remove(bioguide_id);
+	}
+
+	public void onLocationChanged(Location location) {
+		locationUpdater.onLocationChanged(location);
+	}
+
+	public void onProviderDisabled(String provider) {
+		locationUpdater.onProviderDisabled(provider);
+	}
+	
+	public void onProviderEnabled(String provider) {
+		locationUpdater.onProviderEnabled(provider);
+	}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		locationUpdater.onStatusChanged(provider, status, extras);
 	}
 
 }

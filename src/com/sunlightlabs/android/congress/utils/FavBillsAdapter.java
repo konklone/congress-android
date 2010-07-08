@@ -1,5 +1,6 @@
 package com.sunlightlabs.android.congress.utils;
 
+
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -47,7 +48,7 @@ public class FavBillsAdapter extends CursorAdapter {
 		private TextView code, title;
 		
 		public Bill bill;
-		
+
 		public FavBillWrapper(View row) {
 			this.row = row;
 		}
