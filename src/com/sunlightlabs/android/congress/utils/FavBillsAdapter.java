@@ -44,7 +44,7 @@ public class FavBillsAdapter extends CursorAdapter {
 	
 	public class FavBillWrapper {
 		private View row;
-		private TextView text;
+		private TextView code, title;
 		
 		public Bill bill;
 		
@@ -54,11 +54,21 @@ public class FavBillsAdapter extends CursorAdapter {
 		
 		public void populateFrom(Cursor c) throws CongressException {
 			bill = Bill.fromCursor(c);
-			getText().setText(Bill.formatCode(bill.code));
+			getCode().setText(Bill.formatCode(bill.code));
+			String title;
+			if (bill.short_title != null && !bill.short_title.equals(""))
+				title = bill.short_title;
+			else
+				title = bill.official_title;
+			getTitle().setText(Utils.truncate(title, 80));
 		}
 		
-		private TextView getText() {
-			return text == null ? text = (TextView) row.findViewById(R.id.text) : text;
+		private TextView getCode() {
+			return code == null ? code = (TextView) row.findViewById(R.id.code) : code;
+		}
+		
+		private TextView getTitle() {
+			return title == null ? title = (TextView) row.findViewById(R.id.title) : title;
 		}
 	}
 		
