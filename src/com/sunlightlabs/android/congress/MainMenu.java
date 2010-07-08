@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -28,14 +29,16 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.sunlightlabs.android.congress.MainMenu.FavoriteBillsAdapter.FavoriteBillWrapper;
+import com.sunlightlabs.android.congress.MainMenu.FavoriteLegislatorsAdapter.FavoriteLegislatorWrapper;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
-import com.sunlightlabs.android.congress.utils.FavBillsAdapter;
-import com.sunlightlabs.android.congress.utils.FavLegislatorsAdapter;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.LocationUpdater;
@@ -43,11 +46,10 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.android.congress.utils.ViewWrapper;
 import com.sunlightlabs.android.congress.utils.AddressUpdater.AddressUpdateable;
-import com.sunlightlabs.android.congress.utils.FavBillsAdapter.FavBillWrapper;
-import com.sunlightlabs.android.congress.utils.FavLegislatorsAdapter.FavLegislatorWrapper;
 import com.sunlightlabs.android.congress.utils.LocationUpdater.LocationUpdateable;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.Legislator;
 
 public class MainMenu extends ListActivity implements LocationUpdateable<MainMenu>, 
 	LocationListener, AddressUpdateable<MainMenu>, LoadPhotoTask.LoadsPhoto {
@@ -88,7 +90,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	private Cursor peopleCursor, billCursor;
 
 	private HashMap<String, LoadPhotoTask> loadPhotoTasks = new HashMap<String, LoadPhotoTask>();
-	private HashMap<String, FavLegislatorWrapper> favPeopleWrappers = new HashMap<String, FavLegislatorWrapper>();
+	private HashMap<String, FavoriteLegislatorWrapper> favoritePeopleWrappers = new HashMap<String, FavoriteLegislatorWrapper>();
 
 	private Handler handler = new Handler() {
 		@Override
@@ -130,7 +132,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 				while (iterator.hasNext())
 					iterator.next().onScreenLoad(this);
 			}
-			favPeopleWrappers = holder.favPeopleWrappers;
+			favoritePeopleWrappers = holder.favoritePeopleWrappers;
 		}
 
 		if (locationUpdater == null)
@@ -157,7 +159,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		Location location;
 		String address;
 		HashMap<String, LoadPhotoTask> loadPhotoTasks;
-		HashMap<String, FavLegislatorWrapper> favPeopleWrappers;
+		HashMap<String, FavoriteLegislatorWrapper> favoritePeopleWrappers;
 	}
 
 	@Override
@@ -168,7 +170,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		holder.location = location;
 		holder.address = address;
 		holder.loadPhotoTasks = loadPhotoTasks;
-		holder.favPeopleWrappers = favPeopleWrappers;
+		holder.favoritePeopleWrappers = favoritePeopleWrappers;
 		return holder;
 	}
 
@@ -236,10 +238,10 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 				break;
 			}
 		}
-		else if (tag instanceof FavLegislatorWrapper)
-			startActivity(Utils.legislatorIntent(((FavLegislatorWrapper) tag).legislator.bioguide_id));
-		else if (tag instanceof FavBillWrapper) {
-			Bill bill = ((FavBillWrapper) tag).bill;
+		else if (tag instanceof FavoriteLegislatorWrapper)
+			startActivity(Utils.legislatorIntent(((FavoriteLegislatorWrapper) tag).legislator.bioguide_id));
+		else if (tag instanceof FavoriteBillWrapper) {
+			Bill bill = ((FavoriteBillWrapper) tag).bill;
 			startActivity(Utils.billIntent(bill.id, bill.code));
 		}
 	}
@@ -277,12 +279,12 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 
 		// Bills
 		adapter.addView(inflateHeader(inflater, R.string.menu_bills_header));
-		adapter.addAdapter(new FavBillsAdapter(this, billCursor));
+		adapter.addAdapter(new FavoriteBillsAdapter(this, billCursor));
 		adapter.addAdapter(new ViewArrayAdapter(this, setupBillMenu(inflater)));
 
 		// Legislators
 		adapter.addView(inflateHeader(inflater, R.string.menu_legislators_header));
-		adapter.addAdapter(new FavLegislatorsAdapter(this, peopleCursor));
+		adapter.addAdapter(new FavoriteLegislatorsAdapter(this, peopleCursor));
 		searchLocationAdapter = new ViewArrayAdapter(this, setupSearchMenu(inflater));
 		adapter.addAdapter(searchLocationAdapter);
 		
@@ -682,11 +684,11 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		return handler;
 	}
 
-	public void loadPhoto(String bioguide_id, FavLegislatorWrapper wrapper) {
+	public void loadPhoto(String bioguide_id, FavoriteLegislatorWrapper wrapper) {
 		if (!loadPhotoTasks.containsKey(bioguide_id)) {
 			loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this,
 					LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
-			favPeopleWrappers.put(bioguide_id, wrapper);
+			favoritePeopleWrappers.put(bioguide_id, wrapper);
 		}
 	}
 
@@ -697,8 +699,8 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	public void onLoadPhoto(Drawable photo, Object tag) {
 		String bioguide_id = (String) tag;
 		loadPhotoTasks.remove(bioguide_id);
-		favPeopleWrappers.get(bioguide_id).onLoadPhoto(photo, bioguide_id);
-		favPeopleWrappers.remove(bioguide_id);
+		favoritePeopleWrappers.get(bioguide_id).onLoadPhoto(photo, bioguide_id);
+		favoritePeopleWrappers.remove(bioguide_id);
 	}
 
 	public void onLocationChanged(Location location) {
@@ -716,5 +718,151 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		locationUpdater.onStatusChanged(provider, status, extras);
 	}
+	
+	
+	// Favorite bills adapter for the menu
+	public class FavoriteBillsAdapter extends CursorAdapter {
 
+		public FavoriteBillsAdapter(Context context, Cursor c) {
+			super(context, c);
+		}
+
+		@Override
+		public void bindView(View view, Context context, Cursor cursor) {
+			try {
+				((FavoriteBillWrapper) view.getTag()).populateFrom(cursor);
+			} catch(CongressException e) {
+				Utils.alert(context, R.string.menu_favorite_bill_error);
+			}
+		}
+
+		@Override
+		public View newView(Context context, Cursor cursor, ViewGroup parent) {
+			View row = LayoutInflater.from(context).inflate(R.layout.favorite_bill, null);
+			FavoriteBillWrapper wrapper = new FavoriteBillWrapper(row);
+			
+			try {
+				wrapper.populateFrom(cursor);
+			} catch(CongressException e) {
+				Utils.alert(context, R.string.menu_favorite_bill_error);
+			}
+			
+			row.setTag(wrapper);
+			return row;
+		}
+		
+		public class FavoriteBillWrapper {
+			private View row;
+			private TextView code, title;
+			
+			public Bill bill;
+
+			public FavoriteBillWrapper(View row) {
+				this.row = row;
+			}
+			
+			public void populateFrom(Cursor c) throws CongressException {
+				bill = Bill.fromCursor(c);
+				getCode().setText(Bill.formatCode(bill.code));
+				String title;
+				if (bill.short_title != null && !bill.short_title.equals(""))
+					title = bill.short_title;
+				else
+					title = bill.official_title;
+				getTitle().setText(Utils.truncate(title, 80));
+			}
+			
+			private TextView getCode() {
+				return code == null ? code = (TextView) row.findViewById(R.id.code) : code;
+			}
+			
+			private TextView getTitle() {
+				return title == null ? title = (TextView) row.findViewById(R.id.title) : title;
+			}
+		}
+			
+	}
+	
+	// Favorite legislators adapter for the menu
+	public class FavoriteLegislatorsAdapter extends CursorAdapter {
+
+		public FavoriteLegislatorsAdapter(Context context, Cursor c) {
+			super(context, c);
+		}
+
+		@Override
+		public void bindView(View view, Context context, Cursor cursor) {
+			((FavoriteLegislatorWrapper) view.getTag()).populateFrom(cursor, context);
+		}
+		
+		@Override
+		public View newView(Context context, Cursor cursor, ViewGroup parent) {
+			View row = LayoutInflater.from(context).inflate(R.layout.favorite_legislator, null);
+			FavoriteLegislatorWrapper wrapper = new FavoriteLegislatorWrapper(row);
+			
+			wrapper.populateFrom(cursor, context);
+			row.setTag(wrapper);
+			
+			return row;
+		}
+
+		public class FavoriteLegislatorWrapper {
+			private View row;
+
+			private TextView name, position;
+			private ImageView photo;
+			
+			public Legislator legislator;
+
+			public FavoriteLegislatorWrapper(View row) {
+				this.row = row;
+			}
+
+			void populateFrom(Cursor c, Context context) {
+				legislator = Legislator.fromCursor(c);
+				
+				getName().setText(legislator.titledName());
+				String position = Legislator.partyName(legislator.party) + " from " 
+					+ Utils.stateCodeToName(context, legislator.state);
+				getPosition().setText(position);
+				
+				BitmapDrawable picture = LegislatorImage.quickGetImage(LegislatorImage.PIC_MEDIUM,
+						legislator.bioguide_id, context);
+				
+				if (picture != null)
+					getPhoto().setImageDrawable(picture);
+				else {
+					getPhoto().setImageResource(R.drawable.loading_photo);
+
+					Class<?> paramTypes[] = new Class<?>[] { String.class, FavoriteLegislatorWrapper.class };
+					Object[] args = new Object[] { legislator.bioguide_id, this };
+					try {
+						context.getClass().getMethod("loadPhoto", paramTypes).invoke(context, args);
+					} catch (Exception e) {
+						Log.e(this.getClass().getName(),
+								"The Context must implement LoadPhotoTask.LoadsPhoto interface!");
+					}
+				}
+			}
+
+			public void onLoadPhoto(Drawable photo, String bioguideId) {
+				if (photo != null)
+					getPhoto().setImageDrawable(photo);
+				else
+					getPhoto().setImageResource(R.drawable.no_photo_female);
+			}
+			
+			private TextView getName() {
+				return name == null ? name = (TextView) row.findViewById(R.id.name) : name;
+			}
+			
+			private TextView getPosition() {
+				return position == null ? position = (TextView) row.findViewById(R.id.position) : position;
+			}
+			
+			private ImageView getPhoto() {
+				return photo == null ? photo = (ImageView) row.findViewById(R.id.photo) : photo;
+			}
+		}
+	}
 }
