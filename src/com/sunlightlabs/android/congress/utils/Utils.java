@@ -93,8 +93,8 @@ public class Utils {
 		Intent intent = new Intent(Intent.ACTION_MAIN);
 		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.BillLoader");
 		intent.putExtra("extra", false)
-		.putExtra("id", billId)
-		.putExtra("code", code);
+			.putExtra("id", billId)
+			.putExtra("code", code);
 		return intent;
 	}
 

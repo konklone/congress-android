@@ -237,9 +237,11 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 			}
 		}
 		else if (tag instanceof FavLegislatorWrapper)
-			startActivity(Utils.legislatorIntent(this, ((FavLegislatorWrapper) tag).legislator));
-		else if (tag instanceof FavBillWrapper)
-			startActivity(Utils.billIntent(this, ((FavBillWrapper) tag).bill));
+			startActivity(Utils.legislatorIntent(((FavLegislatorWrapper) tag).legislator.bioguide_id));
+		else if (tag instanceof FavBillWrapper) {
+			Bill bill = ((FavBillWrapper) tag).bill;
+			startActivity(Utils.billIntent(bill.id, bill.code));
+		}
 	}
 
 	// this class is used to cache the search location view and its children
