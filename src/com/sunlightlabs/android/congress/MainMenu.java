@@ -58,6 +58,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	public static final int RESULT_LASTNAME = 2;
 	public static final int RESULT_STATE = 3;
 	public static final int RESULT_BILL_CODE = 4;
+	public static final int RESULT_COMMITTEE = 5;
 
 	private static final int ABOUT = 0;
 	private static final int FIRST = 1;
@@ -71,6 +72,7 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 	public static final int SEARCH_ZIP = 5;
 	public static final int SEARCH_STATE = 6;
 	public static final int SEARCH_NAME = 7;
+	public static final int SEARCH_COMMITTEE = 8;
 
 	private static final String TAG = "CONGRESS";
 	private static final int MSG_TIMEOUT = 100;
@@ -222,6 +224,9 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 			case SEARCH_STATE:
 				getResponse(RESULT_STATE);
 				break;
+			case SEARCH_COMMITTEE:
+				startActivity(new Intent(this, CommitteeTabs.class));
+				break;
 			case BILLS_RECENT:
 				startActivity(new Intent(this, BillList.class).putExtra("type",	BillList.BILLS_RECENT));
 				break;
@@ -288,6 +293,9 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		searchLocationAdapter = new ViewArrayAdapter(this, setupSearchMenu(inflater));
 		adapter.addAdapter(searchLocationAdapter);
 		
+		// Committees
+		adapter.addAdapter(new ViewArrayAdapter(this, setupCommitteeMenu(inflater)));
+
 		setListAdapter(adapter);
 	}
 
@@ -323,6 +331,14 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		searchViews.add(searchZip);
 
 		return searchViews;
+	}
+
+	private ArrayList<View> setupCommitteeMenu(LayoutInflater inflater) {
+		ArrayList<View> committeeViews = new ArrayList<View>(1);
+		View committees = inflateItem(inflater, R.drawable.committee, R.string.menu_committees,
+				SEARCH_COMMITTEE);
+		committeeViews.add(committees);
+		return committeeViews;
 	}
 
 	private View inflateHeader(LayoutInflater inflater, int text) {

@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Committee;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -23,6 +24,10 @@ public class CommitteeService {
 				+ bioguideId));
 	}
 	
+	public static ArrayList<Committee> getAll(String chamber) throws CongressException {
+		return committeesFor(Sunlight.url("committees.getList", "chamber="
+				+ Utils.capitalize(chamber)));
+	}
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
 	
