@@ -3,7 +3,7 @@
 	<item android:id="@+id/feedback" 
 		android:title="Feedback"
 		android:alphabeticShortcut="f"
-		android:icon="@android:drawable/ic_menu_report_image" />
+		android:icon="@drawable/ic_menu_send" />
 	<item android:id="@+id/changelog"
 		android:title="Changelog"
 		android:alphabeticShortcut="c"

@@ -28,6 +28,6 @@
 	<item android:id="@+id/main" 
 		android:title="Main Menu"
 		android:alphabeticShortcut="m"
-		android:icon="@android:drawable/ic_menu_myplaces"
+		android:icon="@drawable/ic_menu_home"
 		/>
 </menu>
