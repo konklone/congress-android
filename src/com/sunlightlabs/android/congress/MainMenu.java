@@ -277,16 +277,16 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		LayoutInflater inflater = LayoutInflater.from(this);
 		adapter = new MergeAdapter();
 
-		// Bills
-		adapter.addView(inflateHeader(inflater, R.string.menu_bills_header));
-		adapter.addAdapter(new FavoriteBillsAdapter(this, billCursor));
-		adapter.addAdapter(new ViewArrayAdapter(this, setupBillMenu(inflater)));
-
 		// Legislators
 		adapter.addView(inflateHeader(inflater, R.string.menu_legislators_header));
 		adapter.addAdapter(new FavoriteLegislatorsAdapter(this, peopleCursor));
 		searchLocationAdapter = new ViewArrayAdapter(this, setupSearchMenu(inflater));
 		adapter.addAdapter(searchLocationAdapter);
+		
+		// Bills
+		adapter.addView(inflateHeader(inflater, R.string.menu_bills_header));
+		adapter.addAdapter(new FavoriteBillsAdapter(this, billCursor));
+		adapter.addAdapter(new ViewArrayAdapter(this, setupBillMenu(inflater)));
 		
 		setListAdapter(adapter);
 	}
