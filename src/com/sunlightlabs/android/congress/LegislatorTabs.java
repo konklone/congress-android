@@ -26,8 +26,7 @@ public class LegislatorTabs extends TabActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.legislator);
 
-        Bundle extras = getIntent().getExtras();
-		legislator = (Legislator) extras.getSerializable("legislator");
+		legislator = (Legislator) getIntent().getExtras().getSerializable("legislator");
 		
 		database = new Database(this);
 		database.open();
