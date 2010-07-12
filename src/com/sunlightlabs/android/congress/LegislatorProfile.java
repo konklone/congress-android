@@ -236,17 +236,17 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 			contactViews.add(websiteView);
 		}
 		
-		View sponsoredView = inflater.inflate(R.layout.icon_list_item_1, null);
-		((TextView) sponsoredView.findViewById(R.id.text)).setText(R.string.sponsored_bills);
-		((ImageView) sponsoredView.findViewById(R.id.icon)).setImageResource(R.drawable.bill_multiple);
-		sponsoredView.setTag("sponsored");
-		contactViews.add(sponsoredView);
-		
 		View districtMap = inflater.inflate(R.layout.icon_list_item_1, null);
 		((TextView) districtMap.findViewById(R.id.text)).setText(R.string.district_map);
 		((ImageView) districtMap.findViewById(R.id.icon)).setImageResource(R.drawable.district);
 		districtMap.setTag("districtMap");
 		contactViews.add(districtMap);
+		
+		View sponsoredView = inflater.inflate(R.layout.icon_list_item_1, null);
+		((TextView) sponsoredView.findViewById(R.id.text)).setText(R.string.sponsored_bills);
+		((ImageView) sponsoredView.findViewById(R.id.icon)).setImageResource(R.drawable.bill_multiple);
+		sponsoredView.setTag("sponsored");
+		contactViews.add(sponsoredView);
 		
 		committeeHeader = inflater.inflate(R.layout.header_loading, null);
 		((TextView) committeeHeader.findViewById(R.id.header_text)).setText(R.string.committees);
