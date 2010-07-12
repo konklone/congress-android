@@ -59,14 +59,12 @@ public class Utils {
 
 	// Suitable for a legislator desktop shortcut, load a legislator by ID only
 	public static Intent legislatorIntent(String id) {
-		Intent intent = new Intent(Intent.ACTION_MAIN);
-		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorLoader");
-		intent.putExtra("legislator_id", id); 
-		return intent;
+		return new Intent(Intent.ACTION_MAIN)
+			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorLoader")
+			.putExtra("legislator_id", id);
 	}
-
-	// Suitable for a direct link to a legislator, bypassing the
-	// LegislatorLoader entirely
+	
+	// Suitable for a direct link to a legislator, bypassing the LegislatorLoader entirely
 	public static Intent legislatorIntent(Context context, Legislator legislator) {
 		return new Intent(context, LegislatorTabs.class).putExtra("legislator", legislator);
 	}
@@ -116,14 +114,14 @@ public class Utils {
 	}
 
 	public static Intent shortcutIntent(Context context, Legislator legislator, Bitmap icon) {
-		return shortcutIntent(context, legislator.bioguide_id, legislator.last_name, icon);
+		return shortcutIntent(context, legislator.getId(), legislator.last_name, icon);
 	}
 
 	public static Intent shortcutIntent(Context context, String legislatorId, String name, Bitmap icon) {
 		Intent intent = new Intent()
-		.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
-				Utils.legislatorIntent(legislatorId).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
-				.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
+			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
+					Utils.legislatorIntent(legislatorId).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
+			.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
 
 		if (icon != null)
 			intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, icon);
@@ -136,7 +134,7 @@ public class Utils {
 	}
 	
 	public static void installShortcutIcon(Context context, Legislator legislator, Bitmap icon) {
-		context.sendBroadcast(shortcutIntent(context, legislator.getId(), legislator.last_name, icon)
+		context.sendBroadcast(shortcutIntent(context, legislator, icon)
 				.setAction("com.android.launcher.action.INSTALL_SHORTCUT"));
 	}
 

@@ -51,8 +51,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_titled_fastscroll);
 		
-		Bundle extras = getIntent().getExtras();
-		id = extras.getString("id");
+		id = getIntent().getExtras().getString("id");
 		
 		setupControls();
 		
@@ -381,9 +380,8 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			String bioguide_id;
 			
 			@Override
-			public boolean equals(Object holder) {
-				ViewHolder other = (ViewHolder) holder;
-				return other != null && other instanceof ViewHolder && this.bioguide_id.equals(other.bioguide_id);
+			public boolean equals(Object other) {
+				return other != null && other instanceof ViewHolder && this.bioguide_id.equals(((ViewHolder) other).bioguide_id);
 			}
 		}
 		
