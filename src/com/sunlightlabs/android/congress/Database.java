@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.Drumbone;
 
@@ -141,6 +142,81 @@ public class Database {
 	public void close() {
 		helper.close();
 	}
+	
+	public static Bill loadBill(Cursor c) throws CongressException {
+		Bill bill = new Bill();
+		
+		bill.id = c.getString(c.getColumnIndex("id"));
+		bill.type = c.getString(c.getColumnIndex("type"));
+		bill.number = c.getInt(c.getColumnIndex("number"));
+		bill.session = c.getInt(c.getColumnIndex("session"));
+		bill.code = c.getString(c.getColumnIndex("code"));
+		bill.short_title = c.getString(c.getColumnIndex("short_title"));
+		bill.official_title = c.getString(c.getColumnIndex("official_title"));
+		bill.house_result = c.getString(c.getColumnIndex("house_result"));
+		bill.senate_result = c.getString(c.getColumnIndex("senate_result"));
+		bill.passed = Boolean.parseBoolean(c.getString(c.getColumnIndex("passed")));
+		bill.vetoed = Boolean.parseBoolean(c.getString(c.getColumnIndex("vetoed")));
+		bill.override_house_result = c.getString(c.getColumnIndex("override_house_result"));
+		bill.override_senate_result = c.getString(c.getColumnIndex("override_senate_result"));
+		bill.awaiting_signature = Boolean.parseBoolean(c.getString(c
+				.getColumnIndex("awaiting_signature")));
+		bill.enacted = Boolean.parseBoolean(c.getString(c.getColumnIndex("enacted")));
+
+		try {
+			bill.last_vote_at = parseDate(c.getString(c.getColumnIndex("last_vote_at")));
+			bill.last_action_at = parseDate(c.getString(c.getColumnIndex("last_action_at")));
+			bill.introduced_at = parseDate(c.getString(c.getColumnIndex("introduced_at")));
+			bill.house_result_at = parseDate(c.getString(c.getColumnIndex("house_result_at")));
+			bill.senate_result_at = parseDate(c.getString(c.getColumnIndex("senate_result_at")));
+			bill.passed_at = parseDate(c.getString(c.getColumnIndex("passed_at")));
+			bill.vetoed_at = parseDate(c.getString(c.getColumnIndex("vetoed_at")));
+			bill.override_house_result_at = parseDate(c.getString(c.getColumnIndex("override_house_result_at")));
+			bill.override_senate_result_at = parseDate(c.getString(c.getColumnIndex("override_senate_result_at")));
+			bill.awaiting_signature_since = parseDate(c.getString(c.getColumnIndex("awaiting_signature_since")));
+			bill.enacted_at = parseDate(c.getString(c.getColumnIndex("enacted_at")));
+			
+		} catch (ParseException e) {
+			throw new CongressException(e, "Cannot parse a date for a Bill taken from the database.");
+		}
+		
+		Legislator sponsor = new Legislator();
+		sponsor.id = c.getString(c.getColumnIndex("sponsor_id"));
+		sponsor.party = c.getString(c.getColumnIndex("sponsor_party"));
+		sponsor.state = c.getString(c.getColumnIndex("sponsor_state"));
+		sponsor.title = c.getString(c.getColumnIndex("sponsor_title"));
+		sponsor.first_name = c.getString(c.getColumnIndex("sponsor_first_name"));
+		sponsor.last_name = c.getString(c.getColumnIndex("sponsor_last_name"));
+		sponsor.nickname = c.getString(c.getColumnIndex("sponsor_nickname"));
+		bill.sponsor = sponsor;
+
+		return bill;
+	}
+	
+	public static Legislator loadLegislator(Cursor c) {
+		Legislator legislator = new Legislator();
+
+		legislator.id = c.getString(c.getColumnIndex("id"));
+		legislator.bioguide_id = c.getString(c.getColumnIndex("bioguide_id"));
+		legislator.govtrack_id = c.getString(c.getColumnIndex("govtrack_id"));
+		legislator.first_name = c.getString(c.getColumnIndex("first_name"));
+		legislator.last_name = c.getString(c.getColumnIndex("last_name"));
+		legislator.nickname = c.getString(c.getColumnIndex("nickname"));
+		legislator.name_suffix = c.getString(c.getColumnIndex("name_suffix"));
+		legislator.title = c.getString(c.getColumnIndex("title"));
+		legislator.party = c.getString(c.getColumnIndex("party"));
+		legislator.state = c.getString(c.getColumnIndex("state"));
+		legislator.district = c.getString(c.getColumnIndex("district"));
+		legislator.gender = c.getString(c.getColumnIndex("gender"));
+		legislator.congress_office = c.getString(c.getColumnIndex("congress_office"));
+		legislator.website = c.getString(c.getColumnIndex("website"));
+		legislator.phone = c.getString(c.getColumnIndex("phone"));
+		legislator.twitter_id = c.getString(c.getColumnIndex("twitter_id"));
+		legislator.youtube_url = c.getString(c.getColumnIndex("youtube_url"));
+
+		return legislator;
+	}
+	
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 		public DatabaseHelper(Context context) {

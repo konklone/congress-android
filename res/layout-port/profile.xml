@@ -6,6 +6,8 @@
 	android:clickable="false"
 	>
 	
+	<include layout="@layout/legislator_out_of_office" />
+	
 	<LinearLayout android:id="@+id/profile_top"
 		android:orientation="horizontal"
 		

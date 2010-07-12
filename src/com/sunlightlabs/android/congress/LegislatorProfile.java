@@ -64,7 +64,10 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
         	holder.loadInto(this);
         
         loadPhoto();
-        loadCommittees();
+        
+        if (legislator.in_office)
+        	loadCommittees();
+        
         if (shortcutImageTask != null)
         	shortcutImageTask.onScreenLoad(this);
 	}
@@ -204,9 +207,14 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 	}
 	
 	public void setupControls() {
+		MergeAdapter adapter = new MergeAdapter();
 		LayoutInflater inflater = LayoutInflater.from(this);
+		
 		View mainView = inflater.inflate(R.layout.profile, null);
 		mainView.setEnabled(false);
+		
+		if (!legislator.in_office)
+			mainView.findViewById(R.id.out_of_office_text).setVisibility(View.VISIBLE);
 		
 		picture = (ImageView) mainView.findViewById(R.id.profile_picture);
 		
@@ -214,10 +222,12 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		((TextView) mainView.findViewById(R.id.profile_state)).setText(Utils.stateCodeToName(this, legislator.state));
 		((TextView) mainView.findViewById(R.id.profile_domain)).setText(domainName(legislator.getDomain()));
 		
+		adapter.addView(mainView);
+		
 		ArrayList<View> contactViews = new ArrayList<View>(3);
 		
 		String phone = legislator.phone;
-		if (phone != null && !phone.equals("")) {
+		if (legislator.in_office && phone != null && !phone.equals("")) {
 			View phoneView = inflater.inflate(R.layout.icon_list_item_2, null);
 			((TextView) phoneView.findViewById(R.id.text_1)).setText("Call " + pronoun(legislator.gender) + " office");
 			((TextView) phoneView.findViewById(R.id.text_2)).setText(phone);
@@ -227,7 +237,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		}
 		
 		String website = legislator.website;
-		if (website != null && !website.equals("")) {
+		if (legislator.in_office && website != null && !website.equals("")) {
 			View websiteView = inflater.inflate(R.layout.icon_list_item_2, null);
 			((TextView) websiteView.findViewById(R.id.text_1)).setText("Visit " + pronoun(legislator.gender) + " website");
 			((TextView) websiteView.findViewById(R.id.text_2)).setText(websiteName(website));
@@ -248,14 +258,14 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		sponsoredView.setTag("sponsored");
 		contactViews.add(sponsoredView);
 		
-		committeeHeader = inflater.inflate(R.layout.header_loading, null);
-		((TextView) committeeHeader.findViewById(R.id.header_text)).setText(R.string.committees);
-		((TextView) committeeHeader.findViewById(R.id.loading_message)).setText(R.string.loading_committees);
-		
-		MergeAdapter adapter = new MergeAdapter();
-		adapter.addView(mainView);
 		adapter.addAdapter(new ViewArrayAdapter(this, contactViews));
-		adapter.addView(committeeHeader);
+		
+		if (legislator.in_office) {
+			committeeHeader = inflater.inflate(R.layout.header_loading, null);
+			((TextView) committeeHeader.findViewById(R.id.header_text)).setText(R.string.committees);
+			((TextView) committeeHeader.findViewById(R.id.loading_message)).setText(R.string.loading_committees);
+			adapter.addView(committeeHeader);
+		}
 		
 		setListAdapter(adapter);
 	}

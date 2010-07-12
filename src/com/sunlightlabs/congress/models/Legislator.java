@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.database.Cursor;
-
 public class Legislator implements Comparable<Legislator>, Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -130,30 +128,6 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	
 	public int compareTo(Legislator another) {
 		return this.last_name.compareTo(another.last_name);
-	}
-	
-	public static Legislator fromCursor(Cursor c) {
-		Legislator legislator = new Legislator();
-
-		legislator.id = c.getString(c.getColumnIndex("id"));
-		legislator.bioguide_id = c.getString(c.getColumnIndex("bioguide_id"));
-		legislator.govtrack_id = c.getString(c.getColumnIndex("govtrack_id"));
-		legislator.first_name = c.getString(c.getColumnIndex("first_name"));
-		legislator.last_name = c.getString(c.getColumnIndex("last_name"));
-		legislator.nickname = c.getString(c.getColumnIndex("nickname"));
-		legislator.name_suffix = c.getString(c.getColumnIndex("name_suffix"));
-		legislator.title = c.getString(c.getColumnIndex("title"));
-		legislator.party = c.getString(c.getColumnIndex("party"));
-		legislator.state = c.getString(c.getColumnIndex("state"));
-		legislator.district = c.getString(c.getColumnIndex("district"));
-		legislator.gender = c.getString(c.getColumnIndex("gender"));
-		legislator.congress_office = c.getString(c.getColumnIndex("congress_office"));
-		legislator.website = c.getString(c.getColumnIndex("website"));
-		legislator.phone = c.getString(c.getColumnIndex("phone"));
-		legislator.twitter_id = c.getString(c.getColumnIndex("twitter_id"));
-		legislator.youtube_url = c.getString(c.getColumnIndex("youtube_url"));
-
-		return legislator;
 	}
 
 }

@@ -93,11 +93,11 @@ public class LegislatorTabs extends TabActivity {
 		Utils.addTab(this, tabHost, "news_tab", "News", newsIntent(), res.getDrawable(R.drawable.tab_news));
 		
 		String twitter_id = legislator.twitter_id;
-		if (twitter_id != null && !(twitter_id.equals("")))
+		if (legislator.in_office && twitter_id != null && !(twitter_id.equals("")))
 			Utils.addTab(this, tabHost, "twitter_tab", "Twitter", twitterIntent(), res.getDrawable(R.drawable.tab_twitter));
 		
 		String youtube_id = legislator.youtubeUsername();
-		if (youtube_id != null && !(youtube_id.equals("")))
+		if (legislator.in_office && youtube_id != null && !(youtube_id.equals("")))
 			Utils.addTab(this, tabHost, "youtube_tab", "YouTube", youtubeIntent(), res.getDrawable(R.drawable.tab_video));
 			
 		tabHost.setCurrentTab(0);

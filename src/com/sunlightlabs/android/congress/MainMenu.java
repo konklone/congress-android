@@ -761,7 +761,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 			}
 			
 			public void populateFrom(Cursor c) throws CongressException {
-				bill = Bill.fromCursor(c);
+				bill = Database.loadBill(c);
 				getCode().setText(Bill.formatCode(bill.code));
 				String title;
 				if (bill.short_title != null && !bill.short_title.equals(""))
@@ -818,7 +818,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 			}
 
 			void populateFrom(Cursor c, Context context) {
-				legislator = Legislator.fromCursor(c);
+				legislator = Database.loadLegislator(c);
 				
 				getName().setText(legislator.titledName());
 				String position = Legislator.partyName(legislator.party) + " from " 

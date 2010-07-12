@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	
+	android:id="@+id/out_of_office_text"
+	android:visibility="gone"
+	>
+	
+	<TextView 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		
+		android:textSize="16sp"
+		android:textStyle="bold"
+		
+		android:gravity="center"
+		
+		android:paddingLeft="10dp"
+		android:paddingTop="5dp"
+		android:paddingBottom="5dp"
+		
+		android:background="@color/out_of_office_background"
+		android:textColor="@color/out_of_office_text"
+		
+		android:text="@string/out_of_office_message"
+		/>
+	
+	<include layout="@layout/line" />
+	
+</LinearLayout>

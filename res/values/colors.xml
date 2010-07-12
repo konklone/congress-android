@@ -32,4 +32,7 @@
 	
 	<color name="header_line">#3E445f</color>
 	<color name="header_text">#cccccc</color>
+	
+	<color name="out_of_office_text">#ffffff</color>
+	<color name="out_of_office_background">#662222</color>
 </resources>
