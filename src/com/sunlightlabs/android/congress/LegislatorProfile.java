@@ -244,7 +244,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		
 		View districtMap = inflater.inflate(R.layout.icon_list_item_1, null);
 		((TextView) districtMap.findViewById(R.id.text)).setText(R.string.district_map);
-		((ImageView) districtMap.findViewById(R.id.icon)).setImageResource(R.drawable.globe);
+		((ImageView) districtMap.findViewById(R.id.icon)).setImageResource(R.drawable.district);
 		districtMap.setTag("districtMap");
 		contactViews.add(districtMap);
 		
