@@ -30,7 +30,7 @@ public class LegislatorService {
 	}
 
 	public static Legislator find(String bioguideId) throws CongressException {
-		return legislatorFor(Sunlight.url("legislators.get", "bioguide_id=" + bioguideId));
+		return legislatorFor(Sunlight.url("legislators.get", "bioguide_id=" + bioguideId + "&all_legislators=true"));
 	}
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
@@ -42,7 +42,11 @@ public class LegislatorService {
 			legislator.bioguide_id = json.getString("bioguide_id");
 		if (!json.isNull("govtrack_id"))
 			legislator.govtrack_id = json.getString("govtrack_id");
+		
 		legislator.setId(legislator.bioguide_id);
+		
+		if (!json.isNull("in_office"))
+			legislator.in_office = json.getBoolean("in_office");
 
 		if (!json.isNull("first_name"))
 			legislator.first_name = json.getString("first_name");
@@ -83,8 +87,12 @@ public class LegislatorService {
 			legislator.bioguide_id = json.getString("bioguide_id");
 		if (!json.isNull("govtrack_id"))
 			legislator.govtrack_id = json.getString("govtrack_id");
+		
 		legislator.setId(legislator.bioguide_id);
 
+		if (!json.isNull("in_office"))
+			legislator.in_office = json.getBoolean("in_office");
+		
 		if (!json.isNull("firstname"))
 			legislator.first_name = json.getString("firstname");
 		if (!json.isNull("lastname"))
