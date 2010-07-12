@@ -293,7 +293,6 @@ public class MainMenu extends ListActivity implements LocationUpdateable<MainMen
 		adapter.addView(inflateHeader(inflater, R.string.menu_bills_header));
 		adapter.addAdapter(new FavoriteBillsAdapter(this, billCursor));
 		adapter.addAdapter(new ViewArrayAdapter(this, setupBillMenu(inflater)));
-		
 
 		setListAdapter(adapter);
 	}
