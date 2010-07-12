@@ -134,6 +134,11 @@ public class Utils {
 
 		return intent;
 	}
+	
+	public static void installShortcutIcon(Context context, Legislator legislator, Bitmap icon) {
+		context.sendBroadcast(shortcutIntent(context, legislator.getId(), legislator.last_name, icon)
+				.setAction("com.android.launcher.action.INSTALL_SHORTCUT"));
+	}
 
 	public static String stateCodeToName(Context context, String code) {
 		String[] codes = context.getResources().getStringArray(R.array.state_codes);

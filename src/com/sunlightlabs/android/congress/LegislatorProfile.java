@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
+import com.sunlightlabs.android.congress.utils.ShortcutImageTask;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.congress.models.Committee;
@@ -34,7 +35,7 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.CommitteeService;
 
-public class LegislatorProfile extends ListActivity implements LoadPhotoTask.LoadsPhoto {
+public class LegislatorProfile extends ListActivity implements LoadPhotoTask.LoadsPhoto, ShortcutImageTask.CreatesShortcutImage {
 	private Legislator legislator;
 
 	private Drawable avatar;
@@ -86,11 +87,6 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		}
 	}
 	
-	public void installShortcutIcon(Bitmap icon) {
-		sendBroadcast(Utils.shortcutIntent(this, legislator.getId(), legislator.last_name, icon)
-				.setAction("com.android.launcher.action.INSTALL_SHORTCUT"));
-	}
-    
 	public void onLoadCommittees(CongressException exception) {
 		displayCommittees();
 	}
@@ -134,6 +130,10 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		loadPhotoTask = null;
 		this.avatar = avatar;
 		displayAvatar();
+	}
+	
+	public void onCreateShortcutIcon(Bitmap icon) {
+		Utils.installShortcutIcon(this, legislator, icon);
 	}
 	
 	public Context getContext() {
@@ -351,31 +351,6 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 			return view;
 		}
 
-    }
-	
-	private class ShortcutImageTask extends AsyncTask<String,Void,Bitmap> {
-    	public LegislatorProfile context;
-    	
-    	public ShortcutImageTask(LegislatorProfile context) {
-    		super();
-    		this.context = context;
-    		this.context.shortcutImageTask = this;
-    	}
-    	
-    	public void onScreenLoad(LegislatorProfile context) {
-    		this.context = context;
-    	}
-    	
-    	@Override
-    	protected Bitmap doInBackground(String... bioguideId) {
-    		return LegislatorImage.shortcutImage(bioguideId[0], context);
-    	}
-    	
-    	@Override
-    	protected void onPostExecute(Bitmap shortcutIcon) {
-    		context.installShortcutIcon(shortcutIcon);
-    		context.shortcutImageTask = null;
-    	}
     }
 	
 	private class LoadCommitteesTask extends AsyncTask<String,Void,ArrayList<Committee>> {
