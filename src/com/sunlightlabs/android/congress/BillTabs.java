@@ -21,7 +21,6 @@ public class BillTabs extends TabActivity {
 	private Cursor cursor;
 
 	ImageView star;
-	Button share;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,8 +56,7 @@ public class BillTabs extends TabActivity {
 		
 		((TextView) findViewById(R.id.title_text)).setText(Bill.formatCode(bill.code));
 		
-		share = (Button) findViewById(R.id.share);
-		share.setOnClickListener(new View.OnClickListener() {
+		((Button) findViewById(R.id.share)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 	    		Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, shareText());
 	    		startActivity(Intent.createChooser(intent, "Share bill"));

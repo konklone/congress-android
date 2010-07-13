@@ -1,6 +1,7 @@
 package com.sunlightlabs.android.congress;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -60,6 +61,16 @@ public class CommitteeList extends ListActivity {
 		holder.loadCommitteesTask = this.loadCommitteesTask;
 		return holder;
 	}
+	
+	private void setupControls() {
+		((Button) findViewById(R.id.back)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				finish();
+			}
+		});
+
+		Utils.setLoading(this, R.string.committees_loading);
+	}
 
 	@Override
 	protected void onListItemClick(ListView parent, View v, int position, long id) {
@@ -70,21 +81,25 @@ public class CommitteeList extends ListActivity {
 		startActivity(new Intent(this, LegislatorList.class).putExtra("committeeId", committee.id)
 				.putExtra("committeeName", committee.name));
 	}
-
-	private class CommitteeListHolder {
-		ArrayList<Committee> committees;
-		LoadCommitteesTask loadCommitteesTask;
-		String chamber;
+	
+	public void loadCommittees() {
+		if (committees == null)
+			loadCommitteesTask = (LoadCommitteesTask) new LoadCommitteesTask(this).execute(chamber);
+		else
+			displayCommittees();
+	}
+	
+	public void onLoadCommittees(ArrayList<Committee> committees) {
+		Collections.sort(committees);
+		this.committees = committees;
+		displayCommittees();
 	}
 
-	private void setupControls() {
-		((Button) findViewById(R.id.back)).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				finish();
-			}
-		});
-
-		Utils.setLoading(this, R.string.committees_loading);
+	public void displayCommittees() {
+		if (committees.size() > 0)
+			setListAdapter(new CommitteeAdapter(this, committees));
+		else
+			Utils.showBack(this, R.string.committees_emtpy);
 	}
 
 	private class ViewHolder {
@@ -162,25 +177,15 @@ public class CommitteeList extends ListActivity {
 
 		@Override
 		protected void onPostExecute(ArrayList<Committee> result) {
-			context.committees = result;
-			context.displayCommittees();
-			context.loadCommitteesTask = null;
+			context.onLoadCommittees(result);
 		}
 
 	}
-
-	public void loadCommittees() {
-		if (committees == null)
-			loadCommitteesTask = (LoadCommitteesTask) new LoadCommitteesTask(this).execute(chamber);
-		else
-			displayCommittees();
-	}
-
-	public void displayCommittees() {
-		if (committees.size() > 0)
-			setListAdapter(new CommitteeAdapter(this, committees));
-		else
-			Utils.showBack(this, R.string.committees_emtpy);
+	
+	private class CommitteeListHolder {
+		ArrayList<Committee> committees;
+		LoadCommitteesTask loadCommitteesTask;
+		String chamber;
 	}
 
 }
