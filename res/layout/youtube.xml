@@ -12,10 +12,10 @@
 			android:layout_height="wrap_content"
 		>
 		<ImageView android:id="@+id/thumbnail"
-			android:layout_width="120dp"
-			android:layout_height="90dp"
+			android:layout_width="100dp"
+			android:layout_height="75dp"
 			android:layout_gravity="center_vertical"
-			android:layout_marginRight="5dp"
+			android:layout_marginRight="10dp"
 			android:src="@drawable/loading_photo"
 			/>
 	
@@ -23,9 +23,11 @@
 			android:id="@+id/video_title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textSize="16sp" 
+			
 			android:layout_gravity="center_vertical"
+			
 			android:textColor="@android:color/white"
+			android:textSize="16sp"
 			
 			android:text="Title of the YouTube Video And Then Some"
 			/>
