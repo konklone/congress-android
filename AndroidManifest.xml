@@ -24,6 +24,8 @@
         <activity android:name=".GetState"
         	android:theme="@android:style/Theme.Dialog" 
         	/>
+        	
+        <activity android:name=".NewsList" />
         
         <activity android:name=".LegislatorList"
         	android:theme="@android:style/Theme.NoTitleBar" 
@@ -43,7 +45,6 @@
         	/>
         
         <activity android:name=".LegislatorProfile" />
-        <activity android:name=".LegislatorNews" />
         <activity android:name=".LegislatorTwitter" />
         <activity android:name=".LegislatorYouTube" />
         

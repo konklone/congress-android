@@ -24,11 +24,11 @@ import com.sunlightlabs.yahoo.news.NewsException;
 import com.sunlightlabs.yahoo.news.NewsItem;
 import com.sunlightlabs.yahoo.news.NewsService;
 
-public class LegislatorNews extends ListActivity {
+public class NewsList extends ListActivity {
 	private static final int MENU_VIEW = 0;
 	private static final int MENU_COPY = 1;
 	
-	private String searchName;
+	private String searchTerm;
 	private NewsItem[] items = null;
 
 	private LoadNewsTask loadNewsTask = null;
@@ -37,15 +37,9 @@ public class LegislatorNews extends ListActivity {
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.list);
     	
-    	Bundle extras = getIntent().getExtras();
-    	String title = extras.getString("title");
-    	String firstName = extras.getString("firstName");
-    	String nickname = extras.getString("nickname");
-    	String lastName = extras.getString("lastName");
-    	searchName = LegislatorNews.searchNameFor(title, firstName, nickname, lastName); 
-    	searchName = LegislatorNews.correctExceptions(searchName);
+    	searchTerm = getIntent().getStringExtra("searchTerm");
     	
-    	LegislatorNewsHolder holder = (LegislatorNewsHolder) getLastNonConfigurationInstance();
+    	NewsListHolder holder = (NewsListHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
     		items = holder.items;
     		loadNewsTask = holder.loadNewsTask;
@@ -60,7 +54,7 @@ public class LegislatorNews extends ListActivity {
 	
 	@Override
     public Object onRetainNonConfigurationInstance() {
-		LegislatorNewsHolder holder = new LegislatorNewsHolder();
+		NewsListHolder holder = new NewsListHolder();
 		holder.items = this.items;
 		holder.loadNewsTask = this.loadNewsTask;
     	return holder;
@@ -71,7 +65,7 @@ public class LegislatorNews extends ListActivity {
     	((Button) findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				items = null;
-				Utils.showLoading(LegislatorNews.this);
+				Utils.showLoading(NewsList.this);
 				loadNews();
 			}
 		});
@@ -115,7 +109,7 @@ public class LegislatorNews extends ListActivity {
     
     protected void loadNews() {
 	    if (items == null)
-    		loadNewsTask = (LoadNewsTask) new LoadNewsTask(this).execute(searchName);
+    		loadNewsTask = (LoadNewsTask) new LoadNewsTask(this).execute(searchTerm);
 		else
 			displayNews();
 	}
@@ -127,25 +121,7 @@ public class LegislatorNews extends ListActivity {
     		Utils.showRefresh(this, R.string.news_empty);
     }
     
-    private static String searchNameFor(String title, String firstName, String nickname, String lastName) {
-    	String first;
-    	if (nickname != null && !nickname.equals(""))
-    		first = nickname;
-    	else
-    		first = firstName;
-    	return title + ". " + first + " " + lastName;
-    }
-    
-    private static String correctExceptions(String name) {
-		if (name.equals("Rep. Nancy Pelosi"))
-			return "Speaker Nancy Pelosi";
-		else if (name.equals("Del. Eleanor Norton"))
-			return "Eleanor Holmes Norton";
-		else
-			return name;
-	}
-	
-	protected class NewsAdapter extends ArrayAdapter<NewsItem> {
+    protected class NewsAdapter extends ArrayAdapter<NewsItem> {
     	LayoutInflater inflater;
 
         public NewsAdapter(Activity context, NewsItem[] items) {
@@ -180,14 +156,14 @@ public class LegislatorNews extends ListActivity {
     }
 	
 	private class LoadNewsTask extends AsyncTask<String,Void,NewsItem[]> {
-		public LegislatorNews context;
+		public NewsList context;
 		
-		public LoadNewsTask(LegislatorNews context) {
+		public LoadNewsTask(NewsList context) {
 			super();
 			this.context = context;
 		}
 		
-		public void onScreenLoad(LegislatorNews context) {
+		public void onScreenLoad(NewsList context) {
 			this.context = context;
 		}
 		
@@ -209,7 +185,7 @@ public class LegislatorNews extends ListActivity {
 		}
 	}
 	
-	static class LegislatorNewsHolder{
+	static class NewsListHolder{
 		NewsItem[] items;
 		LoadNewsTask loadNewsTask;
 	}

@@ -108,11 +108,8 @@ public class LegislatorTabs extends TabActivity {
 	}
 	
 	public Intent newsIntent() {
-		return new Intent(this, LegislatorNews.class)
-			.putExtra("firstName", legislator.firstName())
-			.putExtra("nickname", legislator.nickname)
-			.putExtra("lastName", legislator.last_name)
-			.putExtra("title", legislator.title);
+		return new Intent(this, NewsList.class)
+			.putExtra("searchTerm", correctExceptions(searchNameFor(legislator)));
 	}
 	
 	public Intent twitterIntent() {
@@ -123,6 +120,22 @@ public class LegislatorTabs extends TabActivity {
 	public Intent youtubeIntent() {
 		return new Intent(this, LegislatorYouTube.class)
 			.putExtra("username", legislator.youtubeUsername());
+	}
+	
+	
+	// for news searching, don't use legislator.titledName() because we don't want to use the name_suffix
+	private static String searchNameFor(Legislator legislator) {
+    	return legislator.title + ". " + legislator.firstName() + " " + legislator.last_name;
+    }
+    
+	// a little hand massaging for prominent exceptions
+    private static String correctExceptions(String name) {
+		if (name.equals("Rep. Nancy Pelosi"))
+			return "Speaker Nancy Pelosi";
+		else if (name.equals("Del. Eleanor Norton"))
+			return "Eleanor Holmes Norton";
+		else
+			return name;
 	}
 
 }
