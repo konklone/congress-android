@@ -1,7 +1,6 @@
 package com.sunlightlabs.congress.models;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Committee implements Comparable<Committee> {
 
