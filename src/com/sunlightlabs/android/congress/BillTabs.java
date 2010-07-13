@@ -106,7 +106,8 @@ public class BillTabs extends TabActivity {
 		TabHost tabHost = getTabHost();
 		
 		Utils.addTab(this, tabHost, "info_tab", "Details", detailsIntent(), res.getDrawable(R.drawable.tab_profile));
-		Utils.addTab(this, tabHost, "history_tab", "History", historyIntent(), res.getDrawable(R.drawable.tab_news));
+		Utils.addTab(this, tabHost, "news_tab", "News", newsIntent(), res.getDrawable(R.drawable.tab_news));
+		Utils.addTab(this, tabHost, "history_tab", "History", historyIntent(), res.getDrawable(R.drawable.tab_history));
 		
 		if (bill.last_vote_at != null && bill.last_vote_at.getTime() > 0)
 			Utils.addTab(this, tabHost, "voted_tab", "Votes", votesIntent(), res.getDrawable(R.drawable.tab_video));
@@ -119,6 +120,10 @@ public class BillTabs extends TabActivity {
 		return Utils.billIntent(this, BillInfo.class, bill);
 	}
 	
+	public Intent newsIntent() {
+		return new Intent(this, NewsList.class).putExtra("searchTerm", searchTermFor(bill));
+	}
+	
 	public Intent historyIntent() {
 		return new Intent(this, BillHistory.class).putExtra("id", bill.id);
 	}
@@ -126,4 +131,12 @@ public class BillTabs extends TabActivity {
 	public Intent votesIntent() {
 		return new Intent(this, BillVotes.class).putExtra("id", bill.id);
 	}
+	
+	// for news searching, don't use legislator.titledName() because we don't want to use the name_suffix
+	private static String searchTermFor(Bill bill) {
+    	if (bill.short_title != null && !bill.short_title.equals(""))
+    		return bill.short_title;
+    	else
+    		return Bill.formatCodeShort(bill.code);
+    }
 }
