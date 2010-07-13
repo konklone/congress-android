@@ -9,6 +9,7 @@ import java.util.Iterator;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -37,6 +38,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private Roll roll;
 	private HashMap<String,Roll.Vote> voters;
 	
+	private Database database;
+	private Cursor peopleCursor;
+	
 	private LoadRollTask loadRollTask, loadVotersTask;
 	private View loadingView;
 	
@@ -50,6 +54,11 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_titled_fastscroll);
+		
+		database = new Database(this);
+		database.open();
+		peopleCursor = database.getLegislators();
+		startManagingCursor(peopleCursor);
 		
 		id = getIntent().getExtras().getString("id");
 		
@@ -76,6 +85,12 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		return new RollInfoHolder(loadRollTask, roll, loadVotersTask, voters, loadPhotoTasks);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		database.close();
 	}
 	
 	public void setupControls() {
@@ -149,14 +164,36 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	}
 	
 	public void displayVoters() {
-		MergeAdapter adapter = (MergeAdapter) getListAdapter();
-		
 		ArrayList<Roll.Vote> voterArray = new ArrayList<Roll.Vote>(voters.values());
 		Collections.sort(voterArray);
+		
+		int starredCount = peopleCursor.getCount();
+		ArrayList<Roll.Vote> starred = new ArrayList<Roll.Vote>(starredCount);
+		
+		if (starredCount > 0) {
+			ArrayList<String> starredIds = new ArrayList<String>(starredCount);
+			
+			peopleCursor.moveToFirst();
+			do {
+				starredIds.add(peopleCursor.getString(peopleCursor.getColumnIndex("bioguide_id")));
+			} while(peopleCursor.moveToNext());
+			
+			
+			Iterator<Roll.Vote> iter = voterArray.iterator();
+			while (iter.hasNext()) {
+				Roll.Vote vote = iter.next();
+				if (starredIds.contains(vote.voter_id)) {
+					iter.remove();
+					starred.add(vote);
+				}
+			}
+		}
+		
+		MergeAdapter adapter = (MergeAdapter) getListAdapter();
+		adapter.addAdapter(new VoterAdapter(this, starred, true));
 		adapter.addAdapter(new VoterAdapter(this, voterArray));
 		
 		loadingView.setVisibility(View.GONE);
-		
 		setListAdapter(adapter);
 	}
 	
@@ -263,12 +300,23 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		LayoutInflater inflater;
 		RollInfo context;
 		Resources resources;
+		
+		private boolean starred;
 
 	    public VoterAdapter(RollInfo context, ArrayList<Roll.Vote> items) {
 	        super(context, 0, items);
 	        this.context = context;
 	        this.resources = context.getResources();
 	        this.inflater = LayoutInflater.from(context);
+	        this.starred = false;
+	    }
+	    
+	    public VoterAdapter(RollInfo context, ArrayList<Roll.Vote> items, boolean starred) {
+	        super(context, 0, items);
+	        this.context = context;
+	        this.resources = context.getResources();
+	        this.inflater = LayoutInflater.from(context);
+	        this.starred = starred;
 	    }
 	    
 	    public boolean areAllItemsEnabled() {
@@ -291,6 +339,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 				holder.position = (TextView) view.findViewById(R.id.position);
 				holder.vote = (TextView) view.findViewById(R.id.vote);
 				holder.photo = (ImageView) view.findViewById(R.id.photo);
+				holder.star = (ImageView) view.findViewById(R.id.star);
 				
 				view.setTag(holder);
 			} else {
@@ -307,6 +356,8 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			
 			holder.name.setText(nameFor(legislator));
 			holder.position.setText(positionFor(legislator));
+			
+			holder.star.setVisibility(starred ? View.VISIBLE : View.GONE);
 			
 			TextView voteView = holder.vote;
 			int value = vote.vote;
@@ -376,7 +427,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		static class ViewHolder {
 			TextView name, position, vote;
-			ImageView photo;
+			ImageView photo, star;
 			String bioguide_id;
 			
 			@Override
