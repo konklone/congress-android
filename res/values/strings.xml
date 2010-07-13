@@ -12,6 +12,9 @@
     <string name="empty_last_name">No legislators found by that last name.</string>
     <string name="empty_general">No legislators found.</string>
     
+    <string name="empty_bills_sponsored">This legislator has not sponsored any bills.</string>
+    <string name="empty_bills">There are no bills that match your search.</string>
+    
     <string name="news_loading">Plucking news from the air...</string>
     <string name="news_empty">No recent news found.</string>
     <string name="twitter_loading">Plucking tweets from the air...</string>

@@ -111,26 +111,34 @@ public class BillList extends ListActivity {
 	}
 
 
-	public void onLoadBills(ArrayList<Bill> bills) {
+	public void onLoadBills(ArrayList<Bill> newBills) {
+		if (bills.size() == 0 && newBills.size() == 0) {
+			if (type == BILLS_SPONSOR)
+				Utils.showBack(this, R.string.empty_bills_sponsored);
+			else
+				Utils.showBack(this, R.string.empty_bills);
+			return;
+		}
+		
 		// remove the placeholder and add the new bills in the array
-		if (this.bills.size() > 0) {
-			int lastIndex = this.bills.size() - 1;
-			if (this.bills.get(lastIndex) == null) {
-				this.bills.remove(lastIndex);
+		if (bills.size() > 0) {
+			int lastIndex = bills.size() - 1;
+			if (bills.get(lastIndex) == null) {
+				bills.remove(lastIndex);
 			}
 		}
 
-		this.bills.addAll(bills);
+		bills.addAll(newBills);
 
 		// if we got back a full page of bills, there may be more yet to come
-		if (bills.size() == BILLS)
-			this.bills.add(null);
+		if (newBills.size() == BILLS)
+			bills.add(null);
 
 		((BillAdapter) getListAdapter()).notifyDataSetChanged();
 	}
 
 	public void onLoadBills(CongressException exception) {
-		if (bills != null && bills.size() > 0) {
+		if (bills.size() > 0) {
 			
 			lw.getLoading().setVisibility(View.GONE);
 			lw.getRetryContainer().setVisibility(View.VISIBLE);
