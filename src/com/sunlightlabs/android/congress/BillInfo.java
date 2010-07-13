@@ -297,22 +297,9 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.openCongressUrl(bill.type,
 					bill.number, bill.session))));
     		break;
-    	case R.id.share:
-    		Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, shareText());
-    		startActivity(Intent.createChooser(intent, "Share bill"));
-    		break;
     	}
     	return true;
     }
-	
-	public String shareText() {
-		String url = Bill.thomasUrl(bill.type, bill.number, bill.session);
-		String short_title = bill.short_title;
-		if (short_title != null && !short_title.equals(""))
-			return "Check out the " + short_title + " on THOMAS: " + url;
-		else
-			return "Check out the bill " + Bill.formatCode(bill.code) + " on THOMAS: " + url;
-	}
 	
 	public int sizeOfTitle(String title) {
 		int length = title.length();

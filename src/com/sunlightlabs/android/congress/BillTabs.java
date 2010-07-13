@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ public class BillTabs extends TabActivity {
 	private Cursor cursor;
 
 	ImageView star;
+	Button share;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,23 @@ public class BillTabs extends TabActivity {
 		toggleFavoriteStar(cursor.getCount() == 1);
 		
 		((TextView) findViewById(R.id.title_text)).setText(Bill.formatCode(bill.code));
+		
+		share = (Button) findViewById(R.id.share);
+		share.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+	    		Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, shareText());
+	    		startActivity(Intent.createChooser(intent, "Share bill"));
+			}
+		});
+	}
+	
+	public String shareText() {
+		String url = Bill.thomasUrl(bill.type, bill.number, bill.session);
+		String short_title = bill.short_title;
+		if (short_title != null && !short_title.equals(""))
+			return "Check out the " + short_title + " on THOMAS: " + url;
+		else
+			return "Check out the bill " + Bill.formatCode(bill.code) + " on THOMAS: " + url;
 	}
 	
 	private void toggleFavoriteStar(boolean enabled) {

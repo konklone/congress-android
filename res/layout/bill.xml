@@ -12,7 +12,7 @@
     	android:layout_height="fill_parent"
     	>
     	
-    	<include layout="@layout/title_bar_star" />
+    	<include layout="@layout/title_bar_star_share" />
     	
     	<View
 			android:layout_width="fill_parent"
