@@ -11,12 +11,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -88,14 +89,10 @@ public class LegislatorTwitter extends ListActivity {
     	}
 	}
 	
-	public void onListItemClick(ListView parent, View v, int position, long id) {
-		launchReplyForTweet((Status) parent.getItemAtPosition(position));
-	}
-	
 	private void launchReplyForTweet(Status tweet) {
 		String tweetText = "@" + tweet.user.screenName + " ";
 		Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, tweetText);
-		startActivity(Intent.createChooser(intent, "Choose a Twitter app"));
+		startActivity(Intent.createChooser(intent, "Reply with a Twitter app:"));
 	}
 	
     protected class TweetAdapter extends ArrayAdapter<Status> {
@@ -108,7 +105,12 @@ public class LegislatorTwitter extends ListActivity {
         
         @Override
         public boolean areAllItemsEnabled() {
-        	return true;
+        	return false;
+        }
+        
+        @Override
+        public boolean isEnabled(int position) {
+        	return false;
         }
         
         @Override
@@ -121,7 +123,19 @@ public class LegislatorTwitter extends ListActivity {
 				view = inflater.inflate(R.layout.tweet, null); 
 			
 			Status tweet = getItem(position);
-			((TextView) view.findViewById(R.id.tweet_text)).setText(tweet.text);
+			TextView tweetView = ((TextView) view.findViewById(R.id.tweet_text));
+			tweetView.setText(tweet.text);
+			tweetView.setMovementMethod(LinkMovementMethod.getInstance());
+			
+			ImageView button = (ImageView) view.findViewById(R.id.tweet_button);
+			button.setTag(tweet);
+			button.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					Status one = (Status) v.getTag();
+					launchReplyForTweet(one);
+				}
+			});
+			
 			((TextView) view.findViewById(R.id.tweet_byline))
 				.setText("posted " + timeAgoInWords(tweet.createdAt.getTime()) + " by @" + tweet.user.screenName);
 			

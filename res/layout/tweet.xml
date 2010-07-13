@@ -2,23 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
+	android:layout_height="wrap_content"
 	
 	android:padding="10dp"
 	
+	android:focusable="false"
 	>
 
-	<TextView android:id="@+id/tweet_text"
-		
-		android:layout_width="wrap_content"
+
+	<LinearLayout android:orientation="horizontal"
+		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="2dp"
+		>
 		
-		android:textSize="18sp"
-		android:textColor="@android:color/white"
+		<TextView android:id="@+id/tweet_text"
+			
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:layout_gravity="left"
+			android:layout_weight="1"
+			
+			android:textSize="18sp"
+			android:textColor="@android:color/white"
+			android:autoLink="web"
+			
+			android:focusable="true"
+			android:clickable="true"
+			
+			android:text="This tweet could be as long as 140 characters, which is longer than you may think. And it might start with an @reply."
+			/>
 		
-		android:text="This tweet could be as long as 140 characters, which is longer than you may think. And it might start with an @reply."
-		/>
+		<ImageView android:id="@+id/tweet_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:layout_gravity="right|center_vertical"
+			android:layout_weight="0"
+			
+			android:src="@drawable/more"
+			/>
+		
+	</LinearLayout>
 		
 	<TextView android:id="@+id/tweet_byline"
 		
