@@ -2,6 +2,7 @@ package com.sunlightlabs.yahoo.news;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -31,15 +32,15 @@ public class NewsService {
 		this.apiKey = apiKey;
 	}
 	
-	public NewsItem[] fetchNewsResults(String query) throws NewsException {
+	public ArrayList<NewsItem> fetchNewsResults(String query) throws NewsException {
 		String rawJSON = fetchJSON(query);
-		NewsItem[] items;
+		ArrayList<NewsItem> items;
 		try {
 			JSONObject resultSet = new JSONObject(rawJSON);
 			JSONArray results = resultSet.getJSONObject("ResultSet").getJSONArray("Result");
-			items = new NewsItem[results.length()];
+			items = new ArrayList<NewsItem>(results.length());
 			for (int i = 0; i<results.length(); i++)
-				items[i] = new NewsItem(results.getJSONObject(i));
+				items.add(new NewsItem(results.getJSONObject(i)));
 				
 		} catch(JSONException e) {
 			throw new NewsException(e);

@@ -1,5 +1,7 @@
 package com.sunlightlabs.android.congress;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
@@ -29,7 +31,7 @@ public class NewsList extends ListActivity {
 	private static final int MENU_COPY = 1;
 	
 	private String searchTerm;
-	private NewsItem[] items = null;
+	private ArrayList<NewsItem> items = null;
 
 	private LoadNewsTask loadNewsTask = null;
 	
@@ -115,7 +117,7 @@ public class NewsList extends ListActivity {
 	}
     
     protected void displayNews() {
-    	if (items != null && items.length > 0)
+    	if (items != null && items.size() > 0)
     		setListAdapter(new NewsAdapter(this, items));
     	else
     		Utils.showRefresh(this, R.string.news_empty);
@@ -124,7 +126,7 @@ public class NewsList extends ListActivity {
     protected class NewsAdapter extends ArrayAdapter<NewsItem> {
     	LayoutInflater inflater;
 
-        public NewsAdapter(Activity context, NewsItem[] items) {
+        public NewsAdapter(Activity context, ArrayList<NewsItem> items) {
             super(context, 0, items);
             inflater = LayoutInflater.from(context);
         }
@@ -155,7 +157,7 @@ public class NewsList extends ListActivity {
 
     }
 	
-	private class LoadNewsTask extends AsyncTask<String,Void,NewsItem[]> {
+	private class LoadNewsTask extends AsyncTask<String,Void,ArrayList<NewsItem>> {
 		public NewsList context;
 		
 		public LoadNewsTask(NewsList context) {
@@ -168,7 +170,7 @@ public class NewsList extends ListActivity {
 		}
 		
 		@Override
-		protected NewsItem[] doInBackground(String... searchTerm) {
+		protected ArrayList<NewsItem> doInBackground(String... searchTerm) {
 			try {
     			String apiKey = context.getResources().getString(R.string.yahoo_news_key);
     			return new NewsService(apiKey).fetchNewsResults(searchTerm[0]);
@@ -178,7 +180,7 @@ public class NewsList extends ListActivity {
 		}
 		
 		@Override
-		protected void onPostExecute(NewsItem[] items) {    		
+		protected void onPostExecute(ArrayList<NewsItem> items) {    		
     		context.items = items;
     		context.displayNews();
     		context.loadNewsTask = null;
@@ -186,7 +188,7 @@ public class NewsList extends ListActivity {
 	}
 	
 	static class NewsListHolder{
-		NewsItem[] items;
+		ArrayList<NewsItem> items;
 		LoadNewsTask loadNewsTask;
 	}
 }
