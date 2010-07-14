@@ -6,6 +6,7 @@
 	
 	android:padding="10dp"
 	
+	android:clickable="false"
 	android:focusable="false"
 	>
 

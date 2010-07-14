@@ -109,11 +109,6 @@ public class LegislatorTwitter extends ListActivity {
         }
         
         @Override
-        public boolean isEnabled(int position) {
-        	return false;
-        }
-        
-        @Override
         public int getViewTypeCount() {
         	return 1;
         }
@@ -123,9 +118,7 @@ public class LegislatorTwitter extends ListActivity {
 				view = inflater.inflate(R.layout.tweet, null); 
 			
 			Status tweet = getItem(position);
-			TextView tweetView = ((TextView) view.findViewById(R.id.tweet_text));
-			tweetView.setText(tweet.text);
-			tweetView.setMovementMethod(LinkMovementMethod.getInstance());
+			((TextView) view.findViewById(R.id.tweet_text)).setText(tweet.text);;
 			
 			ImageView button = (ImageView) view.findViewById(R.id.tweet_button);
 			button.setTag(tweet);
@@ -138,6 +131,8 @@ public class LegislatorTwitter extends ListActivity {
 			
 			((TextView) view.findViewById(R.id.tweet_byline))
 				.setText("posted " + timeAgoInWords(tweet.createdAt.getTime()) + " by @" + tweet.user.screenName);
+			
+			view.setEnabled(false);
 			
 			return view;
 		}
