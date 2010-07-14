@@ -18,8 +18,10 @@
 		android:layout_height="wrap_content"
 		android:layout_weight="0"
 		
-		android:layout_marginLeft="5dp"
-   		android:layout_marginRight="12dp"
+		android:paddingLeft="5dp"
+   		android:paddingRight="12dp"
+   		android:paddingTop="8dp"
+   		android:paddingBottom="8dp"
    		   		
 		android:src="@drawable/star_off"
 		/>
