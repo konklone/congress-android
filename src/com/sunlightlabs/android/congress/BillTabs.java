@@ -59,7 +59,7 @@ public class BillTabs extends TabActivity {
 		((Button) findViewById(R.id.share)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 	    		Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, shareText());
-	    		startActivity(Intent.createChooser(intent, "Share bill"));
+	    		startActivity(Intent.createChooser(intent, "Share bill via:"));
 			}
 		});
 	}
