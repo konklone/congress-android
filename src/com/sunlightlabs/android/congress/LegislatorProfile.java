@@ -165,12 +165,8 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
     		String type = (String) tag;
 	    	if (type.equals("phone"))
 	    		callOffice();
-	    	else if (type.equals("web"))
-	    		visitWebsite();
 	    	else if (type.equals("sponsored"))
 	    		sponsoredBills();
-			else if (type.equals("districtMap"))
-				districtMap();
     	}
     }
     
@@ -213,8 +209,21 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		View mainView = inflater.inflate(R.layout.profile, null);
 		mainView.setEnabled(false);
 		
-		if (!legislator.in_office)
+		if (!legislator.in_office) {
 			mainView.findViewById(R.id.out_of_office_text).setVisibility(View.VISIBLE);
+			mainView.findViewById(R.id.website).setVisibility(View.GONE);
+		}
+		
+		mainView.findViewById(R.id.website).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View arg0) {
+				visitWebsite();
+			}
+		});
+		mainView.findViewById(R.id.district).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				districtMap();
+			}
+		});
 		
 		picture = (ImageView) mainView.findViewById(R.id.profile_picture);
 		
@@ -235,22 +244,6 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 			phoneView.setTag("phone");
 			contactViews.add(phoneView);
 		}
-		
-		String website = legislator.website;
-		if (legislator.in_office && website != null && !website.equals("")) {
-			View websiteView = inflater.inflate(R.layout.icon_list_item_2, null);
-			((TextView) websiteView.findViewById(R.id.text_1)).setText("Visit " + pronoun(legislator.gender) + " website");
-			((TextView) websiteView.findViewById(R.id.text_2)).setText(websiteName(website));
-			((ImageView) websiteView.findViewById(R.id.icon)).setImageResource(R.drawable.web);
-			websiteView.setTag("web");
-			contactViews.add(websiteView);
-		}
-		
-		View districtMap = inflater.inflate(R.layout.icon_list_item_1, null);
-		((TextView) districtMap.findViewById(R.id.text)).setText(R.string.district_map);
-		((ImageView) districtMap.findViewById(R.id.icon)).setImageResource(R.drawable.district);
-		districtMap.setTag("districtMap");
-		contactViews.add(districtMap);
 		
 		View sponsoredView = inflater.inflate(R.layout.icon_list_item_1, null);
 		((TextView) sponsoredView.findViewById(R.id.text)).setText(R.string.sponsored_bills);

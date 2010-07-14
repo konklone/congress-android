@@ -17,51 +17,103 @@
 		
 		<include layout="@layout/profile_picture" />
 	  	
-	  	<LinearLayout android:id="@+id/profile_basic"
-	  		android:orientation="vertical"
-	  		
-	  		android:layout_height="wrap_content"
+	  	<RelativeLayout android:id="@+id/profile_basic"
 	  		android:layout_width="fill_parent"
+	  		android:layout_height="fill_parent"
+	  		
+	  		android:paddingRight="10dp"
 	  		android:layout_marginTop="6dp"
 	  		>
 	  		
   			<TextView android:id="@+id/profile_party"
-	  		
-		  		android:layout_width="wrap_content"
+	  			android:layout_width="wrap_content"
 	  			android:layout_height="wrap_content"
-	  			android:layout_marginTop="10dp"
-	  			android:layout_marginBottom="9dp"
+	  			android:layout_alignParentTop="true"
 	  			
-	  			android:textSize="19sp"
+	  			android:layout_marginTop="10dp"
+	  			android:layout_marginBottom="5dp"
+	  			
+	  			android:textSize="17sp"
 	  			android:textColor="@android:color/white"
 	  			
 	  			android:text="Democrat"
 	  			
 		  		/>
 		  	<TextView android:id="@+id/profile_state"
-		  		
 		  		android:layout_width="wrap_content"
 		  		android:layout_height="wrap_content"
-		  		android:layout_marginBottom="9dp"
+		  		android:layout_below="@id/profile_party"
 		  		
-		  		android:textSize="19sp"
+		  		android:layout_marginBottom="5dp"
+		  		
+		  		android:textSize="17sp"
 		  		android:textColor="@android:color/white"
 		  		
 		  		android:text="District of Columbia"
 		  		/>
 		  		
 		  	<TextView android:id="@+id/profile_domain"
-		  		
 		  		android:layout_width="wrap_content"
 	  			android:layout_height="wrap_content"
+	  			android:layout_below="@id/profile_state"
 	  			
-	  			android:textSize="19sp"
+	  			android:textSize="17sp"
 	  			android:textColor="@android:color/white"
 	  			
 	  			android:text="Senior Senator"
 		  		/>
+		  	
+		  	<FrameLayout android:id="@+id/website"
+		  		android:layout_width="wrap_content"
+	  			android:layout_height="wrap_content"
+	  			
+		  		android:layout_marginBottom="18dp"
+	  			android:layout_marginRight="10dp"
+	  			
+	  			android:layout_alignParentBottom="true"
+	  			android:layout_alignParentLeft="true"
+	  			
+		  		android:background="@drawable/button_profile_selector"
+		  		android:clickable="true"
+		  		android:focusable="true"
+		  		>
+		  		
+		  		<ImageView 
+		  			android:layout_width="wrap_content"
+		  			android:layout_height="wrap_content"
+		  			
+		  			android:layout_gravity="center"
+		  			
+		  			android:src="@drawable/web_small"
+		  			/>
+	  			
+  			</FrameLayout>
+  			
+  			<FrameLayout android:id="@+id/district"
+		  		android:layout_width="wrap_content"
+	  			android:layout_height="wrap_content"
+	  			
+		  		android:layout_marginBottom="18dp"
+	  			android:layout_toRightOf="@id/website"
+	  			android:layout_alignParentBottom="true"
+	  			
+		  		android:background="@drawable/button_profile_selector"
+		  		android:clickable="true"
+		  		android:focusable="true"
+		  		>
+		  		
+		  		<ImageView 
+		  			android:layout_width="wrap_content"
+		  			android:layout_height="wrap_content"
+		  			
+		  			android:layout_gravity="center"
+		  			
+		  			android:src="@drawable/globe_small"
+		  			/>
+	  			
+  			</FrameLayout>
 	  		
-  		</LinearLayout>
+  		</RelativeLayout>
   	
  	</LinearLayout>
  	
