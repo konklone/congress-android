@@ -25,6 +25,7 @@ import com.sunlightlabs.android.congress.RollInfo;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
+import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.Drumbone;
 import com.sunlightlabs.congress.services.Sunlight;
 
@@ -84,6 +85,10 @@ public class Utils {
 
 	public static Intent billIntent(Context context, Class<?> cls, Bill bill) {
 		return new Intent(context, cls).putExtra("bill", bill);
+	}
+	
+	public static Intent rollIntent(Context context, Roll roll) {
+		return new Intent(context, RollInfo.class).putExtra("id", roll.id);
 	}
 
 	public static Intent billIntent(String billId, String code) {

@@ -14,6 +14,7 @@
     
     <string name="empty_bills_sponsored">This legislator has not sponsored any bills.</string>
     <string name="empty_bills">There are no bills that match your search.</string>
+    <string name="empty_rolls">This legislator has not cast any recent roll call votes.</string>
     
     <string name="news_loading">Plucking news from the air...</string>
     <string name="news_empty">No recent news found.</string>
@@ -23,6 +24,7 @@
     <string name="youtube_empty">No videos found.</string>
     <string name="bills_loading">Searching for bills...</string>
     <string name="legislators_loading">Searching for legislators...</string>
+    <string name="rolls_loading">Searching for roll calls...</string>
    
    	<string name="committees_title">Committees</string>
     <string name="committees_loading">Searching for committees...</string>

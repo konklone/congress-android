@@ -80,6 +80,10 @@
         <activity android:name=".CommitteeList" 
         	android:theme="@android:style/Theme.NoTitleBar"
         	/>
+        
+        <activity android:name=".RollList"
+        	android:theme="@android:style/Theme.NoTitleBar"
+        	/>
     </application>
     
     <uses-permission android:name="android.permission.INTERNET" />

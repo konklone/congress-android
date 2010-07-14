@@ -1,5 +1,6 @@
 package com.sunlightlabs.congress.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -18,6 +19,10 @@ public class RollService {
 	
 	public static Roll find(String id, String sections) throws CongressException {
 		return rollFor(Drumbone.url("roll", "roll_id=" + id + "&sections=" + sections));
+	}
+	
+	public static ArrayList<Roll> latestVotes(String bioguide_id, int per_page, int page) throws CongressException {
+		return new ArrayList<Roll>();
 	}
 	
 	

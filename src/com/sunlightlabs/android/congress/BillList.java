@@ -43,8 +43,6 @@ public class BillList extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_titled);
 
-		Utils.setupDrumbone(this);
-
 		Bundle extras = getIntent().getExtras();
 		type = extras.getInt("type", BILLS_RECENT);
 		sponsor_id = extras.getString("sponsor_id");
@@ -52,7 +50,7 @@ public class BillList extends ListActivity {
 
 		setupControls();
 
-		MainActivityHolder holder = (MainActivityHolder) getLastNonConfigurationInstance();
+		BillListHolder holder = (BillListHolder) getLastNonConfigurationInstance();
 
 		if (holder != null) {
 			this.bills = holder.bills;
@@ -71,7 +69,7 @@ public class BillList extends ListActivity {
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new MainActivityHolder(bills, loadBillsTask);
+		return new BillListHolder(bills, loadBillsTask);
 	}
 
 	public void setupControls() {
@@ -162,6 +160,7 @@ public class BillList extends ListActivity {
 
 		public LoadBillsTask(BillList context) {
 			this.context = context;
+			Utils.setupDrumbone(context);
 		}
 
 		public void onScreenLoad(BillList context) {
@@ -319,20 +318,18 @@ public class BillList extends ListActivity {
 		}
 	}
 
-	static class MainActivityHolder {
+	static class BillListHolder {
 		ArrayList<Bill> bills;
 		LoadBillsTask loadBillsTask;
 
-		public MainActivityHolder(ArrayList<Bill> bills, LoadBillsTask loadBillsTask) {
+		public BillListHolder(ArrayList<Bill> bills, LoadBillsTask loadBillsTask) {
 			this.bills = bills;
 			this.loadBillsTask = loadBillsTask;
 		}
 	}
 	
 	static class LoadingWrapper {
-		private View base;
-		private View loading;
-		private View retryContainer;
+		private View base, loading, retryContainer;
 		private Button retry;
 
 		public LoadingWrapper(View base) {

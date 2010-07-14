@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:padding="10dp"
+	>
+
+	<TextView android:id="@+id/byline"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		
+		android:layout_gravity="left"
+		
+		android:layout_marginTop="3dp"
+		android:layout_marginRight="5dp"
+		
+		android:textSize="16sp"
+		
+		android:text="H.Res. 3222 introduced:"
+		/>
+		
+	<TextView android:id="@+id/date"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		
+		android:layout_alignParentRight="true"
+		android:layout_alignTop="@id/byline"
+		
+		android:textSize="16sp"
+		
+		android:text="Feb 22"
+		/>
+		
+	<TextView android:id="@+id/title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		
+		android:layout_below="@+id/byline"
+		
+		android:layout_marginTop="5dp"
+		
+		android:textSize="16sp"
+		android:textColor="#ffffff"
+		
+		android:text="Title Of The Bill And Such"
+		/>
+</RelativeLayout>
