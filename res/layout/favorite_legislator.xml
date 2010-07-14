@@ -4,9 +4,10 @@
 	
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:paddingLeft="15dp"
+	android:paddingLeft="10dp"
 	android:paddingTop="3dp"
 	android:paddingBottom="3dp"
+	android:paddingRight="10dp"
 	>
 
 	<ImageView android:id="@+id/photo"
@@ -14,8 +15,11 @@
 		android:layout_height="40dp"
 		android:layout_marginTop="4dp"
 		android:layout_marginBottom="4dp"
-		android:layout_marginRight="20dp"
+		android:layout_marginRight="15dp"
 		android:src="@drawable/loading_photo"
+		
+		android:layout_weight="0"
+		
 		/>
 		
 	<LinearLayout 
@@ -25,6 +29,8 @@
 		android:paddingRight="10dp"
 		android:paddingTop="2dp"
 		android:paddingBottom="2dp"
+		
+		android:layout_weight="1"
 		>
 		
 		<TextView android:id="@+id/name"
@@ -49,5 +55,15 @@
 			/>
 		
 	</LinearLayout>
+	
+	<ImageView 
+		android:layout_width="24dp"
+		android:layout_height="24dp"
+		
+		android:layout_weight="0"
+		android:layout_gravity="right|center_vertical"
+		
+		android:src="@drawable/star_on"
+		/>
 		
 </LinearLayout>

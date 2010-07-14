@@ -4,22 +4,28 @@
 	
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:paddingLeft="15dp"
+	android:paddingLeft="10dp"
 	android:paddingTop="3dp"
 	android:paddingBottom="3dp"
+	android:paddingRight="10dp"
 	>
 
 	<ImageView android:id="@+id/icon"
 		android:layout_width="48dp"
 		android:layout_height="48dp"
-		android:layout_marginRight="20dp"
+		
+		android:layout_weight="0"
+		android:layout_marginRight="15dp"
+		
 		android:src="@drawable/bill"
 		/>
 		
 	<LinearLayout 
+		android:orientation="vertical"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:orientation="vertical"
+		
+		android:layout_weight="1"
 		android:paddingRight="10dp"
 		>
 		
@@ -46,5 +52,15 @@
 			/>
 		
 	</LinearLayout>
+	
+	<ImageView 
+		android:layout_width="24dp"
+		android:layout_height="24dp"
+		
+		android:layout_weight="0"
+		android:layout_gravity="right|center_vertical"
+		
+		android:src="@drawable/star_on"
+		/>
 		
 </LinearLayout>
