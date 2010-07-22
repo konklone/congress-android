@@ -64,6 +64,8 @@ public class LegislatorService {
 			legislator.state = json.getString("state");
 		if (!json.isNull("district"))
 			legislator.district = json.getString("district");
+		if (!json.isNull("chamber"))
+			legislator.chamber = json.getString("chamber");
 
 		if (!json.isNull("gender"))
 			legislator.gender = json.getString("gender");
@@ -101,14 +103,16 @@ public class LegislatorService {
 			legislator.nickname = json.getString("nickname");
 		if (!json.isNull("name_suffix"))
 			legislator.name_suffix = json.getString("name_suffix");
-		if (!json.isNull("title"))
-			legislator.title = json.getString("title");
 		if (!json.isNull("party"))
 			legislator.party = json.getString("party");
 		if (!json.isNull("state"))
 			legislator.state = json.getString("state");
 		if (!json.isNull("district"))
 			legislator.district = json.getString("district");
+		if (!json.isNull("title"))
+			legislator.title = json.getString("title");
+		
+		legislator.chamber = legislator.title.equals("Sen") ? "senate" : "house";
 
 		if (!json.isNull("gender"))
 			legislator.gender = json.getString("gender");

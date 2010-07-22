@@ -6,10 +6,12 @@ import java.util.Iterator;
 
 import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.models.Roll.Vote;
 
@@ -21,8 +23,8 @@ public class RollService {
 		return rollFor(Drumbone.url("roll", "roll_id=" + id + "&sections=" + sections));
 	}
 	
-	public static ArrayList<Roll> latestVotes(String bioguide_id, int per_page, int page) throws CongressException {
-		return new ArrayList<Roll>();
+	public static ArrayList<Roll> latestVotes(Legislator voter, int per_page, int page) throws CongressException {
+		return rollsFor(Drumbone.url("rolls", "order=voted_at&chamber=" + voter.chamber + "&sections=basic,voter_ids." + voter.bioguide_id)); 
 	}
 	
 	
@@ -93,8 +95,7 @@ public class RollService {
 			Iterator<?> iter = voterIdsObject.keys();
 			while (iter.hasNext()) {
 				String voter_id = (String) iter.next();
-				roll.voters.put(voter_id,
-						new Vote(voter_id, voterIdsObject.getString(voter_id)));
+				roll.voter_ids.put(voter_id, new Vote(voter_id, voterIdsObject.getString(voter_id)));
 			}
 		}
 
@@ -121,6 +122,25 @@ public class RollService {
 		} catch (DateParseException e) {
 			throw new CongressException(e, "Problem parsing a date in the JSON from " + url);
 		}
+	}
+	
+	private static ArrayList<Roll> rollsFor(String url) throws CongressException {
+		String rawJSON = Drumbone.fetchJSON(url);
+		ArrayList<Roll> rolls = new ArrayList<Roll>();
+		try {
+			JSONArray results = new JSONObject(rawJSON).getJSONArray("rolls");
+
+			int length = results.length();
+			for (int i = 0; i < length; i++)
+				rolls.add(fromDrumbone(results.getJSONObject(i)));
+			
+		} catch (JSONException e) {
+			throw new CongressException(e, "Problem parsing the JSON from " + url);
+		} catch (DateParseException e) {
+			throw new CongressException(e, "Problem parsing a date in the JSON from " + url);
+		}
+		
+		return rolls;
 	}
 
 }

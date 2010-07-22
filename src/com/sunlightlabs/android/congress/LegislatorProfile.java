@@ -165,6 +165,8 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
     		String type = (String) tag;
 	    	if (type.equals("phone"))
 	    		callOffice();
+	    	else if (type.equals("voting"))
+	    		votingRecord();
 	    	else if (type.equals("sponsored"))
 	    		sponsoredBills();
     	}
@@ -176,6 +178,13 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
     
     public void visitWebsite() {
     	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(legislator.website)));
+    }
+    
+    public void votingRecord() {
+    	Intent intent = new Intent(this, RollList.class)
+    		.putExtra("type", RollList.ROLLS_VOTER)
+    		.putExtra("voter", legislator);
+    	startActivity(intent);
     }
     
     public void sponsoredBills() {
@@ -244,6 +253,12 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 			phoneView.setTag("phone");
 			contactViews.add(phoneView);
 		}
+		
+		View votingRecordView = inflater.inflate(R.layout.icon_list_item_1, null);
+		((TextView) votingRecordView.findViewById(R.id.text)).setText(R.string.voting_record);
+		((ImageView) votingRecordView.findViewById(R.id.icon)).setImageResource(R.drawable.rolls);
+		votingRecordView.setTag("voting");
+		contactViews.add(votingRecordView);
 		
 		View sponsoredView = inflater.inflate(R.layout.icon_list_item_1, null);
 		((TextView) sponsoredView.findViewById(R.id.text)).setText(R.string.sponsored_bills);

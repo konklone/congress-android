@@ -9,7 +9,7 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	
 	public String id, bioguide_id, govtrack_id;
 	public String first_name, last_name, nickname, name_suffix;
-	public String title, party, state, district;
+	public String title, party, state, district, chamber;
 	public String gender, congress_office, website, phone, twitter_id, youtube_url;
 	public boolean in_office;
 

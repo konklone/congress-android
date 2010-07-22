@@ -33,6 +33,7 @@
     <string name="committees_joint">Joint Committees</string>
     <string name="committees_emtpy">No committees found.</string>
     
+    <string name="voting_record">Voting Record</string>
     <string name="sponsored_bills">Sponsored Bills</string>
     <string name="committees">Committees</string>
     <string name="loading_committees">Loading committees...</string>

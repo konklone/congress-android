@@ -20,6 +20,7 @@ import com.sunlightlabs.congress.services.RollService;
 
 public class RollList extends ListActivity {
 	private static final int ROLLS = 20;
+	
 	public static final int ROLLS_VOTER = 0;
 	
 	private ArrayList<Roll> rolls;
@@ -133,47 +134,6 @@ public class RollList extends ListActivity {
 			Utils.showBack(this, R.string.error_connection);
 	}
 
-	private class LoadRollsTask extends AsyncTask<Void,Void,ArrayList<Roll>> {
-		private RollList context;
-		private CongressException exception;
-
-		public LoadRollsTask(RollList context) {
-			this.context = context;
-			Utils.setupDrumbone(context);
-		}
-
-		public void onScreenLoad(RollList context) {
-			this.context = context;
-		}
-
-		@Override
-		public ArrayList<Roll> doInBackground(Void... nothing) {
-			try {
-				int page = (context.rolls.size() / ROLLS) + 1;
-
-				switch (context.type) {
-				case ROLLS_VOTER:
-					return RollService.latestVotes(context.voter.bioguide_id, ROLLS, page);
-				default:
-					throw new CongressException("Not sure what type of bills to find.");
-				}
-			} catch(CongressException exception) {
-				this.exception = exception;
-				return null;
-			}
-		}
-
-		@Override
-		public void onPostExecute(ArrayList<Roll> rolls) {
-			context.loadRollsTask = null;
-
-			if (exception != null)
-				context.onLoadRolls(exception);
-			else
-				context.onLoadRolls(rolls);
-		}
-	}
-
 	private static class RollAdapter extends ArrayAdapter<Roll> {
 		private LayoutInflater inflater;
 		private RollList context;
@@ -247,6 +207,47 @@ public class RollList extends ListActivity {
 		static class ViewHolder {
 		}
 	}
+	
+	private class LoadRollsTask extends AsyncTask<Void,Void,ArrayList<Roll>> {
+		private RollList context;
+		private CongressException exception;
+
+		public LoadRollsTask(RollList context) {
+			this.context = context;
+			Utils.setupDrumbone(context);
+		}
+
+		public void onScreenLoad(RollList context) {
+			this.context = context;
+		}
+
+		@Override
+		public ArrayList<Roll> doInBackground(Void... nothing) {
+			try {
+				int page = (context.rolls.size() / ROLLS) + 1;
+
+				switch (context.type) {
+				case ROLLS_VOTER:
+					return RollService.latestVotes(context.voter, ROLLS, page);
+				default:
+					throw new CongressException("Not sure what type of bills to find.");
+				}
+			} catch(CongressException exception) {
+				this.exception = exception;
+				return null;
+			}
+		}
+
+		@Override
+		public void onPostExecute(ArrayList<Roll> rolls) {
+			context.loadRollsTask = null;
+
+			if (exception != null)
+				context.onLoadRolls(exception);
+			else
+				context.onLoadRolls(rolls);
+		}
+	}
 
 	static class RollListHolder {
 		ArrayList<Roll> rolls;
@@ -265,9 +266,11 @@ public class RollList extends ListActivity {
 		public LoadingWrapper(View base) {
 			this.base = base;
 		}
+		
 		public View getLoading() {
 			return loading == null ? loading = base.findViewById(R.id.loading_layout) : loading;
 		}
+		
 		public Button getRetry() {
 			return retry == null ? retry = (Button) base.findViewById(R.id.retry) : retry;
 		}
