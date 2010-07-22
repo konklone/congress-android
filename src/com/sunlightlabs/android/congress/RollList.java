@@ -1,8 +1,12 @@
 package com.sunlightlabs.android.congress;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import android.app.ListActivity;
+import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
@@ -137,6 +142,7 @@ public class RollList extends ListActivity {
 	private static class RollAdapter extends ArrayAdapter<Roll> {
 		private LayoutInflater inflater;
 		private RollList context;
+		private Resources resources;
 		
 		private static final int ROLL = 0;
 		private static final int LOADING = 1;
@@ -145,6 +151,7 @@ public class RollList extends ListActivity {
 			super(context, 0, rolls);
 			this.inflater = LayoutInflater.from(context);
 			this.context = context;
+			this.resources = context.getResources();
 		}
 
 		@Override
@@ -192,19 +199,73 @@ public class RollList extends ListActivity {
 				view = inflater.inflate(R.layout.roll_item, null);
 				
 				holder = new ViewHolder();
-				// set each holder view piece
+				holder.roll = (TextView) view.findViewById(R.id.roll);
+				holder.date = (TextView) view.findViewById(R.id.date);
+				holder.question = (TextView) view.findViewById(R.id.question);
+				holder.result = (TextView) view.findViewById(R.id.result);
 				
 				view.setTag(holder);
 			} else
 				holder = (ViewHolder) view.getTag();
 			
-			// set the contents of each view in the holder
+			TextView msgView = holder.roll;
+			if (context.type == RollList.ROLLS_VOTER) {
+				Roll.Vote vote = roll.voter_ids.get(context.voter.bioguide_id);
+				if (vote == null || vote.vote == Roll.NOT_VOTING) {
+					msgView.setText("Did Not Vote");
+					msgView.setTextColor(resources.getColor(android.R.color.white));
+					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+				} else if (vote.vote == Roll.OTHER) {
+					msgView.setText(vote.vote_name);
+					msgView.setTextColor(resources.getColor(android.R.color.white));
+					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+				} else if (vote.vote == Roll.YEA) {
+					msgView.setText("Yea");
+					msgView.setTextColor(resources.getColor(R.color.yea));
+					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+				} else if (vote.vote == Roll.NAY) {
+					msgView.setText("Nay");
+					msgView.setTextColor(resources.getColor(R.color.nay));
+					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+				} else if (vote.vote == Roll.PRESENT) {
+					msgView.setText("Present");
+					msgView.setTextColor(android.R.color.white);
+					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+				}
+				
+			} else
+				msgView.setText(Utils.capitalize(roll.chamber) + "Roll No. " + roll.number);
 			
+			holder.roll = msgView;
 			
+			holder.date.setText(new SimpleDateFormat("MMM dd, yyyy").format(roll.voted_at));
+			holder.question.setText(roll.question);
+			holder.result.setText(resultFor(roll));
+				
 			return view;
 		}
 		
 		static class ViewHolder {
+			TextView roll, date, question, result;
+		}
+		
+		private String resultFor(Roll roll) {
+			// if a roll call has non-standard votes, it's the House election of the Speaker - only known exception
+			String breakdown;
+			if (roll.otherVotes.isEmpty())
+				breakdown = roll.yeas + "-" + roll.nays;
+			else {
+				breakdown = "";
+				Iterator<Integer> iter = roll.otherVotes.values().iterator();
+				while (iter.hasNext()) {
+					int val = iter.next().intValue();
+					breakdown += "" + val;
+					if (iter.hasNext())
+						breakdown += "-";
+				}
+			}
+			
+			return roll.result + ", " + breakdown;
 		}
 	}
 	

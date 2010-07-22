@@ -5,7 +5,7 @@
 	android:padding="10dp"
 	>
 
-	<TextView android:id="@+id/byline"
+	<TextView android:id="@+id/roll"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		
@@ -15,8 +15,9 @@
 		android:layout_marginRight="5dp"
 		
 		android:textSize="16sp"
+		android:textColor="@android:color/white"
 		
-		android:text="H.Res. 3222 introduced:"
+		android:text="Voted Aye"
 		/>
 		
 	<TextView android:id="@+id/date"
@@ -24,24 +25,41 @@
 		android:layout_height="wrap_content"
 		
 		android:layout_alignParentRight="true"
-		android:layout_alignTop="@id/byline"
+		android:layout_alignTop="@id/roll"
 		
 		android:textSize="16sp"
+		android:textColor="@color/grey"
 		
-		android:text="Feb 22"
+		android:text="Feb 22, 2010"
 		/>
 		
-	<TextView android:id="@+id/title"
+	<TextView android:id="@+id/question"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		
-		android:layout_below="@id/byline"
+		android:layout_below="@id/roll"
 		
-		android:layout_marginTop="5dp"
+		android:layout_marginTop="7dp"
+		
+		android:textSize="14sp"
+		android:textColor="@color/grey"
+		
+		android:text="On Passage: H R 5114 Flood Insurance Reform Priorities Act"
+		/>
+	
+	<TextView android:id="@+id/result"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		
+		android:layout_below="@id/question"
+		android:layout_alignLeft="@id/question"
+		
+		android:layout_marginTop="7dp"
 		
 		android:textSize="16sp"
-		android:textColor="#ffffff"
+		android:textColor="@android:color/white"
 		
-		android:text="Title Of The Bill And Such"
+		android:text="Amendment Agreed To, 60-39"
+		/>
 		/>
 </RelativeLayout>
