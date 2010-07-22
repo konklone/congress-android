@@ -542,19 +542,19 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 			View changelogView = inflater.inflate(R.layout.changelog, null);
 
 			Spanned changelog = Html.fromHtml(
-				"<b>&#183;</b> 2.5.1 - Re-enable Android 1.5 support<br/><br/>" +
-				"<b>&#183;</b> See full history and voting records on bills<br/><br/>" +
-				"<b>&#183;</b> Search by bill code<br/><br/>" +	
-				"<b>&#183;</b> Better location searching <br/><br/>" +
-				"<b>&#183;</b> New app icon, other visual improvements<br/><br/>" +
-				"<b>&#183;</b> Various bugfixes"
+				"<b>&#183;</b> \"Star\" your favorite legislators and bills to add them to the main menu<br/><br/>" +
+				"<b>&#183;</b> Search by committee for legislators<br/><br/>" +
+				"<b>&#183;</b> News tab for bills<br/><br/>" +
+				"<b>&#183;</b> See a map of a legislator's district<br/><br/>" +
+				"<b>&#183;</b> Share bills on social networks through your apps<br/><br/>" +
+				"<b>&#183;</b> Made links clickable on tweets again<br/><br/>" +
+				"<b>&#183;</b> Location fetching fixes and improvements<br/><br/>" +
+				"<b>&#183;</b> Various bugfixes and visual tweaks"
 			);
 			Spanned changelogLast = Html.fromHtml(
-				"<b>&#183;</b> New \"Latest Votes\" listing for bills and resolutions that just got a vote<br/><br/>" +
-				"<b>&#183;</b> Endless scrolling for bills, thumbnails for legislators" +
-				"<b>&#183;</b> Menu links to THOMAS, OpenCongress, GovTrack, and the Bioguide<br/><br/>" +
-				"<b>&#183;</b> New \"Sponsored Bills\" button on legislator profiles<br/><br/>" +
-				"<b>&#183;</b> Basic information about bills and laws"
+				"<b>&#183;</b> See full history and voting records on bills<br/><br/>" +
+				"<b>&#183;</b> Search by bill code<br/><br/>" +	
+				"<b>&#183;</b> Better location searching"
 			);
 			((TextView) changelogView.findViewById(R.id.changelog)).setText(changelog);
 			((TextView) changelogView.findViewById(R.id.changelog_last_title)).setText(R.string.app_version_older);
