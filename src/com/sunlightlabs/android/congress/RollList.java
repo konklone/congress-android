@@ -252,9 +252,11 @@ public class RollList extends ListActivity {
 		private String resultFor(Roll roll) {
 			// if a roll call has non-standard votes, it's the House election of the Speaker - only known exception
 			String breakdown;
-			if (roll.otherVotes.isEmpty())
+			if (roll.otherVotes.isEmpty()) {
 				breakdown = roll.yeas + "-" + roll.nays;
-			else {
+				if (roll.present > 0)
+					breakdown += "-" + roll.present;
+			} else {
 				breakdown = "";
 				Iterator<Integer> iter = roll.otherVotes.values().iterator();
 				while (iter.hasNext()) {

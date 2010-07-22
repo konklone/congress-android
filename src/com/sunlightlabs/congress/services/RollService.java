@@ -24,7 +24,10 @@ public class RollService {
 	}
 	
 	public static ArrayList<Roll> latestVotes(Legislator voter, int per_page, int page) throws CongressException {
-		return rollsFor(Drumbone.url("rolls", "order=voted_at&chamber=" + voter.chamber + "&sections=basic,voter_ids." + voter.bioguide_id)); 
+		String query =  "per_page=" + per_page + "&page=" + page + "&order=voted_at";
+		query += 		"&chamber=" + voter.chamber;
+		query += 		"&sections=basic,voter_ids." + voter.bioguide_id;
+		return rollsFor(Drumbone.url("rolls", query)); 
 	}
 	
 	
