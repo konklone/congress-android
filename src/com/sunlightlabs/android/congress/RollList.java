@@ -34,7 +34,7 @@ public class RollList extends ListActivity {
 	private Legislator voter;
 	private int type;
 	
-	private LoadingWrapper lw;
+	private LoadingWrapper loading;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -124,14 +124,14 @@ public class RollList extends ListActivity {
 	public void onLoadRolls(CongressException exception) {
 		if (rolls.size() > 0) {
 			
-			lw.getLoading().setVisibility(View.GONE);
-			lw.getRetryContainer().setVisibility(View.VISIBLE);
+			loading.getLoading().setVisibility(View.GONE);
+			loading.getRetryContainer().setVisibility(View.VISIBLE);
 			
-			Button retry = lw.getRetry();
+			Button retry = loading.getRetry();
 			retry.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					lw.getRetryContainer().setVisibility(View.GONE);
-					lw.getLoading().setVisibility(View.VISIBLE);
+					loading.getRetryContainer().setVisibility(View.GONE);
+					loading.getLoading().setVisibility(View.VISIBLE);
 					loadRolls();
 				}
 			});
@@ -190,8 +190,8 @@ public class RollList extends ListActivity {
 
 		private View getLoadingView() {
 			context.loadRolls();
-			context.lw = new LoadingWrapper(inflater.inflate(R.layout.loading_retry, null));
-			return context.lw.getBase();
+			context.loading = new LoadingWrapper(inflater.inflate(R.layout.loading_retry, null));
+			return context.loading.getBase();
 		}
 
 		private View getRollView(Roll roll, View view) {
@@ -230,7 +230,7 @@ public class RollList extends ListActivity {
 					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 				} else if (vote.vote == Roll.PRESENT) {
 					msgView.setText("Present");
-					msgView.setTextColor(android.R.color.white);
+					msgView.setTextColor(resources.getColor(android.R.color.white));
 					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
 				}
 				

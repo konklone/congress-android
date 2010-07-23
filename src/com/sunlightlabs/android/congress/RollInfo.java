@@ -143,7 +143,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		View resultHeader = header.findViewById(R.id.result_header);
 		((TextView) resultHeader.findViewById(R.id.header_text)).setText("Results");
-		((TextView) resultHeader.findViewById(R.id.header_text_right)).setText(roll.required + " majority required");
+		
+		String requiredText = roll.required.equals("QUORUM") ? "Quorum" : roll.required + " majority required";
+		((TextView) resultHeader.findViewById(R.id.header_text_right)).setText(requiredText);
 		
 		((TextView) header.findViewById(R.id.result)).setText(roll.result);
 		
