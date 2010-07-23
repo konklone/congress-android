@@ -291,17 +291,9 @@ public class Utils {
        } catch (NoSuchMethodException nsme) {}
 	}
 	
-	public static void addTab(Activity activity, TabHost tabHost, String tag, TabHost.TabContentFactory factory, String name, Drawable backup) {
-		TabHost.TabSpec tab = tabHost.newTabSpec(tag).setContent(factory);
-		addTab(activity, tabHost, tab, name, backup);
-	}
-	
 	public static void addTab(Activity activity, TabHost tabHost, String tag, Intent intent, String name, Drawable backup) {
 		TabHost.TabSpec tab = tabHost.newTabSpec(tag).setContent(intent);
-		addTab(activity, tabHost, tab, name, backup);
-	}
 	
-	public static void addTab(Activity activity, TabHost tabHost, TabHost.TabSpec tab, String name, Drawable backup) {
 		if (setView != null) {
 			try {
 				setView.invoke(tab, tabView(activity, name));
