@@ -316,7 +316,7 @@ public class Utils {
 	
 	public static View tabView(Context context, String name) {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		View tab = inflater.inflate(R.layout.tab_minimal, null);
+		View tab = inflater.inflate(R.layout.tab_1, null);
 		((TextView) tab.findViewById(R.id.tab_name)).setText(name);
 		return tab;
 	}
