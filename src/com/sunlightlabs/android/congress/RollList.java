@@ -80,7 +80,8 @@ public class RollList extends ListActivity {
 		switch (type) {
 		case ROLLS_VOTER:
 		default:
-			Utils.setTitle(this, "Latest Votes By " + voter.titledName(), R.drawable.rolls);
+			Utils.setTitle(this, "Latest Votes By\n" + voter.titledName(), R.drawable.rolls);
+			Utils.setTitleSize(this, 18);
 			break;
 		}
 	}
