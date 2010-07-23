@@ -88,8 +88,8 @@ public class BillList extends ListActivity {
 			Utils.setTitle(this, R.string.menu_bills_law, R.drawable.bill_law);
 			break;
 		case BILLS_SPONSOR:
-			Utils.setTitle(this, "Latest Bills by " + sponsor_name, R.drawable.bill_multiple);
-			Utils.setTitleSize(this, 20);
+			Utils.setTitle(this, "Latest Bills by\n" + sponsor_name, R.drawable.bill_multiple);
+			Utils.setTitleSize(this, 18);
 			break;
 		case BILLS_LATEST_VOTES:
 			Utils.setTitle(this, R.string.menu_bills_latest_votes, R.drawable.bill_vote);
