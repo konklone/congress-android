@@ -29,12 +29,9 @@ public class CommitteeTabs extends TabActivity {
 		Resources res = getResources();
 		TabHost tabHost = getTabHost();
 
-		Utils.addTab(this, tabHost, "committee_house", "House", committeeIntent("house"), res
-				.getDrawable(R.drawable.committee));
-		Utils.addTab(this, tabHost, "committee_senate", "Senate", committeeIntent("senate"), res
-				.getDrawable(R.drawable.committee));
-		Utils.addTab(this, tabHost, "committee_joint", "Joint", committeeIntent("joint"), res
-				.getDrawable(R.drawable.committee));
+		Utils.addTab(this, tabHost, "committee_house", committeeIntent("house"), "House", res.getDrawable(R.drawable.committee));
+		Utils.addTab(this, tabHost, "committee_senate", committeeIntent("senate"), "Senate", res.getDrawable(R.drawable.committee));
+		Utils.addTab(this, tabHost, "committee_joint", committeeIntent("joint"), "Joint", res.getDrawable(R.drawable.committee));
 
 		tabHost.setCurrentTab(0);
 	}

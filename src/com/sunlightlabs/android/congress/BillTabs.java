@@ -103,12 +103,12 @@ public class BillTabs extends TabActivity {
 		Resources res = getResources();
 		TabHost tabHost = getTabHost();
 		
-		Utils.addTab(this, tabHost, "info_tab", "Details", detailsIntent(), res.getDrawable(R.drawable.tab_profile));
-		Utils.addTab(this, tabHost, "news_tab", "News", newsIntent(), res.getDrawable(R.drawable.tab_news));
-		Utils.addTab(this, tabHost, "history_tab", "History", historyIntent(), res.getDrawable(R.drawable.tab_history));
+		Utils.addTab(this, tabHost, "info", detailsIntent(), "Details", res.getDrawable(R.drawable.tab_profile));
+		Utils.addTab(this, tabHost, "news", newsIntent(), "News", res.getDrawable(R.drawable.tab_news));
+		Utils.addTab(this, tabHost, "history", historyIntent(), "History", res.getDrawable(R.drawable.tab_history));
 		
 		if (bill.last_vote_at != null && bill.last_vote_at.getTime() > 0)
-			Utils.addTab(this, tabHost, "voted_tab", "Votes", votesIntent(), res.getDrawable(R.drawable.tab_video));
+			Utils.addTab(this, tabHost, "voted", votesIntent(), "Votes", res.getDrawable(R.drawable.tab_video));
 		
 		tabHost.setCurrentTab(0);
 	}
