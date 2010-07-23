@@ -42,13 +42,22 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private Cursor peopleCursor;
 	
 	private LoadRollTask loadRollTask, loadVotersTask;
-	private View loadingView;
+	private View header, loadingView;
 	
 	private HashMap<String,LoadPhotoTask> loadPhotoTasks = new HashMap<String,LoadPhotoTask>();
 	private ArrayList<String> queuedPhotos = new ArrayList<String>();
 	
 	private static final int MAX_PHOTO_TASKS = 10;
 	private static final int MAX_QUEUE_TASKS = 20;
+	
+	// keep the adapters and arrays as members so we can toggle freely between them
+	private ArrayList<Roll.Vote> starred = new ArrayList<Roll.Vote>();
+	private ArrayList<Roll.Vote> rest = new ArrayList<Roll.Vote>();
+	private VoterAdapter starredAdapter;
+	private VoterAdapter restAdapter;
+	
+	private String currentTab = null;
+	private HashMap<String,ArrayList<Roll.Vote>> voterBreakdown = new HashMap<String,ArrayList<Roll.Vote>>();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +80,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			this.loadVotersTask = holder.loadVotersTask;
 			this.voters = holder.voters;
 			this.loadPhotoTasks = holder.loadPhotoTasks;
+			this.currentTab = holder.currentTab;
 			
 			if (loadPhotoTasks != null) {
 				Iterator<LoadPhotoTask> iterator = loadPhotoTasks.values().iterator();
@@ -84,7 +94,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new RollInfoHolder(loadRollTask, roll, loadVotersTask, voters, loadPhotoTasks);
+		return new RollInfoHolder(loadRollTask, roll, loadVotersTask, voters, loadPhotoTasks, currentTab);
 	}
 	
 	@Override
@@ -137,7 +147,8 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		MergeAdapter adapter = new MergeAdapter();
 		
-		View header = inflater.inflate(R.layout.roll_basic, null);
+		header = inflater.inflate(R.layout.roll_basic, null);
+		
 		((TextView) header.findViewById(R.id.question)).setText(roll.question);
 		((TextView) header.findViewById(R.id.voted_at)).setText(new SimpleDateFormat("MMM dd, yyyy").format(roll.voted_at));
 		
@@ -149,26 +160,10 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		((TextView) header.findViewById(R.id.result)).setText(roll.result);
 		
-		if (roll.otherVotes.isEmpty()) {
-			((TextView) header.findViewById(R.id.yeas)).setText(roll.yeas + "");
-			((TextView) header.findViewById(R.id.nays)).setText(roll.nays + "");
-		} else {
-			// if a roll call has non-standard votes, it's the House election of the Speaker - only known exception 
-			Iterator<String> names = roll.otherVotes.keySet().iterator();
-			String first = names.next();
-			String second = names.next();
-			((TextView) header.findViewById(R.id.yeas_header)).setText(first);
-			((TextView) header.findViewById(R.id.yeas)).setText(roll.otherVotes.get(first) + "");
-			((TextView) header.findViewById(R.id.nays_header)).setText(second);
-			((TextView) header.findViewById(R.id.nays)).setText(roll.otherVotes.get(second) + "");
-		}
-		
-		((TextView) header.findViewById(R.id.present)).setText(roll.present + "");
-		((TextView) header.findViewById(R.id.not_voting)).setText(roll.not_voting + "");
-		
-		((TextView) header.findViewById(R.id.voters_header)).setText("Votes");
 		loadingView = header.findViewById(R.id.loading_votes);
 		((TextView) loadingView.findViewById(R.id.loading_message)).setText("Loading votes...");
+		
+		setupTabs();
 		
 		adapter.addView(header);
 		setListAdapter(adapter);
@@ -177,12 +172,132 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		loadVotes();
 	}
 	
-	public void displayVoters() {
-		ArrayList<Roll.Vote> voterArray = new ArrayList<Roll.Vote>(voters.values());
-		Collections.sort(voterArray);
+	// depends on the "header" member variable having been initialized and inflated
+	public void setupTabs() {
+		View.OnClickListener tabListener = new View.OnClickListener() {
+			public void onClick(View view) {
+				String tag = (String) view.getTag();
+				Iterator<String> iter = voterBreakdown.keySet().iterator();
+				while (iter.hasNext()) {
+					String tabTag = iter.next();
+					if (tabTag.equals(tag))
+						header.findViewWithTag(tabTag).setSelected(true);
+					else
+						header.findViewWithTag(tabTag).setSelected(false);
+				}
+				
+				currentTab = tag;
+				toggleVoters(tag);
+			}
+		};
 		
+		View yeas = header.findViewById(R.id.yeas_header);
+		View nays = header.findViewById(R.id.nays_header);
+		if (roll.otherVotes.isEmpty()) {
+			((TextView) yeas.findViewById(R.id.name)).setText(R.string.yeas);
+			((TextView) yeas.findViewById(R.id.subname)).setText(roll.yeas + "");
+			yeas.setTag("yeas");
+			voterBreakdown.put("yeas", new ArrayList<Roll.Vote>());
+			yeas.setOnClickListener(tabListener);
+			
+			if (currentTab == null)
+				currentTab = "yeas";
+			
+			((TextView) nays.findViewById(R.id.name)).setText(R.string.nays);
+			((TextView) nays.findViewById(R.id.subname)).setText(roll.nays + "");
+			nays.setTag("nays");
+			voterBreakdown.put("nays", new ArrayList<Roll.Vote>());
+			nays.setOnClickListener(tabListener);
+		} else {
+			// if a roll call has non-standard votes, it's the House election of the Speaker - only known exception 
+			Iterator<String> names = roll.otherVotes.keySet().iterator();
+			String first = names.next();
+			String second = names.next();
+			
+			((TextView) yeas.findViewById(R.id.name)).setText(first);
+			((TextView) yeas.findViewById(R.id.subname)).setText(roll.otherVotes.get(first) + "");
+			yeas.setTag(first);
+			voterBreakdown.put(first, new ArrayList<Roll.Vote>());
+			yeas.setOnClickListener(tabListener);
+			
+			if (currentTab == null)
+				currentTab = first;
+			
+			((TextView) nays.findViewById(R.id.name)).setText(second);
+			((TextView) nays.findViewById(R.id.subname)).setText(roll.otherVotes.get(second) + "");
+			nays.setTag(second);
+			voterBreakdown.put(second, new ArrayList<Roll.Vote>());
+			nays.setOnClickListener(tabListener);
+		}
+		
+		View present = header.findViewById(R.id.present_header);
+		((TextView) present.findViewById(R.id.name)).setText(R.string.present);
+		((TextView) present.findViewById(R.id.subname)).setText(roll.present + "");
+		present.setTag("present");
+		voterBreakdown.put("present", new ArrayList<Roll.Vote>());
+		present.setOnClickListener(tabListener);
+		
+		View not_voting = header.findViewById(R.id.not_voting_header);
+		((TextView) not_voting.findViewById(R.id.name)).setText(R.string.not_voting_short);
+		((TextView) not_voting.findViewById(R.id.subname)).setText(roll.not_voting + "");
+		not_voting.setTag("not_voting");
+		voterBreakdown.put("not_voting", new ArrayList<Roll.Vote>());
+		not_voting.setOnClickListener(tabListener);
+	}
+	
+	
+	// depends on setupTabs having been called, and that every vote a legislator has cast
+	// has an entry in voterBreakdown, as created in setupTabs
+	public void displayVoters() {
+		// sort HashMap of voters into the voterBreakdown hashmap by vote type
+		ArrayList<Roll.Vote> allVoters = new ArrayList<Roll.Vote>(voters.values());
+		Collections.sort(allVoters); // sort once, all at once
+		
+		Iterator<Roll.Vote> iter = allVoters.iterator();
+		while (iter.hasNext()) {
+			Roll.Vote vote = iter.next();
+			String name;
+			if (vote.vote == Roll.YEA)
+				name = "yeas";
+			else if (vote.vote == Roll.NAY) 
+				name = "nays";
+			else if (vote.vote == Roll.PRESENT)
+				name = "present";
+			else if (vote.vote == Roll.NOT_VOTING)
+				name = "not_voting";
+			else // vote.vote == Roll.OTHER
+				name = vote.vote_name;
+			
+			voterBreakdown.get(name).add(vote);
+		}
+		
+		// hide loading, show tabs
+		loadingView.setVisibility(View.GONE);
+		
+		header.findViewWithTag(currentTab).setSelected(true);
+		header.findViewById(R.id.vote_tabs).setVisibility(View.VISIBLE);
+		
+		// initialize adapters, add them beneath the tabs
+		starredAdapter = new VoterAdapter(this, starred, true);
+		restAdapter = new VoterAdapter(this, rest);
+		
+		MergeAdapter adapter = (MergeAdapter) getListAdapter();
+		adapter.addAdapter(starredAdapter);
+		adapter.addAdapter(restAdapter);
+		setListAdapter(adapter);
+		
+		// show the voters for the current tab
+		toggleVoters(currentTab);
+	}
+	
+	public void toggleVoters(String tag) {
+		rest.clear();
+		starred.clear();
+		
+		rest.addAll(voterBreakdown.get(tag));
+		
+		// reset starred, sweep through the new array again
 		int starredCount = peopleCursor.getCount();
-		ArrayList<Roll.Vote> starred = new ArrayList<Roll.Vote>(starredCount);
 		
 		if (starredCount > 0) {
 			ArrayList<String> starredIds = new ArrayList<String>(starredCount);
@@ -192,8 +307,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 				starredIds.add(peopleCursor.getString(peopleCursor.getColumnIndex("bioguide_id")));
 			} while(peopleCursor.moveToNext());
 			
-			
-			Iterator<Roll.Vote> iter = voterArray.iterator();
+			Iterator<Roll.Vote> iter = rest.iterator();
 			while (iter.hasNext()) {
 				Roll.Vote vote = iter.next();
 				if (starredIds.contains(vote.voter_id)) {
@@ -203,12 +317,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			}
 		}
 		
-		MergeAdapter adapter = (MergeAdapter) getListAdapter();
-		adapter.addAdapter(new VoterAdapter(this, starred, true));
-		adapter.addAdapter(new VoterAdapter(this, voterArray));
-		
-		loadingView.setVisibility(View.GONE);
-		setListAdapter(adapter);
+		((MergeAdapter) getListAdapter()).notifyDataSetChanged();
 	}
 	
 	public void loadRoll() {
@@ -457,13 +566,15 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		private Roll roll;
 		private HashMap<String,Roll.Vote> voters;
 		HashMap<String,LoadPhotoTask> loadPhotoTasks;
+		private String currentTab;
 		
-		public RollInfoHolder(LoadRollTask loadRollTask, Roll roll, LoadRollTask loadVotersTask, HashMap<String,Roll.Vote> voters, HashMap<String,LoadPhotoTask> loadPhotoTasks) {
+		public RollInfoHolder(LoadRollTask loadRollTask, Roll roll, LoadRollTask loadVotersTask, HashMap<String,Roll.Vote> voters, HashMap<String,LoadPhotoTask> loadPhotoTasks, String currentTab) {
 			this.loadRollTask = loadRollTask;
 			this.roll = roll;
 			this.loadVotersTask = loadVotersTask;
 			this.voters = voters;
 			this.loadPhotoTasks = loadPhotoTasks;
+			this.currentTab = currentTab;
 		}
 	}
 }

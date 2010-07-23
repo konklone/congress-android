@@ -49,106 +49,46 @@
 		android:text="Passed"
 		/>
 	
+	<!--  Hand-made tab layout for a tab-like experience while still keeping the tabs and list inline
+		  (so the tabs themselves will scroll up with the content) -->
 		
-	<TableLayout
+	<LinearLayout android:id="@+id/vote_tabs"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		
-		android:paddingLeft="10dp"
-		android:paddingRight="10dp"
-		
-		android:stretchColumns="*"
+		android:orientation="horizontal"
 		
 		android:layout_marginBottom="10dp"
+		
+		android:visibility="gone"
 		>
-		<TableRow android:id="@+id/vote_types"
+		
+		<include android:id="@+id/yeas_header"
+			layout="@layout/tab_2" 
+			/>
+		
+		<include android:id="@+id/nays_header"
+			layout="@layout/tab_2" 
+			/>
+		
+		<include android:id="@+id/present_header"
+			layout="@layout/tab_2" 
+			/>
 			
-			>
-			<TextView android:id="@+id/yeas_header"
-				android:textColor="@android:color/white"
-				android:textStyle="bold"
-				android:text="Yeas"
-				android:textSize="16dp"
-				
-				android:layout_gravity="center"
-				
-				
-				/>
-			<TextView android:id="@+id/nays_header"
-				android:textColor="@android:color/white"
-				android:textStyle="bold"
-				android:text="Nays"
-				android:textSize="16dp"
-				
-				android:layout_gravity="center"
-				
-				/>
-			<TextView android:id="@+id/present_header"
-				android:textColor="@android:color/white"
-				android:textStyle="bold"
-				android:text="Present"
-				android:textSize="16dp"
-				
-				android:layout_gravity="center"
-				
-				/>
-			<TextView android:id="@+id/not_voting_header"
-				android:textColor="@android:color/white"
-				android:textStyle="bold"
-				android:text="Not Voting"
-				android:textSize="16dp"
-				
-				android:layout_gravity="center"
-				
-
-				/>
-		</TableRow>
-		<TableRow android:id="@+id/vote_values"
-			
-			>
-			<TextView
-				android:id="@+id/yeas"
-				android:layout_gravity="center"
-				
-				android:textColor="@color/grey"
-				android:textSize="16dp"
-				
-				android:text="240"
-				/>
-			<TextView
-				android:id="@+id/nays"
-				android:layout_gravity="center"
-				
-				android:textColor="@color/grey"
-				android:textSize="16dp"
-				
-				android:text="200"
-				/>
-			<TextView
-				android:id="@+id/present"
-				android:layout_gravity="center"
-				
-				android:textColor="@color/grey"
-				android:textSize="16dp"
-				
-				android:text="4"
-				/>
-			<TextView
-				android:id="@+id/not_voting"
-				android:layout_gravity="center"
-				
-				android:textColor="@color/grey"
-				android:textSize="16dp"
-				
-				android:text="1"
-				/>
-		</TableRow>
-	</TableLayout>
-	
-	<include layout="@layout/line" />
-	<include layout="@layout/header_alone" android:id="@+id/voters_header" />
-	<include layout="@layout/line" />
+		<include android:id="@+id/not_voting_header"
+			layout="@layout/tab_2" 
+			/>
+	</LinearLayout>
 	
 	<include layout="@layout/loading" android:id="@+id/loading_votes" />
+	
+	<TextView android:id="@+id/empty_votes"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		
+		android:text="No lawmaker cast this vote."
+		
+		android:visibility="gone"
+		/>
 	
 </LinearLayout>
