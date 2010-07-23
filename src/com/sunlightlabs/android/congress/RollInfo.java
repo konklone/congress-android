@@ -149,8 +149,20 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		((TextView) header.findViewById(R.id.result)).setText(roll.result);
 		
-		((TextView) header.findViewById(R.id.yeas)).setText(roll.yeas + "");
-		((TextView) header.findViewById(R.id.nays)).setText(roll.nays + "");
+		if (roll.otherVotes.isEmpty()) {
+			((TextView) header.findViewById(R.id.yeas)).setText(roll.yeas + "");
+			((TextView) header.findViewById(R.id.nays)).setText(roll.nays + "");
+		} else {
+			// if a roll call has non-standard votes, it's the House election of the Speaker - only known exception 
+			Iterator<String> names = roll.otherVotes.keySet().iterator();
+			String first = names.next();
+			String second = names.next();
+			((TextView) header.findViewById(R.id.yeas_header)).setText(first);
+			((TextView) header.findViewById(R.id.yeas)).setText(roll.otherVotes.get(first) + "");
+			((TextView) header.findViewById(R.id.nays_header)).setText(second);
+			((TextView) header.findViewById(R.id.nays)).setText(roll.otherVotes.get(second) + "");
+		}
+		
 		((TextView) header.findViewById(R.id.present)).setText(roll.present + "");
 		((TextView) header.findViewById(R.id.not_voting)).setText(roll.not_voting + "");
 		
