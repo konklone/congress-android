@@ -99,7 +99,7 @@ public class CommitteeList extends ListActivity {
 		if (committees.size() > 0)
 			setListAdapter(new CommitteeAdapter(this, committees));
 		else
-			Utils.showBack(this, R.string.committees_emtpy);
+			Utils.showBack(this, R.string.committees_empty);
 	}
 
 	private class ViewHolder {

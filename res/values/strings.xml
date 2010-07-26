@@ -31,7 +31,7 @@
     <string name="committees_house">House Committees</string>
     <string name="committees_senate">Senate Committees</string>
     <string name="committees_joint">Joint Committees</string>
-    <string name="committees_emtpy">No committees found.</string>
+    <string name="committees_empty">No committees found.</string>
     
     <string name="voting_record">Voting Record</string>
     <string name="sponsored_bills">Sponsored Bills</string>
@@ -52,10 +52,10 @@
     
     <string name="first_tip_1_header">Call your representatives.</string>
     <string name="first_tip_1_body">Tap \"My Location\" to find your district\'s representatives. Tap the call button to give them a call. </string>
-    <string name="first_tip_2_header">See the latest bills and laws.</string>
-    <string name="first_tip_2_body">Read up on what your legislators are introducing into Congress, and the laws they\'re passing.</string>
-    <string name="first_tip_3_header">Home screen shortcuts galore.</string>
-    <string name="first_tip_3_body">Tap \"Create Shortcut\" on the menu for a bill or legislator to give yourself one-tap access from your home screen. </string>
+    <string name="first_tip_2_header">See the latest bills and votes.</string>
+    <string name="first_tip_2_body">Read up on what your legislators are introducing and voting on.</string>
+    <string name="first_tip_3_header">Easy access to oft-viewed items.</string>
+    <string name="first_tip_3_body">Tap the star at the top of a bill or legislator\'s screen to add them to the main menu.</string>
     
     <string name="menu_bills_header">Bills</string>
     <string name="menu_bills_law">New Laws</string>
