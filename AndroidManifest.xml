@@ -69,19 +69,24 @@
         <activity android:name=".BillHistory" />
         <activity android:name=".BillVotes" />
         
-        <activity android:name=".RollInfo" 
+        <activity android:name=".RollList"
         	android:theme="@android:style/Theme.NoTitleBar"
         	/>
+        
+        <activity android:name=".RollInfo" 
+        	android:theme="@android:style/Theme.NoTitleBar"
+        	>
+        	<intent-filter>
+        		<action android:name="android.intent.action.MAIN" />
+        		<category android:name="android.intent.category.DEFAULT" />
+        	</intent-filter>
+        </activity>
         
         <activity android:name=".CommitteeTabs"
         	android:theme="@android:style/Theme.NoTitleBar"
         	/>
         
         <activity android:name=".CommitteeList" 
-        	android:theme="@android:style/Theme.NoTitleBar"
-        	/>
-        
-        <activity android:name=".RollList"
         	android:theme="@android:style/Theme.NoTitleBar"
         	/>
     </application>

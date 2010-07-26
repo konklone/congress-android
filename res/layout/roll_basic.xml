@@ -82,13 +82,4 @@
 	
 	<include layout="@layout/loading" android:id="@+id/loading_votes" />
 	
-	<TextView android:id="@+id/empty_votes"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		
-		android:text="No lawmaker cast this vote."
-		
-		android:visibility="gone"
-		/>
-	
 </LinearLayout>
