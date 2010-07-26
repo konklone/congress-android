@@ -30,8 +30,8 @@
 			
 			android:layout_weight="1"
 			
-			android:paddingTop="10dp"
-			android:paddingBottom="10dp"
+			android:paddingTop="3dp"
+			android:paddingBottom="3dp"
 			>
 		
 			<TextView android:id="@+id/name"
@@ -51,7 +51,7 @@
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				
-				android:paddingTop="3dp"
+				android:paddingTop="1dp"
 				
 				android:gravity="center"
 				
