@@ -59,6 +59,11 @@ public class Bill implements Serializable {
 		return "" + (((year + 1901) / 2) - 894);
 	}
 	
+	public static String formatId(String id) {
+		String code = id.replaceAll("-\\d+$", "");
+		return formatCode(code);
+	}
+	
 	public static String formatCode(String code) {
 		code = code.toLowerCase().replace(" ", "").replace(".", "");
 		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");

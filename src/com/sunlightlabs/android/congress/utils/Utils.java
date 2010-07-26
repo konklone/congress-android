@@ -88,7 +88,12 @@ public class Utils {
 	}
 	
 	public static Intent rollIntent(Context context, Roll roll) {
-		return new Intent(context, RollInfo.class).putExtra("id", roll.id);
+		return rollIntent(context, roll.id);
+	}
+	
+	public static Intent rollIntent(Context context, String rollId) {
+		return new Intent(context, RollInfo.class)
+			.putExtra("id", rollId);
 	}
 
 	public static Intent billIntent(String billId, String code) {
@@ -102,10 +107,6 @@ public class Utils {
 
 	public static Intent billIntent(String billId) {
 		return billIntent(billId, null);
-	}
-
-	public static Intent rollIntent(Context context, String rollId) {
-		return new Intent(context, RollInfo.class).putExtra("id", rollId);
 	}
 
 	public static Intent shortcutIntent(Context context, String billId, String code) {

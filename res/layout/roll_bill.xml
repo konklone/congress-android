@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	
+	android:orientation="vertical"
+	>
+	
+	<include layout="@layout/line" 
+		android:id="@+id/top_line"
+		/>
+	
+	<LinearLayout android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		
+		android:paddingTop="2dp"
+		android:paddingLeft="5dp"
+		android:paddingRight="5dp"
+		android:paddingBottom="5dp"
+		>
+		
+		<ImageView
+			android:src="@drawable/bill"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			
+			android:layout_marginRight="10dp"
+			/>
+		
+		<LinearLayout android:orientation="vertical"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:layout_marginTop="5dp"
+			>
+			
+			<TextView 
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				
+				android:textSize="12sp"
+				android:text="@string/related_to_bill"
+				/>
+			
+			<TextView android:id="@+id/code"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				
+				android:textSize="18sp"
+				android:textColor="@android:color/white"
+				android:text="H.R. 3590"
+				/>
+		</LinearLayout>
+		
+	</LinearLayout>
+	
+</LinearLayout>

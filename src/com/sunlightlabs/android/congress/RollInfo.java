@@ -29,6 +29,8 @@ import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
+import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.models.Roll;
@@ -71,7 +73,8 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		peopleCursor = database.getLegislators();
 		startManagingCursor(peopleCursor);
 		
-		id = getIntent().getExtras().getString("id");
+		Bundle extras = getIntent().getExtras();
+		id = extras.getString("id");
 		
 		setupControls();
 		
@@ -113,10 +116,14 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	}
 	
 	@Override
-	public void onListItemClick(ListView parent, View v, int position, long id) {
-		VoterAdapter.ViewHolder tag = (VoterAdapter.ViewHolder) v.getTag();
-		if (tag != null && tag instanceof VoterAdapter.ViewHolder)
-    		startActivity(Utils.legislatorIntent(tag.bioguide_id));
+	public void onListItemClick(ListView parent, View view, int position, long id) {
+		Object tag = view.getTag();
+		if (tag != null) {
+			if (tag instanceof VoterAdapter.ViewHolder)
+				startActivity(Utils.legislatorIntent(((VoterAdapter.ViewHolder) tag).bioguide_id));
+			else if (tag instanceof String && ((String) tag).equals("bill_id"))
+				startActivity(Utils.billIntent(roll.bill_id));
+		}
 	}
 	
 	public void onLoadRoll(String tag, Roll roll) {
@@ -149,10 +156,28 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		MergeAdapter adapter = new MergeAdapter();
 		
-		header = inflater.inflate(R.layout.roll_basic, null);
+		View headerTop = inflater.inflate(R.layout.roll_basic_1, null);
 		
-		((TextView) header.findViewById(R.id.question)).setText(roll.question);
-		((TextView) header.findViewById(R.id.voted_at)).setText(new SimpleDateFormat("MMM dd, yyyy").format(roll.voted_at));
+		((TextView) headerTop.findViewById(R.id.question)).setText(roll.question);
+		((TextView) headerTop.findViewById(R.id.voted_at)).setText(new SimpleDateFormat("MMM dd, yyyy").format(roll.voted_at));
+		
+		adapter.addView(headerTop);
+		
+		
+		if (roll.bill_id != null && !roll.bill_id.equals("")) {
+			adapter.addView(inflater.inflate(R.layout.line, null));
+			
+			View bill = inflater.inflate(R.layout.roll_bill, null);
+			((TextView) bill.findViewById(R.id.code)).setText(Bill.formatId(roll.bill_id));
+			bill.setTag("bill_id");
+			
+			ArrayList<View> billArray = new ArrayList<View>(1);
+			billArray.add(bill);
+			adapter.addAdapter(new ViewArrayAdapter(this, billArray));
+		}
+		
+		
+		header = inflater.inflate(R.layout.roll_basic_2, null);
 		
 		View resultHeader = header.findViewById(R.id.result_header);
 		((TextView) resultHeader.findViewById(R.id.header_text)).setText("Results");
@@ -329,7 +354,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			if (roll != null)
 				displayRoll();
 			else
-				loadRollTask = (LoadRollTask) new LoadRollTask(this, id, "basic").execute("basic,bill");
+				loadRollTask = (LoadRollTask) new LoadRollTask(this, id, "basic").execute("basic");
 		}
 	}
 	

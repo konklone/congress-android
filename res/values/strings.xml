@@ -84,6 +84,7 @@
     <string name="bill_vote_not_roll">No roll call was taken for this vote.</string>
     
     <string name="roll_loading">Loading roll call details...</string>
+    <string name="related_to_bill">Related to bill</string>
     
     <string name="update">Update</string>
     <string name="updating">Updating</string>
