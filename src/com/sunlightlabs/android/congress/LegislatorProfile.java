@@ -239,6 +239,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		((TextView) mainView.findViewById(R.id.profile_party)).setText(partyName(legislator.party));
 		((TextView) mainView.findViewById(R.id.profile_state)).setText(Utils.stateCodeToName(this, legislator.state));
 		((TextView) mainView.findViewById(R.id.profile_domain)).setText(domainName(legislator.getDomain()));
+		((TextView) mainView.findViewById(R.id.profile_office)).setText(officeName(legislator.congress_office));
 		
 		adapter.addView(mainView);
 		
@@ -348,6 +349,10 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 			return "his";
 		else // "F"
 			return "her";
+	}
+	
+	public static String officeName(String office) {
+		return office.replaceAll("(?:House|Senate) Office Building", "").trim();
 	}
 	
 	protected class CommitteeAdapter extends ArrayAdapter<Committee> {

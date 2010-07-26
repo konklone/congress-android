@@ -12,7 +12,6 @@
 		
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="0dp"
 		>
 		
 		<include layout="@layout/profile_picture" />
@@ -22,7 +21,6 @@
 	  		android:layout_height="fill_parent"
 	  		
 	  		android:paddingRight="10dp"
-	  		android:layout_marginTop="6dp"
 	  		>
 	  		
   			<TextView android:id="@+id/profile_party"
@@ -31,9 +29,9 @@
 	  			android:layout_alignParentTop="true"
 	  			
 	  			android:layout_marginTop="10dp"
-	  			android:layout_marginBottom="5dp"
+	  			android:layout_marginBottom="2dp"
 	  			
-	  			android:textSize="17sp"
+	  			android:textSize="15sp"
 	  			android:textColor="@android:color/white"
 	  			
 	  			android:text="Democrat"
@@ -44,9 +42,9 @@
 		  		android:layout_height="wrap_content"
 		  		android:layout_below="@id/profile_party"
 		  		
-		  		android:layout_marginBottom="5dp"
+		  		android:layout_marginBottom="2dp"
 		  		
-		  		android:textSize="17sp"
+		  		android:textSize="15sp"
 		  		android:textColor="@android:color/white"
 		  		
 		  		android:text="District of Columbia"
@@ -57,11 +55,24 @@
 	  			android:layout_height="wrap_content"
 	  			android:layout_below="@id/profile_state"
 	  			
-	  			android:textSize="17sp"
+	  			android:layout_marginBottom="2dp"
+	  			
+	  			android:textSize="15sp"
 	  			android:textColor="@android:color/white"
 	  			
 	  			android:text="Senior Senator"
 		  		/>
+		  	
+		  	<TextView android:id="@+id/profile_office"
+		  		android:layout_width="wrap_content"
+	  			android:layout_height="wrap_content"
+	  			android:layout_below="@id/profile_domain"
+	  			
+	  			android:textSize="15sp"
+	  			android:textColor="@android:color/white"
+	  			
+	  			android:text="3445 Rayburn"
+	  			/>
 		  	
 		  	<FrameLayout android:id="@+id/website"
 		  		android:layout_width="wrap_content"
