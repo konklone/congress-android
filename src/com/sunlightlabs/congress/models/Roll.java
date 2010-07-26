@@ -1,11 +1,14 @@
 package com.sunlightlabs.congress.models;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Roll {
+public class Roll implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	public static final int OTHER = -1;
 	public static final int YEA = 0;
 	public static final int NAY = 1;
@@ -41,7 +44,9 @@ public class Roll {
 	 * The 'legislator' field may be null here, in which case you will need to use the bioguide_id
 	 * to look up more information about the legislator.
 	 */
-	public static class Vote implements Comparable<Vote> {
+	public static class Vote implements Comparable<Vote>, Serializable {
+		private static final long serialVersionUID = 1L;
+		
 		public String voter_id; // bioguide ID
 		
 		public String vote_name;

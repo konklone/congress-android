@@ -88,7 +88,9 @@ public class Utils {
 	}
 	
 	public static Intent rollIntent(Context context, Roll roll) {
-		return rollIntent(context, roll.id);
+		return new Intent(context, RollInfo.class)
+			.putExtra("id", roll.id)
+			.putExtra("roll", roll);
 	}
 	
 	public static Intent rollIntent(Context context, String rollId) {

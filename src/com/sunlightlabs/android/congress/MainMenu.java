@@ -67,13 +67,13 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 
 	public static final int BILLS_LAW = 0;
 	public static final int BILLS_RECENT = 1;
-	public static final int BILLS_LATEST_VOTES = 2;
-	public static final int BILLS_CODE = 3;
-	public static final int SEARCH_LOCATION = 4;
-	public static final int SEARCH_ZIP = 5;
-	public static final int SEARCH_STATE = 6;
-	public static final int SEARCH_NAME = 7;
-	public static final int SEARCH_COMMITTEE = 8;
+	public static final int BILLS_CODE = 2;
+	public static final int SEARCH_LOCATION = 3;
+	public static final int SEARCH_ZIP = 4;
+	public static final int SEARCH_STATE = 5;
+	public static final int SEARCH_NAME = 6;
+	public static final int SEARCH_COMMITTEE = 7;
+	public static final int VOTES_LATEST = 8;
 
 	public static final String TAG = "CONGRESS";
 
@@ -218,8 +218,8 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 			case BILLS_LAW:
 				startActivity(new Intent(this, BillList.class).putExtra("type", BillList.BILLS_LAW));
 				break;
-			case BILLS_LATEST_VOTES:
-				startActivity(new Intent(this, BillList.class).putExtra("type", BillList.BILLS_LATEST_VOTES));
+			case VOTES_LATEST:
+				startActivity(new Intent(this, RollList.class).putExtra("type", RollList.ROLLS_LATEST));
 				break;
 			case BILLS_CODE:
 				getResponse(RESULT_BILL_CODE);
@@ -278,24 +278,30 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		adapter.addView(inflateHeader(inflater, R.string.menu_bills_header));
 		adapter.addAdapter(new FavoriteBillsAdapter(this, billCursor));
 		adapter.addAdapter(new ViewArrayAdapter(this, setupBillMenu(inflater)));
+		
+		// Votes
+		adapter.addView(inflateHeader(inflater, R.string.menu_votes_header));
+		adapter.addAdapter(new ViewArrayAdapter(this, setupVotesMenu(inflater)));
 
 		setListAdapter(adapter);
 	}
 
 	private ArrayList<View> setupBillMenu(LayoutInflater inflater) {
-		ArrayList<View> billViews = new ArrayList<View>(2);
+		ArrayList<View> billViews = new ArrayList<View>();
 
-		View billsLaw = inflateItem(inflater, R.drawable.bill_law, R.string.menu_bills_law, BILLS_LAW);
-		View billsRecent = inflateItem(inflater, R.drawable.bill_recent, R.string.menu_bills_recent, BILLS_RECENT);
-		View billsLatestVotes = inflateItem(inflater, R.drawable.bill_vote, R.string.menu_bills_latest_votes, BILLS_LATEST_VOTES);
-		View billsCode = inflateItem(inflater, R.drawable.bill_code, R.string.menu_bills_code, BILLS_CODE);
-
-		billViews.add(billsLaw);
-		billViews.add(billsRecent);	
-		billViews.add(billsLatestVotes);
-		billViews.add(billsCode);
+		billViews.add(inflateItem(inflater, R.drawable.bill_law, R.string.menu_bills_law, BILLS_LAW));
+		billViews.add(inflateItem(inflater, R.drawable.bill_recent, R.string.menu_bills_recent, BILLS_RECENT));	
+		billViews.add(inflateItem(inflater, R.drawable.bill_code, R.string.menu_bills_code, BILLS_CODE));
 
 		return billViews;
+	}
+	
+	private ArrayList<View> setupVotesMenu(LayoutInflater inflater) {
+		ArrayList<View> voteViews = new ArrayList<View>();
+		
+		voteViews.add(inflateItem(inflater, R.drawable.rolls, R.string.menu_votes_latest, VOTES_LATEST));
+		
+		return voteViews;
 	}
 
 	private ArrayList<View> setupSearchMenu(LayoutInflater inflater) {

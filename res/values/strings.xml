@@ -60,13 +60,15 @@
     <string name="menu_bills_header">Bills</string>
     <string name="menu_bills_law">New Laws</string>
     <string name="menu_bills_recent">Just Introduced</string>
-    <string name="menu_bills_latest_votes">Latest Votes</string>
     <string name="menu_bills_code">By Bill Code</string>
+    <string name="menu_bills_latest_votes">Latest Votes</string>
     <string name="menu_legislators_header">Legislators</string>
     <string name="menu_legislators_location">My Location</string>
     <string name="menu_legislators_state">State</string>
     <string name="menu_legislators_lastname">Last Name</string>
     <string name="menu_legislators_zip">Zip Code</string>
+    <string name="menu_votes_header">Votes</string>
+    <string name="menu_votes_latest">Latest Votes</string>
     <string name="menu_location_no_location">Cannot update location</string>
     <string name="menu_location_updating">Updating location...</string>
     <string name="menu_favorite_bill_error">Error loading starred bills.</string>

@@ -75,6 +75,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		Bundle extras = getIntent().getExtras();
 		id = extras.getString("id");
+		roll = (Roll) extras.getSerializable("roll");
 		
 		setupControls();
 		

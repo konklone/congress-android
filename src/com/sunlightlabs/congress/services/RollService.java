@@ -30,6 +30,11 @@ public class RollService {
 		return rollsFor(Drumbone.url("rolls", query)); 
 	}
 	
+	public static ArrayList<Roll> latestVotes(int per_page, int page) throws CongressException {
+		String query =  "per_page=" + per_page + "&page=" + page + "&order=voted_at";
+		query += 		"&sections=basic";
+		return rollsFor(Drumbone.url("rolls", query));
+	}
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
 	
