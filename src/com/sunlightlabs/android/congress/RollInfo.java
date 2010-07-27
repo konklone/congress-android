@@ -127,6 +127,28 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		}
 	}
 	
+	public void loadRoll() {
+		if (loadRollTask != null)
+			loadRollTask.onScreenLoad(this);
+		else {
+			if (roll != null)
+				displayRoll();
+			else
+				loadRollTask = (LoadRollTask) new LoadRollTask(this, id, "basic").execute("basic");
+		}
+	}
+	
+	public void loadVotes() {
+		if (loadVotersTask != null)
+			loadVotersTask.onScreenLoad(this);
+		else {
+			if (voters != null)
+				displayVoters();
+			else
+				loadVotersTask = (LoadRollTask) new LoadRollTask(this, id, "voters").execute("voters");
+		}
+	}
+	
 	public void onLoadRoll(String tag, Roll roll) {
 		if (tag.equals("basic")) {
 			this.loadRollTask = null;
@@ -346,28 +368,6 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		}
 		
 		((MergeAdapter) getListAdapter()).notifyDataSetChanged();
-	}
-	
-	public void loadRoll() {
-		if (loadRollTask != null)
-			loadRollTask.onScreenLoad(this);
-		else {
-			if (roll != null)
-				displayRoll();
-			else
-				loadRollTask = (LoadRollTask) new LoadRollTask(this, id, "basic").execute("basic");
-		}
-	}
-	
-	public void loadVotes() {
-		if (loadVotersTask != null)
-			loadVotersTask.onScreenLoad(this);
-		else {
-			if (voters != null)
-				displayVoters();
-			else
-				loadVotersTask = (LoadRollTask) new LoadRollTask(this, id, "voters").execute("voters");
-		}
 	}
 	
 	public void loadPhoto(String bioguide_id) {
