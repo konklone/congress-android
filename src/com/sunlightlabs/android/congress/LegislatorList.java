@@ -210,6 +210,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 		Utils.setLoading(this, R.string.legislators_loading);
 		Utils.setTitleSize(this, 20);
+		
 		switch (type) {
 		case SEARCH_ZIP:
 			Utils.setTitle(this, "Legislators For " + zipCode);
@@ -230,6 +231,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		case SEARCH_COSPONSORS:
 			Utils.setTitle(this, "Cosponsors for\n" + Bill.formatId(bill_id));
 			Utils.setTitleSize(this, 18);
+			Utils.setLoading(this, R.string.legislators_loading_cosponsors);
 			break;
 		default:
 			Utils.setTitle(this, "Legislator Search");
@@ -242,7 +244,10 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	}
 
 	public void selectLegislator(Legislator legislator) {
-		startActivity(Utils.legislatorIntent(this, legislator));
+		if (type == SEARCH_COSPONSORS) // cosponsors from Drumbone don't have enough info to go direct
+			startActivity(Utils.legislatorIntent(legislator.id));
+		else
+			startActivity(Utils.legislatorIntent(this, legislator));
 	}
 	
 	private static class LegislatorAdapter extends ArrayAdapter<Legislator> {
@@ -405,7 +410,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			context.legislators = legislators;
 			
 			// if there's only one result, don't even make them click it
-			if (legislators.size() == 1 && context.type != SEARCH_LOCATION) {
+			if (legislators.size() == 1 && (context.type != SEARCH_LOCATION && context.type != SEARCH_COSPONSORS)) {
 				context.selectLegislator(legislators.get(0));
 				context.finish();
 			} else

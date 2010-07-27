@@ -24,6 +24,7 @@
     <string name="youtube_empty">No videos found.</string>
     <string name="bills_loading">Searching for bills...</string>
     <string name="legislators_loading">Searching for legislators...</string>
+    <string name="legislators_loading_cosponsors">Loading cosponsors...</string>
     <string name="rolls_loading">Searching for roll calls...</string>
    
    	<string name="committees_title">Committees</string>
