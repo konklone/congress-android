@@ -549,19 +549,17 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 			View changelogView = inflater.inflate(R.layout.changelog, null);
 
 			Spanned changelog = Html.fromHtml(
-				"<b>&#183;</b> \"Star\" your favorite legislators and bills to add them to the main menu<br/><br/>" +
-				"<b>&#183;</b> Search by committee for legislators<br/><br/>" +
-				"<b>&#183;</b> News tab for bills<br/><br/>" +
-				"<b>&#183;</b> See a map of a legislator's district<br/><br/>" +
-				"<b>&#183;</b> Share bills on social networks through your apps<br/><br/>" +
-				"<b>&#183;</b> Made links clickable on tweets again<br/><br/>" +
-				"<b>&#183;</b> Location fetching fixes and improvements<br/><br/>" +
-				"<b>&#183;</b> Various bugfixes and visual tweaks"
+				"<b>&#183;</b> See a legislator's recent voting record<br/><br/>" +
+				"<b>&#183;</b> See recent votes in general, and just nomination votes<br/><br/>" +
+				"<b>&#183;</b> Improved vote screen, linked back to bill if related<br/><br/>" +
+				"<b>&#183;</b> Show cosponsors of bills<br/><br/>" +
+				"<b>&#183;</b> Added legislator's office building and room number"
 			);
 			Spanned changelogLast = Html.fromHtml(
-				"<b>&#183;</b> See full history and voting records on bills<br/><br/>" +
-				"<b>&#183;</b> Search by bill code<br/><br/>" +	
-				"<b>&#183;</b> Better location searching"
+				"<b>&#183;</b> Search by committee for legislators<br/><br/>" +
+				"<b>&#183;</b> See a map of a legislator's district<br/><br/>" +
+				"<b>&#183;</b> Share bills on social networks through your apps<br/><br/>" +	
+				"<b>&#183;</b> \"Star\" your favorite legislators and bills to add them to the main menu<br/><br/>"
 			);
 			((TextView) changelogView.findViewById(R.id.changelog)).setText(changelog);
 			((TextView) changelogView.findViewById(R.id.changelog_last_title)).setText(R.string.app_version_older);
