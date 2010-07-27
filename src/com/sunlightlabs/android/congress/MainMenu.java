@@ -271,6 +271,10 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		LayoutInflater inflater = LayoutInflater.from(this);
 		adapter = new MergeAdapter();
 
+		// Votes
+		adapter.addView(inflateHeader(inflater, R.string.menu_votes_header));
+		adapter.addAdapter(new ViewArrayAdapter(this, setupVotesMenu(inflater)));
+		
 		// Legislators
 		adapter.addView(inflateHeader(inflater, R.string.menu_legislators_header));
 		adapter.addAdapter(new FavoriteLegislatorsAdapter(this, peopleCursor));
@@ -283,10 +287,6 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		adapter.addAdapter(new FavoriteBillsAdapter(this, billCursor));
 		adapter.addAdapter(new ViewArrayAdapter(this, setupBillMenu(inflater)));
 		
-		// Votes
-		adapter.addView(inflateHeader(inflater, R.string.menu_votes_header));
-		adapter.addAdapter(new ViewArrayAdapter(this, setupVotesMenu(inflater)));
-
 		setListAdapter(adapter);
 	}
 
