@@ -123,7 +123,7 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient {
 			if (code >= 500 && code<600) {
 				throw new TwitterException.E50X(error+" "+url);
 			}
-			boolean rateLimitExceeded = error.contains("Rate limit exceeded");
+			boolean rateLimitExceeded = (error != null && error.contains("Rate limit exceeded"));
 			if (rateLimitExceeded) {
 				throw new TwitterException.RateLimit(error);
 			}
@@ -139,8 +139,9 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient {
 					// oh well
 				}				
 			}
+			String message = error != null ? error : "";
 			// just report it as a vanilla exception
-			throw new TwitterException(code + " " + error+" "+url);
+			throw new TwitterException(code + " " + message + " "+ url);
 		} catch (SocketTimeoutException e) {
 			URL url = connection.getURL();
 			throw new TwitterException.Timeout(timeOutMilliSecs+"milli-secs for "+url);
