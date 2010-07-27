@@ -32,12 +32,6 @@ public class LegislatorLoader extends Activity {
 		return loadLegislatorTask;
 	}
 	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if (loadLegislatorTask != null)
-			loadLegislatorTask.cancel(false);
-	}
 	
 	public void onLoadLegislator(Legislator legislator) {
 		if (legislator != null)

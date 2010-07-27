@@ -108,9 +108,6 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	protected void onDestroy() {
 		super.onDestroy();
 		database.close();
-		
-		if (loadRollTask != null)
-			loadRollTask.cancel(true);
 	}
 	
 	public void setupControls() {

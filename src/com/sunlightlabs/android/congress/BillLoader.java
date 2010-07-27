@@ -32,12 +32,6 @@ public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 		setupControls();
 	}
 	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (loadBillTask != null)
-			loadBillTask.cancel(true);
-	}
 	
 	public void setupControls() {
 		if (code != null && !code.equals(""))
