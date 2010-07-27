@@ -34,6 +34,8 @@ public class LoadBillTask extends AsyncTask<String,Void,Bill> {
 	
 	@Override
 	public void onPostExecute(Bill bill) {
+		if (isCancelled()) return;
+		
 		if (exception != null && bill == null)
 			context.onLoadBill(exception);
 		else

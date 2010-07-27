@@ -17,6 +17,8 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.Drumbone;
 
 public class Database {
+	public boolean closed = true;
+	
 	private static final String TAG = "CongressDatabase";
 
 	private static final String DATABASE_NAME = "congress.db";
@@ -135,11 +137,13 @@ public class Database {
 
 	public Database open() {
 		helper = new DatabaseHelper(context);
+		closed = false;
 		database = helper.getWritableDatabase();
 		return this;
 	}
 
 	public void close() {
+		closed = true;
 		helper.close();
 	}
 	

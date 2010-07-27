@@ -11,14 +11,14 @@ import com.sunlightlabs.congress.services.LegislatorService;
 
 public class LegislatorLoader extends Activity {
 	private LoadLegislatorTask loadLegislatorTask = null;
-	
+	private String id;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading_fullscreen);
 		
-		String id = getIntent().getStringExtra("legislator_id");
+		id = getIntent().getStringExtra("legislator_id");
         
         loadLegislatorTask = (LoadLegislatorTask) getLastNonConfigurationInstance();
         if (loadLegislatorTask != null)
@@ -30,6 +30,13 @@ public class LegislatorLoader extends Activity {
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		return loadLegislatorTask;
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (loadLegislatorTask != null)
+			loadLegislatorTask.cancel(false);
 	}
 	
 	public void onLoadLegislator(Legislator legislator) {
@@ -64,9 +71,11 @@ public class LegislatorLoader extends Activity {
     	}
     	
     	@Override
-    	protected void onPostExecute(Legislator legislator) {    		
-    		context.onLoadLegislator(legislator);
+    	protected void onPostExecute(Legislator legislator) {
+    		if (isCancelled()) return;
     		context.loadLegislatorTask = null;
+    		
+    		context.onLoadLegislator(legislator);
     	}
     }
 }

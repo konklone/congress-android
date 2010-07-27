@@ -98,6 +98,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		loadRoll();
 	}
 	
+	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		return new RollInfoHolder(loadRollTask, roll, loadVotersTask, voters, loadPhotoTasks, currentTab);
@@ -107,6 +108,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	protected void onDestroy() {
 		super.onDestroy();
 		database.close();
+		
+		if (loadRollTask != null)
+			loadRollTask.cancel(true);
 	}
 	
 	public void setupControls() {
@@ -458,6 +462,12 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		@Override
 		public void onPostExecute(Roll roll) {
+			if (isCancelled()) return;
+			
+			// last check - if the database is closed, then onDestroy must have run, 
+			// even if the task didn't get marked as cancelled for some reason
+			if (context.database.closed) return;
+			
 			if (exception != null && roll == null)
 				context.onLoadRoll(tag, exception);
 			else
