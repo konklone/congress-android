@@ -5,8 +5,8 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	android:paddingLeft="10dp"
-	android:paddingTop="3dp"
-	android:paddingBottom="3dp"
+	android:paddingTop="1dp"
+	android:paddingBottom="1dp"
 	>
 
 	<ImageView android:id="@+id/icon"
@@ -21,7 +21,7 @@
 		
 		android:layout_gravity="center_vertical"
 		
-		android:textSize="22sp"
+		android:textSize="18sp"
 		android:textColor="#dddddd"
 		
 		android:text="Text"

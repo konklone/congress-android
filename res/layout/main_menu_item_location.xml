@@ -6,9 +6,9 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	android:paddingLeft="10dp"
-	android:paddingTop="3dp"
-	android:paddingBottom="3dp"
 	android:paddingRight="10dp"
+	android:paddingTop="1dp"
+	android:paddingBottom="1dp"
 	>
 
 	<ImageView android:id="@+id/icon"
