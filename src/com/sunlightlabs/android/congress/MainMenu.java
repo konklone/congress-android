@@ -303,7 +303,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	private ArrayList<View> setupVotesMenu(LayoutInflater inflater) {
 		ArrayList<View> voteViews = new ArrayList<View>();
 		
-		voteViews.add(inflateItem(inflater, R.drawable.rolls, R.string.menu_votes_latest, VOTES_LATEST));
+		voteViews.add(inflateItem(inflater, R.drawable.rolls_menu, R.string.menu_votes_latest, VOTES_LATEST));
 		voteViews.add(inflateItem(inflater, R.drawable.rolls_nominations, R.string.menu_votes_nominations, VOTES_NOMINATIONS));
 		
 		return voteViews;
