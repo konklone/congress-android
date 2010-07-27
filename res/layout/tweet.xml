@@ -4,7 +4,10 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	
-	android:padding="10dp"
+	android:paddingLeft="10dp"
+	android:paddingRight="10dp"
+	android:paddingBottom="5dp"
+	android:paddingTop="5dp"
 	
 	android:clickable="false"
 	android:focusable="false"
@@ -25,7 +28,7 @@
 			android:layout_gravity="left"
 			android:layout_weight="1"
 			
-			android:textSize="18sp"
+			android:textSize="16sp"
 			android:textColor="@android:color/white"
 			android:autoLink="web"
 			
