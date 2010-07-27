@@ -73,11 +73,11 @@ public class BillService {
 		if (!json.isNull("official_title"))
 			bill.official_title = json.getString("official_title");
 		if (!json.isNull("last_action_at"))
-			bill.last_action_at = DateUtils.parseDate(json.getString("last_action_at"),
-					Drumbone.dateFormat);
+			bill.last_action_at = DateUtils.parseDate(json.getString("last_action_at"), Drumbone.dateFormat);
 		if (!json.isNull("last_vote_at"))
-			bill.last_vote_at = DateUtils.parseDate(json.getString("last_vote_at"),
-					Drumbone.dateFormat);
+			bill.last_vote_at = DateUtils.parseDate(json.getString("last_vote_at"), Drumbone.dateFormat);
+		if (!json.isNull("cosponsors_count"))
+			bill.cosponsors_count = json.getInt("cosponsors_count");
 
 		// timeline dates
 		if (!json.isNull("introduced_at"))
@@ -132,6 +132,14 @@ public class BillService {
 		if (!json.isNull("summary"))
 			bill.summary = json.getString("summary");
 
+		if (!json.isNull("cosponsors")) {
+			JSONArray cosponsorObjects = json.getJSONArray("cosponsors");
+			int length = cosponsorObjects.length();
+			
+			for (int i=0; i<length; i++)
+				bill.cosponsors.add(LegislatorService.fromDrumbone(cosponsorObjects.getJSONObject(i)));
+		}
+		
 		if (!json.isNull("votes")) {
 			JSONArray voteObjects = json.getJSONArray("votes");
 			int length = voteObjects.length();

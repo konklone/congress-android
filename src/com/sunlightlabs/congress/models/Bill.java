@@ -14,6 +14,7 @@ public class Bill implements Serializable {
 	public int session, number;
 	public String short_title, official_title;
 	public Date last_action_at, last_vote_at;
+	public int cosponsors_count;
 	
 	public Date introduced_at, house_result_at, senate_result_at, passed_at;
 	public Date vetoed_at, override_house_result_at, override_senate_result_at;
@@ -24,6 +25,9 @@ public class Bill implements Serializable {
 	
 	// sponsor
 	public Legislator sponsor;
+	
+	// cosponsors
+	public ArrayList<Legislator> cosponsors = new ArrayList<Legislator>();
 	
 	// summary
 	public String summary;

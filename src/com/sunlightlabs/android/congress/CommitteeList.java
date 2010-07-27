@@ -78,8 +78,10 @@ public class CommitteeList extends ListActivity {
 	}
 
 	private void selectCommittee(Committee committee) {
-		startActivity(new Intent(this, LegislatorList.class).putExtra("committeeId", committee.id)
-				.putExtra("committeeName", committee.name));
+		startActivity(new Intent(this, LegislatorList.class)
+			.putExtra("type", LegislatorList.SEARCH_COMMITTEE)
+			.putExtra("committeeId", committee.id)
+			.putExtra("committeeName", committee.name));
 	}
 	
 	public void loadCommittees() {

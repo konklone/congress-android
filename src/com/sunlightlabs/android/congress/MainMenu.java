@@ -359,33 +359,29 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	}
 
 	private void searchByZip(String zipCode) {
-		Bundle extras = new Bundle();
-		extras.putString("zip_code", zipCode);
-		search(extras);
+		startActivity(new Intent(this, LegislatorList.class)
+			.putExtra("type", LegislatorList.SEARCH_ZIP)
+			.putExtra("zip_code", zipCode));
 	}
 
 	private void searchByLatLong(double latitude, double longitude, String address) {
-		Bundle extras = new Bundle();
-		extras.putDouble("latitude", latitude);
-		extras.putDouble("longitude", longitude);
-		extras.putString("address", address);
-		search(extras);
+		startActivity(new Intent(this, LegislatorList.class)
+			.putExtra("type", LegislatorList.SEARCH_LOCATION)
+			.putExtra("latitude", latitude)
+			.putExtra("longitude", longitude)
+			.putExtra("address", address));
 	}
 
 	private void searchByLastName(String lastName) {
-		Bundle extras = new Bundle();
-		extras.putString("last_name", lastName);
-		search(extras);
+		startActivity(new Intent(this, LegislatorList.class)
+			.putExtra("type", LegislatorList.SEARCH_LASTNAME)
+			.putExtra("last_name", lastName));
 	}
 
 	private void searchByState(String state) {
-		Bundle extras = new Bundle();
-		extras.putString("state", state);
-		search(extras);
-	}
-
-	private void search(Bundle extras) {
-		startActivity(new Intent(this, LegislatorList.class).putExtras(extras));
+		startActivity(new Intent(this, LegislatorList.class)
+			.putExtra("type", LegislatorList.SEARCH_STATE)
+			.putExtra("state", state));
 	}
 
 	private void searchByBillId(String billId, String code) {

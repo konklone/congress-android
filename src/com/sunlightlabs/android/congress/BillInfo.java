@@ -88,6 +88,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		
 		adapter.addView(header);
 		
+		ArrayList<View> listViews = new ArrayList<View>();
 		if (sponsor != null) {
 			sponsorView = inflater.inflate(R.layout.bill_sponsor, null);
 			
@@ -99,14 +100,24 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 			((TextView) sponsorView.findViewById(R.id.description)).setText(description);
 			
 			sponsorView.setTag("sponsor");
-			ArrayList<View> sponsorViews = new ArrayList<View>(1);
-			sponsorViews.add(sponsorView);
-			adapter.addAdapter(new ViewArrayAdapter(this, sponsorViews));
+			listViews.add(sponsorView);
 			
 			// kick off the photo loading task after the new bill data is all displayed
 			loadPhoto();
 		} else
 			adapter.addView(inflater.inflate(R.layout.bill_no_sponsor, null));
+		
+		if (bill.cosponsors_count > 0) {
+			View cosponsorView = inflater.inflate(R.layout.bill_cosponsors, null);
+			String cosponsorText = bill.cosponsors_count + " Cosponsors";
+			((ImageView) cosponsorView.findViewById(R.id.icon)).setImageResource(R.drawable.committee);
+			((TextView) cosponsorView.findViewById(R.id.text)).setText(cosponsorText);
+			cosponsorView.setTag("cosponsors");
+			listViews.add(cosponsorView);
+		}
+		
+		if (!listViews.isEmpty())
+			adapter.addAdapter(new ViewArrayAdapter(this, listViews));
 		
 		loadingContainer = inflater.inflate(R.layout.header_loading, null);
 		((TextView) loadingContainer.findViewById(R.id.header_text)).setText("Summary");
@@ -266,6 +277,12 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		String type = (String) v.getTag();
 		if (type.equals("sponsor") && sponsor != null)
 			startActivity(Utils.legislatorIntent(sponsor.getId()));
+		else if (type.equals("cosponsors")) {
+			Intent intent = new Intent(this, LegislatorList.class)
+				.putExtra("type", LegislatorList.SEARCH_COSPONSORS)
+				.putExtra("bill_id", bill.id);
+			startActivity(intent);
+		}
     }
 	
 	@Override 

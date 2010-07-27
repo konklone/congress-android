@@ -34,18 +34,21 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.AddressUpdater.AddressUpdateable;
 import com.sunlightlabs.android.congress.utils.LocationUtils.LocationListenerTimeout;
 import com.sunlightlabs.android.congress.utils.LocationUtils.LocationTimer;
+import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
+import com.sunlightlabs.congress.services.BillService;
 import com.sunlightlabs.congress.services.CommitteeService;
 import com.sunlightlabs.congress.services.LegislatorService;
 
 public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsPhoto,
 		LocationListenerTimeout, AddressUpdateable<LegislatorList> {
-	private final static int SEARCH_ZIP = 0;
-	private final static int SEARCH_LOCATION = 1;
-	private final static int SEARCH_STATE = 2;
-	private final static int SEARCH_LASTNAME = 3;
-	private final static int SEARCH_COMMITTEE = 4;
+	public final static int SEARCH_ZIP = 0;
+	public final static int SEARCH_LOCATION = 1;
+	public final static int SEARCH_STATE = 2;
+	public final static int SEARCH_LASTNAME = 3;
+	public final static int SEARCH_COMMITTEE = 4;
+	public static final int SEARCH_COSPONSORS = 5;
 
 	public final static String TAG = "CONGRESS";
 
@@ -53,6 +56,10 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	private LoadLegislatorsTask loadLegislatorsTask = null;
 
 	private HashMap<String,LoadPhotoTask> loadPhotoTasks = new HashMap<String,LoadPhotoTask>();
+	
+	private int type = -1;
+	
+	private String bill_id;
 
 	private String zipCode, lastName, state, committeeId, committeeName;
 	private double latitude = -1;
@@ -80,6 +87,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		Utils.setupSunlight(this);
 
 		Bundle extras = getIntent().getExtras();
+		type = extras.getInt("type");
 
 		zipCode = extras.getString("zip_code");
 		latitude = extras.getDouble("latitude");
@@ -89,7 +97,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		state = extras.getString("state");
 		committeeId = extras.getString("committeeId");
 		committeeName = extras.getString("committeeName");
-
+		bill_id = extras.getString("bill_id");
 
 		LegislatorListHolder holder = (LegislatorListHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
@@ -135,7 +143,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if (searchType() == SEARCH_LOCATION) {
+		if (type == SEARCH_LOCATION) {
 			cancelTimer();
 			relocating = false;
 			toggleRelocating();
@@ -153,7 +161,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		if (legislators.size() > 0)
 			setListAdapter(new LegislatorAdapter(this, legislators));
 		else {
-			switch (searchType()) {
+			switch (type) {
 			case SEARCH_ZIP:
 				Utils.showBack(this, R.string.empty_zipcode);
 				break;
@@ -202,7 +210,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 		Utils.setLoading(this, R.string.legislators_loading);
 		Utils.setTitleSize(this, 20);
-		switch (searchType()) {
+		switch (type) {
 		case SEARCH_ZIP:
 			Utils.setTitle(this, "Legislators For " + zipCode);
 			break;
@@ -219,6 +227,10 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		case SEARCH_STATE:
 			Utils.setTitle(this, "Legislators from " + Utils.stateCodeToName(this, state));
 			break;
+		case SEARCH_COSPONSORS:
+			Utils.setTitle(this, "Cosponsors for\n" + Bill.formatId(bill_id));
+			Utils.setTitleSize(this, 18);
+			break;
 		default:
 			Utils.setTitle(this, "Legislator Search");
 		}
@@ -232,45 +244,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	public void selectLegislator(Legislator legislator) {
 		startActivity(Utils.legislatorIntent(this, legislator));
 	}
-
-	private int searchType() {
-		if (zipSearch())
-			return SEARCH_ZIP;
-		else if (locationSearch())
-			return SEARCH_LOCATION;
-		else if (lastNameSearch())
-			return SEARCH_LASTNAME;
-		else if (stateSearch())
-			return SEARCH_STATE;
-		else if (committeeSearch())
-			return SEARCH_COMMITTEE;
-		else
-			return SEARCH_LOCATION;
-	}
-
-	private boolean zipSearch() {
-		return zipCode != null;
-	}
-
-	private boolean locationSearch() {
-		// sucks for people at the intersection of the equator and prime
-		// meridian
-		return (latitude != 0.0 && longitude != 0.0);
-	}
-
-	private boolean lastNameSearch() {
-		return lastName != null;
-	}
-
-	private boolean stateSearch() {
-		return state != null;
-	}
-
-	private boolean committeeSearch() {
-		return committeeId != null;
-	}
-
-
+	
 	private static class LegislatorAdapter extends ArrayAdapter<Legislator> {
 		LayoutInflater inflater;
 		LegislatorList context;
@@ -385,7 +359,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 			ArrayList<Legislator> temp;
 			try {
-				switch (searchType()) {
+				switch (context.type) {
 				case SEARCH_ZIP:
 					temp = LegislatorService.allForZipCode(zipCode);
 					break;
@@ -400,6 +374,9 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 					break;
 				case SEARCH_STATE:
 					temp = LegislatorService.allWhere("state", state);
+					break;
+				case SEARCH_COSPONSORS:
+					temp = BillService.find(bill_id, "cosponsors").cosponsors;
 					break;
 				default:
 					return legislators;
@@ -428,7 +405,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			context.legislators = legislators;
 			
 			// if there's only one result, don't even make them click it
-			if (legislators.size() == 1 && searchType() != SEARCH_LOCATION) {
+			if (legislators.size() == 1 && context.type != SEARCH_LOCATION) {
 				context.selectLegislator(legislators.get(0));
 				context.finish();
 			} else

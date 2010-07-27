@@ -4,8 +4,8 @@
 	android:layout_height="wrap_content"
 	
 	android:paddingLeft="10dp"
-	android:paddingTop="13dp"
-	android:paddingBottom="13dp"
+	android:paddingTop="7dp"
+	android:paddingBottom="7dp"
 	
 	android:orientation="horizontal"
 	>
@@ -40,7 +40,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			
-			android:layout_marginBottom="3dp"
+			android:layout_marginBottom="1dp"
 			
 			android:textSize="14sp"
 			android:text="Sponsored by"
@@ -50,7 +50,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			
-			android:layout_marginBottom="3dp"
+			android:layout_marginBottom="1dp"
 			
 			android:textColor="@android:color/white"
 			android:textSize="19sp"

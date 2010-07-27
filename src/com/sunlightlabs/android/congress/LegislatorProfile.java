@@ -196,8 +196,8 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
     }
     
     public void launchCommittee(Committee committee) {
-    	Intent intent = new Intent()
-    		.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorList")
+    	Intent intent = new Intent(this, LegislatorList.class)
+    		.putExtra("type", LegislatorList.SEARCH_COMMITTEE)
 			.putExtra("committeeId", committee.id)
 			.putExtra("committeeName", committee.name);
 		startActivity(intent);
