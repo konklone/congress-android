@@ -28,6 +28,7 @@ public class RollList extends ListActivity {
 	
 	public static final int ROLLS_VOTER = 0;
 	public static final int ROLLS_LATEST = 1;
+	public static final int ROLLS_NOMINATIONS = 2;
 	
 	private ArrayList<Roll> rolls;
 	private LoadRollsTask loadRollsTask;
@@ -82,6 +83,9 @@ public class RollList extends ListActivity {
 		case ROLLS_VOTER:
 			Utils.setTitle(this, "Latest Votes By\n" + voter.titledName(), R.drawable.rolls);
 			Utils.setTitleSize(this, 18);
+			break;
+		case ROLLS_NOMINATIONS:
+			Utils.setTitle(this, R.string.menu_votes_nominations, R.drawable.rolls_nominations);
 			break;
 		case ROLLS_LATEST:
 		default:
@@ -299,6 +303,8 @@ public class RollList extends ListActivity {
 					return RollService.latestVotes(context.voter, ROLLS, page);
 				case ROLLS_LATEST:
 					return RollService.latestVotes(ROLLS, page);
+				case ROLLS_NOMINATIONS:
+					return RollService.latestNominations(ROLLS, page);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
 				}

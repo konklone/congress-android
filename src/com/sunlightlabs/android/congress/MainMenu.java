@@ -74,6 +74,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	public static final int SEARCH_NAME = 6;
 	public static final int SEARCH_COMMITTEE = 7;
 	public static final int VOTES_LATEST = 8;
+	public static final int VOTES_NOMINATIONS = 9;
 
 	public static final String TAG = "CONGRESS";
 
@@ -218,11 +219,14 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 			case BILLS_LAW:
 				startActivity(new Intent(this, BillList.class).putExtra("type", BillList.BILLS_LAW));
 				break;
+			case BILLS_CODE:
+				getResponse(RESULT_BILL_CODE);
+				break;
 			case VOTES_LATEST:
 				startActivity(new Intent(this, RollList.class).putExtra("type", RollList.ROLLS_LATEST));
 				break;
-			case BILLS_CODE:
-				getResponse(RESULT_BILL_CODE);
+			case VOTES_NOMINATIONS:
+				startActivity(new Intent(this, RollList.class).putExtra("type", RollList.ROLLS_NOMINATIONS));
 				break;
 			default:
 				break;
@@ -300,6 +304,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		ArrayList<View> voteViews = new ArrayList<View>();
 		
 		voteViews.add(inflateItem(inflater, R.drawable.rolls, R.string.menu_votes_latest, VOTES_LATEST));
+		voteViews.add(inflateItem(inflater, R.drawable.rolls_nominations, R.string.menu_votes_nominations, VOTES_NOMINATIONS));
 		
 		return voteViews;
 	}

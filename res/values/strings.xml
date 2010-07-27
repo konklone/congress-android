@@ -68,7 +68,8 @@
     <string name="menu_legislators_lastname">Last Name</string>
     <string name="menu_legislators_zip">Zip Code</string>
     <string name="menu_votes_header">Votes</string>
-    <string name="menu_votes_latest">Latest Votes</string>
+    <string name="menu_votes_latest">Latest</string>
+    <string name="menu_votes_nominations">Nominations</string>
     <string name="menu_location_no_location">Cannot update location</string>
     <string name="menu_location_updating">Updating location...</string>
     <string name="menu_favorite_bill_error">Error loading starred bills.</string>
