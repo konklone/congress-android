@@ -89,6 +89,19 @@
         <activity android:name=".CommitteeList" 
         	android:theme="@android:style/Theme.NoTitleBar"
         	/>
+        	
+        <activity android:name=".Preferences"
+        	android:label="@string/preferences" />
+        	
+        <receiver android:name=".notifications.OnAlarmReceiver" />
+        <receiver android:name=".notifications.OnServiceActionReceiver">
+        	<intent-filter>
+        		<action android:name="com.sunlightlabs.android.congress.intent.action.START_SERVICE"/>
+        		<action android:name="com.sunlightlabs.android.congress.intent.action.STOP_SERVICE" />
+        	</intent-filter>
+        </receiver>
+		
+		<service android:name=".notifications.NotificationsService" />
     </application>
     
     <uses-permission android:name="android.permission.INTERNET" />
@@ -96,6 +109,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     
     <uses-sdk 
     	android:minSdkVersion="3"

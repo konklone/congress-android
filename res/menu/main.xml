@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"> 
+	<item android:id="@+id/preferences"
+		android:title="Preferences"
+		android:icon="@android:drawable/ic_menu_preferences"/>
 	<item android:id="@+id/feedback" 
 		android:title="Feedback"
 		android:alphabeticShortcut="f"

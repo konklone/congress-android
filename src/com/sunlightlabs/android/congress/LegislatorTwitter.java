@@ -28,9 +28,10 @@ public class LegislatorTwitter extends ListActivity {
 	
 	private LoadTweetsTask loadTweetsTask = null;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	setContentView(R.layout.list);
+		setContentView(R.layout.list_footer);
     	
     	username = getIntent().getStringExtra("username");
     
@@ -64,6 +65,9 @@ public class LegislatorTwitter extends ListActivity {
 				loadTweets();
 			}
 		});
+
+		((TextView) findViewById(R.id.footer_text))
+				.setText(getString(R.string.enable_notifications));
 	}
     
 	protected void loadTweets() {	    
@@ -112,6 +116,7 @@ public class LegislatorTwitter extends ListActivity {
         	return 1;
         }
 
+		@Override
 		public View getView(int position, View view, ViewGroup parent) {
 			if (view == null)
 				view = inflater.inflate(R.layout.tweet, null); 

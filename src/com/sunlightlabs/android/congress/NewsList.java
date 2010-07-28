@@ -35,9 +35,10 @@ public class NewsList extends ListActivity {
 
 	private LoadNewsTask loadNewsTask = null;
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	setContentView(R.layout.list);
+		setContentView(R.layout.list_footer);
     	
     	searchTerm = getIntent().getStringExtra("searchTerm");
     	
@@ -72,6 +73,9 @@ public class NewsList extends ListActivity {
 			}
 		});
     	
+		((TextView) findViewById(R.id.footer_text))
+				.setText(getString(R.string.enable_notifications));
+
     	registerForContextMenu(getListView());
     }
 	
@@ -141,6 +145,7 @@ public class NewsList extends ListActivity {
         	return 1;
         }
 
+		@Override
 		public View getView(int position, View view, ViewGroup parent) {
 			if (view == null)
 				view = inflater.inflate(R.layout.news_item, null);

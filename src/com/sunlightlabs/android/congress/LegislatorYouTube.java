@@ -46,9 +46,10 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb {
 	private LoadVideosTask loadVideosTask = null;
 	private HashMap<Integer, LoadYoutubeThumbTask> loadThumbTasks = new HashMap<Integer, LoadYoutubeThumbTask>();
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	setContentView(R.layout.list);
+		setContentView(R.layout.list_footer);
     	
     	username = getIntent().getStringExtra("username");
     	
@@ -90,6 +91,10 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb {
 				loadVideos();
 			}
 		});
+
+		((TextView) findViewById(R.id.footer_text))
+				.setText(getString(R.string.enable_notifications));
+
     	registerForContextMenu(getListView());
 	}
     
@@ -161,6 +166,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb {
         	return 1;
         }
 
+		@Override
 		public View getView(int position, View view, ViewGroup parent) {
 			if (view == null)
 				view = inflater.inflate(R.layout.youtube, null);
@@ -214,11 +220,10 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb {
 
 			@Override
 			public boolean equals(Object o) {
-				if (!(o instanceof VideoHolder))
+				// 'this' cannot be null
+				if (o == null || !(o instanceof VideoHolder))
 					return false;
 				VideoHolder ov = (VideoHolder) o;
-				if (ov == null)
-					return this == null;
 				return ov.hash.equals(this.hash);
 			}
 		}

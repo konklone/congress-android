@@ -106,4 +106,11 @@
     <string name="present">Present</string>
     <string name="not_voting">Did Not Vote</string>
     <string name="not_voting_short">No Vote</string>
+    
+    <string name="preferences">Preferences</string>
+    <string name="notifications">Notifications</string>
+    <string name="enable_notifications">I want to be notified when new updates are available</string>
+    <string name="enable_notifications_summary">Check this to enable or disable all notifications.</string>
+    <string name="notifications_interval">Notifications Interval</string>
+    <string name="notifications_interval_summary">Choose how frequently you want to receive notifications.</string>
 </resources>

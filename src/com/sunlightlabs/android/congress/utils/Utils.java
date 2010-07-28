@@ -281,6 +281,10 @@ public class Utils {
 		return PreferenceManager.getDefaultSharedPreferences(context).getString(key, null);
 	}
 	
+	public static String getStringPreference(Context context, String key, String value) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getString(key, value);
+	}
+
 	public static boolean setStringPreference(Context context, String key, String value) {
 		return PreferenceManager.getDefaultSharedPreferences(context).edit().putString(key, value).commit();
 	}

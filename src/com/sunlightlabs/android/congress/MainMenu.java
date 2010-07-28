@@ -30,6 +30,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -38,6 +40,7 @@ import android.widget.TextView;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteBillsAdapter.FavoriteBillWrapper;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteLegislatorsAdapter.FavoriteLegislatorWrapper;
+import com.sunlightlabs.android.congress.notifications.Notifications;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
@@ -77,6 +80,8 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	public static final int VOTES_NOMINATIONS = 9;
 
 	public static final String TAG = "CONGRESS";
+
+	private CheckBox check;
 
 	private Location location;
 	private LocationTimer timer;
@@ -181,6 +186,9 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		peopleCursor.requery();
 		billCursor.requery();
 		adapter.notifyDataSetChanged();
+
+		check.setChecked(Utils.getBooleanPreference(this, Preferences.KEY_ENABLE_NOTIFICATIONS,
+				Preferences.DEFAULT_ENABLE_NOTIFICATIONS));
 	}
 
 	@Override
@@ -288,6 +296,29 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		adapter.addAdapter(new ViewArrayAdapter(this, setupBillMenu(inflater)));
 		
 		setListAdapter(adapter);
+		
+		((TextView) findViewById(R.id.footer_text)).setText(getString(R.string.enable_notifications));
+		check = (CheckBox) findViewById(R.id.footer_check);
+		check.setChecked(Utils.getBooleanPreference(this, Preferences.KEY_ENABLE_NOTIFICATIONS,
+				Preferences.DEFAULT_ENABLE_NOTIFICATIONS));
+
+		check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					Utils.setBooleanPreference(MainMenu.this, Preferences.KEY_ENABLE_NOTIFICATIONS, true);
+					Intent i = new Intent();
+					i.setAction(Notifications.START_SERVICE_INTENT);					
+					MainMenu.this.sendBroadcast(i);
+				}
+				else {
+					Utils.setBooleanPreference(MainMenu.this, Preferences.KEY_ENABLE_NOTIFICATIONS, false);
+					Intent i = new Intent();
+					i.setAction(Notifications.STOP_SERVICE_INTENT);
+					MainMenu.this.sendBroadcast(i);
+				}
+			}
+		});
 	}
 
 	private ArrayList<View> setupBillMenu(LayoutInflater inflater) {
@@ -587,6 +618,9 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) { 
+		case R.id.preferences:
+			startActivity(new Intent(this, Preferences.class));
+			break;
 		case R.id.feedback:
 			Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getResources().getString(R.string.contact_email), null));
 			intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_subject));

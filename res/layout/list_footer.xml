@@ -4,13 +4,6 @@
 	android:layout_height="wrap_content"
 	android:orientation="vertical">
 	
-	 <RelativeLayout android:id="@+id/header_bar"
-	 	android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
-		
-		<include layout="@layout/title_bar_main" />
-	</RelativeLayout>
-	
 	<LinearLayout android:id="@+id/footer_bar"
 		android:layout_width="fill_parent" 
 		android:layout_height="wrap_content"
@@ -20,13 +13,19 @@
 		<include layout="@layout/footer" />
 		
 	</LinearLayout>
-	
-	
+
 	<ListView android:id="@id/android:list"
 	    android:layout_width="fill_parent" 
-	    android:layout_height="0dip"
-	    android:layout_below="@id/header_bar"
+	    android:layout_height="fill_parent"
 	    android:layout_above="@id/footer_bar"
 		/>
-			
+	
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:gravity="center"
+		android:layout_above="@id/footer_bar"
+		>
+		<include layout="@layout/list_empty" />
+	</LinearLayout>
 </RelativeLayout>
