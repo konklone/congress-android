@@ -38,6 +38,7 @@ import android.widget.TextView;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteBillsAdapter.FavoriteBillWrapper;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteLegislatorsAdapter.FavoriteLegislatorWrapper;
+import com.sunlightlabs.android.congress.notifications.Notifications;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
@@ -85,6 +86,9 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 
 	private SearchViewWrapper searchLocationView;
 	private ViewArrayAdapter searchLocationAdapter;
+
+	private TextView footerText;
+	private ImageView footerImg;
 
 	MergeAdapter adapter;
 
@@ -182,6 +186,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		peopleCursor.requery();
 		billCursor.requery();
 		adapter.notifyDataSetChanged();
+		updateFooter();
 	}
 
 	@Override
@@ -290,28 +295,60 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		
 		setListAdapter(adapter);
 		
-		View footerBar = findViewById(R.id.footer_bar);
-		final TextView footer = ((TextView) findViewById(R.id.footer_text));
-		ImageView footerImg = (ImageView) findViewById(R.id.footer_img);
+		setupFooter();
+	}
 
-		footerBar.setOnClickListener(new View.OnClickListener() {
+	private void toggleNotifications(boolean on) {
+		if (on) {
+			footerText.setText(getString(R.string.notifications_enabled));
+			footerImg.setImageDrawable(getResources().getDrawable(R.drawable.notifications_on));
+		} else {
+			footerText.setText(getString(R.string.notifications_paused));
+			footerImg.setImageDrawable(getResources().getDrawable(R.drawable.notifications_off));
+		}
+	}
 
+	private void setupFooter() {
+		final View footer = findViewById(R.id.footer_bar);
+		footerText = (TextView) findViewById(R.id.footer_text);
+		footerImg = (ImageView) findViewById(R.id.footer_img);
+
+		footer.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				
+				// if notifications are enabled, send broadcast
+				// to pause them
+				if (Utils.getBooleanPreference(MainMenu.this, Preferences.KEY_NOTIFICATIONS_ENABLED,
+						Preferences.DEFAULT_NOTIFICATIONS_ENABLED)) {
+
+					Utils.setBooleanPreference(MainMenu.this, Preferences.KEY_NOTIFICATIONS_ENABLED, false);
+
+					Intent i = new Intent();
+					i.setAction(Notifications.STOP_SERVICE_INTENT);
+					MainMenu.this.sendBroadcast(i);
+				}
+				// else, send broadcast to start them
+				else {
+					Utils.setBooleanPreference(MainMenu.this, Preferences.KEY_NOTIFICATIONS_ENABLED, true);
+
+					Intent i = new Intent();
+					i.setAction(Notifications.START_SERVICE_INTENT);
+					MainMenu.this.sendBroadcast(i);
+				}
+
+				updateFooter();
 			}
 		});
 
-		if (!Utils.getBooleanPreference(this, Preferences.KEY_NOTIFICATIONS_ENABLED,
-				Preferences.DEFAULT_NOTIFICATIONS_ENABLED)) {
-			footer.setText(getString(R.string.no_active_notifications));
-			footerImg.setImageDrawable(this.getResources()
-					.getDrawable(R.drawable.notifications_off));
-		}
-		else {
-			footer.setText(getString(R.string.stop_notifications));
-			footerImg
-					.setImageDrawable(this.getResources().getDrawable(R.drawable.notifications_on));
-		}
+		updateFooter();
+	}
+
+	private void updateFooter() {
+		// if the service is started, check the database
+		if (Utils.getBooleanPreference(this, Preferences.KEY_NOTIFICATIONS_ENABLED,
+				Preferences.DEFAULT_NOTIFICATIONS_ENABLED))
+			toggleNotifications(true);
+		else
+			toggleNotifications(false);
 	}
 
 	private ArrayList<View> setupBillMenu(LayoutInflater inflater) {
@@ -670,7 +707,6 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	}
 
 	private void toggleLocationLoading(boolean visible) {
-		Log.d(TAG, "toggleLocationLoading(): visible=" + visible + "; thread=" + Thread.currentThread().getName());
 		searchLocationView.getLoading().setVisibility(visible ? View.VISIBLE : View.GONE);
 		searchLocationView.getText2().setVisibility(visible ? View.GONE : View.VISIBLE);
 	}

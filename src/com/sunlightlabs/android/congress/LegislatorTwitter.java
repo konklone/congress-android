@@ -20,20 +20,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sunlightlabs.android.congress.notifications.Notifications;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.Legislator;
 
 public class LegislatorTwitter extends ListActivity {
-	private String username;
+	private static final String NOTIFICATION_TYPE = "twitter";
+
+	private Legislator legislator;
 	private List<Status> tweets;
 	
 	private LoadTweetsTask loadTweetsTask = null;
+	private Database database;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_footer);
-    	
-    	username = getIntent().getStringExtra("username");
+
+		database = new Database(this);
+		database.open();
+
+		legislator = (Legislator) getIntent().getExtras().getSerializable("legislator");
     
     	LegislatorTwitterHolder holder = (LegislatorTwitterHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
@@ -55,7 +63,13 @@ public class LegislatorTwitter extends ListActivity {
 		holder.loadTweetsTask = loadTweetsTask;
     	return holder;
     }
-	
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		database.close();
+	}
+
 	private void setupControls() {
 		Utils.setLoading(this, R.string.twitter_loading);
 		((Button) findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
@@ -69,26 +83,66 @@ public class LegislatorTwitter extends ListActivity {
 		setupFooter();
 	}
 
+	private void toggleNotifications(boolean on, TextView txt, ImageView img) {
+		if (on) {
+			txt.setText(getString(R.string.notifications_enabled));
+			img.setImageDrawable(getResources().getDrawable(R.drawable.notifications_on));
+		} else {
+			txt.setText(getString(R.string.notifications_paused));
+			img.setImageDrawable(getResources().getDrawable(R.drawable.notifications_off));
+		}
+	}
+
 	private void setupFooter() {
-		View footer = findViewById(R.id.footer_bar);
-		TextView txt = (TextView) findViewById(R.id.footer_text);
-		ImageView img = (ImageView) findViewById(R.id.footer_img);
+		final View footer = findViewById(R.id.footer_bar);
+		final TextView txt = (TextView) findViewById(R.id.footer_text);
+		final ImageView img = (ImageView) findViewById(R.id.footer_img);
 
 		footer.setOnClickListener(new View.OnClickListener() {
-
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				String id = legislator.id;
 
+				// turn off twitter notifications for this legislator, without
+				// stopping the service
+				if (database.isLegislatorNotified(id, NOTIFICATION_TYPE)) {
+
+					if (database.setOffLegislatorNotifications(id, NOTIFICATION_TYPE) != -1)
+						toggleNotifications(false, txt, img);
+
+				}
+				// turn on twitter notifications for this legislator
+				else {
+					if (database.setOnLegislatorNotifications(legislator, NOTIFICATION_TYPE) != -1) {
+						toggleNotifications(true, txt, img);
+
+						// if notifications are not yet enabled, send broadcast
+						// to start them
+						if (!Utils.getBooleanPreference(LegislatorTwitter.this, Preferences.KEY_NOTIFICATIONS_ENABLED,
+								Preferences.DEFAULT_NOTIFICATIONS_ENABLED)) {
+
+							Utils.setBooleanPreference(LegislatorTwitter.this, Preferences.KEY_NOTIFICATIONS_ENABLED, true);
+
+							Intent i = new Intent();
+							i.setAction(Notifications.START_SERVICE_INTENT);
+							LegislatorTwitter.this.sendBroadcast(i);
+						}
+					}
+				}
 			}
 		});
 		
 		// if the service is started, check the database
-		if(Utils.getBooleanPreference(this, Preferences.KEY_NOTIFICATIONS_ENABLED, Preferences.DEFAULT_NOTIFICATIONS_ENABLED))
+		if (Utils.getBooleanPreference(this, Preferences.KEY_NOTIFICATIONS_ENABLED,
+				Preferences.DEFAULT_NOTIFICATIONS_ENABLED)
+				&& database.isLegislatorNotified(legislator.id, "twitter"))
+				toggleNotifications(true, txt, img);
+		else
+			toggleNotifications(false, txt, img);
 	}
     
 	protected void loadTweets() {	    
 	    if (tweets == null)
-    		loadTweetsTask = (LoadTweetsTask) new LoadTweetsTask(this).execute(username);
+			loadTweetsTask = (LoadTweetsTask) new LoadTweetsTask(this).execute(legislator.twitter_id);
     	else
     		displayTweets();
 	}

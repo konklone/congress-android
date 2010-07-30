@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	
 	<PreferenceCategory android:title="@string/notifications">
+          
           <CheckBoxPreference
-                        android:title="@string/enable_notifications"
-                        android:defaultValue="false"
-                        android:summary="@string/enable_notifications_summary"
+                        android:title="@string/notifications_enable"
+                        android:summary="@string/notifications_enable_summary"
+                        
                         android:key="congress.notifications_enabled" 
+                        android:defaultValue="false"                        
                         />
+                        
           <ListPreference
                         android:title="@string/notifications_interval"
                         android:summary="@string/notifications_interval_summary"
+                        
                         android:key="congress.notifications_interval"
                         android:defaultValue="15"
+                        
                         android:entries="@array/notifications_interval"
                         android:entryValues="@array/notifications_interval_values"
-                        android:dependency="congress.enable_notifications" />
+                        
+                        android:dependency="congress.notifications_enabled" />
            
     </PreferenceCategory>
+    
 </PreferenceScreen>

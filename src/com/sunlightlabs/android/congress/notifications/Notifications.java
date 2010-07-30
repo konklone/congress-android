@@ -25,8 +25,7 @@ public class Notifications {
 	}
 
 	public static int getIntervalMillis(Context context) {
-		return Integer
-				.parseInt(Utils.getStringPreference(context,
+		return Integer.parseInt(Utils.getStringPreference(context,
 						Preferences.KEY_NOTIFICATIONS_INTERVAL,
 						Preferences.DEFAULT_NOTIFICATIONS_INTERVAL)) * 1000;
 	}
@@ -38,8 +37,6 @@ public class Notifications {
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.currentThreadTimeMillis()
 				+ interval, interval, getPendingIntent(context));
-
-		Utils.setBooleanPreference(context, Preferences.KEY_NOTIFICATIONS_ENABLED, false);
 	}
 
 	public static void stopNotifications(Context context) {
@@ -47,8 +44,6 @@ public class Notifications {
 
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getPendingIntent(context));
-
-		Utils.setBooleanPreference(context, Preferences.KEY_NOTIFICATIONS_ENABLED, true);
 	}
 
 	public static Notification getNotification(Context context) {

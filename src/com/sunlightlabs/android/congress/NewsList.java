@@ -76,7 +76,6 @@ public class NewsList extends ListActivity {
 		registerForContextMenu(getListView());
     	
     	TextView txt = (TextView) findViewById(R.id.footer_text);
-		txt.setText(getString(R.string.enable_notifications_long));
     }
 	
     @Override

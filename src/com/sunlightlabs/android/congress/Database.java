@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -26,7 +27,7 @@ public class Database {
 
 	private static final String LEGISLATORS_TABLE = "legislators";
 	private static final String BILLS_TABLE = "bills";
-	private static final String LEGISLATORS_NOTIFICATIONS_TABLE = "legislators_notifications";
+	private static final String LEGISLATOR_NOTIFICATIONS_TABLE = "legislators_notifications";
 
 	private static final String[] LEGISLATOR_COLUMNS = new String[] { "id", "bioguide_id",
 			"govtrack_id", "first_name", "last_name", "nickname", "name_suffix", "title", "party",
@@ -41,8 +42,8 @@ public class Database {
 			"sponsor_party", "sponsor_state", "sponsor_title", "sponsor_first_name",
 			"sponsor_nickname", "sponsor_last_name" };
 
-	private static final String[] LEGISLATORS_NOTIFICATIONS_COLUMNS = new String[] { "id",
-			"twitter_id", "youtube_username", "last_twitter_id", "last_video_id" };
+	private static final String[] LEGISLATOR_NOTIFICATIONS_COLUMNS = new String[] {
+			"notify_twitter", "last_tweet_id", "notify_youtube", "last_video_id" };
 
 
 	private DatabaseHelper helper;
@@ -55,22 +56,29 @@ public class Database {
 		this.context = context;
 	}
 
-	public long addLegislator(Legislator legislator) {
+	private ContentValues fromLegislator(Legislator legislator, int size) {
 		try {
 			Class<?> cls = Class.forName("com.sunlightlabs.congress.models.Legislator");
-			ContentValues cv = new ContentValues(LEGISLATOR_COLUMNS.length);
+			ContentValues cv = new ContentValues(size);
 			for (int i = 0; i < LEGISLATOR_COLUMNS.length; i++) {
 				String column = LEGISLATOR_COLUMNS[i];
 				cv.put(column, (String) cls.getDeclaredField(column).get(legislator));
 			}
-			return database.insert(LEGISLATORS_TABLE, null, cv);
-		} catch (ClassNotFoundException e) {
-			return -1;
-		} catch (IllegalAccessException e) {
-			return -1;
-		} catch (NoSuchFieldException e) {
-			return -1;
+			return cv;
+		} catch (Exception e) {
+			return null;
 		}
+	}
+
+	private ContentValues fromLegislator(Legislator legislator) {
+		return fromLegislator(legislator, LEGISLATOR_COLUMNS.length);
+	}
+
+	public long addLegislator(Legislator legislator) {
+		ContentValues cv = fromLegislator(legislator);
+		if (cv != null)
+			return database.insert(LEGISLATORS_TABLE, null, cv);
+		return -1;
 	}
 
 	public int removeLegislator(String id) {
@@ -225,33 +233,100 @@ public class Database {
 		return legislator;
 	}
 	
+	public Cursor getAllLegislatorsNotifications() {
+		return database.rawQuery("SELECT * FROM " + LEGISLATOR_NOTIFICATIONS_TABLE, null);
+	}
+
+	private boolean isLegislatorEntry(String id) {
+		Cursor c = database.query(LEGISLATOR_NOTIFICATIONS_TABLE, new String[] { "id", }, "id=?",
+				new String[] { id }, null, null, null);
+		boolean ok = c.moveToFirst();
+		c.close();
+		return ok;
+	}
+
+	public boolean isLegislatorNotified(String id, String type) {
+		StringBuilder query = new StringBuilder("id=?").append(" AND notify_").append(type).append(
+				"=?");
+
+		Cursor c = database.query(LEGISLATOR_NOTIFICATIONS_TABLE, new String[] { "id", }, query
+				.toString(), new String[] { id, "true" }, null, null, null);
+
+		boolean ok = c.moveToFirst();
+		c.close();
+		return ok;
+	}
+
+	public long setOnLegislatorNotifications(Legislator legislator, String type) {
+		// first, add a default entry in the database
+		ContentValues cv = null;
+
+		if (!isLegislatorEntry(legislator.id)) {
+			cv = fromLegislator(legislator, LEGISLATOR_NOTIFICATIONS_COLUMNS.length);
+			cv.put("notify_twitter", "false");
+			cv.put("last_tweet_id", (String) null);
+			cv.put("notify_youtube", "false");
+			cv.put("last_video_id", (String) null);
+			database.insert(LEGISLATOR_NOTIFICATIONS_TABLE, null, cv);
+		}
+
+		// then, update the notification type
+		cv = new ContentValues(1);
+		if (type.equals("twitter"))
+			cv.put("notify_twitter", "true");
+		else if (type.equals("youtube"))
+			cv.put("notify_youtube", "true");
+
+		if (cv.size() > 0)
+			return database.update(LEGISLATOR_NOTIFICATIONS_TABLE, cv, "id=?", new String[] { legislator.id });
+
+		return -1;
+	}
+
+	public long setOffLegislatorNotifications(String id, String type) {
+		if (!isLegislatorEntry(id))
+			return -1;
+
+		ContentValues cv = new ContentValues(1);
+		if (type.equals("twitter"))
+			cv.put("notify_twitter", false);
+		else if (type.equals("youtube"))
+			cv.put("notify_youtube", false);
+
+		if (cv.size() > 0)
+			return database.update(LEGISLATOR_NOTIFICATIONS_TABLE, cv, "id=?", new String[] { id });
+		return -1;
+	}
+
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 		public DatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		}
 
+		private String sqlCreateTable(String table, String[] columns) {
+			StringBuilder sql = new StringBuilder("CREATE TABLE " + table);
+			sql.append(" (_id INTEGER PRIMARY KEY AUTOINCREMENT");
+
+			for (int i = 0; i < columns.length; i++)
+				sql.append(", " + columns[i] + " TEXT");
+
+			sql.append(");");
+			return sql.toString();
+		}
+
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			// create legislators table
-			StringBuilder sql = new StringBuilder("CREATE TABLE " + LEGISLATORS_TABLE);
-			sql.append(" (_id INTEGER PRIMARY KEY AUTOINCREMENT");
-
-			for (int i = 0; i < LEGISLATOR_COLUMNS.length; i++)
-				sql.append(", " + LEGISLATOR_COLUMNS[i] + " TEXT");
-
-			sql.append(");");
-			db.execSQL(sql.toString());
+			db.execSQL(sqlCreateTable(LEGISLATORS_TABLE, LEGISLATOR_COLUMNS));
 
 			// create bills table
-			sql.setLength(0); // clear
-			sql.append("CREATE TABLE " + BILLS_TABLE).append(
-					" (_id INTEGER PRIMARY KEY AUTOINCREMENT");
-			for (int i = 0; i < BILL_COLUMNS.length; i++)
-				sql.append(", " + BILL_COLUMNS[i] + " TEXT");
+			db.execSQL(sqlCreateTable(BILLS_TABLE, BILL_COLUMNS));
 
-			sql.append(");");
-			db.execSQL(sql.toString());
+			// we will need all the info for a legislator, to open its profile
+			// when a new notification comes up
+			db.execSQL(sqlCreateTable(LEGISLATOR_NOTIFICATIONS_TABLE, 
+					Utils.concat(LEGISLATOR_COLUMNS, LEGISLATOR_NOTIFICATIONS_COLUMNS)));
 		}
 
 		@Override

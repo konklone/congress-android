@@ -113,13 +113,12 @@ public class LegislatorTabs extends TabActivity {
 	}
 	
 	public Intent twitterIntent() {
-		return new Intent(this, LegislatorTwitter.class)
-			.putExtra("username", legislator.twitter_id);
+		return new Intent(this, LegislatorTwitter.class).putExtra("legislator", legislator);
 	}
 	
 	public Intent youtubeIntent() {
-		return new Intent(this, LegislatorYouTube.class)
-			.putExtra("username", legislator.youtubeUsername());
+		return new Intent(this, LegislatorYouTube.class).putExtra("username", legislator
+				.youtubeUsername());
 	}
 	
 	
