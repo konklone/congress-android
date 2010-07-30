@@ -3,6 +3,4 @@
 	<include layout="@layout/line" />
 	
 	<include layout="@layout/footer_alone" />
-	
-  	<include layout="@layout/line" />
 </merge>

@@ -92,10 +92,9 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb {
 			}
 		});
 
-		((TextView) findViewById(R.id.footer_text))
-				.setText(getString(R.string.enable_notifications));
+		registerForContextMenu(getListView());
 
-    	registerForContextMenu(getListView());
+		TextView txt = (TextView) findViewById(R.id.footer_text);
 	}
     
 	protected void loadVideos() {

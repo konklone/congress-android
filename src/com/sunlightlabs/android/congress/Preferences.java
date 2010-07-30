@@ -8,8 +8,8 @@ import android.preference.PreferenceActivity;
 import com.sunlightlabs.android.congress.notifications.Notifications;
 
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
-	public static final String KEY_ENABLE_NOTIFICATIONS = "congress.enable_notifications";
-	public static final boolean DEFAULT_ENABLE_NOTIFICATIONS = false;
+	public static final String KEY_NOTIFICATIONS_ENABLED = "congress.notifications_enabled";
+	public static final boolean DEFAULT_NOTIFICATIONS_ENABLED = false;
 
 	public static final String KEY_NOTIFICATIONS_INTERVAL = "congress.notifications_interval";
 	public static final String DEFAULT_NOTIFICATIONS_INTERVAL = "15";
@@ -36,8 +36,8 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if (key.equals(KEY_ENABLE_NOTIFICATIONS)) {
-			if (sharedPreferences.getBoolean(key, DEFAULT_ENABLE_NOTIFICATIONS))
+		if (key.equals(KEY_NOTIFICATIONS_ENABLED)) {
+			if (sharedPreferences.getBoolean(key, DEFAULT_NOTIFICATIONS_ENABLED))
 				Notifications.scheduleNotifications(this);
 			else
 				Notifications.stopNotifications(this);

@@ -72,11 +72,11 @@ public class NewsList extends ListActivity {
 				loadNews();
 			}
 		});
-    	
-		((TextView) findViewById(R.id.footer_text))
-				.setText(getString(R.string.enable_notifications));
 
-    	registerForContextMenu(getListView());
+		registerForContextMenu(getListView());
+    	
+    	TextView txt = (TextView) findViewById(R.id.footer_text);
+		txt.setText(getString(R.string.enable_notifications_long));
     }
 	
     @Override

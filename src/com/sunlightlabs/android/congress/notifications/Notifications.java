@@ -33,16 +33,22 @@ public class Notifications {
 
 	public static void scheduleNotifications(Context context) {
 		Log.d(TAG, "Schedule notifications");
+
 		int interval = getIntervalMillis(context);
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.currentThreadTimeMillis()
 				+ interval, interval, getPendingIntent(context));
+
+		Utils.setBooleanPreference(context, Preferences.KEY_NOTIFICATIONS_ENABLED, false);
 	}
 
 	public static void stopNotifications(Context context) {
 		Log.d(TAG, "Stop notifications");
+
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getPendingIntent(context));
+
+		Utils.setBooleanPreference(context, Preferences.KEY_NOTIFICATIONS_ENABLED, true);
 	}
 
 	public static Notification getNotification(Context context) {

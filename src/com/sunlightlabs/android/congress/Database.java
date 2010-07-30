@@ -26,6 +26,7 @@ public class Database {
 
 	private static final String LEGISLATORS_TABLE = "legislators";
 	private static final String BILLS_TABLE = "bills";
+	private static final String LEGISLATORS_NOTIFICATIONS_TABLE = "legislators_notifications";
 
 	private static final String[] LEGISLATOR_COLUMNS = new String[] { "id", "bioguide_id",
 			"govtrack_id", "first_name", "last_name", "nickname", "name_suffix", "title", "party",
@@ -39,6 +40,9 @@ public class Database {
 			"override_senate_result_at", "awaiting_signature_since", "enacted_at", "sponsor_id",
 			"sponsor_party", "sponsor_state", "sponsor_title", "sponsor_first_name",
 			"sponsor_nickname", "sponsor_last_name" };
+
+	private static final String[] LEGISLATORS_NOTIFICATIONS_COLUMNS = new String[] { "id",
+			"twitter_id", "youtube_username", "last_twitter_id", "last_video_id" };
 
 
 	private DatabaseHelper helper;
@@ -227,6 +231,7 @@ public class Database {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		}
 
+		@Override
 		public void onCreate(SQLiteDatabase db) {
 			// create legislators table
 			StringBuilder sql = new StringBuilder("CREATE TABLE " + LEGISLATORS_TABLE);
@@ -249,6 +254,7 @@ public class Database {
 			db.execSQL(sql.toString());
 		}
 
+		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			Log.w(TAG, "Upgrading " + DATABASE_NAME + " from version " + oldVersion + " to "
 					+ newVersion + ", wiping old data");

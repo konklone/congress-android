@@ -5,7 +5,7 @@
                         android:title="@string/enable_notifications"
                         android:defaultValue="false"
                         android:summary="@string/enable_notifications_summary"
-                        android:key="congress.enable_notifications" 
+                        android:key="congress.notifications_enabled" 
                         />
           <ListPreference
                         android:title="@string/notifications_interval"

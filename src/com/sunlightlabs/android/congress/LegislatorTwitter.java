@@ -66,8 +66,24 @@ public class LegislatorTwitter extends ListActivity {
 			}
 		});
 
-		((TextView) findViewById(R.id.footer_text))
-				.setText(getString(R.string.enable_notifications));
+		setupFooter();
+	}
+
+	private void setupFooter() {
+		View footer = findViewById(R.id.footer_bar);
+		TextView txt = (TextView) findViewById(R.id.footer_text);
+		ImageView img = (ImageView) findViewById(R.id.footer_img);
+
+		footer.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		// if the service is started, check the database
+		if(Utils.getBooleanPreference(this, Preferences.KEY_NOTIFICATIONS_ENABLED, Preferences.DEFAULT_NOTIFICATIONS_ENABLED))
 	}
     
 	protected void loadTweets() {	    
