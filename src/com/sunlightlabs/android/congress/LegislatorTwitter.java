@@ -52,6 +52,7 @@ public class LegislatorTwitter extends ListActivity {
     	}
     	
     	setupControls();
+
     	if (loadTweetsTask == null)
     		loadTweets();
 	}
@@ -134,7 +135,7 @@ public class LegislatorTwitter extends ListActivity {
 		// if the service is started, check the database
 		if (Utils.getBooleanPreference(this, Preferences.KEY_NOTIFICATIONS_ENABLED,
 				Preferences.DEFAULT_NOTIFICATIONS_ENABLED)
-				&& database.isLegislatorNotified(legislator.id, "twitter"))
+				&& database.isLegislatorNotified(legislator.id, NOTIFICATION_TYPE))
 				toggleNotifications(true, txt, img);
 		else
 			toggleNotifications(false, txt, img);

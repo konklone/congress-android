@@ -117,8 +117,7 @@ public class LegislatorTabs extends TabActivity {
 	}
 	
 	public Intent youtubeIntent() {
-		return new Intent(this, LegislatorYouTube.class).putExtra("username", legislator
-				.youtubeUsername());
+		return new Intent(this, LegislatorYouTube.class).putExtra("legislator", legislator);
 	}
 	
 	

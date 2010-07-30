@@ -28,30 +28,38 @@ import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.sunlightlabs.android.congress.LegislatorYouTube.VideoAdapter.VideoHolder;
+import com.sunlightlabs.android.congress.notifications.Notifications;
 import com.sunlightlabs.android.congress.utils.ImageUtils;
 import com.sunlightlabs.android.congress.utils.LoadYoutubeThumbTask;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.LoadYoutubeThumbTask.LoadsThumb;
+import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.youtube.Video;
 import com.sunlightlabs.youtube.YouTube;
 import com.sunlightlabs.youtube.YouTubeException;
 
 public class LegislatorYouTube extends ListActivity implements LoadsThumb {
+	private static final String NOTIFICATION_TYPE = "youtube";
 	private static final int MENU_WATCH = 0;
 	private static final int MENU_COPY = 1;
 	
-	private String username;
+	private Legislator legislator;
 	private Video[] videos;
 	
 	private LoadVideosTask loadVideosTask = null;
 	private HashMap<Integer, LoadYoutubeThumbTask> loadThumbTasks = new HashMap<Integer, LoadYoutubeThumbTask>();
 	
+	private Database database;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_footer);
     	
-    	username = getIntent().getStringExtra("username");
+		database = new Database(this);
+		database.open();
+
+		legislator = (Legislator) getIntent().getExtras().getSerializable("legislator");
     	
     	LegislatorYouTubeHolder holder = (LegislatorYouTubeHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
@@ -69,6 +77,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb {
     	}
     	
     	setupControls();
+
     	if (loadVideosTask == null)
     		loadVideos();
 	}
@@ -94,12 +103,71 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb {
 
 		registerForContextMenu(getListView());
 
-		TextView txt = (TextView) findViewById(R.id.footer_text);
+		setupFooter();
+	}
+
+	private void toggleNotifications(boolean on, TextView txt, ImageView img) {
+		if (on) {
+			txt.setText(getString(R.string.notifications_enabled));
+			img.setImageDrawable(getResources().getDrawable(R.drawable.notifications_on));
+		} else {
+			txt.setText(getString(R.string.notifications_paused));
+			img.setImageDrawable(getResources().getDrawable(R.drawable.notifications_off));
+		}
+	}
+
+	private void setupFooter() {
+		final View footer = findViewById(R.id.footer_bar);
+		final TextView txt = (TextView) findViewById(R.id.footer_text);
+		final ImageView img = (ImageView) findViewById(R.id.footer_img);
+
+		footer.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				String id = legislator.id;
+
+				// turn off notifications for this legislator, without
+				// stopping the service
+				if (database.isLegislatorNotified(id, NOTIFICATION_TYPE)) {
+
+					if (database.setOffLegislatorNotifications(id, NOTIFICATION_TYPE) != -1)
+						toggleNotifications(false, txt, img);
+
+				}
+				// turn on youtube notifications for this legislator
+				else {
+					if (database.setOnLegislatorNotifications(legislator, NOTIFICATION_TYPE) != -1) {
+						toggleNotifications(true, txt, img);
+
+						// if notifications are not yet enabled, send broadcast
+						// to start them
+						if (!Utils.getBooleanPreference(LegislatorYouTube.this,
+								Preferences.KEY_NOTIFICATIONS_ENABLED,
+								Preferences.DEFAULT_NOTIFICATIONS_ENABLED)) {
+
+							Utils.setBooleanPreference(LegislatorYouTube.this,
+									Preferences.KEY_NOTIFICATIONS_ENABLED, true);
+
+							Intent i = new Intent();
+							i.setAction(Notifications.START_SERVICE_INTENT);
+							LegislatorYouTube.this.sendBroadcast(i);
+						}
+					}
+				}
+			}
+		});
+
+		// if the service is started, check the database
+		if (Utils.getBooleanPreference(this, Preferences.KEY_NOTIFICATIONS_ENABLED,
+				Preferences.DEFAULT_NOTIFICATIONS_ENABLED)
+				&& database.isLegislatorNotified(legislator.id, NOTIFICATION_TYPE))
+			toggleNotifications(true, txt, img);
+		else
+			toggleNotifications(false, txt, img);
 	}
     
 	protected void loadVideos() {
 	    if (videos == null)
-    		loadVideosTask = (LoadVideosTask) new LoadVideosTask(this).execute(username);
+			loadVideosTask = (LoadVideosTask) new LoadVideosTask(this).execute(legislator.youtubeUsername());
     	else
     		displayVideos();
 	}
@@ -243,7 +311,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb {
     	@Override
     	protected Video[] doInBackground(String... usernames) {
     		try {
-        		return new YouTube().getVideos(username);
+				return new YouTube().getVideos(legislator.youtubeUsername());
         	} catch(YouTubeException e) {
         		return null;
         	}
