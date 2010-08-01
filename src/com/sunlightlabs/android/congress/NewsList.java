@@ -21,12 +21,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
+import com.sunlightlabs.android.congress.Footer.State;
+import com.sunlightlabs.android.congress.notifications.Notifications;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.yahoo.news.NewsException;
 import com.sunlightlabs.yahoo.news.NewsItem;
 import com.sunlightlabs.yahoo.news.NewsService;
 
-public class NewsList extends ListActivity {
+public class NewsList extends ListActivity implements OnFooterClickListener {
+	private static final String NOTIFICATION_TYPE = "news";
+
 	private static final int MENU_VIEW = 0;
 	private static final int MENU_COPY = 1;
 	
@@ -35,12 +40,22 @@ public class NewsList extends ListActivity {
 
 	private LoadNewsTask loadNewsTask = null;
 	
+	private Database database;
+	private String entityId, entityType, entityName;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_footer);
     	
-    	searchTerm = getIntent().getStringExtra("searchTerm");
+		database = new Database(this);
+		database.open();
+
+		Intent i = getIntent();
+		entityId = i.getStringExtra("entityId");
+		entityName = i.getStringExtra("entityName");
+		entityType = i.getStringExtra("entityType");
+		searchTerm = i.getStringExtra("searchTerm");
     	
     	NewsListHolder holder = (NewsListHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
@@ -51,6 +66,7 @@ public class NewsList extends ListActivity {
     	}
     	
     	setupControls();
+
     	if (loadNewsTask == null)
     		loadNews();
 	}
@@ -63,6 +79,12 @@ public class NewsList extends ListActivity {
     	return holder;
     }
 	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		database.close();
+	}
+
 	private void setupControls() {
 		Utils.setLoading(this, R.string.news_loading);
     	((Button) findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
@@ -75,9 +97,42 @@ public class NewsList extends ListActivity {
 
 		registerForContextMenu(getListView());
     	
-    	TextView txt = (TextView) findViewById(R.id.footer_text);
+		setupFooter();
     }
 	
+	private void setupFooter() {
+		Footer footer = (Footer) findViewById(R.id.footer);
+		footer.setListener(this);
+		footer.setHasEntity(true);
+		footer.setEntityId(entityId);
+		footer.setEntityName(entityName);
+		footer.setEntityType(entityType);
+		footer.setNotificationType(NOTIFICATION_TYPE);
+		footer.setDatabase(database);
+
+		// if the service is started, check the database
+		if (Utils.getBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED,
+				Preferences.DEFAULT_NOTIFY_ENABLED)
+				&& Database.NOTIFICATIONS_ON.equals(database.getNotificationStatus(entityId, NOTIFICATION_TYPE)))
+			footer.setOn();
+		else
+			footer.setOff();
+	}
+
+	public void onFooterClick(Footer footer, State state) {
+		if (state == State.ON) {
+
+			// if notifications are not yet enabled, send broadcast to start
+			// them
+			if (!Utils.getBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED,
+					Preferences.DEFAULT_NOTIFY_ENABLED)) {
+
+				Utils.setBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, true);
+				Notifications.startNotificationsBroadcast(this);
+			}
+		}
+	}
+
     @Override
 	public void onListItemClick(ListView parent, View view, int position, long id) {
 		NewsItem item = (NewsItem) parent.getItemAtPosition(position);

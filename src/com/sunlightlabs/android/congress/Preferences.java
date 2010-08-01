@@ -8,11 +8,11 @@ import android.preference.PreferenceActivity;
 import com.sunlightlabs.android.congress.notifications.Notifications;
 
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
-	public static final String KEY_NOTIFICATIONS_ENABLED = "congress.notifications_enabled";
-	public static final boolean DEFAULT_NOTIFICATIONS_ENABLED = false;
+	public static final String KEY_NOTIFY_ENABLED = "congress.notify_enabled";
+	public static final boolean DEFAULT_NOTIFY_ENABLED = false;
 
-	public static final String KEY_NOTIFICATIONS_INTERVAL = "congress.notifications_interval";
-	public static final String DEFAULT_NOTIFICATIONS_INTERVAL = "15";
+	public static final String KEY_NOTIFY_INTERVAL = "congress.notify_interval";
+	public static final String DEFAULT_NOTIFY_INTERVAL = "15";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +36,16 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if (key.equals(KEY_NOTIFICATIONS_ENABLED)) {
-			if (sharedPreferences.getBoolean(key, DEFAULT_NOTIFICATIONS_ENABLED))
-				Notifications.scheduleNotifications(this);
+		if (key.equals(KEY_NOTIFY_ENABLED)) {
+
+			if (sharedPreferences.getBoolean(key, DEFAULT_NOTIFY_ENABLED))
+				Notifications.startNotificationsBroadcast(this);
 			else
-				Notifications.stopNotifications(this);
-		} else if (key.equals(KEY_NOTIFICATIONS_INTERVAL)) {
-			Notifications.stopNotifications(this);
-			Notifications.scheduleNotifications(this);
+				Notifications.stopNotificationsBroadcast(this);
+
+		} else if (key.equals(KEY_NOTIFY_INTERVAL)) {
+			Notifications.stopNotificationsBroadcast(this);
+			Notifications.startNotificationsBroadcast(this);
 		}
 	}
 }

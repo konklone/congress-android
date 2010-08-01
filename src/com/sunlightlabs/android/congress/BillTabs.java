@@ -119,7 +119,11 @@ public class BillTabs extends TabActivity {
 	}
 	
 	public Intent newsIntent() {
-		return new Intent(this, NewsList.class).putExtra("searchTerm", searchTermFor(bill));
+		return new Intent(this, NewsList.class)
+		.putExtra("entityId", bill.id)
+		.putExtra("entityType", "bill")
+		.putExtra("entityName", bill.official_title)
+		.putExtra("searchTerm", searchTermFor(bill));
 	}
 	
 	public Intent historyIntent() {

@@ -110,12 +110,12 @@
     <string name="preferences">Preferences</string>
     <string name="notifications">Notifications</string>
     
-    <string name="notifications_enabled">You will receive notifications about new updates.</string>
-    <string name="notifications_paused">You are not notified about new updates.</string>
+    <string name="notify_enabled">You will receive notifications about new updates.</string>
+    <string name="notify_paused">You are not notified about new updates.</string>
     
-    <string name="notifications_enable">Enable Notifications</string>
-    <string name="notifications_enable_summary">Check this to enable or disable all notifications.</string>
+    <string name="notify_enable">Enable Notifications</string>
+    <string name="notify_enable_summary">Check this to enable or disable all notifications.</string>
     
-    <string name="notifications_interval">Notifications Interval</string>
-    <string name="notifications_interval_summary">Choose how frequently you want to receive notifications.</string>
+    <string name="notify_interval">Notifications Interval</string>
+    <string name="notify_interval_summary">Choose how frequently you want to receive notifications.</string>
 </resources>

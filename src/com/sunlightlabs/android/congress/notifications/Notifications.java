@@ -26,12 +26,12 @@ public class Notifications {
 
 	public static int getIntervalMillis(Context context) {
 		return Integer.parseInt(Utils.getStringPreference(context,
-						Preferences.KEY_NOTIFICATIONS_INTERVAL,
-						Preferences.DEFAULT_NOTIFICATIONS_INTERVAL)) * 1000;
+						Preferences.KEY_NOTIFY_INTERVAL,
+						Preferences.DEFAULT_NOTIFY_INTERVAL)) * 1000;
 	}
 
 	public static void scheduleNotifications(Context context) {
-		Log.d(TAG, "Schedule notifications");
+		Log.d(TAG, "Schedule notifications!");
 
 		int interval = getIntervalMillis(context);
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -40,23 +40,38 @@ public class Notifications {
 	}
 
 	public static void stopNotifications(Context context) {
-		Log.d(TAG, "Stop notifications");
+		Log.d(TAG, "Stop notifications!");
 
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getPendingIntent(context));
+	}
+
+	public static void startNotificationsBroadcast(Context context) {
+		Intent i = new Intent();
+		i.setAction(Notifications.START_SERVICE_INTENT);
+		context.sendBroadcast(i);
+	}
+
+	public static void stopNotificationsBroadcast(Context context) {
+		Intent i = new Intent();
+		i.setAction(Notifications.STOP_SERVICE_INTENT);
+		context.sendBroadcast(i);
 	}
 
 	public static Notification getNotification(Context context) {
 		Notification notification = new Notification(R.drawable.icon, "Title", System
 				.currentTimeMillis());
 
-		/*Intent notificationIntent = new Intent(context, LegislatorTabs.class).putExtra("tab", 1);
-		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
-		notification.contentIntent = contentIntent;
-		RemoteViews contentView = new RemoteViews("com.sunlightlabs.android.congress",
-				R.layout.custom_notification);
-		contentView.setTextViewText(R.id.title, "text");
-		notification.contentView = contentView;*/
+		/*
+		 * Intent notificationIntent = new Intent(context,
+		 * LegislatorTabs.class).putExtra("tab", 1); PendingIntent contentIntent
+		 * = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+		 * notification.contentIntent = contentIntent; RemoteViews contentView =
+		 * new RemoteViews("com.sunlightlabs.android.congress",
+		 * R.layout.custom_notification);
+		 * contentView.setTextViewText(R.id.title, "text");
+		 * notification.contentView = contentView;
+		 */
 		return notification;
 	}
 }

@@ -20,18 +20,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
+import com.sunlightlabs.android.congress.Footer.State;
 import com.sunlightlabs.android.congress.notifications.Notifications;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.congress.models.Legislator;
 
-public class LegislatorTwitter extends ListActivity {
-	private static final String NOTIFICATION_TYPE = "twitter";
+public class LegislatorTwitter extends ListActivity implements OnFooterClickListener {
+	private final static String NOTIFICATION_TYPE = "twitter";
 
-	private Legislator legislator;
 	private List<Status> tweets;
-	
 	private LoadTweetsTask loadTweetsTask = null;
+	
 	private Database database;
+	private String entityId, entityType, entityName, twitterId;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,11 @@ public class LegislatorTwitter extends ListActivity {
 		database = new Database(this);
 		database.open();
 
-		legislator = (Legislator) getIntent().getExtras().getSerializable("legislator");
+		Intent i = getIntent();
+		entityId = i.getStringExtra("entityId");
+		entityName = i.getStringExtra("entityName");
+		entityType = i.getStringExtra("entityType");
+		twitterId = i.getStringExtra("twitterId");
     
     	LegislatorTwitterHolder holder = (LegislatorTwitterHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
@@ -84,66 +89,40 @@ public class LegislatorTwitter extends ListActivity {
 		setupFooter();
 	}
 
-	private void toggleNotifications(boolean on, TextView txt, ImageView img) {
-		if (on) {
-			txt.setText(getString(R.string.notifications_enabled));
-			img.setImageDrawable(getResources().getDrawable(R.drawable.notifications_on));
-		} else {
-			txt.setText(getString(R.string.notifications_paused));
-			img.setImageDrawable(getResources().getDrawable(R.drawable.notifications_off));
+	private void setupFooter() {
+		Footer footer = (Footer) findViewById(R.id.footer);
+		footer.setListener(this);
+		footer.setHasEntity(true);
+		footer.setEntityId(entityId);
+		footer.setEntityName(entityName);
+		footer.setEntityType(entityType);
+		footer.setNotificationType(NOTIFICATION_TYPE);
+		footer.setDatabase(database);
+
+		// if the service is started, check the database
+		if (Utils.getBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, Preferences.DEFAULT_NOTIFY_ENABLED)
+				&& Database.NOTIFICATIONS_ON.equals(database.getNotificationStatus(entityId, NOTIFICATION_TYPE)))
+			footer.setOn();
+		else
+			footer.setOff();
+	}
+
+	public void onFooterClick(Footer footer, State state) {
+		if (state == State.ON) {
+			
+			// if notifications are not yet enabled, send broadcast to start them
+			if (!Utils.getBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED,
+					Preferences.DEFAULT_NOTIFY_ENABLED)) {
+
+				Utils.setBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, true);
+				Notifications.startNotificationsBroadcast(this);
+			}
 		}
 	}
 
-	private void setupFooter() {
-		final View footer = findViewById(R.id.footer_bar);
-		final TextView txt = (TextView) findViewById(R.id.footer_text);
-		final ImageView img = (ImageView) findViewById(R.id.footer_img);
-
-		footer.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				String id = legislator.id;
-
-				// turn off twitter notifications for this legislator, without
-				// stopping the service
-				if (database.isLegislatorNotified(id, NOTIFICATION_TYPE)) {
-
-					if (database.setOffLegislatorNotifications(id, NOTIFICATION_TYPE) != -1)
-						toggleNotifications(false, txt, img);
-
-				}
-				// turn on twitter notifications for this legislator
-				else {
-					if (database.setOnLegislatorNotifications(legislator, NOTIFICATION_TYPE) != -1) {
-						toggleNotifications(true, txt, img);
-
-						// if notifications are not yet enabled, send broadcast
-						// to start them
-						if (!Utils.getBooleanPreference(LegislatorTwitter.this, Preferences.KEY_NOTIFICATIONS_ENABLED,
-								Preferences.DEFAULT_NOTIFICATIONS_ENABLED)) {
-
-							Utils.setBooleanPreference(LegislatorTwitter.this, Preferences.KEY_NOTIFICATIONS_ENABLED, true);
-
-							Intent i = new Intent();
-							i.setAction(Notifications.START_SERVICE_INTENT);
-							LegislatorTwitter.this.sendBroadcast(i);
-						}
-					}
-				}
-			}
-		});
-		
-		// if the service is started, check the database
-		if (Utils.getBooleanPreference(this, Preferences.KEY_NOTIFICATIONS_ENABLED,
-				Preferences.DEFAULT_NOTIFICATIONS_ENABLED)
-				&& database.isLegislatorNotified(legislator.id, NOTIFICATION_TYPE))
-				toggleNotifications(true, txt, img);
-		else
-			toggleNotifications(false, txt, img);
-	}
-    
 	protected void loadTweets() {	    
 	    if (tweets == null)
-			loadTweetsTask = (LoadTweetsTask) new LoadTweetsTask(this).execute(legislator.twitter_id);
+			loadTweetsTask = (LoadTweetsTask) new LoadTweetsTask(this).execute(twitterId);
     	else
     		displayTweets();
 	}

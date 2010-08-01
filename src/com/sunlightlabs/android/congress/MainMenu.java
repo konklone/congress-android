@@ -36,6 +36,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
+import com.sunlightlabs.android.congress.Footer.State;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteBillsAdapter.FavoriteBillWrapper;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteLegislatorsAdapter.FavoriteLegislatorWrapper;
 import com.sunlightlabs.android.congress.notifications.Notifications;
@@ -54,7 +56,7 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class MainMenu extends ListActivity implements LocationListenerTimeout,
-		AddressUpdateable<MainMenu>, LoadPhotoTask.LoadsPhoto {
+		AddressUpdateable<MainMenu>, LoadPhotoTask.LoadsPhoto, OnFooterClickListener {
 
 	public static final int RESULT_ZIP = 1;
 	public static final int RESULT_LASTNAME = 2;
@@ -87,8 +89,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	private SearchViewWrapper searchLocationView;
 	private ViewArrayAdapter searchLocationAdapter;
 
-	private TextView footerText;
-	private ImageView footerImg;
+	private Footer footer;
 
 	MergeAdapter adapter;
 
@@ -186,6 +187,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		peopleCursor.requery();
 		billCursor.requery();
 		adapter.notifyDataSetChanged();
+
 		updateFooter();
 	}
 
@@ -298,57 +300,31 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		setupFooter();
 	}
 
-	private void toggleNotifications(boolean on) {
-		if (on) {
-			footerText.setText(getString(R.string.notifications_enabled));
-			footerImg.setImageDrawable(getResources().getDrawable(R.drawable.notifications_on));
-		} else {
-			footerText.setText(getString(R.string.notifications_paused));
-			footerImg.setImageDrawable(getResources().getDrawable(R.drawable.notifications_off));
-		}
-	}
-
 	private void setupFooter() {
-		final View footer = findViewById(R.id.footer_bar);
-		footerText = (TextView) findViewById(R.id.footer_text);
-		footerImg = (ImageView) findViewById(R.id.footer_img);
-
-		footer.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				// if notifications are enabled, send broadcast
-				// to pause them
-				if (Utils.getBooleanPreference(MainMenu.this, Preferences.KEY_NOTIFICATIONS_ENABLED,
-						Preferences.DEFAULT_NOTIFICATIONS_ENABLED)) {
-
-					Utils.setBooleanPreference(MainMenu.this, Preferences.KEY_NOTIFICATIONS_ENABLED, false);
-
-					Intent i = new Intent();
-					i.setAction(Notifications.STOP_SERVICE_INTENT);
-					MainMenu.this.sendBroadcast(i);
-				}
-				// else, send broadcast to start them
-				else {
-					Utils.setBooleanPreference(MainMenu.this, Preferences.KEY_NOTIFICATIONS_ENABLED, true);
-
-					Intent i = new Intent();
-					i.setAction(Notifications.START_SERVICE_INTENT);
-					MainMenu.this.sendBroadcast(i);
-				}
-
-				updateFooter();
-			}
-		});
-
+		footer = (Footer) findViewById(R.id.footer);
+		footer.setListener(this);
 		updateFooter();
 	}
 
 	private void updateFooter() {
-		// if the service is started, check the database
-		if (Utils.getBooleanPreference(this, Preferences.KEY_NOTIFICATIONS_ENABLED,
-				Preferences.DEFAULT_NOTIFICATIONS_ENABLED))
-			toggleNotifications(true);
+		// check notifications status
+		if (Utils.getBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED,
+				Preferences.DEFAULT_NOTIFY_ENABLED))
+			footer.setOn();
 		else
-			toggleNotifications(false);
+			footer.setOff();
+	}
+
+	public void onFooterClick(Footer footer, State state) {
+		// turn off all notifications at once
+		if (state == State.OFF) {
+			Utils.setBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, false);
+			Notifications.stopNotificationsBroadcast(this);
+		}
+		else {
+			Utils.setBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, true);
+			Notifications.startNotificationsBroadcast(this);
+		}
 	}
 
 	private ArrayList<View> setupBillMenu(LayoutInflater inflater) {
@@ -553,8 +529,8 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	}
 
 	public void setNotificationState() {
-		Utils.setBooleanPreference(this, Preferences.KEY_NOTIFICATIONS_ENABLED,
-				Preferences.DEFAULT_NOTIFICATIONS_ENABLED);
+		Utils.setBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED,
+				Preferences.DEFAULT_NOTIFY_ENABLED);
 	}
 
 

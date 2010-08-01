@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
-	android:orientation="horizontal"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:background="@drawable/main_menu_gradient"
-	android:paddingTop="3dp"
-	android:paddingBottom="3dp"
-	>
+
+<com.sunlightlabs.android.congress.Footer
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:footer="http://schemas.android.com/apk/res/com.sunlightlabs.android.congress"
+		
+		android:id="@+id/footer"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/main_menu_gradient"
+		android:paddingTop="3dp"
+		android:paddingBottom="3dp"
+		
+		footer:textView="@+id/footer_text"
+		footer:imageView="@+id/footer_img"
+		>
 	
-	<ImageView 
+	<com.sunlightlabs.android.congress.FooterImage
 		android:id="@+id/footer_img"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_centerVertical="true"		
 		android:paddingLeft="20dp"
-		android:src="@drawable/notifications_off"
+		
+		footer:srcOff="@drawable/notifications_off"		
+		footer:srcOn="@drawable/notifications_on"
 		/>
 	
-	<TextView 
+	<com.sunlightlabs.android.congress.FooterText	
 		android:id="@+id/footer_text"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"		
@@ -27,7 +37,11 @@
 		android:paddingRight="10dp"
 		android:textSize="14sp"
 		android:textColor="@color/header_text"
-		android:text="Footer Text"
+		
+		footer:textOff="@string/notify_paused"
+		footer:textOn="@string/notify_enabled"		
 	/>
+	
+</com.sunlightlabs.android.congress.Footer>
 
-</RelativeLayout>
+	

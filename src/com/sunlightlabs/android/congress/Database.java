@@ -11,7 +11,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -19,7 +18,7 @@ import com.sunlightlabs.congress.services.Drumbone;
 
 public class Database {
 	public boolean closed = true;
-	
+
 	private static final String TAG = "CongressDatabase";
 
 	private static final String DATABASE_NAME = "congress.db";
@@ -27,7 +26,7 @@ public class Database {
 
 	private static final String LEGISLATORS_TABLE = "legislators";
 	private static final String BILLS_TABLE = "bills";
-	private static final String LEGISLATOR_NOTIFICATIONS_TABLE = "legislators_notifications";
+	private static final String NOTIFICATIONS_TABLE = "notifications";
 
 	private static final String[] LEGISLATOR_COLUMNS = new String[] { "id", "bioguide_id",
 			"govtrack_id", "first_name", "last_name", "nickname", "name_suffix", "title", "party",
@@ -42,9 +41,11 @@ public class Database {
 			"sponsor_party", "sponsor_state", "sponsor_title", "sponsor_first_name",
 			"sponsor_nickname", "sponsor_last_name" };
 
-	private static final String[] LEGISLATOR_NOTIFICATIONS_COLUMNS = new String[] {
-			"notify_twitter", "last_tweet_id", "notify_youtube", "last_video_id" };
+	private static final String[] NOTIFICATIONS_COLUMNS = new String[] { "entity_id",
+			"entity_type", "entity_name", "notification_type", "last_seen_id", "status" };
 
+	public static final String NOTIFICATIONS_ON = "on";
+	public static final String NOTIFICATIONS_OFF = "off";
 
 	private DatabaseHelper helper;
 	private SQLiteDatabase database;
@@ -233,71 +234,37 @@ public class Database {
 		return legislator;
 	}
 	
-	public Cursor getAllLegislatorsNotifications() {
-		return database.rawQuery("SELECT * FROM " + LEGISLATOR_NOTIFICATIONS_TABLE, null);
-	}
+	public String getNotificationStatus(String entityId, String notificationType) {
+		StringBuilder query = new StringBuilder("entity_id=? AND notification_type=?");
 
-	private boolean isLegislatorEntry(String id) {
-		Cursor c = database.query(LEGISLATOR_NOTIFICATIONS_TABLE, new String[] { "id", }, "id=?",
-				new String[] { id }, null, null, null);
-		boolean ok = c.moveToFirst();
+		Cursor c = database.query(NOTIFICATIONS_TABLE, new String[] { "status", }, query
+				.toString(), new String[] { entityId, notificationType }, null, null, null);
+		String status = null;
+		if (c.moveToFirst())
+			status = c.getString(c.getColumnIndex("status"));
 		c.close();
-		return ok;
+		return status;
 	}
 
-	public boolean isLegislatorNotified(String id, String type) {
-		StringBuilder query = new StringBuilder("id=?").append(" AND notify_").append(type).append(
-				"=?");
-
-		Cursor c = database.query(LEGISLATOR_NOTIFICATIONS_TABLE, new String[] { "id", }, query
-				.toString(), new String[] { id, "true" }, null, null, null);
-
-		boolean ok = c.moveToFirst();
-		c.close();
-		return ok;
+	public long addNotification(String entityId, String entityType, String entityName,
+			String notificationType) {
+		ContentValues cv = new ContentValues(NOTIFICATIONS_COLUMNS.length);
+		cv.put("entity_id", entityId);
+		cv.put("entity_type", entityType);
+		cv.put("entity_name", entityName);
+		cv.put("notification_type", notificationType);
+		cv.put("last_seen_id", (String) null);
+		cv.put("status", "on");
+		return database.insert(NOTIFICATIONS_TABLE, null, cv);
 	}
 
-	public long setOnLegislatorNotifications(Legislator legislator, String type) {
-		// first, add a default entry in the database
-		ContentValues cv = null;
-
-		if (!isLegislatorEntry(legislator.id)) {
-			cv = fromLegislator(legislator, LEGISLATOR_NOTIFICATIONS_COLUMNS.length);
-			cv.put("notify_twitter", "false");
-			cv.put("last_tweet_id", (String) null);
-			cv.put("notify_youtube", "false");
-			cv.put("last_video_id", (String) null);
-			database.insert(LEGISLATOR_NOTIFICATIONS_TABLE, null, cv);
-		}
-
-		// then, update the notification type
-		cv = new ContentValues(1);
-		if (type.equals("twitter"))
-			cv.put("notify_twitter", "true");
-		else if (type.equals("youtube"))
-			cv.put("notify_youtube", "true");
-
-		if (cv.size() > 0)
-			return database.update(LEGISLATOR_NOTIFICATIONS_TABLE, cv, "id=?", new String[] { legislator.id });
-
-		return -1;
-	}
-
-	public long setOffLegislatorNotifications(String id, String type) {
-		if (!isLegislatorEntry(id))
-			return -1;
-
+	public long setNotificationStatus(String entityId, String notificationType, String status) {
 		ContentValues cv = new ContentValues(1);
-		if (type.equals("twitter"))
-			cv.put("notify_twitter", false);
-		else if (type.equals("youtube"))
-			cv.put("notify_youtube", false);
+		cv.put("status", status);
 
-		if (cv.size() > 0)
-			return database.update(LEGISLATOR_NOTIFICATIONS_TABLE, cv, "id=?", new String[] { id });
-		return -1;
+		return database.update(NOTIFICATIONS_TABLE, cv, "entity_id=? AND notification_type=?",
+				new String[] { entityId, notificationType });
 	}
-
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 		public DatabaseHelper(Context context) {
@@ -323,10 +290,8 @@ public class Database {
 			// create bills table
 			db.execSQL(sqlCreateTable(BILLS_TABLE, BILL_COLUMNS));
 
-			// we will need all the info for a legislator, to open its profile
-			// when a new notification comes up
-			db.execSQL(sqlCreateTable(LEGISLATOR_NOTIFICATIONS_TABLE, 
-					Utils.concat(LEGISLATOR_COLUMNS, LEGISLATOR_NOTIFICATIONS_COLUMNS)));
+			// create notifications table
+			db.execSQL(sqlCreateTable(NOTIFICATIONS_TABLE, NOTIFICATIONS_COLUMNS));
 		}
 
 		@Override

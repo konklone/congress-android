@@ -5,24 +5,24 @@
 	<PreferenceCategory android:title="@string/notifications">
           
           <CheckBoxPreference
-                        android:title="@string/notifications_enable"
-                        android:summary="@string/notifications_enable_summary"
+                        android:title="@string/notify_enable"
+                        android:summary="@string/notify_enable_summary"
                         
-                        android:key="congress.notifications_enabled" 
+                        android:key="congress.notify_enabled" 
                         android:defaultValue="false"                        
                         />
                         
           <ListPreference
-                        android:title="@string/notifications_interval"
-                        android:summary="@string/notifications_interval_summary"
+                        android:title="@string/notify_interval"
+                        android:summary="@string/notify_interval_summary"
                         
-                        android:key="congress.notifications_interval"
+                        android:key="congress.notify_interval"
                         android:defaultValue="15"
                         
-                        android:entries="@array/notifications_interval"
-                        android:entryValues="@array/notifications_interval_values"
+                        android:entries="@array/notify_interval"
+                        android:entryValues="@array/notify_interval_values"
                         
-                        android:dependency="congress.notifications_enabled" />
+                        android:dependency="congress.notify_enabled" />
            
     </PreferenceCategory>
     

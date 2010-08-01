@@ -109,15 +109,26 @@ public class LegislatorTabs extends TabActivity {
 	
 	public Intent newsIntent() {
 		return new Intent(this, NewsList.class)
+			.putExtra("entityId", legislator.id)
+			.putExtra("entityType", "legislator")
+			.putExtra("entityName", legislator.getName())
 			.putExtra("searchTerm", correctExceptions(searchTermFor(legislator)));
 	}
 	
 	public Intent twitterIntent() {
-		return new Intent(this, LegislatorTwitter.class).putExtra("legislator", legislator);
+		return new Intent(this, LegislatorTwitter.class)
+		.putExtra("entityId", legislator.id)
+		.putExtra("entityType", "legislator")
+		.putExtra("entityName", legislator.getName())
+		.putExtra("twitterId", legislator.twitter_id);
 	}
 	
 	public Intent youtubeIntent() {
-		return new Intent(this, LegislatorYouTube.class).putExtra("legislator", legislator);
+		return new Intent(this, LegislatorYouTube.class)
+		.putExtra("entityId", legislator.id)
+		.putExtra("entityType", "legislator")
+		.putExtra("entityName", legislator.getName())
+		.putExtra("youtubeUsername", legislator.youtubeUsername());
 	}
 	
 	

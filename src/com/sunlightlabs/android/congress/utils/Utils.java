@@ -355,13 +355,4 @@ public class Utils {
 		
 		return url;
 	}
-
-	public static String[] concat(String[] arr1, String[] arr2) {
-		int l1 = arr1.length;
-		int l2 = arr2.length;
-		String[] tmp = new String[l1 + l2];
-		System.arraycopy(arr1, 0, tmp, 0, l1);
-		System.arraycopy(arr2, 0, tmp, l1, l2);
-		return tmp;
-	}
 }
