@@ -18,12 +18,12 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.Drumbone;
 
 public class Database {
+	private static final int DATABASE_VERSION = 3;
+	
 	public boolean closed = true;
-
+	
 	private static final String TAG = "CongressDatabase";
-
 	private static final String DATABASE_NAME = "congress.db";
-	private static final int DATABASE_VERSION = 2;
 
 	private static final String LEGISLATORS_TABLE = "legislators";
 	private static final String BILLS_TABLE = "bills";
@@ -329,9 +329,13 @@ public class Database {
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			Log.w(TAG, "Upgrading " + DATABASE_NAME + " from version " + oldVersion + " to "
 					+ newVersion + ", wiping old data");
-			db.execSQL("DROP TABLE IF EXISTS " + LEGISLATORS_TABLE);
-			db.execSQL("DROP TABLE IF EXISTS " + BILLS_TABLE);
-			onCreate(db);
+			
+			// Version 1 - Never released
+			// Version 2 - Favorites (bills and legislators table), as released in version 2.6
+			// Version 3 - Notifications (notifications table), not yet released
+			
+			if (oldVersion <= 2)
+				db.execSQL(sqlCreateTable(NOTIFICATIONS_TABLE, NOTIFICATIONS_COLUMNS));
 		}
 	}
 }
