@@ -108,6 +108,7 @@ public class NewsList extends ListActivity implements OnFooterClickListener {
 		footer.setEntityName(entityName);
 		footer.setEntityType(entityType);
 		footer.setNotificationType(NOTIFICATION_TYPE);
+		footer.setNotificationData(searchTerm);
 		footer.setDatabase(database);
 
 		// if the service is started, check the database

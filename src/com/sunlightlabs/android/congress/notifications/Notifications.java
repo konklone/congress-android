@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.Preferences;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -17,6 +18,7 @@ public class Notifications {
 
 	public static final String START_SERVICE_INTENT = "com.sunlightlabs.android.congress.intent.action.START_SERVICE";
 	public static final String STOP_SERVICE_INTENT = "com.sunlightlabs.android.congress.intent.action.STOP_SERVICE";
+
 	public static final int NOTIFY_UPDATES = 0;
 
 	private static PendingIntent getPendingIntent(Context context) {
@@ -58,20 +60,20 @@ public class Notifications {
 		context.sendBroadcast(i);
 	}
 
-	public static Notification getNotification(Context context) {
-		Notification notification = new Notification(R.drawable.icon, "Title", System
-				.currentTimeMillis());
+	public static Notification getTwitterNotification(Context context, NotifiableEntity e) {
 
-		/*
-		 * Intent notificationIntent = new Intent(context,
-		 * LegislatorTabs.class).putExtra("tab", 1); PendingIntent contentIntent
-		 * = PendingIntent.getActivity(context, 0, notificationIntent, 0);
-		 * notification.contentIntent = contentIntent; RemoteViews contentView =
-		 * new RemoteViews("com.sunlightlabs.android.congress",
-		 * R.layout.custom_notification);
-		 * contentView.setTextViewText(R.id.title, "text");
-		 * notification.contentView = contentView;
-		 */
+		int icon = R.drawable.icon;
+		CharSequence tickerText = "New Twitter Updates for " + e.name;
+		long when = System.currentTimeMillis();
+
+		Notification notification = new Notification(icon, tickerText, when);
+
+		CharSequence contentTitle = "New Twitter Updates for " + e.name;
+		CharSequence contentText = "There are " + e.results + " new twitter updates.";
+		Intent notificationIntent = new Intent(context, LegislatorTabs.class).putExtra("tab", 2);
+		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+
+		notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
 		return notification;
 	}
 }

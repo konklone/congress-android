@@ -15,6 +15,7 @@ import com.sunlightlabs.congress.models.Legislator;
 
 public class LegislatorTabs extends TabActivity {
 	private Legislator legislator;
+	private int tab;
 
 	private Database database;
 	private Cursor cursor;
@@ -27,6 +28,7 @@ public class LegislatorTabs extends TabActivity {
         setContentView(R.layout.legislator);
 
 		legislator = (Legislator) getIntent().getExtras().getSerializable("legislator");
+		tab = getIntent().getIntExtra("tab", 0);
 		
 		database = new Database(this);
 		database.open();
@@ -100,7 +102,7 @@ public class LegislatorTabs extends TabActivity {
 		if (legislator.in_office && youtube_id != null && !(youtube_id.equals("")))
 			Utils.addTab(this, tabHost, "youtube", youtubeIntent(), "YouTube", res.getDrawable(R.drawable.tab_video));
 			
-		tabHost.setCurrentTab(0);
+		tabHost.setCurrentTab(tab);
 	}
 	
 	public Intent profileIntent() {

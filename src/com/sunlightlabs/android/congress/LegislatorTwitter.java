@@ -3,12 +3,10 @@ package com.sunlightlabs.android.congress;
 import java.util.List;
 
 import winterwell.jtwitter.Twitter;
-import winterwell.jtwitter.TwitterException;
 import winterwell.jtwitter.Twitter.Status;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.view.LayoutInflater;
@@ -23,9 +21,11 @@ import android.widget.Toast;
 import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
 import com.sunlightlabs.android.congress.Footer.State;
 import com.sunlightlabs.android.congress.notifications.Notifications;
+import com.sunlightlabs.android.congress.utils.LoadTweetsTask;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.android.congress.utils.LoadTweetsTask.LoadsTweets;
 
-public class LegislatorTwitter extends ListActivity implements OnFooterClickListener {
+public class LegislatorTwitter extends ListActivity implements LoadsTweets, OnFooterClickListener {
 	private final static String NOTIFICATION_TYPE = "twitter";
 
 	private List<Status> tweets;
@@ -97,6 +97,7 @@ public class LegislatorTwitter extends ListActivity implements OnFooterClickList
 		footer.setEntityName(entityName);
 		footer.setEntityType(entityType);
 		footer.setNotificationType(NOTIFICATION_TYPE);
+		footer.setNotificationData(twitterId);
 		footer.setDatabase(database);
 
 		// if the service is started, check the database
@@ -218,38 +219,15 @@ public class LegislatorTwitter extends ListActivity implements OnFooterClickList
 		}
 
     }
-    
-    private class LoadTweetsTask extends AsyncTask<String,Void,List<Twitter.Status>> {
-    	public LegislatorTwitter context;
-    	
-    	public LoadTweetsTask(LegislatorTwitter context) {
-    		super();
-    		this.context = context;
-    	}
-    	
-    	public void onScreenLoad(LegislatorTwitter context) {
-    		this.context = context;
-    	}
-    	
-    	@Override
-    	protected List<Twitter.Status> doInBackground(String... username) {
-    		try {
-        		return new Twitter().getUserTimeline(username[0]);
-        	} catch(TwitterException e) {
-        		return null;
-        	}
-    	}
-    	
-    	@Override
-    	protected void onPostExecute(List<Twitter.Status> tweets) {
-    		context.tweets = tweets;
-    		context.displayTweets();
-    		context.loadTweetsTask = null;
-    	}
-    }
 
     static class LegislatorTwitterHolder {
     	List<Twitter.Status> tweets;
     	LoadTweetsTask loadTweetsTask;
     }
+
+	public void onLoadTweets(List<Status> tweets, String... id) {
+		this.tweets = tweets;
+		displayTweets();
+		loadTweetsTask = null;
+	}
 }

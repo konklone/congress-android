@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.sunlightlabs.android.congress.notifications.NotifiableEntity;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -42,7 +43,8 @@ public class Database {
 			"sponsor_nickname", "sponsor_last_name" };
 
 	private static final String[] NOTIFICATIONS_COLUMNS = new String[] { "entity_id",
-			"entity_type", "entity_name", "notification_type", "last_seen_id", "status" };
+			"entity_type", "entity_name", "notification_type", "notification_data", "last_seen_id",
+			"status" };
 
 	public static final String NOTIFICATIONS_ON = "on";
 	public static final String NOTIFICATIONS_OFF = "off";
@@ -89,8 +91,8 @@ public class Database {
 	public Cursor getLegislator(String id) {
 		Cursor cursor = database.query(LEGISLATORS_TABLE, LEGISLATOR_COLUMNS, "id=?",
 				new String[] { id }, null, null, null);
-		if (cursor != null)
-			cursor.moveToFirst();
+
+		cursor.moveToFirst();
 		return cursor;
 	}
 
@@ -139,8 +141,8 @@ public class Database {
 	public Cursor getBill(String id) {
 		Cursor cursor = database.query(BILLS_TABLE, BILL_COLUMNS, "id=?", new String[] { id },
 				null, null, null);
-		if (cursor != null)
-			cursor.moveToFirst();
+
+		cursor.moveToFirst();
 		return cursor;
 	}
 
@@ -234,6 +236,13 @@ public class Database {
 		return legislator;
 	}
 	
+	public Cursor getNotifications(String entityType, String notificationType) {
+		StringBuilder query = new StringBuilder("entity_type=? AND notification_type=?");
+
+		return database.query(NOTIFICATIONS_TABLE, NOTIFICATIONS_COLUMNS, query.toString(),
+				new String[] { entityType, notificationType }, null, null, null);
+	}
+
 	public String getNotificationStatus(String entityId, String notificationType) {
 		StringBuilder query = new StringBuilder("entity_id=? AND notification_type=?");
 
@@ -247,15 +256,28 @@ public class Database {
 	}
 
 	public long addNotification(String entityId, String entityType, String entityName,
-			String notificationType) {
+			String notificationType, String notificationData) {
 		ContentValues cv = new ContentValues(NOTIFICATIONS_COLUMNS.length);
 		cv.put("entity_id", entityId);
 		cv.put("entity_type", entityType);
 		cv.put("entity_name", entityName);
 		cv.put("notification_type", notificationType);
+		cv.put("notification_data", notificationData);
 		cv.put("last_seen_id", (String) null);
 		cv.put("status", "on");
 		return database.insert(NOTIFICATIONS_TABLE, null, cv);
+	}
+
+	public NotifiableEntity loadEntity(Cursor c) {
+		NotifiableEntity e = new NotifiableEntity();
+		e.id = c.getString(c.getColumnIndex("entity_id"));
+		e.name = c.getString(c.getColumnIndex("entity_name"));
+		e.type = c.getString(c.getColumnIndex("entity_type"));
+		e.notificationType = c.getString(c.getColumnIndex("notification_type"));
+		e.notificationData = c.getString(c.getColumnIndex("notification_data"));
+		e.status = c.getString(c.getColumnIndex("status"));
+		e.lastSeenId = c.getString(c.getColumnIndex("last_seen_id"));
+		return e;
 	}
 
 	public long setNotificationStatus(String entityId, String notificationType, String status) {

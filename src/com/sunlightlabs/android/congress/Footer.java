@@ -27,7 +27,7 @@ public class Footer extends RelativeLayout {
 	private State state;
 
 	private boolean hasEntity = false;
-	private String entityId, entityType, entityName, notificationType;
+	private String entityId, entityType, entityName, notificationType, notificationData;
 	private Database database;
 
 	public Footer(Context context, AttributeSet attrs) {
@@ -89,13 +89,14 @@ public class Footer extends RelativeLayout {
 								
 						// there is no entry in the notifications table for this entity
 						if (status == null) {
-							ok = database.addNotification(entityId, entityType, entityName, notificationType) != -1;
+							ok = database.addNotification(entityId, entityType, entityName,
+									notificationType, notificationData) != -1;
 							Log.d(TAG, "Adding " + notificationType + " notifications for entity "
 									+ entityId + " result is: " + ok);
 						}
 						
 						// there is an entry in the notifications table for this entity
-						if (ok) {
+						else {
 							ok = database.setNotificationStatus(entityId, notificationType, Database.NOTIFICATIONS_ON) != -1;
 							Log.d(TAG, "Setting " + notificationType
 									+ " notifications ON for entity " + entityId + " result is: "
@@ -165,6 +166,14 @@ public class Footer extends RelativeLayout {
 
 	public void setNotificationType(String notificationType) {
 		this.notificationType = notificationType;
+	}
+
+	public String getNotificationData() {
+		return notificationData;
+	}
+
+	public void setNotificationData(String notificationData) {
+		this.notificationData = notificationData;
 	}
 
 	public void setDatabase(Database database) {

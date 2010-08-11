@@ -125,6 +125,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, OnFoo
 		footer.setEntityName(entityName);
 		footer.setEntityType(entityType);
 		footer.setNotificationType(NOTIFICATION_TYPE);
+		footer.setNotificationData(youtubeUsername);
 		footer.setDatabase(database);
 
 		// if the service is started, check the database
