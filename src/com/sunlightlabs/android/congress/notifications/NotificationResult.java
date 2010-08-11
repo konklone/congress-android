@@ -1,13 +1,7 @@
 package com.sunlightlabs.android.congress.notifications;
 
 public class NotificationResult {
-	public String id;
-	public String type;
-	public String name;
-	public String notificationType;
-	public String notificationData;
-	public String lastSeenId;
-	public String status;
+	public String id, type, name, notificationType, notificationData, lastSeenId, status;
 	public int results;
 
 	@Override
