@@ -12,5 +12,4 @@ public class OnAlarmReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		WakefulIntentService.sendWakefulWork(context, NotificationsService.class);
 	}
-
 }

@@ -12,6 +12,7 @@ public class OnServiceActionReceiver extends BroadcastReceiver {
 
 		if (action.equals(Notifications.START_SERVICE_INTENT))
 			Notifications.scheduleNotifications(context);
+
 		else if (action.equals(Notifications.STOP_SERVICE_INTENT))
 			Notifications.stopNotifications(context);
 	}

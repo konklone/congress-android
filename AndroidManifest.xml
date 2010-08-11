@@ -94,6 +94,7 @@
         	android:label="@string/preferences" />
         	
         <receiver android:name=".notifications.OnAlarmReceiver" />
+        
         <receiver android:name=".notifications.OnServiceActionReceiver">
         	<intent-filter>
         		<action android:name="com.sunlightlabs.android.congress.intent.action.START_SERVICE"/>

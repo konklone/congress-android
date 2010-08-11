@@ -60,7 +60,7 @@ public class Notifications {
 		context.sendBroadcast(i);
 	}
 
-	public static Notification getTwitterNotification(Context context, NotifiableEntity e) {
+	public static Notification getTwitterNotification(Context context, NotificationResult e) {
 
 		int icon = R.drawable.icon;
 		CharSequence tickerText = "New Twitter Updates for " + e.name;

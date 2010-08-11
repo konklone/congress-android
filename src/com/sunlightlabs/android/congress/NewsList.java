@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.view.ContextMenu;
@@ -24,12 +23,12 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
 import com.sunlightlabs.android.congress.Footer.State;
 import com.sunlightlabs.android.congress.notifications.Notifications;
+import com.sunlightlabs.android.congress.utils.LoadYahooNewsTask;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.yahoo.news.NewsException;
+import com.sunlightlabs.android.congress.utils.LoadYahooNewsTask.LoadsYahooNews;
 import com.sunlightlabs.yahoo.news.NewsItem;
-import com.sunlightlabs.yahoo.news.NewsService;
 
-public class NewsList extends ListActivity implements OnFooterClickListener {
+public class NewsList extends ListActivity implements LoadsYahooNews, OnFooterClickListener {
 	private static final String NOTIFICATION_TYPE = "news";
 
 	private static final int MENU_VIEW = 0;
@@ -38,7 +37,7 @@ public class NewsList extends ListActivity implements OnFooterClickListener {
 	private String searchTerm;
 	private ArrayList<NewsItem> items = null;
 
-	private LoadNewsTask loadNewsTask = null;
+	private LoadYahooNewsTask loadNewsTask = null;
 	
 	private Database database;
 	private String entityId, entityType, entityName;
@@ -169,8 +168,10 @@ public class NewsList extends ListActivity implements OnFooterClickListener {
 	}
     
     protected void loadNews() {
-	    if (items == null)
-    		loadNewsTask = (LoadNewsTask) new LoadNewsTask(this).execute(searchTerm);
+	    if (items == null) {
+	    	String apiKey = getResources().getString(R.string.yahoo_news_key);
+    		loadNewsTask = (LoadYahooNewsTask) new LoadYahooNewsTask(this).execute(searchTerm, apiKey);
+	    }
 		else
 			displayNews();
 	}
@@ -216,39 +217,15 @@ public class NewsList extends ListActivity implements OnFooterClickListener {
 		}
 
     }
-	
-	private class LoadNewsTask extends AsyncTask<String,Void,ArrayList<NewsItem>> {
-		public NewsList context;
 		
-		public LoadNewsTask(NewsList context) {
-			super();
-			this.context = context;
-		}
-		
-		public void onScreenLoad(NewsList context) {
-			this.context = context;
-		}
-		
-		@Override
-		protected ArrayList<NewsItem> doInBackground(String... searchTerm) {
-			try {
-    			String apiKey = context.getResources().getString(R.string.yahoo_news_key);
-    			return new NewsService(apiKey).fetchNewsResults(searchTerm[0]);
-    		} catch (NewsException e) {
-    			return null;
-    		}
-		}
-		
-		@Override
-		protected void onPostExecute(ArrayList<NewsItem> items) {    		
-    		context.items = items;
-    		context.displayNews();
-    		context.loadNewsTask = null;
-		}
-	}
-	
 	static class NewsListHolder{
 		ArrayList<NewsItem> items;
-		LoadNewsTask loadNewsTask;
+		LoadYahooNewsTask loadNewsTask;
+	}
+
+	public void onLoadYahooNews(ArrayList<NewsItem> news, String... id) {
+		this.items = news;
+		displayNews();
+		loadNewsTask = null;
 	}
 }

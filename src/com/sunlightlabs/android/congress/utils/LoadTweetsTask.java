@@ -5,23 +5,26 @@ import java.util.List;
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class LoadTweetsTask extends AsyncTask<String, Void, List<Twitter.Status>> {
+	private final static String TAG = "CONGRESS";
 
 	public static interface LoadsTweets {
 		void onLoadTweets(List<Twitter.Status> tweets, String... id);
 	}
 
 	private LoadsTweets context;
-	private String id;
+	private String id; // the id of the task
 
 	public LoadTweetsTask(LoadsTweets context, String id) {
+		super();
 		this.context = context;
 		this.id = id;
 	}
 
 	public LoadTweetsTask(LoadsTweets context) {
-		this.context = context;
+		this(context, null);
 	}
 
 	public void onScreenLoad(LoadsTweets context) {
@@ -37,6 +40,7 @@ public class LoadTweetsTask extends AsyncTask<String, Void, List<Twitter.Status>
 		try {
 			return new Twitter().getUserTimeline(username[0]);
 		} catch (TwitterException e) {
+			Log.w(TAG, "Couldn't get twitter timeline for " + username[0]);
 			return null;
 		}
 	}
