@@ -148,8 +148,21 @@ public class Bill implements Serializable {
 			return type;
 	}
 	
+	// in accordance with the syntax described here:
+	// http://thomas.loc.gov/home/handles/help.html
+	public static String thomasType(String type) {
+		if (type.equals("hcres"))
+			return "hconres";
+		else if (type.equals("scres"))
+			return "sconres";
+		else
+			return type;
+	}
+	
+	// in accordance with the syntax described here:
+	// http://thomas.loc.gov/home/handles/help.html
 	public static String thomasUrl(String type, int number, int session) {
-		return "http://thomas.loc.gov/cgi-bin/query/z?c" + session + ":" + type + number + ":";
+		return "http://hdl.loc.gov/loc.uscongress/legislation." + session + thomasType(type) + number;
 	}
 	
 	public static String openCongressUrl(String type, int number, int session) {

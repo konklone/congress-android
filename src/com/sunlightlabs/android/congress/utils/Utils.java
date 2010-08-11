@@ -343,7 +343,7 @@ public class Utils {
 	}
 
 	public static String districtMapUrl(String title, String state, String district) {
-		String url = "http://data.politiwidgets.com/kml/";
+		String url = "http://assets.sunlightfoundation.com/kml/";
 		String session = "110";
 		
 		if (title.equals("Sen"))
