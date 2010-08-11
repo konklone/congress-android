@@ -1,6 +1,6 @@
 package com.sunlightlabs.android.congress.notifications;
 
-public class NotificationResult {
+public class NotificationEntity {
 	public String id, type, name, notificationType, notificationData, lastSeenId, status;
 	public int results;
 

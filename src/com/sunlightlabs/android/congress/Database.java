@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.notifications.NotificationResult;
+import com.sunlightlabs.android.congress.notifications.NotificationEntity;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -269,8 +269,8 @@ public class Database {
 		return database.insert(NOTIFICATIONS_TABLE, null, cv);
 	}
 
-	public NotificationResult loadEntity(Cursor c) {
-		NotificationResult e = new NotificationResult();
+	public NotificationEntity loadEntity(Cursor c) {
+		NotificationEntity e = new NotificationEntity();
 		e.id = c.getString(c.getColumnIndex("entity_id"));
 		e.name = c.getString(c.getColumnIndex("entity_name"));
 		e.type = c.getString(c.getColumnIndex("entity_type"));

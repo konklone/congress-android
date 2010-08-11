@@ -60,16 +60,17 @@ public class Notifications {
 		context.sendBroadcast(i);
 	}
 
-	public static Notification getTwitterNotification(Context context, NotificationResult e) {
+	public static Notification getNotification(Context context, NotificationEntity e) {
 
+		// TODO create a custom notification for each type of update
 		int icon = R.drawable.icon;
-		CharSequence tickerText = "New Twitter Updates for " + e.name;
+		CharSequence tickerText = "New Updates for " + e.name;
 		long when = System.currentTimeMillis();
 
 		Notification notification = new Notification(icon, tickerText, when);
 
-		CharSequence contentTitle = "New Twitter Updates for " + e.name;
-		CharSequence contentText = "There are " + e.results + " new twitter updates.";
+		CharSequence contentTitle = "New Updates for " + e.name;
+		CharSequence contentText = "There are " + e.results + " new updates.";
 		Intent notificationIntent = new Intent(context, LegislatorTabs.class).putExtra("tab", 2);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
