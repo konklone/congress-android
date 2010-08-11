@@ -28,14 +28,14 @@ public class NotificationsService extends WakefulIntentService implements LoadsT
 		LoadsYoutubeVideos, LoadsYahooNews {
 	private static final String TAG = "CONGRESS";
 
-	private static final int LEGISLATOR_UPDATES_COUNT = 3;
-	private static final int BILL_UPDATES_COUNT = 1;
-
 	private NotificationManager notifyManager;
 	private Database database;
 
-	private Map<String, Map<String, NotificationResult>> updates;
-	private Map<String, Integer> counts;
+	private Map<String, NotificationEntity> entities;
+
+	private enum UpdateType {
+		twitter, youtube, news;
+	}
 
 	public NotificationsService() {
 		super("NotificationService");
@@ -47,13 +47,7 @@ public class NotificationsService extends WakefulIntentService implements LoadsT
 		notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		database = new Database(this);
 		database.open();
-
-		updates = new HashMap<String, Map<String, NotificationResult>>();
-		updates.put("twitter", new HashMap<String, NotificationResult>());
-		updates.put("youtube", new HashMap<String, NotificationResult>());
-		updates.put("news", new HashMap<String, NotificationResult>());
-
-		counts = new HashMap<String, Integer>();
+		entities = new HashMap<String, NotificationEntity>();
 	}
 
 	@Override
@@ -65,131 +59,64 @@ public class NotificationsService extends WakefulIntentService implements LoadsT
 	@Override
 	protected void doWakefulWork(Intent intent) {
 		// check legislator updates
-		checkLegislatorTwitterUpdates();
-		checkLegislatorYoutubeUpdates();
-		checkLegislatorNewsUpdates();
+		checkUpdates("legislator");
 
 		// check bill updates
-		checkBillNewsUpdates();
+		checkUpdates("bill");
 
 		// check laws updates
 	}
 
-	private synchronized void incrementUpdateCounts(NotificationResult e) {
-		String id = e.id;
-		if (counts.containsKey(id))
-			counts.put(id, counts.get(id) + 1);
-		else
-			counts.put(id, 1);
 
-		String type = e.type;
-		int count = counts.get(id);
-		if ((type.equals("legislator") && count == LEGISLATOR_UPDATES_COUNT)
-				|| (type.equals("bill") && count == BILL_UPDATES_COUNT))
-			sendLegislatorNotification(e);
+	private void notify(NotificationEntity e) {
+		if (e.results > 0)
+			notifyManager.notify(Notifications.NOTIFY_UPDATES, Notifications.getNotification(this, e));
+		entities.remove(e.id);
 	}
 
-	private void sendLegislatorNotification(NotificationResult e) {
-		updates.get(e.notificationType).remove(e.id);
+	private void checkUpdates(String entityType) {
+		for (int i = 0; i < UpdateType.values().length; i++) {
+			UpdateType updateType = UpdateType.values()[i];
 
-		if (e.results > 0) {
-			Log.d(TAG, "Found new " + e.results + "results!");
-			notifyManager.notify(Notifications.NOTIFY_UPDATES, Notifications
-					.getTwitterNotification(this, e));
+			Cursor c = database.getNotifications(entityType, updateType.name());
+			if (c.moveToFirst()) {
+				do {
+					NotificationEntity e = database.loadEntity(c);
+					Log.d(TAG, "Checking " + updateType.name() + " updates for entity " + e.id);
+
+					switch (updateType) {
+					case twitter:
+						new LoadTweetsTask(this, e.id).execute(e.notificationData);
+						break;
+					case youtube:
+						new LoadYoutubeVideosTask(this, e.id).execute(e.notificationData);
+						break;
+					case news:
+						new LoadYahooNewsTask(this, e.id).execute(e.notificationData,
+								getResources().getString(R.string.yahoo_news_key));
+						break;
+					}
+
+					// keep this in the map, so when results are loaded, we'll
+					// know for which entity to send the notification
+					if (!entities.containsKey(e.id))
+						entities.put(e.id, e);
+				} while (c.moveToNext());
+			}
+			c.close();
 		}
-	}
-
-	private void checkLegislatorTwitterUpdates() {
-		Cursor c = database.getNotifications("legislator", "twitter");
-
-		if (c.moveToFirst()) {
-			do {
-				NotificationResult e = database.loadEntity(c);
-				Log.d(TAG, "Checking twitter updates for entity " + e.toString());
-
-				LoadTweetsTask task = new LoadTweetsTask(this, e.id);
-				task.execute(e.notificationData);
-
-				Map<String, NotificationResult> twitterUpdates = updates.get("twitter");
-				if (!twitterUpdates.containsKey(e.id))
-					twitterUpdates.put(e.id, e);
-
-			} while (c.moveToNext());
-		}
-		c.close();
-	}
-
-	private void checkLegislatorYoutubeUpdates() {
-		Cursor c = database.getNotifications("legislator", "youtube");
-
-		if (c.moveToFirst()) {
-			do {
-				NotificationResult e = database.loadEntity(c);
-				Log.d(TAG, "Checking youtube updates for entity " + e.toString());
-
-				LoadYoutubeVideosTask task = new LoadYoutubeVideosTask(this, e.id);
-				task.execute(e.notificationData);
-
-				Map<String, NotificationResult> youtubeUpdates = updates.get("youtube");
-				if (!youtubeUpdates.containsKey(e.id))
-					youtubeUpdates.put(e.id, e);
-
-			} while (c.moveToNext());
-		}
-		c.close();
-	}
-
-	private void checkLegislatorNewsUpdates() {
-		Cursor c = database.getNotifications("legislator", "news");
-
-		if (c.moveToFirst()) {
-			do {
-				NotificationResult e = database.loadEntity(c);
-				Log.d(TAG, "Checking yahoo news updates for entity " + e.toString());
-
-				LoadYahooNewsTask task = new LoadYahooNewsTask(this, e.id);
-				String apiKey = getResources().getString(R.string.yahoo_news_key);
-				task.execute(e.notificationData, apiKey);
-
-				Map<String, NotificationResult> newsUpdates = updates.get("news");
-				if (!newsUpdates.containsKey(e.id))
-					newsUpdates.put(e.id, e);
-
-			} while (c.moveToNext());
-		}
-		c.close();
-	}
-
-	private void checkBillNewsUpdates() {
-		Cursor c = database.getNotifications("bill", "news");
-
-		if (c.moveToFirst()) {
-			do {
-				NotificationResult e = database.loadEntity(c);
-				Log.d(TAG, "Checking yahoo news updates for entity " + e.toString());
-
-				LoadYahooNewsTask task = new LoadYahooNewsTask(this, e.id);
-				String apiKey = getResources().getString(R.string.yahoo_news_key);
-				task.execute(e.notificationData, apiKey);
-
-				Map<String, NotificationResult> newsUpdates = updates.get("news");
-				if (!newsUpdates.containsKey(e.id))
-					newsUpdates.put(e.id, e);
-
-			} while (c.moveToNext());
-		}
-		c.close();
 	}
 
 
 	public void onLoadTweets(List<Status> tweets, String... id) {
 		String eId = id[0];
-		NotificationResult e = updates.get("twitter").get(eId);
-		incrementUpdateCounts(e);
+		NotificationEntity e = entities.get(eId);
 
 		if (tweets != null && !tweets.isEmpty()) {
 			Log.d(TAG, "Loaded " + tweets.size() + " tweets for entity with id " + eId);
 
+			// first time don't send a notification, the user sees the tweets
+			// on the profile
 			if (e.lastSeenId == null) {
 				e.lastSeenId = new Long(tweets.get(tweets.size() - 1).id).toString();
 				return;
@@ -207,18 +134,21 @@ public class NotificationsService extends WakefulIntentService implements LoadsT
 			e.lastSeenId = new Long(tweets.get(tweets.size() - 1).id).toString();
 			e.results = tweets.size() - pos - 1;
 
-			Log.d(TAG, "Update last seen twitter id for entity " + e.toString());
-			long ok = database.updateLastSeenNotification(e.lastSeenId, e.notificationType, e.lastSeenId);
+			Log.d(TAG, "Last seen tweet for entity " + e.id + " is " + e.lastSeenId
+					+ ". There are " + e.results + " new ones");
+			long ok = database.updateLastSeenNotification(e.lastSeenId, e.notificationType,
+					e.lastSeenId);
 			if (ok == 0) {
 				Log.w(TAG, "Could not update last seen twitter id for entity " + e.toString());
 			}
+
+			notify(e);
 		}
 	}
 
 	public void onLoadYoutubeVideos(Video[] videos, String... id) {
 		String eId = id[0];
-		NotificationResult e = updates.get("youtube").get(eId);
-		incrementUpdateCounts(e);
+		NotificationEntity e = entities.get(eId);
 
 		if (videos != null && videos.length > 0) {
 			Log.d(TAG, "Loaded " + videos.length + " youtube videos for entity with id " + eId);
@@ -240,20 +170,21 @@ public class NotificationsService extends WakefulIntentService implements LoadsT
 			e.lastSeenId = videos[videos.length - 1].timestamp.toString();
 			e.results = videos.length - pos - 1;
 
-			Log.d(TAG, "Update last seen youtube video for entity " + e.toString());
+			Log.d(TAG, "Last seen video for entity " + e.id + " is " + e.lastSeenId
+					+ ". There are " + e.results + " new ones");
 			long ok = database.updateLastSeenNotification(e.lastSeenId, e.notificationType,
 					e.lastSeenId);
 			if (ok == 0) {
 				Log.w(TAG, "Could not update last seen youtube video for entity " + e.toString());
 			}
-		}
 
+			notify(e);
+		}
 	}
 
 	public void onLoadYahooNews(ArrayList<NewsItem> news, String... id) {
 		String eId = id[0];
-		NotificationResult e = updates.get("news").get(eId);
-		incrementUpdateCounts(e);
+		NotificationEntity e = entities.get(eId);
 
 		if (news != null && news.size() > 0) {
 			Log.d(TAG, "Loaded yahoo news for entity with id " + eId);
@@ -275,14 +206,15 @@ public class NotificationsService extends WakefulIntentService implements LoadsT
 			e.lastSeenId = news.get(news.size() - 1).timestamp.toString();
 			e.results = news.size() - pos - 1;
 
-			Log.d(TAG, "Update last seen youtube video for entity " + e.toString());
+			Log.d(TAG, "Last seen news for entity " + e.id + " is " + e.lastSeenId + ". There are "
+					+ e.results + " new ones");
 			long ok = database.updateLastSeenNotification(e.lastSeenId, e.notificationType,
 					e.lastSeenId);
 			if (ok == 0) {
 				Log.w(TAG, "Could not update last seen youtube video for entity " + e.toString());
 			}
 
+			notify(e);
 		}
-
 	}
 }
