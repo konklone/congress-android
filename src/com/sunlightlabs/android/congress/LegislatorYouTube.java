@@ -30,12 +30,12 @@ import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
 import com.sunlightlabs.android.congress.Footer.State;
 import com.sunlightlabs.android.congress.LegislatorYouTube.VideoAdapter.VideoHolder;
 import com.sunlightlabs.android.congress.notifications.Notifications;
+import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask;
+import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask;
+import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask.LoadsThumb;
+import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask.LoadsYoutubeVideos;
 import com.sunlightlabs.android.congress.utils.ImageUtils;
-import com.sunlightlabs.android.congress.utils.LoadYoutubeThumbTask;
-import com.sunlightlabs.android.congress.utils.LoadYoutubeVideosTask;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.android.congress.utils.LoadYoutubeThumbTask.LoadsThumb;
-import com.sunlightlabs.android.congress.utils.LoadYoutubeVideosTask.LoadsYoutubeVideos;
 import com.sunlightlabs.youtube.Video;
 
 public class LegislatorYouTube extends ListActivity implements LoadsThumb, LoadsYoutubeVideos,

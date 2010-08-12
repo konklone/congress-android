@@ -21,9 +21,9 @@ import android.widget.Toast;
 import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
 import com.sunlightlabs.android.congress.Footer.State;
 import com.sunlightlabs.android.congress.notifications.Notifications;
-import com.sunlightlabs.android.congress.utils.LoadTweetsTask;
+import com.sunlightlabs.android.congress.tasks.LoadTweetsTask;
+import com.sunlightlabs.android.congress.tasks.LoadTweetsTask.LoadsTweets;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.android.congress.utils.LoadTweetsTask.LoadsTweets;
 
 public class LegislatorTwitter extends ListActivity implements LoadsTweets, OnFooterClickListener {
 	private final static String NOTIFICATION_TYPE = "twitter";

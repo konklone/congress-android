@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.congress.utils;
+package com.sunlightlabs.android.congress.tasks;
 
 import java.util.List;
 

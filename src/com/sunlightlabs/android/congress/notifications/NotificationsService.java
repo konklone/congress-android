@@ -15,12 +15,12 @@ import android.util.Log;
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.sunlightlabs.android.congress.Database;
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.utils.LoadTweetsTask;
-import com.sunlightlabs.android.congress.utils.LoadYahooNewsTask;
-import com.sunlightlabs.android.congress.utils.LoadYoutubeVideosTask;
-import com.sunlightlabs.android.congress.utils.LoadTweetsTask.LoadsTweets;
-import com.sunlightlabs.android.congress.utils.LoadYahooNewsTask.LoadsYahooNews;
-import com.sunlightlabs.android.congress.utils.LoadYoutubeVideosTask.LoadsYoutubeVideos;
+import com.sunlightlabs.android.congress.tasks.LoadTweetsTask;
+import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask;
+import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask;
+import com.sunlightlabs.android.congress.tasks.LoadTweetsTask.LoadsTweets;
+import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask.LoadsYahooNews;
+import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask.LoadsYoutubeVideos;
 import com.sunlightlabs.yahoo.news.NewsItem;
 import com.sunlightlabs.youtube.Video;
 

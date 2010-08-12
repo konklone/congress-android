@@ -1,4 +1,6 @@
-package com.sunlightlabs.android.congress.utils;
+package com.sunlightlabs.android.congress.tasks;
+
+import com.sunlightlabs.android.congress.utils.ImageUtils;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

@@ -26,9 +26,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
-import com.sunlightlabs.android.congress.utils.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.LocationUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.AddressUpdater.AddressUpdateable;

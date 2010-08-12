@@ -1,8 +1,9 @@
-package com.sunlightlabs.android.congress.utils;
+package com.sunlightlabs.android.congress.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.BillService;

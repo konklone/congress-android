@@ -23,9 +23,9 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
 import com.sunlightlabs.android.congress.Footer.State;
 import com.sunlightlabs.android.congress.notifications.Notifications;
-import com.sunlightlabs.android.congress.utils.LoadYahooNewsTask;
+import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask;
+import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask.LoadsYahooNews;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.android.congress.utils.LoadYahooNewsTask.LoadsYahooNews;
 import com.sunlightlabs.yahoo.news.NewsItem;
 
 public class NewsList extends ListActivity implements LoadsYahooNews, OnFooterClickListener {
