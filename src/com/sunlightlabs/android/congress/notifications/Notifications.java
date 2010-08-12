@@ -16,14 +16,14 @@ import com.sunlightlabs.android.congress.utils.Utils;
 public class Notifications {
 	private static final String TAG = "CONGRESS";
 
-	public static final String START_SERVICE_INTENT = "com.sunlightlabs.android.congress.intent.action.START_SERVICE";
-	public static final String STOP_SERVICE_INTENT = "com.sunlightlabs.android.congress.intent.action.STOP_SERVICE";
+	public static final String START_SERVICE = "com.sunlightlabs.android.congress.intent.action.START_SERVICE";
+	public static final String STOP_SERVICE = "com.sunlightlabs.android.congress.intent.action.STOP_SERVICE";
 
 	public static final int NOTIFY_UPDATES = 0;
 
 	private static PendingIntent getPendingIntent(Context context) {
-		Intent i = new Intent(context, OnAlarmReceiver.class);
-		return PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+		Intent intent = new Intent(context, OnAlarmReceiver.class);
+		return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 
 	public static int getIntervalMillis(Context context) {
@@ -49,28 +49,23 @@ public class Notifications {
 	}
 
 	public static void startNotificationsBroadcast(Context context) {
-		Intent i = new Intent();
-		i.setAction(Notifications.START_SERVICE_INTENT);
-		context.sendBroadcast(i);
+		context.sendBroadcast(new Intent(Notifications.START_SERVICE));
 	}
 
 	public static void stopNotificationsBroadcast(Context context) {
-		Intent i = new Intent();
-		i.setAction(Notifications.STOP_SERVICE_INTENT);
-		context.sendBroadcast(i);
+		context.sendBroadcast(new Intent(Notifications.STOP_SERVICE));
 	}
 
-	public static Notification getNotification(Context context, NotificationEntity e) {
-
+	public static Notification getNotification(Context context, NotificationEntity entity) {
 		// TODO create a custom notification for each type of update
 		int icon = R.drawable.icon;
-		CharSequence tickerText = "New Updates for " + e.name;
+		CharSequence tickerText = "New Updates for " + entity.name;
 		long when = System.currentTimeMillis();
 
 		Notification notification = new Notification(icon, tickerText, when);
 
-		CharSequence contentTitle = "New Updates for " + e.name;
-		CharSequence contentText = "There are " + e.results + " new updates.";
+		CharSequence contentTitle = "New Updates for " + entity.name;
+		CharSequence contentText = "There are " + entity.results + " new updates.";
 		Intent notificationIntent = new Intent(context, LegislatorTabs.class).putExtra("tab", 2);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
