@@ -1,17 +1,18 @@
 package com.sunlightlabs.android.congress;
 
 import android.app.Activity;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.sunlightlabs.android.congress.tasks.LoadLegislatorTask;
+import com.sunlightlabs.android.congress.tasks.LoadLegislatorTask.LoadsLegislator;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
-import com.sunlightlabs.congress.services.LegislatorService;
 
-public class LegislatorLoader extends Activity {
+public class LegislatorLoader extends Activity implements LoadsLegislator {
 	private LoadLegislatorTask loadLegislatorTask = null;
 	private String id;
+	private int tab;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -19,12 +20,13 @@ public class LegislatorLoader extends Activity {
 		setContentView(R.layout.loading_fullscreen);
 		
 		id = getIntent().getStringExtra("legislator_id");
+		tab = getIntent().getIntExtra("tab", 0);
         
         loadLegislatorTask = (LoadLegislatorTask) getLastNonConfigurationInstance();
         if (loadLegislatorTask != null)
         	loadLegislatorTask.onScreenLoad(this);
         else
-        	loadLegislatorTask = (LoadLegislatorTask) new LoadLegislatorTask(this).execute(id);
+			loadLegislatorTask = (LoadLegislatorTask) new LoadLegislatorTask(this, tab).execute(id);
 	}
 	
 	@Override
@@ -33,43 +35,19 @@ public class LegislatorLoader extends Activity {
 	}
 	
 	
-	public void onLoadLegislator(Legislator legislator) {
-		if (legislator != null)
-			startActivity(Utils.legislatorIntent(this, legislator));
+	public void onLoadLegislator(Legislator legislator, int... tab) {
+		if (legislator != null) {
+			Intent i = null;
+			if (tab != null && tab.length > 0)
+				i = Utils.legislatorIntent(this, legislator, tab[0]);
+			else
+				i = Utils.legislatorIntent(this, legislator);
+			startActivity(i);
+		}
 		else
 			Utils.alert(this, R.string.error_connection);
 		
+		loadLegislatorTask = null;
 		finish();
 	}
-	
-	private class LoadLegislatorTask extends AsyncTask<String,Void,Legislator> {
-		public LegislatorLoader context;
-    	
-    	public LoadLegislatorTask(LegislatorLoader context) {
-    		super();
-    		this.context = context;
-    		Utils.setupSunlight(context);
-    	}
-    	
-    	public void onScreenLoad(LegislatorLoader context) {
-    		this.context = context;
-    	}
-    	
-    	@Override
-    	protected Legislator doInBackground(String... id) {
-    		try {
-				return LegislatorService.find(id[0]);
-			} catch(CongressException exception) {
-				return null;
-			}
-    	}
-    	
-    	@Override
-    	protected void onPostExecute(Legislator legislator) {
-    		if (isCancelled()) return;
-    		context.loadLegislatorTask = null;
-    		
-    		context.onLoadLegislator(legislator);
-    	}
-    }
 }

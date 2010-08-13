@@ -52,6 +52,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 			displayBill();
 	}
 	
+	@Override
 	public Object onRetainNonConfigurationInstance() {
 		return new BillVotesHolder(loadBillTask, bill);
 	}
@@ -60,7 +61,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 		return this;
 	}
 	
-	public void onLoadBill(Bill bill) {
+	public void onLoadBill(Bill bill, int... tab) {
 		this.loadBillTask = null;
 		this.bill = bill;
 		displayBill();
@@ -96,7 +97,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
         
         @Override
         public boolean isEnabled(int position) {
-        	return ((Bill.Vote) getItem(position)).roll_id != null;
+        	return (getItem(position)).roll_id != null;
         }
         
         @Override
@@ -109,6 +110,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
         	return 1;
         }
 
+		@Override
 		public View getView(int position, View view, ViewGroup parent) {
 			if (view == null)
 				view = inflater.inflate(R.layout.bill_vote, null);

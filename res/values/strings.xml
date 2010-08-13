@@ -118,4 +118,15 @@
     
     <string name="notify_interval">Notifications Interval</string>
     <string name="notify_interval_summary">Choose how frequently you want to receive notifications.</string>
+    
+    <string name="notification_ticker_text">Congress updates</string>
+    <string name="notification_title">New updates for %1$s</string>
+    
+    <string name="tab_profile">Profile</string>
+    <string name="tab_tweets">Tweets</string>
+    <string name="tab_videos">Videos</string>
+    <string name="tab_news">News</string>
+    <string name="tab_details">Details</string>
+    <string name="tab_history">History</string>
+    <string name="tab_votes">Votes</string>
 </resources>

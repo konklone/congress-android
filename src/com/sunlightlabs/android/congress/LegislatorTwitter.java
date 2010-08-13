@@ -20,14 +20,13 @@ import android.widget.Toast;
 
 import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
 import com.sunlightlabs.android.congress.Footer.State;
+import com.sunlightlabs.android.congress.notifications.NotificationType;
 import com.sunlightlabs.android.congress.notifications.Notifications;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask.LoadsTweets;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class LegislatorTwitter extends ListActivity implements LoadsTweets, OnFooterClickListener {
-	private final static String NOTIFICATION_TYPE = "twitter";
-
 	private List<Status> tweets;
 	private LoadTweetsTask loadTweetsTask = null;
 	
@@ -96,13 +95,14 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets, OnFo
 		footer.setEntityId(entityId);
 		footer.setEntityName(entityName);
 		footer.setEntityType(entityType);
-		footer.setNotificationType(NOTIFICATION_TYPE);
+		footer.setNotificationType(NotificationType.tweets);
 		footer.setNotificationData(twitterId);
 		footer.setDatabase(database);
 
 		// if the service is started, check the database
 		if (Utils.getBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, Preferences.DEFAULT_NOTIFY_ENABLED)
-				&& Database.NOTIFICATIONS_ON.equals(database.getNotificationStatus(entityId, NOTIFICATION_TYPE)))
+				&& Database.NOTIFICATIONS_ON.equals(database.getNotificationStatus(entityId,
+						NotificationType.tweets)))
 			footer.setOn();
 		else
 			footer.setOff();

@@ -14,13 +14,17 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class LegislatorTabs extends TabActivity {
+	public enum Tabs {
+		profile, tweets, videos, news;
+	}
+	
 	private Legislator legislator;
 	private int tab;
 
 	private Database database;
 	private Cursor cursor;
 	
-	ImageView star;
+	private ImageView star;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,16 +95,16 @@ public class LegislatorTabs extends TabActivity {
 		Resources res = getResources();
 		TabHost tabHost = getTabHost();
 		
-		Utils.addTab(this, tabHost, "profile", profileIntent(), "Profile", res.getDrawable(R.drawable.tab_profile));
-		Utils.addTab(this, tabHost, "news", newsIntent(), "News", res.getDrawable(R.drawable.tab_news));
+		Utils.addTab(this, tabHost, Tabs.profile.name(), profileIntent(), getString(R.string.tab_profile), res.getDrawable(R.drawable.tab_profile));
+		Utils.addTab(this, tabHost, Tabs.news.name(), newsIntent(), getString(R.string.tab_news), res.getDrawable(R.drawable.tab_news));
 		
 		String twitter_id = legislator.twitter_id;
 		if (legislator.in_office && twitter_id != null && !(twitter_id.equals("")))
-			Utils.addTab(this, tabHost, "twitter", twitterIntent(), "Twitter", res.getDrawable(R.drawable.tab_twitter));
+			Utils.addTab(this, tabHost, Tabs.tweets.name(), twitterIntent(), getString(R.string.tab_tweets), res.getDrawable(R.drawable.tab_twitter));
 		
 		String youtube_id = legislator.youtubeUsername();
 		if (legislator.in_office && youtube_id != null && !(youtube_id.equals("")))
-			Utils.addTab(this, tabHost, "youtube", youtubeIntent(), "YouTube", res.getDrawable(R.drawable.tab_video));
+			Utils.addTab(this, tabHost, Tabs.videos.name(), youtubeIntent(), getString(R.string.tab_videos), res.getDrawable(R.drawable.tab_video));
 			
 		tabHost.setCurrentTab(tab);
 	}

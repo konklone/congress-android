@@ -2,9 +2,9 @@ package com.sunlightlabs.android.congress;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
-import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
@@ -13,21 +13,23 @@ import com.sunlightlabs.congress.models.CongressException;
 public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 	private LoadBillTask loadBillTask;
 	private String id, code;
+	private int tab;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading_fullscreen);
 		
-		Bundle extras = getIntent().getExtras();
-		id = extras.getString("id");
-		code = extras.getString("code");
+		Intent intent = getIntent();
+		id = intent.getStringExtra("id");
+		code = intent.getStringExtra("code");
+		tab = intent.getIntExtra("tab", 0);
 		
 		loadBillTask = (LoadBillTask) getLastNonConfigurationInstance();
 		if (loadBillTask != null)
 			loadBillTask.onScreenLoad(this);
 		else
-			loadBillTask = (LoadBillTask) new LoadBillTask(this, id).execute("basic,sponsor");
+			loadBillTask = (LoadBillTask) new LoadBillTask(this, id, tab).execute("basic,sponsor");
 		
 		setupControls();
 	}
@@ -38,11 +40,12 @@ public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 			Utils.setTitle(this, Bill.formatCode(code));
 	}
 	
+	@Override
 	public Object onRetainNonConfigurationInstance() {
 		return loadBillTask;
 	}
 	
-	public void onLoadBill(Bill bill) {
+	public void onLoadBill(Bill bill, int... tab) {
 		startActivity(Utils.billIntent(this, bill));
 		finish();
 	}

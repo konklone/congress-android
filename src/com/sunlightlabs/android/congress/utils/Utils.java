@@ -70,6 +70,13 @@ public class Utils {
 		return new Intent(context, LegislatorTabs.class).putExtra("legislator", legislator);
 	}
 
+	// Suitable for a direct link to a legislator, when a specific tab is to be open first
+	public static Intent legislatorIntent(Context context, Legislator legislator, int tab) {
+		Intent i = legislatorIntent(context, legislator);
+		i.putExtra("tab", tab);
+		return i;
+	}
+
 	public static Intent legislatorIntent(Context context, Class<?> activityClass, Legislator legislator) {
 		return new Intent(context, activityClass).putExtra("legislator", legislator);
 	}

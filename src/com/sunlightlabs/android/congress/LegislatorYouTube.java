@@ -29,6 +29,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
 import com.sunlightlabs.android.congress.Footer.State;
 import com.sunlightlabs.android.congress.LegislatorYouTube.VideoAdapter.VideoHolder;
+import com.sunlightlabs.android.congress.notifications.NotificationType;
 import com.sunlightlabs.android.congress.notifications.Notifications;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask;
@@ -40,8 +41,6 @@ import com.sunlightlabs.youtube.Video;
 
 public class LegislatorYouTube extends ListActivity implements LoadsThumb, LoadsYoutubeVideos,
 		OnFooterClickListener {
-	private static final String NOTIFICATION_TYPE = "youtube";
-
 	private static final int MENU_WATCH = 0;
 	private static final int MENU_COPY = 1;
 	
@@ -124,13 +123,14 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 		footer.setEntityId(entityId);
 		footer.setEntityName(entityName);
 		footer.setEntityType(entityType);
-		footer.setNotificationType(NOTIFICATION_TYPE);
+		footer.setNotificationType(NotificationType.videos);
 		footer.setNotificationData(youtubeUsername);
 		footer.setDatabase(database);
 
 		// if the service is started, check the database
 		if (Utils.getBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, Preferences.DEFAULT_NOTIFY_ENABLED)
-				&& Database.NOTIFICATIONS_ON.equals(database.getNotificationStatus(entityId, NOTIFICATION_TYPE)))
+				&& Database.NOTIFICATIONS_ON.equals(database.getNotificationStatus(entityId,
+						NotificationType.videos)))
 			footer.setOn();
 		else
 			footer.setOff();

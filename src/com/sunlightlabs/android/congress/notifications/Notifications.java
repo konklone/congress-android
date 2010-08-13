@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.sunlightlabs.android.congress.BillLoader;
+import com.sunlightlabs.android.congress.BillTabs;
+import com.sunlightlabs.android.congress.LegislatorLoader;
 import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.Preferences;
 import com.sunlightlabs.android.congress.R;
@@ -57,19 +60,31 @@ public class Notifications {
 	}
 
 	public static Notification getNotification(Context context, NotificationEntity entity) {
-		// TODO create a custom notification for each type of update
 		int icon = R.drawable.icon;
-		CharSequence tickerText = "New Updates for " + entity.name;
+		CharSequence tickerText = context.getString(R.string.notification_ticker_text);
 		long when = System.currentTimeMillis();
 
 		Notification notification = new Notification(icon, tickerText, when);
-
-		CharSequence contentTitle = "New Updates for " + entity.name;
-		CharSequence contentText = "There are " + entity.results + " new updates.";
-		Intent notificationIntent = new Intent(context, LegislatorTabs.class).putExtra("tab", 2);
+		CharSequence contentTitle = String.format(context.getString(R.string.notification_title), entity.name);
+		// TODO handle plural or singular results
+		CharSequence contentText = entity.results + " new " + entity.notificationType.name();
+		
+		Intent notificationIntent = null;
+		
+		if(entity.type.equals("legislator")) {
+			notificationIntent = new Intent(context, LegislatorLoader.class)
+				.putExtra("legislator_id", entity.id)
+				.putExtra("tab", LegislatorTabs.Tabs.valueOf(entity.notificationType.name()));
+		}
+		else if(entity.type.equals("bill")) {
+			notificationIntent = new Intent(context, BillLoader.class).putExtra("id", entity.id)
+					.putExtra("tab", BillTabs.Tabs.valueOf(entity.notificationType.name()));
+		}
+				
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
 		notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		return notification;
 	}
 }

@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.NotificationType;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -19,9 +20,9 @@ import com.sunlightlabs.congress.services.Drumbone;
 
 public class Database {
 	private static final int DATABASE_VERSION = 3;
-	
+
 	public boolean closed = true;
-	
+
 	private static final String TAG = "CongressDatabase";
 	private static final String DATABASE_NAME = "congress.db";
 
@@ -157,14 +158,18 @@ public class Database {
 		return this;
 	}
 
+	public boolean isOpen() {
+		return database.isOpen();
+	}
+
 	public void close() {
 		closed = true;
 		helper.close();
 	}
-	
+
 	public static Bill loadBill(Cursor c) throws CongressException {
 		Bill bill = new Bill();
-		
+
 		bill.id = c.getString(c.getColumnIndex("id"));
 		bill.type = c.getString(c.getColumnIndex("type"));
 		bill.number = c.getInt(c.getColumnIndex("number"));
@@ -190,15 +195,19 @@ public class Database {
 			bill.senate_result_at = parseDate(c.getString(c.getColumnIndex("senate_result_at")));
 			bill.passed_at = parseDate(c.getString(c.getColumnIndex("passed_at")));
 			bill.vetoed_at = parseDate(c.getString(c.getColumnIndex("vetoed_at")));
-			bill.override_house_result_at = parseDate(c.getString(c.getColumnIndex("override_house_result_at")));
-			bill.override_senate_result_at = parseDate(c.getString(c.getColumnIndex("override_senate_result_at")));
-			bill.awaiting_signature_since = parseDate(c.getString(c.getColumnIndex("awaiting_signature_since")));
+			bill.override_house_result_at = parseDate(c.getString(c
+					.getColumnIndex("override_house_result_at")));
+			bill.override_senate_result_at = parseDate(c.getString(c
+					.getColumnIndex("override_senate_result_at")));
+			bill.awaiting_signature_since = parseDate(c.getString(c
+					.getColumnIndex("awaiting_signature_since")));
 			bill.enacted_at = parseDate(c.getString(c.getColumnIndex("enacted_at")));
-			
+
 		} catch (ParseException e) {
-			throw new CongressException(e, "Cannot parse a date for a Bill taken from the database.");
+			throw new CongressException(e,
+					"Cannot parse a date for a Bill taken from the database.");
 		}
-		
+
 		Legislator sponsor = new Legislator();
 		sponsor.id = c.getString(c.getColumnIndex("sponsor_id"));
 		sponsor.party = c.getString(c.getColumnIndex("sponsor_party"));
@@ -211,7 +220,7 @@ public class Database {
 
 		return bill;
 	}
-	
+
 	public static Legislator loadLegislator(Cursor c) {
 		Legislator legislator = new Legislator();
 
@@ -235,20 +244,22 @@ public class Database {
 
 		return legislator;
 	}
-	
-	public Cursor getNotifications(String entityType, String notificationType) {
-		StringBuilder query = new StringBuilder("entity_type=? AND notification_type=? AND status=?");
+
+	public Cursor getNotifications(String entityType, NotificationType notificationType) {
+		StringBuilder query = new StringBuilder(
+				"entity_type=? AND notification_type=? AND status=?");
 
 		return database.query(NOTIFICATIONS_TABLE, NOTIFICATIONS_COLUMNS, query.toString(),
-				new String[] { entityType, notificationType, Database.NOTIFICATIONS_ON }, null,
-				null, null);
+				new String[] { entityType, notificationType.name(), Database.NOTIFICATIONS_ON },
+				null, null, null);
 	}
 
-	public String getNotificationStatus(String entityId, String notificationType) {
+	public String getNotificationStatus(String entityId, NotificationType notificationType) {
 		StringBuilder query = new StringBuilder("entity_id=? AND notification_type=?");
 
-		Cursor c = database.query(NOTIFICATIONS_TABLE, new String[] { "status", }, query
-				.toString(), new String[] { entityId, notificationType }, null, null, null);
+		Cursor c = database.query(NOTIFICATIONS_TABLE, new String[] { "status", },
+				query.toString(), new String[] { entityId, notificationType.name() }, null, null,
+				null);
 		String status = null;
 		if (c.moveToFirst())
 			status = c.getString(c.getColumnIndex("status"));
@@ -257,12 +268,12 @@ public class Database {
 	}
 
 	public long addNotification(String entityId, String entityType, String entityName,
-			String notificationType, String notificationData) {
+			NotificationType notificationType, String notificationData) {
 		ContentValues cv = new ContentValues(NOTIFICATIONS_COLUMNS.length);
 		cv.put("entity_id", entityId);
 		cv.put("entity_type", entityType);
 		cv.put("entity_name", entityName);
-		cv.put("notification_type", notificationType);
+		cv.put("notification_type", notificationType.name());
 		cv.put("notification_data", notificationData);
 		cv.put("last_seen_id", (String) null);
 		cv.put("status", Database.NOTIFICATIONS_ON);
@@ -274,27 +285,29 @@ public class Database {
 		e.id = c.getString(c.getColumnIndex("entity_id"));
 		e.name = c.getString(c.getColumnIndex("entity_name"));
 		e.type = c.getString(c.getColumnIndex("entity_type"));
-		e.notificationType = c.getString(c.getColumnIndex("notification_type"));
+		e.notificationType = NotificationType.valueOf(c.getString(c.getColumnIndex("notification_type")));
 		e.notificationData = c.getString(c.getColumnIndex("notification_data"));
 		e.status = c.getString(c.getColumnIndex("status"));
 		e.lastSeenId = c.getString(c.getColumnIndex("last_seen_id"));
 		return e;
 	}
 
-	public long setNotificationStatus(String entityId, String notificationType, String status) {
+	public long setNotificationStatus(String entityId, NotificationType notificationType,
+			String status) {
 		ContentValues cv = new ContentValues(1);
 		cv.put("status", status);
 
 		return database.update(NOTIFICATIONS_TABLE, cv, "entity_id=? AND notification_type=?",
-				new String[] { entityId, notificationType });
+				new String[] { entityId, notificationType.name() });
 	}
 
-	public long updateLastSeenNotification(String entityId, String notificationType, String lastSeenId) {
+	public long updateLastSeenNotification(String entityId, NotificationType notificationType,
+			String lastSeenId) {
 		ContentValues cv = new ContentValues(1);
 		cv.put("last_seen_id", lastSeenId);
 
 		return database.update(NOTIFICATIONS_TABLE, cv, "entity_id=? AND notification_type=?",
-				new String[] { entityId, notificationType });
+				new String[] { entityId, notificationType.name() });
 	}
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {
@@ -329,11 +342,12 @@ public class Database {
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			Log.w(TAG, "Upgrading " + DATABASE_NAME + " from version " + oldVersion + " to "
 					+ newVersion + ", wiping old data");
-			
+
 			// Version 1 - Never released
-			// Version 2 - Favorites (bills and legislators table), as released in version 2.6
+			// Version 2 - Favorites (bills and legislators table), as released
+			// in version 2.6
 			// Version 3 - Notifications (notifications table), not yet released
-			
+
 			if (oldVersion <= 2)
 				db.execSQL(sqlCreateTable(NOTIFICATIONS_TABLE, NOTIFICATIONS_COLUMNS));
 		}

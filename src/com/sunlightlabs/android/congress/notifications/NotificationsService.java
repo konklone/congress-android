@@ -33,10 +33,6 @@ public class NotificationsService extends WakefulIntentService implements LoadsT
 
 	private Map<String, NotificationEntity> entities;
 
-	private enum UpdateType {
-		twitter, youtube, news;
-	}
-
 	public NotificationsService() {
 		super("NotificationService");
 	}
@@ -47,6 +43,7 @@ public class NotificationsService extends WakefulIntentService implements LoadsT
 		notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		database = new Database(this);
 		database.open();
+		Log.d(TAG, "Creating notifications service and opening db");
 		entities = new HashMap<String, NotificationEntity>();
 	}
 
@@ -54,6 +51,7 @@ public class NotificationsService extends WakefulIntentService implements LoadsT
 	public void onDestroy() {
 		super.onDestroy();
 		database.close();
+		Log.d(TAG, "Destroying notifications service and closing db");
 	}
 
 	@Override
@@ -75,20 +73,20 @@ public class NotificationsService extends WakefulIntentService implements LoadsT
 	}
 
 	private void checkUpdates(String entityType) {
-		for (int i = 0; i < UpdateType.values().length; i++) {
-			UpdateType updateType = UpdateType.values()[i];
+		for (int i = 0; i < NotificationType.values().length; i++) {
+			NotificationType notificationType = NotificationType.values()[i];
 
-			Cursor c = database.getNotifications(entityType, updateType.name());
+			Cursor c = database.getNotifications(entityType, notificationType);
 			if (c.moveToFirst()) {
 				do {
 					NotificationEntity e = database.loadEntity(c);
-					Log.d(TAG, "Checking " + updateType.name() + " updates for entity " + e.id);
+					Log.d(TAG, "Checking " + notificationType.name() + " updates for entity " + e.id);
 
-					switch (updateType) {
-					case twitter:
+					switch (notificationType) {
+					case tweets:
 						new LoadTweetsTask(this, e.id).execute(e.notificationData);
 						break;
-					case youtube:
+					case videos:
 						new LoadYoutubeVideosTask(this, e.id).execute(e.notificationData);
 						break;
 					case news:
@@ -113,7 +111,7 @@ public class NotificationsService extends WakefulIntentService implements LoadsT
 		NotificationEntity e = entities.get(eId);
 
 		if (tweets != null && !tweets.isEmpty()) {
-			Log.d(TAG, "Loaded " + tweets.size() + " tweets for entity with id " + eId);
+			Log.d(TAG, "Loaded " + tweets + " tweets for entity with id " + eId);
 
 			// first time don't send a notification, the user sees the tweets
 			// on the profile
@@ -136,10 +134,15 @@ public class NotificationsService extends WakefulIntentService implements LoadsT
 
 			Log.d(TAG, "Last seen tweet for entity " + e.id + " is " + e.lastSeenId
 					+ ". There are " + e.results + " new ones");
-			long ok = database.updateLastSeenNotification(e.lastSeenId, e.notificationType,
-					e.lastSeenId);
-			if (ok == 0) {
-				Log.w(TAG, "Could not update last seen twitter id for entity " + e.toString());
+
+			if (!database.isOpen()) {
+				database.open();
+				long ok = database.updateLastSeenNotification(e.lastSeenId, e.notificationType,
+						e.lastSeenId);
+				if (ok == 0)
+					Log.w(TAG, "Could not update last seen twitter id for entity " + e.toString());
+
+				database.close();
 			}
 
 			notify(e);
@@ -172,10 +175,16 @@ public class NotificationsService extends WakefulIntentService implements LoadsT
 
 			Log.d(TAG, "Last seen video for entity " + e.id + " is " + e.lastSeenId
 					+ ". There are " + e.results + " new ones");
-			long ok = database.updateLastSeenNotification(e.lastSeenId, e.notificationType,
-					e.lastSeenId);
-			if (ok == 0) {
-				Log.w(TAG, "Could not update last seen youtube video for entity " + e.toString());
+
+			if (!database.isOpen()) {
+				database.open();
+				long ok = database.updateLastSeenNotification(e.lastSeenId, e.notificationType,
+						e.lastSeenId);
+				if (ok == 0)
+					Log.w(TAG, "Could not update last seen youtube video for entity "
+							+ e.toString());
+
+				database.close();
 			}
 
 			notify(e);
@@ -208,10 +217,16 @@ public class NotificationsService extends WakefulIntentService implements LoadsT
 
 			Log.d(TAG, "Last seen news for entity " + e.id + " is " + e.lastSeenId + ". There are "
 					+ e.results + " new ones");
-			long ok = database.updateLastSeenNotification(e.lastSeenId, e.notificationType,
-					e.lastSeenId);
-			if (ok == 0) {
-				Log.w(TAG, "Could not update last seen youtube video for entity " + e.toString());
+
+			if (!database.isOpen()) {
+				database.open();
+				long ok = database.updateLastSeenNotification(e.lastSeenId, e.notificationType,
+						e.lastSeenId);
+				if (ok == 0)
+					Log.w(TAG, "Could not update last seen youtube video for entity "
+							+ e.toString());
+
+				database.close();
 			}
 
 			notify(e);

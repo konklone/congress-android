@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.sunlightlabs.android.congress.notifications.NotificationType;
+
 public class Footer extends RelativeLayout {
 	private final static String TAG = "CONGRESS";
 
@@ -27,7 +29,8 @@ public class Footer extends RelativeLayout {
 	private State state;
 
 	private boolean hasEntity = false;
-	private String entityId, entityType, entityName, notificationType, notificationData;
+	private String entityId, entityType, entityName, notificationData;
+	private NotificationType notificationType;
 	private Database database;
 
 	public Footer(Context context, AttributeSet attrs) {
@@ -40,9 +43,9 @@ public class Footer extends RelativeLayout {
 		if (textViewId == 0)
 			e = new IllegalArgumentException(a.getPositionDescription()
 					+ ": The textView attribute is required and must refer to a valid child.");
-		
+
 		imageViewId = a.getResourceId(R.styleable.Footer_imageView, 0);
-		if(imageViewId == 0)
+		if (imageViewId == 0)
 			e = new IllegalArgumentException(a.getPositionDescription()
 					+ ": The imageView attribute is required and must refer to a valid child.");
 
@@ -76,28 +79,32 @@ public class Footer extends RelativeLayout {
 		state = State.OFF;
 
 		setOnClickListener(new View.OnClickListener() {
-			
+
 			public void onClick(View v) {
 				boolean ok = true;
-				
+
 				if (hasEntity) {
 					String status = database.getNotificationStatus(entityId, notificationType);
-					Log.d(TAG, notificationType + " notifications for entity " + entityId + " are " + status);
-					
+					Log.d(TAG, notificationType + " notifications for entity " + entityId + " are "
+							+ status);
+
 					// must turn notifications ON
-					if(state == State.OFF) {
-								
-						// there is no entry in the notifications table for this entity
+					if (state == State.OFF) {
+
+						// there is no entry in the notifications table for this
+						// entity
 						if (status == null) {
 							ok = database.addNotification(entityId, entityType, entityName,
 									notificationType, notificationData) != -1;
 							Log.d(TAG, "Adding " + notificationType + " notifications for entity "
 									+ entityId + " result is: " + ok);
 						}
-						
-						// there is an entry in the notifications table for this entity
+
+						// there is an entry in the notifications table for this
+						// entity
 						else {
-							ok = database.setNotificationStatus(entityId, notificationType, Database.NOTIFICATIONS_ON) != -1;
+							ok = database.setNotificationStatus(entityId, notificationType,
+									Database.NOTIFICATIONS_ON) != -1;
 							Log.d(TAG, "Setting " + notificationType
 									+ " notifications ON for entity " + entityId + " result is: "
 									+ ok);
@@ -106,13 +113,14 @@ public class Footer extends RelativeLayout {
 
 					// must turn notifications OFF
 					else {
-						ok = database.setNotificationStatus(entityId, notificationType, Database.NOTIFICATIONS_OFF) != -1;
+						ok = database.setNotificationStatus(entityId, notificationType,
+								Database.NOTIFICATIONS_OFF) != -1;
 						Log.d(TAG, "Setting " + notificationType + " notifications OFF for entity "
 								+ entityId + " result is: " + ok);
 					}
 				}
 
-				if(ok) 
+				if (ok)
 					if (state == State.OFF)
 						setOn();
 					else
@@ -164,7 +172,7 @@ public class Footer extends RelativeLayout {
 		this.entityName = entityName;
 	}
 
-	public void setNotificationType(String notificationType) {
+	public void setNotificationType(NotificationType notificationType) {
 		this.notificationType = notificationType;
 	}
 

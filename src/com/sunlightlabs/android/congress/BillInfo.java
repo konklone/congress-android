@@ -186,7 +186,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
         }
 	}
 	
-	public void onLoadBill(Bill bill) {
+	public void onLoadBill(Bill bill, int... tab) {
 		this.loadBillTask = null;
 		this.summary = bill.summary;
 		displaySummary();
