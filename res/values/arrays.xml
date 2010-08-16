@@ -118,17 +118,17 @@
 		<item>Wyoming</item>
 	</string-array>
 	
-	<string-array name="notify_interval">
-		<item>every 15 minutes</item>
-		<item>every 30 minutes</item>
-		<item>hourly</item>
+	<string-array name="notify_interval_names">
+		<item>15 minutes</item>
+		<item>1 hour</item>
+		<item>4 hours</item>
 		<item>daily</item>
 	</string-array>
 	
-	<string-array name="notify_interval_values">
+	<string-array name="notify_interval_codes">
 		<item>15</item>
-		<item>30</item>
 		<item>60</item>
+		<item>240</item>
 		<item>1440</item>
 	</string-array>
 	

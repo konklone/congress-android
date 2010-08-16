@@ -114,8 +114,8 @@
     <string name="notify_paused">You are not notified about new updates.</string>
     
     <string name="notify_enable">Enable Notifications</string>
-    <string name="notify_enable_summary">Check this to enable or disable all notifications.</string>
-    
+    <string name="notify_enable_summary_on">Notifications are enabled</string>
+    <string name="notify_enable_summary_off">Notifications are disabled</string>
+
     <string name="notify_interval">Notifications Interval</string>
-    <string name="notify_interval_summary">Choose how frequently you want to receive notifications.</string>
 </resources>
