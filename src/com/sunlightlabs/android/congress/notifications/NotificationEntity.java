@@ -16,6 +16,7 @@ public class NotificationEntity implements Serializable {
 	public static final String VIDEOS = "videos";
 	public static final String NEWS = "news";
 	public static final String VOTES = "votes";
+	public static final String HISTORY = "history";
 
 	public String id, name, type, lastSeenId, status, notification_data, notification_type;
 	public int results;

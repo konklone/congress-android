@@ -12,9 +12,9 @@ import com.sunlightlabs.yahoo.news.NewsException;
 import com.sunlightlabs.yahoo.news.NewsItem;
 import com.sunlightlabs.yahoo.news.NewsService;
 
-public class YahooNewsResultProcessor extends NotificationChecker {
+public class YahooNewsFinder extends NotificationFinder {
 
-	public YahooNewsResultProcessor(Context context) {
+	public YahooNewsFinder(Context context) {
 		super(context);
 	}
 

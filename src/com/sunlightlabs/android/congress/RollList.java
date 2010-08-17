@@ -53,11 +53,12 @@ public class RollList extends ListActivity {
 		type = extras.getInt("type", ROLLS_VOTER);
 		voter = (Legislator) extras.getSerializable("voter");
 
-		entity = new NotificationEntity(voter.id, NotificationEntity.LEGISLATOR, voter.getName(),
-				NotificationEntity.VOTES, new String[] { voter.id, voter.chamber });
-
-		if (type == ROLLS_VOTER)
+		if (type == ROLLS_VOTER) {
 			setContentView(R.layout.list_footer_titled);
+
+			entity = new NotificationEntity(voter.id, NotificationEntity.LEGISLATOR, voter
+					.getName(), NotificationEntity.VOTES, new String[] { voter.id, voter.chamber });
+		}
 		else
 			setContentView(R.layout.list_titled);
 
@@ -103,6 +104,7 @@ public class RollList extends ListActivity {
 		case ROLLS_VOTER:
 			Utils.setTitle(this, "Latest Votes By\n" + voter.titledName(), R.drawable.rolls);
 			Utils.setTitleSize(this, 18);
+
 			setupFooter();
 			break;
 		case ROLLS_NOMINATIONS:

@@ -4,10 +4,10 @@ import java.util.List;
 
 import android.content.Context;
 
-public abstract class NotificationChecker {
+public abstract class NotificationFinder {
 	protected Context context;
 
-	public NotificationChecker(Context context) {
+	public NotificationFinder(Context context) {
 		this.context = context;
 	}
 

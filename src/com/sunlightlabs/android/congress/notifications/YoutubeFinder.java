@@ -11,9 +11,9 @@ import com.sunlightlabs.youtube.Video;
 import com.sunlightlabs.youtube.YouTube;
 import com.sunlightlabs.youtube.YouTubeException;
 
-public class YoutubeResultProcessor extends NotificationChecker {
+public class YoutubeFinder extends NotificationFinder {
 
-	public YoutubeResultProcessor(Context context) {
+	public YoutubeFinder(Context context) {
 		super(context);
 	}
 

@@ -10,9 +10,9 @@ import android.util.Log;
 
 import com.sunlightlabs.android.congress.utils.Utils;
 
-public class TwitterResultProcessor extends NotificationChecker {
+public class TwitterFinder extends NotificationFinder {
 
-	public TwitterResultProcessor(Context context) {
+	public TwitterFinder(Context context) {
 		super(context);
 	}
 

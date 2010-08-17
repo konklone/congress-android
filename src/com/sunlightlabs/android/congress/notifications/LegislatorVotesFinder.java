@@ -10,10 +10,10 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.RollService;
 
-public class LegislatorVotesResultProcessor extends NotificationChecker {
+public class LegislatorVotesFinder extends NotificationFinder {
 	private static final int PER_PAGE = 40;
 
-	public LegislatorVotesResultProcessor(Context context) {
+	public LegislatorVotesFinder(Context context) {
 		super(context);
 	}
 

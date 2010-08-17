@@ -4,22 +4,22 @@ import java.util.List;
 
 import android.content.Context;
 
-public class BillVotesResultProcessor extends NotificationChecker {
+public class BillHistoryFinder extends NotificationFinder {
 
-	public BillVotesResultProcessor(Context context) {
+	public BillHistoryFinder(Context context) {
 		super(context);
 	}
 
 	@Override
-	public String decodeId(Object result) {
+	public List<?> callUpdate(String data) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<?> callUpdate(String data) {
+	protected String decodeId(Object result) {
+		// TODO Auto-generated method stub
 		return null;
-
 	}
 
 }

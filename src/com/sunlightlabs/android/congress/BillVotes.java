@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.notifications.NotificationEntity;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
@@ -26,12 +27,19 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	private Bill bill;
 	private String id;
 	
+	private Database database;
+	private NotificationEntity entity;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list);
+		setContentView(R.layout.list_footer);
 		
-		id = getIntent().getStringExtra("id");
+		database = new Database(this);
+		database.open();
+
+		entity = (NotificationEntity) getIntent().getSerializableExtra("entity");
+		id = entity.id;
 		
 		BillVotesHolder holder = (BillVotesHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
@@ -43,8 +51,15 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 		
 		if (loadBillTask == null)
 			loadBill();
+
+		setupFooter();
 	}
 	
+	private void setupFooter() {
+		Footer footer = (Footer) findViewById(R.id.footer);
+		footer.init(entity, database);
+	}
+
 	public void loadBill() {
 		if (bill == null)
 			loadBillTask = (LoadBillTask) new LoadBillTask(this, id).execute("votes");
@@ -52,6 +67,12 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 			displayBill();
 	}
 	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		database.close();
+	}
+
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		return new BillVotesHolder(loadBillTask, bill);

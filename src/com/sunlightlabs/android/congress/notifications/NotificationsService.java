@@ -53,7 +53,7 @@ public class NotificationsService extends WakefulIntentService {
 				NotificationEntity.VIDEOS, NotificationEntity.NEWS, NotificationEntity.VOTES });
 
 		registerUpdates(NotificationEntity.BILL, new String[] { NotificationEntity.NEWS,
-				NotificationEntity.VOTES });
+				NotificationEntity.VOTES, NotificationEntity.HISTORY });
 	}
 
 	private void registerUpdates(String entityType, String[] notificationTypes) {
@@ -65,22 +65,25 @@ public class NotificationsService extends WakefulIntentService {
 					String lastSeenId = entity.lastSeenId;
 					
 					if (ntype.equals(NotificationEntity.TWEETS))
-						entity = processResults(new TwitterResultProcessor(this), entity);
+						entity = processResults(new TwitterFinder(this), entity);
 
 					else if (ntype.equals(NotificationEntity.VIDEOS))
-						entity = processResults(new YoutubeResultProcessor(this), entity);
+						entity = processResults(new YoutubeFinder(this), entity);
 
 					else if (ntype.equals(NotificationEntity.NEWS))
-						entity = processResults(new YahooNewsResultProcessor(this), entity);
+						entity = processResults(new YahooNewsFinder(this), entity);
 
 					else if (ntype.equals(NotificationEntity.VOTES)) {
 						if(entityType.equals(NotificationEntity.LEGISLATOR))
-							entity = processResults(new LegislatorVotesResultProcessor(this), entity);
+							entity = processResults(new LegislatorVotesFinder(this), entity);
 
 						else if (entityType.equals(NotificationEntity.BILL))
-							entity = processResults(new BillVotesResultProcessor(this), entity);
+							entity = processResults(new BillVotesFinder(this), entity);
 					}
 					
+					else if (ntype.equals(NotificationEntity.HISTORY))
+						entity = processResults(new BillHistoryFinder(this), entity);
+
 					// we must update the last seen id
 					if (lastSeenId != null && !lastSeenId.equals(entity.lastSeenId)) {
 						if (database.updateLastSeenNotification(entity.id,
@@ -102,7 +105,7 @@ public class NotificationsService extends WakefulIntentService {
 	 * is the last in the list. If it's not the case, then it must be first
 	 * sorted to match this criterion.
 	 */
-	protected NotificationEntity processResults(NotificationChecker checker, NotificationEntity entity) {
+	protected NotificationEntity processResults(NotificationFinder checker, NotificationEntity entity) {
 		final String id = entity.id;
 		final String ntype = entity.notification_type;
 
