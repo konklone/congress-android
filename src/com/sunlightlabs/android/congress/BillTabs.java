@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.notifications.NotificationEntity;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 
@@ -127,10 +128,8 @@ public class BillTabs extends TabActivity {
 	
 	public Intent newsIntent() {
 		return new Intent(this, NewsList.class)
-		.putExtra("entityId", bill.id)
-		.putExtra("entityType", "bill")
-		.putExtra("entityName", bill.official_title)
-		.putExtra("searchTerm", searchTermFor(bill));
+			.putExtra("entity", new NotificationEntity(bill.id, NotificationEntity.BILL, bill.official_title, 
+				NotificationEntity.NEWS, searchTermFor(bill)));
 	}
 	
 	public Intent historyIntent() {
