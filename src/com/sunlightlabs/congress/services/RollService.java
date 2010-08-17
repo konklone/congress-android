@@ -10,9 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
-import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.models.Roll.Vote;
@@ -30,8 +27,6 @@ public class RollService {
 		String query =  "per_page=" + per_page + "&page=" + page + "&order=voted_at";
 		query += 		"&chamber=" + chamber;
 		query += 		"&sections=basic,voter_ids." + id;
-		String url = Drumbone.url("rolls", query);
-		Log.d(Utils.TAG, "URL = " + url);
 		return rollsFor(Drumbone.url("rolls", query)); 
 	}
 	

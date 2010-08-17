@@ -62,6 +62,7 @@ public class NotificationsService extends WakefulIntentService {
 			if (c.moveToFirst()) {
 				do {
 					NotificationEntity entity = database.loadEntity(c);
+					String lastSeenId = entity.lastSeenId;
 					
 					if (ntype.equals(NotificationEntity.TWEETS))
 						entity = processResults(new TwitterResultProcessor(this), entity);
@@ -80,13 +81,16 @@ public class NotificationsService extends WakefulIntentService {
 							entity = processResults(new BillVotesResultProcessor(this), entity);
 					}
 					
-					if(database.updateLastSeenNotification(entity.id, entity.notification_type, entity.lastSeenId) > 0) { 
-						Log.d(Utils.TAG, "NotificationService: updated last seen id for entity " + entity.id);
-						sendNotification(entity);
+					// we must update the last seen id
+					if (lastSeenId != null && !lastSeenId.equals(entity.lastSeenId)) {
+						if (database.updateLastSeenNotification(entity.id,
+								entity.notification_type, entity.lastSeenId) > 0) {
+							Log.d(Utils.TAG, "NotificationService: updated last seen id for entity " + entity.id);
+							sendNotification(entity);
+						} else
+							Log.d(Utils.TAG, "NotificationService: could not update the last seen id for entity "
+											+ entity.id);
 					}
-					else 
-						Log.d(Utils.TAG, "NotificationService: could not update the last seen id for entity " + entity.id);
-						
 				} while (c.moveToNext());
 			}
 			c.close();
@@ -104,14 +108,14 @@ public class NotificationsService extends WakefulIntentService {
 
 		List<?> results = checker.callUpdate(entity.notification_data);
 
+		// return entity unchanged
 		if (results == null || results.isEmpty()) {
-			Log.d(Utils.TAG, getClass().getSimpleName() + ": No " + ntype
-					+ " to process for entity " + id);
+			Log.d(Utils.TAG, "NotificationService: No " + ntype + " to process for entity " + id);
+			return entity;
 		}
 
 		final int size = results.size();
-		Log.d(Utils.TAG, getClass().getSimpleName() + ": Loaded " + size + " " + ntype
-				+ " for entity with id " + id);
+		Log.d(Utils.TAG, "NotificationService: Loaded " + size + " " + ntype + " for entity with id " + id);
 
 		String lastId = checker.decodeId(results.get(size - 1));
 		// search for the last seen id in the list of results, and calculate how
@@ -127,13 +131,11 @@ public class NotificationsService extends WakefulIntentService {
 
 			if (foundPosition > -1) {
 				entity.results = size - foundPosition - 1;
-				Log.d(Utils.TAG, getClass().getSimpleName() + ": There are " + entity.results
-						+ " *NEW* " + ntype + " for entity " + id);
+				Log.d(Utils.TAG, "NotificationService: There are " + entity.results + " *NEW* " + ntype + " for entity " + id);
 			}
 		} else
 			// entity.lastSeenId is null, meaning it's the first time we check
-			Log.d(Utils.TAG, getClass().getSimpleName() + ": First time check for entity " + id
-					+ ", " + "set the last seen " + ntype + " id to " + lastId);
+			Log.d(Utils.TAG, "NotificationService: First time check for entity " + id + ", " + "set the last seen " + ntype + " id to " + lastId);
 
 		// set the last seen id to the id of the most recent result
 		entity.lastSeenId = lastId;

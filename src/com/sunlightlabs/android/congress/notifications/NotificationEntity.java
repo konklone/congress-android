@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class NotificationEntity implements Serializable {
 	private static final long serialVersionUID = -8734277713086848691L;
-	public static final String SEPARATOR = "|";
+	public static final String SEPARATOR = "[|]+";
 
 	// entity types
 	public static final String LEGISLATOR = "legislator";
@@ -22,7 +22,7 @@ public class NotificationEntity implements Serializable {
 
 	public NotificationEntity() {}
 	
-	public NotificationEntity(String id, String type, String name, String nType, Object... nData) {
+	public NotificationEntity(String id, String type, String name, String nType, String... nData) {
 		this.id = id;
 		this.type = type;
 		this.name = name;
@@ -30,7 +30,7 @@ public class NotificationEntity implements Serializable {
 		this.notification_data = flatten(nData);
 	}
 
-	private String flatten(Object[] data) {
+	private String flatten(String[] data) {
 		StringBuilder result = new StringBuilder();
 		
 		boolean first = true;

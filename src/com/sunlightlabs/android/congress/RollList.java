@@ -54,7 +54,7 @@ public class RollList extends ListActivity {
 		voter = (Legislator) extras.getSerializable("voter");
 
 		entity = new NotificationEntity(voter.id, NotificationEntity.LEGISLATOR, voter.getName(),
-				NotificationEntity.VOTES, new Object[] { voter.id, voter.chamber });
+				NotificationEntity.VOTES, new String[] { voter.id, voter.chamber });
 
 		if (type == ROLLS_VOTER)
 			setContentView(R.layout.list_footer_titled);
