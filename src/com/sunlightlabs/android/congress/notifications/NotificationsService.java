@@ -19,11 +19,6 @@ import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
 
-// apparently, we don't need async tasks to perform network calls because
-// IntentService (and WakefulIntentService) already does its work on a 
-// background thread; it is a bit like a regular service with an async task
-// built-in
-
 public class NotificationsService extends WakefulIntentService {
 	public static final int NOTIFY_UPDATES = 0;
 
@@ -54,10 +49,6 @@ public class NotificationsService extends WakefulIntentService {
 	protected void doWakefulWork(Intent intent) {
 		Log.d(Utils.TAG, "doWakefulWork()");
 
-		// to add another type of notification, register the entity type with
-		// the corresponding notification types and create a new processor 
-		// for that specific type of results; the code logic is encapsulated 
-		// in the processor subclass, so no major changes in the service are required
 		registerUpdates(NotificationEntity.LEGISLATOR, new String[] { NotificationEntity.TWEETS,
 				NotificationEntity.VIDEOS, NotificationEntity.NEWS, NotificationEntity.VOTES });
 
