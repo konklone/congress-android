@@ -11,20 +11,14 @@ public class LoadYoutubeVideosTask extends AsyncTask<String, Void, Video[]> {
 	private final static String TAG = "CONGRESS";
 
 	public static interface LoadsYoutubeVideos {
-		void onLoadYoutubeVideos(Video[] videos, String... id);
+		void onLoadYoutubeVideos(Video[] videos);
 	}
 
 	private LoadsYoutubeVideos context;
-	private String id;
-
-	public LoadYoutubeVideosTask(LoadsYoutubeVideos context, String id) {
-		super();
-		this.context = context;
-		this.id = id;
-	}
 
 	public LoadYoutubeVideosTask(LoadsYoutubeVideos context) {
-		this(context, null);
+		super();
+		this.context = context;
 	}
 
 	public void onScreenLoad(LoadsYoutubeVideos context) {
@@ -43,9 +37,6 @@ public class LoadYoutubeVideosTask extends AsyncTask<String, Void, Video[]> {
 
 	@Override
 	protected void onPostExecute(Video[] videos) {
-		if (id != null)
-			context.onLoadYoutubeVideos(videos, id);
-		else
-			context.onLoadYoutubeVideos(videos);
+		context.onLoadYoutubeVideos(videos);
 	}
 }

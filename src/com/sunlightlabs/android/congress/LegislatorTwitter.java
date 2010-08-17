@@ -18,20 +18,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
-import com.sunlightlabs.android.congress.Footer.State;
-import com.sunlightlabs.android.congress.notifications.NotificationType;
-import com.sunlightlabs.android.congress.notifications.Notifications;
+import com.sunlightlabs.android.congress.notifications.NotificationEntity;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask.LoadsTweets;
 import com.sunlightlabs.android.congress.utils.Utils;
 
-public class LegislatorTwitter extends ListActivity implements LoadsTweets, OnFooterClickListener {
+public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 	private List<Status> tweets;
 	private LoadTweetsTask loadTweetsTask = null;
 	
+	private String twitterId;
 	private Database database;
-	private String entityId, entityType, entityName, twitterId;
+	private NotificationEntity entity;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -42,10 +40,8 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets, OnFo
 		database.open();
 
 		Intent i = getIntent();
-		entityId = i.getStringExtra("entityId");
-		entityName = i.getStringExtra("entityName");
-		entityType = i.getStringExtra("entityType");
-		twitterId = i.getStringExtra("twitterId");
+		entity = (NotificationEntity) i.getSerializableExtra("entity");
+		twitterId = entity.notification_data;
     
     	LegislatorTwitterHolder holder = (LegislatorTwitterHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
@@ -90,35 +86,7 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets, OnFo
 
 	private void setupFooter() {
 		Footer footer = (Footer) findViewById(R.id.footer);
-		footer.setListener(this);
-		footer.setHasEntity(true);
-		footer.setEntityId(entityId);
-		footer.setEntityName(entityName);
-		footer.setEntityType(entityType);
-		footer.setNotificationType(NotificationType.tweets);
-		footer.setNotificationData(twitterId);
-		footer.setDatabase(database);
-
-		// if the service is started, check the database
-		if (Utils.getBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, Preferences.DEFAULT_NOTIFY_ENABLED)
-				&& Database.NOTIFICATIONS_ON.equals(database.getNotificationStatus(entityId,
-						NotificationType.tweets)))
-			footer.setOn();
-		else
-			footer.setOff();
-	}
-
-	public void onFooterClick(Footer footer, State state) {
-		if (state == State.ON) {
-			
-			// if notifications are not yet enabled, send broadcast to start them
-			if (!Utils.getBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED,
-					Preferences.DEFAULT_NOTIFY_ENABLED)) {
-
-				Utils.setBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, true);
-				Notifications.startNotificationsBroadcast(this);
-			}
-		}
+		footer.init(entity, database);
 	}
 
 	protected void loadTweets() {	    
@@ -225,7 +193,7 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets, OnFo
     	LoadTweetsTask loadTweetsTask;
     }
 
-	public void onLoadTweets(List<Status> tweets, String... id) {
+	public void onLoadTweets(List<Status> tweets) {
 		this.tweets = tweets;
 		displayTweets();
 		loadTweetsTask = null;

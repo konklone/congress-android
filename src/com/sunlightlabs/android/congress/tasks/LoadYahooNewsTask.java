@@ -13,20 +13,14 @@ public class LoadYahooNewsTask extends AsyncTask<String, Void, ArrayList<NewsIte
 	private final static String TAG = "CONGRESS";
 
 	public static interface LoadsYahooNews {
-		void onLoadYahooNews(ArrayList<NewsItem> news, String... id);
+		void onLoadYahooNews(ArrayList<NewsItem> news);
 	}
 
 	private LoadsYahooNews context;
-	private String id;
-
-	public LoadYahooNewsTask(LoadsYahooNews context, String id) {
-		super();
-		this.context = context;
-		this.id = id;
-	}
 
 	public LoadYahooNewsTask(LoadsYahooNews context) {
-		this(context, null);
+		super();
+		this.context = context;
 	}
 
 	public void onScreenLoad(LoadsYahooNews context) {
@@ -53,10 +47,7 @@ public class LoadYahooNewsTask extends AsyncTask<String, Void, ArrayList<NewsIte
 
 	@Override
 	protected void onPostExecute(ArrayList<NewsItem> news) {
-		if (id != null)
-			context.onLoadYahooNews(news, id);
-		else
-			context.onLoadYahooNews(news);
+		context.onLoadYahooNews(news);
 	}
 
 }

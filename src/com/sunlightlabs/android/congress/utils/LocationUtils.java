@@ -9,11 +9,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 public class LocationUtils {
-	public static final String TAG = "CONGRESS";
-
 	public static final int TIMEOUT = 20000; // milliseconds
 	public static final int MIN_TIME = 6000; // milliseconds
 	public static final int MIN_DIST = 100; // meters
@@ -44,10 +41,10 @@ public class LocationUtils {
 
 		public void start() {
 			if (!manager.isProviderEnabled(provider)) {
-				Log.d(TAG, "LocationUtils - start(): provider " + provider + " is not enabled!");
+				//Log.d(Utils.TAG, "LocationUtils - start(): provider " + provider + " is not enabled!");
 				handler.sendMessage(timeoutMsg(provider));
 			} else {
-				Log.d(TAG, "LocationUtils - start(): started timer for provider " + provider);
+				//Log.d(Utils.TAG, "LocationUtils - start(): started timer for provider " + provider);
 				Timeout task = new Timeout(listener, manager, provider, handler);
 				schedule(task, TIMEOUT);
 				manager.requestLocationUpdates(provider, MIN_TIME, MIN_DIST, listener);
@@ -58,7 +55,7 @@ public class LocationUtils {
 		public void cancel() {
 			super.cancel();
 			manager.removeUpdates(listener);
-			Log.d(TAG, "LocationUtils - cancel(): cancel updating timer and remove listener");
+			//Log.d(Utils.TAG, "LocationUtils - cancel(): cancel updating timer and remove listener");
 		}
 	}
 
@@ -82,7 +79,7 @@ public class LocationUtils {
 
 		@Override
 		public void run() {
-			Log.d(TAG, "LocationUtils - run(): Timeout! Remove listener from provider " + provider);
+			//Log.d(Utils.TAG, "LocationUtils - run(): Timeout! Remove listener from provider " + provider);
 			manager.removeUpdates(listener);
 			handler.sendMessage(timeoutMsg(provider));
 		}
@@ -107,7 +104,7 @@ public class LocationUtils {
 
 	public static LocationTimer requestLocationUpdate(Context context, Handler handler,
 			String provider) {
-		Log.d(TAG, "LocationUtils - requestLocationUpdate(): from provider " + provider);
+		//Log.d(Utils.TAG, "LocationUtils - requestLocationUpdate(): from provider " + provider);
 
 		if (!(context instanceof LocationListener))
 			throw new IllegalArgumentException(

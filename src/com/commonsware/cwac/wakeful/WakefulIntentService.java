@@ -29,14 +29,13 @@ abstract public class WakefulIntentService extends IntentService {
 		getLock(context).acquire();
 	}
 
-	synchronized private static PowerManager.WakeLock getLock(Context context) {
+	synchronized protected static PowerManager.WakeLock getLock(Context context) {
 		if (lockStatic == null) {
 			PowerManager mgr = (PowerManager) context
 					.getSystemService(Context.POWER_SERVICE);
 
 			// wake up the CPU
-			lockStatic = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-					LOCK_NAME_STATIC);
+			lockStatic = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, LOCK_NAME_STATIC);
 			lockStatic.setReferenceCounted(true);
 		}
 
@@ -66,7 +65,7 @@ abstract public class WakefulIntentService extends IntentService {
 	}
 
 	@Override
-	final protected void onHandleIntent(Intent intent) {
+	protected void onHandleIntent(Intent intent) {
 		try {
 			doWakefulWork(intent);
 		} finally {

@@ -40,7 +40,6 @@ import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
 import com.sunlightlabs.android.congress.Footer.State;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteBillsAdapter.FavoriteBillWrapper;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteLegislatorsAdapter.FavoriteLegislatorWrapper;
-import com.sunlightlabs.android.congress.notifications.Notifications;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
@@ -187,8 +186,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		peopleCursor.requery();
 		billCursor.requery();
 		adapter.notifyDataSetChanged();
-
-		updateFooter();
+		footer.init();
 	}
 
 	@Override
@@ -303,27 +301,17 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	private void setupFooter() {
 		footer = (Footer) findViewById(R.id.footer);
 		footer.setListener(this);
-		updateFooter();
-	}
-
-	private void updateFooter() {
-		// check notifications status
-		if (Utils.getBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED,
-				Preferences.DEFAULT_NOTIFY_ENABLED))
-			footer.setOn();
-		else
-			footer.setOff();
+		footer.init();
 	}
 
 	public void onFooterClick(Footer footer, State state) {
 		// turn off all notifications at once
 		if (state == State.OFF) {
 			Utils.setBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, false);
-			Notifications.stopNotificationsBroadcast(this);
-		}
-		else {
+			Utils.stopNotificationsBroadcast(this);
+		} else {
 			Utils.setBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, true);
-			Notifications.startNotificationsBroadcast(this);
+			Utils.startNotificationsBroadcast(this);
 		}
 	}
 
@@ -654,14 +642,14 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		}
 
 		location = LocationUtils.getLastKnownLocation(this);
-		Log.d(TAG, "MainMenu - setupLocation(): last known location is " + location);
+		//Log.d(TAG, "MainMenu - setupLocation(): last known location is " + location);
 
 		if (location == null) {
 			toggleLocationEnabled(false);
 			toggleLocationLoading(true);
 			timer = LocationUtils
 					.requestLocationUpdate(this, handler, LocationManager.GPS_PROVIDER);
-			Log.d(TAG, "MainMenu - setupLocation(): request update from GPS");
+			//Log.d(TAG, "MainMenu - setupLocation(): request update from GPS");
 		}
 		else { 
 			address = AddressUpdater.getFromCache(location); 
@@ -669,7 +657,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 				toggleLocationEnabled(false);
 				toggleLocationLoading(true);
 				addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
-				Log.d(TAG, "MainMenu - setupLocation(): request address update for location");
+				//Log.d(TAG, "MainMenu - setupLocation(): request address update for location");
 			}
 			else
 				displayAddress(address, true);
@@ -690,25 +678,25 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	private void cancelTimer() {
 		if (timer != null) {
 			timer.cancel();
-			Log.d(TAG, "MainMenu - cancelTimer(): cancel updating timer");
+			//Log.d(TAG, "MainMenu - cancelTimer(): cancel updating timer");
 		}
 	}
 
 	private void displayAddress(String address, boolean enabled) {
-		Log.d(TAG, "displayAddress(): address=" + address);
+		//Log.d(TAG, "MainMenu - displayAddress(): address=" + address);
 		searchLocationView.getText2().setTextColor(enabled ? Color.parseColor("#dddddd") : Color.parseColor("#666666"));
 		searchLocationView.getText2().setText(address);
 	}
 
 	public void onLocationUpdateError() {
-		Log.d(TAG, "MainMenu - onLocationUpdateError(): cannot update location");
+		//Log.d(TAG, "MainMenu - onLocationUpdateError(): cannot update location");
 		displayAddress(this.getString(R.string.menu_location_no_location), false);
 		toggleLocationLoading(false);
 		toggleLocationEnabled(false);
 	}
 
 	public void onLocationChanged(Location location) {
-		Log.d(TAG, "MainMenu - onLocationChanged(): " + location);
+		//Log.d(TAG, "MainMenu - onLocationChanged(): " + location);
 		this.location = location;
 		addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
 		cancelTimer();
@@ -721,7 +709,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	public void onStatusChanged(String provider, int status, Bundle extras) {}
 
 	public void onTimeout(String provider) {
-		Log.d(TAG, "MainMenu - onTimeout(): for provider " + provider);
+		//Log.d(TAG, "MainMenu - onTimeout(): for provider " + provider);
 		if (provider.equals(LocationManager.GPS_PROVIDER)) {
 			timer = LocationUtils.requestLocationUpdate(this, handler,
 					LocationManager.NETWORK_PROVIDER);
@@ -730,7 +718,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	}
 
 	public void onAddressUpdate(String address) {
-		Log.d(TAG, "MainMenu - onAddressUpdate(): " + address);
+		//Log.d(TAG, "MainMenu - onAddressUpdate(): " + address);
 		this.address =  address;
 		addressUpdater = null;
 		displayAddress(address, true);	
@@ -740,7 +728,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	}
 
 	public void onAddressUpdateError(CongressException e) {
-		Log.d(TAG, "MainMenu - onAddressUpdateError(): " + e);
+		//Log.d(TAG, "MainMenu - onAddressUpdateError(): " + e);
 		this.address = "";
 		addressUpdater = null;
 		displayAddress(address, false);

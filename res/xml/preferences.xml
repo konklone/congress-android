@@ -8,7 +8,7 @@
                         android:title="@string/notify_enable"
                         android:summary="@string/notify_enable_summary"
                         
-                        android:key="congress.notify_enabled" 
+                        android:key="notify_enabled" 
                         android:defaultValue="false"                        
                         />
                         
@@ -16,13 +16,13 @@
                         android:title="@string/notify_interval"
                         android:summary="@string/notify_interval_summary"
                         
-                        android:key="congress.notify_interval"
-                        android:defaultValue="15"
+                        android:key="notify_interval"
+                        android:defaultValue="1"
                         
                         android:entries="@array/notify_interval"
                         android:entryValues="@array/notify_interval_values"
                         
-                        android:dependency="congress.notify_enabled" />
+                        android:dependency="notify_enabled" />
            
     </PreferenceCategory>
     

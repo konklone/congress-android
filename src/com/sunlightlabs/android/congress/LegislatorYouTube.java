@@ -26,11 +26,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
-import com.sunlightlabs.android.congress.Footer.State;
 import com.sunlightlabs.android.congress.LegislatorYouTube.VideoAdapter.VideoHolder;
-import com.sunlightlabs.android.congress.notifications.NotificationType;
-import com.sunlightlabs.android.congress.notifications.Notifications;
+import com.sunlightlabs.android.congress.notifications.NotificationEntity;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask.LoadsThumb;
@@ -39,8 +36,7 @@ import com.sunlightlabs.android.congress.utils.ImageUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.youtube.Video;
 
-public class LegislatorYouTube extends ListActivity implements LoadsThumb, LoadsYoutubeVideos,
-		OnFooterClickListener {
+public class LegislatorYouTube extends ListActivity implements LoadsThumb, LoadsYoutubeVideos {
 	private static final int MENU_WATCH = 0;
 	private static final int MENU_COPY = 1;
 	
@@ -48,8 +44,9 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	private LoadYoutubeVideosTask loadVideosTask = null;
 	private HashMap<Integer, LoadYoutubeThumbTask> loadThumbTasks = new HashMap<Integer, LoadYoutubeThumbTask>();
 	
+	String youtubeUsername;
 	private Database database;
-	private String entityId, entityType, entityName, youtubeUsername;
+	private NotificationEntity entity;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,10 +57,8 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 		database.open();
 
 		Intent i = getIntent();
-		entityId = i.getStringExtra("entityId");
-		entityName = i.getStringExtra("entityName");
-		entityType = i.getStringExtra("entityType");
-		youtubeUsername = i.getStringExtra("youtubeUsername");
+		entity = (NotificationEntity) i.getSerializableExtra("entity");
+		youtubeUsername = entity.notification_data;
     	
     	LegislatorYouTubeHolder holder = (LegislatorYouTubeHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
@@ -118,35 +113,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 
 	private void setupFooter() {
 		Footer footer = (Footer) findViewById(R.id.footer);
-		footer.setListener(this);
-		footer.setHasEntity(true);
-		footer.setEntityId(entityId);
-		footer.setEntityName(entityName);
-		footer.setEntityType(entityType);
-		footer.setNotificationType(NotificationType.videos);
-		footer.setNotificationData(youtubeUsername);
-		footer.setDatabase(database);
-
-		// if the service is started, check the database
-		if (Utils.getBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, Preferences.DEFAULT_NOTIFY_ENABLED)
-				&& Database.NOTIFICATIONS_ON.equals(database.getNotificationStatus(entityId,
-						NotificationType.videos)))
-			footer.setOn();
-		else
-			footer.setOff();
-	}
-
-	public void onFooterClick(Footer footer, State state) {
-		if (state == State.ON) {
-			
-			// if notifications are not yet enabled, send broadcast to start them
-			if (!Utils.getBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED,
-					Preferences.DEFAULT_NOTIFY_ENABLED)) {
-
-				Utils.setBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, true);
-				Notifications.startNotificationsBroadcast(this);
-			}
-		}
+		footer.init(entity, database);
 	}
     
 	protected void loadVideos() {
@@ -313,7 +280,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 		return this;
 	}
 
-	public void onLoadYoutubeVideos(Video[] videos, String... id) {
+	public void onLoadYoutubeVideos(Video[] videos) {
 		this.videos = videos;
 		displayVideos();
 		loadVideosTask = null;

@@ -1,37 +1,36 @@
 package com.sunlightlabs.android.congress.notifications;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import winterwell.jtwitter.Twitter.Status;
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
+import com.sunlightlabs.android.congress.BillLoader;
+import com.sunlightlabs.android.congress.BillTabs;
 import com.sunlightlabs.android.congress.Database;
+import com.sunlightlabs.android.congress.LegislatorLoader;
+import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.tasks.LoadTweetsTask;
-import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask;
-import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask;
-import com.sunlightlabs.android.congress.tasks.LoadTweetsTask.LoadsTweets;
-import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask.LoadsYahooNews;
-import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask.LoadsYoutubeVideos;
-import com.sunlightlabs.yahoo.news.NewsItem;
-import com.sunlightlabs.youtube.Video;
+import com.sunlightlabs.android.congress.utils.Utils;
 
-public class NotificationsService extends WakefulIntentService implements LoadsTweets,
-		LoadsYoutubeVideos, LoadsYahooNews {
-	private static final String TAG = "CONGRESS";
+// apparently, we don't need async tasks to perform network calls because
+// IntentService (and WakefulIntentService) already does its work on a 
+// background thread; it is a bit like a regular service with an async task
+// built-in
+
+public class NotificationsService extends WakefulIntentService {
+	public static final int NOTIFY_UPDATES = 0;
 
 	private NotificationManager notifyManager;
 	private Database database;
-
-	private Map<String, NotificationEntity> entities;
+	private List<ResultProcessor> processors;
 
 	public NotificationsService() {
 		super("NotificationService");
@@ -43,193 +42,107 @@ public class NotificationsService extends WakefulIntentService implements LoadsT
 		notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		database = new Database(this);
 		database.open();
-		Log.d(TAG, "Creating notifications service and opening db");
-		entities = new HashMap<String, NotificationEntity>();
+		Log.d(Utils.TAG, "Creating notifications service and opening db");
+
+		processors = new ArrayList<ResultProcessor>();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		database.close();
-		Log.d(TAG, "Destroying notifications service and closing db");
+		processors.clear();
+		processors = null;
+		Log.d(Utils.TAG, "Destroying notifications service and closing db");
 	}
 
 	@Override
 	protected void doWakefulWork(Intent intent) {
-		// check legislator updates
-		checkUpdates("legislator");
+		Log.d(Utils.TAG, "doWakefulWork()");
 
-		// check bill updates
-		checkUpdates("bill");
+		// to add another type of notification, register the entity type with
+		// the corresponding notification types and create a new processor 
+		// for that specific type of results; the code logic is encapsulated 
+		// in the processor subclass, so no major changes in the service are required
+		registerUpdates(NotificationEntity.LEGISLATOR, new String[] { NotificationEntity.TWEETS,
+				NotificationEntity.VIDEOS, NotificationEntity.NEWS, NotificationEntity.VOTES });
 
-		// check laws updates
+		//registerUpdates(NotificationEntity.BILL, new String[] { NotificationEntity.NEWS,
+				//NotificationEntity.VOTES });
 	}
 
-
-	private void notify(NotificationEntity e) {
-		if (e.results > 0)
-			notifyManager.notify(Notifications.NOTIFY_UPDATES, Notifications.getNotification(this, e));
-		entities.remove(e.id);
-	}
-
-	private void checkUpdates(String entityType) {
-		for (int i = 0; i < NotificationType.values().length; i++) {
-			NotificationType notificationType = NotificationType.values()[i];
-
-			Cursor c = database.getNotifications(entityType, notificationType);
+	private void registerUpdates(String entityType, String[] notificationTypes) {
+		for (String ntype : notificationTypes) {
+			Cursor c = database.getNotifications(entityType, ntype);
 			if (c.moveToFirst()) {
 				do {
-					NotificationEntity e = database.loadEntity(c);
-					Log.d(TAG, "Checking " + notificationType.name() + " updates for entity " + e.id);
+					NotificationEntity entity = database.loadEntity(c);
+					if (ntype.equals(NotificationEntity.TWEETS))
+						processors.add(new TwitterResultProcessor(this, entity));
 
-					switch (notificationType) {
-					case tweets:
-						new LoadTweetsTask(this, e.id).execute(e.notificationData);
-						break;
-					case videos:
-						new LoadYoutubeVideosTask(this, e.id).execute(e.notificationData);
-						break;
-					case news:
-						new LoadYahooNewsTask(this, e.id).execute(e.notificationData,
-								getResources().getString(R.string.yahoo_news_key));
-						break;
+					else if (ntype.equals(NotificationEntity.VIDEOS))
+						processors.add(new YoutubeResultProcessor(this, entity));
+
+					else if (ntype.equals(NotificationEntity.NEWS))
+						processors.add(new YahooNewsResultProcessor(this, entity));
+
+					else if (ntype.equals(NotificationEntity.VOTES)) {
+						if(entityType.equals(NotificationEntity.LEGISLATOR))
+							processors.add(new LegislatorVotesResultProcessor(this, entity));
+
+						else if (entityType.equals(NotificationEntity.BILL))
+							processors.add(new BillBotesResultProcessor(this, entity));
 					}
-
-					// keep this in the map, so when results are loaded, we'll
-					// know for which entity to send the notification
-					if (!entities.containsKey(e.id))
-						entities.put(e.id, e);
+						
 				} while (c.moveToNext());
 			}
 			c.close();
 		}
-	}
 
+		for (ResultProcessor processor : processors) {
+			processor.callUpdate();
+			NotificationEntity entity = processor.getEntity();
 
-	public void onLoadTweets(List<Status> tweets, String... id) {
-		String eId = id[0];
-		NotificationEntity e = entities.get(eId);
-
-		if (tweets != null && !tweets.isEmpty()) {
-			Log.d(TAG, "Loaded " + tweets + " tweets for entity with id " + eId);
-
-			// first time don't send a notification, the user sees the tweets
-			// on the profile
-			if (e.lastSeenId == null) {
-				e.lastSeenId = new Long(tweets.get(tweets.size() - 1).id).toString();
-				return;
+			if(database.updateLastSeenNotification(entity.id, entity.notification_type, entity.lastSeenId) > 0) { 
+				Log.d(Utils.TAG, "NotificationService: updated last seen id for entity " + entity.id);
+				sendNotification(entity);
 			}
-
-			int i = 0;
-			int pos = -1;
-			for (i = 0; i < tweets.size(); i++) {
-				if (e.lastSeenId.equals(new Long(tweets.get(i).id).toString())) {
-					pos = i;
-					break;
-				}
-			}
-
-			e.lastSeenId = new Long(tweets.get(tweets.size() - 1).id).toString();
-			e.results = tweets.size() - pos - 1;
-
-			Log.d(TAG, "Last seen tweet for entity " + e.id + " is " + e.lastSeenId
-					+ ". There are " + e.results + " new ones");
-
-			if (!database.isOpen()) {
-				database.open();
-				long ok = database.updateLastSeenNotification(e.lastSeenId, e.notificationType,
-						e.lastSeenId);
-				if (ok == 0)
-					Log.w(TAG, "Could not update last seen twitter id for entity " + e.toString());
-
-				database.close();
-			}
-
-			notify(e);
+			else 
+				Log.d(Utils.TAG, "NotificationService: could not update the last seen id for entity " + entity.id);
 		}
 	}
 
-	public void onLoadYoutubeVideos(Video[] videos, String... id) {
-		String eId = id[0];
-		NotificationEntity e = entities.get(eId);
-
-		if (videos != null && videos.length > 0) {
-			Log.d(TAG, "Loaded " + videos.length + " youtube videos for entity with id " + eId);
-
-			if (e.lastSeenId == null) {
-				e.lastSeenId = videos[videos.length - 1].timestamp.toString();
-				return;
-			}
-
-			int i = 0;
-			int pos = -1;
-			for (i = 0; i < videos.length; i++) {
-				if (e.lastSeenId.equals(videos[i].timestamp.toString())) {
-					pos = i;
-					break;
-				}
-			}
-
-			e.lastSeenId = videos[videos.length - 1].timestamp.toString();
-			e.results = videos.length - pos - 1;
-
-			Log.d(TAG, "Last seen video for entity " + e.id + " is " + e.lastSeenId
-					+ ". There are " + e.results + " new ones");
-
-			if (!database.isOpen()) {
-				database.open();
-				long ok = database.updateLastSeenNotification(e.lastSeenId, e.notificationType,
-						e.lastSeenId);
-				if (ok == 0)
-					Log.w(TAG, "Could not update last seen youtube video for entity "
-							+ e.toString());
-
-				database.close();
-			}
-
-			notify(e);
-		}
+	private void sendNotification(NotificationEntity entity) {
+		if (entity.results > 0)
+			notifyManager.notify(NOTIFY_UPDATES, getNotification(entity));
 	}
 
-	public void onLoadYahooNews(ArrayList<NewsItem> news, String... id) {
-		String eId = id[0];
-		NotificationEntity e = entities.get(eId);
+	private Notification getNotification(NotificationEntity entity) {
+		int icon = R.drawable.icon;
+		CharSequence tickerText = getString(R.string.notification_ticker_text);
+		long when = System.currentTimeMillis();
 
-		if (news != null && news.size() > 0) {
-			Log.d(TAG, "Loaded yahoo news for entity with id " + eId);
+		Notification notification = new Notification(icon, tickerText, when);
+		CharSequence contentTitle = String.format(getString(R.string.notification_title),
+				entity.name);
+		// TODO handle plural or singular results
+		CharSequence contentText = entity.results + " new " + entity.notification_type;
 
-			if (e.lastSeenId == null) {
-				e.lastSeenId = news.get(news.size() - 1).timestamp.toString();
-				return;
-			}
+		Intent notificationIntent = null;
 
-			int i = 0;
-			int pos = -1;
-			for (i = 0; i < news.size(); i++) {
-				if (e.lastSeenId.equals(news.get(i).timestamp.toString())) {
-					pos = i;
-					break;
-				}
-			}
-
-			e.lastSeenId = news.get(news.size() - 1).timestamp.toString();
-			e.results = news.size() - pos - 1;
-
-			Log.d(TAG, "Last seen news for entity " + e.id + " is " + e.lastSeenId + ". There are "
-					+ e.results + " new ones");
-
-			if (!database.isOpen()) {
-				database.open();
-				long ok = database.updateLastSeenNotification(e.lastSeenId, e.notificationType,
-						e.lastSeenId);
-				if (ok == 0)
-					Log.w(TAG, "Could not update last seen youtube video for entity "
-							+ e.toString());
-
-				database.close();
-			}
-
-			notify(e);
+		if (entity.type.equals("legislator")) {
+			notificationIntent = new Intent(this, LegislatorLoader.class).putExtra(
+					"legislator_id", entity.id).putExtra("tab",
+					LegislatorTabs.Tabs.valueOf(entity.notification_type));
+		} else if (entity.type.equals("bill")) {
+			notificationIntent = new Intent(this, BillLoader.class).putExtra("id", entity.id)
+					.putExtra("tab", BillTabs.Tabs.valueOf(entity.notification_type));
 		}
+
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+		notification.setLatestEventInfo(this, contentTitle, contentText, contentIntent);
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		return notification;
 	}
 }

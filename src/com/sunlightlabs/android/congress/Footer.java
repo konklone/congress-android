@@ -7,11 +7,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.sunlightlabs.android.congress.notifications.NotificationType;
+import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.utils.Utils;
 
 public class Footer extends RelativeLayout {
 	private final static String TAG = "CONGRESS";
 
+	// in case we need more action when the footer is turned on/off
 	public static interface OnFooterClickListener {
 		public void onFooterClick(Footer footer, State state);
 	}
@@ -28,13 +30,13 @@ public class Footer extends RelativeLayout {
 	private OnFooterClickListener listener;
 	private State state;
 
-	private boolean hasEntity = false;
-	private String entityId, entityType, entityName, notificationData;
-	private NotificationType notificationType;
+	private NotificationEntity entity;
 	private Database database;
+	private Context context;
 
 	public Footer(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		this.context = context;
 
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Footer);
 		RuntimeException e = null;
@@ -76,119 +78,128 @@ public class Footer extends RelativeLayout {
 	}
 
 	private void setupControls() {
+		// default state
 		state = State.OFF;
+	}
 
+	private void setUIListener() {
 		setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
-				boolean ok = true;
-
-				if (hasEntity) {
-					String status = database.getNotificationStatus(entityId, notificationType);
-					Log.d(TAG, notificationType + " notifications for entity " + entityId + " are "
-							+ status);
-
-					// must turn notifications ON
-					if (state == State.OFF) {
-
-						// there is no entry in the notifications table for this
-						// entity
-						if (status == null) {
-							ok = database.addNotification(entityId, entityType, entityName,
-									notificationType, notificationData) != -1;
-							Log.d(TAG, "Adding " + notificationType + " notifications for entity "
-									+ entityId + " result is: " + ok);
-						}
-
-						// there is an entry in the notifications table for this
-						// entity
-						else {
-							ok = database.setNotificationStatus(entityId, notificationType,
-									Database.NOTIFICATIONS_ON) != -1;
-							Log.d(TAG, "Setting " + notificationType
-									+ " notifications ON for entity " + entityId + " result is: "
-									+ ok);
-						}
-					}
-
-					// must turn notifications OFF
-					else {
-						ok = database.setNotificationStatus(entityId, notificationType,
-								Database.NOTIFICATIONS_OFF) != -1;
-						Log.d(TAG, "Setting " + notificationType + " notifications OFF for entity "
-								+ entityId + " result is: " + ok);
-					}
+				if (entity != null && database != null) {
+					Log.d(TAG, "Footer: doFooterLogic()");
+					doFooterLogic();
+				} else {// this footer has no entity attached; just update the
+						// UI
+					Log.d(TAG, "Footer: doUpdateUi()");
+					doUpdateUI();
 				}
-
-				if (ok)
-					if (state == State.OFF)
-						setOn();
-					else
-						setOff();
-
+				
+				// if there is a listener, call its callback method
 				if (listener != null)
 					listener.onFooterClick(Footer.this, state);
 			}
 		});
 	}
+	
+	private void doUpdateUI() {
+		if (state == State.OFF)
+			setOn();
+		else
+			setOff();
+	}
 
-	public void setOn() {
+	private void doFooterLogic() {
+		String id = entity.id;
+		String type = entity.type;
+		String name = entity.name;
+		String nType = entity.notification_type;
+		String nData = entity.notification_data;
+		boolean ok = true;
+
+		String status = database.getNotificationStatus(id, nType);
+
+		// the current state is OFF; must turn notifications ON
+		if (state == State.OFF) {
+
+			// Case 1: there is no entry in the notifications table for this entity:
+			// add a notification
+			if (status == null) {
+				ok = database.addNotification(id, type, name, nType, nData) != -1;
+				Log.d(TAG, "Footer: Added " + nType + " notifications for entity " + id + "->" + ok);
+			}
+
+			// Case 2: there is an entry in the notifications table for this entity:
+			// update notification status
+			else {
+				ok = database.setNotificationStatus(id, nType, Database.NOTIFICATIONS_ON) != -1;
+				Log.d(TAG, "Footer: Set " + nType + " notifications ON for entity " + id + "->" + ok);
+			}
+		}
+
+		// the current state is ON; must turn notifications OFF
+		// this means we set the notification status in the database to OFF for the current entity
+		// it doesn't mean we stop the service; it can only be stopped from MainMenu footer
+		else {
+			// it means there is an entry in the notifications table
+			ok = database.setNotificationStatus(id, nType, Database.NOTIFICATIONS_OFF) != -1;
+			Log.d(TAG, "Footer: Set " + nType + " notifications OFF for entity " + id + "->" + ok);
+		}
+		
+		// all database operations went smoothly; update footer UI
+		if (ok)
+			doUpdateUI();
+	}
+
+	private void setOn() {
 		state = State.ON;
 		textView.setOn();
 		imageView.setOn();
+
+		// start the notification service, if it's currently stopped
+		if (!Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED,
+				Preferences.DEFAULT_NOTIFY_ENABLED)) {
+			Utils.setBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED, true);
+			Utils.startNotificationsBroadcast(context);
+		}
 	}
 
-	public void setOff() {
+	private void setOff() {
 		state = State.OFF;
 		textView.setOff();
 		imageView.setOff();
 	}
 
+	public void init(NotificationEntity entity, Database database) {
+		if(entity == null || database == null) {
+			Log.d(TAG, "You must set the entity and the database before calling init() on the footer!");
+			return;
+		}
+		this.entity = entity;
+		this.database = database;
+		setUIListener();
+
+		// if the service is started, check the database to set the initial state of the UI
+		if (Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED,
+				Preferences.DEFAULT_NOTIFY_ENABLED)
+				&& Database.NOTIFICATIONS_ON.equals(database.getNotificationStatus(entity.id,
+						entity.notification_type)))
+			setOn();
+		else
+			setOff();
+	}
+
+	public void init() {
+		setUIListener();
+
+		if (Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED,
+				Preferences.DEFAULT_NOTIFY_ENABLED))
+			setOn();
+		else
+			setOff();
+	}
+
 	public void setListener(OnFooterClickListener listener) {
 		this.listener = listener;
-	}
-
-	public State getState() {
-		return state;
-	}
-
-	public FooterText getTextView() {
-		return textView;
-	}
-
-	public FooterImage getImageView() {
-		return imageView;
-	}
-
-	public void setEntityId(String entityId) {
-		this.entityId = entityId;
-	}
-
-	public void setEntityType(String entityType) {
-		this.entityType = entityType;
-	}
-
-	public void setEntityName(String entityName) {
-		this.entityName = entityName;
-	}
-
-	public void setNotificationType(NotificationType notificationType) {
-		this.notificationType = notificationType;
-	}
-
-	public String getNotificationData() {
-		return notificationData;
-	}
-
-	public void setNotificationData(String notificationData) {
-		this.notificationData = notificationData;
-	}
-
-	public void setDatabase(Database database) {
-		this.database = database;
-	}
-
-	public void setHasEntity(boolean hasEntity) {
-		this.hasEntity = hasEntity;
 	}
 }

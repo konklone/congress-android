@@ -11,28 +11,19 @@ public class LoadTweetsTask extends AsyncTask<String, Void, List<Twitter.Status>
 	private final static String TAG = "CONGRESS";
 
 	public static interface LoadsTweets {
-		void onLoadTweets(List<Twitter.Status> tweets, String... id);
+		void onLoadTweets(List<Twitter.Status> tweets);
 	}
 
 	private LoadsTweets context;
-	private String id; // the id of the task
-
-	public LoadTweetsTask(LoadsTweets context, String id) {
-		super();
-		this.context = context;
-		this.id = id;
-	}
 
 	public LoadTweetsTask(LoadsTweets context) {
-		this(context, null);
+		super();
+		this.context = context;
 	}
+
 
 	public void onScreenLoad(LoadsTweets context) {
 		this.context = context;
-	}
-
-	public String getId() {
-		return id;
 	}
 
 	@Override
@@ -47,10 +38,7 @@ public class LoadTweetsTask extends AsyncTask<String, Void, List<Twitter.Status>
 
 	@Override
 	protected void onPostExecute(List<Twitter.Status> tweets) {
-		if (id != null)
-			context.onLoadTweets(tweets, id);
-		else
-			context.onLoadTweets(tweets);
+		context.onLoadTweets(tweets);
 	}
 
 }

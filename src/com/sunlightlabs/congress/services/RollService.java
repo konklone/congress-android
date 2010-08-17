@@ -11,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.sunlightlabs.congress.models.CongressException;
-import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.models.Roll.Vote;
 
@@ -23,10 +22,11 @@ public class RollService {
 		return rollFor(Drumbone.url("roll", "roll_id=" + id + "&sections=" + sections));
 	}
 	
-	public static ArrayList<Roll> latestVotes(Legislator voter, int per_page, int page) throws CongressException {
+	public static ArrayList<Roll> latestVotes(String id, String chamber, int per_page, int page)
+			throws CongressException {
 		String query =  "per_page=" + per_page + "&page=" + page + "&order=voted_at";
-		query += 		"&chamber=" + voter.chamber;
-		query += 		"&sections=basic,voter_ids." + voter.bioguide_id;
+		query += 		"&chamber=" + chamber;
+		query += 		"&sections=basic,voter_ids." + id;
 		return rollsFor(Drumbone.url("rolls", query)); 
 	}
 	

@@ -31,6 +31,7 @@ import com.sunlightlabs.congress.services.Sunlight;
 
 public class Utils {
 	private static Method setView = null;
+	public static final String TAG = "CONGRESS";
 	
 	public static void setupDrumbone(Context context) {
 		Resources resources = context.getResources();
@@ -361,5 +362,16 @@ public class Utils {
 		url += ".kml";
 		
 		return url;
+	}
+
+	public static final String START_NOTIFICATION_SERVICE = "com.sunlightlabs.android.congress.intent.action.START_NOTIFICATION_SERVICE";
+	public static final String STOP_NOTIFICATION_SERVICE = "com.sunlightlabs.android.congress.intent.action.STOP_NOTIFICATION_SERVICE";
+
+	public static void startNotificationsBroadcast(Context context) {
+		context.sendBroadcast(new Intent(START_NOTIFICATION_SERVICE));
+	}
+
+	public static void stopNotificationsBroadcast(Context context) {
+		context.sendBroadcast(new Intent(STOP_NOTIFICATION_SERVICE));
 	}
 }

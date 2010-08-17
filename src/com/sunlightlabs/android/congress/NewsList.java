@@ -20,16 +20,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
-import com.sunlightlabs.android.congress.Footer.State;
-import com.sunlightlabs.android.congress.notifications.NotificationType;
-import com.sunlightlabs.android.congress.notifications.Notifications;
+import com.sunlightlabs.android.congress.notifications.NotificationEntity;
 import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask;
 import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask.LoadsYahooNews;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.yahoo.news.NewsItem;
 
-public class NewsList extends ListActivity implements LoadsYahooNews, OnFooterClickListener {
+public class NewsList extends ListActivity implements LoadsYahooNews {
 	private static final int MENU_VIEW = 0;
 	private static final int MENU_COPY = 1;
 
@@ -39,7 +36,7 @@ public class NewsList extends ListActivity implements LoadsYahooNews, OnFooterCl
 	private LoadYahooNewsTask loadNewsTask = null;
 
 	private Database database;
-	private String entityId, entityType, entityName;
+	private NotificationEntity entity;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,10 +47,8 @@ public class NewsList extends ListActivity implements LoadsYahooNews, OnFooterCl
 		database.open();
 
 		Intent i = getIntent();
-		entityId = i.getStringExtra("entityId");
-		entityName = i.getStringExtra("entityName");
-		entityType = i.getStringExtra("entityType");
-		searchTerm = i.getStringExtra("searchTerm");
+		entity = (NotificationEntity) i.getSerializableExtra("entity");
+		searchTerm = entity.notification_data;
 
 		NewsListHolder holder = (NewsListHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
@@ -100,37 +95,7 @@ public class NewsList extends ListActivity implements LoadsYahooNews, OnFooterCl
 
 	private void setupFooter() {
 		Footer footer = (Footer) findViewById(R.id.footer);
-		footer.setListener(this);
-		footer.setHasEntity(true);
-		footer.setEntityId(entityId);
-		footer.setEntityName(entityName);
-		footer.setEntityType(entityType);
-		footer.setNotificationType(NotificationType.news);
-		footer.setNotificationData(searchTerm);
-		footer.setDatabase(database);
-
-		// if the service is started, check the database
-		if (Utils.getBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED,
-				Preferences.DEFAULT_NOTIFY_ENABLED)
-				&& Database.NOTIFICATIONS_ON.equals(database.getNotificationStatus(entityId,
-						NotificationType.news)))
-			footer.setOn();
-		else
-			footer.setOff();
-	}
-
-	public void onFooterClick(Footer footer, State state) {
-		if (state == State.ON) {
-
-			// if notifications are not yet enabled, send broadcast to start
-			// them
-			if (!Utils.getBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED,
-					Preferences.DEFAULT_NOTIFY_ENABLED)) {
-
-				Utils.setBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, true);
-				Notifications.startNotificationsBroadcast(this);
-			}
-		}
+		footer.init(entity, database);
 	}
 
 	@Override
@@ -224,7 +189,7 @@ public class NewsList extends ListActivity implements LoadsYahooNews, OnFooterCl
 		LoadYahooNewsTask loadNewsTask;
 	}
 
-	public void onLoadYahooNews(ArrayList<NewsItem> news, String... id) {
+	public void onLoadYahooNews(ArrayList<NewsItem> news) {
 		this.items = news;
 		displayNews();
 		loadNewsTask = null;

@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.notifications.NotificationEntity;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -38,14 +39,28 @@ public class RollList extends ListActivity {
 	
 	private LoadingWrapper loading;
 
+	private Database database;
+	private NotificationEntity entity;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list_titled);
+
+		database = new Database(this);
+		database.open();
 
 		Bundle extras = getIntent().getExtras();
 		type = extras.getInt("type", ROLLS_VOTER);
 		voter = (Legislator) extras.getSerializable("voter");
+
+		int page = (rolls == null ? 0 : (rolls.size() / ROLLS) + 1);
+		entity = new NotificationEntity(voter.id, NotificationEntity.LEGISLATOR, voter.getName(),
+				NotificationEntity.VOTES, new Object[] { voter.id, voter.chamber, page, ROLLS });
+
+		if (type == ROLLS_VOTER)
+			setContentView(R.layout.list_footer_titled);
+		else
+			setContentView(R.layout.list_titled);
 
 		setupControls();
 
@@ -83,6 +98,7 @@ public class RollList extends ListActivity {
 		case ROLLS_VOTER:
 			Utils.setTitle(this, "Latest Votes By\n" + voter.titledName(), R.drawable.rolls);
 			Utils.setTitleSize(this, 18);
+			setupFooter();
 			break;
 		case ROLLS_NOMINATIONS:
 			Utils.setTitle(this, R.string.menu_votes_nominations, R.drawable.rolls_nominations);
@@ -94,6 +110,12 @@ public class RollList extends ListActivity {
 		}
 	}
 
+	private void setupFooter() {
+		Footer footer = (Footer) findViewById(R.id.footer);
+		footer.init(entity, database);
+	}
+
+	@Override
 	protected void onListItemClick(ListView parent, View v, int position, long id) {
 		Roll roll = (Roll) parent.getItemAtPosition(position);
 		if (roll != null)
@@ -300,7 +322,7 @@ public class RollList extends ListActivity {
 
 				switch (context.type) {
 				case ROLLS_VOTER:
-					return RollService.latestVotes(context.voter, ROLLS, page);
+					return RollService.latestVotes(context.voter.id, context.voter.chamber, ROLLS, page);
 				case ROLLS_LATEST:
 					return RollService.latestVotes(ROLLS, page);
 				case ROLLS_NOMINATIONS:

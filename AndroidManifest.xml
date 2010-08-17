@@ -90,15 +90,26 @@
         	android:theme="@android:style/Theme.NoTitleBar"
         	/>
         	
-        <activity android:name=".Preferences"
-        	android:label="@string/preferences" />
+        <activity android:name=".Preferences" android:label="@string/preferences" />
+        
+        <receiver android:name=".notifications.OnBootReceiver">
+        	<intent-filter>
+        		<action android:name="android.intent.action.BOOT_COMPLETED" />
+        	</intent-filter>
+        </receiver>
+        	
+        <receiver android:name=".notifications.OnBootReceiver">
+        	<intent-filter>
+        		<action android:name="android.intent.action.BOOT_COMPLETED" />
+        	</intent-filter>
+        </receiver>
         	
         <receiver android:name=".notifications.OnAlarmReceiver" />
         
         <receiver android:name=".notifications.OnServiceActionReceiver">
         	<intent-filter>
-        		<action android:name="com.sunlightlabs.android.congress.intent.action.START_SERVICE"/>
-        		<action android:name="com.sunlightlabs.android.congress.intent.action.STOP_SERVICE" />
+        		<action android:name="com.sunlightlabs.android.congress.intent.action.START_NOTIFICATION_SERVICE"/>
+        		<action android:name="com.sunlightlabs.android.congress.intent.action.STOP_NOTIFICATION_SERVICE" />
         	</intent-filter>
         </receiver>
 		
@@ -111,6 +122,7 @@
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     
     <uses-sdk 
     	android:minSdkVersion="3"
