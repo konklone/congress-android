@@ -1,6 +1,5 @@
 package com.sunlightlabs.android.congress.notifications;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Notification;
@@ -30,7 +29,6 @@ public class NotificationsService extends WakefulIntentService {
 
 	private NotificationManager notifyManager;
 	private Database database;
-	private List<ResultProcessor> processors;
 
 	public NotificationsService() {
 		super("NotificationService");
@@ -43,16 +41,12 @@ public class NotificationsService extends WakefulIntentService {
 		database = new Database(this);
 		database.open();
 		Log.d(Utils.TAG, "Creating notifications service and opening db");
-
-		processors = new ArrayList<ResultProcessor>();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		database.close();
-		processors.clear();
-		processors = null;
 		Log.d(Utils.TAG, "Destroying notifications service and closing db");
 	}
 
@@ -67,8 +61,8 @@ public class NotificationsService extends WakefulIntentService {
 		registerUpdates(NotificationEntity.LEGISLATOR, new String[] { NotificationEntity.TWEETS,
 				NotificationEntity.VIDEOS, NotificationEntity.NEWS, NotificationEntity.VOTES });
 
-		//registerUpdates(NotificationEntity.BILL, new String[] { NotificationEntity.NEWS,
-				//NotificationEntity.VOTES });
+		registerUpdates(NotificationEntity.BILL, new String[] { NotificationEntity.NEWS,
+				NotificationEntity.VOTES });
 	}
 
 	private void registerUpdates(String entityType, String[] notificationTypes) {
@@ -77,39 +71,82 @@ public class NotificationsService extends WakefulIntentService {
 			if (c.moveToFirst()) {
 				do {
 					NotificationEntity entity = database.loadEntity(c);
+					
 					if (ntype.equals(NotificationEntity.TWEETS))
-						processors.add(new TwitterResultProcessor(this, entity));
+						entity = processResults(new TwitterResultProcessor(this), entity);
 
 					else if (ntype.equals(NotificationEntity.VIDEOS))
-						processors.add(new YoutubeResultProcessor(this, entity));
+						entity = processResults(new YoutubeResultProcessor(this), entity);
 
 					else if (ntype.equals(NotificationEntity.NEWS))
-						processors.add(new YahooNewsResultProcessor(this, entity));
+						entity = processResults(new YahooNewsResultProcessor(this), entity);
 
 					else if (ntype.equals(NotificationEntity.VOTES)) {
 						if(entityType.equals(NotificationEntity.LEGISLATOR))
-							processors.add(new LegislatorVotesResultProcessor(this, entity));
+							entity = processResults(new LegislatorVotesResultProcessor(this), entity);
 
 						else if (entityType.equals(NotificationEntity.BILL))
-							processors.add(new BillBotesResultProcessor(this, entity));
+							entity = processResults(new BillVotesResultProcessor(this), entity);
 					}
+					
+					if(database.updateLastSeenNotification(entity.id, entity.notification_type, entity.lastSeenId) > 0) { 
+						Log.d(Utils.TAG, "NotificationService: updated last seen id for entity " + entity.id);
+						sendNotification(entity);
+					}
+					else 
+						Log.d(Utils.TAG, "NotificationService: could not update the last seen id for entity " + entity.id);
 						
 				} while (c.moveToNext());
 			}
 			c.close();
 		}
+	}
 
-		for (ResultProcessor processor : processors) {
-			processor.callUpdate();
-			NotificationEntity entity = processor.getEntity();
+	/**
+	 * This method assumes that the results are ordered and the most recent one
+	 * is the last in the list. If it's not the case, then it must be first
+	 * sorted to match this criterion.
+	 */
+	protected NotificationEntity processResults(NotificationChecker checker, NotificationEntity entity) {
+		final String id = entity.id;
+		final String ntype = entity.notification_type;
 
-			if(database.updateLastSeenNotification(entity.id, entity.notification_type, entity.lastSeenId) > 0) { 
-				Log.d(Utils.TAG, "NotificationService: updated last seen id for entity " + entity.id);
-				sendNotification(entity);
-			}
-			else 
-				Log.d(Utils.TAG, "NotificationService: could not update the last seen id for entity " + entity.id);
+		List<?> results = checker.callUpdate(entity.notification_data);
+
+		if (results == null || results.isEmpty()) {
+			Log.d(Utils.TAG, getClass().getSimpleName() + ": No " + ntype
+					+ " to process for entity " + id);
 		}
+
+		final int size = results.size();
+		Log.d(Utils.TAG, getClass().getSimpleName() + ": Loaded " + size + " " + ntype
+				+ " for entity with id " + id);
+
+		String lastId = checker.decodeId(results.get(size - 1));
+		// search for the last seen id in the list of results, and calculate how
+		// many new results are after that id
+		if (entity.lastSeenId != null) {
+			int foundPosition = -1;
+			for (Object result : results) {
+				if (entity.lastSeenId.equals(checker.decodeId(result))) {
+					foundPosition = results.indexOf(result);
+					break;
+				}
+			}
+
+			if (foundPosition > -1) {
+				entity.results = size - foundPosition - 1;
+				Log.d(Utils.TAG, getClass().getSimpleName() + ": There are " + entity.results
+						+ " *NEW* " + ntype + " for entity " + id);
+			}
+		} else
+			// entity.lastSeenId is null, meaning it's the first time we check
+			Log.d(Utils.TAG, getClass().getSimpleName() + ": First time check for entity " + id
+					+ ", " + "set the last seen " + ntype + " id to " + lastId);
+
+		// set the last seen id to the id of the most recent result
+		entity.lastSeenId = lastId;
+		return entity;
 	}
 
 	private void sendNotification(NotificationEntity entity) {

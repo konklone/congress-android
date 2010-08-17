@@ -1,5 +1,7 @@
 package com.sunlightlabs.android.congress.notifications;
 
+import java.util.List;
+
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
 import winterwell.jtwitter.Twitter.Status;
@@ -8,10 +10,10 @@ import android.util.Log;
 
 import com.sunlightlabs.android.congress.utils.Utils;
 
-public class TwitterResultProcessor extends ResultProcessor {
+public class TwitterResultProcessor extends NotificationChecker {
 
-	public TwitterResultProcessor(Context context, NotificationEntity entity) {
-		super(context, entity);
+	public TwitterResultProcessor(Context context) {
+		super(context);
 	}
 
 	@Override
@@ -22,12 +24,12 @@ public class TwitterResultProcessor extends ResultProcessor {
 	}
 
 	@Override
-	public void callUpdate() {
+	public List<?> callUpdate(String data) {
 		try {
-			processResults(new Twitter().getUserTimeline(entity.notification_data));
+			return new Twitter().getUserTimeline(data);
 		} catch (TwitterException exc) {
-			Log.w(Utils.TAG, "Could not fetch tweets for " + entity.id + " using "
-					+ entity.notification_data, exc);
+			Log.w(Utils.TAG, "Could not fetch tweets for " + data, exc);
+			return null;
 		}
 	}
 

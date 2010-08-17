@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class NotificationEntity implements Serializable {
 	private static final long serialVersionUID = -8734277713086848691L;
-	private static final String SEPARATOR = "|";
+	public static final String SEPARATOR = "|";
 
 	// entity types
 	public static final String LEGISLATOR = "legislator";
@@ -45,12 +45,6 @@ public class NotificationEntity implements Serializable {
 		}
 
 		return result.toString();
-	}
-	
-	public String[] inflateData() {
-		if(notification_data == null)
-			return null;
-		return notification_data.split(SEPARATOR);
 	}
 
 	@Override

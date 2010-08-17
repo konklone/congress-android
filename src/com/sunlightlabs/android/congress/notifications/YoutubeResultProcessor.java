@@ -1,6 +1,7 @@
 package com.sunlightlabs.android.congress.notifications;
 
 import java.util.Arrays;
+import java.util.List;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,10 +11,10 @@ import com.sunlightlabs.youtube.Video;
 import com.sunlightlabs.youtube.YouTube;
 import com.sunlightlabs.youtube.YouTubeException;
 
-public class YoutubeResultProcessor extends ResultProcessor {
+public class YoutubeResultProcessor extends NotificationChecker {
 
-	public YoutubeResultProcessor(Context context, NotificationEntity entity) {
-		super(context, entity);
+	public YoutubeResultProcessor(Context context) {
+		super(context);
 	}
 
 	@Override
@@ -24,12 +25,12 @@ public class YoutubeResultProcessor extends ResultProcessor {
 	}
 
 	@Override
-	public void callUpdate() {
+	public List<?> callUpdate(String data) {
 		try {
-			processResults(Arrays.asList(new YouTube().getVideos(entity.notification_data)));
+			return Arrays.asList(new YouTube().getVideos(data));
 		} catch (YouTubeException e) {
-			Log.w(Utils.TAG, "YoutubeResultProcessor: Could not fetch youtube videos for "
-					+ entity.id + " using " + entity.notification_data, e);
+			Log.w(Utils.TAG, "YoutubeResultProcessor: Could not fetch youtube videos for " + data, e);
+			return null;
 		}
 	}
 }

@@ -1,5 +1,7 @@
 package com.sunlightlabs.android.congress.notifications;
 
+import java.util.List;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -8,10 +10,11 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.RollService;
 
-public class LegislatorVotesResultProcessor extends ResultProcessor {
+public class LegislatorVotesResultProcessor extends NotificationChecker {
+	private static final int PER_PAGE = 40;
 
-	public LegislatorVotesResultProcessor(Context context, NotificationEntity entity) {
-		super(context, entity);
+	public LegislatorVotesResultProcessor(Context context) {
+		super(context);
 	}
 
 	@Override
@@ -22,19 +25,22 @@ public class LegislatorVotesResultProcessor extends ResultProcessor {
 	}
 
 	@Override
-	public void callUpdate() {
-		String[] data = entity.inflateData();
-		String id = data[0];
-		String chamber = data[1];
-		int page = Integer.parseInt(data[2]);
-		int per_page = Integer.parseInt(data[3]);
+	public List<?> callUpdate(String data) {
+		String[] split = data.split(NotificationEntity.SEPARATOR);
+		if (split == null || split.length < 2) {
+			Log.w(Utils.TAG, "Could not fetch the latest votes for legislator. "
+					+ "You should provide the 'id' and 'chamber' params in notification data.");
+			return null;
+		}
+		String id = split[0];
+		String chamber = split[1];
 
 		Utils.setupDrumbone(context);
 		try {
-			processResults(RollService.latestVotes(id, chamber, per_page, page));
+			return RollService.latestVotes(id, chamber, PER_PAGE, 1);
 		} catch (CongressException e) {
-			Log.w(Utils.TAG, "Could not fetch the latest votes for legislator " + id + " using "
-					+ entity.notification_data, e);
+			Log.w(Utils.TAG, "Could not fetch the latest votes for id " + id + " and chamber " + chamber, e);
+			return null;
 		}
 	}
 

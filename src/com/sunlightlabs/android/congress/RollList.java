@@ -53,9 +53,8 @@ public class RollList extends ListActivity {
 		type = extras.getInt("type", ROLLS_VOTER);
 		voter = (Legislator) extras.getSerializable("voter");
 
-		int page = (rolls == null ? 0 : (rolls.size() / ROLLS) + 1);
 		entity = new NotificationEntity(voter.id, NotificationEntity.LEGISLATOR, voter.getName(),
-				NotificationEntity.VOTES, new Object[] { voter.id, voter.chamber, page, ROLLS });
+				NotificationEntity.VOTES, new Object[] { voter.id, voter.chamber });
 
 		if (type == ROLLS_VOTER)
 			setContentView(R.layout.list_footer_titled);
@@ -79,6 +78,12 @@ public class RollList extends ListActivity {
 
 		if (rolls.size() == 0)
 			loadRolls();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		database.close();
 	}
 
 	@Override

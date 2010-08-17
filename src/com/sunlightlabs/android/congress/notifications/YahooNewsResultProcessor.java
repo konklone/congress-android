@@ -1,5 +1,7 @@
 package com.sunlightlabs.android.congress.notifications;
 
+import java.util.List;
+
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
 import android.util.Log;
@@ -10,10 +12,10 @@ import com.sunlightlabs.yahoo.news.NewsException;
 import com.sunlightlabs.yahoo.news.NewsItem;
 import com.sunlightlabs.yahoo.news.NewsService;
 
-public class YahooNewsResultProcessor extends ResultProcessor {
+public class YahooNewsResultProcessor extends NotificationChecker {
 
-	public YahooNewsResultProcessor(Context context, NotificationEntity entity) {
-		super(context, entity);
+	public YahooNewsResultProcessor(Context context) {
+		super(context);
 	}
 
 	@Override
@@ -24,16 +26,16 @@ public class YahooNewsResultProcessor extends ResultProcessor {
 	}
 
 	@Override
-	public void callUpdate() {
+	public List<?> callUpdate(String data) {
 		try {
-			processResults(new NewsService(context.getResources().getString(R.string.yahoo_news_key))
-					.fetchNewsResults(entity.notification_data));
+			return new NewsService(context.getResources().getString(R.string.yahoo_news_key))
+					.fetchNewsResults(data);
 		} catch (NotFoundException e) {
-			Log.w(Utils.TAG, "Could not fetch yahoo news for " + entity.id + " using "
-					+ entity.notification_data, e);
+			Log.w(Utils.TAG, "Could not fetch yahoo news for " + data, e);
+			return null;
 		} catch (NewsException e) {
-			Log.w(Utils.TAG, "Could not fetch yahoo news for " + entity.id + " using "
-					+ entity.notification_data, e);
+			Log.w(Utils.TAG, "Could not fetch yahoo news for " + data, e);
+			return null;
 		}
 	}
 }
