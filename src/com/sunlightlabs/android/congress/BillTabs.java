@@ -133,13 +133,15 @@ public class BillTabs extends TabActivity {
 	}
 	
 	public Intent historyIntent() {
-		return new Intent(this, BillHistory.class).putExtra("entity", new NotificationEntity(
-				bill.id, NotificationEntity.BILL, bill.official_title, NotificationEntity.HISTORY));
+		return new Intent(this, BillHistory.class)
+			 .putExtra("entity", new NotificationEntity(bill.id, NotificationEntity.BILL, bill.official_title, 
+				NotificationEntity.ACTIONS, bill.id));
 	}
 	
 	public Intent votesIntent() {
-		return new Intent(this, BillVotes.class).putExtra("entity", new NotificationEntity(bill.id,
-				NotificationEntity.BILL, bill.official_title, NotificationEntity.VOTES));
+		return new Intent(this, BillVotes.class)
+			.putExtra("entity", new NotificationEntity(bill.id,	NotificationEntity.BILL, bill.official_title, 
+				NotificationEntity.VOTES, bill.id));
 	}
 	
 	// for news searching, don't use legislator.titledName() because we don't want to use the name_suffix

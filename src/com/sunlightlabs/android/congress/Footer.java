@@ -11,7 +11,6 @@ import com.sunlightlabs.android.congress.notifications.NotificationEntity;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class Footer extends RelativeLayout {
-	private final static String TAG = "CONGRESS";
 
 	// in case we need more action when the footer is turned on/off
 	public static interface OnFooterClickListener {
@@ -86,14 +85,11 @@ public class Footer extends RelativeLayout {
 		setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
-				if (entity != null && database != null) {
-					Log.d(TAG, "Footer: doFooterLogic()");
+				if (entity != null && database != null)
 					doFooterLogic();
-				} else {// this footer has no entity attached; just update the
-						// UI
-					Log.d(TAG, "Footer: doUpdateUi()");
+				else
+					// this footer has no entity attached; just update the UI
 					doUpdateUI();
-				}
 				
 				// if there is a listener, call its callback method
 				if (listener != null)
@@ -111,10 +107,7 @@ public class Footer extends RelativeLayout {
 
 	private void doFooterLogic() {
 		String id = entity.id;
-		String type = entity.type;
-		String name = entity.name;
-		String nType = entity.notification_type;
-		String nData = entity.notification_data;
+		String nType = entity.notificationType;
 		boolean ok = true;
 
 		String status = database.getNotificationStatus(id, nType);
@@ -125,15 +118,15 @@ public class Footer extends RelativeLayout {
 			// Case 1: there is no entry in the notifications table for this entity:
 			// add a notification
 			if (status == null) {
-				ok = database.addNotification(id, type, name, nType, nData) != -1;
-				Log.d(TAG, "Footer: Added " + nType + " notifications for entity " + id + "->" + ok);
+				ok = database.addNotification(entity) != -1;
+				Log.d(Utils.TAG, "Footer: Added " + nType + " notifications for entity " + id + "->" + ok);
 			}
 
 			// Case 2: there is an entry in the notifications table for this entity:
 			// update notification status
 			else {
 				ok = database.setNotificationStatus(id, nType, Database.NOTIFICATIONS_ON) != -1;
-				Log.d(TAG, "Footer: Set " + nType + " notifications ON for entity " + id + "->" + ok);
+				Log.d(Utils.TAG, "Footer: Set " + nType + " notifications ON for entity " + id + "->" + ok);
 			}
 		}
 
@@ -143,7 +136,7 @@ public class Footer extends RelativeLayout {
 		else {
 			// it means there is an entry in the notifications table
 			ok = database.setNotificationStatus(id, nType, Database.NOTIFICATIONS_OFF) != -1;
-			Log.d(TAG, "Footer: Set " + nType + " notifications OFF for entity " + id + "->" + ok);
+			Log.d(Utils.TAG, "Footer: Set " + nType + " notifications OFF for entity " + id + "->" + ok);
 		}
 		
 		// all database operations went smoothly; update footer UI
@@ -172,7 +165,7 @@ public class Footer extends RelativeLayout {
 
 	public void init(NotificationEntity entity, Database database) {
 		if(entity == null || database == null) {
-			Log.d(TAG, "You must set the entity and the database before calling init() on the footer!");
+			Log.d(Utils.TAG, "You must set the entity and the database before calling init() on the footer!");
 			return;
 		}
 		this.entity = entity;
@@ -183,7 +176,7 @@ public class Footer extends RelativeLayout {
 		if (Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED,
 				Preferences.DEFAULT_NOTIFY_ENABLED)
 				&& Database.NOTIFICATIONS_ON.equals(database.getNotificationStatus(entity.id,
-						entity.notification_type)))
+						entity.notificationType)))
 			setOn();
 		else
 			setOff();

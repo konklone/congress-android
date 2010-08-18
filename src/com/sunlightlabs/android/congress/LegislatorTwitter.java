@@ -41,7 +41,7 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 
 		Intent i = getIntent();
 		entity = (NotificationEntity) i.getSerializableExtra("entity");
-		twitterId = entity.notification_data;
+		twitterId = entity.notificationData;
     
     	LegislatorTwitterHolder holder = (LegislatorTwitterHolder) getLastNonConfigurationInstance();
     	if (holder != null) {

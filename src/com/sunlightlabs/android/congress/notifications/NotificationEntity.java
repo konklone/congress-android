@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class NotificationEntity implements Serializable {
 	private static final long serialVersionUID = -8734277713086848691L;
-	public static final String SEPARATOR = "[|]+";
+	public static final String SEPARATOR = ":";
 
 	// entity types
 	public static final String LEGISLATOR = "legislator";
@@ -16,9 +16,9 @@ public class NotificationEntity implements Serializable {
 	public static final String VIDEOS = "videos";
 	public static final String NEWS = "news";
 	public static final String VOTES = "votes";
-	public static final String HISTORY = "history";
+	public static final String ACTIONS = "actions";
 
-	public String id, name, type, lastSeenId, status, notification_data, notification_type;
+	public String id, name, type, lastSeenId, status, notificationData, notificationType;
 	public int results;
 
 	public NotificationEntity() {}
@@ -27,8 +27,9 @@ public class NotificationEntity implements Serializable {
 		this.id = id;
 		this.type = type;
 		this.name = name;
-		this.notification_type = nType;
-		this.notification_data = flatten(nData);
+		this.notificationType = nType;
+		if (nData != null)
+			this.notificationData = flatten(nData);
 	}
 
 	private String flatten(String[] data) {
@@ -50,8 +51,8 @@ public class NotificationEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "{id:" + id + ",type:" + type + ",name:" + name + ",nType:" + notification_type
-				+ ", nData:" + notification_data + ",lastSeenId:" + lastSeenId + ",status:" + status
+		return "{id:" + id + ",type:" + type + ",name:" + name + ",nType:" + notificationType
+				+ ", nData:" + notificationData + ",lastSeenId:" + lastSeenId + ",status:" + status
 				+ ",results:" + results + "}";
 	}
 }

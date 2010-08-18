@@ -58,7 +58,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 
 		Intent i = getIntent();
 		entity = (NotificationEntity) i.getSerializableExtra("entity");
-		youtubeUsername = entity.notification_data;
+		youtubeUsername = entity.notificationData;
     	
     	LegislatorYouTubeHolder holder = (LegislatorYouTubeHolder) getLastNonConfigurationInstance();
     	if (holder != null) {

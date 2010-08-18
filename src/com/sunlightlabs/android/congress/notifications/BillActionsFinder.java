@@ -10,26 +10,26 @@ import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.BillService;
 
-public class BillVotesFinder extends NotificationFinder {
+public class BillActionsFinder extends NotificationFinder {
 
-	public BillVotesFinder(Context context) {
+	public BillActionsFinder(Context context) {
 		super(context);
 	}
 
 	@Override
-	public String decodeId(Object result) {
-		if(!(result instanceof Bill.Vote))
-			throw new IllegalArgumentException("The result must be of type com.sunlightlabs.congress.models.Bill.Vote");
-		return String.valueOf(((Bill.Vote) result).voted_at.getTime());
+	protected String decodeId(Object result) {
+		if(!(result instanceof Bill.Action))
+			throw new IllegalArgumentException("The result must be of type com.sunlightlabs.congress.models.Bill.Action");
+		return String.valueOf(((Bill.Action) result).acted_at.getTime());
 	}
 
 	@Override
 	public List<?> callUpdate(String data) {
 		Utils.setupDrumbone(context);
 		try {
-			return BillService.find(data, "votes").votes;
+			return BillService.find(data, "actions").actions;
 		} catch (CongressException e) {
-			Log.w(Utils.TAG, "Could not fetch the latest votes for " + data, e);
+			Log.w(Utils.TAG, "Could not fetch the latest actions for " + data, e);
 			return null;
 		}
 	}

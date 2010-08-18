@@ -243,25 +243,28 @@ public class Database {
 		return legislator;
 	}
 
-	public Cursor getNotifications(String type, String nType) {
+	public Cursor getNotifications(String type, String notificationType) {
 		StringBuilder query = new StringBuilder("type=? AND notification_type=? AND status=?");
 
 		return database.query(NOTIFICATIONS_TABLE, NOTIFICATIONS_COLUMNS, query.toString(),
-				new String[] { type, nType, Database.NOTIFICATIONS_ON }, null, null, null);
+				new String[] { type, notificationType, Database.NOTIFICATIONS_ON },
+				null, null, null);
 	}
 
-	public Cursor getNotification(String id, String nType) {
+	public Cursor getNotification(String id, String notificationType) {
 		StringBuilder query = new StringBuilder("id=? AND notification_type=? AND status=?");
 
 		return database.query(NOTIFICATIONS_TABLE, NOTIFICATIONS_COLUMNS, query.toString(),
-				new String[] { id, nType, Database.NOTIFICATIONS_ON }, null, null, null);
+				new String[] { id, notificationType, Database.NOTIFICATIONS_ON }, null,
+				null, null);
 	}
 
-	public String getNotificationStatus(String id, String nType) {
+	public String getNotificationStatus(String id, String notificationType) {
 		StringBuilder query = new StringBuilder("id=? AND notification_type=?");
 
 		Cursor c = database.query(NOTIFICATIONS_TABLE, new String[] { "status", },
-				query.toString(), new String[] { id, nType }, null, null, null);
+				query.toString(), new String[] { id, notificationType }, null, null,
+				null);
 		String status = null;
 		if (c.moveToFirst())
 			status = c.getString(c.getColumnIndex("status"));
@@ -269,13 +272,13 @@ public class Database {
 		return status;
 	}
 
-	public long addNotification(String id, String type, String name, String nType, String nData) {
+	public long addNotification(NotificationEntity entity) {
 		ContentValues cv = new ContentValues(NOTIFICATIONS_COLUMNS.length);
-		cv.put("id", id);
-		cv.put("type", type);
-		cv.put("name", name);
-		cv.put("notification_type", nType);
-		cv.put("notification_data", nData);
+		cv.put("id", entity.id);
+		cv.put("type", entity.type);
+		cv.put("name", entity.name);
+		cv.put("notification_type", entity.notificationType);
+		cv.put("notification_data", entity.notificationData);
 		cv.put("last_seen_id", (String) null);
 		cv.put("status", Database.NOTIFICATIONS_ON);
 		return database.insert(NOTIFICATIONS_TABLE, null, cv);
@@ -286,34 +289,34 @@ public class Database {
 		e.id = c.getString(c.getColumnIndex("id"));
 		e.name = c.getString(c.getColumnIndex("name"));
 		e.type = c.getString(c.getColumnIndex("type"));
-		e.notification_type = c.getString(c.getColumnIndex("notification_type"));
-		e.notification_data = c.getString(c.getColumnIndex("notification_data"));
+		e.notificationType = c.getString(c.getColumnIndex("notification_type"));
+		e.notificationData = c.getString(c.getColumnIndex("notification_data"));
 		e.status = c.getString(c.getColumnIndex("status"));
 		e.lastSeenId = c.getString(c.getColumnIndex("last_seen_id"));
 		return e;
 	}
 
-	public NotificationEntity loadEntity(String id, String nType) {
-		Cursor c = getNotification(id, nType);
+	public NotificationEntity loadEntity(String id, String notificationType) {
+		Cursor c = getNotification(id, notificationType);
 		if (c.moveToFirst())
 			return loadEntity(c);
 		return null;
 	}
 
-	public long setNotificationStatus(String id, String nType, String status) {
+	public long setNotificationStatus(String id, String notificationType, String status) {
 		ContentValues cv = new ContentValues(1);
 		cv.put("status", status);
 
 		return database.update(NOTIFICATIONS_TABLE, cv, "id=? AND notification_type=?",
-				new String[] { id, nType });
+				new String[] { id, notificationType });
 	}
 
-	public long updateLastSeenNotification(String id, String nType, String lastSeenId) {
+	public long updateLastSeenNotification(NotificationEntity entity) {
 		ContentValues cv = new ContentValues(1);
-		cv.put("last_seen_id", lastSeenId);
+		cv.put("last_seen_id", entity.lastSeenId);
 
 		return database.update(NOTIFICATIONS_TABLE, cv, "id=? AND notification_type=?",
-				new String[] { id, nType });
+				new String[] { entity.id, entity.notificationType });
 	}
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {

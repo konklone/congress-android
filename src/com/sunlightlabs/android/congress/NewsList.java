@@ -48,7 +48,7 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 
 		Intent i = getIntent();
 		entity = (NotificationEntity) i.getSerializableExtra("entity");
-		searchTerm = entity.notification_data;
+		searchTerm = entity.notificationData;
 
 		NewsListHolder holder = (NewsListHolder) getLastNonConfigurationInstance();
 		if (holder != null) {

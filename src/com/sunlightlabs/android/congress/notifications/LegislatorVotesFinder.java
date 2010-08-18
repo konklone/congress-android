@@ -35,6 +35,9 @@ public class LegislatorVotesFinder extends NotificationFinder {
 		String id = split[0];
 		String chamber = split[1];
 
+		Log.i(Utils.TAG, "DATA = " + data + " ID = " + id + " CHAMBER = " + chamber + " split = "
+				+ split);
+
 		Utils.setupDrumbone(context);
 		try {
 			return RollService.latestVotes(id, chamber, PER_PAGE, 1);

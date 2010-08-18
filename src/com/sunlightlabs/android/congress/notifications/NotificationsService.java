@@ -35,35 +35,35 @@ public class NotificationsService extends WakefulIntentService {
 		notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		database = new Database(this);
 		database.open();
-		Log.d(Utils.TAG, "Creating notifications service and opening db");
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		database.close();
-		Log.d(Utils.TAG, "Destroying notifications service and closing db");
 	}
 
 	@Override
 	protected void doWakefulWork(Intent intent) {
-		Log.d(Utils.TAG, "doWakefulWork()");
+		Log.d(Utils.TAG, "================ NotificationService Start ================");
 
 		registerUpdates(NotificationEntity.LEGISLATOR, new String[] { NotificationEntity.TWEETS,
 				NotificationEntity.VIDEOS, NotificationEntity.NEWS, NotificationEntity.VOTES });
 
 		registerUpdates(NotificationEntity.BILL, new String[] { NotificationEntity.NEWS,
-				NotificationEntity.VOTES, NotificationEntity.HISTORY });
+				NotificationEntity.VOTES, NotificationEntity.ACTIONS });
+
+		Log.d(Utils.TAG, "================ NotificationService End  ================ \n\n");
 	}
 
 	private void registerUpdates(String entityType, String[] notificationTypes) {
 		for (String ntype : notificationTypes) {
+
 			Cursor c = database.getNotifications(entityType, ntype);
 			if (c.moveToFirst()) {
 				do {
 					NotificationEntity entity = database.loadEntity(c);
-					String lastSeenId = entity.lastSeenId;
-					
+
 					if (ntype.equals(NotificationEntity.TWEETS))
 						entity = processResults(new TwitterFinder(this), entity);
 
@@ -74,26 +74,26 @@ public class NotificationsService extends WakefulIntentService {
 						entity = processResults(new YahooNewsFinder(this), entity);
 
 					else if (ntype.equals(NotificationEntity.VOTES)) {
-						if(entityType.equals(NotificationEntity.LEGISLATOR))
+						if (entityType.equals(NotificationEntity.LEGISLATOR))
 							entity = processResults(new LegislatorVotesFinder(this), entity);
 
 						else if (entityType.equals(NotificationEntity.BILL))
 							entity = processResults(new BillVotesFinder(this), entity);
 					}
-					
-					else if (ntype.equals(NotificationEntity.HISTORY))
-						entity = processResults(new BillHistoryFinder(this), entity);
 
-					// we must update the last seen id
-					if (lastSeenId != null && !lastSeenId.equals(entity.lastSeenId)) {
-						if (database.updateLastSeenNotification(entity.id,
-								entity.notification_type, entity.lastSeenId) > 0) {
-							Log.d(Utils.TAG, "NotificationService: updated last seen id for entity " + entity.id);
-							sendNotification(entity);
-						} else
-							Log.d(Utils.TAG, "NotificationService: could not update the last seen id for entity "
-											+ entity.id);
+					else if (ntype.equals(NotificationEntity.ACTIONS))
+						entity = processResults(new BillActionsFinder(this), entity);
+
+					// update the last seen id and send a notification if there are new updates
+					long ok = 0;
+					if (entity.lastSeenId != null) {
+						ok = database.updateLastSeenNotification(entity);
+						if (ok > 0 && entity.results > 0)
+							doNotify(entity);
 					}
+					if (ok == 0)
+						Log.w(Utils.TAG, "Could not update last seen id for entity " + entity.id);
+
 				} while (c.moveToNext());
 			}
 			c.close();
@@ -105,28 +105,27 @@ public class NotificationsService extends WakefulIntentService {
 	 * is the last in the list. If it's not the case, then it must be first
 	 * sorted to match this criterion.
 	 */
-	protected NotificationEntity processResults(NotificationFinder checker, NotificationEntity entity) {
+	protected NotificationEntity processResults(NotificationFinder finder, NotificationEntity entity) {
 		final String id = entity.id;
-		final String ntype = entity.notification_type;
+		final String ntype = entity.notificationType;
 
-		List<?> results = checker.callUpdate(entity.notification_data);
+		List<?> results = finder.callUpdate(entity.notificationData);
 
 		// return entity unchanged
 		if (results == null || results.isEmpty()) {
-			Log.d(Utils.TAG, "NotificationService: No " + ntype + " to process for entity " + id);
+			Log.d(Utils.TAG, "No " + ntype + " to process for entity " + id);
 			return entity;
 		}
 
 		final int size = results.size();
-		Log.d(Utils.TAG, "NotificationService: Loaded " + size + " " + ntype + " for entity with id " + id);
+		Log.d(Utils.TAG, "Loaded " + size + " " + ntype + " for entity with id " + id);
 
-		String lastId = checker.decodeId(results.get(size - 1));
 		// search for the last seen id in the list of results, and calculate how
-		// many new results are after that id
+		// many new results are after that
 		if (entity.lastSeenId != null) {
 			int foundPosition = -1;
 			for (Object result : results) {
-				if (entity.lastSeenId.equals(checker.decodeId(result))) {
+				if (entity.lastSeenId.equals(finder.decodeId(result))) {
 					foundPosition = results.indexOf(result);
 					break;
 				}
@@ -134,20 +133,20 @@ public class NotificationsService extends WakefulIntentService {
 
 			if (foundPosition > -1) {
 				entity.results = size - foundPosition - 1;
-				Log.d(Utils.TAG, "NotificationService: There are " + entity.results + " *NEW* " + ntype + " for entity " + id);
+				Log.d(Utils.TAG, "There are " + entity.results + " *new* " + ntype + " for entity "
+						+ id);
 			}
-		} else
-			// entity.lastSeenId is null, meaning it's the first time we check
-			Log.d(Utils.TAG, "NotificationService: First time check for entity " + id + ", " + "set the last seen " + ntype + " id to " + lastId);
+		}
 
 		// set the last seen id to the id of the most recent result
-		entity.lastSeenId = lastId;
+		entity.lastSeenId = finder.decodeId(results.get(size - 1));
+		Log.d(Utils.TAG, "Set the last seen " + ntype + " id to " + entity.lastSeenId + " for entity " + id);
+
 		return entity;
 	}
 
-	private void sendNotification(NotificationEntity entity) {
-		if (entity.results > 0)
-			notifyManager.notify(NOTIFY_UPDATES, getNotification(entity));
+	private void doNotify(NotificationEntity entity) {
+		notifyManager.notify(NOTIFY_UPDATES, getNotification(entity));
 	}
 
 	private Notification getNotification(NotificationEntity entity) {
@@ -159,17 +158,17 @@ public class NotificationsService extends WakefulIntentService {
 		CharSequence contentTitle = String.format(getString(R.string.notification_title),
 				entity.name);
 		// TODO handle plural or singular results
-		CharSequence contentText = entity.results + " new " + entity.notification_type;
+		CharSequence contentText = entity.results + " new " + entity.notificationType;
 
 		Intent notificationIntent = null;
 
 		if (entity.type.equals("legislator")) {
-			notificationIntent = new Intent(this, LegislatorLoader.class).putExtra(
-					"legislator_id", entity.id).putExtra("tab",
-					LegislatorTabs.Tabs.valueOf(entity.notification_type));
+			notificationIntent = new Intent(this, LegislatorLoader.class).putExtra("legislator_id",
+					entity.id)
+					.putExtra("tab", LegislatorTabs.Tabs.valueOf(entity.notificationType));
 		} else if (entity.type.equals("bill")) {
 			notificationIntent = new Intent(this, BillLoader.class).putExtra("id", entity.id)
-					.putExtra("tab", BillTabs.Tabs.valueOf(entity.notification_type));
+					.putExtra("tab", BillTabs.Tabs.valueOf(entity.notificationType));
 		}
 
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
