@@ -17,6 +17,12 @@ import com.sunlightlabs.android.congress.Database;
 import com.sunlightlabs.android.congress.LegislatorLoader;
 import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.android.congress.notifications.finders.BillActionsFinder;
+import com.sunlightlabs.android.congress.notifications.finders.BillVotesFinder;
+import com.sunlightlabs.android.congress.notifications.finders.LegislatorVotesFinder;
+import com.sunlightlabs.android.congress.notifications.finders.TwitterFinder;
+import com.sunlightlabs.android.congress.notifications.finders.YahooNewsFinder;
+import com.sunlightlabs.android.congress.notifications.finders.YoutubeFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class NotificationsService extends WakefulIntentService {

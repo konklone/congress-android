@@ -1,10 +1,12 @@
-package com.sunlightlabs.android.congress.notifications;
+package com.sunlightlabs.android.congress.notifications.finders;
 
 import java.util.List;
 
 import android.content.Context;
 import android.util.Log;
 
+import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Roll;

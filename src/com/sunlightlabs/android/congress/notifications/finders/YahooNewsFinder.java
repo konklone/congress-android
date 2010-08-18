@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.congress.notifications;
+package com.sunlightlabs.android.congress.notifications.finders;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import android.content.res.Resources.NotFoundException;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.yahoo.news.NewsException;
 import com.sunlightlabs.yahoo.news.NewsItem;
