@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.congress.notifications;
+package com.sunlightlabs.android.congress.notifications.finders;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.util.Log;
 
+import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.youtube.Video;
 import com.sunlightlabs.youtube.YouTube;
