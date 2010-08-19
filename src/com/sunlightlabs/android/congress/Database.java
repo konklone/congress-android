@@ -42,11 +42,8 @@ public class Database {
 			"sponsor_party", "sponsor_state", "sponsor_title", "sponsor_first_name",
 			"sponsor_nickname", "sponsor_last_name" };
 
-	private static final String[] NOTIFICATIONS_COLUMNS = new String[] { "id", "type", "name",
-			"notification_type", "notification_data", "last_seen_id", "status" };
-
-	public static final String NOTIFICATIONS_OFF = "off";
-	public static final String NOTIFICATIONS_ON = "on";
+	private static final String[] NOTIFICATIONS_COLUMNS = new String[] {
+			"entity_id", "entity_name", "notification_data", "last_seen_id", "notification_class" };
 
 	private DatabaseHelper helper;
 	private SQLiteDatabase database;
@@ -243,80 +240,61 @@ public class Database {
 		return legislator;
 	}
 
-	public Cursor getNotifications(String type, String notificationType) {
-		StringBuilder query = new StringBuilder("type=? AND notification_type=? AND status=?");
-
-		return database.query(NOTIFICATIONS_TABLE, NOTIFICATIONS_COLUMNS, query.toString(),
-				new String[] { type, notificationType, Database.NOTIFICATIONS_ON },
-				null, null, null);
+	public Cursor getNotifications() {
+		return database.rawQuery("SELECT * FROM " + NOTIFICATIONS_TABLE, null);
 	}
 
-	public Cursor getNotification(String id, String notificationType) {
-		StringBuilder query = new StringBuilder("id=? AND notification_type=? AND status=?");
+	public Cursor getNotification(String entityId, String notificationClass) {
+		StringBuilder query = new StringBuilder("entity_id=? AND notification_class=?");
 
 		return database.query(NOTIFICATIONS_TABLE, NOTIFICATIONS_COLUMNS, query.toString(),
-				new String[] { id, notificationType, Database.NOTIFICATIONS_ON }, null,
-				null, null);
+				new String[] { entityId, notificationClass }, null, null, null);
 	}
-
-	public String getNotificationStatus(String id, String notificationType) {
-		StringBuilder query = new StringBuilder("id=? AND notification_type=?");
-
-		Cursor c = database.query(NOTIFICATIONS_TABLE, new String[] { "status", },
-				query.toString(), new String[] { id, notificationType }, null, null,
-				null);
-		String status = null;
-		if (c.moveToFirst())
-			status = c.getString(c.getColumnIndex("status"));
-		c.close();
-		return status;
+	
+	public boolean hasNotification(String entityId, String notificationClass) {
+		if (getNotification(entityId, notificationClass).moveToFirst())
+			return true;
+		return false;
 	}
 
 	public long addNotification(NotificationEntity entity) {
 		ContentValues cv = new ContentValues(NOTIFICATIONS_COLUMNS.length);
-		cv.put("id", entity.id);
-		cv.put("type", entity.type);
-		cv.put("name", entity.name);
-		cv.put("notification_type", entity.notificationType);
+		cv.put("entity_id", entity.id);
+		cv.put("entity_name", entity.name);
+		cv.put("notification_class", entity.notificationClass);
 		cv.put("notification_data", entity.notificationData);
 		cv.put("last_seen_id", (String) null);
-		cv.put("status", Database.NOTIFICATIONS_ON);
 		return database.insert(NOTIFICATIONS_TABLE, null, cv);
 	}
-
+	
+	public long removeNotification(String entityId, String notificationClass) {
+		return database.delete(NOTIFICATIONS_TABLE, "entity_id=? AND notification_class=?", 
+				new String[] { entityId , notificationClass });
+	}
+	
 	public NotificationEntity loadEntity(Cursor c) {
 		NotificationEntity e = new NotificationEntity();
-		e.id = c.getString(c.getColumnIndex("id"));
-		e.name = c.getString(c.getColumnIndex("name"));
-		e.type = c.getString(c.getColumnIndex("type"));
-		e.notificationType = c.getString(c.getColumnIndex("notification_type"));
+		e.id = c.getString(c.getColumnIndex("entity_id"));
+		e.name = c.getString(c.getColumnIndex("entity_name"));
 		e.notificationData = c.getString(c.getColumnIndex("notification_data"));
-		e.status = c.getString(c.getColumnIndex("status"));
 		e.lastSeenId = c.getString(c.getColumnIndex("last_seen_id"));
+		e.notificationClass = c.getString(c.getColumnIndex("notification_class"));
 		return e;
 	}
 
-	public NotificationEntity loadEntity(String id, String notificationType) {
-		Cursor c = getNotification(id, notificationType);
+	public NotificationEntity loadEntity(String entityId, String notificationClass) {
+		Cursor c = getNotification(entityId, notificationClass);
 		if (c.moveToFirst())
 			return loadEntity(c);
 		return null;
 	}
 
-	public long setNotificationStatus(String id, String notificationType, String status) {
-		ContentValues cv = new ContentValues(1);
-		cv.put("status", status);
-
-		return database.update(NOTIFICATIONS_TABLE, cv, "id=? AND notification_type=?",
-				new String[] { id, notificationType });
-	}
-
-	public long updateLastSeenNotification(NotificationEntity entity) {
+	public int updateLastSeenId(NotificationEntity entity) {
 		ContentValues cv = new ContentValues(1);
 		cv.put("last_seen_id", entity.lastSeenId);
 
-		return database.update(NOTIFICATIONS_TABLE, cv, "id=? AND notification_type=?",
-				new String[] { entity.id, entity.notificationType });
+		return database.update(NOTIFICATIONS_TABLE, cv, "entity_id=? AND notification_class=?",
+				new String[] { entity.id, entity.notificationClass });
 	}
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {

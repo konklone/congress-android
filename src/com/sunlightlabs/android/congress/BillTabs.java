@@ -12,6 +12,9 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.finders.BillActionsFinder;
+import com.sunlightlabs.android.congress.notifications.finders.BillVotesFinder;
+import com.sunlightlabs.android.congress.notifications.finders.YahooNewsFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 
@@ -127,21 +130,21 @@ public class BillTabs extends TabActivity {
 	}
 	
 	public Intent newsIntent() {
-		return new Intent(this, NewsList.class)
-			.putExtra("entity", new NotificationEntity(bill.id, NotificationEntity.BILL, bill.official_title, 
-				NotificationEntity.NEWS, searchTermFor(bill)));
+		return new Intent(this, NewsList.class).putExtra("entity",
+				new NotificationEntity(bill.id, bill.official_title,
+						YahooNewsFinder.class.getName(), searchTermFor(bill)));
 	}
 	
 	public Intent historyIntent() {
-		return new Intent(this, BillHistory.class)
-			 .putExtra("entity", new NotificationEntity(bill.id, NotificationEntity.BILL, bill.official_title, 
-				NotificationEntity.ACTIONS, bill.id));
+		return new Intent(this, BillHistory.class).putExtra("entity",
+				new NotificationEntity(bill.id, bill.official_title,
+						BillActionsFinder.class.getName(), bill.id));
 	}
 	
 	public Intent votesIntent() {
-		return new Intent(this, BillVotes.class)
-			.putExtra("entity", new NotificationEntity(bill.id,	NotificationEntity.BILL, bill.official_title, 
-				NotificationEntity.VOTES, bill.id));
+		return new Intent(this, BillVotes.class).putExtra("entity",
+				new NotificationEntity(bill.id, bill.official_title,
+						BillVotesFinder.class.getName(), bill.id));
 	}
 	
 	// for news searching, don't use legislator.titledName() because we don't want to use the name_suffix

@@ -6,30 +6,17 @@ public class NotificationEntity implements Serializable {
 	private static final long serialVersionUID = -8734277713086848691L;
 	public static final String SEPARATOR = ":";
 
-	// entity types
-	public static final String LEGISLATOR = "legislator";
-	public static final String BILL = "bill";
-	public static final String LAW = "law";
-
-	// notification types
-	public static final String TWEETS = "tweets";
-	public static final String VIDEOS = "videos";
-	public static final String NEWS = "news";
-	public static final String VOTES = "votes";
-	public static final String ACTIONS = "actions";
-
-	public String id, name, type, lastSeenId, status, notificationData, notificationType;
+	public String id, name, notificationClass, lastSeenId, notificationData;
 	public int results;
 
 	public NotificationEntity() {}
 	
-	public NotificationEntity(String id, String type, String name, String nType, String... nData) {
+	public NotificationEntity(String id, String name, String notificationClass,
+			String... data) {
 		this.id = id;
-		this.type = type;
 		this.name = name;
-		this.notificationType = nType;
-		if (nData != null)
-			this.notificationData = flatten(nData);
+		this.notificationClass = notificationClass;
+		if (data != null) this.notificationData = flatten(data);
 	}
 
 	private String flatten(String[] data) {
@@ -51,8 +38,7 @@ public class NotificationEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "{id:" + id + ",type:" + type + ",name:" + name + ",nType:" + notificationType
-				+ ", nData:" + notificationData + ",lastSeenId:" + lastSeenId + ",status:" + status
-				+ ",results:" + results + "}";
+		return "{id:" + id + ",name:" + name + ",data:" + notificationData
+				+ ",lastSeenId:" + lastSeenId + ",results:" + results + "}";
 	}
 }

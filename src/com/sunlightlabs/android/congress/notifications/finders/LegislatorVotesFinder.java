@@ -2,11 +2,10 @@ package com.sunlightlabs.android.congress.notifications.finders;
 
 import java.util.List;
 
-import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.notifications.NotificationEntity;
-import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Roll;
@@ -14,10 +13,6 @@ import com.sunlightlabs.congress.services.RollService;
 
 public class LegislatorVotesFinder extends NotificationFinder {
 	private static final int PER_PAGE = 40;
-
-	public LegislatorVotesFinder(Context context) {
-		super(context);
-	}
 
 	@Override
 	public String decodeId(Object result) {
@@ -27,26 +22,32 @@ public class LegislatorVotesFinder extends NotificationFinder {
 	}
 
 	@Override
-	public List<?> callUpdate(String data) {
-		String[] split = data.split(NotificationEntity.SEPARATOR);
-		if (split == null || split.length < 2) {
-			Log.w(Utils.TAG, "Could not fetch the latest votes for legislator. "
-					+ "You should provide the 'id' and 'chamber' params in notification data.");
-			return null;
-		}
-		String id = split[0];
-		String chamber = split[1];
-
-		Log.i(Utils.TAG, "DATA = " + data + " ID = " + id + " CHAMBER = " + chamber + " split = "
-				+ split);
-
+	public List<?> callUpdate(NotificationEntity entity) {
 		Utils.setupDrumbone(context);
 		try {
-			return RollService.latestVotes(id, chamber, PER_PAGE, 1);
+			return RollService.latestVotes(entity.id, entity.notificationData, PER_PAGE, 1);
 		} catch (CongressException e) {
-			Log.w(Utils.TAG, "Could not fetch the latest votes for id " + id + " and chamber " + chamber, e);
+			Log.w(Utils.TAG, "Could not fetch the latest votes for " + entity, e);
 			return null;
 		}
+	}
+
+	@Override
+	public Intent notificationIntent(NotificationEntity entity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String notificationMessage(NotificationEntity entity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String notificationTitle(NotificationEntity entity) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -11,6 +11,9 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.finders.TwitterFinder;
+import com.sunlightlabs.android.congress.notifications.finders.YahooNewsFinder;
+import com.sunlightlabs.android.congress.notifications.finders.YoutubeFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
@@ -115,21 +118,22 @@ public class LegislatorTabs extends TabActivity {
 	}
 	
 	public Intent newsIntent() {
-		return new Intent(this, NewsList.class)
-				.putExtra("entity", new NotificationEntity(legislator.id, NotificationEntity.LEGISLATOR, legislator.getName(), 
-						NotificationEntity.NEWS, correctExceptions(searchTermFor(legislator))));
+		return new Intent(this, NewsList.class).putExtra("entity",
+				new NotificationEntity(legislator.id, legislator.getName(),
+						YahooNewsFinder.class.getName(), correctExceptions(searchTermFor(legislator))));
+		
 	}
 	
 	public Intent twitterIntent() {
-		return new Intent(this, LegislatorTwitter.class)
-				.putExtra("entity", new NotificationEntity(legislator.id, NotificationEntity.LEGISLATOR, legislator.getName(), 
-						NotificationEntity.TWEETS, legislator.twitter_id));
+		return new Intent(this, LegislatorTwitter.class).putExtra("entity",
+				new NotificationEntity(legislator.id, legislator.getName(),
+						TwitterFinder.class.getName(), legislator.twitter_id));
 	}
 	
 	public Intent youtubeIntent() {
-		return new Intent(this, LegislatorYouTube.class)
-				.putExtra("entity", new NotificationEntity(legislator.id, NotificationEntity.LEGISLATOR, legislator.getName(), 
-						NotificationEntity.VIDEOS, legislator.youtubeUsername()));
+		return new Intent(this, LegislatorYouTube.class).putExtra("entity",
+				new NotificationEntity(legislator.id, legislator.getName(),
+						YoutubeFinder.class.getName(), legislator.youtubeUsername()));
 	}
 	
 	

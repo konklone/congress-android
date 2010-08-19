@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.finders.LegislatorVotesFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -52,8 +53,8 @@ public class RollList extends ListActivity {
 		if (type == ROLLS_VOTER) {
 			setContentView(R.layout.list_footer_titled);
 
-			entity = new NotificationEntity(voter.id, NotificationEntity.LEGISLATOR, voter
-					.getName(), NotificationEntity.VOTES, new String[] { voter.id, voter.chamber });
+			entity = new NotificationEntity(voter.id, voter.getName(),
+					LegislatorVotesFinder.class.getName(), voter.chamber);
 		}
 		else
 			setContentView(R.layout.list_titled);

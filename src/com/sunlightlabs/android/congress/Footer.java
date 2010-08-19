@@ -54,6 +54,32 @@ public class Footer extends RelativeLayout {
 		// default state
 		state = OFF;
 	}
+	
+	public void init(NotificationEntity entity) {
+		this.entity = entity;
+		database = new Database(context);
+		database.open();
+
+		setUIListener();
+
+		// if the service is started, check the database to set the initial state of the UI
+		if (Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED,
+				Preferences.DEFAULT_NOTIFY_ENABLED)
+				&& database.hasNotification(entity.id, entity.notificationClass))
+			setOn();
+		else
+			setOff();
+	}
+
+	public void init() {
+		setUIListener();
+
+		if (Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED,
+				Preferences.DEFAULT_NOTIFY_ENABLED))
+			setOn();
+		else
+			setOff();
+	}
 
 	private void setUIListener() {
 		setOnClickListener(new View.OnClickListener() {
@@ -81,41 +107,20 @@ public class Footer extends RelativeLayout {
 
 	private void doFooterLogic() {
 		String id = entity.id;
-		String nType = entity.notificationType;
-		boolean ok = true;
+		String cls = entity.notificationClass;
+		boolean dbOk = true;
 
-		String status = database.getNotificationStatus(id, nType);
-
-		// the current state is OFF; must turn notifications ON
-		if (state == OFF) {
-
-			// Case 1: there is no entry in the notifications table for this entity:
-			// add a notification
-			if (status == null) {
-				ok = database.addNotification(entity) != -1;
-				Log.d(Utils.TAG, "Footer: Added " + nType + " notifications for entity " + id + "->" + ok);
-			}
-
-			// Case 2: there is an entry in the notifications table for this entity:
-			// update notification status
-			else {
-				ok = database.setNotificationStatus(id, nType, Database.NOTIFICATIONS_ON) != -1;
-				Log.d(Utils.TAG, "Footer: Set " + nType + " notifications ON for entity " + id + "->" + ok);
-			}
-		}
-
-		// the current state is ON; must turn notifications OFF
-		// this means we set the notification status in the database to OFF for the current entity
-		// it doesn't mean we stop the service; it can only be stopped from MainMenu footer
-		else {
-			// it means there is an entry in the notifications table
-			ok = database.setNotificationStatus(id, nType, Database.NOTIFICATIONS_OFF) != -1;
-			Log.d(Utils.TAG, "Footer: Set " + nType + " notifications OFF for entity " + id + "->" + ok);
-		}
+		if (state == OFF) // current state is OFF; must turn notifications ON
+			dbOk = database.addNotification(entity) != -1;
+		
+		else // current state is ON; must turn notifications OFF
+			dbOk = database.removeNotification(id, cls) != -1;
 
 		// all database operations went smoothly; update footer UI
-		if (ok)
+		if (dbOk)
 			doUpdateUI();
+		else
+			Log.w(Utils.TAG, "doFooterLogic(): database operation not successful!");
 	}
 
 	private void setOn() {
@@ -124,8 +129,7 @@ public class Footer extends RelativeLayout {
 		imageView.setOn();
 
 		// start the notification service, if it's currently stopped
-		if (!Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED,
-				Preferences.DEFAULT_NOTIFY_ENABLED)) {
+		if (!Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED, Preferences.DEFAULT_NOTIFY_ENABLED)) {
 			Utils.setBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED, true);
 			Utils.startNotificationsBroadcast(context);
 		}
@@ -135,31 +139,6 @@ public class Footer extends RelativeLayout {
 		state = OFF;
 		textView.setOff();
 		imageView.setOff();
-	}
-
-	public void init(NotificationEntity entity) {
-		this.entity = entity;
-		database = new Database(context);
-		database.open();
-
-		setUIListener();
-
-		// if the service is started, check the database to set the initial state of the UI
-		if (Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED, Preferences.DEFAULT_NOTIFY_ENABLED)
-				&& Database.NOTIFICATIONS_ON.equals(database.getNotificationStatus(entity.id, entity.notificationType))) 
-			setOn();
-		else
-			setOff();
-	}
-
-	public void init() {
-		setUIListener();
-
-		if (Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED,
-				Preferences.DEFAULT_NOTIFY_ENABLED))
-			setOn();
-		else
-			setOff();
 	}
 
 	public void setListener(OnFooterClickListener listener) {
