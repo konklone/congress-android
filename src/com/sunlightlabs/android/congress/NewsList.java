@@ -35,16 +35,13 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 
 	private LoadYahooNewsTask loadNewsTask = null;
 
-	private Database database;
 	private NotificationEntity entity;
+	private Footer footer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_footer);
-
-		database = new Database(this);
-		database.open();
 
 		Intent i = getIntent();
 		entity = (NotificationEntity) i.getSerializableExtra("entity");
@@ -75,7 +72,7 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		database.close();
+		footer.onDestroy();
 	}
 
 	private void setupControls() {
@@ -94,8 +91,8 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 	}
 
 	private void setupFooter() {
-		Footer footer = (Footer) findViewById(R.id.footer);
-		footer.init(entity, database);
+		footer = (Footer) findViewById(R.id.footer);
+		footer.init(entity);
 	}
 
 	@Override

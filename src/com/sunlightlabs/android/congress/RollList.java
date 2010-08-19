@@ -38,16 +38,12 @@ public class RollList extends ListActivity {
 	private int type;
 	
 	private LoadingWrapper loading;
-
-	private Database database;
 	private NotificationEntity entity;
+	private Footer footer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		database = new Database(this);
-		database.open();
 
 		Bundle extras = getIntent().getExtras();
 		type = extras.getInt("type", ROLLS_VOTER);
@@ -82,14 +78,14 @@ public class RollList extends ListActivity {
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		database.close();
+	public Object onRetainNonConfigurationInstance() {
+		return new RollListHolder(rolls, loadRollsTask);
 	}
 
 	@Override
-	public Object onRetainNonConfigurationInstance() {
-		return new RollListHolder(rolls, loadRollsTask);
+	protected void onDestroy() {
+		super.onDestroy();
+		footer.onDestroy();
 	}
 
 	public void setupControls() {
@@ -118,8 +114,8 @@ public class RollList extends ListActivity {
 	}
 
 	private void setupFooter() {
-		Footer footer = (Footer) findViewById(R.id.footer);
-		footer.init(entity, database);
+		footer = (Footer) findViewById(R.id.footer);
+		footer.init(entity);
 	}
 
 	@Override

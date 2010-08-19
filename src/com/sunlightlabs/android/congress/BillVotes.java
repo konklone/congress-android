@@ -27,16 +27,13 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	private Bill bill;
 	private String id;
 	
-	private Database database;
 	private NotificationEntity entity;
+	private Footer footer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_footer);
-		
-		database = new Database(this);
-		database.open();
 
 		entity = (NotificationEntity) getIntent().getSerializableExtra("entity");
 		id = entity.id;
@@ -55,9 +52,15 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 		setupFooter();
 	}
 	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		footer.onDestroy();
+	}
+
 	private void setupFooter() {
-		Footer footer = (Footer) findViewById(R.id.footer);
-		footer.init(entity, database);
+		footer = (Footer) findViewById(R.id.footer);
+		footer.init(entity);
 	}
 
 	public void loadBill() {
@@ -65,12 +68,6 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 			loadBillTask = (LoadBillTask) new LoadBillTask(this, id).execute("votes");
 		else
 			displayBill();
-	}
-	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		database.close();
 	}
 
 	@Override

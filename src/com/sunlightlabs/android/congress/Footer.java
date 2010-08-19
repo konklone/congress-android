@@ -14,12 +14,11 @@ public class Footer extends RelativeLayout {
 
 	// in case we need more action when the footer is turned on/off
 	public static interface OnFooterClickListener {
-		public void onFooterClick(Footer footer, State state);
+		public void onFooterClick(Footer footer, int state);
 	}
 
-	public enum State {
-		ON, OFF;
-	}
+	public static final int ON = 1;
+	public static final int OFF = 0;
 
 	private int textViewId;
 	private int imageViewId;
@@ -27,7 +26,7 @@ public class Footer extends RelativeLayout {
 	private FooterImage imageView;
 
 	private OnFooterClickListener listener;
-	private State state;
+	private int state;
 
 	private NotificationEntity entity;
 	private Database database;
@@ -38,54 +37,29 @@ public class Footer extends RelativeLayout {
 		this.context = context;
 
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Footer);
-		RuntimeException e = null;
-
 		textViewId = a.getResourceId(R.styleable.Footer_textView, 0);
-		if (textViewId == 0)
-			e = new IllegalArgumentException(a.getPositionDescription()
-					+ ": The textView attribute is required and must refer to a valid child.");
-
 		imageViewId = a.getResourceId(R.styleable.Footer_imageView, 0);
-		if (imageViewId == 0)
-			e = new IllegalArgumentException(a.getPositionDescription()
-					+ ": The imageView attribute is required and must refer to a valid child.");
-
 		a.recycle();
-
-		if (e != null)
-			throw e;
 	}
 
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
-
 		textView = (FooterText) findViewById(textViewId);
-		if (textView == null) {
-			String name = getResources().getResourceEntryName(textViewId);
-			throw new RuntimeException("Your Footer must have a child View "
-					+ "whose id attribute is 'R.id." + name + "'");
-		}
 		imageView = (FooterImage) findViewById(imageViewId);
-		if (imageView == null) {
-			String name = getResources().getResourceEntryName(imageViewId);
-			throw new RuntimeException("Your Footer must have a child View "
-					+ "whose id attribute is 'R.id." + name + "'");
-		}
-
 		setupControls();
 	}
 
 	private void setupControls() {
 		// default state
-		state = State.OFF;
+		state = OFF;
 	}
 
 	private void setUIListener() {
 		setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
-				if (entity != null && database != null)
+				if (entity != null)
 					doFooterLogic();
 				else
 					// this footer has no entity attached; just update the UI
@@ -99,7 +73,7 @@ public class Footer extends RelativeLayout {
 	}
 	
 	private void doUpdateUI() {
-		if (state == State.OFF)
+		if (state == OFF)
 			setOn();
 		else
 			setOff();
@@ -113,7 +87,7 @@ public class Footer extends RelativeLayout {
 		String status = database.getNotificationStatus(id, nType);
 
 		// the current state is OFF; must turn notifications ON
-		if (state == State.OFF) {
+		if (state == OFF) {
 
 			// Case 1: there is no entry in the notifications table for this entity:
 			// add a notification
@@ -138,14 +112,14 @@ public class Footer extends RelativeLayout {
 			ok = database.setNotificationStatus(id, nType, Database.NOTIFICATIONS_OFF) != -1;
 			Log.d(Utils.TAG, "Footer: Set " + nType + " notifications OFF for entity " + id + "->" + ok);
 		}
-		
+
 		// all database operations went smoothly; update footer UI
 		if (ok)
 			doUpdateUI();
 	}
 
 	private void setOn() {
-		state = State.ON;
+		state = ON;
 		textView.setOn();
 		imageView.setOn();
 
@@ -158,25 +132,21 @@ public class Footer extends RelativeLayout {
 	}
 
 	private void setOff() {
-		state = State.OFF;
+		state = OFF;
 		textView.setOff();
 		imageView.setOff();
 	}
 
-	public void init(NotificationEntity entity, Database database) {
-		if(entity == null || database == null) {
-			Log.d(Utils.TAG, "You must set the entity and the database before calling init() on the footer!");
-			return;
-		}
+	public void init(NotificationEntity entity) {
 		this.entity = entity;
-		this.database = database;
+		database = new Database(context);
+		database.open();
+
 		setUIListener();
 
 		// if the service is started, check the database to set the initial state of the UI
-		if (Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED,
-				Preferences.DEFAULT_NOTIFY_ENABLED)
-				&& Database.NOTIFICATIONS_ON.equals(database.getNotificationStatus(entity.id,
-						entity.notificationType)))
+		if (Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED, Preferences.DEFAULT_NOTIFY_ENABLED)
+				&& Database.NOTIFICATIONS_ON.equals(database.getNotificationStatus(entity.id, entity.notificationType))) 
 			setOn();
 		else
 			setOff();
@@ -194,5 +164,10 @@ public class Footer extends RelativeLayout {
 
 	public void setListener(OnFooterClickListener listener) {
 		this.listener = listener;
+	}
+
+	// must be called to avoid database leaks
+	public void onDestroy() {
+		database.close();
 	}
 }

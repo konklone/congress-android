@@ -37,7 +37,6 @@ import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
-import com.sunlightlabs.android.congress.Footer.State;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteBillsAdapter.FavoriteBillWrapper;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteLegislatorsAdapter.FavoriteLegislatorWrapper;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
@@ -304,9 +303,9 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		footer.init();
 	}
 
-	public void onFooterClick(Footer footer, State state) {
+	public void onFooterClick(Footer footer, int state) {
 		// turn off all notifications at once
-		if (state == State.OFF) {
+		if (state == Footer.OFF) {
 			Utils.setBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, false);
 			Utils.stopNotificationsBroadcast(this);
 		} else {

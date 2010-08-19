@@ -24,17 +24,14 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 	private LoadBillTask loadBillTask;
 	private Bill bill;
 	private String id;
-	
-	private Database database;
+
 	private NotificationEntity entity;
+	private Footer footer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_footer);
-		
-		database = new Database(this);
-		database.open();
 
 		entity = (NotificationEntity) getIntent().getSerializableExtra("entity");
 		id = entity.id;
@@ -53,9 +50,15 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 		setupFooter();
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		footer.onDestroy();
+	}
+
 	private void setupFooter() {
-		Footer footer = (Footer) findViewById(R.id.footer);
-		footer.init(entity, database);
+		footer = (Footer) findViewById(R.id.footer);
+		footer.init(entity);
 	}
 	
 	public void loadBill() {
@@ -68,12 +71,6 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		return new BillHistoryHolder(loadBillTask, bill);
-	}
-	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		database.close();
 	}
 
 	public Context getContext() {

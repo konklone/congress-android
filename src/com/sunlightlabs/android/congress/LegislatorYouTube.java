@@ -44,17 +44,14 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	private LoadYoutubeVideosTask loadVideosTask = null;
 	private HashMap<Integer, LoadYoutubeThumbTask> loadThumbTasks = new HashMap<Integer, LoadYoutubeThumbTask>();
 	
-	String youtubeUsername;
-	private Database database;
+	private String youtubeUsername;
 	private NotificationEntity entity;
+	private Footer footer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_footer);
-    	
-		database = new Database(this);
-		database.open();
 
 		Intent i = getIntent();
 		entity = (NotificationEntity) i.getSerializableExtra("entity");
@@ -89,11 +86,11 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 		holder.loadThumbTasks = this.loadThumbTasks;
     	return holder;
     }
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		database.close();
+		footer.onDestroy();
 	}
 
 	private void setupControls() {
@@ -112,8 +109,8 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	}
 
 	private void setupFooter() {
-		Footer footer = (Footer) findViewById(R.id.footer);
-		footer.init(entity, database);
+		footer = (Footer) findViewById(R.id.footer);
+		footer.init(entity);
 	}
     
 	protected void loadVideos() {
