@@ -98,7 +98,6 @@ public class NotificationsService extends WakefulIntentService {
 
 			entity.results = size - foundIndex - 1;
 		}
-
 		entity.lastSeenId = finder.decodeId(results.get(size - 1));
 	}
 
@@ -115,8 +114,7 @@ public class NotificationsService extends WakefulIntentService {
 		CharSequence contentTitle = title;
 		CharSequence contentText = message;
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		notification.setLatestEventInfo(this, contentTitle, contentText, contentIntent);
 
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;

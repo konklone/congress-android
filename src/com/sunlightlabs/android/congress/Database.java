@@ -258,8 +258,10 @@ public class Database {
 	}
 
 	public boolean hasNotifications() {
-		return database.rawQuery("SELECT * FROM " + NOTIFICATIONS_TABLE, null)
-				.moveToFirst();
+		Cursor c = database.rawQuery("SELECT * FROM " + NOTIFICATIONS_TABLE, null);
+		boolean hasNotifications = c.moveToFirst();
+		c.close();
+		return hasNotifications;
 	}
 
 	public long addNotification(NotificationEntity entity) {
