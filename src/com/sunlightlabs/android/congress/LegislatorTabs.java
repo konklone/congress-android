@@ -12,8 +12,8 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.finders.LegislatorNewsFinder;
 import com.sunlightlabs.android.congress.notifications.finders.TwitterFinder;
-import com.sunlightlabs.android.congress.notifications.finders.YahooNewsFinder;
 import com.sunlightlabs.android.congress.notifications.finders.YoutubeFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
@@ -123,7 +123,7 @@ public class LegislatorTabs extends TabActivity {
 	public Intent newsIntent() {
 		return new Intent(this, NewsList.class).putExtra("entity",
 				new NotificationEntity(legislator.id, legislator.getName(),
-						YahooNewsFinder.class.getName(), correctExceptions(searchTermFor(legislator))));
+						LegislatorNewsFinder.class.getName(), correctExceptions(searchTermFor(legislator))));
 		
 	}
 	

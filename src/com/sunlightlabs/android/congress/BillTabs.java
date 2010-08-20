@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.notifications.NotificationEntity;
 import com.sunlightlabs.android.congress.notifications.finders.BillActionsFinder;
+import com.sunlightlabs.android.congress.notifications.finders.BillNewsFinder;
 import com.sunlightlabs.android.congress.notifications.finders.BillVotesFinder;
-import com.sunlightlabs.android.congress.notifications.finders.YahooNewsFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 
@@ -135,7 +135,7 @@ public class BillTabs extends TabActivity {
 	public Intent newsIntent() {
 		return new Intent(this, NewsList.class).putExtra("entity",
 				new NotificationEntity(bill.id, bill.official_title,
-						YahooNewsFinder.class.getName(), searchTermFor(bill)));
+						BillNewsFinder.class.getName(), searchTermFor(bill)));
 	}
 	
 	public Intent historyIntent() {
