@@ -12,21 +12,23 @@ import com.sunlightlabs.congress.models.Legislator;
 public class LegislatorLoader extends Activity implements LoadsLegislator {
 	private LoadLegislatorTask loadLegislatorTask = null;
 	private String id;
-	private int tab;
+	private Intent intent;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading_fullscreen);
 		
-		id = getIntent().getStringExtra("legislator_id");
-		tab = getIntent().getIntExtra("tab", 0);
-        
+		Intent i = getIntent();
+		id = i.getStringExtra("id");
+		intent = (Intent) i.getParcelableExtra("intent");
+
         loadLegislatorTask = (LoadLegislatorTask) getLastNonConfigurationInstance();
         if (loadLegislatorTask != null)
         	loadLegislatorTask.onScreenLoad(this);
         else
-			loadLegislatorTask = (LoadLegislatorTask) new LoadLegislatorTask(this, tab).execute(id);
+			loadLegislatorTask = (LoadLegislatorTask) new LoadLegislatorTask(
+					this).execute(id);
 	}
 	
 	@Override
@@ -35,14 +37,10 @@ public class LegislatorLoader extends Activity implements LoadsLegislator {
 	}
 	
 	
-	public void onLoadLegislator(Legislator legislator, int... tab) {
+	public void onLoadLegislator(Legislator legislator) {
 		if (legislator != null) {
-			Intent i = null;
-			if (tab != null && tab.length > 0)
-				i = Utils.legislatorIntent(this, legislator, tab[0]);
-			else
-				i = Utils.legislatorIntent(this, legislator);
-			startActivity(i);
+			intent.putExtra("legislator", legislator);
+			startActivity(intent);
 		}
 		else
 			Utils.alert(this, R.string.error_connection);

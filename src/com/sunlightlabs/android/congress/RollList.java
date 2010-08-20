@@ -48,7 +48,7 @@ public class RollList extends ListActivity {
 
 		Bundle extras = getIntent().getExtras();
 		type = extras.getInt("type", ROLLS_VOTER);
-		voter = (Legislator) extras.getSerializable("voter");
+		voter = (Legislator) extras.getSerializable("legislator");
 
 		if (type == ROLLS_VOTER) {
 			setContentView(R.layout.list_footer_titled);

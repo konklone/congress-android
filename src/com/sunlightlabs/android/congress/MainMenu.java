@@ -237,7 +237,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 			}
 		}
 		else if (tag instanceof FavoriteLegislatorWrapper)
-			startActivity(Utils.legislatorIntent(((FavoriteLegislatorWrapper) tag).legislator.bioguide_id));
+			startActivity(Utils.legislatorIntent(((FavoriteLegislatorWrapper) tag).legislator.id));
 		else if (tag instanceof FavoriteBillWrapper) {
 			Bill bill = ((FavoriteBillWrapper) tag).bill;
 			startActivity(Utils.billIntent(bill.id, bill.code));

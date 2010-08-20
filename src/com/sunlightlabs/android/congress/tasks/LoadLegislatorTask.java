@@ -12,19 +12,10 @@ import com.sunlightlabs.congress.services.LegislatorService;
 public class LoadLegislatorTask extends AsyncTask<String, Void, Legislator> {
 	private final static String TAG = "CONGRESS";
 	private LoadsLegislator context;
-	private int tab; // used to open a specific tab on legislator's profile
 
 	public LoadLegislatorTask(LoadsLegislator context) {
 		this.context = context;
-		// this should never happen in reality, if used correctly
-		if (!(context instanceof Context))
-			throw new IllegalArgumentException("LoadsLegislator must be of type Context");
 		Utils.setupSunlight((Context) context);
-	}
-
-	public LoadLegislatorTask(LoadsLegislator context, int tab) {
-		this(context);
-		this.tab = tab;
 	}
 
 	public void onScreenLoad(LoadsLegislator context) {
@@ -45,10 +36,10 @@ public class LoadLegislatorTask extends AsyncTask<String, Void, Legislator> {
 	protected void onPostExecute(Legislator legislator) {
 		if (isCancelled())
 			return;
-		context.onLoadLegislator(legislator, tab);
+		context.onLoadLegislator(legislator);
 	}
 
 	public interface LoadsLegislator {
-		void onLoadLegislator(Legislator legislator, int... tab);
+		void onLoadLegislator(Legislator legislator);
 	}
 }

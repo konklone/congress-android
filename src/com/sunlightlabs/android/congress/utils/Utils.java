@@ -61,9 +61,17 @@ public class Utils {
 
 	// Suitable for a legislator desktop shortcut, load a legislator by ID only
 	public static Intent legislatorIntent(String id) {
-		return new Intent(Intent.ACTION_MAIN)
-			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.LegislatorLoader")
-			.putExtra("legislator_id", id);
+		return new Intent(Intent.ACTION_MAIN).setClassName(
+				"com.sunlightlabs.android.congress",
+				"com.sunlightlabs.android.congress.LegislatorLoader")
+			.putExtra("id", id)
+			.putExtra("intent", legislatorTabsIntent(id));
+	}
+	
+	public static Intent legislatorTabsIntent(String id) {
+		return new Intent(Intent.ACTION_MAIN).setClassName(
+				"com.sunlightlabs.android.congress",
+				"com.sunlightlabs.android.congress.LegislatorTabs");
 	}
 	
 	// Suitable for a direct link to a legislator, bypassing the LegislatorLoader entirely

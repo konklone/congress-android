@@ -77,7 +77,7 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 		return this;
 	}
 	
-	public void onLoadBill(Bill bill, int... tab) {
+	public void onLoadBill(Bill bill) {
 		this.loadBillTask = null;
 		this.bill = bill;
 		displayBill();

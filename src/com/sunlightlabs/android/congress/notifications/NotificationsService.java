@@ -51,7 +51,7 @@ public class NotificationsService extends WakefulIntentService {
 				processResults(finder, entity);
 				
 				if (entity.lastSeenId != null) {
-					if(database.updateLastSeenId(entity) > 0) 
+					if(database.updateLastSeenId(entity) > 0 && entity.results > 0) 
 						doNotify(finder.notificationIntent(entity), 
 								 finder.notificationTitle(entity), 
 								 finder.notificationMessage(entity));

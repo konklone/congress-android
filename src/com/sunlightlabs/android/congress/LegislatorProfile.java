@@ -183,7 +183,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
     public void votingRecord() {
     	Intent intent = new Intent(this, RollList.class)
     		.putExtra("type", RollList.ROLLS_VOTER)
-    		.putExtra("voter", legislator);
+    		.putExtra("legislator", legislator);
     	startActivity(intent);
     }
     
