@@ -33,20 +33,9 @@ public class BillActionsFinder extends NotificationFinder {
 
 	@Override
 	public Intent notificationIntent(NotificationEntity entity) {
-		// TODO Auto-generated method stub
-		return null;
+		return Utils.billIntent(entity.id, new Intent(Intent.ACTION_MAIN).setClassName(
+				"com.sunlightlabs.android.congress",
+				"com.sunlightlabs.android.congress.BillHistory")
+				.putExtra("entity", entity));
 	}
-
-	@Override
-	public String notificationMessage(NotificationEntity entity) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String notificationTitle(NotificationEntity entity) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

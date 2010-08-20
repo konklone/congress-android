@@ -65,10 +65,18 @@ public class Utils {
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.LegislatorLoader")
 			.putExtra("id", id)
-			.putExtra("intent", legislatorTabsIntent(id));
+			.putExtra("intent", legislatorTabsIntent());
 	}
 	
-	public static Intent legislatorTabsIntent(String id) {
+	public static Intent legislatorIntent(String id, Intent intent) {
+		return new Intent(Intent.ACTION_MAIN).setClassName(
+				"com.sunlightlabs.android.congress",
+				"com.sunlightlabs.android.congress.LegislatorLoader")
+			.putExtra("id", id)
+			.putExtra("intent", intent);
+	}
+	
+	public static Intent legislatorTabsIntent() {
 		return new Intent(Intent.ACTION_MAIN).setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.LegislatorTabs");
@@ -79,22 +87,10 @@ public class Utils {
 		return new Intent(context, LegislatorTabs.class).putExtra("legislator", legislator);
 	}
 
-	// Suitable for a direct link to a legislator, when a specific tab is to be open first
-	public static Intent legislatorIntent(Context context, Legislator legislator, int tab) {
-		Intent i = legislatorIntent(context, legislator);
-		i.putExtra("tab", tab);
-		return i;
-	}
-
 	public static Intent legislatorIntent(Context context, Class<?> activityClass, Legislator legislator) {
 		return new Intent(context, activityClass).putExtra("legislator", legislator);
 	}
 
-	// Suitable for going from a list to the bill display page.
-	// Assumes the "basic" section of a bill has been loaded.
-	// Not suitable for shortcut intents.
-
-	// so tedious that I want a method to load up an Intent for any class
 	public static Intent billIntent(Context context, Bill bill) {
 		return billIntent(context, BillTabs.class, bill);
 	}
@@ -115,16 +111,30 @@ public class Utils {
 	}
 
 	public static Intent billIntent(String billId, String code) {
-		Intent intent = new Intent(Intent.ACTION_MAIN);
-		intent.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.BillLoader");
-		intent.putExtra("extra", false)
+		return new Intent(Intent.ACTION_MAIN).setClassName(
+				"com.sunlightlabs.android.congress",
+				"com.sunlightlabs.android.congress.BillLoader")
 			.putExtra("id", billId)
-			.putExtra("code", code);
-		return intent;
+			.putExtra("code", code)
+			.putExtra("intent", billTabsIntent());
+	}
+	
+	public static Intent billIntent(String billId) {
+		return billIntent(billId, (String) null);
 	}
 
-	public static Intent billIntent(String billId) {
-		return billIntent(billId, null);
+	public static Intent billIntent(String billId, Intent intent) {
+		return new Intent(Intent.ACTION_MAIN).setClassName(
+				"com.sunlightlabs.android.congress",
+				"com.sunlightlabs.android.congress.BillLoader")
+			.putExtra("id", billId)
+			.putExtra("intent", intent);
+	}
+
+	public static Intent billTabsIntent() {
+		return new Intent(Intent.ACTION_MAIN).setClassName(
+				"com.sunlightlabs.android.congress",
+				"com.sunlightlabs.android.congress.BillTabs");
 	}
 
 	public static Intent shortcutIntent(Context context, String billId, String code) {

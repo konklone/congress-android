@@ -12,6 +12,8 @@
 	    android:layout_height="fill_parent"
 		/>
 
-	<include layout="@layout/list_empty" />
+	<include layout="@layout/list_empty"
+		android:layout_width="fill_parent" 
+	    android:layout_height="fill_parent" />
 	
 </LinearLayout>

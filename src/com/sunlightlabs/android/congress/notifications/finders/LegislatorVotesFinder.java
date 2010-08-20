@@ -5,6 +5,7 @@ import java.util.List;
 import android.content.Intent;
 import android.util.Log;
 
+import com.sunlightlabs.android.congress.RollList;
 import com.sunlightlabs.android.congress.notifications.NotificationEntity;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
@@ -34,20 +35,9 @@ public class LegislatorVotesFinder extends NotificationFinder {
 
 	@Override
 	public Intent notificationIntent(NotificationEntity entity) {
-		// TODO Auto-generated method stub
-		return null;
+		return Utils.legislatorIntent(entity.id, new Intent(Intent.ACTION_MAIN)
+				.setClassName("com.sunlightlabs.android.congress",
+				"com.sunlightlabs.android.congress.RollList")
+				.putExtra("type", RollList.ROLLS_VOTER));
 	}
-
-	@Override
-	public String notificationMessage(NotificationEntity entity) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String notificationTitle(NotificationEntity entity) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

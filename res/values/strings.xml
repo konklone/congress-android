@@ -118,11 +118,11 @@
     <string name="notify_enable">Enable Notifications</string>
     <string name="notify_enable_summary_on">Notifications are enabled</string>
     <string name="notify_enable_summary_off">Notifications are disabled</string>
-
     <string name="notify_interval">Notifications Interval</string>
-    
+  
     <string name="notification_ticker_text">Congress updates</string>
-    <string name="notification_title">New updates for %1$s</string>
+    <string name="notification_title">%1$s updates for %2$s</string>
+    <string name="notification_message">There are %1$s %2$s updates for %3$s. Click to view them.</string>
     
     <string name="tab_profile">Profile</string>
     <string name="tab_tweets">Tweets</string>

@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -126,6 +127,8 @@ public class Footer extends RelativeLayout {
 		if (state == OFF) { // current state is OFF; must turn notifications ON
 			if (database.addNotification(entity) != -1) {
 				setOn();
+				Log.d(Utils.TAG, "Added notification in the db for entity " + id);
+
 				// the service is stopped but there are notifications in the database => start the service
 				if (!Utils.getBooleanPreference(context,
 						Preferences.KEY_NOTIFY_ENABLED,
@@ -136,8 +139,10 @@ public class Footer extends RelativeLayout {
 			}
 		}
 		else { // current state is ON; must turn notifications OFF
-			if (database.removeNotification(id, cls) != -1)
+			if (database.removeNotification(id, cls) != 0) {
 				setOff();
+				Log.d(Utils.TAG, "Removed notification from the db for entity " + id);
+			}
 		}
 	}
 

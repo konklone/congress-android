@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class NotificationEntity implements Serializable {
 	private static final long serialVersionUID = -8734277713086848691L;
-	public static final String SEPARATOR = ":";
+	public static final String sep = ":";
 
 	public String id, name, notificationClass, lastSeenId, notificationData;
 	public int results;
@@ -31,7 +31,7 @@ public class NotificationEntity implements Serializable {
 			if(first)
 				first = false;
 			else
-				result.append(SEPARATOR);
+				result.append(sep);
 			result.append(data[i]);
 		}
 

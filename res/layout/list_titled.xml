@@ -6,21 +6,18 @@
     >
     
     <include layout="@layout/title_bar_search" />
+    	
     <include layout="@layout/line"
-		android:background="#5c5e5d"
-		/>
+		android:background="#5c5e5d"/>
  
     <ListView android:id="@id/android:list"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="fill_parent"
 		/>
 	
-	<LinearLayout android:orientation="vertical"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:gravity="center"
-		>
-		<include layout="@layout/list_empty" />
-	</LinearLayout>
+	
+	<include layout="@layout/list_empty"
+		android:layout_width="fill_parent" 
+	    android:layout_height="fill_parent" />
 	
 </LinearLayout>

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,8 +37,10 @@ public class BillTabs extends TabActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bill);
 		
-		bill = (Bill) getIntent().getExtras().getSerializable("bill");
-		tab = getIntent().getIntExtra("tab", 0);
+		Intent i = getIntent();
+		bill = (Bill) i.getSerializableExtra("bill");
+		tab = i.getIntExtra("tab", 0);
+		Log.i(Utils.TAG, "TAB is " + tab);
 		
 		database = new Database(this);
 		database.open();

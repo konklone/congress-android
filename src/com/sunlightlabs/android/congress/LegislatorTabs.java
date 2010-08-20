@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
@@ -35,8 +36,10 @@ public class LegislatorTabs extends TabActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.legislator);
 
-		legislator = (Legislator) getIntent().getExtras().getSerializable("legislator");
-		tab = getIntent().getIntExtra("tab", 0);
+		Intent i = getIntent();
+		legislator = (Legislator) i.getSerializableExtra("legislator");
+		tab = i.getIntExtra("tab", 0);
+		Log.i(Utils.TAG, "TAB is " + tab);
 		
 		database = new Database(this);
 		database.open();

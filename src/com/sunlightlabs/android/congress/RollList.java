@@ -85,7 +85,7 @@ public class RollList extends ListActivity {
 
 	@Override
 	protected void onDestroy() {
-		footer.onDestroy();
+		if (footer != null) footer.onDestroy();
 		super.onDestroy();
 	}
 

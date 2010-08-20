@@ -43,24 +43,33 @@ public class NotificationsService extends WakefulIntentService {
 	@Override
 	protected void doWakefulWork(Intent intent) {
 		Cursor c = database.getNotifications();
-		for (c.moveToFirst(); c.moveToNext(); c.isAfterLast()) {
-			NotificationEntity entity = database.loadEntity(c);
-			try {
-				NotificationFinder finder = (NotificationFinder) Class.forName(entity.notificationClass).newInstance();
-				finder.setContext(this);
-				processResults(finder, entity);
-				
-				if (entity.lastSeenId != null) {
-					if(database.updateLastSeenId(entity) > 0 && entity.results > 0) 
-						doNotify(finder.notificationIntent(entity), 
-								 finder.notificationTitle(entity), 
-								 finder.notificationMessage(entity));
-				}
-				else
-					Log.w(Utils.TAG, "Could not update last seen id for entity " + entity.id);
-			} catch (Exception e) {
-				Log.e(Utils.TAG, "Could not instatiate a NotificationFinder of class " + entity.notificationClass);
-			} 
+		Log.i(Utils.TAG, "There are currently " + c.getCount() + " notifications in the db!");
+
+		if(c.moveToFirst()) {
+			do {
+				NotificationEntity entity = database.loadEntity(c);
+				Log.d(Utils.TAG, "Processing notifications for entity " + entity);
+
+				try {
+					NotificationFinder finder = (NotificationFinder) Class.forName(entity.notificationClass).newInstance();
+					finder.setContext(this);
+					processResults(finder, entity);
+					
+					if (entity.lastSeenId != null) {
+						//TODO change this to "> 0" (this is DEBUG)
+						if(database.updateLastSeenId(entity) > 0 && entity.results == 0) 
+							doNotify(finder.notificationId(entity),
+									 finder.notificationTitle(entity), 
+									 finder.notificationMessage(entity), 
+									 finder.notificationIntent(entity),
+									 entity.results);
+					}
+					else
+						Log.w(Utils.TAG, "Could not update last seen id for entity " + entity.id);
+				} catch (Exception e) {
+					Log.e(Utils.TAG, "Could not instatiate a NotificationFinder of class " + entity.notificationClass);
+				} 
+			}while(c.moveToNext());
 		}
 	}
 
@@ -93,26 +102,25 @@ public class NotificationsService extends WakefulIntentService {
 		entity.lastSeenId = finder.decodeId(results.get(size - 1));
 	}
 
-	private void doNotify(Intent notificationIntent, String notificationTitle, String notificationMessage) {
-		notifyManager.notify(NOTIFY_UPDATES, getNotification(
-				notificationIntent, notificationTitle, notificationMessage));
+	private void doNotify(int id, String title, String message, Intent intent, int results) {
+		notifyManager.notify(id, getNotification(title, message, intent, results));
 	}
 
-	private Notification getNotification(Intent notificationIntent,
-			String notificationTitle, String notificationMessage) {
-
+	private Notification getNotification(String title, String message, Intent intent, int results) {
 		int icon = R.drawable.icon;
 		CharSequence tickerText = getString(R.string.notification_ticker_text);
 		long when = System.currentTimeMillis();
-
 		Notification notification = new Notification(icon, tickerText, when);
-		CharSequence contentTitle = notificationTitle;
-		CharSequence contentText = notificationMessage;
 
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-
+		CharSequence contentTitle = title;
+		CharSequence contentText = message;
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+				intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		notification.setLatestEventInfo(this, contentTitle, contentText, contentIntent);
+
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		notification.number = results;
 		return notification;
 	}
 }
