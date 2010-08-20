@@ -54,8 +54,8 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
 		footer.onDestroy();
+		super.onDestroy();
 	}
 
 	private void setupFooter() {

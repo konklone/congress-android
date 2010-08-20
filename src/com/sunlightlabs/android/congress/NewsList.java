@@ -71,8 +71,8 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
 		footer.onDestroy();
+		super.onDestroy();
 	}
 
 	private void setupControls() {

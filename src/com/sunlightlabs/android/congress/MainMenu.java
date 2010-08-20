@@ -36,7 +36,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
-import com.sunlightlabs.android.congress.Footer.OnFooterClickListener;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteBillsAdapter.FavoriteBillWrapper;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteLegislatorsAdapter.FavoriteLegislatorWrapper;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
@@ -54,7 +53,7 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class MainMenu extends ListActivity implements LocationListenerTimeout,
-		AddressUpdateable<MainMenu>, LoadPhotoTask.LoadsPhoto, OnFooterClickListener {
+		AddressUpdateable<MainMenu>, LoadPhotoTask.LoadsPhoto {
 
 	public static final int RESULT_ZIP = 1;
 	public static final int RESULT_LASTNAME = 2;
@@ -89,7 +88,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 
 	private Footer footer;
 
-	MergeAdapter adapter;
+	private MergeAdapter adapter;
 
 	private Database database;
 	private Cursor peopleCursor, billCursor;
@@ -185,7 +184,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		peopleCursor.requery();
 		billCursor.requery();
 		adapter.notifyDataSetChanged();
-		footer.init();
+		footer.doInitUI();
 	}
 
 	@Override
@@ -299,19 +298,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 
 	private void setupFooter() {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.setListener(this);
 		footer.init();
-	}
-
-	public void onFooterClick(Footer footer, int state) {
-		// turn off all notifications at once
-		if (state == Footer.OFF) {
-			Utils.setBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, false);
-			Utils.stopNotificationsBroadcast(this);
-		} else {
-			Utils.setBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED, true);
-			Utils.startNotificationsBroadcast(this);
-		}
 	}
 
 	private ArrayList<View> setupBillMenu(LayoutInflater inflater) {

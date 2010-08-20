@@ -257,6 +257,11 @@ public class Database {
 		return false;
 	}
 
+	public boolean hasNotifications() {
+		return database.rawQuery("SELECT * FROM " + NOTIFICATIONS_TABLE, null)
+				.moveToFirst();
+	}
+
 	public long addNotification(NotificationEntity entity) {
 		ContentValues cv = new ContentValues(NOTIFICATIONS_COLUMNS.length);
 		cv.put("entity_id", entity.id);
