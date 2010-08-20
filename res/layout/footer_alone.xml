@@ -38,8 +38,8 @@
 		android:textSize="14sp"
 		android:textColor="@color/header_text"
 		
-		footer:textOff="@string/notify_paused"
-		footer:textOn="@string/notify_enabled"		
+		footer:textOff="@string/main_footer_off"
+		footer:textOn="@string/main_footer_on"		
 	/>
 	
 </com.sunlightlabs.android.congress.Footer>

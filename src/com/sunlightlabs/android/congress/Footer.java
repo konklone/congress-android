@@ -72,6 +72,9 @@ public class Footer extends RelativeLayout {
 	
 	public void doInitUI() {
 		if (entity != null) { // tab footer
+			textView.setTextOn(Utils.footerText(context.getString(R.string.footer_on), entity.notificationName()));
+			textView.setTextOff(Utils.footerText(context.getString(R.string.footer_off), entity.notificationName()));
+			
 			if (Utils.getBooleanPreference(context,
 					Preferences.KEY_NOTIFY_ENABLED,
 					Preferences.DEFAULT_NOTIFY_ENABLED)

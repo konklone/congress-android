@@ -110,8 +110,10 @@
     <string name="preferences">Preferences</string>
     <string name="notifications">Notifications</string>
     
-    <string name="notify_enabled">You will receive notifications about new updates.</string>
-    <string name="notify_paused">You are not notified about new updates.</string>
+    <string name="main_footer_on">You are notified about new updates.</string>
+    <string name="main_footer_off">Notifications about new updates are paused.</string>
+    <string name="footer_on">You are notified about %1$s updates.</string>
+    <string name="footer_off">You are not notified about %1$s updates.</string>
     
     <string name="notify_enable">Enable Notifications</string>
     <string name="notify_enable_summary_on">Notifications are enabled</string>

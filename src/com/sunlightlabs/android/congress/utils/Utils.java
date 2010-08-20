@@ -374,4 +374,12 @@ public class Utils {
 	public static void stopNotificationsBroadcast(Context context) {
 		context.sendBroadcast(new Intent(STOP_NOTIFICATION_SERVICE));
 	}
+
+	public static String formatStringResource(String str, Object... args) {
+		return String.format(str, args);
+	}
+
+	public static String footerText(String str, Object... args) {
+		return Utils.capitalize(formatStringResource(str, args));
+	}
 }

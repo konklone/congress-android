@@ -1,6 +1,8 @@
 package com.sunlightlabs.android.congress.notifications;
 
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class NotificationEntity implements Serializable {
 	private static final long serialVersionUID = -8734277713086848691L;
@@ -34,6 +36,19 @@ public class NotificationEntity implements Serializable {
 		}
 
 		return result.toString();
+	}
+
+	public String notificationName() {
+		String name = notificationClass.substring(
+				notificationClass.lastIndexOf('.') + 1).replace("Finder", "");
+		Pattern p = Pattern.compile("\\p{Lu}");
+		Matcher m = p.matcher(name);
+		StringBuffer sb = new StringBuffer();
+		while (m.find()) {
+			m.appendReplacement(sb, " " + m.group().toLowerCase());
+		}
+		m.appendTail(sb);
+		return sb.toString().trim();
 	}
 
 	@Override
