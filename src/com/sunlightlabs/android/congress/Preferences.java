@@ -14,7 +14,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	public static final boolean DEFAULT_NOTIFY_ENABLED = false;
 
 	public static final String KEY_NOTIFY_INTERVAL = "notify_interval";
-	public static final String DEFAULT_NOTIFY_INTERVAL = "1";
+	public static final String DEFAULT_NOTIFY_INTERVAL = "10";
 
 
 	@Override
