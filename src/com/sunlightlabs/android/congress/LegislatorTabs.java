@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
@@ -20,11 +19,11 @@ import com.sunlightlabs.congress.models.Legislator;
 
 public class LegislatorTabs extends TabActivity {
 	public enum Tabs {
-		profile, tweets, videos, news;
+		profile, news, tweets, videos;
 	}
 	
 	private Legislator legislator;
-	private int tab;
+	private Tabs tab;
 
 	private Database database;
 	private Cursor cursor;
@@ -38,8 +37,8 @@ public class LegislatorTabs extends TabActivity {
 
 		Intent i = getIntent();
 		legislator = (Legislator) i.getSerializableExtra("legislator");
-		tab = i.getIntExtra("tab", 0);
-		Log.i(Utils.TAG, "TAB is " + tab);
+		tab = (Tabs) i.getSerializableExtra("tab");
+		if (tab == null) tab = Tabs.profile;
 		
 		database = new Database(this);
 		database.open();
@@ -113,7 +112,7 @@ public class LegislatorTabs extends TabActivity {
 		if (legislator.in_office && youtube_id != null && !(youtube_id.equals("")))
 			Utils.addTab(this, tabHost, Tabs.videos.name(), youtubeIntent(), getString(R.string.tab_videos), res.getDrawable(R.drawable.tab_video));
 			
-		tabHost.setCurrentTab(tab);
+		tabHost.setCurrentTabByTag(tab.name());
 	}
 	
 	public Intent profileIntent() {

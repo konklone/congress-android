@@ -46,8 +46,6 @@ public class Footer extends RelativeLayout {
 	private void setupControls() {
 		// default state
 		state = OFF;
-		database = new Database(context);
-		database.open();
 	}
 	
 	public void init(NotificationEntity entity) {
@@ -56,6 +54,9 @@ public class Footer extends RelativeLayout {
 	}
 
 	public void init() {
+		database = new Database(context);
+		database.open();
+
 		setUIListener();
 		doInitUI();
 	}

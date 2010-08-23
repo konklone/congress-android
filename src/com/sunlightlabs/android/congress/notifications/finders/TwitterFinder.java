@@ -33,6 +33,8 @@ public class TwitterFinder extends NotificationFinder {
 
 	@Override
 	public Intent notificationIntent(NotificationEntity entity) {
-		return Utils.legislatorIntent(entity.id).putExtra("tab", LegislatorTabs.Tabs.tweets.ordinal());
+		// the "tab" extra must go to the enclosed intent sent to LegislatorLoader
+		return Utils.legislatorLoadIntent(entity.id, Utils
+				.legislatorTabsIntent().putExtra("tab", LegislatorTabs.Tabs.tweets));
 	}
 }

@@ -245,7 +245,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 	public void selectLegislator(Legislator legislator) {
 		if (type == SEARCH_COSPONSORS) // cosponsors from Drumbone don't have enough info to go direct
-			startActivity(Utils.legislatorIntent(legislator.id));
+			startActivity(Utils.legislatorLoadIntent(legislator.id));
 		else
 			startActivity(Utils.legislatorIntent(this, legislator));
 	}

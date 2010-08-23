@@ -34,7 +34,7 @@ public class YoutubeFinder extends NotificationFinder {
 
 	@Override
 	public Intent notificationIntent(NotificationEntity entity) {
-		return Utils.legislatorIntent(entity.id).putExtra("tab",
-				LegislatorTabs.Tabs.videos.ordinal());
+		return Utils.legislatorLoadIntent(entity.id, Utils
+				.legislatorTabsIntent().putExtra("tab", LegislatorTabs.Tabs.videos));
 	}
 }

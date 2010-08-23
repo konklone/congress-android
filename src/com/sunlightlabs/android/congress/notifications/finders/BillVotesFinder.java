@@ -33,7 +33,7 @@ public class BillVotesFinder extends NotificationFinder {
 
 	@Override
 	public Intent notificationIntent(NotificationEntity entity) {
-		return Utils.billIntent(entity.id, new Intent(Intent.ACTION_MAIN)
+		return Utils.billLoadIntent(entity.id, new Intent(Intent.ACTION_MAIN)
 				.setClassName("com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.BillVotes")
 				.putExtra("entity", entity));

@@ -176,6 +176,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	protected void onDestroy() {
 		super.onDestroy();
 		database.close();
+		footer.onDestroy();
 	}
 
 	@Override
@@ -237,10 +238,10 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 			}
 		}
 		else if (tag instanceof FavoriteLegislatorWrapper)
-			startActivity(Utils.legislatorIntent(((FavoriteLegislatorWrapper) tag).legislator.id));
+			startActivity(Utils.legislatorLoadIntent(((FavoriteLegislatorWrapper) tag).legislator.id));
 		else if (tag instanceof FavoriteBillWrapper) {
 			Bill bill = ((FavoriteBillWrapper) tag).bill;
-			startActivity(Utils.billIntent(bill.id, bill.code));
+			startActivity(Utils.billLoadIntent(bill.id, bill.code));
 		}
 	}
 
@@ -396,7 +397,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	}
 
 	private void searchByBillId(String billId, String code) {
-		startActivity(Utils.billIntent(billId, code));
+		startActivity(Utils.billLoadIntent(billId, code));
 	}
 
 	private void getResponse(int requestCode) {

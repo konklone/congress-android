@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,7 +24,7 @@ public class BillTabs extends TabActivity {
 	}
 
 	private Bill bill;
-	private int tab;
+	private Tabs tab;
 
 	private Database database;
 	private Cursor cursor;
@@ -39,8 +38,8 @@ public class BillTabs extends TabActivity {
 		
 		Intent i = getIntent();
 		bill = (Bill) i.getSerializableExtra("bill");
-		tab = i.getIntExtra("tab", 0);
-		Log.i(Utils.TAG, "TAB is " + tab);
+		tab = (Tabs) i.getSerializableExtra("tab");
+		if (tab == null) tab = Tabs.info;
 		
 		database = new Database(this);
 		database.open();
@@ -124,7 +123,7 @@ public class BillTabs extends TabActivity {
 			Utils.addTab(this, tabHost, Tabs.votes.name(), votesIntent(), getString(R.string.tab_votes), res
 					.getDrawable(R.drawable.tab_video));
 		
-		tabHost.setCurrentTab(tab);
+		tabHost.setCurrentTabByTag(tab.name());
 	}
 	
 	

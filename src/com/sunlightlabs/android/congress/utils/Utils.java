@@ -60,15 +60,15 @@ public class Utils {
 	}
 
 	// Suitable for a legislator desktop shortcut, load a legislator by ID only
-	public static Intent legislatorIntent(String id) {
+	public static Intent legislatorLoadIntent(String id) {
 		return new Intent(Intent.ACTION_MAIN).setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.LegislatorLoader")
 			.putExtra("id", id)
 			.putExtra("intent", legislatorTabsIntent());
 	}
-	
-	public static Intent legislatorIntent(String id, Intent intent) {
+
+	public static Intent legislatorLoadIntent(String id, Intent intent) {
 		return new Intent(Intent.ACTION_MAIN).setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.LegislatorLoader")
@@ -110,7 +110,7 @@ public class Utils {
 			.putExtra("id", rollId);
 	}
 
-	public static Intent billIntent(String billId, String code) {
+	public static Intent billLoadIntent(String billId, String code) {
 		return new Intent(Intent.ACTION_MAIN).setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.BillLoader")
@@ -119,11 +119,11 @@ public class Utils {
 			.putExtra("intent", billTabsIntent());
 	}
 	
-	public static Intent billIntent(String billId) {
-		return billIntent(billId, (String) null);
+	public static Intent billLoadIntent(String billId) {
+		return billLoadIntent(billId, (String) null);
 	}
 
-	public static Intent billIntent(String billId, Intent intent) {
+	public static Intent billLoadIntent(String billId, Intent intent) {
 		return new Intent(Intent.ACTION_MAIN).setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.BillLoader")
@@ -141,7 +141,7 @@ public class Utils {
 		Parcelable resource = Intent.ShortcutIconResource.fromContext(context, R.drawable.bill);
 		return new Intent()
 			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
-				billIntent(billId, code).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
+				billLoadIntent(billId, code).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
 			.putExtra(Intent.EXTRA_SHORTCUT_NAME, Bill.formatCodeShort(code))
 			.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, resource);
 	}
@@ -153,7 +153,7 @@ public class Utils {
 	public static Intent shortcutIntent(Context context, String legislatorId, String name, Bitmap icon) {
 		Intent intent = new Intent()
 			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
-					Utils.legislatorIntent(legislatorId).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
+					Utils.legislatorLoadIntent(legislatorId).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
 			.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
 
 		if (icon != null)

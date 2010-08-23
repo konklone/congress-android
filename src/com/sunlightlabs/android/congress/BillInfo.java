@@ -276,7 +276,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
     protected void onListItemClick(ListView l, View v, int position, long id) {
 		String type = (String) v.getTag();
 		if (type.equals("sponsor") && sponsor != null)
-			startActivity(Utils.legislatorIntent(sponsor.getId()));
+			startActivity(Utils.legislatorLoadIntent(sponsor.getId()));
 		else if (type.equals("cosponsors")) {
 			Intent intent = new Intent(this, LegislatorList.class)
 				.putExtra("type", LegislatorList.SEARCH_COSPONSORS)

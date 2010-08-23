@@ -252,7 +252,10 @@ public class Database {
 	}
 	
 	public boolean hasNotification(String entityId, String notificationClass) {
-		if (getNotification(entityId, notificationClass).moveToFirst())
+		Cursor c = getNotification(entityId, notificationClass);
+		boolean hasNotification = c.moveToFirst();
+		c.close();
+		if (hasNotification)
 			return true;
 		return false;
 	}

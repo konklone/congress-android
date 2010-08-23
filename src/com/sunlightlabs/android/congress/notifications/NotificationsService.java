@@ -48,7 +48,7 @@ public class NotificationsService extends WakefulIntentService {
 		if(c.moveToFirst()) {
 			do {
 				NotificationEntity entity = database.loadEntity(c);
-				Log.d(Utils.TAG, "Processing notifications for entity " + entity);
+				Log.d(Utils.TAG, "Processing notifications (" + entity.notificationClass + ") for entity " + entity.id);
 
 				try {
 					NotificationFinder finder = (NotificationFinder) Class.forName(entity.notificationClass).newInstance();
@@ -56,21 +56,27 @@ public class NotificationsService extends WakefulIntentService {
 					processResults(finder, entity);
 					
 					if (entity.lastSeenId != null) {
-						//TODO change this to "> 0" (this is DEBUG)
-						if(database.updateLastSeenId(entity) > 0 && entity.results == 0) 
-							doNotify(finder.notificationId(entity),
-									 finder.notificationTitle(entity), 
-									 finder.notificationMessage(entity), 
-									 finder.notificationIntent(entity),
-									 entity.results);
+						if(database.updateLastSeenId(entity) > 0) {
+							if (entity.results == 0) { // TODO change to > 0
+								doNotify(finder.notificationId(entity),
+										 finder.notificationTitle(entity), 
+										 finder.notificationMessage(entity), 
+										 finder.notificationIntent(entity),
+										 entity.results);
+							}
+							Log.d(Utils.TAG, "Updated entity " + entity.id + " in the db");
+						}
+						else
+							Log.w(Utils.TAG, "Could not update last seen id for entity " + entity.id);
 					}
 					else
-						Log.w(Utils.TAG, "Could not update last seen id for entity " + entity.id);
+						Log.w(Utils.TAG, "Last seen id for entity " + entity.id + " is null!");
 				} catch (Exception e) {
 					Log.e(Utils.TAG, "Could not instatiate a NotificationFinder of class " + entity.notificationClass, e);
 				} 
 			}while(c.moveToNext());
 		}
+		c.close();
 	}
 
 	/**
@@ -99,6 +105,8 @@ public class NotificationsService extends WakefulIntentService {
 			entity.results = size - foundIndex - 1;
 		}
 		entity.lastSeenId = finder.decodeId(results.get(size - 1));
+		Log.i(Utils.TAG, "Finder class: " + finder.getClass().getSimpleName()
+				+ ". Last seen id for entity " + entity.id + " is  " + entity.lastSeenId);
 	}
 
 	private void doNotify(int id, String title, String message, Intent intent, int results) {
@@ -113,9 +121,9 @@ public class NotificationsService extends WakefulIntentService {
 
 		CharSequence contentTitle = title;
 		CharSequence contentText = message;
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		
+		PendingIntent contentIntent = PendingIntent
+				.getActivity(this, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		notification.setLatestEventInfo(this, contentTitle, contentText, contentIntent);
 
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;

@@ -35,7 +35,7 @@ public class LegislatorVotesFinder extends NotificationFinder {
 
 	@Override
 	public Intent notificationIntent(NotificationEntity entity) {
-		return Utils.legislatorIntent(entity.id, new Intent(Intent.ACTION_MAIN)
+		return Utils.legislatorLoadIntent(entity.id, new Intent(Intent.ACTION_MAIN)
 				.setClassName("com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.RollList")
 				.putExtra("type", RollList.ROLLS_VOTER));
