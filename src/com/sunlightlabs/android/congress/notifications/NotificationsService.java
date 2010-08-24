@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Debug;
 import android.util.Log;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
@@ -29,6 +30,7 @@ public class NotificationsService extends WakefulIntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Debug.startMethodTracing("congress");
 		notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		database = new Database(this);
 		database.open();
@@ -38,18 +40,16 @@ public class NotificationsService extends WakefulIntentService {
 	public void onDestroy() {
 		super.onDestroy();
 		database.close();
+		Debug.stopMethodTracing();
 	}
 
 	@Override
 	protected void doWakefulWork(Intent intent) {
 		Cursor c = database.getNotifications();
-		Log.i(Utils.TAG, "There are currently " + c.getCount() + " notifications in the db!");
-
+		
 		if(c.moveToFirst()) {
 			do {
 				NotificationEntity entity = database.loadEntity(c);
-				Log.d(Utils.TAG, "Processing notifications (" + entity.notificationClass + ") for entity " + entity.id);
-
 				try {
 					NotificationFinder finder = (NotificationFinder) Class.forName(entity.notificationClass).newInstance();
 					finder.setContext(this);
@@ -58,13 +58,12 @@ public class NotificationsService extends WakefulIntentService {
 					if (entity.lastSeenId != null) {
 						if(database.updateLastSeenId(entity) > 0) {
 							if (entity.results > 0) {
-								doNotify(finder.notificationId(entity),
-										 finder.notificationTitle(entity), 
-										 finder.notificationMessage(entity), 
-										 finder.notificationIntent(entity),
+								doNotify(finder.notificationId(entity), finder.notificationTitle(entity), 
+										 finder.notificationMessage(entity), finder.notificationIntent(entity),
 										 entity.results);
 							}
-							Log.d(Utils.TAG, "Updated entity " + entity.id + " in the db");
+							Log.i(Utils.TAG, "There are " + entity.results + " new " + finder.getClass().getSimpleName() 
+									+ " results for entity " + entity.id);
 						}
 						else
 							Log.w(Utils.TAG, "Could not update last seen id for entity " + entity.id);
@@ -85,10 +84,14 @@ public class NotificationsService extends WakefulIntentService {
 	 * sorted to match this criterion.
 	 */
 	private void processResults(NotificationFinder finder, NotificationEntity entity) {
+		String logCls = finder.getClass().getSimpleName();
+		Log.d(Utils.TAG,  logCls + ": processing notifications for entity " + entity.id);
+		
 		List<?> results = finder.callUpdate(entity);
-
 		if (results == null || results.isEmpty()) return;
+		
 		int size = results.size();
+		Log.d(Utils.TAG, logCls + ": there are " + size + " from the newtork call");
 
 		// search for the last seen id in the list of results
 		// and calculate how many new results are after that
@@ -105,8 +108,7 @@ public class NotificationsService extends WakefulIntentService {
 			entity.results = size - foundIndex - 1;
 		}
 		entity.lastSeenId = finder.decodeId(results.get(size - 1));
-		Log.i(Utils.TAG, "Finder class: " + finder.getClass().getSimpleName()
-				+ ". Last seen id for entity " + entity.id + " is  " + entity.lastSeenId);
+		Log.i(Utils.TAG, logCls + ": last seen id for entity " + entity.id + " is updated to " + entity.lastSeenId);
 	}
 
 	private void doNotify(int id, String title, String message, Intent intent, int results) {
