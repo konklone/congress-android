@@ -8,7 +8,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Debug;
 import android.util.Log;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
@@ -30,7 +29,7 @@ public class NotificationsService extends WakefulIntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Debug.startMethodTracing("congress");
+		// Debug.startMethodTracing("congress");
 		notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		database = new Database(this);
 		database.open();
@@ -40,7 +39,7 @@ public class NotificationsService extends WakefulIntentService {
 	public void onDestroy() {
 		super.onDestroy();
 		database.close();
-		Debug.stopMethodTracing();
+		// Debug.stopMethodTracing();
 	}
 
 	@Override
