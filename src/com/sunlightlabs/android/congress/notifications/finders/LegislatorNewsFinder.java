@@ -35,7 +35,7 @@ public class LegislatorNewsFinder extends NotificationFinder {
 	@Override
 	public Intent notificationIntent(NotificationEntity entity) {
 		return Utils.legislatorLoadIntent(entity.id, Utils
-				.legislatorTabsIntent().putExtra("tab", LegislatorTabs.Tabs.news.ordinal()));
+				.legislatorTabsIntent().putExtra("tab", LegislatorTabs.Tabs.news));
 	}
 
 }
