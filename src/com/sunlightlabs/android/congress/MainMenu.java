@@ -119,7 +119,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		startManagingCursor(peopleCursor);
 
 		MainMenuHolder holder = (MainMenuHolder) getLastNonConfigurationInstance();
-		if(holder != null) {
+		if (holder != null) {
 			addressUpdater = holder.addressUpdater;
 			location = holder.location;
 			address = holder.address;

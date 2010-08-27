@@ -29,7 +29,8 @@ public class LegislatorNewsFinder extends NotificationFinder {
 	public String decodeId(Object result) {
 		 if (!(result instanceof NewsItem))
 			 throw new IllegalArgumentException("The result must be of type com.sunlightlabs.yahoo.news.NewsItem");
-			 return String.valueOf(((NewsItem) result).timestamp.toMillis(true));
+		 
+		 return String.valueOf(((NewsItem) result).timestamp.toMillis(true));
 	}
 
 	@Override
