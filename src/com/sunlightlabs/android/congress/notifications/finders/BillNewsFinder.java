@@ -10,7 +10,7 @@ public class BillNewsFinder extends LegislatorNewsFinder {
 
 	@Override
 	public Intent notificationIntent(NotificationEntity entity) {
-		return Utils.billLoadIntent(entity.id, Utils.legislatorTabsIntent()
+		return Utils.billLoadIntent(entity.id, Utils.billTabsIntent()
 				.putExtra("tab", BillTabs.Tabs.news));
 	}
 }
