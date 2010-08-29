@@ -1,13 +1,19 @@
-package com.sunlightlabs.android.congress;
+package com.sunlightlabs.android.congress.notifications;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.Database;
+import com.sunlightlabs.android.congress.Preferences;
+import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.android.congress.R.string;
+import com.sunlightlabs.android.congress.R.styleable;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class Footer extends RelativeLayout {
@@ -16,8 +22,8 @@ public class Footer extends RelativeLayout {
 
 	private int textViewId;
 	private int imageViewId;
-	private FooterText textView;
-	private FooterImage imageView;
+	public FooterText textView;
+	public FooterImage imageView;
 
 	private int state;
 
@@ -40,11 +46,11 @@ public class Footer extends RelativeLayout {
 		super.onFinishInflate();
 		textView = (FooterText) findViewById(textViewId);
 		imageView = (FooterImage) findViewById(imageViewId);
+		
 		setupControls();
 	}
 
 	private void setupControls() {
-		// default state
 		state = OFF;
 	}
 	
@@ -73,20 +79,20 @@ public class Footer extends RelativeLayout {
 	}
 	
 	public void doInitUI() {
-		if (entity != null) { // tab footer
-			textView.setTextOn(Utils.footerText(context.getString(R.string.footer_on), entity.notificationName()));
-			textView.setTextOff(Utils.footerText(context.getString(R.string.footer_off), entity.notificationName()));
+		// tab footer
+		if (entity != null) {
+			textView.textOn = Utils.footerText(context.getString(R.string.footer_on), entity.notificationName());
+			textView.textOff = Utils.footerText(context.getString(R.string.footer_off), entity.notificationName());
 			
-			if (Utils.getBooleanPreference(context,
-					Preferences.KEY_NOTIFY_ENABLED,
-					Preferences.DEFAULT_NOTIFY_ENABLED)
-					&& database.hasNotification(entity.id, entity.notificationClass)) {
+			if (Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED, Preferences.DEFAULT_NOTIFY_ENABLED)
+					&& database.hasNotification(entity.id, entity.notificationClass))
 				setOn();
-			}
 			else
 				setOff();
-		} // MainMenu footer
-		else {
+		} 
+		
+		// MainMenu footer
+		else { 
 			if(database.hasNotifications()) {
 				setVisibility(View.VISIBLE);
 				if (Utils.getBooleanPreference(context,
@@ -157,14 +163,6 @@ public class Footer extends RelativeLayout {
 		state = OFF;
 		textView.setOff();
 		imageView.setOff();
-	}
-
-	public FooterText getTextView() {
-		return textView;
-	}
-
-	public FooterImage getImageView() {
-		return imageView;
 	}
 
 	// must be called to avoid database leaks

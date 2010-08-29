@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.sunlightlabs.android.congress.Footer
-		xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:footer="http://schemas.android.com/apk/res/com.sunlightlabs.android.congress"
-		
-		android:id="@+id/footer"
-		android:orientation="horizontal"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:background="@drawable/main_menu_gradient"
-		android:paddingTop="3dp"
-		android:paddingBottom="3dp"
-		
-		footer:textView="@+id/footer_text"
-		footer:imageView="@+id/footer_img"
-		>
+<com.sunlightlabs.android.congress.notifications.Footer
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:footer="http://schemas.android.com/apk/res/com.sunlightlabs.android.congress"
 	
-	<com.sunlightlabs.android.congress.FooterImage
+	android:id="@+id/footer"
+	android:orientation="horizontal"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/main_menu_gradient"
+	android:paddingTop="3dp"
+	android:paddingBottom="3dp"
+	
+	footer:textView="@+id/footer_text"
+	footer:imageView="@+id/footer_img"
+	>
+	
+	<com.sunlightlabs.android.congress.notifications.FooterImage
 		android:id="@+id/footer_img"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
 		footer:srcOn="@drawable/notifications_on"
 		/>
 	
-	<com.sunlightlabs.android.congress.FooterText	
+	<com.sunlightlabs.android.congress.notifications.FooterText
 		android:id="@+id/footer_text"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"		
@@ -42,6 +42,4 @@
 		footer:textOn="@string/main_footer_on"		
 	/>
 	
-</com.sunlightlabs.android.congress.Footer>
-
-	
+</com.sunlightlabs.android.congress.notifications.Footer>
