@@ -21,7 +21,7 @@ public class LegislatorNewsFinder extends NotificationFinder {
 			return new NewsService(context.getResources().getString(R.string.yahoo_news_key))
 					.fetchNewsResults(entity.notificationData);
 		} catch (Exception e) {
-			Log.w(Utils.TAG, "Could not fetch yahoo news for " + entity.id);
+			Log.w(Utils.TAG, "Could not fetch news for " + entity.id);
 			return null;
 		}
 	}

@@ -28,7 +28,7 @@ public class YoutubeFinder extends NotificationFinder {
 		try {
 			return Arrays.asList(new YouTube().getVideos(entity.notificationData));
 		} catch (YouTubeException e) {
-			Log.w(Utils.TAG, "YoutubeResultProcessor: Could not fetch youtube videos for " + entity, e);
+			Log.w(Utils.TAG, "YoutubeFinder: Could not fetch youtube videos for " + entity, e);
 			return null;
 		}
 	}
