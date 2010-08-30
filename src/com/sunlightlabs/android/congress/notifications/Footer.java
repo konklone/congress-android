@@ -5,15 +5,11 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.Database;
 import com.sunlightlabs.android.congress.Preferences;
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.R.string;
-import com.sunlightlabs.android.congress.R.styleable;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class Footer extends RelativeLayout {
