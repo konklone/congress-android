@@ -21,7 +21,7 @@ public class BillVotesFinder extends NotificationFinder {
 	}
 
 	@Override
-	public List<?> callUpdate(NotificationEntity entity) {
+	public List<?> fetchUpdates(NotificationEntity entity) {
 		Utils.setupDrumbone(context);
 		try {
 			return BillService.find(entity.notificationData, "votes").votes;

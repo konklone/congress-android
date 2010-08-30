@@ -22,7 +22,7 @@ public class TwitterFinder extends NotificationFinder {
 	}
 
 	@Override
-	public List<?> callUpdate(NotificationEntity entity) {
+	public List<?> fetchUpdates(NotificationEntity entity) {
 		try {
 			return new Twitter().getUserTimeline(entity.notificationData);
 		} catch (TwitterException exc) {

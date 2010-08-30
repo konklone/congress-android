@@ -27,8 +27,8 @@ public class NotificationEntity implements Serializable {
 		boolean first = true;
 		int length = data.length;
 		
-		for(int i = 0; i < length; i++) {
-			if(first)
+		for (int i = 0; i < length; i++) {
+			if (first)
 				first = false;
 			else
 				result.append(sep);
@@ -53,7 +53,7 @@ public class NotificationEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "{id:" + id + ",name:" + name + ",data:" + notificationData
-				+ ",lastSeenId:" + lastSeenId + ",results:" + results + "}";
+		return "{id:" + id + ", name:" + name + ", data:" + notificationData
+				+ ", lastSeenId:" + lastSeenId + ", results:" + results + "}";
 	}
 }

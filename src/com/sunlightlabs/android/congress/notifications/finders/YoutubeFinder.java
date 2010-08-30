@@ -23,7 +23,7 @@ public class YoutubeFinder extends NotificationFinder {
 	}
 
 	@Override
-	public List<?> callUpdate(NotificationEntity entity) {
+	public List<?> fetchUpdates(NotificationEntity entity) {
 		try {
 			return Arrays.asList(new YouTube().getVideos(entity.notificationData));
 		} catch (YouTubeException e) {

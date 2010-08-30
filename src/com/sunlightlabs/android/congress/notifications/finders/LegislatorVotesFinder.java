@@ -23,7 +23,7 @@ public class LegislatorVotesFinder extends NotificationFinder {
 	}
 
 	@Override
-	public List<?> callUpdate(NotificationEntity entity) {
+	public List<?> fetchUpdates(NotificationEntity entity) {
 		Utils.setupDrumbone(context);
 		try {
 			return RollService.latestVotes(entity.id, entity.notificationData, PER_PAGE, 1);

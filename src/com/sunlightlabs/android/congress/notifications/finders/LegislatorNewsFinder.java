@@ -15,7 +15,7 @@ import com.sunlightlabs.yahoo.news.NewsService;
 public class LegislatorNewsFinder extends NotificationFinder {
 
 	@Override
-	public List<?> callUpdate(NotificationEntity entity) {
+	public List<?> fetchUpdates(NotificationEntity entity) {
 		try {
 			return new NewsService(context.getResources().getString(R.string.yahoo_news_key))
 					.fetchNewsResults(entity.notificationData);

@@ -46,16 +46,19 @@ public class NotificationsService extends WakefulIntentService {
 	protected void doWakefulWork(Intent intent) {
 		Cursor c = database.getNotifications();
 		
-		if(c.moveToFirst()) {
+		if (c.moveToFirst()) {
 			do {
 				NotificationEntity entity = database.loadEntity(c);
+				
 				try {
 					NotificationFinder finder = (NotificationFinder) Class.forName(entity.notificationClass).newInstance();
-					finder.setContext(this);
+					finder.context = this;
+					
 					processResults(finder, entity);
 					
 					if (entity.lastSeenId != null) {
-						if(database.updateLastSeenId(entity) > 0) {
+						
+						if (database.updateLastSeenId(entity) > 0) {
 							if (entity.results > 0) {
 								doNotify(finder.notificationId(entity), finder.notificationTitle(entity), 
 										 finder.notificationMessage(entity), finder.notificationIntent(entity),
@@ -72,7 +75,7 @@ public class NotificationsService extends WakefulIntentService {
 				} catch (Exception e) {
 					Log.e(Utils.TAG, "Could not instatiate a NotificationFinder of class " + entity.notificationClass, e);
 				} 
-			}while(c.moveToNext());
+			} while(c.moveToNext());
 		}
 		c.close();
 	}
@@ -86,7 +89,7 @@ public class NotificationsService extends WakefulIntentService {
 		String logCls = finder.getClass().getSimpleName();
 		Log.d(Utils.TAG,  logCls + ": processing notifications for entity " + entity.id);
 		
-		List<?> results = finder.callUpdate(entity);
+		List<?> results = finder.fetchUpdates(entity);
 		if (results == null || results.isEmpty()) return;
 		
 		int size = results.size();

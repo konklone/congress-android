@@ -10,24 +10,21 @@ import com.sunlightlabs.android.congress.notifications.NotificationEntity;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public abstract class NotificationFinder {
-	protected Context context;
-
+	public Context context;
+	
 	public NotificationFinder() {}
 
-	public void setContext(Context context) {
-		this.context = context;
-	}
-
-	public abstract List<?> callUpdate(NotificationEntity entity);
-	
 	public abstract String decodeId(Object result);
-
+	
+	public abstract List<?> fetchUpdates(NotificationEntity entity);
+	
 	public abstract Intent notificationIntent(NotificationEntity entity);
 
 	public int notificationId(NotificationEntity entity) {
 		return (entity.id + entity.notificationClass).hashCode();
 	}
 
+	
 	// can be overridden by subclasses
 	public String notificationMessage(NotificationEntity entity) {
 		return Utils.formatStringResource(context.getString(R.string.notification_message), 
