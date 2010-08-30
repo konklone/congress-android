@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.congress.notifications.finders;
+package com.sunlightlabs.android.congress.notifications;
 
 import java.util.List;
 
@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.notifications.NotificationEntity;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public abstract class NotificationFinder {

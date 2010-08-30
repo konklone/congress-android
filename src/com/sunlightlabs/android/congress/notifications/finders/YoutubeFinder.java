@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.youtube.Video;
 import com.sunlightlabs.youtube.YouTube;

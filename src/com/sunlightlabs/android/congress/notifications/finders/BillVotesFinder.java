@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;

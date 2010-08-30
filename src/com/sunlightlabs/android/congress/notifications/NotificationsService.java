@@ -13,7 +13,6 @@ import android.util.Log;
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.sunlightlabs.android.congress.Database;
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.notifications.finders.NotificationFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class NotificationsService extends WakefulIntentService {
