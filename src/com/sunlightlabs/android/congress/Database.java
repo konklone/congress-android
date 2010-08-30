@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -240,71 +240,75 @@ public class Database {
 		return legislator;
 	}
 
-	public Cursor getNotifications() {
+	public Cursor getSubscriptions() {
 		return database.rawQuery("SELECT * FROM " + NOTIFICATIONS_TABLE, null);
 	}
 
-	public Cursor getNotification(String entityId, String notificationClass) {
+	public Cursor getSubscription(String entityId, String notificationClass) {
 		StringBuilder query = new StringBuilder("entity_id=? AND notification_class=?");
 
 		return database.query(NOTIFICATIONS_TABLE, NOTIFICATIONS_COLUMNS, query.toString(),
 				new String[] { entityId, notificationClass }, null, null, null);
 	}
 	
-	public boolean hasNotification(String entityId, String notificationClass) {
-		Cursor c = getNotification(entityId, notificationClass);
-		boolean hasNotification = c.moveToFirst();
+	public boolean hasSubscription(String entityId, String notificationClass) {
+		Cursor c = getSubscription(entityId, notificationClass);
+		boolean hasSubscription = c.moveToFirst();
 		c.close();
-		if (hasNotification)
-			return true;
-		return false;
+		
+		return hasSubscription;
 	}
 
-	public boolean hasNotifications() {
+	public boolean hasSubscriptions() {
 		Cursor c = database.rawQuery("SELECT * FROM " + NOTIFICATIONS_TABLE, null);
-		boolean hasNotifications = c.moveToFirst();
+		boolean hasSubscriptions = c.moveToFirst();
 		c.close();
-		return hasNotifications;
+		return hasSubscriptions;
 	}
 
-	public long addNotification(NotificationEntity entity) {
+	public long addSubscription(Subscription subscription) {
 		ContentValues cv = new ContentValues(NOTIFICATIONS_COLUMNS.length);
-		cv.put("entity_id", entity.id);
-		cv.put("entity_name", entity.name);
-		cv.put("notification_class", entity.notificationClass);
-		cv.put("notification_data", entity.notificationData);
+		cv.put("entity_id", subscription.id);
+		cv.put("entity_name", subscription.name);
+		cv.put("notification_class", subscription.notificationClass);
+		cv.put("notification_data", subscription.data);
 		cv.put("last_seen_id", (String) null);
+		
 		return database.insert(NOTIFICATIONS_TABLE, null, cv);
 	}
 	
-	public long removeNotification(String entityId, String notificationClass) {
+	public long removeSubscription(String entityId, String notificationClass) {
 		return database.delete(NOTIFICATIONS_TABLE, "entity_id=? AND notification_class=?", 
 				new String[] { entityId , notificationClass });
 	}
 	
-	public NotificationEntity loadEntity(Cursor c) {
-		NotificationEntity e = new NotificationEntity();
-		e.id = c.getString(c.getColumnIndex("entity_id"));
-		e.name = c.getString(c.getColumnIndex("entity_name"));
-		e.notificationData = c.getString(c.getColumnIndex("notification_data"));
-		e.lastSeenId = c.getString(c.getColumnIndex("last_seen_id"));
-		e.notificationClass = c.getString(c.getColumnIndex("notification_class"));
-		return e;
+	public Subscription loadSubscription(Cursor c) {
+		Subscription subscription = new Subscription();
+		subscription.id = c.getString(c.getColumnIndex("entity_id"));
+		subscription.name = c.getString(c.getColumnIndex("entity_name"));
+		subscription.data = c.getString(c.getColumnIndex("notification_data"));
+		subscription.lastSeenId = c.getString(c.getColumnIndex("last_seen_id"));
+		subscription.notificationClass = c.getString(c.getColumnIndex("notification_class"));
+		
+		return subscription;
 	}
 
-	public NotificationEntity loadEntity(String entityId, String notificationClass) {
-		Cursor c = getNotification(entityId, notificationClass);
-		if (c.moveToFirst())
-			return loadEntity(c);
-		return null;
+	public Subscription loadSubscription(String entityId, String notificationClass) {
+		Cursor c = getSubscription(entityId, notificationClass);
+		if (c.moveToFirst()) {
+			Subscription subscription = loadSubscription(c);
+			c.close();
+			return subscription;
+		} else
+			return null;
 	}
 
-	public int updateLastSeenId(NotificationEntity entity) {
+	public int updateLastSeenId(Subscription subscription) {
 		ContentValues cv = new ContentValues(1);
-		cv.put("last_seen_id", entity.lastSeenId);
+		cv.put("last_seen_id", subscription.lastSeenId);
 
 		return database.update(NOTIFICATIONS_TABLE, cv, "entity_id=? AND notification_class=?",
-				new String[] { entity.id, entity.notificationClass });
+				new String[] { subscription.id, subscription.notificationClass });
 	}
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {

@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sunlightlabs.android.congress.notifications.Footer;
-import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask.LoadsTweets;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -29,7 +29,7 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 	private LoadTweetsTask loadTweetsTask = null;
 	
 	private String twitterId;
-	private NotificationEntity entity;
+	private Subscription subscription;
 	private Footer footer;
 	
 	@Override
@@ -38,8 +38,8 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 		setContentView(R.layout.list_footer);
 
 		Intent i = getIntent();
-		entity = (NotificationEntity) i.getSerializableExtra("entity");
-		twitterId = entity.notificationData;
+		subscription = (Subscription) i.getSerializableExtra("subscription");
+		twitterId = subscription.data;
     
     	LegislatorTwitterHolder holder = (LegislatorTwitterHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
@@ -84,7 +84,7 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 
 	private void setupFooter() {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(entity);
+		footer.init(subscription);
 	}
 
 	protected void loadTweets() {	    

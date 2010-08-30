@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.notifications.Footer;
-import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.notifications.finders.LegislatorVotesFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
@@ -40,7 +40,7 @@ public class RollList extends ListActivity {
 	private int type;
 	
 	private LoadingWrapper loading;
-	private NotificationEntity entity;
+	private Subscription subscription;
 	private Footer footer;
 
 	@Override
@@ -54,7 +54,7 @@ public class RollList extends ListActivity {
 		if (type == ROLLS_VOTER) {
 			setContentView(R.layout.list_footer_titled);
 
-			entity = new NotificationEntity(voter.id, voter.getName(),
+			subscription = new Subscription(voter.id, voter.getName(),
 					LegislatorVotesFinder.class.getName(), voter.chamber);
 		}
 		else
@@ -117,7 +117,7 @@ public class RollList extends ListActivity {
 
 	private void setupFooter() {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(entity);
+		footer.init(subscription);
 	}
 
 	@Override

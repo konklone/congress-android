@@ -4,24 +4,25 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NotificationEntity implements Serializable {
+public class Subscription implements Serializable {
 	private static final long serialVersionUID = -8734277713086848691L;
 	public static final String sep = ":";
 
-	public String id, name, notificationClass, lastSeenId, notificationData;
+	public String id, name, notificationClass, lastSeenId, data;
 	public int results;
 
-	public NotificationEntity() {}
+	public Subscription() {}
 	
-	public NotificationEntity(String id, String name, String notificationClass,
-			String... data) {
+	public Subscription(String id, String name, String notificationClass, String... data) {
 		this.id = id;
 		this.name = name;
 		this.notificationClass = notificationClass;
-		if (data != null) this.notificationData = flatten(data);
+		
+		if (data != null) 
+			this.data = flatten(data);
 	}
 
-	private String flatten(String[] data) {
+	private static String flatten(String[] data) {
 		StringBuilder result = new StringBuilder();
 		
 		boolean first = true;
@@ -53,7 +54,7 @@ public class NotificationEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "{id:" + id + ", name:" + name + ", data:" + notificationData
-				+ ", lastSeenId:" + lastSeenId + ", results:" + results + "}";
+		return "{id:" + id + ", name:" + name + ", data:" + data 
+			+ ", lastSeenId:" + lastSeenId + ", results:" + results + "}";
 	}
 }

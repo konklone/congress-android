@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.LegislatorTabs;
-import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 
@@ -23,19 +23,20 @@ public class TwitterFinder extends NotificationFinder {
 	}
 
 	@Override
-	public List<?> fetchUpdates(NotificationEntity entity) {
+	public List<?> fetchUpdates(Subscription subscription) {
 		try {
-			return new Twitter().getUserTimeline(entity.notificationData);
+			String username = subscription.data;
+			return new Twitter().getUserTimeline(username);
 		} catch (TwitterException exc) {
-			Log.w(Utils.TAG, "Could not fetch tweets for " + entity, exc);
+			Log.w(Utils.TAG, "Could not fetch tweets for " + subscription, exc);
 			return null;
 		}
 	}
 
 	@Override
-	public Intent notificationIntent(NotificationEntity entity) {
+	public Intent notificationIntent(Subscription subscription) {
 		// the "tab" extra must go to the enclosed intent sent to LegislatorLoader
-		return Utils.legislatorLoadIntent(entity.id, Utils
+		return Utils.legislatorLoadIntent(subscription.id, Utils
 				.legislatorTabsIntent().putExtra("tab", LegislatorTabs.Tabs.tweets));
 	}
 }

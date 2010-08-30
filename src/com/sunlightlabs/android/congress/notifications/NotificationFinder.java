@@ -15,24 +15,25 @@ public abstract class NotificationFinder {
 
 	public abstract String decodeId(Object result);
 	
-	public abstract List<?> fetchUpdates(NotificationEntity entity);
+	public abstract List<?> fetchUpdates(Subscription subscription);
 	
-	public abstract Intent notificationIntent(NotificationEntity entity);
+	public abstract Intent notificationIntent(Subscription subscription);
 
-	public int notificationId(NotificationEntity entity) {
-		return (entity.id + entity.notificationClass).hashCode();
+	public int notificationId(Subscription subscription) {
+		return (subscription.id + subscription.notificationClass).hashCode();
 	}
 
 	
 	// can be overridden by subclasses
-	public String notificationMessage(NotificationEntity entity) {
+	public String notificationMessage(Subscription subscription) {
 		return Utils.formatStringResource(context.getString(R.string.notification_message), 
-				entity.results, entity.notificationName(), entity.name );
+				subscription.results, subscription.notificationName(), subscription.name );
 	}
 
-	public String notificationTitle(NotificationEntity entity) {
-		return Utils.capitalize(Utils.formatStringResource(context
-				.getString(R.string.notification_title), entity
-				.notificationName(), entity.name));
+	public String notificationTitle(Subscription subscription) {
+		return Utils.capitalize(Utils.formatStringResource(
+				context.getString(R.string.notification_title), 
+				subscription.notificationName(), 
+				subscription.name));
 	}
 }

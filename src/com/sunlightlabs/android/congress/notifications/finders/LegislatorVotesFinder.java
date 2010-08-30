@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.RollList;
-import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
@@ -24,21 +24,21 @@ public class LegislatorVotesFinder extends NotificationFinder {
 	}
 
 	@Override
-	public List<?> fetchUpdates(NotificationEntity entity) {
+	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupDrumbone(context);
 		try {
-			return RollService.latestVotes(entity.id, entity.notificationData, PER_PAGE, 1);
+			return RollService.latestVotes(subscription.id, subscription.data, PER_PAGE, 1);
 		} catch (CongressException e) {
-			Log.w(Utils.TAG, "Could not fetch the latest votes for " + entity, e);
+			Log.w(Utils.TAG, "Could not fetch the latest votes for " + subscription, e);
 			return null;
 		}
 	}
 
 	@Override
-	public Intent notificationIntent(NotificationEntity entity) {
-		return Utils.legislatorLoadIntent(entity.id, new Intent(Intent.ACTION_MAIN)
-				.setClassName("com.sunlightlabs.android.congress",
-				"com.sunlightlabs.android.congress.RollList")
+	public Intent notificationIntent(Subscription subscription) {
+		return Utils.legislatorLoadIntent(subscription.id, 
+			new Intent(Intent.ACTION_MAIN)
+				.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.RollList")
 				.putExtra("type", RollList.ROLLS_VOTER));
 	}
 }

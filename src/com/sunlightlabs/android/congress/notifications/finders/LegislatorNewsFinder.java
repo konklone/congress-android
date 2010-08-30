@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.yahoo.news.NewsItem;
@@ -16,12 +16,13 @@ import com.sunlightlabs.yahoo.news.NewsService;
 public class LegislatorNewsFinder extends NotificationFinder {
 
 	@Override
-	public List<?> fetchUpdates(NotificationEntity entity) {
+	public List<?> fetchUpdates(Subscription subscription) {
 		try {
-			return new NewsService(context.getResources().getString(R.string.yahoo_news_key))
-					.fetchNewsResults(entity.notificationData);
+			String searchTerm = subscription.data;
+			String apiKey = context.getResources().getString(R.string.yahoo_news_key);
+			return new NewsService(apiKey).fetchNewsResults(searchTerm);
 		} catch (Exception e) {
-			Log.w(Utils.TAG, "Could not fetch news for " + entity.id);
+			Log.w(Utils.TAG, "LegislatorNewsFinder: Could not fetch news for legislator " + subscription.name);
 			return null;
 		}
 	}
@@ -35,8 +36,8 @@ public class LegislatorNewsFinder extends NotificationFinder {
 	}
 
 	@Override
-	public Intent notificationIntent(NotificationEntity entity) {
-		return Utils.legislatorLoadIntent(entity.id, Utils
+	public Intent notificationIntent(Subscription subscription) {
+		return Utils.legislatorLoadIntent(subscription.id, Utils
 				.legislatorTabsIntent().putExtra("tab", LegislatorTabs.Tabs.news));
 	}
 

@@ -17,7 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.notifications.Footer;
-import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
@@ -28,7 +28,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	private Bill bill;
 	private String id;
 	
-	private NotificationEntity entity;
+	private Subscription subscription;
 	private Footer footer;
 
 	@Override
@@ -36,8 +36,8 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_footer);
 
-		entity = (NotificationEntity) getIntent().getSerializableExtra("entity");
-		id = entity.id;
+		subscription = (Subscription) getIntent().getSerializableExtra("subscription");
+		id = subscription.id;
 		
 		BillVotesHolder holder = (BillVotesHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
@@ -61,7 +61,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 
 	private void setupFooter() {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(entity);
+		footer.init(subscription);
 	}
 
 	public void loadBill() {

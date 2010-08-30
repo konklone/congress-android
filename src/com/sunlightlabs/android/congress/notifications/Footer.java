@@ -23,7 +23,7 @@ public class Footer extends RelativeLayout {
 
 	private int state;
 
-	private NotificationEntity entity;
+	private Subscription subscription;
 	private Database database;
 	private Context context;
 
@@ -50,8 +50,8 @@ public class Footer extends RelativeLayout {
 		state = OFF;
 	}
 	
-	public void init(NotificationEntity entity) {
-		this.entity = entity;
+	public void init(Subscription subscription) {
+		this.subscription = subscription;
 		init();
 	}
 
@@ -66,7 +66,7 @@ public class Footer extends RelativeLayout {
 	private void setUIListener() {
 		setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if (entity != null) // tab footer
+				if (subscription != null) // tab footer
 					doFooterLogic();
 				else  // MainMenu footer
 					doUpdateUI();
@@ -76,12 +76,12 @@ public class Footer extends RelativeLayout {
 	
 	public void doInitUI() {
 		// tab footer
-		if (entity != null) {
-			textView.textOn = Utils.footerText(context.getString(R.string.footer_on), entity.notificationName());
-			textView.textOff = Utils.footerText(context.getString(R.string.footer_off), entity.notificationName());
+		if (subscription != null) {
+			textView.textOn = Utils.footerText(context.getString(R.string.footer_on), subscription.notificationName());
+			textView.textOff = Utils.footerText(context.getString(R.string.footer_off), subscription.notificationName());
 			
 			if (Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED, Preferences.DEFAULT_NOTIFY_ENABLED)
-					&& database.hasNotification(entity.id, entity.notificationClass))
+					&& database.hasSubscription(subscription.id, subscription.notificationClass))
 				setOn();
 			else
 				setOff();
@@ -89,7 +89,7 @@ public class Footer extends RelativeLayout {
 		
 		// MainMenu footer
 		else { 
-			if(database.hasNotifications()) {
+			if(database.hasSubscriptions()) {
 				setVisibility(View.VISIBLE);
 				if (Utils.getBooleanPreference(context,
 						Preferences.KEY_NOTIFY_ENABLED,
@@ -124,13 +124,13 @@ public class Footer extends RelativeLayout {
 	}
 
 	private void doFooterLogic() {
-		String id = entity.id;
-		String cls = entity.notificationClass;
+		String id = subscription.id;
+		String cls = subscription.notificationClass;
 
 		if (state == OFF) { // current state is OFF; must turn notifications ON
-			if (database.addNotification(entity) != -1) {
+			if (database.addSubscription(subscription) != -1) {
 				setOn();
-				Log.d(Utils.TAG, "Added notification in the db for entity " + id);
+				Log.d(Utils.TAG, "Footer: Added notification in the db for subscription " + id);
 
 				// the service is stopped but there are notifications in the database => start the service
 				if (!Utils.getBooleanPreference(context,
@@ -142,9 +142,9 @@ public class Footer extends RelativeLayout {
 			}
 		}
 		else { // current state is ON; must turn notifications OFF
-			if (database.removeNotification(id, cls) != 0) {
+			if (database.removeSubscription(id, cls) != 0) {
 				setOff();
-				Log.d(Utils.TAG, "Removed notification from the db for entity " + id);
+				Log.d(Utils.TAG, "Footer: Removed notification from the db for subscription " + id);
 			}
 		}
 	}

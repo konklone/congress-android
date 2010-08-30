@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.sunlightlabs.android.congress.notifications.Footer;
-import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask;
 import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask.LoadsYahooNews;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -36,7 +36,7 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 
 	private LoadYahooNewsTask loadNewsTask = null;
 
-	private NotificationEntity entity;
+	private Subscription subscription;
 	private Footer footer;
 
 	@Override
@@ -45,8 +45,8 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 		setContentView(R.layout.list_footer);
 
 		Intent i = getIntent();
-		entity = (NotificationEntity) i.getSerializableExtra("entity");
-		searchTerm = entity.notificationData;
+		subscription = (Subscription) i.getSerializableExtra("subscription");
+		searchTerm = subscription.data;
 
 		NewsListHolder holder = (NewsListHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
@@ -93,7 +93,7 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 
 	private void setupFooter() {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(entity);
+		footer.init(subscription);
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.LegislatorTabs;
-import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.youtube.Video;
@@ -24,18 +24,19 @@ public class YoutubeFinder extends NotificationFinder {
 	}
 
 	@Override
-	public List<?> fetchUpdates(NotificationEntity entity) {
+	public List<?> fetchUpdates(Subscription subscription) {
 		try {
-			return Arrays.asList(new YouTube().getVideos(entity.notificationData));
+			String username = subscription.data;
+			return Arrays.asList(new YouTube().getVideos(username));
 		} catch (YouTubeException e) {
-			Log.w(Utils.TAG, "YoutubeFinder: Could not fetch youtube videos for " + entity, e);
+			Log.w(Utils.TAG, "YoutubeFinder: Could not fetch youtube videos for " + subscription, e);
 			return null;
 		}
 	}
 
 	@Override
-	public Intent notificationIntent(NotificationEntity entity) {
-		return Utils.legislatorLoadIntent(entity.id, Utils
+	public Intent notificationIntent(Subscription subscription) {
+		return Utils.legislatorLoadIntent(subscription.id, Utils
 				.legislatorTabsIntent().putExtra("tab", LegislatorTabs.Tabs.videos));
 	}
 }

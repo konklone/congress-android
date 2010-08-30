@@ -5,7 +5,7 @@ import java.util.List;
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.notifications.NotificationEntity;
+import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
@@ -22,21 +22,22 @@ public class BillActionsFinder extends NotificationFinder {
 	}
 
 	@Override
-	public List<?> fetchUpdates(NotificationEntity entity) {
+	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupDrumbone(context);
 		try {
-			return BillService.find(entity.notificationData, "actions").actions;
+			String billId = subscription.data;
+			return BillService.find(billId, "actions").actions;
 		} catch (CongressException e) {
-			Log.w(Utils.TAG, "Could not fetch the latest actions for " + entity, e);
+			Log.w(Utils.TAG, "Could not fetch the latest actions for " + subscription, e);
 			return null;
 		}
 	}
 
 	@Override
-	public Intent notificationIntent(NotificationEntity entity) {
-		return Utils.billLoadIntent(entity.id, new Intent(Intent.ACTION_MAIN).setClassName(
+	public Intent notificationIntent(Subscription subscription) {
+		return Utils.billLoadIntent(subscription.id, new Intent(Intent.ACTION_MAIN).setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.BillHistory")
-				.putExtra("entity", entity));
+				.putExtra("subscription", subscription));
 	}
 }
