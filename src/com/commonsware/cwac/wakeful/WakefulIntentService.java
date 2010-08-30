@@ -17,29 +17,51 @@ package com.commonsware.cwac.wakeful;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 
 abstract public class WakefulIntentService extends IntentService {
 	abstract protected void doWakefulWork(Intent intent);
 
 	public static final String LOCK_NAME_STATIC = "com.commonsware.cwac.wakeful.WakefulIntentService";
-	private static PowerManager.WakeLock lockStatic = null;
+	private static PowerManager.WakeLock lockCpu = null;
+	private static WifiManager.WifiLock lockWifi = null;
 
 	public static void acquireStaticLock(Context context) {
-		getLock(context).acquire();
+		getCpuLock(context).acquire();
+		getWifiLock(context).acquire();
 	}
 
-	synchronized protected static PowerManager.WakeLock getLock(Context context) {
-		if (lockStatic == null) {
+	synchronized protected static PowerManager.WakeLock getCpuLock(
+			Context context) {
+		if (lockCpu == null) {
 			PowerManager mgr = (PowerManager) context
 					.getSystemService(Context.POWER_SERVICE);
 
 			// wake up the CPU
-			lockStatic = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, LOCK_NAME_STATIC);
-			lockStatic.setReferenceCounted(true);
+			lockCpu = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+					LOCK_NAME_STATIC);
+			lockCpu.setReferenceCounted(true);
 		}
 
-		return (lockStatic);
+		return (lockCpu);
+	}
+
+	synchronized protected static WifiManager.WifiLock getWifiLock(
+			Context context) {
+		if (lockWifi == null) {
+			WifiManager mgr = (WifiManager) context
+					.getSystemService(Context.WIFI_SERVICE);
+
+			// restart the WiFi service
+			mgr.setWifiEnabled(true);
+
+			// wake up the WiFi
+			lockWifi = mgr.createWifiLock(LOCK_NAME_STATIC);
+			lockWifi.setReferenceCounted(true);
+		}
+
+		return lockWifi;
 	}
 
 	public static void sendWakefulWork(Context ctxt, Intent i) {
@@ -57,8 +79,11 @@ abstract public class WakefulIntentService extends IntentService {
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-		if (!getLock(this).isHeld()) { // fail-safe for crash restart
-			getLock(this).acquire();
+		if (!getCpuLock(this).isHeld()) { // fail-safe for crash restart
+			getCpuLock(this).acquire();
+		}
+		if (!getWifiLock(this).isHeld()) {
+			getWifiLock(this).acquire();
 		}
 
 		super.onStart(intent, startId);
@@ -69,7 +94,8 @@ abstract public class WakefulIntentService extends IntentService {
 		try {
 			doWakefulWork(intent);
 		} finally {
-			getLock(this).release();
+			getCpuLock(this).release();
+			getWifiLock(this).release();
 		}
 	}
 }
