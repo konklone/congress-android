@@ -113,7 +113,7 @@
         	</intent-filter>
         </receiver>
 		
-		<service android:name=".notifications.NotificationsService" />
+		<service android:name=".notifications.NotificationService" />
     </application>
     
     <uses-permission android:name="android.permission.INTERNET" />

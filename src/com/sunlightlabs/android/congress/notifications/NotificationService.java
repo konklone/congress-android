@@ -15,13 +15,13 @@ import com.sunlightlabs.android.congress.Database;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
 
-public class NotificationsService extends WakefulIntentService {
+public class NotificationService extends WakefulIntentService {
 	public static final int NOTIFY_UPDATES = 0;
 
 	private NotificationManager notifyManager;
 	private Database database;
 
-	public NotificationsService() {
+	public NotificationService() {
 		super("NotificationService");
 	}
 

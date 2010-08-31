@@ -12,7 +12,7 @@ public class OnAlarmReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		WakefulIntentService.sendWakefulWork(context, NotificationsService.class);
+		WakefulIntentService.sendWakefulWork(context, NotificationService.class);
 		Log.d(Utils.TAG, "OnAlarmReceiver: waking the notification service to do its job!");
 	}
 }

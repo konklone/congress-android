@@ -40,7 +40,7 @@ import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteBillsAdapter.FavoriteBillWrapper;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteLegislatorsAdapter.FavoriteLegislatorWrapper;
 import com.sunlightlabs.android.congress.notifications.Footer;
-import com.sunlightlabs.android.congress.notifications.NotificationsService;
+import com.sunlightlabs.android.congress.notifications.NotificationService;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
@@ -277,7 +277,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	private void setupDebugBar() {
 		findViewById(R.id.check).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				WakefulIntentService.sendWakefulWork(MainMenu.this, NotificationsService.class);
+				WakefulIntentService.sendWakefulWork(MainMenu.this, NotificationService.class);
 			}
 		});
 	}
