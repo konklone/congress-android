@@ -36,9 +36,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteBillsAdapter.FavoriteBillWrapper;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteLegislatorsAdapter.FavoriteLegislatorWrapper;
 import com.sunlightlabs.android.congress.notifications.Footer;
+import com.sunlightlabs.android.congress.notifications.NotificationsService;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
@@ -246,33 +248,6 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		}
 	}
 
-	// this class is used to cache the search location view and its children
-	private class SearchViewWrapper {
-		private View base;
-		private View loading;
-		private TextView text1;
-		private TextView text2;		
-
-		public SearchViewWrapper(View base) {
-			this.base = base;
-		}		
-		public TextView getText1() {
-			return (text1 == null) ? text1 = (TextView) this.base.findViewById(R.id.text_1) : text1;
-		}		
-		public TextView getText2() {
-			return (text2 == null) ? text2 = (TextView) this.base.findViewById(R.id.text_2) : text2;
-		}		
-		public View getLoading() {
-			return (loading == null) ? loading = this.base.findViewById(R.id.row_loading) : loading;
-		}		
-		public View getBase() {
-			return base;
-		}		
-		public ViewWrapper getWrapperTag() {
-			return (ViewWrapper) base.getTag();
-		}	
-	}
-
 	public void setupControls() {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		adapter = new MergeAdapter();
@@ -296,6 +271,15 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		setListAdapter(adapter);
 		
 		setupFooter();
+		setupDebugBar();
+	}
+	
+	private void setupDebugBar() {
+		findViewById(R.id.check).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				WakefulIntentService.sendWakefulWork(MainMenu.this, NotificationsService.class);
+			}
+		});
 	}
 
 	private void setupFooter() {
@@ -630,14 +614,12 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		}
 
 		location = LocationUtils.getLastKnownLocation(this);
-		//Log.d(TAG, "MainMenu - setupLocation(): last known location is " + location);
 
 		if (location == null) {
 			toggleLocationEnabled(false);
 			toggleLocationLoading(true);
 			timer = LocationUtils
 					.requestLocationUpdate(this, handler, LocationManager.GPS_PROVIDER);
-			//Log.d(TAG, "MainMenu - setupLocation(): request update from GPS");
 		}
 		else { 
 			address = AddressUpdater.getFromCache(location); 
@@ -645,7 +627,6 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 				toggleLocationEnabled(false);
 				toggleLocationLoading(true);
 				addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
-				//Log.d(TAG, "MainMenu - setupLocation(): request address update for location");
 			}
 			else
 				displayAddress(address, true);
@@ -666,25 +647,21 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	private void cancelTimer() {
 		if (timer != null) {
 			timer.cancel();
-			//Log.d(TAG, "MainMenu - cancelTimer(): cancel updating timer");
 		}
 	}
 
 	private void displayAddress(String address, boolean enabled) {
-		//Log.d(TAG, "MainMenu - displayAddress(): address=" + address);
 		searchLocationView.getText2().setTextColor(enabled ? Color.parseColor("#dddddd") : Color.parseColor("#666666"));
 		searchLocationView.getText2().setText(address);
 	}
 
 	public void onLocationUpdateError() {
-		//Log.d(TAG, "MainMenu - onLocationUpdateError(): cannot update location");
 		displayAddress(this.getString(R.string.menu_location_no_location), false);
 		toggleLocationLoading(false);
 		toggleLocationEnabled(false);
 	}
 
 	public void onLocationChanged(Location location) {
-		//Log.d(TAG, "MainMenu - onLocationChanged(): " + location);
 		this.location = location;
 		addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
 		cancelTimer();
@@ -697,7 +674,6 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	public void onStatusChanged(String provider, int status, Bundle extras) {}
 
 	public void onTimeout(String provider) {
-		//Log.d(TAG, "MainMenu - onTimeout(): for provider " + provider);
 		if (provider.equals(LocationManager.GPS_PROVIDER)) {
 			timer = LocationUtils.requestLocationUpdate(this, handler,
 					LocationManager.NETWORK_PROVIDER);
@@ -706,7 +682,6 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	}
 
 	public void onAddressUpdate(String address) {
-		//Log.d(TAG, "MainMenu - onAddressUpdate(): " + address);
 		this.address =  address;
 		addressUpdater = null;
 		displayAddress(address, true);	
@@ -716,7 +691,6 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	}
 
 	public void onAddressUpdateError(CongressException e) {
-		//Log.d(TAG, "MainMenu - onAddressUpdateError(): " + e);
 		this.address = "";
 		addressUpdater = null;
 		displayAddress(address, false);
@@ -742,6 +716,31 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		loadPhotoTasks.remove(bioguide_id);
 		favoritePeopleWrappers.get(bioguide_id).onLoadPhoto(photo, bioguide_id);
 		favoritePeopleWrappers.remove(bioguide_id);
+	}
+	
+	// this class is used to cache the search location view and its children
+	private class SearchViewWrapper {
+		private View base, loading;
+		private TextView text1, text2;		
+
+		public SearchViewWrapper(View base) {
+			this.base = base;
+		}		
+		public TextView getText1() {
+			return (text1 == null) ? text1 = (TextView) this.base.findViewById(R.id.text_1) : text1;
+		}		
+		public TextView getText2() {
+			return (text2 == null) ? text2 = (TextView) this.base.findViewById(R.id.text_2) : text2;
+		}		
+		public View getLoading() {
+			return (loading == null) ? loading = this.base.findViewById(R.id.row_loading) : loading;
+		}		
+		public View getBase() {
+			return base;
+		}		
+		public ViewWrapper getWrapperTag() {
+			return (ViewWrapper) base.getTag();
+		}	
 	}
 	
 	// Favorite bills adapter for the menu
