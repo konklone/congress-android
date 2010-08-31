@@ -8,35 +8,18 @@ public class Subscription implements Serializable {
 	private static final long serialVersionUID = -8734277713086848691L;
 	public static final String sep = ":";
 
-	public String id, name, notificationClass, lastSeenId, data;
-	public int results;
-
-	public Subscription() {}
+	public String id, name, notificationClass, data, lastSeenId;
 	
-	public Subscription(String id, String name, String notificationClass, String... data) {
+	public Subscription(String id, String name, String notificationClass, String data) {
 		this.id = id;
 		this.name = name;
 		this.notificationClass = notificationClass;
-		
-		if (data != null) 
-			this.data = flatten(data);
+		this.data = data;
 	}
-
-	private static String flatten(String[] data) {
-		StringBuilder result = new StringBuilder();
-		
-		boolean first = true;
-		int length = data.length;
-		
-		for (int i = 0; i < length; i++) {
-			if (first)
-				first = false;
-			else
-				result.append(sep);
-			result.append(data[i]);
-		}
-
-		return result.toString();
+	
+	public Subscription(String id, String name, String notificationClass, String data, String lastSeenId) {
+		this(id, name, notificationClass, data);
+		this.lastSeenId = lastSeenId;
 	}
 
 	public String notificationName() {
@@ -54,7 +37,6 @@ public class Subscription implements Serializable {
 
 	@Override
 	public String toString() {
-		return "{id:" + id + ", name:" + name + ", data:" + data 
-			+ ", lastSeenId:" + lastSeenId + ", results:" + results + "}";
+		return "{id:" + id + ", name:" + name + ", data:" + data + ", lastSeenId:" + lastSeenId + "}";
 	}
 }

@@ -27,9 +27,9 @@ public abstract class NotificationFinder {
 
 	
 	// can be overridden by subclasses
-	public String notificationMessage(Subscription subscription) {
+	public String notificationMessage(Subscription subscription, int results) {
 		return Utils.formatStringResource(context.getString(R.string.notification_message), 
-				subscription.results, subscription.notificationName(), subscription.name );
+				results, subscription.notificationName(), subscription.name );
 	}
 
 	public String notificationTitle(Subscription subscription) {

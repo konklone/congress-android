@@ -93,13 +93,13 @@ public class NotificationsService extends WakefulIntentService {
 					finder.notificationId(subscription), 
 					getNotification(
 						finder.notificationTitle(subscription), 
-						finder.notificationMessage(subscription), 
+						finder.notificationMessage(subscription, results), 
 						finder.notificationIntent(subscription),
 						results
 					)
 				);
 				
-				Log.i(Utils.TAG, "There are " + subscription.results + " new " + finder.getClass().getSimpleName() 
+				Log.i(Utils.TAG, "There are " + results + " new " + finder.getClass().getSimpleName() 
 						+ " results for subscription " + subscription.id);
 				
 				database.updateLastSeenId(subscription, lastSeenId);

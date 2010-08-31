@@ -56,8 +56,7 @@ public class RollList extends ListActivity {
 
 			subscription = new Subscription(voter.id, voter.getName(),
 					LegislatorVotesFinder.class.getName(), voter.chamber);
-		}
-		else
+		} else
 			setContentView(R.layout.list_titled);
 
 		setupControls();

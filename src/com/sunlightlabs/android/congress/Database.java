@@ -283,14 +283,13 @@ public class Database {
 	}
 	
 	public Subscription loadSubscription(Cursor c) {
-		Subscription subscription = new Subscription();
-		subscription.id = c.getString(c.getColumnIndex("entity_id"));
-		subscription.name = c.getString(c.getColumnIndex("entity_name"));
-		subscription.data = c.getString(c.getColumnIndex("notification_data"));
-		subscription.lastSeenId = c.getString(c.getColumnIndex("last_seen_id"));
-		subscription.notificationClass = c.getString(c.getColumnIndex("notification_class"));
+		String id = c.getString(c.getColumnIndex("entity_id"));
+		String name = c.getString(c.getColumnIndex("entity_name"));
+		String data = c.getString(c.getColumnIndex("notification_data"));
+		String lastSeenId = c.getString(c.getColumnIndex("last_seen_id"));
+		String notificationClass = c.getString(c.getColumnIndex("notification_class"));
 		
-		return subscription;
+		return new Subscription(id, name, notificationClass, data, lastSeenId);
 	}
 
 	public Subscription loadSubscription(String entityId, String notificationClass) {
