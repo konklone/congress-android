@@ -5,6 +5,7 @@ import java.util.List;
 import android.content.Intent;
 import android.util.Log;
 
+import com.sunlightlabs.android.congress.BillTabs;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -33,9 +34,7 @@ public class BillActionsFinder extends NotificationFinder {
 
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
-		return Utils.billLoadIntent(subscription.id, new Intent(Intent.ACTION_MAIN).setClassName(
-				"com.sunlightlabs.android.congress",
-				"com.sunlightlabs.android.congress.BillHistory")
-				.putExtra("subscription", subscription));
+		return Utils.billLoadIntent(subscription.id, Utils.billTabsIntent()
+				.putExtra("tab", BillTabs.Tabs.history));
 	}
 }
