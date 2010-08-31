@@ -7,7 +7,9 @@
 	
 	<include layout="@layout/title_bar_main" />
 	
-	<include layout="@layout/debug_bar" />
+	<include layout="@layout/debug_bar"
+		android:visibility="gone" 
+		/>
 
 	<ListView android:id="@id/android:list"
 	    android:layout_width="fill_parent" 
