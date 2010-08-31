@@ -303,9 +303,9 @@ public class Database {
 			return null;
 	}
 
-	public int updateLastSeenId(Subscription subscription) {
+	public int updateLastSeenId(Subscription subscription, String lastSeenId) {
 		ContentValues cv = new ContentValues(1);
-		cv.put("last_seen_id", subscription.lastSeenId);
+		cv.put("last_seen_id", lastSeenId);
 
 		return database.update(NOTIFICATIONS_TABLE, cv, "entity_id=? AND notification_class=?",
 				new String[] { subscription.id, subscription.notificationClass });

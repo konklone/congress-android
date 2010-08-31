@@ -41,91 +41,86 @@ public class NotificationsService extends WakefulIntentService {
 
 	@Override
 	protected void doWakefulWork(Intent intent) {
-		Cursor c = database.getSubscriptions();
+		Cursor cursor = database.getSubscriptions();
 		
-		if (c.moveToFirst()) {
-			do {
-				Subscription subscription = database.loadSubscription(c);
-				
-				try {
-					NotificationFinder finder = (NotificationFinder) Class.forName(subscription.notificationClass).newInstance();
-					finder.context = this;
-					
-					processResults(finder, subscription);
-					
-					if (subscription.lastSeenId != null) {
-						
-						if (database.updateLastSeenId(subscription) > 0) {
-							if (subscription.results > 0) {
-								doNotify(finder.notificationId(subscription), finder.notificationTitle(subscription), 
-										 finder.notificationMessage(subscription), finder.notificationIntent(subscription),
-										 subscription.results);
-							}
-							Log.i(Utils.TAG, "There are " + subscription.results + " new " + finder.getClass().getSimpleName() 
-									+ " results for subscription " + subscription.id);
-						}
-						else
-							Log.w(Utils.TAG, "Could not update last seen id for subscription " + subscription.id);
-					}
-					else
-						Log.w(Utils.TAG, "Last seen id for subscription " + subscription.id + " is null!");
-				} catch (Exception e) {
-					Log.e(Utils.TAG, "Could not instatiate a NotificationFinder of class " + subscription.notificationClass, e);
-				} 
-			} while(c.moveToNext());
+		if (!cursor.moveToFirst()) {
+			cursor.close();
+			return;
 		}
-		c.close();
-	}
-
-	/**
-	 * This method assumes that the results are ordered and the most recent one
-	 * is the last in the list. If it's not the case, then it must be first
-	 * sorted to match this criterion.
-	 */
-	private void processResults(NotificationFinder finder, Subscription subscription) {
-		String logCls = finder.getClass().getSimpleName();
-		Log.d(Utils.TAG, logCls + ": processing notifications for subscription " + subscription.id);
 		
-		List<?> results = finder.fetchUpdates(subscription);
-		if (results == null || results.isEmpty()) return;
-		
-		int size = results.size();
-		Log.d(Utils.TAG, logCls + ": there are " + size + " from the network call");
-
-		// search for the last seen id in the list of results
-		// and calculate how many new results are after that
-		if (subscription.lastSeenId != null) {
-			int foundIndex = -1;
-
-			for (Object result : results) {
-				if (subscription.lastSeenId.equals(finder.decodeId(result))) {
-					foundIndex = results.indexOf(result);
+		do {
+			Subscription subscription = database.loadSubscription(cursor);
+			
+			// load the appropriate finder for this subscription 
+			NotificationFinder finder;
+			try {
+				finder = (NotificationFinder) Class.forName(subscription.notificationClass).newInstance();
+				finder.context = this;
+			} catch (Exception e) {
+				Log.e(Utils.TAG, "Could not instantiate a NotificationFinder of class " + subscription.notificationClass, e);
+				continue;
+			}
+			
+			
+			// ask the finder for the latest updates
+			List<?> updates = finder.fetchUpdates(subscription);
+			if (updates == null || updates.isEmpty())
+				continue;
+			
+			String lastSeenId = null;
+			
+			// Scan through the updates for a match of the last seen ID 
+			int results = -1;
+			for (Object update : updates) {
+				String id = finder.decodeId(update);
+				if (subscription.lastSeenId.equals(id)) {
+					results = updates.indexOf(update);
+					lastSeenId = id;
 					break;
 				}
 			}
-
-			subscription.results = size - foundIndex - 1;
-		}
-		subscription.lastSeenId = finder.decodeId(results.get(size - 1));
-		Log.i(Utils.TAG, logCls + ": last seen id for subscription " + subscription.id + " is updated to " + subscription.lastSeenId);
+			
+			// if not matched, all of them must be new
+			if (results == -1) {
+				results = updates.size();
+				lastSeenId = finder.decodeId(updates.get(0));
+			}
+			
+			// if there's at least one new item, notify the user
+			if (results > 0) {
+				
+				notifyManager.notify(
+					finder.notificationId(subscription), 
+					getNotification(
+						finder.notificationTitle(subscription), 
+						finder.notificationMessage(subscription), 
+						finder.notificationIntent(subscription),
+						results
+					)
+				);
+				
+				Log.i(Utils.TAG, "There are " + subscription.results + " new " + finder.getClass().getSimpleName() 
+						+ " results for subscription " + subscription.id);
+				
+				database.updateLastSeenId(subscription, lastSeenId);
+			}
+			
+		} while(cursor.moveToNext());
+		
+		cursor.close();
 	}
 
-	private void doNotify(int id, String title, String message, Intent intent, int results) {
-		notifyManager.notify(id, getNotification(title, message, intent, results));
-	}
 
 	private Notification getNotification(String title, String message, Intent intent, int results) {
 		int icon = R.drawable.icon;
+		
 		CharSequence tickerText = getString(R.string.notification_ticker_text);
 		long when = System.currentTimeMillis();
 		Notification notification = new Notification(icon, tickerText, when);
 
-		CharSequence contentTitle = title;
-		CharSequence contentText = message;
-		
 		PendingIntent contentIntent = PendingIntent
 				.getActivity(this, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		notification.setLatestEventInfo(this, contentTitle, contentText, contentIntent);
+		notification.setLatestEventInfo(this, title, message, contentIntent);
 
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notification.number = results;

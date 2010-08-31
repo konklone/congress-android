@@ -13,9 +13,11 @@ public abstract class NotificationFinder {
 	
 	public NotificationFinder() {}
 
-	public abstract String decodeId(Object result);
-	
+	// must return results in order of most recent first
 	public abstract List<?> fetchUpdates(Subscription subscription);
+	
+	// must be prepared to receive an object of the same type that's in the List<?> returned by fetchUpdates 
+	public abstract String decodeId(Object result);
 	
 	public abstract Intent notificationIntent(Subscription subscription);
 
