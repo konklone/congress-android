@@ -18,8 +18,6 @@ public class YoutubeFinder extends NotificationFinder {
 
 	@Override
 	public String decodeId(Object result) {
-		if (!(result instanceof Video))
-			throw new IllegalArgumentException("The result must be of type com.sunlightlabs.youtube.Video");
 		return String.valueOf(((Video) result).timestamp.toMillis(true));
 	}
 

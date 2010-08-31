@@ -16,8 +16,6 @@ public class BillVotesFinder extends NotificationFinder {
 
 	@Override
 	public String decodeId(Object result) {
-		if(!(result instanceof Bill.Vote))
-			throw new IllegalArgumentException("The result must be of type com.sunlightlabs.congress.models.Bill.Vote");
 		return String.valueOf(((Bill.Vote) result).voted_at.getTime());
 	}
 

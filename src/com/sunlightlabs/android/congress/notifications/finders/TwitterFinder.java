@@ -17,8 +17,6 @@ public class TwitterFinder extends NotificationFinder {
 
 	@Override
 	public String decodeId(Object result) {
-		if (!(result instanceof Status))
-			throw new IllegalArgumentException("The result must be of type winterwell.jtwitter.Twitter.Status");
 		return String.valueOf(((Status) result).id);
 	}
 

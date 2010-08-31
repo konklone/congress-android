@@ -16,8 +16,6 @@ public class BillActionsFinder extends NotificationFinder {
 
 	@Override
 	public String decodeId(Object result) {
-		if(!(result instanceof Bill.Action))
-			throw new IllegalArgumentException("The result must be of type com.sunlightlabs.congress.models.Bill.Action");
 		return String.valueOf(((Bill.Action) result).acted_at.getTime());
 	}
 

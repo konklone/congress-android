@@ -18,8 +18,6 @@ public class LegislatorVotesFinder extends NotificationFinder {
 
 	@Override
 	public String decodeId(Object result) {
-		if(!(result instanceof Roll))
-			throw new IllegalArgumentException("The result must be of type com.sunlightlabs.congress.models.Roll");
 		return ((Roll) result).id;
 	}
 

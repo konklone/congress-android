@@ -16,6 +16,11 @@ import com.sunlightlabs.yahoo.news.NewsService;
 public class LegislatorNewsFinder extends NotificationFinder {
 
 	@Override
+	public String decodeId(Object result) {
+		return String.valueOf(((NewsItem) result).timestamp.toMillis(true));
+	}
+	
+	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
 		try {
 			String searchTerm = subscription.data;
@@ -27,15 +32,7 @@ public class LegislatorNewsFinder extends NotificationFinder {
 		}
 	}
 
-	@Override
-	public String decodeId(Object result) {
-		 if (!(result instanceof NewsItem))
-			 throw new IllegalArgumentException("The result must be of type com.sunlightlabs.yahoo.news.NewsItem");
-		 
-		 return String.valueOf(((NewsItem) result).timestamp.toMillis(true));
-	}
-
-	@Override
+		@Override
 	public Intent notificationIntent(Subscription subscription) {
 		return Utils.legislatorLoadIntent(subscription.id, Utils
 				.legislatorTabsIntent().putExtra("tab", LegislatorTabs.Tabs.news));
