@@ -22,13 +22,22 @@ public class YoutubeFinder extends NotificationFinder {
 
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
+		String username = subscription.data;
+		
 		try {
-			String username = subscription.data;
 			return Arrays.asList(new YouTube().getVideos(username));
 		} catch (YouTubeException e) {
 			Log.w(Utils.TAG, "YoutubeFinder: Could not fetch youtube videos for " + subscription, e);
 			return null;
 		}
+	}
+	
+	@Override
+	public String notificationMessage(Subscription subscription, int results) {
+		if (results > 1)
+			return results + " new videos.";
+		else
+			return results + " new video.";
 	}
 
 	@Override

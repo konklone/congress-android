@@ -79,8 +79,8 @@ public class Footer extends RelativeLayout {
 	public void doInitUI() {
 		// tab footer
 		if (subscription != null) {
-			textView.textOn = Utils.footerText(context.getString(R.string.footer_on), subscription.notificationName());
-			textView.textOff = Utils.footerText(context.getString(R.string.footer_off), subscription.notificationName());
+			textView.textOn = Utils.capitalize(String.format(context.getString(R.string.footer_on), "these items"));
+			textView.textOff = Utils.capitalize(String.format(context.getString(R.string.footer_off), "these items"));
 			
 			if (Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED, Preferences.DEFAULT_NOTIFY_ENABLED)
 					&& database.hasSubscription(subscription.id, subscription.notificationClass))

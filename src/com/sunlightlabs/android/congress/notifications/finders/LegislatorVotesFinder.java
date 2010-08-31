@@ -24,13 +24,22 @@ public class LegislatorVotesFinder extends NotificationFinder {
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupDrumbone(context);
+		String chamber = subscription.data;
+		
 		try {
-			String chamber = subscription.data;
 			return RollService.latestVotes(subscription.id, chamber, PER_PAGE, 1);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest votes for " + subscription, e);
 			return null;
 		}
+	}
+	
+	@Override
+	public String notificationMessage(Subscription subscription, int results) {
+		if (results > 1)
+			return results + " new votes cast.";
+		else
+			return results + " new vote cast.";
 	}
 
 	@Override

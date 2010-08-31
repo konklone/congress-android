@@ -22,13 +22,22 @@ public class BillVotesFinder extends NotificationFinder {
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupDrumbone(context);
+		String billId = subscription.data;
+		
 		try {
-			String billId = subscription.data;
 			return BillService.find(billId, "votes").votes;
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest votes for " + subscription, e);
 			return null;
 		}
+	}
+	
+	@Override
+	public String notificationMessage(Subscription subscription, int results) {
+		if (results > 1)
+			return results + " new votes have occurred.";
+		else
+			return "A vote has occurred.";
 	}
 
 	@Override

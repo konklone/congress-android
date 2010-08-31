@@ -21,17 +21,26 @@ public class LegislatorNewsFinder extends NotificationFinder {
 	
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
+		String searchTerm = subscription.data;
+		String apiKey = context.getResources().getString(R.string.yahoo_news_key);
+		
 		try {
-			String searchTerm = subscription.data;
-			String apiKey = context.getResources().getString(R.string.yahoo_news_key);
 			return new NewsService(apiKey).fetchNewsResults(searchTerm);
 		} catch (Exception e) {
 			Log.w(Utils.TAG, "LegislatorNewsFinder: Could not fetch news for legislator " + subscription.name);
 			return null;
 		}
 	}
+	
+	@Override
+	public String notificationMessage(Subscription subscription, int results) {
+		if (results > 1)
+			return results + " new mentions in the news.";
+		else
+			return results + " new mention in the news.";
+	}
 
-		@Override
+	@Override
 	public Intent notificationIntent(Subscription subscription) {
 		return Utils.legislatorLoadIntent(subscription.id, 
 				Utils.legislatorTabsIntent().putExtra("tab", "news"));

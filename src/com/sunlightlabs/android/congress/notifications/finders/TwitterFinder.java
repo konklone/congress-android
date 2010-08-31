@@ -21,13 +21,22 @@ public class TwitterFinder extends NotificationFinder {
 
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
+		String username = subscription.data;
+		
 		try {
-			String username = subscription.data;
 			return new Twitter().getUserTimeline(username);
 		} catch (TwitterException exc) {
 			Log.w(Utils.TAG, "Could not fetch tweets for " + subscription, exc);
 			return null;
 		}
+	}
+	
+	@Override
+	public String notificationMessage(Subscription subscription, int results) {
+		if (results > 1)
+			return results + " new tweets.";
+		else
+			return results + " new tweet.";
 	}
 
 	@Override

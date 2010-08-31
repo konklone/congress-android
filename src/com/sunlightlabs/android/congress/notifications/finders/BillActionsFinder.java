@@ -22,8 +22,9 @@ public class BillActionsFinder extends NotificationFinder {
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupDrumbone(context);
+		String billId = subscription.data;
+		
 		try {
-			String billId = subscription.data;
 			return BillService.find(billId, "actions").actions;
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest actions for " + subscription, e);
@@ -31,6 +32,14 @@ public class BillActionsFinder extends NotificationFinder {
 		}
 	}
 
+	@Override
+	public String notificationMessage(Subscription subscription, int results) {
+		if (results > 1)
+			return results + " new action items.";
+		else
+			return results + " new action item.";
+	}
+	
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
 		return Utils.billLoadIntent(subscription.id, Utils.billTabsIntent()

@@ -111,8 +111,9 @@ public class NotificationService extends WakefulIntentService {
 			if (results > 0) {
 				
 				notifyManager.notify(
-					finder.notificationId(subscription), 
+					(subscription.id + subscription.notificationClass).hashCode(), 
 					getNotification(
+						finder.notificationTicker(subscription),
 						finder.notificationTitle(subscription), 
 						finder.notificationMessage(subscription, results), 
 						finder.notificationIntent(subscription),
@@ -132,12 +133,11 @@ public class NotificationService extends WakefulIntentService {
 		cursor.close();
 	}
 
-	private Notification getNotification(String title, String message, Intent intent, int results) {
+	private Notification getNotification(String ticker, String title, String message, Intent intent, int results) {
 		int icon = R.drawable.icon;
-		
-		CharSequence tickerText = getString(R.string.notification_ticker_text);
 		long when = System.currentTimeMillis();
-		Notification notification = new Notification(icon, tickerText, when);
+		
+		Notification notification = new Notification(icon, ticker, when);
 
 		PendingIntent contentIntent = PendingIntent
 				.getActivity(this, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -145,6 +145,7 @@ public class NotificationService extends WakefulIntentService {
 
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notification.number = results;
+		
 		return notification;
 	}
 }
