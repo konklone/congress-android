@@ -64,10 +64,18 @@ public class NotificationsService extends WakefulIntentService {
 			
 			// ask the finder for the latest updates
 			List<?> updates = finder.fetchUpdates(subscription);
+			
+			
+			// if there were no results, move on
 			if (updates == null || updates.isEmpty())
 				continue;
 			
-			String lastSeenId = null;
+			// if the subscription has no lastSeenId, then this is its first run,
+			// so take the first one and don't notify
+			if (subscription.lastSeenId == null) {
+				database.updateLastSeenId(subscription, finder.decodeId(updates.get(0)));
+				continue;
+			}
 			
 			// Scan through the updates for a match of the last seen ID 
 			int results = -1;
@@ -75,7 +83,7 @@ public class NotificationsService extends WakefulIntentService {
 				String id = finder.decodeId(update);
 				if (subscription.lastSeenId.equals(id)) {
 					results = updates.indexOf(update);
-					lastSeenId = id;
+					database.updateLastSeenId(subscription, id);
 					break;
 				}
 			}
@@ -83,7 +91,7 @@ public class NotificationsService extends WakefulIntentService {
 			// if not matched, all of them must be new
 			if (results == -1) {
 				results = updates.size();
-				lastSeenId = finder.decodeId(updates.get(0));
+				database.updateLastSeenId(subscription, finder.decodeId(updates.get(0)));
 			}
 			
 			// if there's at least one new item, notify the user
@@ -101,8 +109,6 @@ public class NotificationsService extends WakefulIntentService {
 				
 				Log.i(Utils.TAG, "There are " + results + " new " + finder.getClass().getSimpleName() 
 						+ " results for subscription " + subscription.id);
-				
-				database.updateLastSeenId(subscription, lastSeenId);
 			}
 			
 		} while(cursor.moveToNext());
