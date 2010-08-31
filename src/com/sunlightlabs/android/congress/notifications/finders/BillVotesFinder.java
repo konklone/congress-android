@@ -33,9 +33,7 @@ public class BillVotesFinder extends NotificationFinder {
 
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
-		return Utils.billLoadIntent(subscription.id, new Intent(Intent.ACTION_MAIN)
-				.setClassName("com.sunlightlabs.android.congress",
-				"com.sunlightlabs.android.congress.BillVotes")
-				.putExtra("subscription", subscription));
+		return Utils.billLoadIntent(subscription.id, Utils.billTabsIntent()
+				.putExtra("tab", "votes"));
 	}
 }

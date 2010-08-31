@@ -5,10 +5,9 @@ import java.util.List;
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.notifications.NotificationFinder;
+import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.yahoo.news.NewsItem;
 import com.sunlightlabs.yahoo.news.NewsService;
@@ -34,8 +33,7 @@ public class LegislatorNewsFinder extends NotificationFinder {
 
 		@Override
 	public Intent notificationIntent(Subscription subscription) {
-		return Utils.legislatorLoadIntent(subscription.id, Utils
-				.legislatorTabsIntent().putExtra("tab", LegislatorTabs.Tabs.news));
+		return Utils.legislatorLoadIntent(subscription.id, 
+				Utils.legislatorTabsIntent().putExtra("tab", "news"));
 	}
-
 }

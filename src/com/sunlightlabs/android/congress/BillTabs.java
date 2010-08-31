@@ -19,12 +19,8 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 
 public class BillTabs extends TabActivity {
-	public enum Tabs {
-		info, news, history, votes;
-	}
-
 	private Bill bill;
-	private Tabs tab;
+	private String tab;
 
 	private Database database;
 	private Cursor cursor;
@@ -36,10 +32,9 @@ public class BillTabs extends TabActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bill);
 		
-		Intent i = getIntent();
-		bill = (Bill) i.getSerializableExtra("bill");
-		tab = (Tabs) i.getSerializableExtra("tab");
-		if (tab == null) tab = Tabs.info;
+		Bundle extras = getIntent().getExtras();
+		bill = (Bill) extras.getSerializable("bill");
+		tab = extras.getString("tab");
 		
 		database = new Database(this);
 		database.open();
@@ -115,15 +110,17 @@ public class BillTabs extends TabActivity {
 		Resources res = getResources();
 		TabHost tabHost = getTabHost();
 		
-		Utils.addTab(this, tabHost, Tabs.info.name(), detailsIntent(), getString(R.string.tab_details), res.getDrawable(R.drawable.tab_profile));
-		Utils.addTab(this, tabHost, Tabs.news.name(), newsIntent(), getString(R.string.tab_news), res.getDrawable(R.drawable.tab_news));
-		Utils.addTab(this, tabHost, Tabs.history.name(), historyIntent(), getString(R.string.tab_history), res.getDrawable(R.drawable.tab_history));
+		Utils.addTab(this, tabHost, "info", detailsIntent(), getString(R.string.tab_details), res.getDrawable(R.drawable.tab_profile));
+		Utils.addTab(this, tabHost, "news", newsIntent(), getString(R.string.tab_news), res.getDrawable(R.drawable.tab_news));
+		Utils.addTab(this, tabHost, "history", historyIntent(), getString(R.string.tab_history), res.getDrawable(R.drawable.tab_history));
 		
 		if (bill.last_vote_at != null && bill.last_vote_at.getTime() > 0)
-			Utils.addTab(this, tabHost, Tabs.votes.name(), votesIntent(), getString(R.string.tab_votes), res
-					.getDrawable(R.drawable.tab_video));
+			Utils.addTab(this, tabHost, "votes", votesIntent(), getString(R.string.tab_votes), res.getDrawable(R.drawable.tab_video));
 		
-		tabHost.setCurrentTabByTag(tab.name());
+		if (tab != null) 
+			tabHost.setCurrentTabByTag(tab);
+		else
+			tabHost.setCurrentTabByTag("info");
 	}
 	
 	

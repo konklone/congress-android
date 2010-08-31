@@ -8,9 +8,8 @@ import winterwell.jtwitter.Twitter.Status;
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.LegislatorTabs;
-import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.notifications.NotificationFinder;
+import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class TwitterFinder extends NotificationFinder {
@@ -33,8 +32,7 @@ public class TwitterFinder extends NotificationFinder {
 
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
-		// the "tab" extra must go to the enclosed intent sent to LegislatorLoader
 		return Utils.legislatorLoadIntent(subscription.id, Utils
-				.legislatorTabsIntent().putExtra("tab", LegislatorTabs.Tabs.tweets));
+				.legislatorTabsIntent().putExtra("tab", "tweets"));
 	}
 }
