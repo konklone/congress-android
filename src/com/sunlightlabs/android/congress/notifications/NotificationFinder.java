@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.Legislator;
 
 public abstract class NotificationFinder {
 	public Context context;
@@ -34,6 +35,13 @@ public abstract class NotificationFinder {
 	// utility methods
 	
 	public static String notificationName(Bill bill) {
-		return Bill.formatCode(bill.code);
+		if (bill.short_title != null && !(bill.short_title.equals("")))
+			return Bill.formatCode(bill.code) + " - " + bill.short_title;
+		else
+			return Bill.formatCode(bill.code);
+	}
+	
+	public static String notificationName(Legislator legislator) {
+		return legislator.titledName();
 	}
 }

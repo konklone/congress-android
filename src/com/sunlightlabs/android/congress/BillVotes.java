@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.notifications.Footer;
+import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -26,9 +27,7 @@ import com.sunlightlabs.congress.models.CongressException;
 public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	private LoadBillTask loadBillTask;
 	private Bill bill;
-	private String id;
 	
-	private String subscriptionName;
 	private Footer footer;
 
 	@Override
@@ -37,9 +36,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 		setContentView(R.layout.list_footer);
 
 		Bundle extras = getIntent().getExtras();
-		Bill bill = (Bill) extras.getSerializable("bill");
-		id = bill.id;
-		subscriptionName = bill.code;
+		bill = (Bill) extras.getSerializable("bill");
 		
 		BillVotesHolder holder = (BillVotesHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
@@ -63,12 +60,12 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 
 	private void setupFooter() {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(new Subscription(id, subscriptionName, "BillVotesFinder", id));
+		footer.init(new Subscription(bill.id, NotificationFinder.notificationName(bill), "BillVotesFinder", bill.id));
 	}
 
 	public void loadBill() {
-		if (bill == null)
-			loadBillTask = (LoadBillTask) new LoadBillTask(this, id).execute("votes");
+		if (bill.votes == null)
+			loadBillTask = (LoadBillTask) new LoadBillTask(this, bill.id).execute("votes");
 		else
 			displayBill();
 	}
@@ -84,7 +81,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	
 	public void onLoadBill(Bill bill) {
 		this.loadBillTask = null;
-		this.bill = bill;
+		this.bill.votes = bill.votes;
 		displayBill();
 	}
 	

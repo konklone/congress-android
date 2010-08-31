@@ -27,7 +27,7 @@ public class Bill implements Serializable {
 	public Legislator sponsor;
 	
 	// cosponsors
-	public ArrayList<Legislator> cosponsors = new ArrayList<Legislator>();
+	public ArrayList<Legislator> cosponsors;
 	
 	// summary
 	public String summary;
@@ -35,10 +35,10 @@ public class Bill implements Serializable {
 	// votes
 	public String last_vote_result;
 	public String last_vote_chamber;
-	public ArrayList<Bill.Vote> votes = new ArrayList<Bill.Vote>();
+	public ArrayList<Bill.Vote> votes;
 	
 	// actions
-	public ArrayList<Bill.Action> actions = new ArrayList<Bill.Action>();
+	public ArrayList<Bill.Action> actions;
 	
 
 	public static class Action implements Serializable {

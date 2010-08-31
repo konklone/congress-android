@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.models.Bill.Action;
 import com.sunlightlabs.congress.models.Bill.Vote;
 
@@ -136,6 +137,8 @@ public class BillService {
 			JSONArray cosponsorObjects = json.getJSONArray("cosponsors");
 			int length = cosponsorObjects.length();
 			
+			bill.cosponsors = new ArrayList<Legislator>();
+			
 			for (int i=0; i<length; i++)
 				bill.cosponsors.add(LegislatorService.fromDrumbone(cosponsorObjects.getJSONObject(i)));
 		}
@@ -143,6 +146,8 @@ public class BillService {
 		if (!json.isNull("votes")) {
 			JSONArray voteObjects = json.getJSONArray("votes");
 			int length = voteObjects.length();
+			
+			bill.votes = new ArrayList<Bill.Vote>();
 
 			// load in descending order
 			for (int i = 0; i < length; i++)
@@ -159,6 +164,8 @@ public class BillService {
 			JSONArray actionObjects = json.getJSONArray("actions");
 			int length = actionObjects.length();
 
+			bill.actions = new ArrayList<Bill.Action>();
+			
 			// load in descending order
 			for (int i = 0; i < length; i++)
 				bill.actions.add(0, actionFromDrumbone(actionObjects.getJSONObject(i)));

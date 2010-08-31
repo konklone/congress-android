@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
@@ -117,7 +118,7 @@ public class LegislatorTabs extends TabActivity {
 		return new Intent(this, NewsList.class)
 			.putExtra("searchTerm", correctExceptions(searchTermFor(legislator)))
 			.putExtra("subscriptionId", legislator.id)
-			.putExtra("subscriptionName", legislator.getName())
+			.putExtra("subscriptionName", NotificationFinder.notificationName(legislator))
 			.putExtra("subscriptionClass", "LegislatorNewsFinder");
 	}
 	

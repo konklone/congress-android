@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sunlightlabs.android.congress.notifications.Footer;
+import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask.LoadsTweets;
@@ -30,7 +31,6 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 	private LoadTweetsTask loadTweetsTask = null;
 	
 	private Legislator legislator;
-	private String twitterId;
 	private Footer footer;
 	
 	@Override
@@ -40,7 +40,6 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 
 		Bundle extras = getIntent().getExtras();
 		legislator = (Legislator) extras.getSerializable("legislator");
-		twitterId = legislator.twitter_id;
     
     	LegislatorTwitterHolder holder = (LegislatorTwitterHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
@@ -85,12 +84,12 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 
 	private void setupSubscription() {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(new Subscription(legislator.id, legislator.getName(), "TwitterFinder", twitterId));
+		footer.init(new Subscription(legislator.id, NotificationFinder.notificationName(legislator), "TwitterFinder", legislator.twitter_id));
 	}
 
 	protected void loadTweets() {	    
 	    if (tweets == null)
-			loadTweetsTask = (LoadTweetsTask) new LoadTweetsTask(this).execute(twitterId);
+			loadTweetsTask = (LoadTweetsTask) new LoadTweetsTask(this).execute(legislator.twitter_id);
     	else
     		displayTweets();
 	}

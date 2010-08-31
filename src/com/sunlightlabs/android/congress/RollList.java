@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.notifications.Footer;
+import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
@@ -112,7 +113,7 @@ public class RollList extends ListActivity {
 
 	private void setupFooter() {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(new Subscription(voter.id, voter.getName(), "LegislatorVotesFinder", voter.chamber));
+		footer.init(new Subscription(voter.id, NotificationFinder.notificationName(voter), "LegislatorVotesFinder", voter.chamber));
 	}
 
 	@Override

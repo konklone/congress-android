@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.notifications.NotificationFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 
@@ -128,7 +129,7 @@ public class BillTabs extends TabActivity {
 		return new Intent(this, NewsList.class)
 			.putExtra("searchTerm", searchTermFor(bill))
 			.putExtra("subscriptionId", bill.id)
-			.putExtra("subscriptionName", bill.code)
+			.putExtra("subscriptionName", NotificationFinder.notificationName(bill))
 			.putExtra("subscriptionClass", "BillNewsFinder");
 	}
 	

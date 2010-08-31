@@ -108,7 +108,7 @@ public class NotificationService extends WakefulIntentService {
 			}
 			
 			// if there's at least one new item, notify the user
-			if (results > 0) {
+			if (results >= 0) {
 				
 				notifyManager.notify(
 					(subscription.id + subscription.notificationClass).hashCode(), 
