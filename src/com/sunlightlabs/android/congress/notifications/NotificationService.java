@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.util.Log;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
@@ -108,7 +109,7 @@ public class NotificationService extends WakefulIntentService {
 			}
 			
 			// if there's at least one new item, notify the user
-			if (results >= 0) {
+			if (results > 0) {
 				
 				notifyManager.notify(
 					(subscription.id + subscription.notificationClass).hashCode(), 
@@ -118,6 +119,7 @@ public class NotificationService extends WakefulIntentService {
 						finder.notificationMessage(subscription, results), 
 						finder.notificationIntent(subscription),
 						
+						notificationUri(subscription),
 						results
 					)
 				);
@@ -133,12 +135,14 @@ public class NotificationService extends WakefulIntentService {
 		cursor.close();
 	}
 
-	private Notification getNotification(String ticker, String title, String message, Intent intent, int results) {
+	private Notification getNotification(String ticker, String title, String message, Intent intent, Uri uri, int results) {
 		int icon = R.drawable.icon;
 		long when = System.currentTimeMillis();
 		
 		Notification notification = new Notification(icon, ticker, when);
 
+		intent.setData(uri);
+		
 		PendingIntent contentIntent = PendingIntent
 				.getActivity(this, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		notification.setLatestEventInfo(this, title, message, contentIntent);
@@ -147,5 +151,10 @@ public class NotificationService extends WakefulIntentService {
 		notification.number = results;
 		
 		return notification;
+	}
+	
+	// hack to make sure PendingIntents are always recognized as unique
+	private Uri notificationUri(Subscription subscription) {
+		return Uri.parse("congress://notifications/" + subscription.notificationClass + "/" + subscription.id);
 	}
 }
