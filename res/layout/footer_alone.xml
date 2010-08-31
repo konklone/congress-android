@@ -16,7 +16,8 @@
 	footer:imageView="@+id/footer_img"
 	>
 	
-	<com.sunlightlabs.android.congress.notifications.FooterImage
+	<view
+		class="com.sunlightlabs.android.congress.notifications.Footer$FooterImage"
 		android:id="@+id/footer_img"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -27,7 +28,8 @@
 		footer:srcOn="@drawable/notifications_on"
 		/>
 	
-	<com.sunlightlabs.android.congress.notifications.FooterText
+	<view
+		class="com.sunlightlabs.android.congress.notifications.Footer$FooterText"
 		android:id="@+id/footer_text"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"		
