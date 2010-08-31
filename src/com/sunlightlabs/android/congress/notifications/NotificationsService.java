@@ -28,7 +28,6 @@ public class NotificationsService extends WakefulIntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		// Debug.startMethodTracing("congress");
 		notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		database = new Database(this);
 		database.open();
@@ -38,7 +37,6 @@ public class NotificationsService extends WakefulIntentService {
 	public void onDestroy() {
 		super.onDestroy();
 		database.close();
-		// Debug.stopMethodTracing();
 	}
 
 	@Override
@@ -86,13 +84,13 @@ public class NotificationsService extends WakefulIntentService {
 	 */
 	private void processResults(NotificationFinder finder, Subscription subscription) {
 		String logCls = finder.getClass().getSimpleName();
-		Log.d(Utils.TAG,  logCls + ": processing notifications for subscription " + subscription.id);
+		Log.d(Utils.TAG, logCls + ": processing notifications for subscription " + subscription.id);
 		
 		List<?> results = finder.fetchUpdates(subscription);
 		if (results == null || results.isEmpty()) return;
 		
 		int size = results.size();
-		Log.d(Utils.TAG, logCls + ": there are " + size + " from the newtork call");
+		Log.d(Utils.TAG, logCls + ": there are " + size + " from the network call");
 
 		// search for the last seen id in the list of results
 		// and calculate how many new results are after that
