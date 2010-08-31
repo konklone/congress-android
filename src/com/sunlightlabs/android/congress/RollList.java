@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscription;
-import com.sunlightlabs.android.congress.notifications.finders.LegislatorVotesFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -40,7 +39,6 @@ public class RollList extends ListActivity {
 	private int type;
 	
 	private LoadingWrapper loading;
-	private Subscription subscription;
 	private Footer footer;
 
 	@Override
@@ -51,12 +49,9 @@ public class RollList extends ListActivity {
 		type = extras.getInt("type", ROLLS_VOTER);
 		voter = (Legislator) extras.getSerializable("legislator");
 
-		if (type == ROLLS_VOTER) {
+		if (type == ROLLS_VOTER)
 			setContentView(R.layout.list_footer_titled);
-
-			subscription = new Subscription(voter.id, voter.getName(),
-					LegislatorVotesFinder.class.getName(), voter.chamber);
-		} else
+		else
 			setContentView(R.layout.list_titled);
 
 		setupControls();
@@ -86,7 +81,8 @@ public class RollList extends ListActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if (footer != null) footer.onDestroy();
+		if (footer != null) 
+			footer.onDestroy();
 	}
 
 	public void setupControls() {
@@ -116,7 +112,7 @@ public class RollList extends ListActivity {
 
 	private void setupFooter() {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(subscription);
+		footer.init(new Subscription(voter.id, voter.getName(), "LegislatorVotesFinder", voter.chamber));
 	}
 
 	@Override

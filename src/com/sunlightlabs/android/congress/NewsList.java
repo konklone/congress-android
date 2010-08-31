@@ -32,11 +32,10 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 	private static final int MENU_COPY = 1;
 
 	private String searchTerm;
-	private ArrayList<NewsItem> items = null;
-
-	private LoadYahooNewsTask loadNewsTask = null;
-
-	private Subscription subscription;
+	private ArrayList<NewsItem> items;
+	private LoadYahooNewsTask loadNewsTask;
+	
+	private String subscriptionId, subscriptionName, subscriptionClass;
 	private Footer footer;
 
 	@Override
@@ -44,9 +43,11 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_footer);
 
-		Intent i = getIntent();
-		subscription = (Subscription) i.getSerializableExtra("subscription");
-		searchTerm = subscription.data;
+		Bundle extras = getIntent().getExtras();
+		searchTerm = extras.getString("searchTerm");
+		subscriptionId = extras.getString("subscriptionId");
+		subscriptionName = extras.getString("subscriptionName");
+		subscriptionClass = extras.getString("subscriptionClass");
 
 		NewsListHolder holder = (NewsListHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
@@ -88,12 +89,12 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 
 		registerForContextMenu(getListView());
 
-		setupFooter();
+		setupSubscription();
 	}
 
-	private void setupFooter() {
+	private void setupSubscription() {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(subscription);
+		footer.init(new Subscription(subscriptionId, subscriptionName, subscriptionClass, searchTerm));
 	}
 
 	@Override

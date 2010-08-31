@@ -23,13 +23,14 @@ import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask.LoadsTweets;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.Legislator;
 
 public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 	private List<Status> tweets;
 	private LoadTweetsTask loadTweetsTask = null;
 	
+	private Legislator legislator;
 	private String twitterId;
-	private Subscription subscription;
 	private Footer footer;
 	
 	@Override
@@ -37,9 +38,9 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
     	super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_footer);
 
-		Intent i = getIntent();
-		subscription = (Subscription) i.getSerializableExtra("subscription");
-		twitterId = subscription.data;
+		Bundle extras = getIntent().getExtras();
+		legislator = (Legislator) extras.getSerializable("legislator");
+		twitterId = legislator.twitter_id;
     
     	LegislatorTwitterHolder holder = (LegislatorTwitterHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
@@ -79,12 +80,12 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 			}
 		});
 
-		setupFooter();
+		setupSubscription();
 	}
 
-	private void setupFooter() {
+	private void setupSubscription() {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(subscription);
+		footer.init(new Subscription(legislator.id, legislator.getName(), "TwitterFinder", twitterId));
 	}
 
 	protected void loadTweets() {	    

@@ -26,7 +26,7 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 	private Bill bill;
 	private String id;
 
-	private Subscription subscription;
+	private String subscriptionName;
 	private Footer footer;
 
 	@Override
@@ -34,8 +34,10 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_footer);
 
-		subscription = (Subscription) getIntent().getSerializableExtra("subscription");
-		id = subscription.id;
+		Bundle extras = getIntent().getExtras();
+		Bill bill = (Bill) extras.getSerializable("bill");
+		id = bill.id;
+		subscriptionName = bill.code;
 		
 		BillHistoryHolder holder = (BillHistoryHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
@@ -59,7 +61,7 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 
 	private void setupFooter() {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(subscription);
+		footer.init(new Subscription(id, subscriptionName, "BillActionsFinder", id));
 	}
 	
 	public void loadBill() {

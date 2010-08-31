@@ -54,7 +54,7 @@ public class NotificationService extends WakefulIntentService {
 			// load the appropriate finder for this subscription 
 			NotificationFinder finder;
 			try {
-				finder = (NotificationFinder) Class.forName(subscription.notificationClass).newInstance();
+				finder = (NotificationFinder) Class.forName("com.sunlightlabs.android.congress.notifications.finders." + subscription.notificationClass).newInstance();
 				finder.context = this;
 			} catch (Exception e) {
 				Log.e(Utils.TAG, "Could not instantiate a NotificationFinder of class " + subscription.notificationClass, e);

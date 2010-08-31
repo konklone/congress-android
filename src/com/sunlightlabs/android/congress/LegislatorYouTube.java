@@ -35,6 +35,7 @@ import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask.LoadsThumb;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask.LoadsYoutubeVideos;
 import com.sunlightlabs.android.congress.utils.ImageUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.youtube.Video;
 
 public class LegislatorYouTube extends ListActivity implements LoadsThumb, LoadsYoutubeVideos {
@@ -45,8 +46,8 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	private LoadYoutubeVideosTask loadVideosTask = null;
 	private HashMap<Integer, LoadYoutubeThumbTask> loadThumbTasks = new HashMap<Integer, LoadYoutubeThumbTask>();
 	
+	private Legislator legislator;
 	private String youtubeUsername;
-	private Subscription subscription;
 	private Footer footer;
 
 	@Override
@@ -54,9 +55,8 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
     	super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_footer);
 
-		Intent i = getIntent();
-		subscription = (Subscription) i.getSerializableExtra("subscription");
-		youtubeUsername = subscription.data;
+		legislator = (Legislator) getIntent().getSerializableExtra("legislator");
+		youtubeUsername = legislator.youtubeUsername();
     	
     	LegislatorYouTubeHolder holder = (LegislatorYouTubeHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
@@ -106,12 +106,12 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 
 		registerForContextMenu(getListView());
 
-		setupFooter();
+		setupSubscription();
 	}
 
-	private void setupFooter() {
+	private void setupSubscription() {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(subscription);
+		footer.init(new Subscription(legislator.id, legislator.getName(), "YoutubeFinder", youtubeUsername));
 	}
     
 	protected void loadVideos() {

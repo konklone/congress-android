@@ -25,7 +25,8 @@ public class LegislatorVotesFinder extends NotificationFinder {
 	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupDrumbone(context);
 		try {
-			return RollService.latestVotes(subscription.id, subscription.data, PER_PAGE, 1);
+			String chamber = subscription.data;
+			return RollService.latestVotes(subscription.id, chamber, PER_PAGE, 1);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest votes for " + subscription, e);
 			return null;

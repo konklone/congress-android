@@ -11,10 +11,6 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-import com.sunlightlabs.android.congress.notifications.Subscription;
-import com.sunlightlabs.android.congress.notifications.finders.BillActionsFinder;
-import com.sunlightlabs.android.congress.notifications.finders.BillNewsFinder;
-import com.sunlightlabs.android.congress.notifications.finders.BillVotesFinder;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 
@@ -129,21 +125,19 @@ public class BillTabs extends TabActivity {
 	}
 	
 	public Intent newsIntent() {
-		return new Intent(this, NewsList.class).putExtra("subscription",
-				new Subscription(bill.id, bill.official_title,
-						BillNewsFinder.class.getName(), searchTermFor(bill)));
+		return new Intent(this, NewsList.class)
+			.putExtra("searchTerm", searchTermFor(bill))
+			.putExtra("subscriptionId", bill.id)
+			.putExtra("subscriptionName", bill.code)
+			.putExtra("subscriptionClass", "BillNewsFinder");
 	}
 	
 	public Intent historyIntent() {
-		return new Intent(this, BillHistory.class).putExtra("subscription",
-				new Subscription(bill.id, bill.official_title,
-						BillActionsFinder.class.getName(), bill.id));
+		return new Intent(this, BillHistory.class).putExtra("bill", bill);
 	}
 	
 	public Intent votesIntent() {
-		return new Intent(this, BillVotes.class).putExtra("subscription",
-				new Subscription(bill.id, bill.official_title,
-						BillVotesFinder.class.getName(), bill.id));
+		return new Intent(this, BillVotes.class).putExtra("bill", bill);
 	}
 	
 	// for news searching, don't use legislator.titledName() because we don't want to use the name_suffix
