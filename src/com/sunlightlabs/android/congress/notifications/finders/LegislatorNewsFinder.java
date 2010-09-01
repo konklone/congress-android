@@ -16,7 +16,7 @@ public class LegislatorNewsFinder extends NotificationFinder {
 
 	@Override
 	public String decodeId(Object result) {
-		return String.valueOf(((NewsItem) result).timestamp.toMillis(true));
+		return ((NewsItem) result).displayURL;
 	}
 	
 	@Override

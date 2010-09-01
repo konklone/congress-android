@@ -17,7 +17,7 @@ public class YoutubeFinder extends NotificationFinder {
 
 	@Override
 	public String decodeId(Object result) {
-		return String.valueOf(((Video) result).timestamp.toMillis(true));
+		return ((Video) result).url;
 	}
 
 	@Override
