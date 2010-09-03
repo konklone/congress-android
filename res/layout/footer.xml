@@ -1,12 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Footer is a subclass of RelativeLayout -->
+<com.sunlightlabs.android.congress.notifications.Footer
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:footer="http://schemas.android.com/apk/res/com.sunlightlabs.android.congress"
+	android:id="@+id/footer"
+	
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:orientation="vertical">
 	
-	<include layout="@layout/line" />
+	android:background="@drawable/main_menu_gradient"
+	android:paddingBottom="3dp"
 	
-	<include layout="@layout/footer_alone" />
+	footer:textView="@+id/footer_text"
+	footer:imageView="@+id/footer_img"
 	
-</LinearLayout>
+	android:visibility="gone"
+	>
+	
+	<include layout="@layout/line"
+		android:id="@+id/footer_line" 
+		android:layout_alignParentTop="true"
+		android:layout_marginBottom="3dp"
+		/>
+	
+	<view class="com.sunlightlabs.android.congress.notifications.Footer$FooterImage"
+		android:id="@+id/footer_img"
+		
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		
+		android:layout_centerVertical="true"
+		android:layout_below="@id/footer_line"
+			
+		android:paddingLeft="20dp"
+		
+		footer:srcOff="@drawable/notifications_off"		
+		footer:srcOn="@drawable/notifications_on"
+		/>
+	
+	<view class="com.sunlightlabs.android.congress.notifications.Footer$FooterText"
+		android:id="@+id/footer_text"
+		
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+				
+		android:layout_centerVertical="true"
+		android:layout_toRightOf="@id/footer_img"
+		
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:textSize="14sp"
+		android:textColor="@color/header_text"
+		
+		footer:textOff="@string/main_footer_off"
+		footer:textOn="@string/main_footer_on"		
+	/>
+	
+</com.sunlightlabs.android.congress.notifications.Footer>

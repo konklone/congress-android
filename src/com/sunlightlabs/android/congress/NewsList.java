@@ -22,6 +22,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscription;
+import com.sunlightlabs.android.congress.notifications.subscribers.BillNewsSubscriber;
 import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask;
 import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask.LoadsYahooNews;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -88,13 +89,13 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 		});
 
 		registerForContextMenu(getListView());
-
-		setupSubscription();
 	}
 
-	private void setupSubscription() {
+	private void setupSubscription(Object lastResult) {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(new Subscription(subscriptionId, subscriptionName, subscriptionClass, searchTerm));
+		// not ideal since this could be either legislator or bill news, but it's simplest
+		String lastSeenId = (lastResult == null) ? null : new BillNewsSubscriber().decodeId(lastResult); 
+		footer.init(new Subscription(subscriptionId, subscriptionName, subscriptionClass, searchTerm, lastSeenId));
 	}
 
 	@Override
@@ -134,17 +135,19 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 	protected void loadNews() {
 		if (items == null) {
 			String apiKey = getResources().getString(R.string.yahoo_news_key);
-			loadNewsTask = (LoadYahooNewsTask) new LoadYahooNewsTask(this).execute(searchTerm,
-					apiKey);
+			loadNewsTask = (LoadYahooNewsTask) new LoadYahooNewsTask(this).execute(searchTerm, apiKey);
 		} else
 			displayNews();
 	}
 
 	protected void displayNews() {
-		if (items != null && items.size() > 0)
+		if (items != null && items.size() > 0) {
+			setupSubscription(items.get(0));
 			setListAdapter(new NewsAdapter(this, items));
-		else
+		} else {
+			setupSubscription(null);
 			Utils.showRefresh(this, R.string.news_empty);
+		}
 	}
 
 	protected class NewsAdapter extends ArrayAdapter<NewsItem> {

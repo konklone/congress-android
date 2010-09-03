@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
+import com.sunlightlabs.android.congress.notifications.subscribers.BillVotesSubscriber;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
@@ -48,8 +49,6 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 		
 		if (loadBillTask == null)
 			loadBill();
-
-		setupFooter();
 	}
 	
 	@Override
@@ -58,9 +57,10 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 		footer.onDestroy();
 	}
 
-	private void setupFooter() {
+	private void setupSubscription(Object lastResult) {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(new Subscription(bill.id, Subscriber.notificationName(bill), "BillVotesSubscriber", bill.id));
+		String lastSeenId = (lastResult == null) ? null : new BillVotesSubscriber().decodeId(lastResult);
+		footer.init(new Subscription(bill.id, Subscriber.notificationName(bill), "BillVotesSubscriber", bill.id, lastSeenId));
 	}
 
 	public void loadBill() {
@@ -90,10 +90,13 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	}
 	
 	public void displayBill() {
-		if (bill.votes.size() > 0)
+		if (bill.votes.size() > 0) {
+			setupSubscription(bill.votes.get(0));
 			setListAdapter(new BillVoteAdapter(this, bill.votes));
-		else
+		} else {
+			setupSubscription(null);
 			Utils.showEmpty(this, R.string.bill_votes_empty);
+		}
 	}
 	
 	@Override

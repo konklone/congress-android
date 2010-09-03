@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
+import com.sunlightlabs.android.congress.notifications.subscribers.LegislatorVotesSubscriber;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -55,10 +56,7 @@ public class RollList extends ListActivity {
 		else
 			setContentView(R.layout.list_titled);
 
-		setupControls();
-
 		RollListHolder holder = (RollListHolder) getLastNonConfigurationInstance();
-
 		if (holder != null) {
 			this.rolls = holder.rolls;
 			this.loadRollsTask = holder.loadRollsTask;
@@ -72,6 +70,8 @@ public class RollList extends ListActivity {
 
 		if (rolls.size() == 0)
 			loadRolls();
+		else
+			setupSubscription(rolls.get(0));
 	}
 
 	@Override
@@ -98,8 +98,6 @@ public class RollList extends ListActivity {
 		case ROLLS_VOTER:
 			Utils.setTitle(this, "Latest Votes By\n" + voter.titledName(), R.drawable.rolls);
 			Utils.setTitleSize(this, 18);
-
-			setupFooter();
 			break;
 		case ROLLS_NOMINATIONS:
 			Utils.setTitle(this, R.string.menu_votes_nominations, R.drawable.rolls_nominations);
@@ -111,9 +109,13 @@ public class RollList extends ListActivity {
 		}
 	}
 
-	private void setupFooter() {
-		footer = (Footer) findViewById(R.id.footer);
-		footer.init(new Subscription(voter.id, Subscriber.notificationName(voter), "LegislatorVotesSubscriber", voter.chamber));
+	private void setupSubscription(Object lastResult) {
+		// for now, only for legislator votes
+		if (type == ROLLS_VOTER) {
+			footer = (Footer) findViewById(R.id.footer);
+			String lastSeenId = (lastResult == null) ? null : new LegislatorVotesSubscriber().decodeId(lastResult);
+			footer.init(new Subscription(voter.id, Subscriber.notificationName(voter), "LegislatorVotesSubscriber", voter.chamber, lastSeenId));
+		}
 	}
 
 	@Override
@@ -130,10 +132,18 @@ public class RollList extends ListActivity {
 
 
 	public void onLoadRolls(ArrayList<Roll> newRolls) {
-		if (rolls.size() == 0 && newRolls.size() == 0) {
-			Utils.showBack(this, R.string.empty_rolls);
-			return;
+		// if this is the first page of rolls, set up the subscription
+		if (rolls.size() == 0) {
+			if (newRolls.size() > 0) {
+				setupSubscription(newRolls.get(0));
+			} else {
+				setupSubscription(null);
+				Utils.showBack(this, R.string.empty_rolls);
+				return;
+			}
 		}
+		
+		
 		
 		// remove the placeholder and add the new bills in the array
 		if (rolls.size() > 0) {

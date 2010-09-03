@@ -7,15 +7,11 @@ public class Subscription implements Serializable {
 
 	public String id, name, notificationClass, data, lastSeenId;
 	
-	public Subscription(String id, String name, String notificationClass, String data) {
+	public Subscription(String id, String name, String notificationClass, String data, String lastSeenId) {
 		this.id = id;
 		this.name = name;
 		this.notificationClass = notificationClass;
 		this.data = data;
-	}
-	
-	public Subscription(String id, String name, String notificationClass, String data, String lastSeenId) {
-		this(id, name, notificationClass, data);
 		this.lastSeenId = lastSeenId;
 	}
 

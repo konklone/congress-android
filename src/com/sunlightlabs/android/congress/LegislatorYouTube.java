@@ -30,6 +30,7 @@ import com.sunlightlabs.android.congress.LegislatorYouTube.VideoAdapter.VideoHol
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
+import com.sunlightlabs.android.congress.notifications.subscribers.YoutubeSubscriber;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask.LoadsThumb;
@@ -107,13 +108,12 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 		});
 
 		registerForContextMenu(getListView());
-
-		setupSubscription();
 	}
 
-	private void setupSubscription() {
+	private void setupSubscription(Object lastResult) {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "YoutubeSubscriber", youtubeUsername));
+		String lastSeenId = (lastResult == null) ? null : new YoutubeSubscriber().decodeId(lastResult);
+		footer.init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "YoutubeSubscriber", youtubeUsername, lastSeenId));
 	}
     
 	protected void loadVideos() {
@@ -124,10 +124,13 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	}
 	
 	protected void displayVideos() {
-    	if (videos != null && videos.length > 0)
+    	if (videos != null && videos.length > 0) {
+    		setupSubscription(videos[0]);
 	    	setListAdapter(new VideoAdapter(LegislatorYouTube.this, videos));
-    	else
+    	} else {
+    		setupSubscription(null);
 	    	Utils.showRefresh(this, R.string.youtube_empty);
+    	}
     }
 	
 	@Override

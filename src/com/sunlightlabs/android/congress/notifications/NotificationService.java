@@ -53,24 +53,24 @@ public class NotificationService extends WakefulIntentService {
 			Subscription subscription = database.loadSubscription(cursor);
 			
 			// load the appropriate finder for this subscription 
-			Subscriber finder;
+			Subscriber subscriber;
 			try {
-				finder = (Subscriber) Class.forName("com.sunlightlabs.android.congress.notifications.subscribers." + subscription.notificationClass).newInstance();
-				finder.context = this;
+				subscriber = (Subscriber) Class.forName("com.sunlightlabs.android.congress.notifications.subscribers." + subscription.notificationClass).newInstance();
+				subscriber.context = this;
 			} catch (Exception e) {
 				Log.e(Utils.TAG, "Could not instantiate a Subscriber of class " + subscription.notificationClass, e);
 				continue;
 			}
 			
-			Log.i(Utils.TAG, "[" + finder.getClass().getSimpleName() + "][" + subscription.id + "] - " +
+			Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
 				"About to fetch updates.");
 			
 			
 			// ask the finder for the latest updates
-			List<?> updates = finder.fetchUpdates(subscription);
+			List<?> updates = subscriber.fetchUpdates(subscription);
 			
 			
-			// if there were no results, move on
+			// if there was an error or there were no results, move on
 			if (updates == null || updates.isEmpty())
 				continue;
 			
@@ -78,25 +78,19 @@ public class NotificationService extends WakefulIntentService {
 			String oldLastSeenId = subscription.lastSeenId;
 			
 			// No matter what, update the database to set lastSeenId as the ID of the first update
-			String newLastSeenId = finder.decodeId(updates.get(0));
+			String newLastSeenId = subscriber.decodeId(updates.get(0));
 			database.updateLastSeenId(subscription, newLastSeenId);
 			
-
-			// if the subscription has no lastSeenId, then this is its first run,
-			// no need to go on to notifying
-			if (oldLastSeenId == null) {
-				Log.i(Utils.TAG, "[" + finder.getClass().getSimpleName() + "][" + subscription.id + "] - " +
-						"No lastSeenId, assuming first run and not notifying.");
-				continue;
-			}
 			
 			// Scan through the updates for a match of the last seen ID 
 			int results = -1;
-			for (Object update : updates) {
-				String id = finder.decodeId(update);
-				if (oldLastSeenId.equals(id)) {
-					results = updates.indexOf(update);
-					break;
+			if (oldLastSeenId != null) {
+				for (Object update : updates) {
+					String id = subscriber.decodeId(update);
+					if (oldLastSeenId.equals(id)) {
+						results = updates.indexOf(update);
+						break;
+					}
 				}
 			}
 			
@@ -104,8 +98,12 @@ public class NotificationService extends WakefulIntentService {
 			if (results == -1) {
 				results = updates.size();
 				
-				Log.i(Utils.TAG, "[" + finder.getClass().getSimpleName() + "][" + subscription.id + "] - " +
-					"Did not match lastSeenId, assuming all updates are new.");
+				if (oldLastSeenId == null)
+					Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
+						"No lastSeenId, will notify of all results.");
+				else
+					Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
+						"Have lastSeenId but it did not appear, will notify of all results");
 			}
 			
 			// if there's at least one new item, notify the user
@@ -114,20 +112,20 @@ public class NotificationService extends WakefulIntentService {
 				notifyManager.notify(
 					(subscription.id + subscription.notificationClass).hashCode(), 
 					getNotification(
-						finder.notificationTicker(subscription),
-						finder.notificationTitle(subscription), 
-						finder.notificationMessage(subscription, results), 
-						finder.notificationIntent(subscription),
+						subscriber.notificationTicker(subscription),
+						subscriber.notificationTitle(subscription), 
+						subscriber.notificationMessage(subscription, results), 
+						subscriber.notificationIntent(subscription),
 						
 						notificationUri(subscription),
 						results
 					)
 				);
 				
-				Log.i(Utils.TAG, "[" + finder.getClass().getSimpleName() + "][" + subscription.id + "] - " +
+				Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
 					"notified of " + results + " results.");
 			} else
-				Log.i(Utils.TAG, "[" + finder.getClass().getSimpleName() + "][" + subscription.id + "] - " +
+				Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
 						"0 new results, not notifying.");
 			
 		} while(cursor.moveToNext());

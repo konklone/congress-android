@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
+import com.sunlightlabs.android.congress.notifications.subscribers.BillActionsSubscriber;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
@@ -46,8 +47,6 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 		
 		if (loadBillTask == null)
 			loadBill();
-
-		setupFooter();
 	}
 	
 	@Override
@@ -65,9 +64,10 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 		footer.onDestroy();
 	}
 
-	private void setupFooter() {
+	private void setupSubscription(Object lastResult) {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(new Subscription(bill.id,  Subscriber.notificationName(bill), "BillActionsSubscriber", bill.id));
+		String lastSeenId = (lastResult == null) ? null : new BillActionsSubscriber().decodeId(lastResult);
+		footer.init(new Subscription(bill.id,  Subscriber.notificationName(bill), "BillActionsSubscriber", bill.id, lastSeenId));
 	}
 	
 	public void loadBill() {
@@ -88,10 +88,13 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 	}
 	
 	public void displayBill() {
-		if (bill.actions.size() > 0)
+		if (bill.actions.size() > 0) {
+			setupSubscription(bill.actions.get(0));
 			setListAdapter(new BillActionAdapter(this, bill.actions));
-		else
+		} else {
+			setupSubscription(null);
 			Utils.showEmpty(this, R.string.bill_actions_empty);
+		}
 	}
 	
 	protected class BillActionAdapter extends ArrayAdapter<Bill.Action> {

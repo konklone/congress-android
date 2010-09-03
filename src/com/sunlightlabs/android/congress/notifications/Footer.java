@@ -87,6 +87,8 @@ public class Footer extends RelativeLayout {
 				setOn();
 			else
 				setOff();
+			
+			setVisibility(View.VISIBLE);
 		} 
 		
 		// MainMenu footer

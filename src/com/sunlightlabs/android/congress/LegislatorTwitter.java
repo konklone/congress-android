@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
+import com.sunlightlabs.android.congress.notifications.subscribers.TwitterSubscriber;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask.LoadsTweets;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -78,13 +79,12 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 				loadTweets();
 			}
 		});
-
-		setupSubscription();
 	}
 
-	private void setupSubscription() {
+	private void setupSubscription(Object lastResult) {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "TwitterSubscriber", legislator.twitter_id));
+		String lastSeenId = (lastResult == null) ? null : new TwitterSubscriber().decodeId(lastResult);
+		footer.init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "TwitterSubscriber", legislator.twitter_id, lastSeenId));
 	}
 
 	protected void loadTweets() {	    
@@ -96,10 +96,13 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 	
 	public void displayTweets() {
     	if (tweets != null && tweets.size() > 0) {
+    		setupSubscription(tweets.get(0));
 	    	setListAdapter(new TweetAdapter(this, tweets));
 	    	firstToast();
-    	} else
+    	} else {
+    		setupSubscription(null);
 	    	Utils.showRefresh(this, R.string.twitter_empty);
+    	}
     }
 	
 	public void firstToast() {
