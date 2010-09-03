@@ -272,7 +272,7 @@ public class Database {
 		cv.put("entity_name", subscription.name);
 		cv.put("notification_class", subscription.notificationClass);
 		cv.put("notification_data", subscription.data);
-		cv.put("last_seen_id", (String) null);
+		cv.put("last_seen_id", (String) subscription.lastSeenId);
 		
 		return database.insert(NOTIFICATIONS_TABLE, null, cv);
 	}
