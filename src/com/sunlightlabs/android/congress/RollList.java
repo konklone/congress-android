@@ -21,6 +21,7 @@ import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.notifications.subscribers.LegislatorVotesSubscriber;
+import com.sunlightlabs.android.congress.notifications.subscribers.NominationsSubscriber;
 import com.sunlightlabs.android.congress.notifications.subscribers.RecentVotesSubscriber;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
@@ -118,6 +119,10 @@ public class RollList extends ListActivity {
 		case ROLLS_LATEST:
 			lastSeenId = (lastResult == null) ? null : new RecentVotesSubscriber().decodeId(lastResult);
 			footer.init(new Subscription("RecentVotes", "Recent Votes", "RecentVotesSubscriber", null, lastSeenId));
+			break;
+		case ROLLS_NOMINATIONS:
+			lastSeenId = (lastResult == null) ? null : new NominationsSubscriber().decodeId(lastResult);
+			footer.init(new Subscription("Nominations", "Recent Nominations", "NominationsSubscriber", null, lastSeenId));
 			break;
 		}
 	}
