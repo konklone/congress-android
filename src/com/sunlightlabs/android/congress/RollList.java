@@ -153,7 +153,6 @@ public class RollList extends ListActivity {
 		}
 		
 		
-		
 		// remove the placeholder and add the new bills in the array
 		if (rolls.size() > 0) {
 			int lastIndex = rolls.size() - 1;

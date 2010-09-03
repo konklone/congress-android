@@ -27,8 +27,7 @@ public class LegislatorLoader extends Activity implements LoadsLegislator {
         if (loadLegislatorTask != null)
         	loadLegislatorTask.onScreenLoad(this);
         else
-			loadLegislatorTask = (LoadLegislatorTask) new LoadLegislatorTask(
-					this).execute(id);
+			loadLegislatorTask = (LoadLegislatorTask) new LoadLegislatorTask(this).execute(id);
 	}
 	
 	@Override

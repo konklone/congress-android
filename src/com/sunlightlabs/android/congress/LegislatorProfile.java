@@ -190,8 +190,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
     public void sponsoredBills() {
     	Intent intent = new Intent(this, BillList.class)
     		.putExtra("type", BillList.BILLS_SPONSOR)
-    		.putExtra("sponsor_id", legislator.getId())
-    		.putExtra("sponsor_name", legislator.titledName());
+    		.putExtra("legislator", legislator);
     	startActivity(intent);
     }
     

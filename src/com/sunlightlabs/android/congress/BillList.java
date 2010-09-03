@@ -17,9 +17,16 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.notifications.Footer;
+import com.sunlightlabs.android.congress.notifications.Subscriber;
+import com.sunlightlabs.android.congress.notifications.Subscription;
+import com.sunlightlabs.android.congress.notifications.subscribers.LegislatorBillsSubscriber;
+import com.sunlightlabs.android.congress.notifications.subscribers.RecentBillsSubscriber;
+import com.sunlightlabs.android.congress.notifications.subscribers.RecentLawsSubscriber;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.BillService;
 
 public class BillList extends ListActivity {
@@ -33,20 +40,20 @@ public class BillList extends ListActivity {
 	private ArrayList<Bill> bills;
 	private LoadBillsTask loadBillsTask;
 
-	private String sponsor_id, sponsor_name;
+	private Legislator sponsor;
 	private int type;
 	
 	private LoadingWrapper lw;
+	private Footer footer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list_titled);
+		setContentView(R.layout.list_footer_titled);
 
 		Bundle extras = getIntent().getExtras();
 		type = extras.getInt("type", BILLS_RECENT);
-		sponsor_id = extras.getString("sponsor_id");
-		sponsor_name = extras.getString("sponsor_name");
+		sponsor = (Legislator) extras.getSerializable("legislator");
 
 		setupControls();
 
@@ -65,6 +72,8 @@ public class BillList extends ListActivity {
 
 		if (bills.size() == 0)
 			loadBills();
+		else
+			setupSubscription(bills.get(0));
 	}
 
 	@Override
@@ -88,12 +97,32 @@ public class BillList extends ListActivity {
 			Utils.setTitle(this, R.string.menu_bills_law, R.drawable.bill_law);
 			break;
 		case BILLS_SPONSOR:
-			Utils.setTitle(this, "Latest Bills by\n" + sponsor_name, R.drawable.bill_multiple);
+			Utils.setTitle(this, "Latest Bills by\n" + sponsor.titledName(), R.drawable.bill_multiple);
 			Utils.setTitleSize(this, 18);
 			break;
 		case BILLS_LATEST_VOTES:
 			Utils.setTitle(this, R.string.menu_bills_latest_votes, R.drawable.bill_vote);
 			break;
+		}
+	}
+	
+	private void setupSubscription(Object lastResult) {
+		footer = (Footer) findViewById(R.id.footer);
+		
+		String lastSeenId;
+		switch (type) {
+		case BILLS_RECENT:
+			lastSeenId = (lastResult == null) ? null : new RecentBillsSubscriber().decodeId(lastResult);
+			footer.init(new Subscription("RecentBills", "Introduced Bills", "RecentBillsSubscriber", null, lastSeenId));
+			break;
+		case BILLS_SPONSOR:
+			lastSeenId = (lastResult == null) ? null : new LegislatorBillsSubscriber().decodeId(lastResult);
+			footer.init(new Subscription(sponsor.id, Subscriber.notificationName(sponsor), "LegislatorBillsSubscriber", null, lastSeenId));
+			break;
+		case BILLS_LAW:
+			lastSeenId = (lastResult == null) ? null : new RecentLawsSubscriber().decodeId(lastResult);
+			footer.init(new Subscription("RecentLaws", "New Laws", "RecentLawsSubscriber", null, lastSeenId));
+			break; 
 		}
 	}
 
@@ -110,13 +139,20 @@ public class BillList extends ListActivity {
 
 
 	public void onLoadBills(ArrayList<Bill> newBills) {
-		if (bills.size() == 0 && newBills.size() == 0) {
-			if (type == BILLS_SPONSOR)
-				Utils.showBack(this, R.string.empty_bills_sponsored);
-			else
-				Utils.showBack(this, R.string.empty_bills);
-			return;
+		// if this is the first page of rolls, set up the subscription
+		if (bills.size() == 0) {
+			if (newBills.size() > 0) {
+				setupSubscription(newBills.get(0));
+			} else {
+				setupSubscription(null);
+				if (type == BILLS_SPONSOR)
+					Utils.showBack(this, R.string.empty_bills_sponsored);
+				else
+					Utils.showBack(this, R.string.empty_bills);
+				return;
+			}
 		}
+		
 		
 		// remove the placeholder and add the new bills in the array
 		if (bills.size() > 0) {
@@ -180,7 +216,7 @@ public class BillList extends ListActivity {
 				case BILLS_LATEST_VOTES:
 					return BillService.latestVotes(BILLS, page);
 				case BILLS_SPONSOR:
-					return BillService.recentlySponsored(BILLS, context.sponsor_id, page);
+					return BillService.recentlySponsored(BILLS, sponsor.id, page);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
 				}
