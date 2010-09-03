@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.Database;
-import com.sunlightlabs.android.congress.Preferences;
+import com.sunlightlabs.android.congress.NotificationSettings;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
 
@@ -82,7 +82,7 @@ public class Footer extends RelativeLayout {
 			textView.textOn = Utils.capitalize(String.format(context.getString(R.string.footer_on), "these items"));
 			textView.textOff = Utils.capitalize(String.format(context.getString(R.string.footer_off), "these items"));
 			
-			if (Utils.getBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED, Preferences.DEFAULT_NOTIFY_ENABLED)
+			if (Utils.getBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, NotificationSettings.DEFAULT_NOTIFY_ENABLED)
 					&& database.hasSubscription(subscription.id, subscription.notificationClass))
 				setOn();
 			else
@@ -94,17 +94,17 @@ public class Footer extends RelativeLayout {
 			if(database.hasSubscriptions()) {
 				setVisibility(View.VISIBLE);
 				if (Utils.getBooleanPreference(context,
-						Preferences.KEY_NOTIFY_ENABLED,
-						Preferences.DEFAULT_NOTIFY_ENABLED))
+						NotificationSettings.KEY_NOTIFY_ENABLED,
+						NotificationSettings.DEFAULT_NOTIFY_ENABLED))
 					setOn();
 				else
 					setOff();
 			}
 			else {
 				if (Utils.getBooleanPreference(context,
-						Preferences.KEY_NOTIFY_ENABLED, 
-						Preferences.DEFAULT_NOTIFY_ENABLED)) {
-					Utils.setBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED, false);
+						NotificationSettings.KEY_NOTIFY_ENABLED, 
+						NotificationSettings.DEFAULT_NOTIFY_ENABLED)) {
+					Utils.setBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, false);
 					Utils.stopNotificationsBroadcast(context);
 				}
 				setVisibility(View.GONE);
@@ -116,11 +116,11 @@ public class Footer extends RelativeLayout {
 		// turn off all notifications at once
 		if (state == Footer.OFF) {
 			setOn();
-			Utils.setBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED, true);
+			Utils.setBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, true);
 			Utils.startNotificationsBroadcast(context);
 		} else {
 			setOff();
-			Utils.setBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED, false);
+			Utils.setBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, false);
 			Utils.stopNotificationsBroadcast(context);
 		}
 	}
@@ -136,9 +136,9 @@ public class Footer extends RelativeLayout {
 
 				// the service is stopped but there are notifications in the database => start the service
 				if (!Utils.getBooleanPreference(context,
-						Preferences.KEY_NOTIFY_ENABLED,
-						Preferences.DEFAULT_NOTIFY_ENABLED)) {
-					Utils.setBooleanPreference(context, Preferences.KEY_NOTIFY_ENABLED, true);
+						NotificationSettings.KEY_NOTIFY_ENABLED,
+						NotificationSettings.DEFAULT_NOTIFY_ENABLED)) {
+					Utils.setBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, true);
 					Utils.startNotificationsBroadcast(context);
 				}
 			}

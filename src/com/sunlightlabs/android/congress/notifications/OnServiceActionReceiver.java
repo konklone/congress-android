@@ -10,7 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.Preferences;
+import com.sunlightlabs.android.congress.NotificationSettings;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 /**
@@ -41,7 +41,7 @@ public class OnServiceActionReceiver extends BroadcastReceiver {
 
 	private static void scheduleNotifications(Context context) {
 		int interval = Integer.parseInt(Utils.getStringPreference(context,
-				Preferences.KEY_NOTIFY_INTERVAL, Preferences.DEFAULT_NOTIFY_INTERVAL));
+				NotificationSettings.KEY_NOTIFY_INTERVAL, NotificationSettings.DEFAULT_NOTIFY_INTERVAL));
 
 		Log.d(Utils.TAG, "OnServiceActionReceiver: Schedule notifications to repeat in " + interval + " minutes.");
 		Calendar c = Calendar.getInstance();

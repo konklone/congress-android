@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"> 
 	<item android:id="@+id/preferences"
-		android:title="Preferences"
+		android:title="@string/menu_notification_settings"
 		android:icon="@android:drawable/ic_menu_preferences"/>
 	<item android:id="@+id/feedback" 
-		android:title="Feedback"
+		android:title="@string/menu_feedback"
 		android:alphabeticShortcut="f"
 		android:icon="@drawable/ic_menu_send" />
 	<item android:id="@+id/changelog"
-		android:title="Changelog"
+		android:title="@string/menu_changelog"
 		android:alphabeticShortcut="c"
 		android:icon="@android:drawable/ic_menu_info_details" />
 	<item android:id="@+id/about"
-		android:title="About"
+		android:title="@string/menu_about"
 		android:alphabeticShortcut="a"
 		android:icon="@android:drawable/ic_menu_help" />
 </menu>

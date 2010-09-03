@@ -107,7 +107,11 @@
     <string name="not_voting">Did Not Vote</string>
     <string name="not_voting_short">No Vote</string>
     
-    <string name="preferences">Preferences</string>
+    <string name="menu_notification_settings">Notification Settings</string>
+    <string name="menu_about">About</string>
+    <string name="menu_feedback">Feedback</string>
+    <string name="menu_changelog">Changelog</string>
+    
     <string name="notifications">Notifications</string>
     
     <string name="main_footer_on">You are notified about new updates.</string>

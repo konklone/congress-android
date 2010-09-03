@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.sunlightlabs.android.congress.utils.Utils;
 
-public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
+public class NotificationSettings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 	public static final String KEY_NOTIFY_ENABLED = "notify_enabled";
 	public static final boolean DEFAULT_NOTIFY_ENABLED = false;
 

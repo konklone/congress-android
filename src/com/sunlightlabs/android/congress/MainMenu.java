@@ -489,8 +489,8 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	}
 
 	public void setNotificationState() {
-		Utils.setBooleanPreference(this, Preferences.KEY_NOTIFY_ENABLED,
-				Preferences.DEFAULT_NOTIFY_ENABLED);
+		Utils.setBooleanPreference(this, NotificationSettings.KEY_NOTIFY_ENABLED,
+				NotificationSettings.DEFAULT_NOTIFY_ENABLED);
 	}
 
 
@@ -590,7 +590,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) { 
 		case R.id.preferences:
-			startActivity(new Intent(this, Preferences.class));
+			startActivity(new Intent(this, NotificationSettings.class));
 			break;
 		case R.id.feedback:
 			Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getResources().getString(R.string.contact_email), null));
