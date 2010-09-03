@@ -36,8 +36,10 @@ public class BillVotesSubscriber extends Subscriber {
 	public String notificationMessage(Subscription subscription, int results) {
 		if (results > 1)
 			return results + " new votes have occurred.";
-		else
+		else if (results == 1)
 			return "A vote has occurred.";
+		else
+			return results + " new votes have occurred.";
 	}
 
 	@Override
