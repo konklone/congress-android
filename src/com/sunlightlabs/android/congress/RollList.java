@@ -21,6 +21,7 @@ import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.notifications.subscribers.LegislatorVotesSubscriber;
+import com.sunlightlabs.android.congress.notifications.subscribers.RecentVotesSubscriber;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -46,15 +47,11 @@ public class RollList extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		setContentView(R.layout.list_footer_titled);
+		
 		Bundle extras = getIntent().getExtras();
 		type = extras.getInt("type", ROLLS_VOTER);
 		voter = (Legislator) extras.getSerializable("legislator");
-
-		if (type == ROLLS_VOTER)
-			setContentView(R.layout.list_footer_titled);
-		else
-			setContentView(R.layout.list_titled);
 
 		RollListHolder holder = (RollListHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
@@ -110,11 +107,18 @@ public class RollList extends ListActivity {
 	}
 
 	private void setupSubscription(Object lastResult) {
-		// for now, only for legislator votes
-		if (type == ROLLS_VOTER) {
-			footer = (Footer) findViewById(R.id.footer);
-			String lastSeenId = (lastResult == null) ? null : new LegislatorVotesSubscriber().decodeId(lastResult);
+		footer = (Footer) findViewById(R.id.footer);
+		
+		String lastSeenId;
+		switch (type) {
+		case ROLLS_VOTER:
+			lastSeenId = (lastResult == null) ? null : new LegislatorVotesSubscriber().decodeId(lastResult);
 			footer.init(new Subscription(voter.id, Subscriber.notificationName(voter), "LegislatorVotesSubscriber", voter.chamber, lastSeenId));
+			break;
+		case ROLLS_LATEST:
+			lastSeenId = (lastResult == null) ? null : new RecentVotesSubscriber().decodeId(lastResult);
+			footer.init(new Subscription("RecentVotes", "Recent Votes", "RecentVotesSubscriber", null, lastSeenId));
+			break;
 		}
 	}
 
