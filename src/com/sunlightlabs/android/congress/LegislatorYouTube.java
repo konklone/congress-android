@@ -28,7 +28,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.sunlightlabs.android.congress.LegislatorYouTube.VideoAdapter.VideoHolder;
 import com.sunlightlabs.android.congress.notifications.Footer;
-import com.sunlightlabs.android.congress.notifications.NotificationFinder;
+import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask;
@@ -113,7 +113,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 
 	private void setupSubscription() {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(new Subscription(legislator.id, NotificationFinder.notificationName(legislator), "YoutubeFinder", youtubeUsername));
+		footer.init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "YoutubeSubscriber", youtubeUsername));
 	}
     
 	protected void loadVideos() {

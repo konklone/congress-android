@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.congress.notifications.finders;
+package com.sunlightlabs.android.congress.notifications.subscribers;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,14 +6,14 @@ import java.util.List;
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.notifications.NotificationFinder;
+import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.youtube.Video;
 import com.sunlightlabs.youtube.YouTube;
 import com.sunlightlabs.youtube.YouTubeException;
 
-public class YoutubeFinder extends NotificationFinder {
+public class YoutubeSubscriber extends Subscriber {
 
 	@Override
 	public String decodeId(Object result) {
@@ -27,7 +27,7 @@ public class YoutubeFinder extends NotificationFinder {
 		try {
 			return Arrays.asList(new YouTube().getVideos(username));
 		} catch (YouTubeException e) {
-			Log.w(Utils.TAG, "YoutubeFinder: Could not fetch youtube videos for " + subscription, e);
+			Log.w(Utils.TAG, "YoutubeSubscriber: Could not fetch youtube videos for " + subscription, e);
 			return null;
 		}
 	}

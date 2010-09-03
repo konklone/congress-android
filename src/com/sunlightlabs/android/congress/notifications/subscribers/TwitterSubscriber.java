@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.congress.notifications.finders;
+package com.sunlightlabs.android.congress.notifications.subscribers;
 
 import java.util.List;
 
@@ -8,11 +8,11 @@ import winterwell.jtwitter.Twitter.Status;
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.notifications.NotificationFinder;
+import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
 
-public class TwitterFinder extends NotificationFinder {
+public class TwitterSubscriber extends Subscriber {
 
 	@Override
 	public String decodeId(Object result) {

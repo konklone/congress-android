@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.congress.notifications.finders;
+package com.sunlightlabs.android.congress.notifications.subscribers;
 
 import java.util.List;
 
@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.notifications.NotificationFinder;
+import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.yahoo.news.NewsItem;
 import com.sunlightlabs.yahoo.news.NewsService;
 
-public class LegislatorNewsFinder extends NotificationFinder {
+public class BillNewsSubscriber extends Subscriber {
 
 	@Override
 	public String decodeId(Object result) {
@@ -27,7 +27,7 @@ public class LegislatorNewsFinder extends NotificationFinder {
 		try {
 			return new NewsService(apiKey).fetchNewsResults(searchTerm);
 		} catch (Exception e) {
-			Log.w(Utils.TAG, "LegislatorNewsFinder: Could not fetch news for legislator " + subscription.name);
+			Log.w(Utils.TAG, "LegislatorNewsSubscriber: Could not fetch news for legislator " + subscription.name);
 			return null;
 		}
 	}
@@ -39,10 +39,10 @@ public class LegislatorNewsFinder extends NotificationFinder {
 		else
 			return results + " new mention in the news.";
 	}
-
+	
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
-		return Utils.legislatorLoadIntent(subscription.id, 
-				Utils.legislatorTabsIntent().putExtra("tab", "news"));
+		return Utils.billLoadIntent(subscription.id, 
+				Utils.billTabsIntent().putExtra("tab", "news"));
 	}
 }

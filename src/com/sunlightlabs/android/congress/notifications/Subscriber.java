@@ -8,10 +8,10 @@ import android.content.Intent;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.Legislator;
 
-public abstract class NotificationFinder {
+public abstract class Subscriber {
 	public Context context;
 	
-	public NotificationFinder() {}
+	public Subscriber() {}
 
 	// must return results in order of most recent first
 	public abstract List<?> fetchUpdates(Subscription subscription);

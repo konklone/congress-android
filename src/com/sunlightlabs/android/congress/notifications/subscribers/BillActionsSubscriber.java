@@ -1,18 +1,18 @@
-package com.sunlightlabs.android.congress.notifications.finders;
+package com.sunlightlabs.android.congress.notifications.subscribers;
 
 import java.util.List;
 
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.notifications.NotificationFinder;
+import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.BillService;
 
-public class BillActionsFinder extends NotificationFinder {
+public class BillActionsSubscriber extends Subscriber {
 
 	@Override
 	public String decodeId(Object result) {

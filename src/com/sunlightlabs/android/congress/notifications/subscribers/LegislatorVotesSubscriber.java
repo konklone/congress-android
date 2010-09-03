@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.congress.notifications.finders;
+package com.sunlightlabs.android.congress.notifications.subscribers;
 
 import java.util.List;
 
@@ -7,13 +7,13 @@ import android.util.Log;
 
 import com.sunlightlabs.android.congress.RollList;
 import com.sunlightlabs.android.congress.notifications.Subscription;
-import com.sunlightlabs.android.congress.notifications.NotificationFinder;
+import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.RollService;
 
-public class LegislatorVotesFinder extends NotificationFinder {
+public class LegislatorVotesSubscriber extends Subscriber {
 	private static final int PER_PAGE = 40;
 
 	@Override

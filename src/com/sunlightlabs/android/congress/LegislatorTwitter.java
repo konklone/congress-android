@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sunlightlabs.android.congress.notifications.Footer;
-import com.sunlightlabs.android.congress.notifications.NotificationFinder;
+import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask.LoadsTweets;
@@ -84,7 +84,7 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 
 	private void setupSubscription() {
 		footer = (Footer) findViewById(R.id.footer);
-		footer.init(new Subscription(legislator.id, NotificationFinder.notificationName(legislator), "TwitterFinder", legislator.twitter_id));
+		footer.init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "TwitterSubscriber", legislator.twitter_id));
 	}
 
 	protected void loadTweets() {	    
