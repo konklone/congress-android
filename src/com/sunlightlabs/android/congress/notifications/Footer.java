@@ -134,7 +134,8 @@ public class Footer extends RelativeLayout {
 		if (state == OFF) { // current state is OFF; must turn notifications ON
 			if (database.addSubscription(subscription) != -1) {
 				setOn();
-				Log.d(Utils.TAG, "Footer: Added notification in the db for subscription " + id);
+				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
+					"Added notification in the db for subscription with lastSeenId: " + ((subscription.lastSeenId == null) ? "null" : subscription.lastSeenId));
 
 				// the service is stopped but there are notifications in the database => start the service
 				if (!Utils.getBooleanPreference(context,
@@ -149,6 +150,8 @@ public class Footer extends RelativeLayout {
 			if (database.removeSubscription(id, cls) != 0) {
 				setOff();
 				Log.d(Utils.TAG, "Footer: Removed notification from the db for subscription " + id);
+				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
+						"Removed notification from the db");
 			}
 		}
 	}
