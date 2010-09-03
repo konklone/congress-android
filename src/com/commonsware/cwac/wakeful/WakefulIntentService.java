@@ -32,29 +32,21 @@ abstract public class WakefulIntentService extends IntentService {
 		getWifiLock(context).acquire();
 	}
 
-	synchronized protected static PowerManager.WakeLock getCpuLock(
-			Context context) {
+	synchronized protected static PowerManager.WakeLock getCpuLock(Context context) {
 		if (lockCpu == null) {
-			PowerManager mgr = (PowerManager) context
-					.getSystemService(Context.POWER_SERVICE);
+			PowerManager mgr = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 
 			// wake up the CPU
-			lockCpu = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-					LOCK_NAME_STATIC);
+			lockCpu = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, LOCK_NAME_STATIC);
 			lockCpu.setReferenceCounted(true);
 		}
 
-		return (lockCpu);
+		return lockCpu;
 	}
 
-	synchronized protected static WifiManager.WifiLock getWifiLock(
-			Context context) {
+	synchronized protected static WifiManager.WifiLock getWifiLock(Context context) {
 		if (lockWifi == null) {
-			WifiManager mgr = (WifiManager) context
-					.getSystemService(Context.WIFI_SERVICE);
-
-			// restart the WiFi service
-			mgr.setWifiEnabled(true);
+			WifiManager mgr = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 
 			// wake up the WiFi
 			lockWifi = mgr.createWifiLock(LOCK_NAME_STATIC);

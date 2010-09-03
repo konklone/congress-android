@@ -71,8 +71,11 @@ public class NotificationService extends WakefulIntentService {
 			
 			
 			// if there was an error or there were no results, move on
-			if (updates == null || updates.isEmpty())
+			if (updates == null || updates.isEmpty()) {
+				Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
+					"No results, or an error - moving on and not notifying.");
 				continue;
+			}
 			
 			// cache the lastSeenId of the subscription from its previous run
 			String oldLastSeenId = subscription.lastSeenId;
