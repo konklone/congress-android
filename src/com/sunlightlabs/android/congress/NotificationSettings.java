@@ -20,6 +20,10 @@ public class NotificationSettings extends PreferenceActivity implements OnShared
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		setContentView(R.layout.list_titled);
+		Utils.setTitle(this, R.string.menu_notification_settings);
+		
 		addPreferencesFromResource(R.xml.preferences);
 		
 		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
