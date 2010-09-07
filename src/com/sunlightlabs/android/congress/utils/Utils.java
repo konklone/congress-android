@@ -111,12 +111,13 @@ public class Utils {
 	}
 
 	public static Intent billLoadIntent(String billId, String code) {
+		Intent intent = billTabsIntent();
 		return new Intent(Intent.ACTION_MAIN).setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.BillLoader")
 			.putExtra("id", billId)
 			.putExtra("code", code)
-			.putExtra("intent", billTabsIntent());
+			.putExtra("intent", intent);
 	}
 	
 	public static Intent billLoadIntent(String billId) {

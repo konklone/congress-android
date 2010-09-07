@@ -25,6 +25,11 @@ public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 		code = i.getStringExtra("code");
 		intent = (Intent) i.getParcelableExtra("intent");
 		
+		// if coming from a shortcut intent, there appears to be a bug with packaging sub-intents
+		// and the intent will be null
+		if (intent == null)
+			intent = Utils.billTabsIntent();
+		
 		loadBillTask = (LoadBillTask) getLastNonConfigurationInstance();
 		if (loadBillTask != null)
 			loadBillTask.onScreenLoad(this);
