@@ -45,87 +45,36 @@ public class Footer extends RelativeLayout {
 		textView = (FooterText) findViewById(textViewId);
 		imageView = (FooterImage) findViewById(imageViewId);
 		
-		setupControls();
-	}
-
-	private void setupControls() {
 		state = OFF;
 	}
-	
+
 	public void init(Subscription subscription) {
 		this.subscription = subscription;
-		init();
-	}
-
-	public void init() {
 		database = new Database(context);
 		database.open();
 
-		setUIListener();
-		doInitUI();
+		setupControls();
 	}
-
-	private void setUIListener() {
+	
+	public void setupControls() {
 		setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if (subscription != null) // tab footer
-					doFooterLogic();
-				else  // MainMenu footer
-					doUpdateUI();
+				doFooterLogic();
 			}
 		});
-	}
-	
-	public void doInitUI() {
-		// tab footer
-		if (subscription != null) {
-			textView.textOn = Utils.capitalize(String.format(context.getString(R.string.footer_on), "these items"));
-			textView.textOff = Utils.capitalize(String.format(context.getString(R.string.footer_off), "these items"));
-			
-			if (Utils.getBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, NotificationSettings.DEFAULT_NOTIFY_ENABLED)
-					&& database.hasSubscription(subscription.id, subscription.notificationClass))
-				setOn();
-			else
-				setOff();
-			
-			setVisibility(View.VISIBLE);
-		} 
 		
-		// MainMenu footer
-		else { 
-			if(database.hasSubscriptions()) {
-				setVisibility(View.VISIBLE);
-				if (Utils.getBooleanPreference(context,
-						NotificationSettings.KEY_NOTIFY_ENABLED,
-						NotificationSettings.DEFAULT_NOTIFY_ENABLED))
-					setOn();
-				else
-					setOff();
-			}
-			else {
-				if (Utils.getBooleanPreference(context,
-						NotificationSettings.KEY_NOTIFY_ENABLED, 
-						NotificationSettings.DEFAULT_NOTIFY_ENABLED)) {
-					Utils.setBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, false);
-					Utils.stopNotificationsBroadcast(context);
-				}
-				setVisibility(View.GONE);
-			}
-		}
+		textView.textOn = Utils.capitalize(String.format(context.getString(R.string.footer_on), "these items"));
+		textView.textOff = Utils.capitalize(String.format(context.getString(R.string.footer_off), "these items"));
+		
+		if (Utils.getBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, NotificationSettings.DEFAULT_NOTIFY_ENABLED)
+				&& database.hasSubscription(subscription.id, subscription.notificationClass))
+			setOn();
+		else
+			setOff();
+		
+		setVisibility(View.VISIBLE);
 	}
 	
-	private void doUpdateUI() {
-		// turn off all notifications at once
-		if (state == Footer.OFF) {
-			setOn();
-			Utils.setBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, true);
-			Utils.startNotificationsBroadcast(context);
-		} else {
-			setOff();
-			Utils.setBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, false);
-			Utils.stopNotificationsBroadcast(context);
-		}
-	}
 
 	private void doFooterLogic() {
 		String id = subscription.id;

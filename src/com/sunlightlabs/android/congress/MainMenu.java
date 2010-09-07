@@ -39,7 +39,6 @@ import com.commonsware.cwac.merge.MergeAdapter;
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteBillsAdapter.FavoriteBillWrapper;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteLegislatorsAdapter.FavoriteLegislatorWrapper;
-import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.NotificationService;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
@@ -88,8 +87,6 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 
 	private SearchViewWrapper searchLocationView;
 	private ViewArrayAdapter searchLocationAdapter;
-
-	private Footer footer;
 
 	private MergeAdapter adapter;
 
@@ -179,7 +176,6 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	protected void onDestroy() {
 		super.onDestroy();
 		database.close();
-		footer.onDestroy();
 	}
 
 	@Override
@@ -188,7 +184,6 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		peopleCursor.requery();
 		billCursor.requery();
 		adapter.notifyDataSetChanged();
-		footer.doInitUI();
 	}
 
 	@Override
@@ -256,6 +251,11 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		adapter.addView(inflateHeader(inflater, R.string.menu_votes_header));
 		adapter.addAdapter(new ViewArrayAdapter(this, setupVotesMenu(inflater)));
 		
+		// Bills
+		adapter.addView(inflateHeader(inflater, R.string.menu_bills_header));
+		adapter.addAdapter(new FavoriteBillsAdapter(this, billCursor));
+		adapter.addAdapter(new ViewArrayAdapter(this, setupBillMenu(inflater)));
+		
 		// Legislators
 		adapter.addView(inflateHeader(inflater, R.string.menu_legislators_header));
 		adapter.addAdapter(new FavoriteLegislatorsAdapter(this, peopleCursor));
@@ -263,14 +263,8 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		adapter.addAdapter(searchLocationAdapter);
 		adapter.addAdapter(new ViewArrayAdapter(this, setupCommitteeMenu(inflater)));
 		
-		// Bills
-		adapter.addView(inflateHeader(inflater, R.string.menu_bills_header));
-		adapter.addAdapter(new FavoriteBillsAdapter(this, billCursor));
-		adapter.addAdapter(new ViewArrayAdapter(this, setupBillMenu(inflater)));
-		
 		setListAdapter(adapter);
 		
-		setupFooter();
 		setupDebugBar();
 	}
 	
@@ -280,11 +274,6 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 				WakefulIntentService.sendWakefulWork(MainMenu.this, NotificationService.class);
 			}
 		});
-	}
-
-	private void setupFooter() {
-		footer = (Footer) findViewById(R.id.footer);
-		footer.init();
 	}
 
 	private ArrayList<View> setupBillMenu(LayoutInflater inflater) {
