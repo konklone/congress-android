@@ -70,6 +70,8 @@ public class RollList extends ListActivity {
 			loadRolls();
 		else
 			setupSubscription(rolls.get(0));
+		
+		setupControls();
 	}
 
 	@Override
@@ -92,6 +94,7 @@ public class RollList extends ListActivity {
 		});
 
 		Utils.setLoading(this, R.string.rolls_loading);
+		
 		switch (type) {
 		case ROLLS_VOTER:
 			Utils.setTitle(this, "Latest Votes By\n" + voter.titledName(), R.drawable.rolls);

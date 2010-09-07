@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -60,7 +59,9 @@ public class BillTabs extends TabActivity {
 		
 		((TextView) findViewById(R.id.title_text)).setText(Bill.formatCode(bill.code));
 		
-		((Button) findViewById(R.id.share)).setOnClickListener(new View.OnClickListener() {
+		View share = findViewById(R.id.share);
+		share.setVisibility(View.VISIBLE);
+		share.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 	    		Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, shareText());
 	    		startActivity(Intent.createChooser(intent, "Share bill via:"));
