@@ -11,7 +11,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		
-		android:textSize="20sp" 
+		android:textSize="16sp" 
 		android:textColor="@android:color/white"
 		
 		android:text="Title of the News Story"
@@ -21,8 +21,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		
-		android:textSize="16sp"
-		android:textColor="#dddddd"
+		android:textSize="14sp"
 		android:text="Sep 22, Example Source"
 		/>
 		
@@ -32,7 +31,6 @@
 		android:layout_marginTop="5dp"
 		
 		android:textSize="14sp"
-		android:textColor="#dddddd"
 		android:text="The summary of an article could be quite long and would look daunting unless wrapped and truncated appropriately..."
 		/>			
 	

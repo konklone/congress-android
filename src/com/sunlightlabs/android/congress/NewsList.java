@@ -177,7 +177,7 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 			NewsItem item = getItem(position);
 
 			((TextView) view.findViewById(R.id.news_item_title)).setText(item.title);
-			((TextView) view.findViewById(R.id.news_item_summary)).setText(item.summary);
+			((TextView) view.findViewById(R.id.news_item_summary)).setText(Utils.truncate(item.summary, 150));
 			((TextView) view.findViewById(R.id.news_item_when_where)).setText(item.timestamp
 					.format("%b %d")
 					+ ", " + item.source);
