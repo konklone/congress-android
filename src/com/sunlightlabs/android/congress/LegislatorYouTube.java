@@ -94,7 +94,8 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		footer.onDestroy();
+		if (footer != null)
+			footer.onDestroy();
 	}
 
 	private void setupControls() {

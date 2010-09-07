@@ -54,7 +54,8 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		footer.onDestroy();
+		if (footer != null)
+			footer.onDestroy();
 	}
 
 	private void setupSubscription(Object lastResult) {

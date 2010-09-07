@@ -67,7 +67,8 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		footer.onDestroy();
+		if (footer != null)
+			footer.onDestroy();
 	}
 
 	private void setupControls() {

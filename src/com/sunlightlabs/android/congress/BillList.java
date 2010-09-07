@@ -80,6 +80,13 @@ public class BillList extends ListActivity {
 	public Object onRetainNonConfigurationInstance() {
 		return new BillListHolder(bills, loadBillsTask);
 	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (footer != null)
+			footer.onDestroy();
+	}
 
 	public void setupControls() {
 		((Button) findViewById(R.id.back)).setOnClickListener(new View.OnClickListener() {
