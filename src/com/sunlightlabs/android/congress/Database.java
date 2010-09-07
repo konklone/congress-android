@@ -236,7 +236,7 @@ public class Database {
 		legislator.phone = c.getString(c.getColumnIndex("phone"));
 		legislator.twitter_id = c.getString(c.getColumnIndex("twitter_id"));
 		legislator.youtube_url = c.getString(c.getColumnIndex("youtube_url"));
-
+		
 		return legislator;
 	}
 

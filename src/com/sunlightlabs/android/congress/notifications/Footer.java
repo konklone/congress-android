@@ -1,6 +1,7 @@
 package com.sunlightlabs.android.congress.notifications;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -15,8 +16,9 @@ import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class Footer extends RelativeLayout {
-	public static final int ON = 1;
+	public static final int DISABLED = -1;
 	public static final int OFF = 0;
+	public static final int ON = 1;
 
 	private int textViewId;
 	private int imageViewId;
@@ -45,7 +47,7 @@ public class Footer extends RelativeLayout {
 		textView = (FooterText) findViewById(textViewId);
 		imageView = (FooterImage) findViewById(imageViewId);
 		
-		state = OFF;
+		setOff();
 	}
 
 	public void init(Subscription subscription) {
@@ -59,28 +61,33 @@ public class Footer extends RelativeLayout {
 	public void setupControls() {
 		setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				doFooterLogic();
+				if (state == DISABLED)
+					context.startActivity(new Intent(context, NotificationSettings.class));
+				else
+					toggleUpdates();
 			}
 		});
 		
 		textView.textOn = Utils.capitalize(String.format(context.getString(R.string.footer_on), "these items"));
 		textView.textOff = Utils.capitalize(String.format(context.getString(R.string.footer_off), "these items"));
 		
-		if (Utils.getBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, NotificationSettings.DEFAULT_NOTIFY_ENABLED)
-				&& database.hasSubscription(subscription.id, subscription.notificationClass))
-			setOn();
-		else
-			setOff();
+		if (Utils.getBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, NotificationSettings.DEFAULT_NOTIFY_ENABLED)) {
+			if (database.hasSubscription(subscription.id, subscription.notificationClass))
+				setOn();
+			else
+				setOff();
+		} else
+			setDisabled();
 		
 		setVisibility(View.VISIBLE);
 	}
 	
 
-	private void doFooterLogic() {
+	private void toggleUpdates() {
 		String id = subscription.id;
 		String cls = subscription.notificationClass;
 
-		if (state == OFF) { // current state is OFF; must turn notifications ON
+		if (state == OFF) { 
 			if (database.addSubscription(subscription) != -1) {
 				setOn();
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
@@ -95,7 +102,7 @@ public class Footer extends RelativeLayout {
 				}
 			}
 		}
-		else { // current state is ON; must turn notifications OFF
+		else { 
 			if (database.removeSubscription(id, cls) != 0) {
 				setOff();
 				Log.d(Utils.TAG, "Footer: Removed notification from the db for subscription " + id);
@@ -113,6 +120,12 @@ public class Footer extends RelativeLayout {
 
 	private void setOff() {
 		state = OFF;
+		textView.setOff();
+		imageView.setOff();
+	}
+	
+	private void setDisabled() {
+		state = DISABLED;
 		textView.setOff();
 		imageView.setOff();
 	}

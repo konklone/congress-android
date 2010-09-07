@@ -22,7 +22,7 @@ public class NotificationSettings extends PreferenceActivity implements OnShared
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.list_titled);
-		Utils.setTitle(this, R.string.menu_notification_settings);
+		Utils.setTitle(this, R.string.menu_notification_settings, android.R.drawable.ic_menu_preferences);
 		
 		addPreferencesFromResource(R.xml.preferences);
 		
