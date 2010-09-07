@@ -16,7 +16,7 @@
           <ListPreference
             android:title="@string/notify_interval"                        
             android:key="notify_interval"
-            android:defaultValue="1"
+            android:defaultValue="15"
             
             android:entries="@array/notify_interval_names"
             android:entryValues="@array/notify_interval_codes"

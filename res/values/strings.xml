@@ -122,7 +122,7 @@
     <string name="notify_enable">Enable Notifications</string>
     <string name="notify_enable_summary_on">Notifications are enabled</string>
     <string name="notify_enable_summary_off">Notifications are disabled</string>
-    <string name="notify_interval">Notifications Interval</string>
+    <string name="notify_interval">Notification Interval</string>
   
     <string name="notification_ticker_text">Congress updates</string>
     

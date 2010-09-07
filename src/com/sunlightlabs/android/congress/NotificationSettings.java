@@ -14,7 +14,7 @@ public class NotificationSettings extends PreferenceActivity implements OnShared
 	public static final boolean DEFAULT_NOTIFY_ENABLED = false;
 
 	public static final String KEY_NOTIFY_INTERVAL = "notify_interval";
-	public static final String DEFAULT_NOTIFY_INTERVAL = "10";
+	public static final String DEFAULT_NOTIFY_INTERVAL = "15";
 
 
 	@Override
@@ -60,8 +60,8 @@ public class NotificationSettings extends PreferenceActivity implements OnShared
 	}
 	
 	private void updateIntervalSummary() {
-		String newValue = getPreferenceScreen().getSharedPreferences().getString(KEY_NOTIFY_INTERVAL, DEFAULT_NOTIFY_INTERVAL);
-		findPreference(KEY_NOTIFY_INTERVAL).setSummary(codeToName(newValue));
+		String newValue = PreferenceManager.getDefaultSharedPreferences(this).getString(KEY_NOTIFY_INTERVAL, DEFAULT_NOTIFY_INTERVAL);
+		findPreference(KEY_NOTIFY_INTERVAL).setSummary("Check every " + codeToName(newValue));
 	}
 	
 	private String codeToName(String code) {
