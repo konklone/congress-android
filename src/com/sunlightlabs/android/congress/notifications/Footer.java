@@ -2,11 +2,9 @@ package com.sunlightlabs.android.congress.notifications;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,10 +18,7 @@ public class Footer extends RelativeLayout {
 	public static final int OFF = 0;
 	public static final int ON = 1;
 
-	private int textViewId;
-	private int imageViewId;
-	public FooterText textView;
-	public FooterImage imageView;
+	public TextView text;
 
 	private int state;
 
@@ -34,20 +29,12 @@ public class Footer extends RelativeLayout {
 	public Footer(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		this.context = context;
-
-		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Footer);
-		textViewId = a.getResourceId(R.styleable.Footer_textView, 0);
-		imageViewId = a.getResourceId(R.styleable.Footer_imageView, 0);
-		a.recycle();
 	}
 
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
-		textView = (FooterText) findViewById(textViewId);
-		imageView = (FooterImage) findViewById(imageViewId);
-		
-		setOff();
+		text = (TextView) findViewById(R.id.text);
 	}
 
 	public void init(Subscription subscription) {
@@ -61,15 +48,9 @@ public class Footer extends RelativeLayout {
 	public void setupControls() {
 		setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if (state == DISABLED)
-					context.startActivity(new Intent(context, NotificationSettings.class));
-				else
-					toggleUpdates();
+				onTap();
 			}
 		});
-		
-		textView.textOn = Utils.capitalize(String.format(context.getString(R.string.footer_on), "these items"));
-		textView.textOff = Utils.capitalize(String.format(context.getString(R.string.footer_off), "these items"));
 		
 		if (Utils.getBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, NotificationSettings.DEFAULT_NOTIFY_ENABLED)) {
 			if (database.hasSubscription(subscription.id, subscription.notificationClass))
@@ -83,10 +64,7 @@ public class Footer extends RelativeLayout {
 	}
 	
 
-	private void toggleUpdates() {
-		String id = subscription.id;
-		String cls = subscription.notificationClass;
-
+	private void onTap() {
 		if (state == OFF) { 
 			if (database.addSubscription(subscription) != -1) {
 				setOn();
@@ -102,92 +80,36 @@ public class Footer extends RelativeLayout {
 				}
 			}
 		}
-		else { 
-			if (database.removeSubscription(id, cls) != 0) {
+		
+		else if (state == ON) { 
+			if (database.removeSubscription(subscription.id, subscription.notificationClass) != 0) {
 				setOff();
-				Log.d(Utils.TAG, "Footer: Removed notification from the db for subscription " + id);
+				Log.d(Utils.TAG, "Footer: Removed notification from the db for subscription " + subscription.id);
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
 						"Removed notification from the db");
 			}
 		}
+		
+		else if (state == DISABLED)
+			context.startActivity(new Intent(context, NotificationSettings.class));
 	}
 
 	private void setOn() {
 		state = ON;
-		textView.setOn();
-		imageView.setOn();
+		text.setText(R.string.footer_on);
 	}
 
 	private void setOff() {
 		state = OFF;
-		textView.setOff();
-		imageView.setOff();
+		text.setText(R.string.footer_off);
 	}
 	
 	private void setDisabled() {
 		state = DISABLED;
-		textView.setOff();
-		imageView.setOff();
+		text.setText(R.string.footer_disabled);
 	}
 
-	// must be called to avoid database leaks
 	public void onDestroy() {
 		database.close();
-	}
-
-	public static class FooterImage extends ImageView {
-		public int srcOn, srcOff;
-
-		public FooterImage(Context context, AttributeSet attrs) {
-			super(context, attrs);
-
-			TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.FooterImage);
-			srcOn = array.getResourceId(R.styleable.FooterImage_srcOn, 0);
-			srcOff = array.getResourceId(R.styleable.FooterImage_srcOff, 0);
-			array.recycle();
-		}
-
-		@Override
-		protected void onFinishInflate() {
-			super.onFinishInflate();
-
-			setOff();
-		}
-
-		public void setOn() {
-			this.setImageResource(srcOn);
-		}
-
-		public void setOff() {
-			this.setImageResource(srcOff);
-		}
-	}
-
-	public static class FooterText extends TextView {
-		public String textOn, textOff;
-
-		public FooterText(Context context, AttributeSet attrs) {
-			super(context, attrs);
-
-			TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.FooterText);
-			textOn = array.getString(R.styleable.FooterText_textOn);
-			textOff = array.getString(R.styleable.FooterText_textOff);
-			array.recycle();
-		}
-
-		@Override
-		protected void onFinishInflate() {
-			super.onFinishInflate();
-
-			setOff();
-		}
-
-		public void setOn() {
-			setText(textOn);
-		}
-
-		public void setOff() {
-			setText(textOff);
-		}
 	}
 }
