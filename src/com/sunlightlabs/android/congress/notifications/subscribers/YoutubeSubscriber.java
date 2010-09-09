@@ -17,7 +17,7 @@ public class YoutubeSubscriber extends Subscriber {
 
 	@Override
 	public String decodeId(Object result) {
-		return ((Video) result).url;
+		return "" + ((Video) result).timestamp;
 	}
 
 	@Override
