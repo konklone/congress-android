@@ -9,10 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.sunlightlabs.android.congress.Database;
+import com.sunlightlabs.android.congress.NotificationSettings;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
 
@@ -148,6 +150,11 @@ public class NotificationService extends WakefulIntentService {
 		PendingIntent contentIntent = PendingIntent
 				.getActivity(this, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		notification.setLatestEventInfo(this, title, message, contentIntent);
+		
+		// Attach notification sound if the user picked one (defaults to silent)
+		String ringtone = PreferenceManager.getDefaultSharedPreferences(this).getString(NotificationSettings.KEY_NOTIFY_RINGTONE, NotificationSettings.DEFAULT_NOTIFY_RINGTONE);
+		if (ringtone != null)
+			notification.sound = Uri.parse(ringtone);
 
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notification.number = results;

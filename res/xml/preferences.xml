@@ -3,24 +3,32 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceCategory android:title="@string/notifications">
           
-		<CheckBoxPreference
+		<CheckBoxPreference android:key="notify_enabled"
 			android:title="@string/notify_enable"
 			
 			android:summaryOn="@string/notify_enable_summary_on"
 			android:summaryOff="@string/notify_enable_summary_off"
 			
-			android:key="notify_enabled"
 			android:defaultValue="false"
 			/>
-                                               
-          <ListPreference
-            android:title="@string/notify_interval"                        
-            android:key="notify_interval"
-            android:defaultValue="15"
-            
-            android:entries="@array/notify_interval_names"
-            android:entryValues="@array/notify_interval_codes"
-            
-            android:dependency="notify_enabled" />           
-    </PreferenceCategory>
+			
+		<ListPreference android:key="notify_interval"
+			android:title="@string/notify_interval"
+			android:defaultValue="15"
+			
+			android:entries="@array/notify_interval_names"
+			android:entryValues="@array/notify_interval_codes"
+			
+			android:dependency="notify_enabled" 
+			/>
+		
+		<RingtonePreference android:key="notify_ringtone"
+			android:title="Select a ringtone"
+			
+			android:ringtoneType="notification"
+			android:showDefault="true"
+			android:showSilent="true"
+			/>
+		    
+	</PreferenceCategory>
 </PreferenceScreen>
