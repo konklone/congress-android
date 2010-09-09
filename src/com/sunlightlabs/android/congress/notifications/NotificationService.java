@@ -106,7 +106,7 @@ public class NotificationService extends WakefulIntentService {
 						"No lastSeenId, will notify of all results.");
 				else
 					Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
-						"Have lastSeenId but it did not appear, will notify of all results");
+						"Have lastSeenId (" + oldLastSeenId + "), but it did not appear, will notify of all results");
 			}
 			
 			// if there's at least one new item, notify the user
@@ -126,7 +126,8 @@ public class NotificationService extends WakefulIntentService {
 				);
 				
 				Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
-					"notified of " + results + " results.");
+					"notified of " + results + " results, " +
+					"oldLastSeenId was " + (oldLastSeenId != null ? oldLastSeenId : "null") + ", newlastSeenId is " + newLastSeenId);
 			} else
 				Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
 						"0 new results, not notifying.");
