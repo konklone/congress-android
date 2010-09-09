@@ -120,8 +120,12 @@
     <string name="footer_first_time">You can be notified of updates. Tap to enable.</string>
     
     <string name="notify_enable">Enable Notifications</string>
+    <string name="notify_enable_summary_on">Notifications are enabled</string>
+    <string name="notify_enable_summary_off">Notifications are disabled</string>
     <string name="notify_interval">Notification Interval</string>
-    <string name="notify_vibration">Vibrate on notify</string>
+    <string name="notify_vibration">Vibrate</string>
+    <string name="notify_vibration_summary_on">Vibrate on notify</string>
+    <string name="notify_vibration_summary_off">Do not vibrate on notify</string>
     <string name="notify_ringtone">Select a ringtone</string>
   
     <string name="notification_ticker_text">Congress updates</string>

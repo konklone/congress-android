@@ -112,7 +112,7 @@ public class NotificationService extends WakefulIntentService {
 			}
 			
 			// if there's at least one new item, notify the user
-			if (results >= 0) {
+			if (results > 0) {
 				
 				notifyManager.notify(
 					(subscription.id + subscription.notificationClass).hashCode(), 
@@ -161,6 +161,10 @@ public class NotificationService extends WakefulIntentService {
 		if (vibration)
 			notification.defaults |= Notification.DEFAULT_VIBRATE;
 		
+		// always show the light
+		notification.ledARGB = 0xffffffff;
+		notification.ledOnMS = 2000;
+		notification.flags |= Notification.FLAG_SHOW_LIGHTS;
 
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notification.number = results;

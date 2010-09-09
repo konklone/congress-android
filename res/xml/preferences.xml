@@ -6,6 +6,9 @@
 		<CheckBoxPreference android:key="notify_enabled"
 			android:title="@string/notify_enable"
 			
+			android:summaryOn="@string/notify_enable_summary_on"
+			android:summaryOff="@string/notify_enable_summary_off"
+			
 			android:defaultValue="false"
 			/>
 		
@@ -21,6 +24,9 @@
 			
 		<CheckBoxPreference android:key="notify_vibration"
 			android:title="@string/notify_vibration"
+			
+			android:summaryOn="@string/notify_vibration_summary_on"
+			android:summaryOff="@string/notify_vibration_summary_off"
 			
 			android:defaultValue="true"
 			
