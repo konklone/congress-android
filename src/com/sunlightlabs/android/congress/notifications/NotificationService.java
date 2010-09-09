@@ -112,7 +112,7 @@ public class NotificationService extends WakefulIntentService {
 			}
 			
 			// if there's at least one new item, notify the user
-			if (results > 0) {
+			if (results >= 0) {
 				
 				notifyManager.notify(
 					(subscription.id + subscription.notificationClass).hashCode(), 
@@ -155,6 +155,12 @@ public class NotificationService extends WakefulIntentService {
 		String ringtone = PreferenceManager.getDefaultSharedPreferences(this).getString(NotificationSettings.KEY_NOTIFY_RINGTONE, NotificationSettings.DEFAULT_NOTIFY_RINGTONE);
 		if (ringtone != null)
 			notification.sound = Uri.parse(ringtone);
+		
+		// Vibrate unless user disabled it
+		boolean vibration = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(NotificationSettings.KEY_NOTIFY_VIBRATION, NotificationSettings.DEFAULT_NOTIFY_VIBRATION);
+		if (vibration)
+			notification.defaults |= Notification.DEFAULT_VIBRATE;
+		
 
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notification.number = results;

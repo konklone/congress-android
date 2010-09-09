@@ -19,6 +19,9 @@ public class NotificationSettings extends PreferenceActivity {
 	
 	public static final String KEY_NOTIFY_RINGTONE = "notify_ringtone";
 	public static final String DEFAULT_NOTIFY_RINGTONE = null;
+	
+	public static final String KEY_NOTIFY_VIBRATION = "notify_vibration";
+	public static final boolean DEFAULT_NOTIFY_VIBRATION = true;
 
 
 	@Override
