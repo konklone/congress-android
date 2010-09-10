@@ -85,6 +85,13 @@ public class RollList extends ListActivity {
 		if (footer != null) 
 			footer.onDestroy();
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (rolls != null && rolls.size() > 0)
+			setupSubscription(rolls.get(0));
+	}
 
 	public void setupControls() {
 		((Button) findViewById(R.id.back)).setOnClickListener(new View.OnClickListener() {

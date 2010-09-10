@@ -87,6 +87,13 @@ public class BillList extends ListActivity {
 		if (footer != null)
 			footer.onDestroy();
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (bills != null && bills.size() > 0)
+			setupSubscription(bills.get(0));
+	}
 
 	public void setupControls() {
 		((Button) findViewById(R.id.back)).setOnClickListener(new View.OnClickListener() {

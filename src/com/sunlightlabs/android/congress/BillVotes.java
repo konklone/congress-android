@@ -57,6 +57,17 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 		if (footer != null)
 			footer.onDestroy();
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (bill.votes != null) {
+			if (bill.votes.size() > 0)
+				setupSubscription(bill.votes.get(0));
+			else
+				setupSubscription(null);
+		}
+	}
 
 	private void setupSubscription(Object lastResult) {
 		footer = (Footer) findViewById(R.id.footer);

@@ -78,6 +78,17 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 		if (footer != null)
 			footer.onDestroy();
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (items != null) {
+			if (items.size() > 0)
+				setupSubscription(items.get(0));
+			else
+				setupSubscription(null);
+		}
+	}
 
 	private void setupControls() {
 		Utils.setLoading(this, R.string.news_loading);

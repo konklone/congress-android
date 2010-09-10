@@ -70,6 +70,17 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 		if (footer != null)
 			footer.onDestroy();
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (tweets != null) {
+			if (tweets.size() > 0)
+				setupSubscription(tweets.get(0));
+			else
+				setupSubscription(null);
+		}
+	}
 
 	private void setupControls() {
 		Utils.setLoading(this, R.string.twitter_loading);

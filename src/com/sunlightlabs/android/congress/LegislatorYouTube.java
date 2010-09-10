@@ -97,6 +97,17 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 		if (footer != null)
 			footer.onDestroy();
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (videos != null) {
+			if (videos.length > 0)
+				setupSubscription(videos[0]);
+			else
+				setupSubscription(null);
+		}
+	}
 
 	private void setupControls() {
 		Utils.setLoading(this, R.string.youtube_loading);
