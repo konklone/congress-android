@@ -1,5 +1,8 @@
 package com.sunlightlabs.android.congress;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,10 +10,13 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class NotificationSettings extends PreferenceActivity {
+	private static final int EXPLANATION = 1;
+	
 	public static final String KEY_NOTIFY_ENABLED = "notify_enabled";
 	public static final boolean DEFAULT_NOTIFY_ENABLED = false;
 
@@ -22,6 +28,10 @@ public class NotificationSettings extends PreferenceActivity {
 	
 	public static final String KEY_NOTIFY_VIBRATION = "notify_vibration";
 	public static final boolean DEFAULT_NOTIFY_VIBRATION = true;
+	
+	// turned to false the first time the user ever visits this activity, and a dialog is shown explaining notifications 
+	public static final String KEY_FIRST_TIME_SETTINGS = "first_time_settings";
+	public static final boolean DEFAULT_FIRST_TIME_SETTINGS = true;
 
 
 	@Override
@@ -34,6 +44,11 @@ public class NotificationSettings extends PreferenceActivity {
 		addPreferencesFromResource(R.xml.preferences);
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
+		if (firstTime()) {
+			tripFirstTimeFlag();
+			showDialog(EXPLANATION);
+		}
+		
 		setupControls();
 	}
 	
@@ -99,4 +114,30 @@ public class NotificationSettings extends PreferenceActivity {
 		}
 		return null;
 	}
+	
+	private boolean firstTime() {
+		return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(KEY_FIRST_TIME_SETTINGS, DEFAULT_FIRST_TIME_SETTINGS);
+	}
+	
+	private void tripFirstTimeFlag() {
+		PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean(KEY_FIRST_TIME_SETTINGS, !DEFAULT_FIRST_TIME_SETTINGS).commit();
+	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		LayoutInflater inflater = getLayoutInflater();
+		
+		if (id == EXPLANATION) {
+			builder.setIcon(R.drawable.icon);
+			builder.setTitle(R.string.explanation_title);
+			builder.setView(inflater.inflate(R.layout.explanation, null));
+			builder.setPositiveButton(R.string.explanation_button, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {}
+			});
+		}
+		
+		return builder.create();
+	}
+	
 }

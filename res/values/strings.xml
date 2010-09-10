@@ -48,8 +48,12 @@
     
     <string name="about_button">Cool</string>
     <string name="first_button">Awesome</string>
-    <string name="changelog_title_prefix">New In Version</string>
+    <string name="explanation_button">Wow</string>
     <string name="changelog_button">Awesome</string>
+    <string name="changelog_title_prefix">New In Version</string>
+    <string name="explanation_title">Notifications</string>
+    <string name="explanation_1">You can be notified of things.</string>
+    
     
     <string name="first_tip_1_header">Call your representatives.</string>
     <string name="first_tip_1_body">Tap \"My Location\" to find your district\'s representatives. Tap the call button to give them a call. </string>

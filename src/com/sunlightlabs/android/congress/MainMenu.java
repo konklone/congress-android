@@ -522,8 +522,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 			builder.setTitle(R.string.app_name);
 			builder.setView(aboutView);
 			builder.setPositiveButton(R.string.about_button, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-				}
+				public void onClick(DialogInterface dialog, int which) {}
 			});
 			return builder.create();
 		case FIRST:
