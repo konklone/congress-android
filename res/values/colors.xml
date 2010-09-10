@@ -22,7 +22,6 @@
 	
 	<color name="tab_selected_top">#234065</color>
 	<color name="tab_selected_bottom">#09264f</color>
-	
 	<color name="tab_dim_top">#082048</color>
 	<color name="tab_dim_bottom">#02112f</color>
 	
@@ -37,4 +36,20 @@
 	
 	<color name="out_of_office_text">#ffffff</color>
 	<color name="out_of_office_background">#662222</color>
+	
+	<color name="footer_on_top">#234065</color>
+	<color name="footer_on_bottom">#09264f</color>
+	<color name="footer_on_text">#f5f5f5</color>
+	
+	<color name="footer_off_top">#082048</color>
+	<color name="footer_off_bottom">#02112f</color>
+	<color name="footer_off_text">#aaaaaa</color>
+	
+	<color name="footer_disabled_top">#333333</color>
+	<color name="footer_disabled_bottom">#111111</color>
+	<color name="footer_disabled_text">#aaaaaa</color>
+	
+	<color name="footer_first_time_top">#082048</color>
+	<color name="footer_first_time_bottom">#02112f</color>
+	<color name="footer_first_time_text">#f5f5f5</color>
 </resources>

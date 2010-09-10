@@ -8,9 +8,6 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	
-	android:background="@drawable/main_menu_gradient"
-	android:paddingBottom="3dp"
-	
 	android:visibility="gone"
 	>
 	
@@ -24,6 +21,9 @@
 		
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		
+		android:paddingTop="5dp"
+		android:paddingBottom="8dp"
 				
 		android:layout_centerVertical="true"
 		android:layout_centerHorizontal="true"
@@ -34,6 +34,18 @@
 		android:textColor="@color/header_text"
 		
 		android:text="Footer not correctly initialized."
-	/>
+		/>
+	
+	<ImageView android:id="@+id/image"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		
+		android:layout_toLeftOf="@id/text"
+		android:layout_centerVertical="true"
+		
+		android:paddingBottom="2dp"
+		
+		android:visibility="gone"
+		/>
 	
 </com.sunlightlabs.android.congress.notifications.Footer>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	>
+	
+	<LinearLayout
+		android:id="@+id/page_container"
+		
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:padding="10dp"
+		
+		android:orientation="vertical"
+		>
+		
+		<TextView android:id="@+id/explanation_1"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			
+			android:textSize="16sp"
+			android:textColor="@android:color/white"
+			
+			android:text="@string/explanation_1"
+			/>
+		
+	</LinearLayout>
+</ScrollView>

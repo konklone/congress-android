@@ -118,7 +118,7 @@
     
     <string name="notifications">Notifications</string>
     
-    <string name="footer_on">You will be notified of updates. Tap to cancel.</string>
+    <string name="footer_on">You will be notified of updates.</string>
     <string name="footer_off">Tap to be notified of updates.</string>
     <string name="footer_disabled">Notifications are disabled. Tap to enable.</string>
     <string name="footer_first_time">You can be notified of updates. Tap to enable.</string>
