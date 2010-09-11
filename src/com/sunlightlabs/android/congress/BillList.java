@@ -35,7 +35,6 @@ public class BillList extends ListActivity {
 	public static final int BILLS_LAW = 0;
 	public static final int BILLS_RECENT = 1;
 	public static final int BILLS_SPONSOR = 2;
-	public static final int BILLS_LATEST_VOTES = 3;
 
 	private ArrayList<Bill> bills;
 	private LoadBillsTask loadBillsTask;
@@ -113,9 +112,6 @@ public class BillList extends ListActivity {
 		case BILLS_SPONSOR:
 			Utils.setTitle(this, "Latest Bills by\n" + sponsor.titledName(), R.drawable.bill_multiple);
 			Utils.setTitleSize(this, 18);
-			break;
-		case BILLS_LATEST_VOTES:
-			Utils.setTitle(this, R.string.menu_bills_latest_votes, R.drawable.bill_vote);
 			break;
 		}
 	}
@@ -227,8 +223,6 @@ public class BillList extends ListActivity {
 					return BillService.recentlyIntroduced(BILLS, page);
 				case BILLS_LAW:
 					return BillService.recentLaws(BILLS, page);
-				case BILLS_LATEST_VOTES:
-					return BillService.latestVotes(BILLS, page);
 				case BILLS_SPONSOR:
 					return BillService.recentlySponsored(BILLS, sponsor.id, page);
 				default:
@@ -324,11 +318,6 @@ public class BillList extends ListActivity {
 				code = Bill.formatCode(bill.code);
 				date = bill.enacted_at;
 				action = "became law";
-				break;
-			case BILLS_LATEST_VOTES:
-				code = Bill.formatCodeShort(bill.code);
-				date = bill.last_vote_at;
-				action = (bill.last_vote_result.equals("pass") ? "passed the " : "failed in the ") + Utils.capitalize(bill.last_vote_chamber);
 				break;
 			case BILLS_RECENT:
 			case BILLS_SPONSOR:

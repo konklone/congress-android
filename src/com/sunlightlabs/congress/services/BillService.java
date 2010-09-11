@@ -36,11 +36,6 @@ public class BillService {
 				+ "&sections=basic,sponsor&per_page=" + n + "&page=" + p));
 	}
 
-	public static ArrayList<Bill> latestVotes(int n, int p) throws CongressException {
-		return billsFor(Drumbone.url("bills",
-				"order=last_vote_at&sections=basic,sponsor,votes&per_page=" + n + "&page=" + p));
-	}
-
 	public static Bill find(String id, String sections) throws CongressException {
 		return billFor(Drumbone.url("bill", "bill_id=" + id + "&sections=" + sections));
 	}
