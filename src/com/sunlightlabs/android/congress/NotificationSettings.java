@@ -44,8 +44,8 @@ public class NotificationSettings extends PreferenceActivity {
 		setContentView(R.layout.list_titled);
 		Utils.setTitle(this, R.string.menu_notification_settings, R.drawable.ic_menu_notifications);
 		
-		addPreferencesFromResource(R.xml.preferences);
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+		addPreferencesFromResource(R.xml.notification_settings);
+		PreferenceManager.setDefaultValues(this, R.xml.notification_settings, false);
 
 		if (firstTime()) {
 			tripFirstTimeFlag();
