@@ -52,8 +52,13 @@
     <string name="changelog_button">Awesome</string>
     <string name="changelog_title_prefix">New In Version</string>
     <string name="explanation_title">Notifications</string>
-    <string name="explanation_1">You can be notified of things.</string>
     
+    <string name="explanation_1">You can be notified of new votes, bills, and all sorts of things.</string>
+    <string name="explanation_2">First, enable this feature, then find what you\'re interested in and tap the blue bar at the bottom.</string>
+    <string name="explanation_3">Please note:</string>
+    <string name="explanation_3a">Information on new bills and votes can be delayed up to a day. (We hope to remove this delay.)</string>
+    <string name="explanation_3b">Other updates (tweets, videos, news) are not delayed.</string>
+    <string name="explanation_3c">Congress operates in bursts, so days may go by without any activity.</string>
     
     <string name="first_tip_1_header">Call your representatives.</string>
     <string name="first_tip_1_body">Tap \"My Location\" to find your district\'s representatives. Tap the call button to give them a call. </string>
@@ -110,7 +115,7 @@
     <string name="not_voting">Did Not Vote</string>
     <string name="not_voting_short">No Vote</string>
     
-    <string name="menu_notification_settings">Notification Settings</string>
+    <string name="menu_notification_settings">Notifications</string>
     <string name="menu_about">About</string>
     <string name="menu_feedback">Feedback</string>
     <string name="menu_changelog">Changelog</string>

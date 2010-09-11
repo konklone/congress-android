@@ -9,8 +9,11 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.utils.Utils;
 
@@ -39,7 +42,7 @@ public class NotificationSettings extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.list_titled);
-		Utils.setTitle(this, R.string.menu_notification_settings, android.R.drawable.ic_menu_preferences);
+		Utils.setTitle(this, R.string.menu_notification_settings, R.drawable.ic_menu_notifications);
 		
 		addPreferencesFromResource(R.xml.preferences);
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -129,12 +132,23 @@ public class NotificationSettings extends PreferenceActivity {
 		LayoutInflater inflater = getLayoutInflater();
 		
 		if (id == EXPLANATION) {
-			builder.setIcon(R.drawable.icon);
-			builder.setTitle(R.string.explanation_title);
-			builder.setView(inflater.inflate(R.layout.explanation, null));
-			builder.setPositiveButton(R.string.explanation_button, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {}
-			});
+			ViewGroup title = (ViewGroup) inflater.inflate(R.layout.alert_dialog_title, null);
+			((TextView) title.findViewById(R.id.title)).setText(R.string.explanation_title);
+			
+			ViewGroup explanation = (ViewGroup) inflater.inflate(R.layout.explanation, null); 
+			String explanation3a = "<b>&#183;</b> " + getString(R.string.explanation_3a); 
+			((TextView) explanation.findViewById(R.id.explanation_3a)).setText(Html.fromHtml(explanation3a));
+			String explanation3b = "<b>&#183;</b> " + getString(R.string.explanation_3b); 
+			((TextView) explanation.findViewById(R.id.explanation_3b)).setText(Html.fromHtml(explanation3b));
+			String explanation3c = "<b>&#183;</b> " + getString(R.string.explanation_3c); 
+			((TextView) explanation.findViewById(R.id.explanation_3c)).setText(Html.fromHtml(explanation3c));
+			
+			builder.setIcon(R.drawable.icon)
+				.setCustomTitle(title)
+				.setView(explanation)
+				.setPositiveButton(R.string.explanation_button, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {}
+				});
 		}
 		
 		return builder.create();

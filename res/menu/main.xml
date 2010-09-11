@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"> 
 	<item android:id="@+id/preferences"
 		android:title="@string/menu_notification_settings"
-		android:icon="@android:drawable/ic_menu_preferences"
+		android:icon="@drawable/ic_menu_notifications"
 		/>
 	<item android:id="@+id/feedback" 
 		android:title="@string/menu_feedback"

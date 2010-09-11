@@ -9,7 +9,10 @@
 		
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:padding="10dp"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:paddingTop="0dp"
+		android:paddingBottom="5dp"
 		
 		android:orientation="vertical"
 		>
@@ -22,6 +25,66 @@
 			android:textColor="@android:color/white"
 			
 			android:text="@string/explanation_1"
+			/>
+		
+		<TextView android:id="@+id/explanation_2"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			
+			android:layout_marginTop="15dp"
+			
+			android:textSize="16sp"
+			android:textColor="@android:color/white"
+			
+			android:text="@string/explanation_2"
+			/>
+		
+		<TextView android:id="@+id/explanation_3"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			
+			android:layout_marginTop="15dp"
+			
+			android:textSize="16sp"
+			android:textColor="@android:color/white"
+			
+			android:text="@string/explanation_3"
+			/>
+		
+		<TextView android:id="@+id/explanation_3a"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			
+			android:layout_marginTop="10dp"
+			
+			android:textSize="16sp"
+			android:textColor="@android:color/white"
+			
+			android:text="Bullet 1"
+			/>
+		
+		<TextView android:id="@+id/explanation_3b"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			
+			android:layout_marginTop="10dp"
+			
+			android:textSize="16sp"
+			android:textColor="@android:color/white"
+			
+			android:text="Bullet 2"
+			/>
+		
+		<TextView android:id="@+id/explanation_3c"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			
+			android:layout_marginTop="10dp"
+			
+			android:textSize="16sp"
+			android:textColor="@android:color/white"
+			
+			android:text="Bullet 3"
 			/>
 		
 	</LinearLayout>
