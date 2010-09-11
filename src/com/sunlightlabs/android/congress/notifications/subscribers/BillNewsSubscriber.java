@@ -16,7 +16,7 @@ public class BillNewsSubscriber extends Subscriber {
 
 	@Override
 	public String decodeId(Object result) {
-		return ((NewsItem) result).displayURL;
+		return "" + ((NewsItem) result).timestamp.toMillis(false);
 	}
 	
 	@Override
