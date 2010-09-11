@@ -351,7 +351,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 	}
 	
 	public static String officeName(String office) {
-		return office.replaceAll("(?:House|Senate) Office Building", "").trim();
+		return office.replaceAll("(?:House|Senate)? ?(?:Office)? ?Building", "").trim();
 	}
 	
 	protected class CommitteeAdapter extends ArrayAdapter<Committee> {
