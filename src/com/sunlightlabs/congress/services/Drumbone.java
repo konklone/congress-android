@@ -23,6 +23,10 @@ public class Drumbone {
 	public static String appVersion = "unversioned";
 	public static String apiKey = "";
 	
+	// optional, if you want to add a custom header/value for your environment
+	public static String extraHeaderKey = null;
+	public static String extraHeaderValue = null;
+	
 	
 	public static String url(String method, String queryString) {
 		if (queryString.length() > 0)
@@ -34,6 +38,9 @@ public class Drumbone {
 	public static String fetchJSON(String url) throws CongressException {
 		HttpGet request = new HttpGet(url);
         request.addHeader("User-Agent", userAgent + "-" + appVersion);
+        
+        if (extraHeaderKey != null && extraHeaderValue != null)
+        	request.addHeader(extraHeaderKey, extraHeaderValue);
 		
         DefaultHttpClient client = new DefaultHttpClient();
         

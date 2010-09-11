@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -35,9 +36,14 @@ public class Utils {
 	
 	public static void setupDrumbone(Context context) {
 		Resources resources = context.getResources();
+		
 		Drumbone.userAgent = resources.getString(R.string.drumbone_user_agent);
 		Drumbone.apiKey = resources.getString(R.string.sunlight_api_key);
 		Drumbone.appVersion = resources.getString(R.string.app_version);
+		
+		// report to Drumbone what version of Android we're using, if Drumbone cares (and it does)
+		Drumbone.extraHeaderKey =  "android-api-level";
+		Drumbone.extraHeaderValue = "" + Build.VERSION.SDK_INT;
 	}
 
 	public static void setupSunlight(Context context) {
