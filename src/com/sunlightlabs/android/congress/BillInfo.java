@@ -275,6 +275,11 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	@Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 		String type = (String) v.getTag();
+		
+		// safety check - don't know why this would happen, but Market error reports imply it can
+		if (type == null)
+			return;
+		
 		if (type.equals("sponsor") && sponsor != null)
 			startActivity(Utils.legislatorLoadIntent(sponsor.getId()));
 		else if (type.equals("cosponsors")) {
