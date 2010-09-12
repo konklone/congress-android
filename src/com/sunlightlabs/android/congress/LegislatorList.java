@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.concurrent.RejectedExecutionException;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -178,8 +179,14 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	}
 
 	public void loadPhoto(String bioguide_id) {
-		if (!loadPhotoTasks.containsKey(bioguide_id))
-			loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
+		if (!loadPhotoTasks.containsKey(bioguide_id)) {
+			try {
+				loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
+			} catch (RejectedExecutionException e) {
+				Log.e(TAG, "[LegislatorList] RejectedExecutionException occurred while loading photo.", e);
+				onLoadPhoto(null, bioguide_id); // if we can't run it, then just show the no photo image and move on
+			}
+		}
 	}
 
 	public void onLoadPhoto(Drawable photo, Object tag) {

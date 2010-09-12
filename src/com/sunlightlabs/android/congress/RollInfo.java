@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.concurrent.RejectedExecutionException;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -15,6 +16,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +39,8 @@ import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.RollService;
 
 public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
+	public final static String TAG = "CONGRESS";
+	
 	private String id;
 	
 	private Roll roll;
@@ -375,9 +379,15 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		if (!loadPhotoTasks.containsKey(bioguide_id)) {
 			
 			// if we have free space, fetch the photo
-			if (loadPhotoTasks.size() <= MAX_PHOTO_TASKS) 
-				loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
-
+			if (loadPhotoTasks.size() <= MAX_PHOTO_TASKS) {
+				try {
+					loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
+				} catch(RejectedExecutionException e) {
+					Log.e(TAG, "[RollInfo] RejectedExecutionException occurred while loading photo.", e);
+					loadNoPhoto(bioguide_id);
+				}
+			}
+			
 			// otherwise, add it to the queue for later
 			else {
 				if (queuedPhotos.size() > MAX_QUEUE_TASKS)
@@ -406,6 +416,15 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		// if there's any in the queue, send the next one
 		if (!queuedPhotos.isEmpty())
 			loadPhoto(queuedPhotos.remove(0));
+	}
+	
+	public void loadNoPhoto(String bioguide_id) {
+		VoterAdapter.ViewHolder holder = new VoterAdapter.ViewHolder();
+		holder.bioguide_id = bioguide_id;
+		
+		View result = getListView().findViewWithTag(holder);
+		if (result != null)
+			((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.no_photo_female);
 	}
 	
 	public Context getContext() {
