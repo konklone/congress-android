@@ -6,8 +6,8 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	android:paddingLeft="15dp"
-	android:paddingTop="10dp"
-	android:paddingBottom="10dp"
+	android:paddingTop="4dp"
+	android:paddingBottom="6dp"
 	>
 
 	<ImageView android:id="@+id/icon"
@@ -27,7 +27,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			
-			android:textSize="22sp"
+			android:textSize="20sp"
 			android:textColor="@android:color/white"
 			
 			android:text="Text"
@@ -41,7 +41,7 @@
 			android:textSize="14sp"
 			android:text="Subtext"
 			
-			android:layout_marginTop="2dp"
+			android:layout_marginTop="1dp"
 			/>
 		
 	</LinearLayout>	
