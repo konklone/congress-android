@@ -25,10 +25,6 @@ public class Database {
 	private static final String TAG = "CongressDatabase";
 	private static final String DATABASE_NAME = "congress.db";
 
-	private static final String LEGISLATORS_TABLE = "legislators";
-	private static final String BILLS_TABLE = "bills";
-	private static final String NOTIFICATIONS_TABLE = "notifications";
-
 	private static final String[] LEGISLATOR_COLUMNS = new String[] { "id", "bioguide_id",
 			"govtrack_id", "first_name", "last_name", "nickname", "name_suffix", "title", "party",
 			"state", "district", "gender", "congress_office", "website", "phone", "twitter_id",
@@ -42,8 +38,8 @@ public class Database {
 			"sponsor_party", "sponsor_state", "sponsor_title", "sponsor_first_name",
 			"sponsor_nickname", "sponsor_last_name" };
 
-	private static final String[] NOTIFICATIONS_COLUMNS = new String[] {
-			"entity_id", "entity_name", "notification_data", "last_seen_id", "notification_class" };
+	private static final String[] SUBSCRIPTION_COLUMNS = new String[] {
+			"id", "name", "data", "last_seen_id", "notification_class" };
 
 	private DatabaseHelper helper;
 	private SQLiteDatabase database;
@@ -76,16 +72,16 @@ public class Database {
 	public long addLegislator(Legislator legislator) {
 		ContentValues cv = fromLegislator(legislator);
 		if (cv != null)
-			return database.insert(LEGISLATORS_TABLE, null, cv);
+			return database.insert("legislators", null, cv);
 		return -1;
 	}
 
 	public int removeLegislator(String id) {
-		return database.delete(LEGISLATORS_TABLE, "id=?", new String[] { id });
+		return database.delete("legislators", "id=?", new String[] { id });
 	}
 
 	public Cursor getLegislator(String id) {
-		Cursor cursor = database.query(LEGISLATORS_TABLE, LEGISLATOR_COLUMNS, "id=?",
+		Cursor cursor = database.query("legislators", LEGISLATOR_COLUMNS, "id=?",
 				new String[] { id }, null, null, null);
 
 		cursor.moveToFirst();
@@ -93,7 +89,7 @@ public class Database {
 	}
 
 	public Cursor getLegislators() {
-		return database.rawQuery("SELECT * FROM " + LEGISLATORS_TABLE, null);
+		return database.rawQuery("SELECT * FROM legislators", null);
 	}
 
 	public static String formatDate(Date date) {
@@ -124,18 +120,18 @@ public class Database {
 			cv.put("sponsor_first_name", sponsor.firstName());
 			cv.put("sponsor_nickname", sponsor.nickname);
 			cv.put("sponsor_last_name", sponsor.last_name);
-			return database.insert(BILLS_TABLE, null, cv);
+			return database.insert("bills", null, cv);
 		} catch (Exception e) {
 			return -1;
 		}
 	}
 
 	public int removeBill(String id) {
-		return database.delete(BILLS_TABLE, "id=?", new String[] { id });
+		return database.delete("bills", "id=?", new String[] { id });
 	}
 
 	public Cursor getBill(String id) {
-		Cursor cursor = database.query(BILLS_TABLE, BILL_COLUMNS, "id=?", new String[] { id },
+		Cursor cursor = database.query("bills", BILL_COLUMNS, "id=?", new String[] { id },
 				null, null, null);
 
 		cursor.moveToFirst();
@@ -143,7 +139,7 @@ public class Database {
 	}
 
 	public Cursor getBills() {
-		return database.rawQuery("SELECT * FROM " + BILLS_TABLE, null);
+		return database.rawQuery("SELECT * FROM bills", null);
 	}
 
 	public Database open() {
@@ -241,18 +237,18 @@ public class Database {
 	}
 
 	public Cursor getSubscriptions() {
-		return database.rawQuery("SELECT * FROM " + NOTIFICATIONS_TABLE, null);
+		return database.rawQuery("SELECT * FROM subscriptions", null);
 	}
 
-	public Cursor getSubscription(String entityId, String notificationClass) {
-		StringBuilder query = new StringBuilder("entity_id=? AND notification_class=?");
+	public Cursor getSubscription(String id, String notificationClass) {
+		StringBuilder query = new StringBuilder("id=? AND notification_class=?");
 
-		return database.query(NOTIFICATIONS_TABLE, NOTIFICATIONS_COLUMNS, query.toString(),
-				new String[] { entityId, notificationClass }, null, null, null);
+		return database.query("subscriptions", SUBSCRIPTION_COLUMNS, query.toString(),
+				new String[] { id, notificationClass }, null, null, null);
 	}
 	
-	public boolean hasSubscription(String entityId, String notificationClass) {
-		Cursor c = getSubscription(entityId, notificationClass);
+	public boolean hasSubscription(String id, String notificationClass) {
+		Cursor c = getSubscription(id, notificationClass);
 		boolean hasSubscription = c.moveToFirst();
 		c.close();
 		
@@ -260,40 +256,40 @@ public class Database {
 	}
 
 	public boolean hasSubscriptions() {
-		Cursor c = database.rawQuery("SELECT * FROM " + NOTIFICATIONS_TABLE, null);
+		Cursor c = database.rawQuery("SELECT * FROM subscriptions", null);
 		boolean hasSubscriptions = c.moveToFirst();
 		c.close();
 		return hasSubscriptions;
 	}
 
 	public long addSubscription(Subscription subscription) {
-		ContentValues cv = new ContentValues(NOTIFICATIONS_COLUMNS.length);
-		cv.put("entity_id", subscription.id);
-		cv.put("entity_name", subscription.name);
+		ContentValues cv = new ContentValues(SUBSCRIPTION_COLUMNS.length);
+		cv.put("id", subscription.id);
+		cv.put("name", subscription.name);
 		cv.put("notification_class", subscription.notificationClass);
-		cv.put("notification_data", subscription.data);
+		cv.put("data", subscription.data);
 		cv.put("last_seen_id", (String) subscription.lastSeenId);
 		
-		return database.insert(NOTIFICATIONS_TABLE, null, cv);
+		return database.insert("subscriptions", null, cv);
 	}
 	
-	public long removeSubscription(String entityId, String notificationClass) {
-		return database.delete(NOTIFICATIONS_TABLE, "entity_id=? AND notification_class=?", 
-				new String[] { entityId , notificationClass });
+	public long removeSubscription(String id, String notificationClass) {
+		return database.delete("subscriptions", "id=? AND notification_class=?", 
+				new String[] { id , notificationClass });
 	}
 	
 	public Subscription loadSubscription(Cursor c) {
-		String id = c.getString(c.getColumnIndex("entity_id"));
-		String name = c.getString(c.getColumnIndex("entity_name"));
-		String data = c.getString(c.getColumnIndex("notification_data"));
+		String id = c.getString(c.getColumnIndex("id"));
+		String name = c.getString(c.getColumnIndex("name"));
+		String data = c.getString(c.getColumnIndex("data"));
 		String lastSeenId = c.getString(c.getColumnIndex("last_seen_id"));
 		String notificationClass = c.getString(c.getColumnIndex("notification_class"));
 		
 		return new Subscription(id, name, notificationClass, data, lastSeenId);
 	}
 
-	public Subscription loadSubscription(String entityId, String notificationClass) {
-		Cursor c = getSubscription(entityId, notificationClass);
+	public Subscription loadSubscription(String id, String notificationClass) {
+		Cursor c = getSubscription(id, notificationClass);
 		if (c.moveToFirst()) {
 			Subscription subscription = loadSubscription(c);
 			c.close();
@@ -306,7 +302,7 @@ public class Database {
 		ContentValues cv = new ContentValues(1);
 		cv.put("last_seen_id", lastSeenId);
 
-		return database.update(NOTIFICATIONS_TABLE, cv, "entity_id=? AND notification_class=?",
+		return database.update("subscriptions", cv, "id=? AND notification_class=?",
 				new String[] { subscription.id, subscription.notificationClass });
 	}
 
@@ -328,14 +324,9 @@ public class Database {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			// create legislators table
-			db.execSQL(sqlCreateTable(LEGISLATORS_TABLE, LEGISLATOR_COLUMNS));
-
-			// create bills table
-			db.execSQL(sqlCreateTable(BILLS_TABLE, BILL_COLUMNS));
-
-			// create notifications table
-			db.execSQL(sqlCreateTable(NOTIFICATIONS_TABLE, NOTIFICATIONS_COLUMNS));
+			db.execSQL(sqlCreateTable("bills", BILL_COLUMNS));
+			db.execSQL(sqlCreateTable("legislators", LEGISLATOR_COLUMNS));
+			db.execSQL(sqlCreateTable("subscriptions", SUBSCRIPTION_COLUMNS));
 		}
 
 		@Override
@@ -345,11 +336,12 @@ public class Database {
 
 			// Version 1 - Never released
 			// Version 2 - Favorites (bills and legislators table), as released
-			// in version 2.6
-			// Version 3 - Notifications (notifications table), not yet released
+			//   in version 2.6
+			// Version 3 - Notifications (subscriptions table), as released
+			// 	 in version 2.9
 
 			if (oldVersion <= 2)
-				db.execSQL(sqlCreateTable(NOTIFICATIONS_TABLE, NOTIFICATIONS_COLUMNS));
+				db.execSQL(sqlCreateTable("subscriptions", SUBSCRIPTION_COLUMNS));
 		}
 	}
 }
