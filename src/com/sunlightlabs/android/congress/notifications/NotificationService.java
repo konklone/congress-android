@@ -167,7 +167,9 @@ public class NotificationService extends WakefulIntentService {
 		notification.flags |= Notification.FLAG_SHOW_LIGHTS;
 
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		notification.number = results;
+		
+		if (results > 1)
+			notification.number = results;
 		
 		return notification;
 	}
