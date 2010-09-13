@@ -159,6 +159,9 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
     	Object tag = v.getTag();
+    	if (tag == null) // not sure how this would happen, but Market error reports indicate it can
+    		return;
+    	
     	if (tag.getClass().getSimpleName().equals("Committee")) {
     		launchCommittee((Committee) tag);
     	} else {
