@@ -18,7 +18,7 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.Drumbone;
 
 public class Database {
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 3; // updated last for version 2.9
 
 	public boolean closed = true;
 
