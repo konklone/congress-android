@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Congress</string>
-    <string name="app_version">2.7</string>
-    <string name="app_version_older">Version 2.6</string>
+    <string name="app_version">2.9</string>
+    <string name="app_version_older">Version 2.7</string>
     
     <string name="create_shortcuts">Legislator</string>
     <string name="first_time_twitter">Tap to the right of a tweet to reply using a Twitter app.</string>
