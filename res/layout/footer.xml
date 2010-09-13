@@ -25,7 +25,6 @@
 		android:paddingTop="5dp"
 		android:paddingBottom="8dp"
 				
-		android:layout_centerVertical="true"
 		android:layout_centerHorizontal="true"
 		
 		android:paddingLeft="10dp"
@@ -41,8 +40,9 @@
 		android:layout_height="wrap_content"
 		
 		android:layout_toLeftOf="@id/text"
-		android:layout_centerVertical="true"
+		android:layout_alignTop="@id/text"
 		
+		android:paddingTop="6dp"
 		android:paddingBottom="2dp"
 		
 		android:visibility="gone"
