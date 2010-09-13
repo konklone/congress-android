@@ -61,11 +61,11 @@
     <string name="explanation_3c">Congress operates in bursts, so days may go by without any activity.</string>
     
     <string name="first_tip_1_header">Call your representatives.</string>
-    <string name="first_tip_1_body">Tap \"My Location\" to find your district\'s representatives. Tap the call button to give them a call. </string>
+    <string name="first_tip_1_body">Tap \"My Location\" to find your district\'s representatives.</string>
     <string name="first_tip_2_header">See the latest bills and votes.</string>
     <string name="first_tip_2_body">Read up on what your legislators are introducing and voting on.</string>
-    <string name="first_tip_3_header">Easy access to oft-viewed items.</string>
-    <string name="first_tip_3_body">Tap the star at the top of a bill or legislator\'s screen to add them to the main menu.</string>
+    <string name="first_tip_3_header">Keep up to date.</string>
+    <string name="first_tip_3_body">Get notifications around the clock about new votes, bills, and more.</string>
     
     <string name="menu_bills_header">Bills</string>
     <string name="menu_bills_law">New Laws</string>
