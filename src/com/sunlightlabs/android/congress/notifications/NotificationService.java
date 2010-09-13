@@ -140,7 +140,7 @@ public class NotificationService extends WakefulIntentService {
 	}
 
 	private Notification getNotification(String ticker, String title, String message, Intent intent, Uri uri, int results) {
-		int icon = R.drawable.icon;
+		int icon = R.drawable.notification_icon;
 		long when = System.currentTimeMillis();
 		
 		Notification notification = new Notification(icon, ticker, when);
