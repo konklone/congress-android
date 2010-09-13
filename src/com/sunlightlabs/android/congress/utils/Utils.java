@@ -43,7 +43,7 @@ public class Utils {
 		
 		// report to Drumbone what version of Android we're using, if Drumbone cares (and it does)
 		Drumbone.extraHeaderKey =  "android-api-level";
-		Drumbone.extraHeaderValue = "" + Build.VERSION.SDK_INT;
+		Drumbone.extraHeaderValue = Build.VERSION.SDK;
 	}
 
 	public static void setupSunlight(Context context) {
