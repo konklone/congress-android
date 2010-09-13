@@ -12,7 +12,7 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.yahoo.news.NewsItem;
 import com.sunlightlabs.yahoo.news.NewsService;
 
-public class BillNewsSubscriber extends Subscriber {
+public class NewsBillSubscriber extends Subscriber {
 
 	@Override
 	public String decodeId(Object result) {
@@ -27,7 +27,7 @@ public class BillNewsSubscriber extends Subscriber {
 		try {
 			return new NewsService(apiKey).fetchNewsResults(searchTerm);
 		} catch (Exception e) {
-			Log.w(Utils.TAG, "LegislatorNewsSubscriber: Could not fetch news for legislator " + subscription.name);
+			Log.w(Utils.TAG, "NewsLegislatorSubscriber: Could not fetch news for legislator " + subscription.name);
 			return null;
 		}
 	}

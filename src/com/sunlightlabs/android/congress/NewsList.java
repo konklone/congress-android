@@ -22,7 +22,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscription;
-import com.sunlightlabs.android.congress.notifications.subscribers.BillNewsSubscriber;
+import com.sunlightlabs.android.congress.notifications.subscribers.NewsBillSubscriber;
 import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask;
 import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask.LoadsYahooNews;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -106,7 +106,7 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 	private void setupSubscription(Object lastResult) {
 		footer = (Footer) findViewById(R.id.footer);
 		// not ideal since this could be either legislator or bill news, but it's simplest
-		String lastSeenId = (lastResult == null) ? null : new BillNewsSubscriber().decodeId(lastResult); 
+		String lastSeenId = (lastResult == null) ? null : new NewsBillSubscriber().decodeId(lastResult); 
 		footer.init(new Subscription(subscriptionId, subscriptionName, subscriptionClass, searchTerm, lastSeenId));
 	}
 

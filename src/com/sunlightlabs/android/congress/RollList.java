@@ -20,9 +20,9 @@ import android.widget.TextView;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
-import com.sunlightlabs.android.congress.notifications.subscribers.LegislatorVotesSubscriber;
-import com.sunlightlabs.android.congress.notifications.subscribers.NominationsSubscriber;
-import com.sunlightlabs.android.congress.notifications.subscribers.RecentVotesSubscriber;
+import com.sunlightlabs.android.congress.notifications.subscribers.RollsLegislatorSubscriber;
+import com.sunlightlabs.android.congress.notifications.subscribers.RollsNominationsSubscriber;
+import com.sunlightlabs.android.congress.notifications.subscribers.RollsRecentSubscriber;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -123,16 +123,16 @@ public class RollList extends ListActivity {
 		String lastSeenId;
 		switch (type) {
 		case ROLLS_VOTER:
-			lastSeenId = (lastResult == null) ? null : new LegislatorVotesSubscriber().decodeId(lastResult);
-			footer.init(new Subscription(voter.id, Subscriber.notificationName(voter), "LegislatorVotesSubscriber", voter.chamber, lastSeenId));
+			lastSeenId = (lastResult == null) ? null : new RollsLegislatorSubscriber().decodeId(lastResult);
+			footer.init(new Subscription(voter.id, Subscriber.notificationName(voter), "RollsLegislatorSubscriber", voter.chamber, lastSeenId));
 			break;
 		case ROLLS_LATEST:
-			lastSeenId = (lastResult == null) ? null : new RecentVotesSubscriber().decodeId(lastResult);
-			footer.init(new Subscription("RecentVotes", "Recent Votes", "RecentVotesSubscriber", null, lastSeenId));
+			lastSeenId = (lastResult == null) ? null : new RollsRecentSubscriber().decodeId(lastResult);
+			footer.init(new Subscription("RecentVotes", "Recent Votes", "RollsRecentSubscriber", null, lastSeenId));
 			break;
 		case ROLLS_NOMINATIONS:
-			lastSeenId = (lastResult == null) ? null : new NominationsSubscriber().decodeId(lastResult);
-			footer.init(new Subscription("Nominations", "Recent Nominations", "NominationsSubscriber", null, lastSeenId));
+			lastSeenId = (lastResult == null) ? null : new RollsNominationsSubscriber().decodeId(lastResult);
+			footer.init(new Subscription("Nominations", "Recent Nominations", "RollsNominationsSubscriber", null, lastSeenId));
 			break;
 		}
 	}

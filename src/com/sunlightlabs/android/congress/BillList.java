@@ -20,9 +20,9 @@ import android.widget.TextView;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
-import com.sunlightlabs.android.congress.notifications.subscribers.LegislatorBillsSubscriber;
-import com.sunlightlabs.android.congress.notifications.subscribers.RecentBillsSubscriber;
-import com.sunlightlabs.android.congress.notifications.subscribers.RecentLawsSubscriber;
+import com.sunlightlabs.android.congress.notifications.subscribers.BillsLegislatorSubscriber;
+import com.sunlightlabs.android.congress.notifications.subscribers.BillsRecentSubscriber;
+import com.sunlightlabs.android.congress.notifications.subscribers.BillsLawsSubscriber;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
@@ -122,16 +122,16 @@ public class BillList extends ListActivity {
 		String lastSeenId;
 		switch (type) {
 		case BILLS_RECENT:
-			lastSeenId = (lastResult == null) ? null : new RecentBillsSubscriber().decodeId(lastResult);
-			footer.init(new Subscription("RecentBills", "Introduced Bills", "RecentBillsSubscriber", null, lastSeenId));
+			lastSeenId = (lastResult == null) ? null : new BillsRecentSubscriber().decodeId(lastResult);
+			footer.init(new Subscription("RecentBills", "Introduced Bills", "BillsRecentSubscriber", null, lastSeenId));
 			break;
 		case BILLS_SPONSOR:
-			lastSeenId = (lastResult == null) ? null : new LegislatorBillsSubscriber().decodeId(lastResult);
-			footer.init(new Subscription(sponsor.id, Subscriber.notificationName(sponsor), "LegislatorBillsSubscriber", null, lastSeenId));
+			lastSeenId = (lastResult == null) ? null : new BillsLegislatorSubscriber().decodeId(lastResult);
+			footer.init(new Subscription(sponsor.id, Subscriber.notificationName(sponsor), "BillsLegislatorSubscriber", null, lastSeenId));
 			break;
 		case BILLS_LAW:
-			lastSeenId = (lastResult == null) ? null : new RecentLawsSubscriber().decodeId(lastResult);
-			footer.init(new Subscription("RecentLaws", "New Laws", "RecentLawsSubscriber", null, lastSeenId));
+			lastSeenId = (lastResult == null) ? null : new BillsLawsSubscriber().decodeId(lastResult);
+			footer.init(new Subscription("RecentLaws", "New Laws", "BillsLawsSubscriber", null, lastSeenId));
 			break; 
 		}
 	}

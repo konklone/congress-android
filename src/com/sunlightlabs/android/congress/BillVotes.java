@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
-import com.sunlightlabs.android.congress.notifications.subscribers.BillVotesSubscriber;
+import com.sunlightlabs.android.congress.notifications.subscribers.VotesBillSubscriber;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
@@ -71,8 +71,8 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 
 	private void setupSubscription(Object lastResult) {
 		footer = (Footer) findViewById(R.id.footer);
-		String lastSeenId = (lastResult == null) ? null : new BillVotesSubscriber().decodeId(lastResult);
-		footer.init(new Subscription(bill.id, Subscriber.notificationName(bill), "BillVotesSubscriber", bill.id, lastSeenId));
+		String lastSeenId = (lastResult == null) ? null : new VotesBillSubscriber().decodeId(lastResult);
+		footer.init(new Subscription(bill.id, Subscriber.notificationName(bill), "VotesBillSubscriber", bill.id, lastSeenId));
 	}
 
 	public void loadBill() {

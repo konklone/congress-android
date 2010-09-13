@@ -13,7 +13,7 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.RollService;
 
-public class NominationsSubscriber extends Subscriber {
+public class RollsRecentSubscriber extends Subscriber {
 	private static final int PER_PAGE = 40;
 
 	@Override
@@ -26,7 +26,7 @@ public class NominationsSubscriber extends Subscriber {
 		Utils.setupDrumbone(context);
 		
 		try {
-			return RollService.latestNominations(PER_PAGE, 1);
+			return RollService.latestVotes(PER_PAGE, 1);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest votes for " + subscription, e);
 			return null;
@@ -45,6 +45,6 @@ public class NominationsSubscriber extends Subscriber {
 	public Intent notificationIntent(Subscription subscription) {
 		return new Intent(Intent.ACTION_MAIN)
 			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.RollList")
-			.putExtra("type", RollList.ROLLS_NOMINATIONS);
+			.putExtra("type", RollList.ROLLS_LATEST);
 	}
 }

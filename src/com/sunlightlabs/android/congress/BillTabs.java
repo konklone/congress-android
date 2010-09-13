@@ -131,7 +131,7 @@ public class BillTabs extends TabActivity {
 			.putExtra("searchTerm", searchTermFor(bill))
 			.putExtra("subscriptionId", bill.id)
 			.putExtra("subscriptionName", Subscriber.notificationName(bill))
-			.putExtra("subscriptionClass", "BillNewsSubscriber");
+			.putExtra("subscriptionClass", "NewsBillSubscriber");
 	}
 	
 	public Intent historyIntent() {

@@ -119,7 +119,7 @@ public class LegislatorTabs extends TabActivity {
 			.putExtra("searchTerm", correctExceptions(searchTermFor(legislator)))
 			.putExtra("subscriptionId", legislator.id)
 			.putExtra("subscriptionName", Subscriber.notificationName(legislator))
-			.putExtra("subscriptionClass", "LegislatorNewsSubscriber");
+			.putExtra("subscriptionClass", "NewsLegislatorSubscriber");
 	}
 	
 	public Intent twitterIntent() {
