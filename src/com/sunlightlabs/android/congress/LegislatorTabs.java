@@ -39,6 +39,9 @@ public class LegislatorTabs extends TabActivity {
 
         setupControls();
         setupTabs();
+        
+        if (firstTimeLoadingStar())
+        	Utils.alert(this, R.string.first_time_loading_star);
 	}
 	
 	@Override
@@ -87,6 +90,14 @@ public class LegislatorTabs extends TabActivity {
 				}
 			}
 		}
+	}
+	
+	public boolean firstTimeLoadingStar() {
+		if (Utils.getBooleanPreference(this, "first_time_loading_star", true)) {
+			Utils.setBooleanPreference(this, "first_time_loading_star", false);
+			return true;
+		}
+		return false;
 	}
 
 	public void setupTabs() {

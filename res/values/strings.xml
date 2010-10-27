@@ -108,6 +108,7 @@
     
     <string name="legislator_favorites_message">Legislator marked as a favorite, and added to the main menu.\n\n(You will not see this message again.)</string>
     <string name="bill_favorites_message">Bill marked as a favorite, and added to the main menu.\n\n(You will not see this message again.)</string>
+    <string name="first_time_loading_star">Tap the star next to the name of a legislator or bill to add them to the main menu for quick access.</string>
     
     <string name="out_of_office_message">This legislator is no longer in office.</string>
     
