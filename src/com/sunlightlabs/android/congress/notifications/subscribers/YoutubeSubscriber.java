@@ -1,6 +1,5 @@
 package com.sunlightlabs.android.congress.notifications.subscribers;
 
-import java.util.Arrays;
 import java.util.List;
 
 import android.content.Intent;
@@ -25,7 +24,7 @@ public class YoutubeSubscriber extends Subscriber {
 		String username = subscription.data;
 		
 		try {
-			return Arrays.asList(new YouTube().getVideos(username));
+			return new YouTube().getVideos(username);
 		} catch (YouTubeException e) {
 			Log.w(Utils.TAG, "YoutubeSubscriber: Could not fetch youtube videos for " + subscription, e);
 			return null;
