@@ -203,7 +203,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 		@Override
 		public View getView(int position, View view, ViewGroup parent) {
 			if (view == null)
-				view = inflater.inflate(R.layout.youtube, null);
+				view = inflater.inflate(R.layout.video, null);
 			
 			Video video = getItem(position);
 
@@ -217,8 +217,10 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 			
 			// make the date stand out in the description using bold text
 			StringBuilder full = new StringBuilder("<b>").append(video.timestamp.format("%b %d")).append("</b>");
-			String description = video.description != null ? video.description.trim() : "";
 			
+			full.append(", " + video.formatDuration());
+			
+			String description = video.description != null ? video.description.trim() : "";
 			if (!description.equals("")) // check to see if the video has a non-empty description first
 				full.append(" - ").append(description);
 			
