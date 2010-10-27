@@ -590,8 +590,16 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		case R.id.about:
 			showDialog(ABOUT);
 			break;
+		case R.id.market:
+			visitMarket();
+			break;
 		}
 		return true;
+	}
+	
+	private void visitMarket() {
+		String packageName = getApplication().getPackageName();
+		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
 	}
 
 	private void setupLocation() {

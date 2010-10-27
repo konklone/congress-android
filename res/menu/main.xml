@@ -19,4 +19,9 @@
 		android:alphabeticShortcut="a"
 		android:icon="@android:drawable/ic_menu_help" 
 		/>
+	<item android:id="@+id/market"
+		android:title="@string/menu_market"
+		android:alphabeticShortcut="m"
+		android:icon="@drawable/ic_menu_market"
+		/>
 </menu>
