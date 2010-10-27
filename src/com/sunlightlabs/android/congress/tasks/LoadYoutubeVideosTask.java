@@ -1,5 +1,7 @@
 package com.sunlightlabs.android.congress.tasks;
 
+import java.util.ArrayList;
+
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -7,11 +9,11 @@ import com.sunlightlabs.youtube.Video;
 import com.sunlightlabs.youtube.YouTube;
 import com.sunlightlabs.youtube.YouTubeException;
 
-public class LoadYoutubeVideosTask extends AsyncTask<String, Void, Video[]> {
+public class LoadYoutubeVideosTask extends AsyncTask<String, Void, ArrayList<Video>> {
 	private final static String TAG = "CONGRESS";
 
 	public static interface LoadsYoutubeVideos {
-		void onLoadYoutubeVideos(Video[] videos);
+		void onLoadYoutubeVideos(ArrayList<Video> videos);
 	}
 
 	private LoadsYoutubeVideos context;
@@ -26,7 +28,7 @@ public class LoadYoutubeVideosTask extends AsyncTask<String, Void, Video[]> {
 	}
 
 	@Override
-	protected Video[] doInBackground(String... username) {
+	protected ArrayList<Video> doInBackground(String... username) {
 		try {
 			return new YouTube().getVideos(username[0]);
 		} catch (YouTubeException e) {
@@ -36,7 +38,7 @@ public class LoadYoutubeVideosTask extends AsyncTask<String, Void, Video[]> {
 	}
 
 	@Override
-	protected void onPostExecute(Video[] videos) {
+	protected void onPostExecute(ArrayList<Video> videos) {
 		context.onLoadYoutubeVideos(videos);
 	}
 }

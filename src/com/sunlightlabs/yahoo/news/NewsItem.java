@@ -18,28 +18,14 @@ public class NewsItem {
 		this.summary = summary;
 	}
 	
-	public NewsItem(JSONObject json) {
-		try {
-			this.title = json.getString("Title");
-			this.displayURL = json.getString("Url");
-			this.clickURL = json.getString("ClickUrl");
-			this.source = json.getString("NewsSource");
-			this.summary = json.getString("Summary");
-			this.timestamp = new Time();
-			long publishDate = json.getLong("PublishDate") * 1000;
-			this.timestamp.set(publishDate);
-			
-		} catch (JSONException e) {
-			setDefaults();
-		}
-	}
-	
-	private void setDefaults() {
-		this.title = "[No article loaded]";
-		this.displayURL = "[no URL]";
-		this.clickURL = null;
-		this.source = "[no source]";
-		this.summary = "[no summary]";
+	public NewsItem(JSONObject json) throws JSONException {
+		this.title = json.getString("Title");
+		this.displayURL = json.getString("Url");
+		this.clickURL = json.getString("ClickUrl");
+		this.source = json.getString("NewsSource");
+		this.summary = json.getString("Summary");
 		this.timestamp = new Time();
+		long publishDate = json.getLong("PublishDate") * 1000;
+		this.timestamp.set(publishDate);
 	}
 }

@@ -1,31 +1,37 @@
 package com.sunlightlabs.youtube;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class YouTube {
 		
-	public Video[] getVideos(String username) throws YouTubeException {
-		ArrayList<Video> videos = new ArrayList<Video>();
+	public ArrayList<Video> getVideos(String username) throws YouTubeException {
+		String rawJSON = fetchJSON(username);
+		ArrayList<Video> videos;
 		
-		String xml = fetchXml(username);
+		try {
+			JSONObject resultSet = new JSONObject(rawJSON);
+			JSONArray results = resultSet.getJSONObject("data").getJSONArray("items");
+			videos = new ArrayList<Video>(results.length());
+			for (int i = 0; i<results.length(); i++)
+				videos.add(new Video(results.getJSONObject(i)));
+				
+		} catch(JSONException e) {
+			throw new YouTubeException(e);
+		}
 		
-		Pattern entryPattern = Pattern.compile("<entry>(.*?)</entry>", Pattern.DOTALL);
-		Matcher entryMatcher = entryPattern.matcher(xml);
-		while (entryMatcher.find())
-			videos.add(new Video(entryMatcher.group(1)));
-		
-		return videos.toArray(new Video[0]);
+		return videos;
 	}
 	
-	private String fetchXml(String username) throws YouTubeException {
+	private String fetchJSON(String username) throws YouTubeException {
 		String url = feedUrl(username);
 		HttpGet request = new HttpGet(url);
         request.addHeader("User-Agent", "Sunlight's Congress Android App (http://github.com/sunlightlabs/congress");
@@ -48,6 +54,6 @@ public class YouTube {
 	}
 	
 	private String feedUrl(String username) {
-		return "http://gdata.youtube.com/feeds/api/users/" + username + "/uploads?orderby=updated"; 
+		return "http://gdata.youtube.com/feeds/api/users/" + username + "/uploads?orderby=updated&alt=jsonc&v=2"; 
 	}
 }
