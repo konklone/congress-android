@@ -550,6 +550,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 			View changelogView = inflater.inflate(R.layout.changelog, null);
 
 			Spanned changelog = Html.fromHtml(
+				"<b>&#183;</b> 2.9.5 - Various bugfixes, small improvements<br/><br/>" +
 				"<b>&#183;</b> Added <b>background notifications</b> for pretty much everything<br/><br/>" +
 				"<b>&#183;</b> Fixed links to THOMAS<br/><br/>" +
 				"<b>&#183;</b> Various fixes and visual tweaks"
