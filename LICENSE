@@ -1,16 +1,43 @@
-Exceptions: 
+Third Party Licenses: 
 
-1) This codebase makes use of Joe Lord's Java client for the Sunlight API. All files in /src/com/sunlightlabs/api and /src/com/sunlightlabs/entities are his.  The full source and any available license is at:
-http://github.com/lordjoe/java-sunlightapi/tree/master
+1) This codebase makes use of Daniel Winterstein's JTwitter library. All files in /src/winterwell/jtwitter are licensed under the LGPL.
 
-2) This codebase makes use of Daniel Winterstein's JTwitter library. All files in /src/winterwell/jtwitter are licensed under the LGPL. The full source and license are at:
-http://www.winterwell.com/software/jtwitter.php
+  The full source and license are at:
 
-3) In turn, JTwitter depends on Stefan Haustein's Base64Encoder class. All files in /src/lgpl/haustein are licensed under the LGPL.
+  http://www.winterwell.com/software/jtwitter.php
 
-4) This application makes use of the freeware Alte Haas Grotesk font, whose license and requirements are included in /assets/fonts/Alte Haas Grotesk licence.rtf.
+2) In turn, JTwitter depends on Stefan Haustein's Base64Encoder class. All files in /src/lgpl/haustein are licensed under the LGPL.
+
+3) This application makes use of various Commonsware libraries. These, along with their respective Apache licenses, are:
+
+  com.commonsware.cwac.wakeful: 
+  http://github.com/commonsguy/cwac-wakeful/blob/master/LICENSE
+
+  com.commonsware.cwac.merge: 
+  http://github.com/commonsguy/cwac-merge/blob/master/LICENSE
+
+  com.commonsware.cwac.sacklist: 
+  http://github.com/commonsguy/cwac-sacklist/blob/master/LICENSE
+
 
 ==================
+
+
+The General Public License v3 covers all code in packages matched by:
+
+  com.sunlightlabs.android.* 
+
+This is equivalent to all code found in the directory:
+
+  /src/com/sunlightlabs/android
+
+The General Public License v3 can be found here:
+
+  http://www.gnu.org/licenses/gpl-3.0.txt
+
+
+==================
+
 
 All other code is covered under the following MIT License:
 
