@@ -29,7 +29,14 @@ abstract public class WakefulIntentService extends IntentService {
 
 	public static void acquireStaticLock(Context context) {
 		getCpuLock(context).acquire();
-		getWifiLock(context).acquire();
+		WifiManager.WifiLock lock = getWifiLock(context);
+		try {
+			lock.acquire();
+		} 
+		// too many wifi locks, couldn't acquire one
+		catch(UnsupportedOperationException ex) {
+			// swallow it. oh well, no wifi lock this time.
+		}
 	}
 
 	synchronized protected static PowerManager.WakeLock getCpuLock(Context context) {
