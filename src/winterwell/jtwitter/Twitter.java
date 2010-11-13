@@ -1764,8 +1764,7 @@ public class Twitter {
 	 */
 	public boolean userExists(String id) {
 		try {
-			String json = http.getPage("http://twitter.com/users/show/" + id
-					+ ".json", null, true);
+			http.getPage("http://twitter.com/users/show/" + id + ".json", null, true);
 		} catch (TwitterException.E404 e) {
 			return false;
 		}

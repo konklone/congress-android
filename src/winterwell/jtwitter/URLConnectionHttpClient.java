@@ -150,14 +150,6 @@ public class URLConnectionHttpClient implements Twitter.IHttpClient {
 		}
 	}	
 
-	private String getErrorStream(HttpURLConnection connection) {
-		try {
-			return toString(connection.getErrorStream());
-		} catch (NullPointerException e) {
-			return null;
-		}
-	}
-
 	/**
 	 * Set a header for basic authentication login.
 	 */
