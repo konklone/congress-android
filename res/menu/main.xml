@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"> 
-	<item android:id="@+id/preferences"
-		android:title="@string/menu_notification_settings"
-		android:icon="@drawable/ic_menu_notifications"
-		/>
 	<item android:id="@+id/feedback" 
 		android:title="@string/menu_feedback"
 		android:alphabeticShortcut="f"
 		android:icon="@drawable/ic_menu_send" 
+		/>
+	<item android:id="@+id/donate"
+		android:title="@string/menu_donate"
+		android:alphabeticShortcut="d"
+		android:icon="@drawable/ic_menu_market"
+		/>
+	<item android:id="@+id/preferences"
+		android:title="@string/menu_notification_settings"
+		android:icon="@drawable/ic_menu_notifications"
 		/>
 	<item android:id="@+id/changelog"
 		android:title="@string/menu_changelog"
@@ -18,10 +23,5 @@
 		android:title="@string/menu_about"
 		android:alphabeticShortcut="a"
 		android:icon="@android:drawable/ic_menu_help" 
-		/>
-	<item android:id="@+id/market"
-		android:title="@string/menu_market"
-		android:alphabeticShortcut="m"
-		android:icon="@drawable/ic_menu_market"
 		/>
 </menu>
