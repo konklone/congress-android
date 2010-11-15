@@ -70,6 +70,11 @@
     <string name="first_tip_3_header">Keep up to date.</string>
     <string name="first_tip_3_body">Get notifications around the clock about new votes, bills, and more.</string>
     
+    <string name="donation_title">Making a Donation</string>
+    <string name="donation_1">If you\'ve found this app useful, consider donating $1 to support its developer, the Sunlight Foundation, a non-profit non-partisan organization dedicated to increasing government transparency.</string>
+    <string name="donation_ok">Dismiss</string>
+    <string name="donation_donate">Donate</string>
+    
     <string name="menu_bills_header">Bills</string>
     <string name="menu_bills_law">New Laws</string>
     <string name="menu_bills_recent">Just Introduced</string>

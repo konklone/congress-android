@@ -67,6 +67,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	private static final int ABOUT = 0;
 	private static final int FIRST = 1;
 	private static final int CHANGELOG = 2;
+	private static final int DONATION = 3;
 
 	public static final int BILLS_LAW = 0;
 	public static final int BILLS_RECENT = 1;
@@ -151,7 +152,10 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 			showDialog(FIRST);
 			setNotificationState(); // initially, all notifications are stopped
 		} else if (newVersion())
-			showDialog(CHANGELOG);
+			showDialog(DONATION);
+		
+			// temporarily swapped out, this release is to ask for donations
+			//showDialog(CHANGELOG);
 	}
 
 	static class MainMenuHolder {
@@ -571,6 +575,31 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 			builder.setView(changelogView);
 			builder.setPositiveButton(R.string.changelog_button, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {}
+			});
+			return builder.create();
+		case DONATION:
+			View donateView = inflater.inflate(R.layout.donation, null);
+			
+			Spanned donate2 = Html.fromHtml(
+				"You can press Donate below to give through the Android Market. " +
+				"If you would prefer to give more, or through the web, you can also " +
+				"<a href=\"http://sunlightfoundation.com/donate/\">donate online</a>."
+			);
+			
+			TextView donateTextView = (TextView) donateView.findViewById(R.id.donate_2);
+			donateTextView.setText(donate2);
+			donateTextView.setMovementMethod(LinkMovementMethod.getInstance());
+			
+			builder.setIcon(R.drawable.icon);
+			builder.setTitle(R.string.donation_title);
+			builder.setView(donateView);
+			builder.setPositiveButton(R.string.donation_ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {}
+			});
+			builder.setNeutralButton(R.string.donation_donate, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					donationPage();
+				}
 			});
 			return builder.create();
 		default:
