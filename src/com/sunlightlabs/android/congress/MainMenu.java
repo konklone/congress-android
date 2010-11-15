@@ -555,9 +555,8 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 
 			Spanned changelog = Html.fromHtml(
 				"<b>&#183;</b> 2.9.6 - Added a donate link<br/><br/>" +
-				"<b>&#183;</b> Added <b>background notifications</b> for pretty much everything<br/><br/>" +
-				"<b>&#183;</b> Fixed links to THOMAS<br/><br/>" +
-				"<b>&#183;</b> Various fixes and visual tweaks"
+				"<b>&#183;</b> Added background notifications for pretty much everything<br/><br/>" +
+				"<b>&#183;</b> Fixed links to THOMAS"
 			);
 			Spanned changelogLast = Html.fromHtml(
 				"<b>&#183;</b> See a legislator's recent voting record<br/><br/>" +
