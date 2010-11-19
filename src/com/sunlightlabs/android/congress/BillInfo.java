@@ -248,7 +248,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		}
 		
 		String override_senate_result = bill.override_senate_result;
-		long override_senate_result_at = bill.override_house_result_at == null ? 0 : bill.override_senate_result_at.getTime();
+		long override_senate_result_at = bill.override_senate_result_at == null ? 0 : bill.override_senate_result_at.getTime();
 		if (override_senate_result != null && override_senate_result_at > 0) {
 			if (override_senate_result.equals("pass"))
 				addTimelinePiece(inner, "Override passed in the Senate on", override_senate_result_at);
