@@ -28,6 +28,9 @@
 	<color name="tab_text_deselected">#aaaaaa</color>
 	<color name="tab_text_selected">#f5f5f5</color>
 	
+	<color name="header_simple_background">#2a2a2a</color>
+	<color name="header_simple_foreground">#cccccc</color>
+	
 	<color name="header_top">#010413</color>
 	<color name="header_bottom">#051026</color>
 	

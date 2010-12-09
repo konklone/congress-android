@@ -93,6 +93,10 @@ public class NewsList extends ListActivity implements LoadsNews {
 	}
 
 	private void setupControls() {
+		TextView header = (TextView) LayoutInflater.from(this).inflate(R.layout.list_header_simple, null);
+		header.setText(R.string.google_news_branding);
+		getListView().addHeaderView(header);
+		
 		Utils.setLoading(this, R.string.news_loading);
 		((Button) findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
