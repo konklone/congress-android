@@ -1,4 +1,4 @@
-package com.sunlightlabs.yahoo.news;
+package com.sunlightlabs.google.news;
 
 public class NewsException extends Exception {
     public int statusCode = -1;

@@ -284,11 +284,14 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	}
 	
 	private void setupDebugBar() {
-		findViewById(R.id.check).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				WakefulIntentService.sendWakefulWork(MainMenu.this, NotificationService.class);
-			}
-		});
+		if (getResources().getString(R.string.debug).equals("true")) {
+			findViewById(R.id.debug_bar).setVisibility(View.VISIBLE);
+			findViewById(R.id.check).setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					WakefulIntentService.sendWakefulWork(MainMenu.this, NotificationService.class);
+				}
+			});
+		}
 	}
 
 	private ArrayList<View> setupBillMenu(LayoutInflater inflater) {

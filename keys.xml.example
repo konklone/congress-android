@@ -2,7 +2,9 @@
 <resources>
     <string name="contact_email"></string>
     <string name="contact_subject"></string>
-    <string name="yahoo_news_key"></string>
+    <string name="google_news_key"></string>
+    <string name="google_news_referer"></string>
     <string name="sunlight_api_key"></string>
     <string name="drumbone_user_agent"></string>
+    <string name="debug">false</string>
 </resources>

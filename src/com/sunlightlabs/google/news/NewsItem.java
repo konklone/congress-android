@@ -1,4 +1,4 @@
-package com.sunlightlabs.yahoo.news;
+package com.sunlightlabs.google.news;
 
 import org.json.JSONException;
 import org.json.JSONObject;

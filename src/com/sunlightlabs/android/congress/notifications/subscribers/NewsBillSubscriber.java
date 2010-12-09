@@ -9,8 +9,8 @@ import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.yahoo.news.NewsItem;
-import com.sunlightlabs.yahoo.news.NewsService;
+import com.sunlightlabs.google.news.NewsItem;
+import com.sunlightlabs.google.news.NewsService;
 
 public class NewsBillSubscriber extends Subscriber {
 

@@ -9,6 +9,7 @@
 	
 	<include layout="@layout/debug_bar"
 		android:visibility="gone"
+		android:id="@+id/debug_bar"
 		/>
 
 	<ListView android:id="@id/android:list"

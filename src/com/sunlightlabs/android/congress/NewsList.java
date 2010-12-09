@@ -23,18 +23,18 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.notifications.subscribers.NewsBillSubscriber;
-import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask;
-import com.sunlightlabs.android.congress.tasks.LoadYahooNewsTask.LoadsYahooNews;
+import com.sunlightlabs.android.congress.tasks.LoadNewsTask;
+import com.sunlightlabs.android.congress.tasks.LoadNewsTask.LoadsNews;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.yahoo.news.NewsItem;
+import com.sunlightlabs.google.news.NewsItem;
 
-public class NewsList extends ListActivity implements LoadsYahooNews {
+public class NewsList extends ListActivity implements LoadsNews {
 	private static final int MENU_VIEW = 0;
 	private static final int MENU_COPY = 1;
 
 	private String searchTerm;
 	private ArrayList<NewsItem> items;
-	private LoadYahooNewsTask loadNewsTask;
+	private LoadNewsTask loadNewsTask;
 	
 	private String subscriptionId, subscriptionName, subscriptionClass;
 	private Footer footer;
@@ -147,7 +147,7 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 	protected void loadNews() {
 		if (items == null) {
 			String apiKey = getResources().getString(R.string.yahoo_news_key);
-			loadNewsTask = (LoadYahooNewsTask) new LoadYahooNewsTask(this).execute(searchTerm, apiKey);
+			loadNewsTask = (LoadNewsTask) new LoadNewsTask(this).execute(searchTerm, apiKey);
 		} else
 			displayNews();
 	}
@@ -200,10 +200,10 @@ public class NewsList extends ListActivity implements LoadsYahooNews {
 
 	static class NewsListHolder {
 		ArrayList<NewsItem> items;
-		LoadYahooNewsTask loadNewsTask;
+		LoadNewsTask loadNewsTask;
 	}
 
-	public void onLoadYahooNews(ArrayList<NewsItem> news) {
+	public void onLoadNews(ArrayList<NewsItem> news) {
 		this.items = news;
 		displayNews();
 		loadNewsTask = null;
