@@ -37,8 +37,9 @@ public class LoadNewsTask extends AsyncTask<String, Void, ArrayList<NewsItem>> {
 		
 		String searchTerm = params[0];
 		String apiKey = params[1];
+		String referer = params[2];
 		try {
-			return new NewsService(apiKey).fetchNewsResults(searchTerm);
+			return new NewsService(apiKey, referer).fetchNewsResults(searchTerm);
 		} catch (NewsException e) {
 			Log.w(TAG, "Could not fetch news for search term " + searchTerm);
 			return null;

@@ -1,31 +1,29 @@
 package com.sunlightlabs.google.news;
 
+import java.util.Date;
+
+import org.apache.http.impl.cookie.DateParseException;
+import org.apache.http.impl.cookie.DateUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.text.format.Time;
-
 public class NewsItem {
-	public String title, source, displayURL, clickURL, summary;
-	public Time timestamp;
+	public String title, source, clickURL, summary;
+	public Date timestamp;
 	
-	public NewsItem(String title, String summary, String source, String displayURL, String clickURL, Time timestamp) {
-		this.title = title;
-		this.displayURL = displayURL;
-		this.clickURL = clickURL;
-		this.source = source;
-		this.timestamp = timestamp;
-		this.summary = summary;
-	}
+	public static final String[] dateFormat = new String[] {"EEE, dd MMM yyyy HH:mm:ss Z"};
 	
 	public NewsItem(JSONObject json) throws JSONException {
-		this.title = json.getString("Title");
-		this.displayURL = json.getString("Url");
-		this.clickURL = json.getString("ClickUrl");
-		this.source = json.getString("NewsSource");
-		this.summary = json.getString("Summary");
-		this.timestamp = new Time();
-		long publishDate = json.getLong("PublishDate") * 1000;
-		this.timestamp.set(publishDate);
+		this.title = json.getString("titleNoFormatting");
+		this.clickURL = json.getString("unescapedUrl");
+		this.source = json.getString("publisher");
+		this.summary = json.getString("content");
+		
+		String publishedDate = json.getString("publishedDate");
+		try {
+			this.timestamp = DateUtils.parseDate(publishedDate, dateFormat);
+		} catch(DateParseException e) {
+			throw new JSONException("Couldn't parse date on news item.");
+		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.sunlightlabs.android.congress;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.ClipboardManager;
+import android.text.Html;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -146,8 +148,9 @@ public class NewsList extends ListActivity implements LoadsNews {
 
 	protected void loadNews() {
 		if (items == null) {
-			String apiKey = getResources().getString(R.string.yahoo_news_key);
-			loadNewsTask = (LoadNewsTask) new LoadNewsTask(this).execute(searchTerm, apiKey);
+			String apiKey = getResources().getString(R.string.google_news_key);
+			String referer = getResources().getString(R.string.google_news_referer);
+			loadNewsTask = (LoadNewsTask) new LoadNewsTask(this).execute(searchTerm, apiKey, referer);
 		} else
 			displayNews();
 	}
@@ -187,11 +190,13 @@ public class NewsList extends ListActivity implements LoadsNews {
 
 			NewsItem item = getItem(position);
 
+			SimpleDateFormat format = new SimpleDateFormat("MMM dd");
+			
 			((TextView) view.findViewById(R.id.news_item_title)).setText(item.title);
-			((TextView) view.findViewById(R.id.news_item_summary)).setText(Utils.truncate(item.summary, 150));
-			((TextView) view.findViewById(R.id.news_item_when_where)).setText(item.timestamp
-					.format("%b %d")
-					+ ", " + item.source);
+			((TextView) view.findViewById(R.id.news_item_summary))
+				.setText(Html.fromHtml(item.summary));
+			((TextView) view.findViewById(R.id.news_item_when_where))
+				.setText(format.format(item.timestamp.getTime()) + ", " + item.source);
 
 			return view;
 		}

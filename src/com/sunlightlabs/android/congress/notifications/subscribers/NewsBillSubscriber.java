@@ -16,16 +16,17 @@ public class NewsBillSubscriber extends Subscriber {
 
 	@Override
 	public String decodeId(Object result) {
-		return "" + ((NewsItem) result).timestamp.toMillis(false);
+		return "" + ((NewsItem) result).timestamp.getTime();
 	}
 	
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
 		String searchTerm = subscription.data;
-		String apiKey = context.getResources().getString(R.string.yahoo_news_key);
+		String apiKey = context.getResources().getString(R.string.google_news_key);
+		String referer = context.getResources().getString(R.string.google_news_referer);
 		
 		try {
-			return new NewsService(apiKey).fetchNewsResults(searchTerm);
+			return new NewsService(apiKey, referer).fetchNewsResults(searchTerm);
 		} catch (Exception e) {
 			Log.w(Utils.TAG, "NewsLegislatorSubscriber: Could not fetch news for legislator " + subscription.name);
 			return null;
