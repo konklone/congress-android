@@ -20,9 +20,9 @@ import android.widget.TextView;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
+import com.sunlightlabs.android.congress.notifications.subscribers.BillsLawsSubscriber;
 import com.sunlightlabs.android.congress.notifications.subscribers.BillsLegislatorSubscriber;
 import com.sunlightlabs.android.congress.notifications.subscribers.BillsRecentSubscriber;
-import com.sunlightlabs.android.congress.notifications.subscribers.BillsLawsSubscriber;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
@@ -343,10 +343,13 @@ public class BillList extends ListActivity {
 				String title = Utils.truncate(bill.short_title, 300);
 				holder.title.setTextSize(19);
 				holder.title.setText(title);
-			} else { // if (bill.official_title != null)
+			} else if (bill.official_title != null) {
 				String title = Utils.truncate(bill.official_title, 300);
 				holder.title.setTextSize(16);
 				holder.title.setText(title);
+			} else {
+				holder.title.setTextSize(16);
+				holder.title.setText(R.string.bill_no_title);
 			}
 
 			return view;

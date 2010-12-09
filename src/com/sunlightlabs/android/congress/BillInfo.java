@@ -74,13 +74,15 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		
 		TextView titleView = (TextView) header.findViewById(R.id.title);
 		String title;
-		String short_title = bill.short_title;
-		if (short_title != null) {
-			title = Utils.truncate(short_title, 400);
+		if (bill.short_title != null) {
+			title = Utils.truncate(bill.short_title, 400);
 			titleView.setTextSize(22);
-		} else {
+		} else if (bill.official_title != null) {
 			title = bill.official_title;
 			titleView.setTextSize(16);
+		} else {
+			title = getResources().getString(R.string.bill_no_title);
+			titleView.setTextSize(22);
 		}
 		titleView.setText(title);
 		

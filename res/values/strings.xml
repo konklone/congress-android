@@ -17,6 +17,7 @@
     <string name="empty_bills">There are no bills that match your search.</string>
     <string name="empty_rolls">This legislator has not cast any recent roll call votes.</string>
     
+    <string name="bill_no_title">(no title)</string>
     <string name="error_loading_favorites">There was a problem loading your starred bills and legislators. If the problem persists, try un-starring and re-starring them.</string>
     
     <string name="google_news_branding">Powered by Google</string>
