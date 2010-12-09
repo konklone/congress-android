@@ -151,11 +151,12 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 			newVersion(); // don't need to see the changelog on first install
 			showDialog(FIRST);
 			setNotificationState(); // initially, all notifications are stopped
-		} else if (newVersion())
-			showDialog(DONATION);
-		
-			// temporarily swapped out, this release is to ask for donations
-			//showDialog(CHANGELOG);
+		} else if (newVersion()) {
+			if (askedDonation())
+				showDialog(CHANGELOG);
+			else
+				showDialog(DONATION);
+		}
 	}
 
 	static class MainMenuHolder {
@@ -483,6 +484,14 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		}
 		return false;
 	}
+	
+	public boolean askedDonation() {
+		if (Utils.getBooleanPreference(this, "askedDonation", false) == false) {
+			Utils.setBooleanPreference(this, "askedDonation", true);
+			return false;
+		}
+		return true;
+	}
 
 	public boolean newVersion() {
 		String lastVersionSeen = getVersionSeen();
@@ -521,7 +530,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 			Spanned about1 = Html.fromHtml(
 					"Bill information provided by <a href=\"http://govtrack.us\">GovTrack</a>, through the Library of Congress.  Bill summaries written by the Congressional Research Service.<br/><br/>" +
 					"Legislator search and information powered by the <a href=\"http://services.sunlightlabs.com/api/\">Sunlight Labs Congress API</a>.<br/><br/>" + 
-					"News mentions provided by the <a href=\"http://developer.yahoo.com/search/news/\">Yahoo! News API</a>, and Twitter search powered by <a href=\"http://www.winterwell.com/software/jtwitter.php\">JTwitter</a>."
+					"News mentions provided by the <a href=\"http://code.google.com/apis/newssearch/v1/\">Google News Search API</a>, and Twitter search powered by <a href=\"http://www.winterwell.com/software/jtwitter.php\">JTwitter</a>."
 			);
 			TextView aboutView1 = (TextView) aboutView.findViewById(R.id.about_1);
 			aboutView1.setText(about1);
