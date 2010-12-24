@@ -2,6 +2,7 @@ package com.sunlightlabs.android.congress;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -24,7 +25,7 @@ import com.sunlightlabs.congress.services.CommitteeService;
 public class CommitteeList extends ListActivity {
 	public static final String TAG = "CONGRESS";
 
-	private ArrayList<Committee> committees;
+	private List<Committee> committees;
 	private String chamber;
 	private LoadCommitteesTask loadCommitteesTask;
 
@@ -91,7 +92,7 @@ public class CommitteeList extends ListActivity {
 			displayCommittees();
 	}
 	
-	public void onLoadCommittees(ArrayList<Committee> committees) {
+	public void onLoadCommittees(List<Committee> committees) {
 		Collections.sort(committees);
 		this.committees = committees;
 		displayCommittees();
@@ -120,7 +121,7 @@ public class CommitteeList extends ListActivity {
 	private class CommitteeAdapter extends ArrayAdapter<Committee> {
 		LayoutInflater inflater;
 
-		public CommitteeAdapter(CommitteeList context, ArrayList<Committee> items) {
+		public CommitteeAdapter(CommitteeList context, List<Committee> items) {
 			super(context, 0, items);
 			this.inflater = LayoutInflater.from(context);
 		}
@@ -153,7 +154,7 @@ public class CommitteeList extends ListActivity {
 		}
 	}
 	
-	private class LoadCommitteesTask extends AsyncTask<String, Void, ArrayList<Committee>> {
+	private class LoadCommitteesTask extends AsyncTask<String, Void, List<Committee>> {
 		private CommitteeList context;
 
 		public LoadCommitteesTask(CommitteeList context) {
@@ -165,8 +166,8 @@ public class CommitteeList extends ListActivity {
 		}
 
 		@Override
-		protected ArrayList<Committee> doInBackground(String... params) {
-			ArrayList<Committee> result = new ArrayList<Committee>();
+		protected List<Committee> doInBackground(String... params) {
+			List<Committee> result = new ArrayList<Committee>();
 			String chamber = params[0];
 			try {
 				result = CommitteeService.getAll(chamber);
@@ -178,14 +179,14 @@ public class CommitteeList extends ListActivity {
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<Committee> result) {
+		protected void onPostExecute(List<Committee> result) {
 			context.onLoadCommittees(result);
 		}
 
 	}
 	
 	private class CommitteeListHolder {
-		ArrayList<Committee> committees;
+		List<Committee> committees;
 		LoadCommitteesTask loadCommitteesTask;
 		String chamber;
 	}

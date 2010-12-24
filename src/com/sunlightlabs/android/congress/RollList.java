@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import android.app.ListActivity;
 import android.content.res.Resources;
@@ -36,7 +37,7 @@ public class RollList extends ListActivity {
 	public static final int ROLLS_LATEST = 1;
 	public static final int ROLLS_NOMINATIONS = 2;
 	
-	private ArrayList<Roll> rolls;
+	private List<Roll> rolls;
 	private LoadRollsTask loadRollsTask;
 
 	private Legislator voter;
@@ -150,7 +151,7 @@ public class RollList extends ListActivity {
 	}
 
 
-	public void onLoadRolls(ArrayList<Roll> newRolls) {
+	public void onLoadRolls(List<Roll> newRolls) {
 		// if this is the first page of rolls, set up the subscription
 		if (rolls.size() == 0) {
 			if (newRolls.size() > 0) {
@@ -207,7 +208,7 @@ public class RollList extends ListActivity {
 		private static final int ROLL = 0;
 		private static final int LOADING = 1;
 
-		public RollAdapter(RollList context, ArrayList<Roll> rolls) {
+		public RollAdapter(RollList context, List<Roll> rolls) {
 			super(context, 0, rolls);
 			this.inflater = LayoutInflater.from(context);
 			this.context = context;
@@ -331,7 +332,7 @@ public class RollList extends ListActivity {
 		}
 	}
 	
-	private class LoadRollsTask extends AsyncTask<Void,Void,ArrayList<Roll>> {
+	private class LoadRollsTask extends AsyncTask<Void,Void,List<Roll>> {
 		private RollList context;
 		private CongressException exception;
 
@@ -345,7 +346,7 @@ public class RollList extends ListActivity {
 		}
 
 		@Override
-		public ArrayList<Roll> doInBackground(Void... nothing) {
+		public List<Roll> doInBackground(Void... nothing) {
 			try {
 				int page = (context.rolls.size() / ROLLS) + 1;
 
@@ -366,7 +367,7 @@ public class RollList extends ListActivity {
 		}
 
 		@Override
-		public void onPostExecute(ArrayList<Roll> rolls) {
+		public void onPostExecute(List<Roll> rolls) {
 			context.loadRollsTask = null;
 
 			if (exception != null)
@@ -377,10 +378,10 @@ public class RollList extends ListActivity {
 	}
 
 	static class RollListHolder {
-		ArrayList<Roll> rolls;
+		List<Roll> rolls;
 		LoadRollsTask loadRollsTask;
 
-		public RollListHolder(ArrayList<Roll> rolls, LoadRollsTask loadRollsTask) {
+		public RollListHolder(List<Roll> rolls, LoadRollsTask loadRollsTask) {
 			this.rolls = rolls;
 			this.loadRollsTask = loadRollsTask;
 		}

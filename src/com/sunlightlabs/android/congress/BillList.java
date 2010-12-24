@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.app.ListActivity;
 import android.os.AsyncTask;
@@ -36,7 +37,7 @@ public class BillList extends ListActivity {
 	public static final int BILLS_RECENT = 1;
 	public static final int BILLS_SPONSOR = 2;
 
-	private ArrayList<Bill> bills;
+	private List<Bill> bills;
 	private LoadBillsTask loadBillsTask;
 
 	private Legislator sponsor;
@@ -148,7 +149,7 @@ public class BillList extends ListActivity {
 	}
 
 
-	public void onLoadBills(ArrayList<Bill> newBills) {
+	public void onLoadBills(List<Bill> newBills) {
 		// if this is the first page of rolls, set up the subscription
 		if (bills.size() == 0) {
 			if (newBills.size() > 0) {
@@ -200,7 +201,7 @@ public class BillList extends ListActivity {
 			Utils.showBack(this, R.string.error_connection);
 	}
 
-	private class LoadBillsTask extends AsyncTask<Void,Void,ArrayList<Bill>> {
+	private class LoadBillsTask extends AsyncTask<Void,Void,List<Bill>> {
 		private BillList context;
 		private CongressException exception;
 
@@ -214,7 +215,7 @@ public class BillList extends ListActivity {
 		}
 
 		@Override
-		public ArrayList<Bill> doInBackground(Void... nothing) {
+		public List<Bill> doInBackground(Void... nothing) {
 			try {
 				int page = (context.bills.size() / BILLS) + 1;
 
@@ -235,7 +236,7 @@ public class BillList extends ListActivity {
 		}
 
 		@Override
-		public void onPostExecute(ArrayList<Bill> bills) {
+		public void onPostExecute(List<Bill> bills) {
 			context.loadBillsTask = null;
 
 			if (exception != null)
@@ -252,7 +253,7 @@ public class BillList extends ListActivity {
 		private static final int BILL = 0;
 		private static final int LOADING = 1;
 
-		public BillAdapter(BillList context, ArrayList<Bill> bills) {
+		public BillAdapter(BillList context, List<Bill> bills) {
 			super(context, 0, bills);
 			this.inflater = LayoutInflater.from(context);
 			this.context = context;
@@ -361,10 +362,10 @@ public class BillList extends ListActivity {
 	}
 
 	static class BillListHolder {
-		ArrayList<Bill> bills;
+		List<Bill> bills;
 		LoadBillsTask loadBillsTask;
 
-		public BillListHolder(ArrayList<Bill> bills, LoadBillsTask loadBillsTask) {
+		public BillListHolder(List<Bill> bills, LoadBillsTask loadBillsTask) {
 			this.bills = bills;
 			this.loadBillsTask = loadBillsTask;
 		}

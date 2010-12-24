@@ -1,6 +1,6 @@
 package com.sunlightlabs.android.congress.tasks;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -9,11 +9,11 @@ import com.sunlightlabs.google.news.NewsException;
 import com.sunlightlabs.google.news.NewsItem;
 import com.sunlightlabs.google.news.NewsService;
 
-public class LoadNewsTask extends AsyncTask<String, Void, ArrayList<NewsItem>> {
+public class LoadNewsTask extends AsyncTask<String, Void, List<NewsItem>> {
 	private final static String TAG = "CONGRESS";
 
 	public static interface LoadsNews {
-		void onLoadNews(ArrayList<NewsItem> news);
+		void onLoadNews(List<NewsItem> news);
 	}
 
 	private LoadsNews context;
@@ -28,7 +28,7 @@ public class LoadNewsTask extends AsyncTask<String, Void, ArrayList<NewsItem>> {
 	}
 
 	@Override
-	protected ArrayList<NewsItem> doInBackground(String... params) {
+	protected List<NewsItem> doInBackground(String... params) {
 		if(params == null || params.length < 2) {
 			Log.w(TAG, "Could not fetch news. "
 					+ "Parameters must contain api key and search term.");
@@ -47,7 +47,7 @@ public class LoadNewsTask extends AsyncTask<String, Void, ArrayList<NewsItem>> {
 	}
 
 	@Override
-	protected void onPostExecute(ArrayList<NewsItem> news) {
+	protected void onPostExecute(List<NewsItem> news) {
 		context.onLoadNews(news);
 	}
 

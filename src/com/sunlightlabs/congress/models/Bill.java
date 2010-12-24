@@ -1,8 +1,8 @@
 package com.sunlightlabs.congress.models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +27,7 @@ public class Bill implements Serializable {
 	public Legislator sponsor;
 	
 	// cosponsors
-	public ArrayList<Legislator> cosponsors;
+	public List<Legislator> cosponsors;
 	
 	// summary
 	public String summary;
@@ -35,10 +35,10 @@ public class Bill implements Serializable {
 	// votes
 	public String last_vote_result;
 	public String last_vote_chamber;
-	public ArrayList<Bill.Vote> votes;
+	public List<Bill.Vote> votes;
 	
 	// actions
-	public ArrayList<Bill.Action> actions;
+	public List<Bill.Action> actions;
 	
 
 	public static class Action implements Serializable {

@@ -1,6 +1,7 @@
 package com.sunlightlabs.congress.services;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,12 +20,12 @@ public class CommitteeService {
 		return committeeFor(Sunlight.url("committees.get", "id=" + id));
 	}
 
-	public static ArrayList<Committee> forLegislator(String bioguideId) throws CongressException {
+	public static List<Committee> forLegislator(String bioguideId) throws CongressException {
 		return committeesFor(Sunlight.url("committees.allForLegislator", "bioguide_id="
 				+ bioguideId));
 	}
 	
-	public static ArrayList<Committee> getAll(String chamber) throws CongressException {
+	public static List<Committee> getAll(String chamber) throws CongressException {
 		return committeesFor(Sunlight.url("committees.getList", "chamber="
 				+ Utils.capitalize(chamber)));
 	}
@@ -60,9 +61,9 @@ public class CommitteeService {
 		}
 	}
 
-	private static ArrayList<Committee> committeesFor(String url) throws CongressException {
+	private static List<Committee> committeesFor(String url) throws CongressException {
 		String rawJSON = Sunlight.fetchJSON(url);
-		ArrayList<Committee> committees = new ArrayList<Committee>();
+		List<Committee> committees = new ArrayList<Committee>();
 		try {
 			JSONArray results = new JSONObject(rawJSON).getJSONObject("response").getJSONArray(
 					"committees");

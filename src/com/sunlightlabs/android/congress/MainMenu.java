@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -295,8 +296,8 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		}
 	}
 
-	private ArrayList<View> setupBillMenu(LayoutInflater inflater) {
-		ArrayList<View> billViews = new ArrayList<View>();
+	private List<View> setupBillMenu(LayoutInflater inflater) {
+		List<View> billViews = new ArrayList<View>();
 
 		billViews.add(inflateItem(inflater, R.drawable.bill_law, R.string.menu_bills_law, BILLS_LAW));
 		billViews.add(inflateItem(inflater, R.drawable.bill_recent, R.string.menu_bills_recent, BILLS_RECENT));	
@@ -305,8 +306,8 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		return billViews;
 	}
 	
-	private ArrayList<View> setupVotesMenu(LayoutInflater inflater) {
-		ArrayList<View> voteViews = new ArrayList<View>();
+	private List<View> setupVotesMenu(LayoutInflater inflater) {
+		List<View> voteViews = new ArrayList<View>();
 		
 		voteViews.add(inflateItem(inflater, R.drawable.rolls_menu, R.string.menu_votes_latest, VOTES_LATEST));
 		voteViews.add(inflateItem(inflater, R.drawable.rolls_nominations, R.string.menu_votes_nominations, VOTES_NOMINATIONS));
@@ -314,8 +315,8 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		return voteViews;
 	}
 
-	private ArrayList<View> setupSearchMenu(LayoutInflater inflater) {
-		ArrayList<View> searchViews = new ArrayList<View>(4);
+	private List<View> setupSearchMenu(LayoutInflater inflater) {
+		List<View> searchViews = new ArrayList<View>(4);
 
 		View view = inflateLocationItem(inflater, R.drawable.search_location, R.string.menu_legislators_location, SEARCH_LOCATION);
 		searchLocationView = new SearchViewWrapper(view);
@@ -332,8 +333,8 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		return searchViews;
 	}
 
-	private ArrayList<View> setupCommitteeMenu(LayoutInflater inflater) {
-		ArrayList<View> committeeViews = new ArrayList<View>(1);
+	private List<View> setupCommitteeMenu(LayoutInflater inflater) {
+		List<View> committeeViews = new ArrayList<View>(1);
 		View committees = inflateItem(inflater, R.drawable.committee, R.string.menu_committees,
 				SEARCH_COMMITTEE);
 		committeeViews.add(committees);

@@ -2,6 +2,7 @@ package com.sunlightlabs.android.congress;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,7 +41,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 
 	private Drawable avatar;
 	private ImageView picture;
-	private ArrayList<Committee> committees;
+	private List<Committee> committees;
 	
 	// need to keep this here between setupControls() and displayCommittees(), not sure why
 	private View committeeHeader;
@@ -94,7 +95,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		displayCommittees();
 	}
 	
-	public void onLoadCommittees(ArrayList<Committee> committees) {
+	public void onLoadCommittees(List<Committee> committees) {
 		this.committees = committees;
 		displayCommittees();
 	}
@@ -245,7 +246,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		
 		adapter.addView(mainView);
 		
-		ArrayList<View> contactViews = new ArrayList<View>(3);
+		List<View> contactViews = new ArrayList<View>(3);
 		
 		String phone = legislator.phone;
 		if (legislator.in_office && phone != null && !phone.equals("")) {
@@ -360,7 +361,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 	protected class CommitteeAdapter extends ArrayAdapter<Committee> {
 		LayoutInflater inflater;
 
-        public CommitteeAdapter(Activity context, ArrayList<Committee> items) {
+        public CommitteeAdapter(Activity context, List<Committee> items) {
             super(context, 0, items);
             inflater = LayoutInflater.from(context);
         }
@@ -378,7 +379,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 
     }
 	
-	private class LoadCommitteesTask extends AsyncTask<String,Void,ArrayList<Committee>> {
+	private class LoadCommitteesTask extends AsyncTask<String,Void,List<Committee>> {
 		private LegislatorProfile context;
 		private CongressException exception;
 		
@@ -391,10 +392,10 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		}
 		
 		@Override
-		public ArrayList<Committee> doInBackground(String... bioguideId) {
-			ArrayList<Committee> committees = new ArrayList<Committee>();
-			ArrayList<Committee> joint = new ArrayList<Committee>();
-			ArrayList<Committee> temp;
+		public List<Committee> doInBackground(String... bioguideId) {
+			List<Committee> committees = new ArrayList<Committee>();
+			List<Committee> joint = new ArrayList<Committee>();
+			List<Committee> temp;
 			
 			try {
 				temp = CommitteeService.forLegislator(bioguideId[0]);
@@ -415,7 +416,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		}
 		
 		@Override
-		public void onPostExecute(ArrayList<Committee> committees) {
+		public void onPostExecute(List<Committee> committees) {
 			context.loadCommitteesTask = null;
 			
 			if (exception != null && committees == null)
@@ -429,9 +430,9 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		LoadPhotoTask loadPhotoTask;
 		LoadCommitteesTask loadCommitteesTask;
 		ShortcutImageTask shortcutImageTask;
-		ArrayList<Committee> committees;
+		List<Committee> committees;
 		
-		LegislatorProfileHolder(LoadPhotoTask loadPhotoTask, LoadCommitteesTask loadCommitteesTask, ShortcutImageTask shortcutImageTask, ArrayList<Committee> committees) {
+		LegislatorProfileHolder(LoadPhotoTask loadPhotoTask, LoadCommitteesTask loadCommitteesTask, ShortcutImageTask shortcutImageTask, List<Committee> committees) {
 			this.loadPhotoTask = loadPhotoTask;
 			this.loadCommitteesTask = loadCommitteesTask;
 			this.shortcutImageTask = shortcutImageTask;
