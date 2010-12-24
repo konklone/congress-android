@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
+import com.sunlightlabs.android.congress.tasks.LoadLegislatorTask;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -32,16 +33,18 @@ import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, LoadBillTask.LoadsBill {	
+public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, LoadBillTask.LoadsBill, LoadLegislatorTask.LoadsLegislator {	
 	// fields from the intent 
 	private Bill bill;
 	private Legislator sponsor;
+	private Legislator detailedSponsor;
 
 	// fields fetched remotely
 	private String summary;
 	
 	private LoadBillTask loadBillTask;
 	private LoadPhotoTask loadPhotoTask;
+	private LoadLegislatorTask loadSponsorTask;
 	private View loadingContainer, sponsorView;
 	
 	private Drawable sponsorPhoto;
@@ -61,9 +64,15 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
         if (holder != null) {
         	loadBillTask = holder.loadBillTask;
         	loadPhotoTask = holder.loadPhotoTask;
+        	loadSponsorTask = holder.loadSponsorTask;
         	summary = holder.summary;
+        	detailedSponsor = holder.detailedSponsor;
         }
 		
+        if (loadSponsorTask != null) {
+        	loadSponsorTask.onScreenLoad(this);
+        }
+        
 		loadSummary();
 	}
 	
@@ -162,9 +171,14 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new BillInfoHolder(loadBillTask, loadPhotoTask, summary);
+		return new BillInfoHolder(loadBillTask, loadPhotoTask, loadSponsorTask, summary, detailedSponsor);
 	}
 	
+	private void loadSponsor() {
+		if (loadSponsorTask == null) {
+			loadSponsorTask = (LoadLegislatorTask) new LoadLegislatorTask(this).execute(sponsor.getId());
+		}
+	}
 	
 	public void loadSummary() {
 		if (loadBillTask != null)
@@ -193,6 +207,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		this.loadBillTask = null;
 		this.summary = bill.summary;
 		displaySummary();
+		loadSponsor();
 	}
 	
 	public void onLoadBill(CongressException exception) {
@@ -207,6 +222,12 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		displayPhoto();
 	}
 	
+	@Override
+	public void onLoadLegislator(Legislator legislator) {
+		loadSponsorTask = null;
+		detailedSponsor = legislator;
+	}
+
 	public Context getContext() {
 		return this;
 	}
@@ -284,7 +305,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 			return;
 		
 		if (type.equals("sponsor") && sponsor != null)
-			startActivity(Utils.legislatorLoadIntent(sponsor.getId()));
+			startSponsorActivity();
 		else if (type.equals("cosponsors")) {
 			Intent intent = new Intent(this, LegislatorList.class)
 				.putExtra("type", LegislatorList.SEARCH_COSPONSORS)
@@ -292,6 +313,17 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 			startActivity(intent);
 		}
     }
+
+	private void startSponsorActivity() {
+		if (detailedSponsor != null) {
+			Intent intent = Utils.legislatorTabsIntent();
+			intent.putExtra("legislator", detailedSponsor);
+			startActivity(intent);
+		}
+		else {
+			startActivity(Utils.legislatorLoadIntent(sponsor.getId()));
+		}
+	}
 	
 	@Override 
     public boolean onCreateOptionsMenu(Menu menu) { 
@@ -343,12 +375,19 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	static class BillInfoHolder {
 		LoadBillTask loadBillTask;
 		LoadPhotoTask loadPhotoTask;
+		LoadLegislatorTask loadSponsorTask;
 		String summary;
-		
-		public BillInfoHolder(LoadBillTask loadBillTask, LoadPhotoTask loadPhotoTask, String summary) {
+		Legislator detailedSponsor;
+
+		public BillInfoHolder(LoadBillTask loadBillTask,
+		                      LoadPhotoTask loadPhotoTask,
+		                      LoadLegislatorTask loadSponsorTask,
+		                      String summary, Legislator detailedSponsor) {
 			this.loadBillTask = loadBillTask;
 			this.loadPhotoTask = loadPhotoTask;
+			this.loadSponsorTask = loadSponsorTask;
 			this.summary = summary;
+			this.detailedSponsor = detailedSponsor;
 		}
 	}
 }
