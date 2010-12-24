@@ -3,6 +3,7 @@ package com.sunlightlabs.congress.models;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,16 +21,16 @@ public class Roll implements Serializable {
 	public int session, number, year;
 	public Date voted_at;
 	public int yeas, nays, present, not_voting;
-	public HashMap<String,Integer> otherVotes = new HashMap<String,Integer>();
+	public Map<String,Integer> otherVotes = new HashMap<String,Integer>();
 	
 	// bill
 	public Bill bill;
 	
 	// voters
-	public HashMap<String,Vote> voters;
+	public Map<String,Vote> voters;
 	
 	// voter_ids
-	public HashMap<String,Vote> voter_ids;
+	public Map<String,Vote> voter_ids;
 
 		
 	/**

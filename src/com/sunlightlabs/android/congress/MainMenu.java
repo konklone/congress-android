@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -96,8 +97,8 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	private Database database;
 	private Cursor peopleCursor, billCursor;
 
-	private HashMap<String, LoadPhotoTask> loadPhotoTasks = new HashMap<String, LoadPhotoTask>();
-	private HashMap<String, FavoriteLegislatorWrapper> favoritePeopleWrappers = new HashMap<String, FavoriteLegislatorWrapper>();
+	private Map<String, LoadPhotoTask> loadPhotoTasks = new HashMap<String, LoadPhotoTask>();
+	private Map<String, FavoriteLegislatorWrapper> favoritePeopleWrappers = new HashMap<String, FavoriteLegislatorWrapper>();
 
 	private Handler handler = new Handler() {
 		@Override
@@ -164,8 +165,8 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		AddressUpdater addressUpdater;
 		Location location;
 		String address;
-		HashMap<String, LoadPhotoTask> loadPhotoTasks;
-		HashMap<String, FavoriteLegislatorWrapper> favoritePeopleWrappers;
+		Map<String, LoadPhotoTask> loadPhotoTasks;
+		Map<String, FavoriteLegislatorWrapper> favoritePeopleWrappers;
 	}
 
 	@Override

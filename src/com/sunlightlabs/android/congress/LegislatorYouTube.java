@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -47,7 +48,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	
 	private List<Video> videos;
 	private LoadYoutubeVideosTask loadVideosTask = null;
-	private HashMap<Integer, LoadYoutubeThumbTask> loadThumbTasks = new HashMap<Integer, LoadYoutubeThumbTask>();
+	private Map<Integer, LoadYoutubeThumbTask> loadThumbTasks = new HashMap<Integer, LoadYoutubeThumbTask>();
 	
 	private Legislator legislator;
 	private String youtubeUsername;
@@ -269,7 +270,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
     static class LegislatorYouTubeHolder {
 		List<Video> videos;
 		LoadYoutubeVideosTask loadVideosTask;
-		HashMap<Integer, LoadYoutubeThumbTask> loadThumbTasks;
+		Map<Integer, LoadYoutubeThumbTask> loadThumbTasks;
 	}
 	
 

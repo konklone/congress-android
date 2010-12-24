@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.RejectedExecutionException;
 
 import android.app.ListActivity;
@@ -46,7 +47,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private String id;
 	
 	private Roll roll;
-	private HashMap<String,Roll.Vote> voters;
+	private Map<String,Roll.Vote> voters;
 	
 	private Database database;
 	private Cursor peopleCursor;
@@ -54,7 +55,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private LoadRollTask loadRollTask, loadVotersTask;
 	private View header, loadingView;
 	
-	private HashMap<String,LoadPhotoTask> loadPhotoTasks = new HashMap<String,LoadPhotoTask>();
+	private Map<String,LoadPhotoTask> loadPhotoTasks = new HashMap<String,LoadPhotoTask>();
 	private List<String> queuedPhotos = new ArrayList<String>();
 	
 	private static final int MAX_PHOTO_TASKS = 10;
@@ -67,7 +68,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private VoterAdapter restAdapter;
 	
 	private String currentTab = null;
-	private HashMap<String,List<Roll.Vote>> voterBreakdown = new HashMap<String,List<Roll.Vote>>();
+	private Map<String,List<Roll.Vote>> voterBreakdown = new HashMap<String,List<Roll.Vote>>();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -306,7 +307,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	// depends on setupTabs having been called, and that every vote a legislator has cast
 	// has an entry in voterBreakdown, as created in setupTabs
 	public void displayVoters() {
-		// sort HashMap of voters into the voterBreakdown hashmap by vote type
+		// sort Map of voters into the voterBreakdown Map by vote type
 		List<Roll.Vote> allVoters = new ArrayList<Roll.Vote>(voters.values());
 		Collections.sort(allVoters); // sort once, all at once
 		
@@ -638,11 +639,11 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	static class RollInfoHolder {
 		private LoadRollTask loadRollTask, loadVotersTask;
 		private Roll roll;
-		private HashMap<String,Roll.Vote> voters;
-		HashMap<String,LoadPhotoTask> loadPhotoTasks;
+		private Map<String,Roll.Vote> voters;
+    Map<String,LoadPhotoTask> loadPhotoTasks;
 		private String currentTab;
 		
-		public RollInfoHolder(LoadRollTask loadRollTask, Roll roll, LoadRollTask loadVotersTask, HashMap<String,Roll.Vote> voters, HashMap<String,LoadPhotoTask> loadPhotoTasks, String currentTab) {
+		public RollInfoHolder(LoadRollTask loadRollTask, Roll roll, LoadRollTask loadVotersTask, Map<String,Roll.Vote> voters, Map<String,LoadPhotoTask> loadPhotoTasks, String currentTab) {
 			this.loadRollTask = loadRollTask;
 			this.roll = roll;
 			this.loadVotersTask = loadVotersTask;
