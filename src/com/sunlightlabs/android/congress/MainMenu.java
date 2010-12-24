@@ -26,6 +26,7 @@ import android.os.Message;
 import android.text.Html;
 import android.text.InputType;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,20 +46,19 @@ import com.sunlightlabs.android.congress.MainMenu.FavoriteLegislatorsAdapter.Fav
 import com.sunlightlabs.android.congress.notifications.NotificationService;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
+import com.sunlightlabs.android.congress.utils.AddressUpdater.AddressUpdateable;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LocationUtils;
+import com.sunlightlabs.android.congress.utils.LocationUtils.LocationListenerTimeout;
+import com.sunlightlabs.android.congress.utils.LocationUtils.LocationTimer;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.android.congress.utils.ViewWrapper;
-import com.sunlightlabs.android.congress.utils.AddressUpdater.AddressUpdateable;
-import com.sunlightlabs.android.congress.utils.LocationUtils.LocationListenerTimeout;
-import com.sunlightlabs.android.congress.utils.LocationUtils.LocationTimer;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class MainMenu extends ListActivity implements LocationListenerTimeout,
-		AddressUpdateable<MainMenu>, LoadPhotoTask.LoadsPhoto {
+public class MainMenu extends ListActivity implements LocationListenerTimeout, AddressUpdateable<MainMenu>, LoadPhotoTask.LoadsPhoto {
 
 	public static final int RESULT_ZIP = 1;
 	public static final int RESULT_LASTNAME = 2;
@@ -82,6 +82,8 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 	public static final int VOTES_LATEST = 8;
 	public static final int VOTES_NOMINATIONS = 9;
 
+	private static final String BULLET = "<b>&#183;</b> "; 
+	
 	public static final String TAG = "CONGRESS";
 
 	private Location location;
@@ -567,19 +569,9 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		case CHANGELOG:
 			View changelogView = inflater.inflate(R.layout.changelog, null);
 
-			Spanned changelog = Html.fromHtml(
-				"<b>&#183;</b> 2.9.7 - Switched news mentions from Yahoo to Google<br/><br/>" +
-				"<b>&#183;</b> 2.9.6 - Added a donate link<br/><br/>" +
-				"<b>&#183;</b> Added background notifications for pretty much everything<br/><br/>" +
-				"<b>&#183;</b> Fixed links to THOMAS"
-			);
-			Spanned changelogLast = Html.fromHtml(
-				"<b>&#183;</b> See a legislator's recent voting record<br/><br/>" +
-				"<b>&#183;</b> See recent votes in general, and just nomination votes<br/><br/>" +
-				"<b>&#183;</b> Improved vote screen, linked back to bill if related<br/><br/>" +
-				"<b>&#183;</b> Show cosponsors of bills<br/><br/>" +
-				"<b>&#183;</b> Added legislator's office building and room number"
-			);
+			Spanned changelog = getChangelogHtml(R.array.changelog);
+			Spanned changelogLast = getChangelogHtml(R.array.changelogLast);
+
 			((TextView) changelogView.findViewById(R.id.changelog)).setText(changelog);
 			((TextView) changelogView.findViewById(R.id.changelog_last_title)).setText(R.string.app_version_older);
 			((TextView) changelogView.findViewById(R.id.changelog_last)).setText(changelogLast);
@@ -619,6 +611,15 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout,
 		default:
 			return null;
 		}
+	}
+
+	private Spanned getChangelogHtml(int stringArrayId) {
+		String[] array = getResources().getStringArray(stringArrayId);
+		List<String> items = new ArrayList<String>();
+		for (String item : array) { 
+			items.add(BULLET + item); 
+		}
+		return Html.fromHtml(TextUtils.join("<br/><br/>", items));
 	}
 
 	@Override 

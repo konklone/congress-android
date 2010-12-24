@@ -137,5 +137,19 @@
 		<item>240</item>
 		<item>1440</item>
 	</string-array>
-	
+    
+    <string-array name="changelog">
+		<item>2.9.7 - Switched news mentions from Yahoo to Google</item>
+		<item>2.9.6 - Added a donate link</item>
+		<item>Added background notifications for pretty much everything</item>
+		<item>Fixed links to THOMAS</item>
+    </string-array>
+    
+    <string-array name="changelogLast">
+		<item>See a legislator\'s recent voting record</item>
+		<item>See recent votes in general, and just nomination votes</item>
+		<item>Improved vote screen, linked back to bill if related</item>
+		<item>Show cosponsors of bills</item>
+		<item>Added legislator\'s office building and room number</item>
+	</string-array>
 </resources>
