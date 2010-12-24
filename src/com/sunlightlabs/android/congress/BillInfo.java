@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -90,7 +91,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		
 		adapter.addView(header);
 		
-		ArrayList<View> listViews = new ArrayList<View>();
+		List<View> listViews = new ArrayList<View>();
 		if (sponsor != null) {
 			sponsorView = inflater.inflate(R.layout.bill_sponsor, null);
 			

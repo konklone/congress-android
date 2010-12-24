@@ -1,6 +1,7 @@
 package com.sunlightlabs.congress.services;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,15 +16,15 @@ public class LegislatorService {
 	
 	/* Main methods */
 	
-	public static ArrayList<Legislator> allWhere(String key, String value) throws CongressException {
+	public static List<Legislator> allWhere(String key, String value) throws CongressException {
 		return legislatorsFor(Sunlight.url("legislators.getList", key + "=" + Uri.encode(value))); // encode user entered data
 	}
 
-	public static ArrayList<Legislator> allForZipCode(String zip) throws CongressException {
+	public static List<Legislator> allForZipCode(String zip) throws CongressException {
 		return legislatorsFor(Sunlight.url("legislators.allForZip", "zip=" + Uri.encode(zip))); // encode user entered data
 	}
 
-	public static ArrayList<Legislator> allForLatLong(double latitude, double longitude)
+	public static List<Legislator> allForLatLong(double latitude, double longitude)
 			throws CongressException {
 		return legislatorsFor(Sunlight.url("legislators.allForLatLong", "latitude=" + latitude
 				+ "&longitude=" + longitude));
@@ -143,9 +144,9 @@ public class LegislatorService {
 		}
 	}
 
-	private static ArrayList<Legislator> legislatorsFor(String url) throws CongressException {
+	private static List<Legislator> legislatorsFor(String url) throws CongressException {
 		String rawJSON = Sunlight.fetchJSON(url);
-		ArrayList<Legislator> legislators = new ArrayList<Legislator>();
+		List<Legislator> legislators = new ArrayList<Legislator>();
 		try {
 			JSONArray results = new JSONObject(rawJSON).getJSONObject("response").getJSONArray(
 					"legislators");

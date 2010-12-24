@@ -1,6 +1,5 @@
 package com.sunlightlabs.android.congress;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.TabActivity;
@@ -8,7 +7,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;

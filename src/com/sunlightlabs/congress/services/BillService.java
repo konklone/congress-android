@@ -2,6 +2,7 @@ package com.sunlightlabs.congress.services;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
@@ -19,18 +20,18 @@ public class BillService {
 	
 	/* Main methods */
 	
-	public static ArrayList<Bill> recentlyIntroduced(int n, int p) throws CongressException {
+	public static List<Bill> recentlyIntroduced(int n, int p) throws CongressException {
 		return billsFor(Drumbone.url("bills",
 				"order=introduced_at&sections=basic,sponsor&per_page=" + n + "&page=" + p));
 	}
 
-	public static ArrayList<Bill> recentLaws(int n, int p) throws CongressException {
+	public static List<Bill> recentLaws(int n, int p) throws CongressException {
 		return billsFor(Drumbone
 				.url("bills", "order=enacted_at&enacted=true&sections=basic,sponsor&per_page=" + n
 						+ "&page=" + p));
 	}
 
-	public static ArrayList<Bill> recentlySponsored(int n, String sponsorId, int p)
+	public static List<Bill> recentlySponsored(int n, String sponsorId, int p)
 			throws CongressException {
 		return billsFor(Drumbone.url("bills", "order=introduced_at&sponsor_id=" + sponsorId
 				+ "&sections=basic,sponsor&per_page=" + n + "&page=" + p));
@@ -206,9 +207,9 @@ public class BillService {
 		}
 	}
 
-	private static ArrayList<Bill> billsFor(String url) throws CongressException {
+	private static List<Bill> billsFor(String url) throws CongressException {
 		String rawJSON = Drumbone.fetchJSON(url);
-		ArrayList<Bill> bills = new ArrayList<Bill>();
+		List<Bill> bills = new ArrayList<Bill>();
 		try {
 			JSONArray results = new JSONObject(rawJSON).getJSONArray("bills");
 

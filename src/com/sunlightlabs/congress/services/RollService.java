@@ -3,6 +3,7 @@ package com.sunlightlabs.congress.services;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
@@ -22,7 +23,7 @@ public class RollService {
 		return rollFor(Drumbone.url("roll", "roll_id=" + id + "&sections=" + sections));
 	}
 	
-	public static ArrayList<Roll> latestVotes(String id, String chamber, int per_page, int page)
+	public static List<Roll> latestVotes(String id, String chamber, int per_page, int page)
 			throws CongressException {
 		String query =  "per_page=" + per_page + "&page=" + page + "&order=voted_at";
 		query += 		"&chamber=" + chamber;
@@ -30,13 +31,13 @@ public class RollService {
 		return rollsFor(Drumbone.url("rolls", query)); 
 	}
 	
-	public static ArrayList<Roll> latestVotes(int per_page, int page) throws CongressException {
+	public static List<Roll> latestVotes(int per_page, int page) throws CongressException {
 		String query =  "per_page=" + per_page + "&page=" + page + "&order=voted_at";
 		query += 		"&sections=basic";
 		return rollsFor(Drumbone.url("rolls", query));
 	}
 	
-	public static ArrayList<Roll> latestNominations(int per_page, int page) throws CongressException {
+	public static List<Roll> latestNominations(int per_page, int page) throws CongressException {
 		String query =  "per_page=" + per_page + "&page=" + page + "&order=voted_at";
 		query +=		"&sections=basic";
 		query += 		"&chamber=senate&type=On+the+Nomination";
@@ -139,9 +140,9 @@ public class RollService {
 		}
 	}
 	
-	private static ArrayList<Roll> rollsFor(String url) throws CongressException {
+	private static List<Roll> rollsFor(String url) throws CongressException {
 		String rawJSON = Drumbone.fetchJSON(url);
-		ArrayList<Roll> rolls = new ArrayList<Roll>();
+		List<Roll> rolls = new ArrayList<Roll>();
 		try {
 			JSONArray results = new JSONObject(rawJSON).getJSONArray("rolls");
 

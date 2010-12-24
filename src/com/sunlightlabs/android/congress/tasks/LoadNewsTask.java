@@ -1,6 +1,6 @@
 package com.sunlightlabs.android.congress.tasks;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -12,13 +12,13 @@ import com.sunlightlabs.google.news.NewsException;
 import com.sunlightlabs.google.news.NewsItem;
 import com.sunlightlabs.google.news.NewsService;
 
-public class LoadNewsTask extends AsyncTask<String, Void, ArrayList<NewsItem>> {
+public class LoadNewsTask extends AsyncTask<String, Void, List<NewsItem>> {
 	private final static String TAG = "CONGRESS";
 
 	private CongressException exception;
 
 	public static interface LoadsNews {
-		void onLoadNews(ArrayList<NewsItem> news);
+		void onLoadNews(List<NewsItem> news);
 		void onLoadNews(CongressException e);
 		Context getContext();
 	}
@@ -35,7 +35,7 @@ public class LoadNewsTask extends AsyncTask<String, Void, ArrayList<NewsItem>> {
 	}
 
 	@Override
-	protected ArrayList<NewsItem> doInBackground(String... params) {
+	protected List<NewsItem> doInBackground(String... params) {
 		String searchTerm = params[0];
 		String apiKey = params[1];
 		String referer = params[2];
@@ -51,7 +51,7 @@ public class LoadNewsTask extends AsyncTask<String, Void, ArrayList<NewsItem>> {
 	}
 
 	@Override
-	protected void onPostExecute(ArrayList<NewsItem> news) {
+	protected void onPostExecute(List<NewsItem> news) {
 		if (news == null && exception != null)
 			context.onLoadNews(exception);
 		else

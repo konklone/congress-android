@@ -1,7 +1,7 @@
 package com.sunlightlabs.android.congress;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -37,7 +37,7 @@ public class NewsList extends ListActivity implements LoadsNews {
 	private static final int MENU_COPY = 1;
 
 	private String searchTerm;
-	private ArrayList<NewsItem> items;
+	private List<NewsItem> items;
 	private LoadNewsTask loadNewsTask;
 	
 	private String subscriptionId, subscriptionName, subscriptionClass;
@@ -174,7 +174,7 @@ public class NewsList extends ListActivity implements LoadsNews {
 	protected class NewsAdapter extends ArrayAdapter<NewsItem> {
 		LayoutInflater inflater;
 
-		public NewsAdapter(Activity context, ArrayList<NewsItem> items) {
+		public NewsAdapter(Activity context, List<NewsItem> items) {
 			super(context, 0, items);
 			inflater = LayoutInflater.from(context);
 		}
@@ -210,18 +210,18 @@ public class NewsList extends ListActivity implements LoadsNews {
 	}
 
 	static class NewsListHolder {
-		ArrayList<NewsItem> items;
+		List<NewsItem> items;
 		LoadNewsTask loadNewsTask;
 	}
 
-	public void onLoadNews(ArrayList<NewsItem> news) {
+	public void onLoadNews(List<NewsItem> news) {
 		this.items = news;
 		displayNews();
 		loadNewsTask = null;
 	}
 
 	public void onLoadNews(CongressException e) {
-		this.onLoadNews((ArrayList<NewsItem>) null);
+		this.onLoadNews((List<NewsItem>) null);
 		Utils.showRefresh(this, e.getMessage());		
 	}
 

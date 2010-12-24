@@ -3,6 +3,7 @@ package com.sunlightlabs.google.news;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -33,9 +34,9 @@ public class NewsService {
 		this.referer = referer;
 	}
 	
-	public ArrayList<NewsItem> fetchNewsResults(String query) throws NewsException {
+	public List<NewsItem> fetchNewsResults(String query) throws NewsException {
 		String rawJSON = fetchJSON(query);
-		ArrayList<NewsItem> items;
+		List<NewsItem> items;
 		try {
 			JSONObject resultSet = new JSONObject(rawJSON);
 			JSONArray results = resultSet.getJSONObject("responseData").getJSONArray("results");

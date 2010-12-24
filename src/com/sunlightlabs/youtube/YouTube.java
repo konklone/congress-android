@@ -1,6 +1,7 @@
 package com.sunlightlabs.youtube;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -13,9 +14,9 @@ import org.json.JSONObject;
 
 public class YouTube {
 		
-	public ArrayList<Video> getVideos(String username) throws YouTubeException {
+	public List<Video> getVideos(String username) throws YouTubeException {
 		String rawJSON = fetchJSON(username);
-		ArrayList<Video> videos;
+		List<Video> videos;
 		
 		try {
 			JSONObject resultSet = new JSONObject(rawJSON);

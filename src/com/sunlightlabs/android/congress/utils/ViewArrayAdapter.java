@@ -1,6 +1,6 @@
 package com.sunlightlabs.android.congress.utils;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.view.View;
@@ -14,7 +14,7 @@ import android.widget.ArrayAdapter;
  */
 public class ViewArrayAdapter extends ArrayAdapter<View> {
 
-	public ViewArrayAdapter(Activity context, ArrayList<View> items) {
+	public ViewArrayAdapter(Activity context, List<View> items) {
 		super(context, 0, items);
 	}
 

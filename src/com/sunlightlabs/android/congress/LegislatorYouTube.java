@@ -1,8 +1,8 @@
 package com.sunlightlabs.android.congress;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -45,7 +45,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	private static final int MENU_WATCH = 0;
 	private static final int MENU_COPY = 1;
 	
-	private ArrayList<Video> videos;
+	private List<Video> videos;
 	private LoadYoutubeVideosTask loadVideosTask = null;
 	private HashMap<Integer, LoadYoutubeThumbTask> loadThumbTasks = new HashMap<Integer, LoadYoutubeThumbTask>();
 	
@@ -184,7 +184,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 		LayoutInflater inflater;
 		LegislatorYouTube context;
 
-        public VideoAdapter(LegislatorYouTube context, ArrayList<Video> videos) {
+        public VideoAdapter(LegislatorYouTube context, List<Video> videos) {
             super(context, 0, videos);
 			this.context = context;
             inflater = LayoutInflater.from(context);
@@ -267,7 +267,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
     
     
     static class LegislatorYouTubeHolder {
-		ArrayList<Video> videos;
+		List<Video> videos;
 		LoadYoutubeVideosTask loadVideosTask;
 		HashMap<Integer, LoadYoutubeThumbTask> loadThumbTasks;
 	}
@@ -298,7 +298,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 		return this;
 	}
 
-	public void onLoadYoutubeVideos(ArrayList<Video> videos) {
+	public void onLoadYoutubeVideos(List<Video> videos) {
 		this.videos = videos;
 		displayVideos();
 		loadVideosTask = null;

@@ -1,7 +1,7 @@
 package com.sunlightlabs.android.congress;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -122,7 +122,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
     	LayoutInflater inflater;
     	Resources resources;
 
-        public BillVoteAdapter(Activity context, ArrayList<Bill.Vote> items) {
+        public BillVoteAdapter(Activity context, List<Bill.Vote> items) {
             super(context, 0, items);
             inflater = LayoutInflater.from(context);
             resources = context.getResources();
