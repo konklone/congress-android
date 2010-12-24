@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.RejectedExecutionException;
 
 import android.app.ListActivity;
@@ -57,7 +58,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	private List<Legislator> legislators = null;
 	private LoadLegislatorsTask loadLegislatorsTask = null;
 
-	private HashMap<String,LoadPhotoTask> loadPhotoTasks = new HashMap<String,LoadPhotoTask>();
+	private Map<String,LoadPhotoTask> loadPhotoTasks = new HashMap<String,LoadPhotoTask>();
 	
 	private int type = -1;
 	
@@ -431,7 +432,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	static class LegislatorListHolder {
 		List<Legislator> legislators;
 		LoadLegislatorsTask loadLegislatorsTask;
-		HashMap<String,LoadPhotoTask> loadPhotoTasks;
+		Map<String,LoadPhotoTask> loadPhotoTasks;
 
 		AddressUpdater addressUpdater;
 		String address;
