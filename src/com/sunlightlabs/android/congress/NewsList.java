@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.sunlightlabs.android.congress.notifications.subscribers.NewsBillSubsc
 import com.sunlightlabs.android.congress.tasks.LoadNewsTask;
 import com.sunlightlabs.android.congress.tasks.LoadNewsTask.LoadsNews;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.google.news.NewsItem;
 
 public class NewsList extends ListActivity implements LoadsNews {
@@ -216,5 +218,14 @@ public class NewsList extends ListActivity implements LoadsNews {
 		this.items = news;
 		displayNews();
 		loadNewsTask = null;
+	}
+
+	public void onLoadNews(CongressException e) {
+		this.onLoadNews((ArrayList<NewsItem>) null);
+		Utils.alert(this, e);
+	}
+
+	public Context getContext() {
+		return this;
 	}
 }

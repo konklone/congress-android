@@ -22,6 +22,7 @@
     
     <string name="google_news_branding">Powered by Google</string>
     <string name="news_loading">Plucking news from the air...</string>
+    <string name="error_fetching_news">There was an error while fetching news.</string>
     <string name="news_empty">No recent news found.</string>
     <string name="twitter_loading">Plucking tweets from the air...</string>
     <string name="twitter_empty">No tweets found.</string>
