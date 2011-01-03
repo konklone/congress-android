@@ -125,6 +125,7 @@
 		<item>1 hour</item>
 		<item>2 hours</item>
 		<item>4 hours</item>
+		<item>1 day</item>
 	</string-array>
 	
 	<string-array name="notify_interval_codes">
@@ -134,6 +135,7 @@
 		<item>60</item>
 		<item>120</item>
 		<item>240</item>
+		<item>1440</item>
 	</string-array>
 	
 </resources>
