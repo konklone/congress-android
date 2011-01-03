@@ -1,6 +1,9 @@
 package com.sunlightlabs.android.congress;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.app.Activity;
@@ -8,6 +11,7 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,18 +106,21 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 	public void displayBill() {
 		if (bill.actions.size() > 0) {
 			setupSubscription(bill.actions.get(0));
-			setListAdapter(new BillActionAdapter(this, bill.actions));
+			setListAdapter(new BillActionAdapter(this, BillActionAdapter.transformActions(bill.actions)));
 		} else {
 			setupSubscription(null);
 			Utils.showEmpty(this, R.string.bill_actions_empty);
 		}
 	}
 	
-	protected class BillActionAdapter extends ArrayAdapter<Bill.Action> {
+	static class BillActionAdapter extends ArrayAdapter<BillActionAdapter.Item> {
     	LayoutInflater inflater;
     	Resources resources;
+    	
+    	public static final int TYPE_DATE = 0;
+    	public static final int TYPE_ACTION = 1; 
 
-        public BillActionAdapter(Activity context, List<Bill.Action> items) {
+        public BillActionAdapter(Activity context, List<BillActionAdapter.Item> items) {
             super(context, 0, items);
             inflater = LayoutInflater.from(context);
             resources = context.getResources();
@@ -130,37 +137,94 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
         }
         
         @Override
+        public int getItemViewType(int position) {
+        	Item item = getItem(position);
+        	if (item instanceof BillActionAdapter.Date)
+        		return BillActionAdapter.TYPE_DATE;
+        	else
+        		return BillActionAdapter.TYPE_ACTION;
+        }
+        
+        @Override
         public int getViewTypeCount() {
-        	return 1;
+        	return 2;
         }
 
 		@Override
 		public View getView(int position, View view, ViewGroup parent) {
-			if (view == null)
-				view = inflater.inflate(R.layout.bill_action, null);
+			Item item = getItem(position);
+			if (item instanceof Date) {
+				if (view == null)
+					view = inflater.inflate(R.layout.bill_action_date, null);
+				
+				((TextView) view.findViewById(R.id.day)).setText(((Date) item).timestamp);				
+				
+			} else { // instanceof Action
+				if (view == null)
+					view = inflater.inflate(R.layout.bill_action, null);
+				
+				((TextView) view).setText(Html.fromHtml(((Action) item).text));
+			}
+
+			return view;
+		}
+		
+		static class Item {}
+		
+		static class Date extends Item {
+			String timestamp;
 			
-			Bill.Action action = getItem(position);
+			public Date(String timestamp) {
+				this.timestamp = timestamp;
+			}
+		}
+		
+		static class Action extends Item {
+			String text;
 			
-			String timestamp = new SimpleDateFormat("MMM dd, yyyy").format(action.acted_at);
-			((TextView) view.findViewById(R.id.acted_at)).setText(timestamp);
-			((TextView) view.findViewById(R.id.text)).setText(action.text);
+			public Action(String text) {
+				this.text = text;
+			}
+		}
+		
+		static List<Item> transformActions(List<Bill.Action> actions) {
+			List<Item> items = new ArrayList<Item>();
 			
-			TextView typeView = (TextView) view.findViewById(R.id.type);
-			String type = action.type;
-			if (type.equals("vote") || type.equals("vote2") || type.equals("vote-aux")) {
-				typeView.setText("Vote");
-				typeView.setTextColor(resources.getColor(R.color.action_vote));
-			} else if (type.equals("enacted")) {
-				typeView.setText("Enacted");
-				typeView.setTextColor(resources.getColor(R.color.action_enacted));
-			} else if (type.equals("vetoed")) {
-				typeView.setText("Vetoed");
-				typeView.setTextColor(resources.getColor(R.color.action_vetoed));
-			} else {
-				typeView.setText("");
+			SimpleDateFormat otherYearFormat = new SimpleDateFormat("MMM dd, yyyy");
+			SimpleDateFormat thisYearFormat = new SimpleDateFormat("MMM dd");
+			
+			int thisYear = new GregorianCalendar().get(Calendar.YEAR); 
+			
+			int currentMonth = -1;
+			int currentDay = -1;
+			int currentYear = -1;
+			
+			for (int i=0; i<actions.size(); i++) {
+				Bill.Action action = actions.get(i);
+				
+				GregorianCalendar calendar = new GregorianCalendar();
+				calendar.setTime(action.acted_at);
+				int month = calendar.get(Calendar.MONTH);
+				int day = calendar.get(Calendar.DAY_OF_MONTH);
+				int year = calendar.get(Calendar.YEAR);
+				
+				if (currentMonth != month || currentDay != day || currentYear != year) {
+					String timestamp = ((year == thisYear) ? thisYearFormat : otherYearFormat).format(action.acted_at);
+					items.add(new Date(timestamp));
+					
+					currentMonth = month;
+					currentDay = day;
+					currentYear = year;
+				}
+				
+				String text = action.text;
+				String type = action.type;
+				if (type.equals("vote") || type.equals("vote2") || type.equals("vote-aux") || type.equals("vetoed") || type.equals("enacted"))
+					text = "<b>" + text + "</b>";
+				items.add(new Action(text));
 			}
 			
-			return view;
+			return items;
 		}
 
     }

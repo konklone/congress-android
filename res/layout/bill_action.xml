@@ -1,49 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/text"
+		
+	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:padding="10dp"
-	>
-
-	<TextView android:id="@+id/acted_at"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		
-		android:layout_weight="1"
-		android:layout_marginTop="3dp"
-		
-		android:textSize="16sp"
-		android:textColor="#dddddd"
-		
-		android:text="May 24, 2010"
-		/>
-		
-	<TextView android:id="@+id/type"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		
-		android:layout_weight="0"
-		android:layout_alignTop="@id/acted_at"
-		android:layout_alignParentRight="true"
-		
-		android:textSize="16sp"
-		android:textStyle="bold"
-		
-		android:text="Action"
-		android:textColor="#ffffff"
-		/>
-		
-	<TextView android:id="@+id/text"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		
-		android:layout_below="@+id/acted_at"
-		
-		android:layout_marginTop="7dp"
-		
-		android:textSize="16sp"
-		android:textColor="@android:color/white"
-		
-		android:text="DEBATE - The House proceeded with forty minutes of debate on H.R. 5160."
-		/>
-</RelativeLayout>
+	
+	android:paddingLeft="10dp"
+	android:paddingRight="10dp"
+	
+	android:paddingTop="5dp"
+	android:paddingBottom="5dp"
+	
+	android:lineSpacingExtra="2dp"
+	
+	android:textSize="14sp"
+	android:textColor="@color/grey"
+	
+	android:text="DEBATE - The House proceeded with forty minutes of debate on H.R. 5160."
+	/>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	
+	android:paddingLeft="10dp"
+	android:paddingRight="10dp"
+	>
+
+	<TextView android:id="@+id/day"
+		
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		
+		android:layout_marginBottom="3dp"
+		android:layout_marginTop="15dp"
+			
+		android:textSize="16sp"
+		android:textColor="@android:color/white"
+		
+		android:text="May 24, 2010"
+		/>
+	
+	<View 
+		android:layout_width="fill_parent"
+		android:layout_height="1px"
+		android:background="@android:color/white"
+		android:layout_marginBottom="2dp"
+		/>
+		
+</LinearLayout>
