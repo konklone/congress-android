@@ -17,8 +17,8 @@
 	<color name="tab_edges">#04081a</color>
 	<color name="tab_top">#04081a</color>
 	
-	<color name="pressed_top">#f58525</color>
-	<color name="pressed_bottom">#c56520</color>
+	<color name="tab_pressed_top">#f58525</color>
+	<color name="tab_pressed_bottom">#c56520</color>
 	
 	<color name="tab_selected_top">#234065</color>
 	<color name="tab_selected_bottom">#09264f</color>
