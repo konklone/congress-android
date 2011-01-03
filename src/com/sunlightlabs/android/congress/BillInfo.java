@@ -69,9 +69,8 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
         	detailedSponsor = holder.detailedSponsor;
         }
 		
-        if (loadSponsorTask != null) {
+        if (loadSponsorTask != null)
         	loadSponsorTask.onScreenLoad(this);
-        }
         
 		loadSummary();
 	}
@@ -222,7 +221,6 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		displayPhoto();
 	}
 	
-	@Override
 	public void onLoadLegislator(Legislator legislator) {
 		loadSponsorTask = null;
 		detailedSponsor = legislator;
@@ -315,14 +313,10 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
     }
 
 	private void startSponsorActivity() {
-		if (detailedSponsor != null) {
-			Intent intent = Utils.legislatorTabsIntent();
-			intent.putExtra("legislator", detailedSponsor);
-			startActivity(intent);
-		}
-		else {
+		if (detailedSponsor != null)
+			startActivity(Utils.legislatorTabsIntent().putExtra("legislator", detailedSponsor));
+		else
 			startActivity(Utils.legislatorLoadIntent(sponsor.getId()));
-		}
 	}
 	
 	@Override 
