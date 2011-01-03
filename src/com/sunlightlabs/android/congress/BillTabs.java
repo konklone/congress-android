@@ -27,17 +27,6 @@ public class BillTabs extends TabActivity {
 
 	private ImageView star;
 
-	/**
-	 * Regex for finding bills that end in "of 2009" or the like:
-	 *   * \s+   = one or more spaces (or other whitespace)
-	 *   * of     = "of"
-	 *   * \s+   = one or more spaces (or other whitespace)
-	 *   * \d{4} = 4 digits in a row (we'll need to update this to {5} in late 9999)
-	 *   * \s*   = zero or more spaces (probably unnecessary)
-	 *   * $      = end of line
-	 */
-	private static Pattern NEWS_SEARCH_REGEX = Pattern.compile("\\s+of\\s+\\d{4}\\s*$", Pattern.CASE_INSENSITIVE);
-
 	@Override
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -168,15 +157,22 @@ public class BillTabs extends TabActivity {
 		return new Intent(this, BillVotes.class).putExtra("bill", bill);
 	}
 	
+	
+	/**
+	 * Regex for finding bills that end in "of 2009" or the like:
+	 *   * \s+   = one or more spaces (or other whitespace)
+	 *   * of     = "of"
+	 *   * \s+   = one or more spaces (or other whitespace)
+	 *   * \d{4} = 4 digits in a row (we'll need to update this to {5} in late 9999)
+	 *   * \s*   = zero or more spaces (probably unnecessary)
+	 *   * $      = end of line
+	 */
+	private static Pattern NEWS_SEARCH_REGEX = Pattern.compile("\\s+of\\s+\\d{4}\\s*$", Pattern.CASE_INSENSITIVE);
+	
 	// for news searching, don't use legislator.titledName() because we don't want to use the name_suffix
 	private static String searchTermFor(Bill bill) {
-    	if (bill.short_title != null && !bill.short_title.equals("")) {
-    		Matcher matcher = NEWS_SEARCH_REGEX.matcher(bill.short_title);
-    		String searchTerm = matcher.replaceFirst("");
-    		Log.d("CONGRESS", "short title: '" + bill.short_title + "'");
-    		Log.d("CONGRESS", "search term: '" + searchTerm + "'");
-    		return searchTerm;
-    	}
+    	if (bill.short_title != null && !bill.short_title.equals(""))
+    		return NEWS_SEARCH_REGEX.matcher(bill.short_title).replaceFirst("");
     	else
     		return Bill.formatCodeShort(bill.code);
     }
