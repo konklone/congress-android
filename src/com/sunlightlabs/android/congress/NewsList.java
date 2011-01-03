@@ -222,7 +222,7 @@ public class NewsList extends ListActivity implements LoadsNews {
 
 	public void onLoadNews(CongressException e) {
 		this.onLoadNews((ArrayList<NewsItem>) null);
-		Utils.alert(this, e);
+		Utils.showRefresh(this, e.getMessage());		
 	}
 
 	public Context getContext() {

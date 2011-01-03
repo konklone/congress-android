@@ -241,8 +241,20 @@ public class Utils {
 	public static void setLoading(Activity activity, int message) {
 		((TextView) activity.findViewById(R.id.loading_message)).setText(message);
 	}
-
+	
+	public static void showBack(Activity activity, int message) {
+		showBack(activity, activity.getResources().getString(message));
+	}
+	
+	public static void showEmpty(Activity activity, int message) {
+		showEmpty(activity, activity.getResources().getString(message));
+	}
+	
 	public static void showRefresh(Activity activity, int message) {
+		showRefresh(activity, activity.getResources().getString(message));
+	}
+
+	public static void showRefresh(Activity activity, String message) {
 		activity.findViewById(R.id.loading).setVisibility(View.GONE);
 		TextView messageView = (TextView) activity.findViewById(R.id.empty_message);
 		messageView.setText(message);
@@ -250,7 +262,7 @@ public class Utils {
 		activity.findViewById(R.id.refresh).setVisibility(View.VISIBLE);
 	}
 
-	public static void showBack(Activity activity, int message) {
+	public static void showBack(Activity activity, String message) {
 		activity.findViewById(R.id.loading).setVisibility(View.GONE);
 		TextView messageView = (TextView) activity.findViewById(R.id.empty_message);
 		messageView.setText(message);
@@ -258,7 +270,7 @@ public class Utils {
 		activity.findViewById(R.id.back).setVisibility(View.VISIBLE);	
 	}
 
-	public static void showEmpty(Activity activity, int message) {
+	public static void showEmpty(Activity activity, String message) {
 		activity.findViewById(R.id.loading).setVisibility(View.GONE);
 		activity.findViewById(R.id.back).setVisibility(View.GONE);
 		TextView messageView = (TextView) activity.findViewById(R.id.empty_message);

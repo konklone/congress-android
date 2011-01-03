@@ -36,15 +36,10 @@ public class LoadNewsTask extends AsyncTask<String, Void, ArrayList<NewsItem>> {
 
 	@Override
 	protected ArrayList<NewsItem> doInBackground(String... params) {
-		if(params == null || params.length < 2) {
-			Log.w(TAG, "Could not fetch news. "
-					+ "Parameters must contain api key and search term.");
-			return null;
-		}
-		
 		String searchTerm = params[0];
 		String apiKey = params[1];
 		String referer = params[2];
+		
 		try {
 			return new NewsService(apiKey, referer).fetchNewsResults(searchTerm);
 		} catch (NewsException e) {
@@ -57,12 +52,10 @@ public class LoadNewsTask extends AsyncTask<String, Void, ArrayList<NewsItem>> {
 
 	@Override
 	protected void onPostExecute(ArrayList<NewsItem> news) {
-		if (news == null && exception != null) {
+		if (news == null && exception != null)
 			context.onLoadNews(exception);
-		}
-		else {
+		else
 			context.onLoadNews(news);
-		}
 	}
 
 }
