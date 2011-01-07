@@ -256,9 +256,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		LinearLayout tabContainer = (LinearLayout) header.findViewById(R.id.vote_tabs);
 		
-		View yeas = tabView(tabContainer);
-		View nays = tabView(tabContainer);
+		
 		if (roll.otherVotes.isEmpty()) {
+			View yeas = tabView(tabContainer);
 			((TextView) yeas.findViewById(R.id.name)).setText(R.string.yeas);
 			((TextView) yeas.findViewById(R.id.subname)).setText(roll.yeas + "");
 			yeas.setTag("yeas");
@@ -268,6 +268,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			if (currentTab == null)
 				currentTab = "yeas";
 			
+			View nays = tabView(tabContainer);
 			((TextView) nays.findViewById(R.id.name)).setText(R.string.nays);
 			((TextView) nays.findViewById(R.id.subname)).setText(roll.nays + "");
 			nays.setTag("nays");
@@ -276,23 +277,19 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		} else {
 			// if a roll call has non-standard votes, it's the House election of the Speaker - only known exception 
 			Iterator<String> names = roll.otherVotes.keySet().iterator();
-			String first = names.next();
-			String second = names.next();
-			
-			((TextView) yeas.findViewById(R.id.name)).setText(first);
-			((TextView) yeas.findViewById(R.id.subname)).setText(roll.otherVotes.get(first) + "");
-			yeas.setTag(first);
-			voterBreakdown.put(first, new ArrayList<Roll.Vote>());
-			yeas.setOnClickListener(tabListener);
-			
-			if (currentTab == null)
-				currentTab = first;
-			
-			((TextView) nays.findViewById(R.id.name)).setText(second);
-			((TextView) nays.findViewById(R.id.subname)).setText(roll.otherVotes.get(second) + "");
-			nays.setTag(second);
-			voterBreakdown.put(second, new ArrayList<Roll.Vote>());
-			nays.setOnClickListener(tabListener);
+			int i=0;
+			while (names.hasNext()) {
+				String name = names.next();
+				if (i == 0 && currentTab == null)
+					currentTab = name;
+					
+				View other = tabView(tabContainer);
+				((TextView) other.findViewById(R.id.name)).setText(name);
+				((TextView) other.findViewById(R.id.subname)).setText(roll.otherVotes.get(name) + "");
+				other.setTag(name);
+				voterBreakdown.put(name, new ArrayList<Roll.Vote>());
+				other.setOnClickListener(tabListener);
+			}
 		}
 		
 		View present = tabView(tabContainer);
