@@ -24,11 +24,6 @@
 	<!--  Hand-made tab layout for a tab-like experience while still keeping the tabs and list inline
 		  (so the tabs themselves will scroll up with the content) -->
 		
-<!--	<HorizontalScrollView-->
-<!--		android:layout_width="wrap_content"-->
-<!--		android:layout_height="wrap_content"-->
-<!--		android:fillViewport="true"-->
-<!--		>-->
 	<LinearLayout android:id="@+id/vote_tabs"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
@@ -39,7 +34,6 @@
 		
 		android:visibility="gone"
 		/>
-<!--	</HorizontalScrollView>-->
 	
 	<include layout="@layout/loading" android:id="@+id/loading_votes" />
 	

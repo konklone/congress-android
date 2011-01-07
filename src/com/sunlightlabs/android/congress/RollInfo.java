@@ -312,7 +312,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	
 	public View tabView(LinearLayout parent) {
 		View tab = inflater.inflate(R.layout.tab_2, null);
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(80, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
 		parent.addView(tab, params);
 		return tab;
 	}
