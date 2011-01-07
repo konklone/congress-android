@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -70,10 +71,14 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private String currentTab = null;
 	private Map<String,List<Roll.Vote>> voterBreakdown = new HashMap<String,List<Roll.Vote>>();
 	
+	LayoutInflater inflater;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_titled_fastscroll);
+		
+		inflater = LayoutInflater.from(this);
 		
 		database = new Database(this);
 		database.open();
@@ -249,8 +254,10 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			}
 		};
 		
-		View yeas = header.findViewById(R.id.yeas_header);
-		View nays = header.findViewById(R.id.nays_header);
+		LinearLayout tabContainer = (LinearLayout) header.findViewById(R.id.vote_tabs);
+		
+		View yeas = tabView(tabContainer);
+		View nays = tabView(tabContainer);
 		if (roll.otherVotes.isEmpty()) {
 			((TextView) yeas.findViewById(R.id.name)).setText(R.string.yeas);
 			((TextView) yeas.findViewById(R.id.subname)).setText(roll.yeas + "");
@@ -288,19 +295,26 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			nays.setOnClickListener(tabListener);
 		}
 		
-		View present = header.findViewById(R.id.present_header);
+		View present = tabView(tabContainer);
 		((TextView) present.findViewById(R.id.name)).setText(R.string.present);
 		((TextView) present.findViewById(R.id.subname)).setText(roll.present + "");
 		present.setTag("present");
 		voterBreakdown.put("present", new ArrayList<Roll.Vote>());
 		present.setOnClickListener(tabListener);
 		
-		View not_voting = header.findViewById(R.id.not_voting_header);
+		View not_voting = tabView(tabContainer);
 		((TextView) not_voting.findViewById(R.id.name)).setText(R.string.not_voting_short);
 		((TextView) not_voting.findViewById(R.id.subname)).setText(roll.not_voting + "");
 		not_voting.setTag("not_voting");
 		voterBreakdown.put("not_voting", new ArrayList<Roll.Vote>());
 		not_voting.setOnClickListener(tabListener);
+	}
+	
+	public View tabView(LinearLayout parent) {
+		View tab = inflater.inflate(R.layout.tab_2, null);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(80, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+		parent.addView(tab, params);
+		return tab;
 	}
 	
 	
