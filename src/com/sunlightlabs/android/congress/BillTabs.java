@@ -75,7 +75,7 @@ public class BillTabs extends TabActivity {
 	}
 	
 	public String shareText() {
-		String url = Bill.thomasUrl(bill.type, bill.number, bill.session);
+		String url = Bill.thomasUrl(bill.bill_type, bill.number, bill.session);
 		String short_title = bill.short_title;
 		if (short_title != null && !short_title.equals(""))
 			return "Check out the " + short_title + " on THOMAS: " + url;
@@ -97,6 +97,8 @@ public class BillTabs extends TabActivity {
 		if (cursor.getCount() == 1) {
 			if (database.removeBill(id) != 0)
 				toggleFavoriteStar(false);
+			else
+				Utils.alert(this, "Problem unstarring bill.");
 		} else {
 			if (database.addBill(bill) != -1) {
 				toggleFavoriteStar(true);
@@ -105,7 +107,8 @@ public class BillTabs extends TabActivity {
 					Utils.alert(this, R.string.bill_favorites_message);
 					Utils.markShownFavoritesMessage(this);
 				}
-			}
+			} else
+				Utils.alert(this, "Problem starring bill.");
 		}
 	}
 	
@@ -125,7 +128,7 @@ public class BillTabs extends TabActivity {
 		Utils.addTab(this, tabHost, "news", newsIntent(), getString(R.string.tab_news), res.getDrawable(R.drawable.tab_news));
 		Utils.addTab(this, tabHost, "history", historyIntent(), getString(R.string.tab_history), res.getDrawable(R.drawable.tab_history));
 		
-		if (bill.last_vote_at != null && bill.last_vote_at.getTime() > 0)
+		if (bill.last_passage_vote_at != null && bill.last_passage_vote_at.getTime() > 0)
 			Utils.addTab(this, tabHost, "votes", votesIntent(), getString(R.string.tab_votes), res.getDrawable(R.drawable.tab_video));
 		
 		if (tab != null) 

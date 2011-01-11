@@ -390,7 +390,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 					temp = LegislatorService.allWhere("state", state);
 					break;
 				case SEARCH_COSPONSORS:
-					temp = BillService.find(bill_id, "cosponsors").cosponsors;
+					temp = BillService.find(bill_id, new String[] {"cosponsors"}).cosponsors;
 					break;
 				default:
 					return legislators;

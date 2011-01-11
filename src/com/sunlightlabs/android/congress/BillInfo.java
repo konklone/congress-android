@@ -160,7 +160,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 			summaryView = inflater.inflate(R.layout.bill_no_summary, null);
 			TextView noSummary = (TextView) summaryView.findViewById(R.id.no_summary);
 			noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\""
-					+ Bill.thomasUrl(bill.type, bill.number, bill.session)
+					+ Bill.thomasUrl(bill.bill_type, bill.number, bill.session)
 					+ "\">Read the text of this bill on THOMAS.</a>"));
         	noSummary.setMovementMethod(LinkMovementMethod.getInstance());
 		}
@@ -337,16 +337,13 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
     				.setAction("com.android.launcher.action.INSTALL_SHORTCUT"));
     		break;
     	case R.id.thomas:
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.thomasUrl(bill.type,
-					bill.number, bill.session))));
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.thomasUrl(bill.bill_type, bill.number, bill.session))));
     		break;
     	case R.id.govtrack:
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.govTrackUrl(bill.type,
-					bill.number, bill.session))));
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.govTrackUrl(bill.bill_type, bill.number, bill.session))));
     		break;
     	case R.id.opencongress:
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.openCongressUrl(bill.type,
-					bill.number, bill.session))));
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.openCongressUrl(bill.bill_type, bill.number, bill.session))));
     		break;
     	}
     	return true;

@@ -6,5 +6,6 @@
     <string name="google_news_referer"></string>
     <string name="sunlight_api_key"></string>
     <string name="drumbone_user_agent"></string>
+    <string name="rtc_user_agent"></string>
     <string name="debug">false</string>
 </resources>

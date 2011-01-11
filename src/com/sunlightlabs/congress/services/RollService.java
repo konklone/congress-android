@@ -1,5 +1,6 @@
 package com.sunlightlabs.congress.services;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,7 +47,7 @@ public class RollService {
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
 	
-	protected static Roll fromDrumbone(JSONObject json) throws JSONException, DateParseException {
+	protected static Roll fromDrumbone(JSONObject json) throws JSONException, DateParseException, ParseException {
 		Roll roll = new Roll();
 		
 		if (!json.isNull("roll_id"))
@@ -73,7 +74,7 @@ public class RollService {
 			roll.voted_at = DateUtils.parseDate(json.getString("voted_at"), Drumbone.dateFormat);
 
 		if (!json.isNull("bill"))
-			roll.bill = BillService.fromDrumbone(json.getJSONObject("bill"));
+			roll.bill = BillService.fromRTC(json.getJSONObject("bill"));
 
 		if (!json.isNull("vote_breakdown")) {
 			JSONObject vote_breakdown = json.getJSONObject("vote_breakdown");
@@ -137,6 +138,8 @@ public class RollService {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);
 		} catch (DateParseException e) {
 			throw new CongressException(e, "Problem parsing a date in the JSON from " + url);
+		} catch (ParseException e) {
+			throw new CongressException(e, "Problem parsing a date in the JSON from " + url);
 		}
 	}
 	
@@ -153,6 +156,8 @@ public class RollService {
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);
 		} catch (DateParseException e) {
+			throw new CongressException(e, "Problem parsing a date in the JSON from " + url);
+		} catch (ParseException e) {
 			throw new CongressException(e, "Problem parsing a date in the JSON from " + url);
 		}
 		

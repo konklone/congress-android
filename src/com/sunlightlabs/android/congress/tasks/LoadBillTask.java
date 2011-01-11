@@ -16,7 +16,7 @@ public class LoadBillTask extends AsyncTask<String,Void,Bill> {
 	public LoadBillTask(LoadsBill context, String billId) {
 		this.context = context;
 		this.billId = billId;
-		Utils.setupDrumbone(context.getContext());
+		Utils.setupRTC(context.getContext());
 	}
 
 	public void onScreenLoad(LoadsBill context) {
@@ -26,7 +26,7 @@ public class LoadBillTask extends AsyncTask<String,Void,Bill> {
 	@Override
 	public Bill doInBackground(String... sections) {
 		try {
-			return BillService.find(billId, sections[0]);
+			return BillService.find(billId, sections);
 		} catch (CongressException exception) {
 			this.exception = exception;
 			return null;

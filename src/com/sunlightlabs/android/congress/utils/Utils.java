@@ -28,11 +28,24 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.Drumbone;
+import com.sunlightlabs.congress.services.RealTimeCongress;
 import com.sunlightlabs.congress.services.Sunlight;
 
 public class Utils {
 	private static Method setView = null;
 	public static final String TAG = "CONGRESS";
+	
+	public static void setupRTC(Context context) {
+		Resources resources = context.getResources();
+		
+		RealTimeCongress.userAgent = resources.getString(R.string.rtc_user_agent);
+		RealTimeCongress.apiKey = resources.getString(R.string.sunlight_api_key);
+		RealTimeCongress.appVersion = resources.getString(R.string.app_version);
+		
+		// report to RTC what version of Android we're using, if RTC cares (and it does)
+		RealTimeCongress.extraHeaderKey =  "android-api-level";
+		RealTimeCongress.extraHeaderValue = Build.VERSION.SDK;
+	}
 	
 	public static void setupDrumbone(Context context) {
 		Resources resources = context.getResources();

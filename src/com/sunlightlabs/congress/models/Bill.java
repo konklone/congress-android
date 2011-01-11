@@ -10,17 +10,17 @@ public class Bill implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// basic
-	public String id, code, type, state, chamber;
+	public String id, code, bill_type, state, chamber;
 	public int session, number;
 	public String short_title, official_title;
-	public Date last_action_at, last_vote_at;
+	public Date last_action_at, last_passage_vote_at;
 	public int cosponsors_count;
 	
-	public Date introduced_at, house_result_at, senate_result_at, passed_at;
+	public Date introduced_at, house_result_at, senate_result_at;
 	public Date vetoed_at, override_house_result_at, override_senate_result_at;
 	public Date awaiting_signature_since, enacted_at;
 	
-	public boolean passed, vetoed, awaiting_signature, enacted;
+	public boolean vetoed, awaiting_signature, enacted;
 	public String house_result, senate_result, override_house_result, override_senate_result;
 	
 	// sponsor
@@ -35,7 +35,7 @@ public class Bill implements Serializable {
 	// votes
 	public String last_vote_result;
 	public String last_vote_chamber;
-	public List<Bill.Vote> votes;
+	public List<Bill.Vote> passage_votes;
 	
 	// actions
 	public List<Bill.Action> actions;
@@ -49,7 +49,7 @@ public class Bill implements Serializable {
 	
 	public static class Vote implements Serializable {
 		private static final long serialVersionUID = 1L;
-		public String result, text, how, type, chamber, roll_id;
+		public String result, text, how, passage_type, chamber, roll_id;
 		public Date voted_at;
 	}
 	

@@ -25,7 +25,7 @@ public class ActionsBillSubscriber extends Subscriber {
 		String billId = subscription.data;
 		
 		try {
-			return BillService.find(billId, "actions").actions;
+			return BillService.find(billId, new String[] {"actions"}).actions;
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest actions for " + subscription, e);
 			return null;

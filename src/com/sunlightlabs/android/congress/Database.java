@@ -15,7 +15,7 @@ import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
-import com.sunlightlabs.congress.services.Drumbone;
+import com.sunlightlabs.congress.services.RealTimeCongress;
 
 public class Database {
 	private static final int DATABASE_VERSION = 3; // updated last for version 2.9
@@ -29,14 +29,17 @@ public class Database {
 			"govtrack_id", "first_name", "last_name", "nickname", "name_suffix", "title", "party",
 			"state", "district", "gender", "congress_office", "website", "phone", "twitter_id",
 			"youtube_url" };
-	private static final String[] BILL_COLUMNS = new String[] { "id", "type", "number", "session",
-			"code", "short_title", "official_title", "house_result", "senate_result", "passed",
-			"vetoed", "override_house_result", "override_senate_result", "awaiting_signature",
-			"enacted", "last_vote_at", "last_action_at", "introduced_at", "house_result_at",
-			"senate_result_at", "passed_at", "vetoed_at", "override_house_result_at",
-			"override_senate_result_at", "awaiting_signature_since", "enacted_at", "sponsor_id",
-			"sponsor_party", "sponsor_state", "sponsor_title", "sponsor_first_name",
-			"sponsor_nickname", "sponsor_last_name" };
+	private static final String[] BILL_COLUMNS = new String[] { 
+			"id", "bill_type", "number", "session", "code", "short_title", "official_title", 
+			
+			"house_result", "senate_result", "vetoed", "override_house_result", "override_senate_result", "awaiting_signature",
+			"enacted", "last_passage_vote_at", "last_action_at", "introduced_at", "house_result_at",
+			"senate_result_at", "vetoed_at", "override_house_result_at",
+			"override_senate_result_at", "awaiting_signature_since", "enacted_at", 
+			
+			"sponsor_id", "sponsor_party", "sponsor_state", "sponsor_title", "sponsor_first_name",
+			"sponsor_nickname", "sponsor_last_name" 
+			};
 
 	private static final String[] SUBSCRIPTION_COLUMNS = new String[] {
 			"id", "name", "data", "last_seen_id", "notification_class" };
@@ -44,8 +47,9 @@ public class Database {
 	private DatabaseHelper helper;
 	private SQLiteDatabase database;
 	private Context context;
-	// uses Drumbone date format
-	private static SimpleDateFormat df = new SimpleDateFormat(Drumbone.dateFormat[0]);
+	
+	// uses RTC date format
+	private static SimpleDateFormat format = new SimpleDateFormat(RealTimeCongress.dateFormat);
 
 	public Database(Context context) {
 		this.context = context;
@@ -93,11 +97,11 @@ public class Database {
 	}
 
 	public static String formatDate(Date date) {
-		return date == null ? null : df.format(date);
+		return date == null ? null : format.format(date);
 	}
 
 	public static Date parseDate(String date) throws ParseException {
-		return date == null ? null : df.parse(date);
+		return date == null ? null : format.parse(date);
 	}
 
 	public long addBill(Bill bill) {
@@ -162,7 +166,7 @@ public class Database {
 		Bill bill = new Bill();
 
 		bill.id = c.getString(c.getColumnIndex("id"));
-		bill.type = c.getString(c.getColumnIndex("type"));
+		bill.bill_type = c.getString(c.getColumnIndex("bill_type"));
 		bill.number = c.getInt(c.getColumnIndex("number"));
 		bill.session = c.getInt(c.getColumnIndex("session"));
 		bill.code = c.getString(c.getColumnIndex("code"));
@@ -170,7 +174,6 @@ public class Database {
 		bill.official_title = c.getString(c.getColumnIndex("official_title"));
 		bill.house_result = c.getString(c.getColumnIndex("house_result"));
 		bill.senate_result = c.getString(c.getColumnIndex("senate_result"));
-		bill.passed = Boolean.parseBoolean(c.getString(c.getColumnIndex("passed")));
 		bill.vetoed = Boolean.parseBoolean(c.getString(c.getColumnIndex("vetoed")));
 		bill.override_house_result = c.getString(c.getColumnIndex("override_house_result"));
 		bill.override_senate_result = c.getString(c.getColumnIndex("override_senate_result"));
@@ -179,12 +182,11 @@ public class Database {
 		bill.enacted = Boolean.parseBoolean(c.getString(c.getColumnIndex("enacted")));
 
 		try {
-			bill.last_vote_at = parseDate(c.getString(c.getColumnIndex("last_vote_at")));
+			bill.last_passage_vote_at = parseDate(c.getString(c.getColumnIndex("last_passage_vote_at")));
 			bill.last_action_at = parseDate(c.getString(c.getColumnIndex("last_action_at")));
 			bill.introduced_at = parseDate(c.getString(c.getColumnIndex("introduced_at")));
 			bill.house_result_at = parseDate(c.getString(c.getColumnIndex("house_result_at")));
 			bill.senate_result_at = parseDate(c.getString(c.getColumnIndex("senate_result_at")));
-			bill.passed_at = parseDate(c.getString(c.getColumnIndex("passed_at")));
 			bill.vetoed_at = parseDate(c.getString(c.getColumnIndex("vetoed_at")));
 			bill.override_house_result_at = parseDate(c.getString(c
 					.getColumnIndex("override_house_result_at")));
@@ -311,7 +313,7 @@ public class Database {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		}
 
-		private String sqlCreateTable(String table, String[] columns) {
+		private void createTable(SQLiteDatabase db, String table, String[] columns) {
 			StringBuilder sql = new StringBuilder("CREATE TABLE " + table);
 			sql.append(" (_id INTEGER PRIMARY KEY AUTOINCREMENT");
 
@@ -319,14 +321,24 @@ public class Database {
 				sql.append(", " + columns[i] + " TEXT");
 
 			sql.append(");");
-			return sql.toString();
+			db.execSQL(sql.toString());
+		}
+		
+		private void renameColumn(SQLiteDatabase db, String table, String oldColumn, String newColumn) {
+			addColumn(db, table, newColumn);
+			db.execSQL("UPDATE TABLE SET " + newColumn + "=" + oldColumn + ";");
+			// abandon old column, no way to remove columns in SQLite
+		}
+		
+		private void addColumn(SQLiteDatabase db, String table, String newColumn) {
+			db.execSQL("ALTER TABLE ADD COLUMN " + newColumn + " TEXT;");
 		}
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			db.execSQL(sqlCreateTable("bills", BILL_COLUMNS));
-			db.execSQL(sqlCreateTable("legislators", LEGISLATOR_COLUMNS));
-			db.execSQL(sqlCreateTable("subscriptions", SUBSCRIPTION_COLUMNS));
+			createTable(db, "bills", BILL_COLUMNS);
+			createTable(db, "legislators", LEGISLATOR_COLUMNS);
+			createTable(db, "subscriptions", SUBSCRIPTION_COLUMNS);
 		}
 
 		@Override
@@ -334,14 +346,29 @@ public class Database {
 			Log.w(TAG, "Upgrading " + DATABASE_NAME + " from version " + oldVersion + " to "
 					+ newVersion + ", wiping old data");
 
-			// Version 1 - Never released
-			// Version 2 - Favorites (bills and legislators table), as released
-			//   in version 2.6
-			// Version 3 - Notifications (subscriptions table), as released
-			// 	 in version 2.9
-
-			if (oldVersion <= 2)
-				db.execSQL(sqlCreateTable("subscriptions", SUBSCRIPTION_COLUMNS));
+			// Version 2 - Favorites (bills and legislators table), 
+			//   first release, in version 2.6
+			
+			// Version 3 - Notifications (subscriptions table)
+			// 	 released in version 2.9
+			if (oldVersion < 3)
+				createTable(db, "subscriptions", SUBSCRIPTION_COLUMNS);
+			
+			// Version 4 - Switch to RTC API (column additions/"renames")
+			//   released in version 3.0
+			if (oldVersion < 4) {
+				renameColumn(db, "bills", "last_vote_at", "last_passage_vote_at");
+				renameColumn(db, "bills", "type", "bill_type");
+				// abandoned 'passed' column, no SQL to run
+				// abandoned 'passed_at' column, no SQL to run
+				
+				//TODO: renameColumn(db, "bills", "house_result", "passage_house_result");
+				//TODO: renameColumn(db, "bills", "house_result_at", "passage_house_result_at");
+				//TODO: renameColumn(db, "bills", "senate_result", "passage_senate_result");
+				//TODO: renameColumn(db, "bills", "senate_result_at", "passage_senate_result_at");
+				//TODO: addColumn(db, "bills", "cloture_senate_result");
+				//TODO: addColumn(db, "bills", "cloture_senate_result_at");
+			}
 		}
 	}
 }

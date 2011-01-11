@@ -61,9 +61,9 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (bill.votes != null) {
-			if (bill.votes.size() > 0)
-				setupSubscription(bill.votes.get(0));
+		if (bill.passage_votes != null) {
+			if (bill.passage_votes.size() > 0)
+				setupSubscription(bill.passage_votes.get(0));
 			else
 				setupSubscription(null);
 		}
@@ -76,7 +76,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	}
 
 	public void loadBill() {
-		if (bill.votes == null)
+		if (bill.passage_votes == null)
 			loadBillTask = (LoadBillTask) new LoadBillTask(this, bill.id).execute("votes");
 		else
 			displayBill();
@@ -93,7 +93,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	
 	public void onLoadBill(Bill bill) {
 		this.loadBillTask = null;
-		this.bill.votes = bill.votes;
+		this.bill.passage_votes = bill.passage_votes;
 		displayBill();
 	}
 	
@@ -102,9 +102,9 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	}
 	
 	public void displayBill() {
-		if (bill.votes.size() > 0) {
-			setupSubscription(bill.votes.get(0));
-			setListAdapter(new BillVoteAdapter(this, bill.votes));
+		if (bill.passage_votes.size() > 0) {
+			setupSubscription(bill.passage_votes.get(0));
+			setListAdapter(new BillVoteAdapter(this, bill.passage_votes));
 		} else {
 			setupSubscription(null);
 			Utils.showEmpty(this, R.string.bill_votes_empty);
