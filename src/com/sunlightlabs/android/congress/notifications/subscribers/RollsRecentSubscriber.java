@@ -26,7 +26,7 @@ public class RollsRecentSubscriber extends Subscriber {
 		Utils.setupRTC(context);
 		
 		try {
-			return RollService.latestVotes(PER_PAGE, 1);
+			return RollService.latestVotes(1, PER_PAGE);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest votes for " + subscription, e);
 			return null;

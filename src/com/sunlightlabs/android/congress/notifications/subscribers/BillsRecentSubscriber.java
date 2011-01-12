@@ -26,7 +26,7 @@ public class BillsRecentSubscriber extends Subscriber {
 		Utils.setupRTC(context);
 		
 		try {
-			return BillService.recentlyIntroduced(PER_PAGE, 1);
+			return BillService.recentlyIntroduced(1, PER_PAGE);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest bills for " + subscription, e);
 			return null;
