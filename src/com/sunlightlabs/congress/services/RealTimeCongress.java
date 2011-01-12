@@ -38,8 +38,17 @@ public class RealTimeCongress {
 	
 	
 	public static String url(String method, String[] sections, Map<String,String> params) {
+		return url(method, sections, params, -1, -1);
+	}
+	
+	public static String url(String method, String[] sections, Map<String,String> params, int page, int per_page) {
 		params.put("apikey", apiKey);
 		params.put("sections", TextUtils.join(",", sections));
+		
+		if (page > 0 && per_page > 0) {
+			params.put("page", String.valueOf(page));
+			params.put("per_page", String.valueOf(per_page));
+		}
 		
 		StringBuilder query = new StringBuilder("");
 		Iterator<String> iterator = params.keySet().iterator();

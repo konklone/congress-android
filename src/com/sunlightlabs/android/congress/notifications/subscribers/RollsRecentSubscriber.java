@@ -23,7 +23,7 @@ public class RollsRecentSubscriber extends Subscriber {
 
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
-		Utils.setupDrumbone(context);
+		Utils.setupRTC(context);
 		
 		try {
 			return RollService.latestVotes(PER_PAGE, 1);

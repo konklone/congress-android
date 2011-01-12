@@ -27,7 +27,6 @@ import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.models.Roll;
-import com.sunlightlabs.congress.services.Drumbone;
 import com.sunlightlabs.congress.services.RealTimeCongress;
 import com.sunlightlabs.congress.services.Sunlight;
 
@@ -45,18 +44,6 @@ public class Utils {
 		// report to RTC what version of Android we're using, if RTC cares (and it does)
 		RealTimeCongress.extraHeaderKey =  "android-api-level";
 		RealTimeCongress.extraHeaderValue = Build.VERSION.SDK;
-	}
-	
-	public static void setupDrumbone(Context context) {
-		Resources resources = context.getResources();
-		
-		Drumbone.userAgent = resources.getString(R.string.drumbone_user_agent);
-		Drumbone.apiKey = resources.getString(R.string.sunlight_api_key);
-		Drumbone.appVersion = resources.getString(R.string.app_version);
-		
-		// report to Drumbone what version of Android we're using, if Drumbone cares (and it does)
-		Drumbone.extraHeaderKey =  "android-api-level";
-		Drumbone.extraHeaderValue = Build.VERSION.SDK;
 	}
 
 	public static void setupSunlight(Context context) {

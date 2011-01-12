@@ -23,7 +23,7 @@ public class BillsLawsSubscriber extends Subscriber {
 
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
-		Utils.setupDrumbone(context);
+		Utils.setupRTC(context);
 		
 		try {
 			return BillService.recentLaws(PER_PAGE, 1);

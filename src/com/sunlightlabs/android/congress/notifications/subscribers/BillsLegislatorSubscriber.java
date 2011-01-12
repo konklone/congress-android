@@ -23,9 +23,9 @@ public class BillsLegislatorSubscriber extends Subscriber {
 
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
-		Utils.setupDrumbone(context);
+		Utils.setupRTC(context);
 		try {
-			return BillService.recentlySponsored(PER_PAGE, subscription.id, 1);
+			return BillService.recentlySponsored(subscription.id, 1, PER_PAGE);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest sponsored bills for " + subscription, e);
 			return null;

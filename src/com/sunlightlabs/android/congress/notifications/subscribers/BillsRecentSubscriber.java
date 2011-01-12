@@ -23,7 +23,7 @@ public class BillsRecentSubscriber extends Subscriber {
 
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
-		Utils.setupDrumbone(context);
+		Utils.setupRTC(context);
 		
 		try {
 			return BillService.recentlyIntroduced(PER_PAGE, 1);

@@ -31,7 +31,7 @@ import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.RollService;
 
 public class RollList extends ListActivity {
-	private static final int ROLLS = 20;
+	private static final int PER_PAGE = 20;
 	
 	public static final int ROLLS_VOTER = 0;
 	public static final int ROLLS_LATEST = 1;
@@ -154,9 +154,9 @@ public class RollList extends ListActivity {
 	public void onLoadRolls(List<Roll> newRolls) {
 		// if this is the first page of rolls, set up the subscription
 		if (rolls.size() == 0) {
-			if (newRolls.size() > 0) {
+			if (newRolls.size() > 0)
 				setupSubscription(newRolls.get(0));
-			} else {
+			else {
 				setupSubscription(null);
 				Utils.showBack(this, R.string.empty_rolls);
 				return;
@@ -167,15 +167,14 @@ public class RollList extends ListActivity {
 		// remove the placeholder and add the new bills in the array
 		if (rolls.size() > 0) {
 			int lastIndex = rolls.size() - 1;
-			if (rolls.get(lastIndex) == null) {
+			if (rolls.get(lastIndex) == null)
 				rolls.remove(lastIndex);
-			}
 		}
 
 		rolls.addAll(newRolls);
 
 		// if we got back a full page of bills, there may be more yet to come
-		if (newRolls.size() == ROLLS)
+		if (newRolls.size() == PER_PAGE)
 			rolls.add(null);
 
 		((RollAdapter) getListAdapter()).notifyDataSetChanged();
@@ -272,27 +271,27 @@ public class RollList extends ListActivity {
 			TextView msgView = holder.roll;
 			if (context.type == RollList.ROLLS_VOTER) {
 				Roll.Vote vote = roll.voter_ids.get(context.voter.bioguide_id);
-				if (vote == null || vote.vote == Roll.NOT_VOTING) {
+				if (vote == null || vote.vote.equals(Roll.NOT_VOTING)) {
 					msgView.setText("Did Not Vote");
 					msgView.setTextColor(resources.getColor(android.R.color.white));
 					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-				} else if (vote.vote == Roll.OTHER) {
-					msgView.setText(vote.vote_name);
-					msgView.setTextColor(resources.getColor(android.R.color.white));
-					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-				} else if (vote.vote == Roll.YEA) {
-					msgView.setText("Yea");
+				} else if (vote.vote.equals(Roll.YEA)) {
+					msgView.setText(vote.vote);
 					msgView.setTextColor(resources.getColor(R.color.yea));
 					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-				} else if (vote.vote == Roll.NAY) {
-					msgView.setText("Nay");
+				} else if (vote.vote.equals(Roll.NAY)) {
+					msgView.setText(vote.vote);
 					msgView.setTextColor(resources.getColor(R.color.nay));
 					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-				} else if (vote.vote == Roll.PRESENT) {
-					msgView.setText("Present");
+				} else if (vote.vote.equals(Roll.PRESENT)) {
+					msgView.setText(vote.vote);
 					msgView.setTextColor(resources.getColor(android.R.color.white));
 					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-				}
+				} else {
+					msgView.setText(vote.vote);
+					msgView.setTextColor(resources.getColor(android.R.color.white));
+					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+				} 
 				
 			} else
 				msgView.setText(Utils.capitalize(roll.chamber) + " Roll No. " + roll.number);
@@ -312,23 +311,21 @@ public class RollList extends ListActivity {
 		
 		private String resultFor(Roll roll) {
 			String breakdown;
-			if (roll.otherVotes.isEmpty()) {
-				breakdown = roll.yeas + "-" + roll.nays;
-				if (roll.present > 0)
-					breakdown += "-" + roll.present;
-			} else {
-				// if a roll call has non-standard votes, it's the House election of the Speaker - only known exception
+			if (roll.otherVotes) {
 				breakdown = "";
-				Iterator<Integer> iter = roll.otherVotes.values().iterator();
+				Iterator<Integer> iter = roll.voteBreakdown.values().iterator();
 				while (iter.hasNext()) {
-					int val = iter.next().intValue();
-					breakdown += "" + val;
+					breakdown += iter.next();
 					if (iter.hasNext())
 						breakdown += "-";
 				}
+			} else {
+				breakdown = roll.voteBreakdown.get(Roll.YEA)+ "-" + roll.voteBreakdown.get(Roll.NAY);
+				if (roll.voteBreakdown.get(Roll.PRESENT) > 0)
+					breakdown += "-" + roll.voteBreakdown.get(Roll.PRESENT);
 			}
 			
-			return roll.result + ", " + breakdown;
+			return roll.result + ", " + breakdown.toString();
 		}
 	}
 	
@@ -338,7 +335,7 @@ public class RollList extends ListActivity {
 
 		public LoadRollsTask(RollList context) {
 			this.context = context;
-			Utils.setupDrumbone(context);
+			Utils.setupRTC(context);
 		}
 
 		public void onScreenLoad(RollList context) {
@@ -348,15 +345,15 @@ public class RollList extends ListActivity {
 		@Override
 		public List<Roll> doInBackground(Void... nothing) {
 			try {
-				int page = (context.rolls.size() / ROLLS) + 1;
+				int page = (context.rolls.size() / PER_PAGE) + 1;
 
 				switch (context.type) {
 				case ROLLS_VOTER:
-					return RollService.latestVotes(context.voter.id, context.voter.chamber, ROLLS, page);
+					return RollService.latestVotes(context.voter.id, context.voter.chamber, page, PER_PAGE);
 				case ROLLS_LATEST:
-					return RollService.latestVotes(ROLLS, page);
+					return RollService.latestVotes(page, PER_PAGE);
 				case ROLLS_NOMINATIONS:
-					return RollService.latestNominations(ROLLS, page);
+					return RollService.latestNominations(page, PER_PAGE);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
 				}

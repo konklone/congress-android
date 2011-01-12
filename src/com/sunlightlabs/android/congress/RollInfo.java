@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -256,62 +257,68 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		LinearLayout tabContainer = (LinearLayout) header.findViewById(R.id.vote_tabs);
 		
-		
-		if (roll.otherVotes.isEmpty()) {
-			View yeas = tabView(tabContainer);
-			((TextView) yeas.findViewById(R.id.name)).setText(R.string.yeas);
-			((TextView) yeas.findViewById(R.id.subname)).setText(roll.yeas + "");
-			yeas.setTag("yeas");
-			voterBreakdown.put("yeas", new ArrayList<Roll.Vote>());
-			yeas.setOnClickListener(tabListener);
-			
-			if (currentTab == null)
-				currentTab = "yeas";
-			
-			View nays = tabView(tabContainer);
-			((TextView) nays.findViewById(R.id.name)).setText(R.string.nays);
-			((TextView) nays.findViewById(R.id.subname)).setText(roll.nays + "");
-			nays.setTag("nays");
-			voterBreakdown.put("nays", new ArrayList<Roll.Vote>());
-			nays.setOnClickListener(tabListener);
-		} else {
-			// if a roll call has non-standard votes, it's the House election of the Speaker - only known exception 
-			Iterator<String> names = roll.otherVotes.keySet().iterator();
-			int i=0;
-			while (names.hasNext()) {
-				String name = names.next();
-				if (i == 0 && currentTab == null)
-					currentTab = name;
-					
-				View other = tabView(tabContainer);
-				((TextView) other.findViewById(R.id.name)).setText(name);
-				((TextView) other.findViewById(R.id.subname)).setText(roll.otherVotes.get(name) + "");
-				other.setTag(name);
-				voterBreakdown.put(name, new ArrayList<Roll.Vote>());
-				other.setOnClickListener(tabListener);
+		// yea and nay should always be first and second, if present
+		// present and not voting should always be second to last and last
+		Comparator<String> tabSorter = new Comparator<String>() {
+			public int compare(String one, String other) {
+				if (one.equals(Roll.NOT_VOTING))
+					return 1;
+				else if (one.equals(Roll.PRESENT)) {
+					if (other.equals(Roll.NOT_VOTING))
+						return -1;
+					else
+						return 1;
+				} else if (one.equals(Roll.YEA))
+					return -1;
+				else if (one.equals(Roll.NAY)) {
+					if (other.equals(Roll.YEA))
+						return 1;
+					else
+						return -1;
+				} else {
+					if (other.equals(Roll.NOT_VOTING) || other.equals(Roll.PRESENT))
+						return -1;
+					else
+						return one.compareTo(other);
+				}
 			}
+		};
+		
+		Iterator<String> iter = roll.voteBreakdown.keySet().iterator();
+		List<String> names = new ArrayList<String>();
+		while (iter.hasNext())
+			names.add(iter.next());
+		
+		Collections.sort(names, tabSorter);
+		
+		for (int i=0; i<names.size(); i++) {
+			String name = names.get(i);
+			if (i == 0 && currentTab == null)
+				currentTab = name;
+			
+			addTab(name, tabContainer, tabListener);
 		}
-		
-		View present = tabView(tabContainer);
-		((TextView) present.findViewById(R.id.name)).setText(R.string.present);
-		((TextView) present.findViewById(R.id.subname)).setText(roll.present + "");
-		present.setTag("present");
-		voterBreakdown.put("present", new ArrayList<Roll.Vote>());
-		present.setOnClickListener(tabListener);
-		
-		View not_voting = tabView(tabContainer);
-		((TextView) not_voting.findViewById(R.id.name)).setText(R.string.not_voting_short);
-		((TextView) not_voting.findViewById(R.id.subname)).setText(roll.not_voting + "");
-		not_voting.setTag("not_voting");
-		voterBreakdown.put("not_voting", new ArrayList<Roll.Vote>());
-		not_voting.setOnClickListener(tabListener);
 	}
 	
-	public View tabView(LinearLayout parent) {
+	public void addTab(String name, LinearLayout parent, View.OnClickListener tabListener) {
 		View tab = inflater.inflate(R.layout.tab_2, null);
+		
+		String displayName;
+		if (name.equals(Roll.NOT_VOTING))
+			displayName = getResources().getString(R.string.not_voting_short);
+		else
+			displayName = name;
+		
+		((TextView) tab.findViewById(R.id.name)).setText(displayName);
+		((TextView) tab.findViewById(R.id.subname)).setText(roll.voteBreakdown.get(name) + "");
+		
+		tab.setTag(name);
+		tab.setOnClickListener(tabListener);
+		
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
 		parent.addView(tab, params);
-		return tab;
+		
+		voterBreakdown.put(name, new ArrayList<Roll.Vote>());
 	}
 	
 	
@@ -325,19 +332,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		Iterator<Roll.Vote> iter = allVoters.iterator();
 		while (iter.hasNext()) {
 			Roll.Vote vote = iter.next();
-			String name;
-			if (vote.vote == Roll.YEA)
-				name = "yeas";
-			else if (vote.vote == Roll.NAY) 
-				name = "nays";
-			else if (vote.vote == Roll.PRESENT)
-				name = "present";
-			else if (vote.vote == Roll.NOT_VOTING)
-				name = "not_voting";
-			else // vote.vote == Roll.OTHER
-				name = vote.vote_name;
-			
-			voterBreakdown.get(name).add(vote);
+			voterBreakdown.get(vote.vote).add(vote);
 		}
 		
 		// hide loading, show tabs
@@ -473,7 +468,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			this.context = context;
 			this.rollId = rollId;
 			this.tag = tag;
-			Utils.setupDrumbone(context);
+			Utils.setupRTC(context);
 		}
 		
 		public void onScreenLoad(RollInfo context) {
@@ -483,7 +478,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		@Override
 		public Roll doInBackground(String... sections) {
 			try {
-				return RollService.find(rollId, sections[0]);
+				return RollService.find(rollId, sections);
 			} catch (CongressException exception) {
 				this.exception = exception;
 				return null;
@@ -569,36 +564,26 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			holder.star.setVisibility(starred ? View.VISIBLE : View.GONE);
 			
 			TextView voteView = holder.vote;
-			int value = vote.vote;
-			switch (value) {
-			case Roll.YEA:
-				voteView.setText("Yea");
+			String value = vote.vote;
+			if (value.equals(Roll.YEA)) {
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 				voteView.setTextColor(resources.getColor(R.color.yea));
-				break;
-			case Roll.NAY:
-				voteView.setText("Nay");
+			} else if (value.equals(Roll.NAY)) {
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 				voteView.setTextColor(resources.getColor(R.color.nay));
-				break;
-			case Roll.PRESENT:
-				voteView.setText("Present");
+			} else if (value.equals(Roll.PRESENT)) {
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
 				voteView.setTextColor(resources.getColor(R.color.present));
-				break;
-			case Roll.NOT_VOTING:
-				voteView.setText("Not Voting");
+			} else if (value.equals(Roll.NOT_VOTING)) {
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
 				voteView.setTextColor(resources.getColor(R.color.not_voting));
-				break;
-			case Roll.OTHER:
-			default:
-				voteView.setText(vote.vote_name);
+			} else {
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 				voteView.setTextColor(resources.getColor(android.R.color.white));
-				break;
 			}
-			 
+			
+			voteView.setText(vote.vote);
+			
 			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_MEDIUM, legislator.bioguide_id, context);
 			if (photo != null)
 				holder.photo.setImageDrawable(photo);
@@ -651,7 +636,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		private LoadRollTask loadRollTask, loadVotersTask;
 		private Roll roll;
 		private Map<String,Roll.Vote> voters;
-    Map<String,LoadPhotoTask> loadPhotoTasks;
+		Map<String,LoadPhotoTask> loadPhotoTasks;
 		private String currentTab;
 		
 		public RollInfoHolder(LoadRollTask loadRollTask, Roll roll, LoadRollTask loadVotersTask, Map<String,Roll.Vote> voters, Map<String,LoadPhotoTask> loadPhotoTasks, String currentTab) {

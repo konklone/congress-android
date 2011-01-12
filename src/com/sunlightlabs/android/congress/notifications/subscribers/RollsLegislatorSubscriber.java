@@ -23,7 +23,7 @@ public class RollsLegislatorSubscriber extends Subscriber {
 
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
-		Utils.setupDrumbone(context);
+		Utils.setupRTC(context);
 		String chamber = subscription.data;
 		
 		try {

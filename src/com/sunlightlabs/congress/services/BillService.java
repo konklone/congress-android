@@ -2,7 +2,6 @@ package com.sunlightlabs.congress.services;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,32 +20,40 @@ public class BillService {
 	
 	/* Main methods */
 	
-	public static List<Bill> recentlyIntroduced(int n, int p) throws CongressException {
-		return billsFor(Drumbone.url("bills",
-				"order=introduced_at&sections=basic,sponsor&per_page=" + n + "&page=" + p));
+	public static List<Bill> recentlyIntroduced(int page, int per_page) throws CongressException {
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("order", "introduced_at");
+		
+		String[] sections = new String[] {"basic", "sponsor"};
+		
+		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page)); 
 	}
 
-	public static List<Bill> recentLaws(int n, int p) throws CongressException {
-		return billsFor(Drumbone
-				.url("bills", "order=enacted_at&enacted=true&sections=basic,sponsor&per_page=" + n
-						+ "&page=" + p));
+	public static List<Bill> recentLaws(int page, int per_page) throws CongressException {
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("order", "enacted_at");
+		params.put("enacted", "true");
+		
+		String[] sections = new String[] {"basic", "sponsor"};
+		
+		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
 	}
 
-	public static List<Bill> recentlySponsored(int n, String sponsorId, int p)
-			throws CongressException {
-		return billsFor(Drumbone.url("bills", "order=introduced_at&sponsor_id=" + sponsorId
-				+ "&sections=basic,sponsor&per_page=" + n + "&page=" + p));
+	public static List<Bill> recentlySponsored(String sponsorId, int page, int per_page) throws CongressException {
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("order", "introduced_at");
+		params.put("sponsor_id", sponsorId);
+		
+		String[] sections = new String[] {"basic", "sponsor"};
+		
+		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
 	}
 
 	public static Bill find(String id, String[] sections) throws CongressException {
-		Map<String, String> params = new HashMap<String,String>();
+		Map<String,String> params = new HashMap<String,String>();
 		params.put("bill_id", id);
 				
 		return billFor(RealTimeCongress.url("bills", sections, params));
-	}
-	
-	public static Date parseDate(String date) throws ParseException {
-		return RealTimeCongress.parseDate(date);
 	}
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
@@ -75,7 +82,7 @@ public class BillService {
 			bill.official_title = json.getString("official_title");
 		if (!json.isNull("last_action_at"))
 			bill.last_action_at = RealTimeCongress.parseDate(json.getString("last_action_at"));
-		if (!json.isNull("last_vote_at"))
+		if (!json.isNull("last_passage_vote_at"))
 			bill.last_passage_vote_at = RealTimeCongress.parseDate(json.getString("last_passage_vote_at"));
 		if (!json.isNull("cosponsors_count"))
 			bill.cosponsors_count = json.getInt("cosponsors_count");
@@ -115,7 +122,7 @@ public class BillService {
 			bill.enacted = json.getBoolean("enacted");
 
 		if (!json.isNull("sponsor"))
-			bill.sponsor = LegislatorService.fromDrumbone(json.getJSONObject("sponsor"));
+			bill.sponsor = LegislatorService.fromRTC(json.getJSONObject("sponsor"));
 
 		if (!json.isNull("summary"))
 			bill.summary = json.getString("summary");
@@ -127,7 +134,7 @@ public class BillService {
 			bill.cosponsors = new ArrayList<Legislator>();
 			
 			for (int i=0; i<length; i++)
-				bill.cosponsors.add(LegislatorService.fromDrumbone(cosponsorObjects.getJSONObject(i)));
+				bill.cosponsors.add(LegislatorService.fromRTC(cosponsorObjects.getJSONObject(i)));
 		}
 		
 		if (!json.isNull("passage_votes")) {
@@ -220,5 +227,4 @@ public class BillService {
 		
 		return bills;
 	}
-
 }

@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.http.impl.cookie.DateParseException;
-import org.apache.http.impl.cookie.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,46 +19,68 @@ public class RollService {
 	
 	/* Main methods */
 	
-	public static Roll find(String id, String sections) throws CongressException {
-		return rollFor(Drumbone.url("roll", "roll_id=" + id + "&sections=" + sections));
+	public static Roll find(String id, String[] sections) throws CongressException {
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("roll_id", id);
+		params.put("how", "roll");
+		
+		return rollFor(RealTimeCongress.url("votes", sections, params));
 	}
 	
-	public static List<Roll> latestVotes(String id, String chamber, int per_page, int page)
-			throws CongressException {
-		String query =  "per_page=" + per_page + "&page=" + page + "&order=voted_at";
-		query += 		"&chamber=" + chamber;
-		query += 		"&sections=basic,voter_ids." + id;
-		return rollsFor(Drumbone.url("rolls", query)); 
+	public static List<Roll> latestVotes(String bioguideId, String chamber, int page, int per_page) throws CongressException {
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("order", "voted_at");
+		params.put("chamber", chamber);
+		params.put("how", "roll");
+		
+		String[] sections = new String[] {"basic", "voter_ids." + bioguideId};
+		
+		return rollsFor(RealTimeCongress.url("votes", sections, params, page, per_page)); 
 	}
 	
-	public static List<Roll> latestVotes(int per_page, int page) throws CongressException {
-		String query =  "per_page=" + per_page + "&page=" + page + "&order=voted_at";
-		query += 		"&sections=basic";
-		return rollsFor(Drumbone.url("rolls", query));
+	public static List<Roll> latestVotes(int page, int per_page) throws CongressException {
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("order", "voted_at");
+		params.put("how", "roll");
+		
+		String[] sections = new String[] {"basic"};
+		
+		return rollsFor(RealTimeCongress.url("votes", sections, params, page, per_page));
 	}
 	
-	public static List<Roll> latestNominations(int per_page, int page) throws CongressException {
-		String query =  "per_page=" + per_page + "&page=" + page + "&order=voted_at";
-		query +=		"&sections=basic";
-		query += 		"&chamber=senate&type=On+the+Nomination";
-		return rollsFor(Drumbone.url("rolls", query));
+	public static List<Roll> latestNominations(int page, int per_page) throws CongressException {
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("order", "voted_at");
+		params.put("chamber", "senate");
+		params.put("vote_type", "nomination");
+		params.put("how", "roll");
+		
+		String[] sections = new String[] {"basic"};
+		
+		return rollsFor(RealTimeCongress.url("votes", sections, params, page, per_page));
 	}
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
 	
-	protected static Roll fromDrumbone(JSONObject json) throws JSONException, DateParseException, ParseException {
+	protected static Roll fromRTC(JSONObject json) throws JSONException, ParseException {
 		Roll roll = new Roll();
 		
 		if (!json.isNull("roll_id"))
 			roll.id = json.getString("roll_id");
+		if (!json.isNull("how"))
+			roll.how = json.getString("how");
 		if (!json.isNull("chamber"))
 			roll.chamber = json.getString("chamber");
-		if (!json.isNull("type"))
-			roll.type = json.getString("type");
+		if (!json.isNull("roll_type"))
+			roll.roll_type = json.getString("roll_type");
+		if (!json.isNull("vote_type"))
+			roll.vote_type = json.getString("vote_type");
 		if (!json.isNull("question"))
 			roll.question = json.getString("question");
 		if (!json.isNull("result"))
 			roll.result = json.getString("result");
+		if (!json.isNull("passage_type"))
+			roll.passage_type = json.getString("passage_type");
 		if (!json.isNull("bill_id"))
 			roll.bill_id = json.getString("bill_id");
 		if (!json.isNull("required"))
@@ -71,26 +92,27 @@ public class RollService {
 		if (!json.isNull("year"))
 			roll.year = json.getInt("year");
 		if (!json.isNull("voted_at"))
-			roll.voted_at = DateUtils.parseDate(json.getString("voted_at"), Drumbone.dateFormat);
+			roll.voted_at = RealTimeCongress.parseDate(json.getString("voted_at"));
 
 		if (!json.isNull("bill"))
 			roll.bill = BillService.fromRTC(json.getJSONObject("bill"));
 
 		if (!json.isNull("vote_breakdown")) {
 			JSONObject vote_breakdown = json.getJSONObject("vote_breakdown");
-			Iterator<?> iter = vote_breakdown.keys();
+			
+			JSONObject total = vote_breakdown.getJSONObject("total");
+			Iterator<?> iter = total.keys();
 			while (iter.hasNext()) {
 				String key = (String) iter.next();
-				if (key.equals("ayes")) // yeah, I made a mistake in the key name in Drumbone :( 
-					roll.yeas = vote_breakdown.getInt(key);
-				else if (key.equals("nays"))
-					roll.nays = vote_breakdown.getInt(key);
-				else if (key.equals("present"))
-					roll.present = vote_breakdown.getInt(key);
-				else if (key.equals("not_voting"))
-					roll.not_voting = vote_breakdown.getInt(key);
-				else
-					roll.otherVotes.put(key, vote_breakdown.getInt(key));
+				roll.voteBreakdown.put(key, total.getInt(key));
+				if (!key.equals(Roll.YEA) && !key.equals(Roll.NAY) && !key.equals(Roll.PRESENT) && !key.equals(Roll.NOT_VOTING))
+					roll.otherVotes = true;
+			}
+			
+			// until this is fixed on the server
+			if (roll.otherVotes) {
+				roll.voteBreakdown.remove(Roll.YEA);
+				roll.voteBreakdown.remove(Roll.NAY);
 			}
 		}
 
@@ -100,9 +122,9 @@ public class RollService {
 			Iterator<?> iter = votersObject.keys();
 			while (iter.hasNext()) {
 				String voter_id = (String) iter.next();
-				Vote vote = voteFromDrumbone(votersObject.getJSONObject(voter_id));
-				vote.voter_id = voter_id;
-				roll.voters.put(voter_id, vote);
+				JSONObject voterObject = votersObject.getJSONObject(voter_id);
+				
+				roll.voters.put(voter_id, voteFromRTC(voter_id, voterObject));
 			}
 		}
 
@@ -112,18 +134,27 @@ public class RollService {
 			Iterator<?> iter = voterIdsObject.keys();
 			while (iter.hasNext()) {
 				String voter_id = (String) iter.next();
-				roll.voter_ids.put(voter_id, new Vote(voter_id, voterIdsObject.getString(voter_id)));
+				String vote_name = voterIdsObject.getString(voter_id);
+				
+				roll.voter_ids.put(voter_id, voteFromRTC(voter_id, vote_name));
 			}
 		}
 
 		return roll;
 	}
 
-	protected static Vote voteFromDrumbone(JSONObject json) throws JSONException {
+	protected static Vote voteFromRTC(String voter_id, JSONObject json) throws JSONException {
 		Vote vote = new Vote();
-		vote.vote_name = json.getString("vote");
-		vote.vote = Roll.voteForName(vote.vote_name);
-		vote.voter = LegislatorService.fromDrumbone(json.getJSONObject("voter"));
+		vote.vote = json.getString("vote");
+		vote.voter_id = voter_id;
+		vote.voter = LegislatorService.fromRTC(json.getJSONObject("voter"));
+		return vote;
+	}
+	
+	protected static Vote voteFromRTC(String voter_id, String vote_name) throws JSONException {
+		Vote vote = new Vote();
+		vote.vote = vote_name;
+		vote.voter_id = voter_id;
 		return vote;
 	}
 	
@@ -131,32 +162,32 @@ public class RollService {
 	/* Private helpers for loading single or plural bill objects */
 		
 	private static Roll rollFor(String url) throws CongressException {
-		String rawJSON = Drumbone.fetchJSON(url);
+		String rawJSON = RealTimeCongress.fetchJSON(url);
 		try {
-			return fromDrumbone(new JSONObject(rawJSON).getJSONObject("roll"));
+			JSONArray results = new JSONObject(rawJSON).getJSONArray("votes");
+			if (results.length() == 0)
+				throw new CongressException("Vote not found.");
+			else
+				return fromRTC(results.getJSONObject(0));
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);
-		} catch (DateParseException e) {
-			throw new CongressException(e, "Problem parsing a date in the JSON from " + url);
 		} catch (ParseException e) {
 			throw new CongressException(e, "Problem parsing a date in the JSON from " + url);
 		}
 	}
 	
 	private static List<Roll> rollsFor(String url) throws CongressException {
-		String rawJSON = Drumbone.fetchJSON(url);
+		String rawJSON = RealTimeCongress.fetchJSON(url);
 		List<Roll> rolls = new ArrayList<Roll>();
 		try {
-			JSONArray results = new JSONObject(rawJSON).getJSONArray("rolls");
+			JSONArray results = new JSONObject(rawJSON).getJSONArray("votes");
 
 			int length = results.length();
 			for (int i = 0; i < length; i++)
-				rolls.add(fromDrumbone(results.getJSONObject(i)));
+				rolls.add(fromRTC(results.getJSONObject(i)));
 			
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);
-		} catch (DateParseException e) {
-			throw new CongressException(e, "Problem parsing a date in the JSON from " + url);
 		} catch (ParseException e) {
 			throw new CongressException(e, "Problem parsing a date in the JSON from " + url);
 		}

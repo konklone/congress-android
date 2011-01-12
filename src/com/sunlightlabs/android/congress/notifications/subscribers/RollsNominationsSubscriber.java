@@ -23,7 +23,7 @@ public class RollsNominationsSubscriber extends Subscriber {
 
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
-		Utils.setupDrumbone(context);
+		Utils.setupRTC(context);
 		
 		try {
 			return RollService.latestNominations(PER_PAGE, 1);

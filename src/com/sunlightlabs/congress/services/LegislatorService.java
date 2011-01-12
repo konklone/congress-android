@@ -24,8 +24,7 @@ public class LegislatorService {
 		return legislatorsFor(Sunlight.url("legislators.allForZip", "zip=" + Uri.encode(zip))); // encode user entered data
 	}
 
-	public static List<Legislator> allForLatLong(double latitude, double longitude)
-			throws CongressException {
+	public static List<Legislator> allForLatLong(double latitude, double longitude) throws CongressException {
 		return legislatorsFor(Sunlight.url("legislators.allForLatLong", "latitude=" + latitude
 				+ "&longitude=" + longitude));
 	}
@@ -36,7 +35,7 @@ public class LegislatorService {
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
 
-	protected static Legislator fromDrumbone(JSONObject json) throws JSONException {
+	protected static Legislator fromRTC(JSONObject json) throws JSONException {
 		Legislator legislator = new Legislator();
 
 		if (!json.isNull("bioguide_id"))

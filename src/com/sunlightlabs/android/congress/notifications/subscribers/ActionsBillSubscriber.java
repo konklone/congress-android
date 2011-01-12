@@ -21,7 +21,7 @@ public class ActionsBillSubscriber extends Subscriber {
 
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
-		Utils.setupDrumbone(context);
+		Utils.setupRTC(context);
 		String billId = subscription.data;
 		
 		try {

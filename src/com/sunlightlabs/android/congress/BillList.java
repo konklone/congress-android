@@ -31,7 +31,7 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.BillService;
 
 public class BillList extends ListActivity {
-	private static final int BILLS = 20;
+	private static final int PER_PAGE = 20;
 
 	public static final int BILLS_LAW = 0;
 	public static final int BILLS_RECENT = 1;
@@ -176,7 +176,7 @@ public class BillList extends ListActivity {
 		bills.addAll(newBills);
 
 		// if we got back a full page of bills, there may be more yet to come
-		if (newBills.size() == BILLS)
+		if (newBills.size() == PER_PAGE)
 			bills.add(null);
 
 		((BillAdapter) getListAdapter()).notifyDataSetChanged();
@@ -207,7 +207,7 @@ public class BillList extends ListActivity {
 
 		public LoadBillsTask(BillList context) {
 			this.context = context;
-			Utils.setupDrumbone(context);
+			Utils.setupRTC(context);
 		}
 
 		public void onScreenLoad(BillList context) {
@@ -217,15 +217,15 @@ public class BillList extends ListActivity {
 		@Override
 		public List<Bill> doInBackground(Void... nothing) {
 			try {
-				int page = (context.bills.size() / BILLS) + 1;
+				int page = (context.bills.size() / PER_PAGE) + 1;
 
 				switch (context.type) {
 				case BILLS_RECENT:
-					return BillService.recentlyIntroduced(BILLS, page);
+					return BillService.recentlyIntroduced(page, PER_PAGE);
 				case BILLS_LAW:
-					return BillService.recentLaws(BILLS, page);
+					return BillService.recentLaws(page, PER_PAGE);
 				case BILLS_SPONSOR:
-					return BillService.recentlySponsored(BILLS, sponsor.id, page);
+					return BillService.recentlySponsored(sponsor.id, page, PER_PAGE);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
 				}

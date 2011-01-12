@@ -10,18 +10,20 @@ import java.util.regex.Pattern;
 public class Roll implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	public static final int OTHER = -1;
-	public static final int YEA = 0;
-	public static final int NAY = 1;
-	public static final int NOT_VOTING = 2;
-	public static final int PRESENT = 3;
+	public static final String YEA = "Yea";
+	public static final String NAY = "Nay";
+	public static final String NOT_VOTING = "Not Voting";
+	public static final String PRESENT = "Present";
 
+	// convenience flag, trip if there are non-standard votes (Speaker of the House election)
+	public boolean otherVotes = false;
+	
 	// basic
-	public String id, chamber, type, question, result, bill_id, required; 
+	public String id, how, chamber, vote_type, roll_type, passage_type;
+	public String question, result, bill_id, required;
 	public int session, number, year;
 	public Date voted_at;
-	public int yeas, nays, present, not_voting;
-	public Map<String,Integer> otherVotes = new HashMap<String,Integer>();
+	public Map<String,Integer> voteBreakdown = new HashMap<String,Integer>();
 	
 	// bill
 	public Bill bill;
@@ -31,16 +33,14 @@ public class Roll implements Serializable {
 	
 	// voter_ids
 	public Map<String,Vote> voter_ids;
-
-		
+	
 	/**
 	 * Represents the vote of a legislator in a roll call. In almost all cases, votes will be 
-	 * AYE, NAY, PRESENT, or NOT_VOTING.  In these cases, the 'vote' field will be set to the 
-	 * appropriate constant, and voteName will contain the text representation.
+	 * "Yea", "Nay", "Present", or "Not Voting". There are constants for these as well, since 
+	 * they have official meanings.
 	 * 
 	 * In one case, the election of the Speaker of the House, votes are recorded as the last name
-	 * of the candidate. In this case, the 'vote' integer field will be set to OTHER, and the String field
-	 * voteName will contain the text of the name of their vote.
+	 * of the candidate.
 	 * 
 	 * The 'legislator' field may be null here, in which case you will need to use the bioguide_id
 	 * to look up more information about the legislator.
@@ -49,37 +49,15 @@ public class Roll implements Serializable {
 		private static final long serialVersionUID = 1L;
 		
 		public String voter_id; // bioguide ID
-		
-		public String vote_name;
-		public int vote;
+		public String vote;
 		
 		public Legislator voter;
 		
-		public Vote() {
-		}
-		
-		public Vote(String voter_id, String vote_name) {
-			this.voter_id = voter_id;
-			this.vote_name = vote_name;
-			this.vote = Roll.voteForName(vote_name);
-		}
+		public Vote() {}
 		
 		public int compareTo(Vote another) {
 			return this.voter.compareTo(another.voter);
 		}
-	}
-	
-	public static int voteForName(String name) {
-		if (name.equals("+"))
-			return Roll.YEA;
-		else if (name.equals("-"))
-			return Roll.NAY;
-		else if (name.equals("P"))
-			return Roll.PRESENT;
-		else if (name.equals("0"))
-			return Roll.NOT_VOTING;
-		else
-			return Roll.OTHER;
 	}
 	
 	// splits a roll into chamber, number, and year, returned in a barebones Roll object
