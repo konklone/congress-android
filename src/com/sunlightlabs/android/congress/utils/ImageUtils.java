@@ -42,6 +42,9 @@ public class ImageUtils {
 	}
 
 	public static String picDir(int hash, Context context) {
+		File cacheDir = context.getCacheDir();
+		if (cacheDir == null)
+			cacheDir = context.getFilesDir();
 		File picDir = new File(context.getCacheDir().getPath() + "/" + hash);
 		picDir.mkdirs();
 		return picDir.getPath();

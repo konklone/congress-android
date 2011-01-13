@@ -94,7 +94,10 @@ public class LegislatorImage {
 	}
 	
 	public static String picDir(String bioguideId, Context context) {
-		File picDir = new File(context.getCacheDir().getPath() + "/" + bioguideId);
+		File cacheDir = context.getCacheDir();
+		if (cacheDir == null)
+			cacheDir = context.getFilesDir();
+		File picDir = new File(cacheDir.getPath() + "/" + bioguideId);
 		picDir.mkdirs();
 		return picDir.getPath();
 	}
