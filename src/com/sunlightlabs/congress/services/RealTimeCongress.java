@@ -29,12 +29,9 @@ public class RealTimeCongress {
 	
 	// filled in by the client
 	public static String userAgent = "com.sunlightlabs.congress.services.RealTimeCongress";
-	public static String appVersion = "unversioned";
+	public static String appVersion = null;
+	public static String osVersion = null;
 	public static String apiKey = "";
-	
-	// optional, if you want to add a custom header/value for your environment
-	public static String extraHeaderKey = null;
-	public static String extraHeaderValue = null;
 	
 	
 	public static String url(String method, String[] sections, Map<String,String> params) {
@@ -72,10 +69,13 @@ public class RealTimeCongress {
 	
 	public static String fetchJSON(String url) throws CongressException {
 		HttpGet request = new HttpGet(url);
-        request.addHeader("User-Agent", userAgent + "-" + appVersion);
+        request.addHeader("User-Agent", userAgent);
         
-        if (extraHeaderKey != null && extraHeaderValue != null)
-        	request.addHeader(extraHeaderKey, extraHeaderValue);
+        if (osVersion != null)
+        	request.addHeader("x-os-version", osVersion);
+        
+        if (appVersion != null)
+        	request.addHeader("x-app-version", appVersion);
 		
         DefaultHttpClient client = new DefaultHttpClient();
         

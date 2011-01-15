@@ -40,10 +40,7 @@ public class Utils {
 		RealTimeCongress.userAgent = resources.getString(R.string.rtc_user_agent);
 		RealTimeCongress.apiKey = resources.getString(R.string.sunlight_api_key);
 		RealTimeCongress.appVersion = resources.getString(R.string.app_version);
-		
-		// report to RTC what version of Android we're using, if RTC cares (and it does)
-		RealTimeCongress.extraHeaderKey =  "android-api-level";
-		RealTimeCongress.extraHeaderValue = Build.VERSION.SDK;
+		RealTimeCongress.osVersion = "Android " + Build.VERSION.SDK;
 	}
 
 	public static void setupSunlight(Context context) {
