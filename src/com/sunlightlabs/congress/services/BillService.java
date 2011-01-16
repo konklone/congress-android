@@ -199,7 +199,7 @@ public class BillService {
 		try {
 			JSONArray results = new JSONObject(rawJSON).getJSONArray("bills");
 			if (results.length() == 0)
-				throw new CongressException("Bill not found.");
+				throw new CongressException.NotFound("Bill not found.");
 			else
 				return fromRTC(results.getJSONObject(0));
 		} catch (JSONException e) {
