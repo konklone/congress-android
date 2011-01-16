@@ -206,7 +206,8 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		this.loadBillTask = null;
 		this.summary = bill.summary;
 		displaySummary();
-		loadSponsor();
+		if (sponsor != null)
+			loadSponsor();
 	}
 	
 	public void onLoadBill(CongressException exception) {
