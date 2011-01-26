@@ -81,14 +81,6 @@ public class Footer extends RelativeLayout {
 				setOn();
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
 					"Added notification in the db for subscription with lastSeenId: " + ((subscription.lastSeenId == null) ? "null" : subscription.lastSeenId));
-
-				// the service is stopped but there are notifications in the database => start the service
-				if (!Utils.getBooleanPreference(context,
-						NotificationSettings.KEY_NOTIFY_ENABLED,
-						NotificationSettings.DEFAULT_NOTIFY_ENABLED)) {
-					Utils.setBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, true);
-					Utils.startNotificationsBroadcast(context);
-				}
 			}
 		}
 		
