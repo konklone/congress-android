@@ -50,7 +50,11 @@ public class OnServiceActionReceiver extends BroadcastReceiver {
 		interval *= 60000; // convert to milliseconds
 		
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		am.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), interval,	getPendingIntent(context));
+		// if the interval is 15 minutes or tighter, use inexact alarms to conserve on battery
+		if (interval <= (15 * 60000))
+			am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), interval,	getPendingIntent(context));
+		else
+			am.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), interval,	getPendingIntent(context));
 	}
 
 	private static void stopNotifications(Context context) {
