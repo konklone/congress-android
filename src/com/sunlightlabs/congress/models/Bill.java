@@ -55,7 +55,7 @@ public class Bill implements Serializable {
 	
 	// takes a potentially user entered, variably formatted code and transforms it into a bill_id
 	public static String codeToBillId(String code) {
-		return code.toLowerCase().replace(" ", "").replace(".", "") + "-" + currentSession();
+		return code.toLowerCase().replace("con", "c").replace("joint", "j").replace(" ", "").replace(".", "") + "-" + currentSession();
 	}
 	
 	public static String currentSession() {
