@@ -350,7 +350,10 @@ public class BillList extends ListActivity {
 				holder.title.setText(title);
 			} else {
 				holder.title.setTextSize(16);
-				holder.title.setText(R.string.bill_no_title);
+				if (bill.abbreviated)
+					holder.title.setText(R.string.bill_no_title_yet);
+				else
+					holder.title.setText(R.string.bill_no_title);
 			}
 
 			return view;

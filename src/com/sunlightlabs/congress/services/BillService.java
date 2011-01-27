@@ -67,14 +67,15 @@ public class BillService {
 			bill.code = json.getString("code");
 		if (!json.isNull("bill_type"))
 			bill.bill_type = json.getString("bill_type");
-		if (!json.isNull("state"))
-			bill.state = json.getString("state");
 		if (!json.isNull("chamber"))
 			bill.chamber = json.getString("chamber");
 		if (!json.isNull("session"))
 			bill.session = json.getInt("session");
 		if (!json.isNull("number"))
 			bill.number = json.getInt("number");
+		
+		if (!json.isNull("abbreviated"))
+			bill.abbreviated = json.getBoolean("abbreviated");
 
 		if (!json.isNull("short_title"))
 			bill.short_title = json.getString("short_title");

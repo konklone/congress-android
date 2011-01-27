@@ -10,8 +10,10 @@ public class Bill implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// basic
-	public String id, code, bill_type, state, chamber;
+	public String id, code, bill_type, chamber;
 	public int session, number;
+	public boolean abbreviated;
+	
 	public String short_title, official_title;
 	public Date last_action_at, last_passage_vote_at;
 	public int cosponsors_count;

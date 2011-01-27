@@ -83,6 +83,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		
 		TextView titleView = (TextView) header.findViewById(R.id.title);
 		String title;
+		
 		if (bill.short_title != null) {
 			title = Utils.truncate(bill.short_title, 400);
 			titleView.setTextSize(22);
@@ -90,12 +91,16 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 			title = bill.official_title;
 			titleView.setTextSize(16);
 		} else {
-			title = getResources().getString(R.string.bill_no_title);
+			if (bill.abbreviated)
+				title = getResources().getString(R.string.bill_no_title_yet);
+			else
+				title = getResources().getString(R.string.bill_no_title);
 			titleView.setTextSize(22);
 		}
 		titleView.setText(title);
 		
-		addBillTimeline(header);
+		if (!bill.abbreviated)
+			addBillTimeline(header);
 		
 		adapter.addView(header);
 		
@@ -115,8 +120,12 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 			
 			// kick off the photo loading task after the new bill data is all displayed
 			loadPhoto();
-		} else
-			adapter.addView(inflater.inflate(R.layout.bill_no_sponsor, null));
+		} else {
+			View noSponsor = inflater.inflate(R.layout.bill_no_sponsor, null);
+			((TextView) noSponsor.findViewById(R.id.text))
+				.setText(bill.abbreviated ? R.string.bill_no_sponsor_yet : R.string.bill_no_sponsor);
+			adapter.addView(noSponsor);
+		}
 		
 		if (bill.cosponsors_count > 0) {
 			View cosponsorView = inflater.inflate(R.layout.bill_cosponsors, null);
@@ -237,7 +246,8 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	public void addBillTimeline(View header) {
 		ViewGroup inner = (ViewGroup) header.findViewById(R.id.header_inner);
 		
-		addTimelinePiece(inner, "Introduced on", bill.introduced_at.getTime());
+		if (bill.introduced_at != null)
+			addTimelinePiece(inner, "Introduced on", bill.introduced_at.getTime());
 		
 		String house_passage_result = bill.house_passage_result;
 		long house_passage_result_at = bill.house_passage_result_at == null ? 0 : bill.house_passage_result_at.getTime();

@@ -104,7 +104,7 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 	}
 	
 	public void displayBill() {
-		if (bill.actions.size() > 0) {
+		if (bill.actions != null && bill.actions.size() > 0) {
 			setupSubscription(bill.actions.get(0));
 			setListAdapter(new BillActionAdapter(this, BillActionAdapter.transformActions(bill.actions)));
 		} else {

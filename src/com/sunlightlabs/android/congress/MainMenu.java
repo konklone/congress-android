@@ -832,8 +832,11 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 				String title;
 				if (bill.short_title != null && !bill.short_title.equals(""))
 					title = bill.short_title;
-				else
+				else if (bill.official_title != null && !bill.official_title.equals(""))
 					title = bill.official_title;
+				else
+					title = getResources().getString(R.string.bill_no_title);
+				
 				getTitle().setText(Utils.truncate(title, 80));
 			}
 			

@@ -22,6 +22,7 @@ public class NewsService {
 	// Google requires a valid referer, that is within the domain/path of the URL that the API key is registered under.
 	public String referer; 
 	
+	public String ned; // news edition (country)
 	public String scoring; // order by 
 	public int rsz; // number of results
 	
@@ -29,6 +30,7 @@ public class NewsService {
 	public NewsService(String apiKey, String referer) {
 		this.scoring = "d"; // date
 		this.rsz = 8; // maximum number of results
+		this.ned = "us"; // US edition
 		
 		this.apiKey = apiKey;
 		this.referer = referer;
@@ -83,6 +85,9 @@ public class NewsService {
 		sb.append(queryPair("rsz", "" + rsz));
 		sb.append("&");
 		sb.append(queryPair("scoring", scoring));
+		sb.append("&");
+		
+		sb.append(queryPair("ned", ned));
 		sb.append("&");
 		
 		sb.append(queryPair("v", "1.0"));
