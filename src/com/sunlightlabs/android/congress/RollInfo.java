@@ -185,7 +185,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			
 			View loadingView = findViewById(R.id.loading_votes);
 			loadingView.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
-			((TextView) loadingView.findViewById(R.id.loading_message)).setText("Error loading votes.");
+			((TextView) loadingView.findViewById(R.id.loading_message)).setText(R.string.vote_error_loading);
 		}
 	}
 	
@@ -325,33 +325,38 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	// depends on setupTabs having been called, and that every vote a legislator has cast
 	// has an entry in voterBreakdown, as created in setupTabs
 	public void displayVoters() {
-		// sort Map of voters into the voterBreakdown Map by vote type
-		List<Roll.Vote> allVoters = new ArrayList<Roll.Vote>(voters.values());
-		Collections.sort(allVoters); // sort once, all at once
-		
-		Iterator<Roll.Vote> iter = allVoters.iterator();
-		while (iter.hasNext()) {
-			Roll.Vote vote = iter.next();
-			voterBreakdown.get(vote.vote).add(vote);
+		if (voters != null) {
+			// sort Map of voters into the voterBreakdown Map by vote type
+			List<Roll.Vote> allVoters = new ArrayList<Roll.Vote>(voters.values());
+			Collections.sort(allVoters); // sort once, all at once
+			
+			Iterator<Roll.Vote> iter = allVoters.iterator();
+			while (iter.hasNext()) {
+				Roll.Vote vote = iter.next();
+				voterBreakdown.get(vote.vote).add(vote);
+			}
+			
+			// hide loading, show tabs
+			loadingView.setVisibility(View.GONE);
+			
+			header.findViewWithTag(currentTab).setSelected(true);
+			header.findViewById(R.id.vote_tabs).setVisibility(View.VISIBLE);
+			
+			// initialize adapters, add them beneath the tabs
+			starredAdapter = new VoterAdapter(this, starred, true);
+			restAdapter = new VoterAdapter(this, rest);
+			
+			MergeAdapter adapter = (MergeAdapter) getListAdapter();
+			adapter.addAdapter(starredAdapter);
+			adapter.addAdapter(restAdapter);
+			setListAdapter(adapter);
+			
+			// show the voters for the current tab
+			toggleVoters(currentTab);
+		} else {
+			loadingView.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
+			((TextView) loadingView.findViewById(R.id.loading_message)).setText(R.string.vote_no_voters_yet);
 		}
-		
-		// hide loading, show tabs
-		loadingView.setVisibility(View.GONE);
-		
-		header.findViewWithTag(currentTab).setSelected(true);
-		header.findViewById(R.id.vote_tabs).setVisibility(View.VISIBLE);
-		
-		// initialize adapters, add them beneath the tabs
-		starredAdapter = new VoterAdapter(this, starred, true);
-		restAdapter = new VoterAdapter(this, rest);
-		
-		MergeAdapter adapter = (MergeAdapter) getListAdapter();
-		adapter.addAdapter(starredAdapter);
-		adapter.addAdapter(restAdapter);
-		setListAdapter(adapter);
-		
-		// show the voters for the current tab
-		toggleVoters(currentTab);
 	}
 	
 	public void toggleVoters(String tag) {

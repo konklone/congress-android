@@ -65,34 +65,37 @@ public class RollService {
 	protected static Roll fromRTC(JSONObject json) throws JSONException, ParseException {
 		Roll roll = new Roll();
 		
-		if (!json.isNull("roll_id"))
-			roll.id = json.getString("roll_id");
+		// guaranteed fields for all votes
 		if (!json.isNull("how"))
 			roll.how = json.getString("how");
 		if (!json.isNull("chamber"))
 			roll.chamber = json.getString("chamber");
-		if (!json.isNull("roll_type"))
-			roll.roll_type = json.getString("roll_type");
 		if (!json.isNull("vote_type"))
 			roll.vote_type = json.getString("vote_type");
 		if (!json.isNull("question"))
 			roll.question = json.getString("question");
 		if (!json.isNull("result"))
 			roll.result = json.getString("result");
-		if (!json.isNull("passage_type"))
-			roll.passage_type = json.getString("passage_type");
-		if (!json.isNull("bill_id"))
-			roll.bill_id = json.getString("bill_id");
-		if (!json.isNull("required"))
-			roll.required = json.getString("required");
-		if (!json.isNull("number"))
-			roll.number = json.getInt("number");
 		if (!json.isNull("session"))
 			roll.session = json.getInt("session");
 		if (!json.isNull("year"))
 			roll.year = json.getInt("year");
 		if (!json.isNull("voted_at"))
 			roll.voted_at = RealTimeCongress.parseDate(json.getString("voted_at"));
+		
+		// guaranteed fields for roll call votes
+		if (!json.isNull("required"))
+			roll.required = json.getString("required");
+		if (!json.isNull("number"))
+			roll.number = json.getInt("number");
+		if (!json.isNull("roll_id"))
+			roll.id = json.getString("roll_id");
+		if (!json.isNull("roll_type"))
+			roll.roll_type = json.getString("roll_type");
+		
+		
+		if (!json.isNull("bill_id"))
+			roll.bill_id = json.getString("bill_id");
 
 		if (!json.isNull("bill"))
 			roll.bill = BillService.fromRTC(json.getJSONObject("bill"));
