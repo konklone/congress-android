@@ -17,7 +17,7 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.RealTimeCongress;
 
 public class Database {
-	private static final int DATABASE_VERSION = 4; // updated last for version 2.9
+	private static final int DATABASE_VERSION = 4; // updated last for version 2.9.8
 
 	public boolean closed = true;
 
