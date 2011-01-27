@@ -90,32 +90,32 @@ public class BillService {
 		// timeline dates
 		if (!json.isNull("introduced_at"))
 			bill.introduced_at = RealTimeCongress.parseDate(json.getString("introduced_at"));
-		if (!json.isNull("house_result_at"))
-			bill.house_result_at = RealTimeCongress.parseDate(json.getString("house_result_at"));
-		if (!json.isNull("senate_result_at"))
-			bill.senate_result_at = RealTimeCongress.parseDate(json.getString("senate_result_at"));
+		if (!json.isNull("house_passage_result_at"))
+			bill.house_passage_result_at = RealTimeCongress.parseDate(json.getString("house_passage_result_at"));
+		if (!json.isNull("senate_passage_result_at"))
+			bill.senate_passage_result_at = RealTimeCongress.parseDate(json.getString("senate_passage_result_at"));
 		if (!json.isNull("vetoed_at"))
 			bill.vetoed_at = RealTimeCongress.parseDate(json.getString("vetoed_at"));
-		if (!json.isNull("override_house_result_at"))
-			bill.override_house_result_at = RealTimeCongress.parseDate(json.getString("override_house_result_at"));
-		if (!json.isNull("override_senate_result_at"))
-			bill.override_senate_result_at = RealTimeCongress.parseDate(json.getString("override_senate_result_at"));
+		if (!json.isNull("house_override_result_at"))
+			bill.house_override_result_at = RealTimeCongress.parseDate(json.getString("house_override_result_at"));
+		if (!json.isNull("senate_override_result_at"))
+			bill.senate_override_result_at = RealTimeCongress.parseDate(json.getString("senate_override_result_at"));
 		if (!json.isNull("awaiting_signature_since"))
 			bill.awaiting_signature_since = RealTimeCongress.parseDate(json.getString("awaiting_signature_since"));
 		if (!json.isNull("enacted_at"))
 			bill.enacted_at = RealTimeCongress.parseDate(json.getString("enacted_at"));
 
 		// timeline flags and values
-		if (!json.isNull("house_result"))
-			bill.house_result = json.getString("house_result");
-		if (!json.isNull("senate_result"))
-			bill.senate_result = json.getString("senate_result");
+		if (!json.isNull("house_passage_result"))
+			bill.house_passage_result = json.getString("house_passage_result");
+		if (!json.isNull("senate_passage_result"))
+			bill.senate_passage_result = json.getString("senate_passage_result");
 		if (!json.isNull("vetoed"))
 			bill.vetoed = json.getBoolean("vetoed");
-		if (!json.isNull("override_house_result"))
-			bill.override_house_result = json.getString("override_house_result");
-		if (!json.isNull("override_senate_result"))
-			bill.override_senate_result = json.getString("override_senate_result");
+		if (!json.isNull("house_override_result"))
+			bill.house_override_result = json.getString("house_override_result");
+		if (!json.isNull("senate_override_result"))
+			bill.senate_override_result = json.getString("senate_override_result");
 		if (!json.isNull("awaiting_signature"))
 			bill.awaiting_signature = json.getBoolean("awaiting_signature");
 		if (!json.isNull("enacted"))
@@ -138,7 +138,7 @@ public class BillService {
 		}
 		
 		if (!json.isNull("passage_votes")) {
-			JSONArray voteObjects = json.getJSONArray("votes");
+			JSONArray voteObjects = json.getJSONArray("passage_votes");
 			int length = voteObjects.length();
 			
 			bill.passage_votes = new ArrayList<Bill.Vote>();

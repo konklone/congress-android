@@ -239,44 +239,44 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		
 		addTimelinePiece(inner, "Introduced on", bill.introduced_at.getTime());
 		
-		String house_result = bill.house_result;
-		long house_result_at = bill.house_result_at == null ? 0 : bill.house_result_at.getTime();
-		if (house_result != null && house_result_at > 0) {
-			if (house_result.equals("pass"))
-				addTimelinePiece(inner, "Passed the House on", house_result_at);
-			else if (house_result.equals("fail"))
-				addTimelinePiece(inner, "Failed the House on", house_result_at);
+		String house_passage_result = bill.house_passage_result;
+		long house_passage_result_at = bill.house_passage_result_at == null ? 0 : bill.house_passage_result_at.getTime();
+		if (house_passage_result != null && house_passage_result_at > 0) {
+			if (house_passage_result.equals("pass"))
+				addTimelinePiece(inner, "Passed the House on", house_passage_result_at);
+			else if (house_passage_result.equals("fail"))
+				addTimelinePiece(inner, "Failed the House on", house_passage_result_at);
 		}
 		
-		String senate_result = bill.senate_result;
-		long senate_result_at = bill.senate_result_at == null ? 0 : bill.senate_result_at.getTime();
-		if (senate_result != null && senate_result_at > 0) {
-			if (senate_result.equals("pass"))
-				addTimelinePiece(inner, "Passed the Senate on", senate_result_at);
-			else if (senate_result.equals("fail"))
-				addTimelinePiece(inner, "Failed the Senate on", senate_result_at);
+		String senate_passage_result = bill.senate_passage_result;
+		long senate_passage_result_at = bill.senate_passage_result_at == null ? 0 : bill.senate_passage_result_at.getTime();
+		if (senate_passage_result != null && senate_passage_result_at > 0) {
+			if (senate_passage_result.equals("pass"))
+				addTimelinePiece(inner, "Passed the Senate on", senate_passage_result_at);
+			else if (senate_passage_result.equals("fail"))
+				addTimelinePiece(inner, "Failed the Senate on", senate_passage_result_at);
 		}
 		
 		long vetoed_at = bill.vetoed_at == null ? 0 : bill.vetoed_at.getTime();
 		if (bill.vetoed && vetoed_at > 0)
 			addTimelinePiece(inner, "Vetoed on", vetoed_at);
 		
-		String override_house_result = bill.override_house_result;
-		long override_house_result_at = bill.override_house_result_at == null ? 0 : bill.override_house_result_at.getTime();
-		if (override_house_result != null && override_house_result_at > 0) {
-			if (override_house_result.equals("pass"))
-				addTimelinePiece(inner, "Override passed in the House on", override_house_result_at);
-			else if (override_house_result.equals("fail"))
-				addTimelinePiece(inner, "Override failed in the House on", override_house_result_at);
+		String house_override_result = bill.house_override_result;
+		long house_override_result_at = bill.house_override_result_at == null ? 0 : bill.house_override_result_at.getTime();
+		if (house_override_result != null && house_override_result_at > 0) {
+			if (house_override_result.equals("pass"))
+				addTimelinePiece(inner, "Override passed in the House on", house_override_result_at);
+			else if (house_override_result.equals("fail"))
+				addTimelinePiece(inner, "Override failed in the House on", house_override_result_at);
 		}
 		
-		String override_senate_result = bill.override_senate_result;
-		long override_senate_result_at = bill.override_senate_result_at == null ? 0 : bill.override_senate_result_at.getTime();
-		if (override_senate_result != null && override_senate_result_at > 0) {
-			if (override_senate_result.equals("pass"))
-				addTimelinePiece(inner, "Override passed in the Senate on", override_senate_result_at);
-			else if (override_senate_result.equals("fail"))
-				addTimelinePiece(inner, "Override failed in the Senate on", override_senate_result_at);
+		String senate_override_result = bill.senate_override_result;
+		long senate_override_result_at = bill.senate_override_result_at == null ? 0 : bill.senate_override_result_at.getTime();
+		if (senate_override_result != null && senate_override_result_at > 0) {
+			if (senate_override_result.equals("pass"))
+				addTimelinePiece(inner, "Override passed in the Senate on", senate_override_result_at);
+			else if (senate_override_result.equals("fail"))
+				addTimelinePiece(inner, "Override failed in the Senate on", senate_override_result_at);
 		}
 		
 		long awaiting_signature_since = bill.awaiting_signature_since == null ? 0 : bill.awaiting_signature_since.getTime();

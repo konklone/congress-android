@@ -32,10 +32,10 @@ public class Database {
 	private static final String[] BILL_COLUMNS = new String[] { 
 			"id", "bill_type", "number", "session", "code", "short_title", "official_title", 
 			
-			"house_result", "senate_result", "vetoed", "override_house_result", "override_senate_result", "awaiting_signature",
-			"enacted", "last_passage_vote_at", "last_action_at", "introduced_at", "house_result_at",
-			"senate_result_at", "vetoed_at", "override_house_result_at",
-			"override_senate_result_at", "awaiting_signature_since", "enacted_at", 
+			"house_passage_result", "senate_passage_result", "vetoed", "house_override_result", "senate_override_result", "awaiting_signature",
+			"enacted", "last_passage_vote_at", "last_action_at", "introduced_at", "house_passage_result_at",
+			"senate_passage_result_at", "vetoed_at", "house_override_result_at",
+			"senate_override_result_at", "awaiting_signature_since", "enacted_at", 
 			
 			"sponsor_id", "sponsor_party", "sponsor_state", "sponsor_title", "sponsor_first_name",
 			"sponsor_nickname", "sponsor_last_name" 
@@ -172,11 +172,11 @@ public class Database {
 		bill.code = c.getString(c.getColumnIndex("code"));
 		bill.short_title = c.getString(c.getColumnIndex("short_title"));
 		bill.official_title = c.getString(c.getColumnIndex("official_title"));
-		bill.house_result = c.getString(c.getColumnIndex("house_result"));
-		bill.senate_result = c.getString(c.getColumnIndex("senate_result"));
+		bill.house_passage_result = c.getString(c.getColumnIndex("house_passage_result"));
+		bill.senate_passage_result = c.getString(c.getColumnIndex("senate_passage_result"));
 		bill.vetoed = Boolean.parseBoolean(c.getString(c.getColumnIndex("vetoed")));
-		bill.override_house_result = c.getString(c.getColumnIndex("override_house_result"));
-		bill.override_senate_result = c.getString(c.getColumnIndex("override_senate_result"));
+		bill.house_override_result = c.getString(c.getColumnIndex("house_override_result"));
+		bill.senate_override_result = c.getString(c.getColumnIndex("senate_override_result"));
 		bill.awaiting_signature = Boolean.parseBoolean(c.getString(c
 				.getColumnIndex("awaiting_signature")));
 		bill.enacted = Boolean.parseBoolean(c.getString(c.getColumnIndex("enacted")));
@@ -185,13 +185,13 @@ public class Database {
 			bill.last_passage_vote_at = parseDate(c.getString(c.getColumnIndex("last_passage_vote_at")));
 			bill.last_action_at = parseDate(c.getString(c.getColumnIndex("last_action_at")));
 			bill.introduced_at = parseDate(c.getString(c.getColumnIndex("introduced_at")));
-			bill.house_result_at = parseDate(c.getString(c.getColumnIndex("house_result_at")));
-			bill.senate_result_at = parseDate(c.getString(c.getColumnIndex("senate_result_at")));
+			bill.house_passage_result_at = parseDate(c.getString(c.getColumnIndex("house_passage_result_at")));
+			bill.senate_passage_result_at = parseDate(c.getString(c.getColumnIndex("senate_passage_result_at")));
 			bill.vetoed_at = parseDate(c.getString(c.getColumnIndex("vetoed_at")));
-			bill.override_house_result_at = parseDate(c.getString(c
-					.getColumnIndex("override_house_result_at")));
-			bill.override_senate_result_at = parseDate(c.getString(c
-					.getColumnIndex("override_senate_result_at")));
+			bill.house_override_result_at = parseDate(c.getString(c
+					.getColumnIndex("house_override_result_at")));
+			bill.senate_override_result_at = parseDate(c.getString(c
+					.getColumnIndex("senate_override_result_at")));
 			bill.awaiting_signature_since = parseDate(c.getString(c
 					.getColumnIndex("awaiting_signature_since")));
 			bill.enacted_at = parseDate(c.getString(c.getColumnIndex("enacted_at")));
@@ -331,7 +331,7 @@ public class Database {
 		}
 		
 		private void addColumn(SQLiteDatabase db, String table, String newColumn) {
-			db.execSQL("ALTER TABLE ADD COLUMN " + newColumn + " TEXT;");
+			db.execSQL("ALTER TABLE " + table + " ADD COLUMN " + newColumn + " TEXT;");
 		}
 
 		@Override
@@ -362,10 +362,17 @@ public class Database {
 				// abandoned 'passed' column, no SQL to run
 				// abandoned 'passed_at' column, no SQL to run
 				
-				//TODO: renameColumn(db, "bills", "house_result", "passage_house_result");
-				//TODO: renameColumn(db, "bills", "house_result_at", "passage_house_result_at");
-				//TODO: renameColumn(db, "bills", "senate_result", "passage_senate_result");
-				//TODO: renameColumn(db, "bills", "senate_result_at", "passage_senate_result_at");
+				renameColumn(db, "bills", "house_result", "house_passage_result");
+				renameColumn(db, "bills", "house_result_at", "house_passage_result_at");
+				renameColumn(db, "bills", "senate_result", "senate_passage_result");
+				renameColumn(db, "bills", "senate_result_at", "senate_passage_result_at");
+				
+				renameColumn(db, "bills", "override_house_result", "house_override_result");
+				renameColumn(db, "bills", "override_house_result_at", "house_override_result_at");
+				renameColumn(db, "bills", "override_senate_result", "senate_override_result");
+				renameColumn(db, "bills", "override_senate_result_at", "senate_override_result_at");
+				
+				// version 5, upcoming
 				//TODO: addColumn(db, "bills", "cloture_senate_result");
 				//TODO: addColumn(db, "bills", "cloture_senate_result_at");
 			}

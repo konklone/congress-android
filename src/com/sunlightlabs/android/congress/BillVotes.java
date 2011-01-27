@@ -77,7 +77,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 
 	public void loadBill() {
 		if (bill.passage_votes == null)
-			loadBillTask = (LoadBillTask) new LoadBillTask(this, bill.id).execute("votes");
+			loadBillTask = (LoadBillTask) new LoadBillTask(this, bill.id).execute("passage_votes");
 		else
 			displayBill();
 	}

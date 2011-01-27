@@ -16,12 +16,12 @@ public class Bill implements Serializable {
 	public Date last_action_at, last_passage_vote_at;
 	public int cosponsors_count;
 	
-	public Date introduced_at, house_result_at, senate_result_at;
-	public Date vetoed_at, override_house_result_at, override_senate_result_at;
+	public Date introduced_at, house_passage_result_at, senate_passage_result_at;
+	public Date vetoed_at, house_override_result_at, senate_override_result_at;
 	public Date awaiting_signature_since, enacted_at;
 	
 	public boolean vetoed, awaiting_signature, enacted;
-	public String house_result, senate_result, override_house_result, override_senate_result;
+	public String house_passage_result, senate_passage_result, house_override_result, senate_override_result;
 	
 	// sponsor
 	public Legislator sponsor;
