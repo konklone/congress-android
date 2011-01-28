@@ -14,7 +14,7 @@ public class NewsItem {
 	public static final String[] dateFormat = new String[] {"EEE, dd MMM yyyy HH:mm:ss Z"};
 	
 	public NewsItem(JSONObject json) throws JSONException {
-		this.title = json.getString("titleNoFormatting");
+		this.title = unescapeHtml(json.getString("titleNoFormatting"));
 		this.clickURL = json.getString("unescapedUrl");
 		this.source = json.getString("publisher");
 		this.summary = json.getString("content");
@@ -25,5 +25,10 @@ public class NewsItem {
 		} catch(DateParseException e) {
 			throw new JSONException("Couldn't parse date on news item.");
 		}
+	}
+	
+	// very very minimal unescaping of common characters, not a robust thing
+	public static String unescapeHtml(String s) {
+		return s.replace("&quot;", "\"").replace("&#39;", "'");
 	}
 }

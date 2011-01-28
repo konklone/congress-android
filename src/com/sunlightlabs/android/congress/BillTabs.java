@@ -173,8 +173,8 @@ public class BillTabs extends TabActivity {
 	// for news searching, don't use legislator.titledName() because we don't want to use the name_suffix
 	private static String searchTermFor(Bill bill) {
     	if (bill.short_title != null && !bill.short_title.equals(""))
-    		return NEWS_SEARCH_REGEX.matcher(bill.short_title).replaceFirst("");
+    		return "\"" + NEWS_SEARCH_REGEX.matcher(bill.short_title).replaceFirst("") + "\" OR \"" + Bill.formatCodeShort(bill.code) + "\"";
     	else
-    		return Bill.formatCodeShort(bill.code);
+    		return "\"" + Bill.formatCodeShort(bill.code) + "\"";
     }
 }

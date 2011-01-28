@@ -144,7 +144,7 @@ public class LegislatorTabs extends TabActivity {
 	
 	// for news searching, don't use legislator.titledName() because we don't want to use the name_suffix
 	private static String searchTermFor(Legislator legislator) {
-    	return legislator.title + ". " + legislator.firstName() + " " + legislator.last_name;
+    	return "\"" + legislator.title + ". " + legislator.firstName() + " " + legislator.last_name + "\"";
     }
     
 	// a little hand massaging for prominent exceptions

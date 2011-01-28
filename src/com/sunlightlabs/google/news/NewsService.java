@@ -23,12 +23,10 @@ public class NewsService {
 	public String referer; 
 	
 	public String ned; // news edition (country)
-	public String scoring; // order by 
 	public int rsz; // number of results
 	
 	
 	public NewsService(String apiKey, String referer) {
-		this.scoring = "d"; // date
 		this.rsz = 8; // maximum number of results
 		this.ned = "us"; // US edition
 		
@@ -84,18 +82,14 @@ public class NewsService {
 		
 		sb.append(queryPair("rsz", "" + rsz));
 		sb.append("&");
-		sb.append(queryPair("scoring", scoring));
-		sb.append("&");
-		
 		sb.append(queryPair("ned", ned));
 		sb.append("&");
-		
 		sb.append(queryPair("v", "1.0"));
 		sb.append("&");
 		sb.append(queryPair("key", apiKey));
 		sb.append("&");
 		
-		sb.append(queryPair("q", "\"" + query + "\""));
+		sb.append(queryPair("q", query));
 		
 		return sb.toString();
 	}
