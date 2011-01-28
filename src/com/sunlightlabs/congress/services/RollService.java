@@ -32,6 +32,7 @@ public class RollService {
 		params.put("order", "voted_at");
 		params.put("chamber", chamber);
 		params.put("how", "roll");
+		params.put("voter_ids." + bioguideId + "__exists", "true");
 		
 		String[] sections = new String[] {"basic", "voter_ids." + bioguideId};
 		
