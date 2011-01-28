@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -114,7 +115,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 		setContentView(R.layout.main_menu);
 
 		// open the database to get the favorites
-//		try {
+		try {
 			database = new Database(this);
 			database.open();
 			
@@ -123,11 +124,11 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 			
 			peopleCursor = database.getLegislators();
 			startManagingCursor(peopleCursor);
-//		} catch(SQLiteException e) {
-//			Utils.alert(this, R.string.error_loading_favorites);
-//			billCursor = null;
-//			peopleCursor = null;
-//		}
+		} catch(SQLiteException e) {
+			Utils.alert(this, R.string.error_loading_favorites);
+			billCursor = null;
+			peopleCursor = null;
+		}
 
 		MainMenuHolder holder = (MainMenuHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
