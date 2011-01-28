@@ -226,6 +226,9 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 			mainView.findViewById(R.id.website).setVisibility(View.GONE);
 		}
 		
+		if (legislator.website == null || legislator.website.equals(""))
+			mainView.findViewById(R.id.website).setVisibility(View.GONE);
+		
 		mainView.findViewById(R.id.website).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
 				visitWebsite();
