@@ -258,6 +258,15 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 				addTimelinePiece(inner, "Failed the House on", house_passage_result_at);
 		}
 		
+		String senate_cloture_result = bill.senate_cloture_result;
+		long senate_cloture_result_at = bill.senate_cloture_result_at == null ? 0 : bill.senate_cloture_result_at.getTime();
+		if (senate_cloture_result != null && senate_cloture_result_at > 0) {
+			if (senate_cloture_result.equals("pass"))
+				addTimelinePiece(inner, "Passed cloture in the Senate on", senate_cloture_result_at);
+			else if (senate_cloture_result.equals("fail"))
+				addTimelinePiece(inner, "Failed cloture in the Senate on", senate_cloture_result_at);
+		}
+		
 		String senate_passage_result = bill.senate_passage_result;
 		long senate_passage_result_at = bill.senate_passage_result_at == null ? 0 : bill.senate_passage_result_at.getTime();
 		if (senate_passage_result != null && senate_passage_result_at > 0) {

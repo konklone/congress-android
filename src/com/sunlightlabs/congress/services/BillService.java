@@ -91,6 +91,8 @@ public class BillService {
 		// timeline dates
 		if (!json.isNull("introduced_at"))
 			bill.introduced_at = RealTimeCongress.parseDate(json.getString("introduced_at"));
+		if (!json.isNull("senate_cloture_result_at"))
+			bill.senate_cloture_result_at = RealTimeCongress.parseDate(json.getString("senate_cloture_result_at"));
 		if (!json.isNull("house_passage_result_at"))
 			bill.house_passage_result_at = RealTimeCongress.parseDate(json.getString("house_passage_result_at"));
 		if (!json.isNull("senate_passage_result_at"))
@@ -107,6 +109,8 @@ public class BillService {
 			bill.enacted_at = RealTimeCongress.parseDate(json.getString("enacted_at"));
 
 		// timeline flags and values
+		if (!json.isNull("senate_cloture_result"))
+			bill.senate_cloture_result = json.getString("senate_cloture_result");
 		if (!json.isNull("house_passage_result"))
 			bill.house_passage_result = json.getString("house_passage_result");
 		if (!json.isNull("senate_passage_result"))

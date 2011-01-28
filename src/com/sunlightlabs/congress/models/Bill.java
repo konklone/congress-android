@@ -20,10 +20,12 @@ public class Bill implements Serializable {
 	
 	public Date introduced_at, house_passage_result_at, senate_passage_result_at;
 	public Date vetoed_at, house_override_result_at, senate_override_result_at;
+	public Date senate_cloture_result_at;
 	public Date awaiting_signature_since, enacted_at;
 	
 	public boolean vetoed, awaiting_signature, enacted;
 	public String house_passage_result, senate_passage_result, house_override_result, senate_override_result;
+	public String senate_cloture_result;
 	
 	// sponsor
 	public Legislator sponsor;
