@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -31,7 +32,7 @@ public class Database {
 	private static final String[] BILL_COLUMNS = new String[] { "id", "code", "short_title", "official_title" };
 
 	private static final String[] SUBSCRIPTION_COLUMNS = new String[] {
-			"id", "name", "data", "last_seen_id", "notification_class" };
+			"id", "name", "data", "seen_id", "notification_class" };
 
 	private DatabaseHelper helper;
 	private SQLiteDatabase database;
@@ -175,7 +176,7 @@ public class Database {
 	}
 
 	public Cursor getSubscriptions() {
-		return database.rawQuery("SELECT * FROM subscriptions", null);
+		return database.rawQuery("SELECT DISTINCT id, name, data, notification_class FROM subscriptions", null);
 	}
 
 	public Cursor getSubscription(String id, String notificationClass) {
@@ -192,23 +193,58 @@ public class Database {
 		
 		return hasSubscription;
 	}
+	
+	public boolean hasSubscriptionItem(String id, String notificationClass, String itemId) {
+		StringBuilder query = new StringBuilder("id=? AND notification_class=? AND seen_id=?");
 
+		Cursor c = database.query("subscriptions", SUBSCRIPTION_COLUMNS, query.toString(),
+				new String[] { id, notificationClass, itemId }, null, null, null);
+		boolean hasItem = c.moveToFirst();
+		c.close();
+		
+		return hasItem;
+	}
+
+	//REMOVETHIS
 	public boolean hasSubscriptions() {
-		Cursor c = database.rawQuery("SELECT * FROM subscriptions", null);
+		Cursor c = database.rawQuery("SELECT * FROM subscriptions LIMIT 1", null);
 		boolean hasSubscriptions = c.moveToFirst();
 		c.close();
 		return hasSubscriptions;
 	}
 
+	//REMOVETHIS
 	public long addSubscription(Subscription subscription) {
 		ContentValues cv = new ContentValues(SUBSCRIPTION_COLUMNS.length);
 		cv.put("id", subscription.id);
 		cv.put("name", subscription.name);
 		cv.put("notification_class", subscription.notificationClass);
 		cv.put("data", subscription.data);
-		cv.put("last_seen_id", (String) subscription.lastSeenId);
+		cv.put("seen_id", (String) subscription.lastSeenId);
 		
 		return database.insert("subscriptions", null, cv);
+	}
+	
+	public long addSubscription(Subscription subscription, List<String> latestIds) {
+		ContentValues cv = new ContentValues(SUBSCRIPTION_COLUMNS.length);
+		cv.put("id", subscription.id);
+		cv.put("name", subscription.name);
+		cv.put("notification_class", subscription.notificationClass);
+		cv.put("data", subscription.data);
+		
+		int rows = 0;
+		boolean failed = false;
+		
+		int size = latestIds.size();
+		for (int i=0; i<size; i++) {
+			cv.put("seen_id", latestIds.get(i));
+			if (database.insert("subscriptions", null, cv) >= 0)
+				rows += 1;
+			else
+				failed = true;
+		}
+		
+		return (failed ? -1 : rows);
 	}
 	
 	public long removeSubscription(String id, String notificationClass) {
@@ -220,12 +256,12 @@ public class Database {
 		String id = c.getString(c.getColumnIndex("id"));
 		String name = c.getString(c.getColumnIndex("name"));
 		String data = c.getString(c.getColumnIndex("data"));
-		String lastSeenId = c.getString(c.getColumnIndex("last_seen_id"));
 		String notificationClass = c.getString(c.getColumnIndex("notification_class"));
 		
-		return new Subscription(id, name, notificationClass, data, lastSeenId);
+		return new Subscription(id, name, notificationClass, data);
 	}
 
+	//REMOVETHIS
 	public Subscription loadSubscription(String id, String notificationClass) {
 		Cursor c = getSubscription(id, notificationClass);
 		if (c.moveToFirst()) {
@@ -236,9 +272,10 @@ public class Database {
 			return null;
 	}
 
+	//REMOVETHIS
 	public int updateLastSeenId(Subscription subscription, String lastSeenId) {
 		ContentValues cv = new ContentValues(1);
-		cv.put("last_seen_id", lastSeenId);
+		cv.put("seen_id", lastSeenId);
 
 		return database.update("subscriptions", cv, "id=? AND notification_class=?",
 				new String[] { subscription.id, subscription.notificationClass });
@@ -265,10 +302,14 @@ public class Database {
 //			db.execSQL("UPDATE " + table + " SET " + newColumn + "=" + oldColumn + ";");
 //			// abandon old column, no way to remove columns in SQLite
 //		}
-//		
-//		private void addColumn(SQLiteDatabase db, String table, String newColumn) {
-//			db.execSQL("ALTER TABLE " + table + " ADD COLUMN " + newColumn + " TEXT;");
-//		}
+		
+		private void addColumn(SQLiteDatabase db, String table, String newColumn) {
+			db.execSQL("ALTER TABLE " + table + " ADD COLUMN " + newColumn + " TEXT;");
+		}
+		
+		private void clearTable(SQLiteDatabase db, String table) {
+			db.execSQL("DELETE FROM " + table + ";");
+		}
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
@@ -290,10 +331,14 @@ public class Database {
 			if (oldVersion < 3)
 				createTable(db, "subscriptions", SUBSCRIPTION_COLUMNS);
 			
-			// Version 4 - Remove a bunch of columns
+			// Version 4 - Remove a bunch of timeline columns, update subscription structure
 			//   released in version 2.9.8
 			if (oldVersion < 4) {
-				// no SQL commands needed, columns are left abandoned
+				// no SQL commands needed for timeline, columns are left abandoned
+				
+				// abandon lastSeenId column, clear existing table
+				clearTable(db, "subscriptions");
+				addColumn(db, "subscriptions", "seen_id");
 			}
 			
 			

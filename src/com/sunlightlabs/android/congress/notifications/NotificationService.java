@@ -1,5 +1,6 @@
 package com.sunlightlabs.android.congress.notifications;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Notification;
@@ -57,7 +58,7 @@ public class NotificationService extends WakefulIntentService {
 			// load the appropriate finder for this subscription 
 			Subscriber subscriber;
 			try {
-				subscriber = (Subscriber) Class.forName("com.sunlightlabs.android.congress.notifications.subscribers." + subscription.notificationClass).newInstance();
+				subscriber = subscription.getSubscriber();
 				subscriber.context = this;
 			} catch (Exception e) {
 				Log.e(Utils.TAG, "Could not instantiate a Subscriber of class " + subscription.notificationClass, e);
@@ -71,7 +72,6 @@ public class NotificationService extends WakefulIntentService {
 			// ask the finder for the latest updates
 			List<?> updates = subscriber.fetchUpdates(subscription);
 			
-			
 			// if there was an error or there were no results, move on
 			if (updates == null || updates.isEmpty()) {
 				Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
@@ -79,37 +79,20 @@ public class NotificationService extends WakefulIntentService {
 				continue;
 			}
 			
-			// cache the lastSeenId of the subscription from its previous run
-			String oldLastSeenId = subscription.lastSeenId;
 			
-			// No matter what, update the database to set lastSeenId as the ID of the first update
-			String newLastSeenId = subscriber.decodeId(updates.get(0));
-			database.updateLastSeenId(subscription, newLastSeenId);
+			// keep a record of the un-seen matches as we go through the updates
+			List<String> unseenIds = new ArrayList<String>();
 			
-			
-			// Scan through the updates for a match of the last seen ID 
-			int results = -1;
-			if (oldLastSeenId != null) {
-				for (Object update : updates) {
-					String id = subscriber.decodeId(update);
-					if (oldLastSeenId.equals(id)) {
-						results = updates.indexOf(update);
-						break;
-					}
-				}
+			int size = updates.size();
+			for (int i=0; i<size; i++) {
+				String itemId = subscriber.decodeId(updates.get(i));
+				if (!database.hasSubscriptionItem(subscription.id, subscription.notificationClass, itemId))
+					unseenIds.add(itemId);
 			}
 			
-			// if not matched, all of them must be new
-			if (results == -1) {
-				results = updates.size();
-				
-				if (oldLastSeenId == null)
-					Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
-						"No lastSeenId, will notify of all results.");
-				else
-					Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
-						"Have lastSeenId (" + oldLastSeenId + "), but it did not appear, will notify of all results");
-			}
+			database.addSubscription(subscription, unseenIds);
+			
+			int results = unseenIds.size();
 			
 			// if there's at least one new item, notify the user
 			if (results > 0) {
@@ -128,8 +111,7 @@ public class NotificationService extends WakefulIntentService {
 				);
 				
 				Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
-					"notified of " + results + " results, " +
-					"oldLastSeenId was " + (oldLastSeenId != null ? oldLastSeenId : "null") + ", newlastSeenId is " + newLastSeenId);
+					"notified of " + results + " results");
 			} else
 				Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
 						"0 new results, not notifying.");

@@ -1,5 +1,8 @@
 package com.sunlightlabs.android.congress.notifications;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -15,6 +18,7 @@ import com.sunlightlabs.android.congress.Database;
 import com.sunlightlabs.android.congress.NotificationSettings;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.CongressException;
 
 public class Footer extends RelativeLayout {
 	public static final int DISABLED = -1;
@@ -26,10 +30,12 @@ public class Footer extends RelativeLayout {
 
 	private int state;
 
-	private Subscription subscription;
 	private Database database;
 	private Context context;
 	private Resources resources;
+	
+	private Subscription subscription;
+	private List<String> latestIds;
 
 	public Footer(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -43,16 +49,37 @@ public class Footer extends RelativeLayout {
 		text = (TextView) findViewById(R.id.text);
 		image = (ImageView) findViewById(R.id.image);
 	}
-
+	
+	//REMOVETHIS
 	public void init(Subscription subscription) {
 		this.subscription = subscription;
 		database = new Database(context);
-		database.open();
 
 		setupControls();
 	}
 	
+	public void init(Subscription subscription, List<?> objects) {
+		init(subscription);
+		
+		Subscriber subscriber;
+		try {
+			subscriber = subscription.getSubscriber();
+			List<String> ids = new ArrayList<String>();
+			if (objects != null) {
+				int size = objects.size();
+				for (int i=0; i<size; i++)
+					ids.add(subscriber.decodeId(objects.get(i)));
+			}
+			
+			this.latestIds = ids;
+		} catch(CongressException e) {
+			Log.e(Utils.TAG, "Could not instantiate a Subscriber of class " + subscription.notificationClass, e);
+		}
+	}
+	
 	public void setupControls() {
+		database.open();
+		
 		setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				onTap();
@@ -72,29 +99,38 @@ public class Footer extends RelativeLayout {
 		}
 		
 		setVisibility(View.VISIBLE);
+		database.close();
 	}
 	
 
 	private void onTap() {
-		if (state == OFF) { 
-			if (database.addSubscription(subscription) != -1) {
+		database.open();
+		
+		if (state == OFF) {
+			long rows = database.addSubscription(subscription, latestIds); 
+			if (rows != -1) {
 				setOn();
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
-					"Added notification in the db for subscription with lastSeenId: " + ((subscription.lastSeenId == null) ? "null" : subscription.lastSeenId));
+					"Added notification in the db for subscription with " + rows + " new inserted IDs");
+			} else {
+				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " +
+					"Error saving notifications, -1 returned from one or more insert calls");
 			}
 		}
 		
-		else if (state == ON) { 
-			if (database.removeSubscription(subscription.id, subscription.notificationClass) != 0) {
-				setOff();
-				Log.d(Utils.TAG, "Footer: Removed notification from the db for subscription " + subscription.id);
-				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
-						"Removed notification from the db");
-			}
+		else if (state == ON) {
+			long rows = database.removeSubscription(subscription.id, subscription.notificationClass); 
+		
+			setOff();
+			Log.d(Utils.TAG, "Footer: Removed notification from the db for subscription " + subscription.id);
+			Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
+					"Removed notification from the db, " + rows + " deleted");
 		}
 		
 		else if (state == DISABLED)
 			context.startActivity(new Intent(context, NotificationSettings.class));
+		
+		database.close();
 	}
 
 	private void setOn() { 
@@ -134,7 +170,8 @@ public class Footer extends RelativeLayout {
 		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(NotificationSettings.KEY_FIRST_TIME_SETTINGS, NotificationSettings.DEFAULT_FIRST_TIME_SETTINGS);
 	}
 
+	//REMOVETHIS
 	public void onDestroy() {
-		database.close();
+		
 	}
 }

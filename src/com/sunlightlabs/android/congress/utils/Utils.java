@@ -23,6 +23,7 @@ import com.sunlightlabs.android.congress.BillTabs;
 import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.RollInfo;
+import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -407,5 +408,9 @@ public class Utils {
 
 	public static void stopNotificationsBroadcast(Context context) {
 		context.sendBroadcast(new Intent(STOP_NOTIFICATION_SERVICE));
+	}
+	
+	public static Footer getFooter(Activity activity) {
+		return (Footer) activity.findViewById(R.id.footer);
 	}
 }

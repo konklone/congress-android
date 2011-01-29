@@ -12,20 +12,18 @@ import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.text.Html;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 
-import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscription;
-import com.sunlightlabs.android.congress.notifications.subscribers.NewsBillSubscriber;
 import com.sunlightlabs.android.congress.tasks.LoadNewsTask;
 import com.sunlightlabs.android.congress.tasks.LoadNewsTask.LoadsNews;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -41,7 +39,6 @@ public class NewsList extends ListActivity implements LoadsNews {
 	private LoadNewsTask loadNewsTask;
 	
 	private String subscriptionId, subscriptionName, subscriptionClass;
-	private Footer footer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -75,23 +72,12 @@ public class NewsList extends ListActivity implements LoadsNews {
 		holder.loadNewsTask = this.loadNewsTask;
 		return holder;
 	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (footer != null)
-			footer.onDestroy();
-	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (items != null) {
-			if (items.size() > 0)
-				setupSubscription(items.get(0));
-			else
-				setupSubscription(null);
-		}
+		if (items != null)
+			setupSubscription();
 	}
 
 	private void setupControls() {
@@ -111,11 +97,8 @@ public class NewsList extends ListActivity implements LoadsNews {
 		registerForContextMenu(getListView());
 	}
 
-	private void setupSubscription(Object lastResult) {
-		footer = (Footer) findViewById(R.id.footer);
-		// not ideal since this could be either legislator or bill news, but it's simplest
-		String lastSeenId = (lastResult == null) ? null : new NewsBillSubscriber().decodeId(lastResult); 
-		footer.init(new Subscription(subscriptionId, subscriptionName, subscriptionClass, searchTerm, lastSeenId));
+	private void setupSubscription() {
+		Utils.getFooter(this).init(new Subscription(subscriptionId, subscriptionName, subscriptionClass, searchTerm), items);
 	}
 
 	@Override
@@ -162,13 +145,12 @@ public class NewsList extends ListActivity implements LoadsNews {
 	}
 
 	protected void displayNews() {
-		if (items != null && items.size() > 0) {
-			setupSubscription(items.get(0));
+		if (items != null && items.size() > 0)
 			setListAdapter(new NewsAdapter(this, items));
-		} else {
-			setupSubscription(null);
+		else
 			Utils.showRefresh(this, R.string.news_empty);
-		}
+		
+		setupSubscription();
 	}
 
 	protected class NewsAdapter extends ArrayAdapter<NewsItem> {
