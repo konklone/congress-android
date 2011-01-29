@@ -137,6 +137,7 @@ public class BillList extends ListActivity {
 					Utils.showBack(this, R.string.empty_bills_sponsored);
 				else
 					Utils.showBack(this, R.string.empty_bills);
+				setupSubscription();
 				return;
 			}
 		}

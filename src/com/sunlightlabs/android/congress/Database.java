@@ -212,6 +212,10 @@ public class Database {
 		cv.put("notification_class", subscription.notificationClass);
 		cv.put("data", subscription.data);
 		
+		// insert placeholder item with null seen_id, so that a subscription is registered even for empty lists
+		if (database.insert("subscriptions", null, cv) < 0)
+			return -1;
+		
 		int rows = 0;
 		boolean failed = false;
 		

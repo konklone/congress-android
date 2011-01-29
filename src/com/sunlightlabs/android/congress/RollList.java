@@ -111,9 +111,9 @@ public class RollList extends ListActivity {
 		
 		if (type == ROLLS_VOTER)
 			subscription = new Subscription(voter.id, Subscriber.notificationName(voter), "RollsLegislatorSubscriber", voter.chamber);
-		if (type == ROLLS_LATEST)
+		else if (type == ROLLS_LATEST)
 			subscription = new Subscription("RecentVotes", "Recent Votes", "RollsRecentSubscriber", null);
-		if (type == ROLLS_NOMINATIONS)
+		else if (type == ROLLS_NOMINATIONS)
 			subscription = new Subscription("Nominations", "Recent Nominations", "RollsNominationsSubscriber", null);
 		
 		Utils.getFooter(this).init(subscription, rolls);
@@ -137,6 +137,7 @@ public class RollList extends ListActivity {
 		if (rolls.size() == 0) {
 			if (newRolls.size() == 0) {
 				Utils.showBack(this, R.string.empty_rolls);
+				setupSubscription(); // this extra call should get removed when we refactor pagination
 				return;
 			}
 		}
