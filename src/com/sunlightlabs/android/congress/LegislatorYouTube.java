@@ -48,6 +48,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	private List<Video> videos;
 	private LoadYoutubeVideosTask loadVideosTask = null;
 	private Map<Integer, LoadYoutubeThumbTask> loadThumbTasks = new HashMap<Integer, LoadYoutubeThumbTask>();
+	private Footer footer;
 	
 	private Legislator legislator;
 	private String youtubeUsername;
@@ -64,30 +65,32 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
     	if (holder != null) {
     		videos = holder.videos;
     		loadVideosTask = holder.loadVideosTask;
-    		if (loadVideosTask != null)
-    			loadVideosTask.onScreenLoad(this);
-
-			loadThumbTasks = holder.loadThumbTasks;
-			if (loadThumbTasks != null) {
-				Iterator<LoadYoutubeThumbTask> iterator = loadThumbTasks.values().iterator();
-				while (iterator.hasNext())
-					iterator.next().onScreenLoad(this);
-			}
+    		loadThumbTasks = holder.loadThumbTasks;
+    		footer = holder.footer;
     	}
     	
     	setupControls();
 
-    	if (loadVideosTask == null)
+    	if (footer != null)
+			footer.onScreenLoad(this);
+		else
+			footer = Footer.from(this);
+    	
+    	if (loadVideosTask != null)
+			loadVideosTask.onScreenLoad(this);
+    	else
     		loadVideos();
+    	
+		if (loadThumbTasks != null) {
+			Iterator<LoadYoutubeThumbTask> iterator = loadThumbTasks.values().iterator();
+			while (iterator.hasNext())
+				iterator.next().onScreenLoad(this);
+		}
 	}
 	
 	@Override
     public Object onRetainNonConfigurationInstance() {
-    	LegislatorYouTubeHolder holder = new LegislatorYouTubeHolder();
-    	holder.videos = this.videos;
-    	holder.loadVideosTask = this.loadVideosTask;
-		holder.loadThumbTasks = this.loadThumbTasks;
-    	return holder;
+    	return new LegislatorYouTubeHolder(videos, loadVideosTask, loadThumbTasks, footer);
     }
 	
 	@Override
@@ -111,7 +114,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	}
 
 	private void setupSubscription() {
-		Footer.from(this).init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "YoutubeSubscriber", youtubeUsername), videos);
+		footer.init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "YoutubeSubscriber", youtubeUsername), videos);
 	}
     
 	protected void loadVideos() {
@@ -254,6 +257,15 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 		List<Video> videos;
 		LoadYoutubeVideosTask loadVideosTask;
 		Map<Integer, LoadYoutubeThumbTask> loadThumbTasks;
+		Footer footer;
+		
+		public LegislatorYouTubeHolder(List<Video> videos, LoadYoutubeVideosTask loadVideosTask, 
+				Map<Integer, LoadYoutubeThumbTask> loadThumbTasks, Footer footer) {
+			this.videos = videos;
+			this.loadVideosTask = loadVideosTask;
+			this.loadThumbTasks = loadThumbTasks;
+			this.footer = footer;
+		}
 	}
 	
 

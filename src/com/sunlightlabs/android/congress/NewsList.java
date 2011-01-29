@@ -38,6 +38,7 @@ public class NewsList extends ListActivity implements LoadsNews {
 	private String searchTerm;
 	private List<NewsItem> items;
 	private LoadNewsTask loadNewsTask;
+	private Footer footer;
 	
 	private String subscriptionId, subscriptionName, subscriptionClass;
 
@@ -56,22 +57,25 @@ public class NewsList extends ListActivity implements LoadsNews {
 		if (holder != null) {
 			items = holder.items;
 			loadNewsTask = holder.loadNewsTask;
-			if (loadNewsTask != null)
-				loadNewsTask.onScreenLoad(this);
+			footer = holder.footer;
 		}
 
 		setupControls();
+		
+		if (footer != null)
+			footer.onScreenLoad(this);
+		else
+			footer = Footer.from(this);
 
-		if (loadNewsTask == null)
+		if (loadNewsTask != null)
+			loadNewsTask.onScreenLoad(this);
+		else
 			loadNews();
 	}
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		NewsListHolder holder = new NewsListHolder();
-		holder.items = this.items;
-		holder.loadNewsTask = this.loadNewsTask;
-		return holder;
+		return new NewsListHolder(items, loadNewsTask, footer);
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class NewsList extends ListActivity implements LoadsNews {
 	}
 
 	private void setupSubscription() {
-		Footer.from(this).init(new Subscription(subscriptionId, subscriptionName, subscriptionClass, searchTerm), items);
+		footer.init(new Subscription(subscriptionId, subscriptionName, subscriptionClass, searchTerm), items);
 	}
 
 	@Override
@@ -195,6 +199,13 @@ public class NewsList extends ListActivity implements LoadsNews {
 	static class NewsListHolder {
 		List<NewsItem> items;
 		LoadNewsTask loadNewsTask;
+		Footer footer;
+		
+		public NewsListHolder(List<NewsItem> items, LoadNewsTask loadNewsTask, Footer footer) {
+			this.items = items;
+			this.loadNewsTask = loadNewsTask;
+			this.footer = footer;
+		}
 	}
 
 	public void onLoadNews(List<NewsItem> news) {

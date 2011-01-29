@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.Database;
@@ -25,39 +26,40 @@ public class Footer {
 	public static final int DISABLED = -1;
 	public static final int OFF = 0;
 	public static final int ON = 1;
+	public static final int WORKING = 2;
 
 	public TextView text;
 	public ImageView image;
+	public ProgressBar working;
 
 	private int state;
 
 	private Context context;
 	private Resources resources;
 	private ViewGroup footerView;
-	private Database database;
+	
 	
 	private Subscription subscription;
 	private List<String> latestIds;
 	
 	
-	public Footer(Context context, ViewGroup footerView) {
-		onScreenLoad(context, footerView);
+	public Footer(Activity context) {
+		onScreenLoad(context);
 	}
 	
-	public void onScreenLoad(Context context, ViewGroup footerView) {
+	public void onScreenLoad(Activity context) {
 		this.context = context;
 		this.resources = context.getResources();
 		
-		this.footerView = footerView;
+		this.footerView = (ViewGroup) context.findViewById(R.id.footer);
 		this.text = (TextView) footerView.findViewById(R.id.text);
 		this.image = (ImageView) footerView.findViewById(R.id.image);
-		// spinner
+		this.working = (ProgressBar) footerView.findViewById(R.id.working);
 		
-		database = new Database(context);
 	}
 	
 	public static Footer from(Activity activity) {
-		return new Footer(activity, (ViewGroup) activity.findViewById(R.id.footer));
+		return new Footer(activity);
 	}
 	
 	public void init(Subscription subscription, List<?> objects) {
@@ -86,7 +88,6 @@ public class Footer {
 	}
 	
 	public void setupControls() {
-		database.open();
 		
 		footerView.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -94,11 +95,23 @@ public class Footer {
 			}
 		});
 		
+		// our logic in the footer works out so we should never have concurrent database access attempts, but
+		// if that were not the case, we would need to surround calls to the database with a synchronized(this) {} block
+		
 		if (Utils.getBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, NotificationSettings.DEFAULT_NOTIFY_ENABLED)) {
-			if (database.hasSubscription(subscription.id, subscription.notificationClass))
-				setOn();
-			else
-				setOff();
+			if (state == WORKING)
+				setWorking();
+			else {
+				Database database = new Database(context);
+				database.open();
+				boolean on = database.hasSubscription(subscription.id, subscription.notificationClass);
+				database.close();
+				
+				if (on)
+					setOn();
+				else
+					setOff();
+			}
 		} else {
 			if (firstTime())
 				setFirstTime();
@@ -108,40 +121,22 @@ public class Footer {
 		
 		footerView.setVisibility(View.VISIBLE);
 		
-		database.close();
 	}
 	
 
 	private void onTap() {
-		database.open();
-		
 		if (state == OFF) {
-			long rows = database.addSubscription(subscription, latestIds);
-			
-			if (rows != -1) {
-				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
-					"Added notification in the db for subscription with " + rows + " new inserted IDs");
-			} else {
-				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " +
-					"Error saving notifications, -1 returned from one or more insert calls");
-			}
-			
-			setOn();
+			setWorking();
+			new SubscribeTask(this).execute();
 		}
 		
 		else if (state == ON) {
-			long rows = database.removeSubscription(subscription.id, subscription.notificationClass); 
-			setOff();
-
-			Log.d(Utils.TAG, "Footer: Removed notification from the db for subscription " + subscription.id);
-			Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
-					"Removed notification from the db, " + rows + " deleted");
+			setWorking();
+			new UnsubscribeTask(this).execute();
 		}
 		
 		else if (state == DISABLED)
 			context.startActivity(new Intent(context, NotificationSettings.class));
-		
-		database.close();
 	}
 
 	private void setOn() { 
@@ -151,6 +146,7 @@ public class Footer {
 		text.setTextColor(resources.getColor(R.color.footer_on_text));
 		image.setVisibility(View.VISIBLE);
 		image.setImageResource(R.drawable.notifications_on);
+		working.setVisibility(View.GONE);
 		
 		footerView.setBackgroundDrawable(resources.getDrawable(R.drawable.footer_on));
 	}
@@ -161,8 +157,20 @@ public class Footer {
 		text.setText(R.string.footer_off);
 		text.setTextColor(resources.getColor(R.color.footer_off_text));
 		image.setVisibility(View.VISIBLE);
-		
 		image.setImageResource(R.drawable.notifications_off);
+		working.setVisibility(View.GONE);
+		
+		footerView.setBackgroundDrawable(resources.getDrawable(R.drawable.footer_off));
+	}
+	
+	private void setWorking() {
+		state = WORKING;
+		
+		text.setText(R.string.footer_working);
+		image.setVisibility(View.GONE);
+		working.setVisibility(View.VISIBLE);
+		
+		text.setTextColor(resources.getColor(R.color.footer_off_text));
 		footerView.setBackgroundDrawable(resources.getDrawable(R.drawable.footer_off));
 	}
 	
@@ -171,6 +179,7 @@ public class Footer {
 		
 		text.setText(R.string.footer_disabled);
 		text.setTextColor(resources.getColor(R.color.footer_disabled_text));
+		working.setVisibility(View.GONE);
 		
 		footerView.setBackgroundDrawable(resources.getDrawable(R.drawable.footer_disabled));
 	}
@@ -189,22 +198,21 @@ public class Footer {
 		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(NotificationSettings.KEY_FIRST_TIME_SETTINGS, NotificationSettings.DEFAULT_FIRST_TIME_SETTINGS);
 	}
 	
-	private static class SubscribeTask extends AsyncTask<Void,Void,Integer> {
+	private class SubscribeTask extends AsyncTask<Void,Void,Integer> {
 		private Footer footer;
-		private Database database;
 		
 		private Subscription subscription;
 		private List<String> latestIds;
 
 		public SubscribeTask(Footer footer) {
 			this.footer = footer;
-			this.database = footer.database;
 			this.subscription = footer.subscription;
 			this.latestIds = footer.latestIds;
 		}
 
 		@Override
 		public Integer doInBackground(Void... nothing) {
+			Database database = new Database(footer.context);
 			database.open();
 			int results = (int) database.addSubscription(subscription, latestIds);
 			database.close();
@@ -216,10 +224,40 @@ public class Footer {
 			if (rows != -1) {
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
 					"Added notification in the db for subscription with " + rows + " new inserted IDs");
+				setOn();
 			} else {
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " +
 					"Error saving notifications, -1 returned from one or more insert calls");
+				Utils.alert(footer.context, R.string.footer_error);
+				setOff();
 			}
+		}
+	}
+	
+	private class UnsubscribeTask extends AsyncTask<Void,Void,Integer> {
+		private Footer footer;
+
+		private Subscription subscription;
+
+		public UnsubscribeTask(Footer footer) {
+			this.footer = footer;
+			this.subscription = footer.subscription;
+		}
+
+		@Override
+		public Integer doInBackground(Void... nothing) {
+			Database database = new Database(footer.context);
+			database.open();
+			int results = (int) database.removeSubscription(subscription.id, subscription.notificationClass);
+			database.close();
+			return results;
+		}
+
+		@Override
+		public void onPostExecute(Integer rows) {
+			Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
+					"Removed notification from the db, " + rows + " deleted");
+			setOff();
 		}
 	}
 }

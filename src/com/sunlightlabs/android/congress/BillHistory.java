@@ -29,6 +29,7 @@ import com.sunlightlabs.congress.models.CongressException;
 public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill {
 	private LoadBillTask loadBillTask;
 	private Bill bill;
+	private Footer footer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -42,17 +43,23 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 		if (holder != null) {
 			this.loadBillTask = holder.loadBillTask;
 			this.bill = holder.bill;
-			if (loadBillTask != null)
-				loadBillTask.onScreenLoad(this);
+			this.footer = holder.footer;
 		}
 		
-		if (loadBillTask == null)
+		if (footer != null)
+			footer.onScreenLoad(this);
+		else
+			footer = Footer.from(this);
+		
+		if (loadBillTask != null)
+			loadBillTask.onScreenLoad(this);
+		else
 			loadBill();
 	}
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new BillHistoryHolder(loadBillTask, bill);
+		return new BillHistoryHolder(loadBillTask, bill, footer);
 	}
 
 	public Context getContext() {
@@ -67,7 +74,7 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 	}
 
 	private void setupSubscription() {
-		Footer.from(this).init(new Subscription(bill.id,  Subscriber.notificationName(bill), "ActionsBillSubscriber", bill.id), bill.actions);
+		footer.init(new Subscription(bill.id,  Subscriber.notificationName(bill), "ActionsBillSubscriber", bill.id), bill.actions);
 	}
 	
 	public void loadBill() {
@@ -201,6 +208,9 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 				}
 				
 				String text = action.text;
+				if (!text.endsWith("."))
+					text += ".";
+				
 				String type = action.type;
 				if (type.equals("vote") || type.equals("vote2") || type.equals("vote-aux") || type.equals("vetoed") || type.equals("enacted"))
 					text = "<b>" + text + "</b>";
@@ -215,10 +225,12 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 	static class BillHistoryHolder {
 		LoadBillTask loadBillTask;
 		Bill bill;
+		Footer footer;
 		
-		public BillHistoryHolder(LoadBillTask loadBillTask, Bill bill) {
+		public BillHistoryHolder(LoadBillTask loadBillTask, Bill bill, Footer footer) {
 			this.loadBillTask = loadBillTask;
 			this.bill = bill;
+			this.footer = footer;
 		}
 	}
 }

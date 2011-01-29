@@ -59,12 +59,18 @@ public class BillList extends ListActivity {
 		if (holder != null) {
 			this.bills = holder.bills;
 			this.loadBillsTask = holder.loadBillsTask;
+			this.footer = holder.footer;
 
 			if (loadBillsTask != null)
 				loadBillsTask.onScreenLoad(this);
 		} else
 			bills = new ArrayList<Bill>();
 
+		if (footer != null)
+			footer.onScreenLoad(this);
+		else
+			footer = Footer.from(this);
+		
 		setListAdapter(new BillAdapter(this, bills));
 
 		if (bills.size() == 0)
@@ -75,7 +81,7 @@ public class BillList extends ListActivity {
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new BillListHolder(bills, loadBillsTask);
+		return new BillListHolder(bills, loadBillsTask, footer);
 	}
 	
 	@Override
@@ -116,7 +122,6 @@ public class BillList extends ListActivity {
 		else if (type == BILLS_LAW)
 			subscription = new Subscription("RecentLaws", "New Laws", "BillsLawsSubscriber", null); 
 		
-		footer = Footer.from(this);
 		footer.init(subscription, bills);
 	}
 
@@ -349,10 +354,12 @@ public class BillList extends ListActivity {
 	static class BillListHolder {
 		List<Bill> bills;
 		LoadBillsTask loadBillsTask;
+		Footer footer;
 
-		public BillListHolder(List<Bill> bills, LoadBillsTask loadBillsTask) {
+		public BillListHolder(List<Bill> bills, LoadBillsTask loadBillsTask, Footer footer) {
 			this.bills = bills;
 			this.loadBillsTask = loadBillsTask;
+			this.footer = footer;
 		}
 	}
 	

@@ -27,6 +27,7 @@ import com.sunlightlabs.congress.models.CongressException;
 public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	private LoadBillTask loadBillTask;
 	private Bill bill;
+	private Footer footer;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,12 +41,23 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 		if (holder != null) {
 			this.loadBillTask = holder.loadBillTask;
 			this.bill = holder.bill;
-			if (loadBillTask != null)
-				loadBillTask.onScreenLoad(this);
+			this.footer = holder.footer;
 		}
 		
-		if (loadBillTask == null)
+		if (footer != null)
+			footer.onScreenLoad(this);
+		else
+			footer = Footer.from(this);
+		
+		if (loadBillTask != null)
+			loadBillTask.onScreenLoad(this);
+		else
 			loadBill();
+	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return new BillVotesHolder(loadBillTask, bill, footer);
 	}
 	
 	@Override
@@ -56,7 +68,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	}
 
 	private void setupSubscription() {
-		Footer.from(this).init(new Subscription(bill.id, Subscriber.notificationName(bill), "VotesBillSubscriber", bill.id), bill.passage_votes);
+		footer.init(new Subscription(bill.id, Subscriber.notificationName(bill), "VotesBillSubscriber", bill.id), bill.passage_votes);
 	}
 
 	public void loadBill() {
@@ -66,11 +78,6 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 			displayBill();
 	}
 
-	@Override
-	public Object onRetainNonConfigurationInstance() {
-		return new BillVotesHolder(loadBillTask, bill);
-	}
-	
 	public Context getContext() {
 		return this;
 	}
@@ -170,10 +177,12 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	static class BillVotesHolder {
 		LoadBillTask loadBillTask;
 		Bill bill;
+		Footer footer;
 		
-		public BillVotesHolder(LoadBillTask loadBillTask, Bill bill) {
+		public BillVotesHolder(LoadBillTask loadBillTask, Bill bill, Footer footer) {
 			this.loadBillTask = loadBillTask;
 			this.bill = bill;
+			this.footer = footer;
 		}
 	}
 }

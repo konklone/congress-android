@@ -47,18 +47,18 @@
 		android:visibility="gone"
 		/>
 	
-<!--	<ProgressBar android:id="@+id/loading_spinner"-->
-<!--   		android:layout_width="wrap_content"-->
-<!--   		android:layout_height="wrap_content"-->
-<!--   		style="?android:attr/progressBarStyleSmallTitle"-->
-<!--   		-->
-<!--   		android:layout_toLeftOf="@id/text"-->
-<!--		android:layout_alignTop="@id/text"-->
-<!--		-->
-<!--		android:paddingTop="6dp"-->
-<!--		android:paddingBottom="2dp"-->
-<!--   		-->
-<!--   		android:visibility="gone"-->
-<!--   		/>-->
+	<ProgressBar android:id="@+id/working"
+   		android:layout_width="wrap_content"
+   		android:layout_height="wrap_content"
+   		style="?android:attr/progressBarStyleSmallTitle"
+   		
+   		android:layout_toLeftOf="@id/text"
+		android:layout_alignTop="@id/text"
+		
+		android:paddingTop="6dp"
+		android:paddingBottom="2dp"
+   		
+   		android:visibility="gone"
+   		/>
 	
 </RelativeLayout>

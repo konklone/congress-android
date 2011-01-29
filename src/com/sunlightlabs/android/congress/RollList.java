@@ -36,6 +36,7 @@ public class RollList extends ListActivity {
 	
 	private List<Roll> rolls;
 	private LoadRollsTask loadRollsTask;
+	private Footer footer;
 
 	private Legislator voter;
 	private int type;
@@ -55,6 +56,7 @@ public class RollList extends ListActivity {
 		if (holder != null) {
 			this.rolls = holder.rolls;
 			this.loadRollsTask = holder.loadRollsTask;
+			this.footer = holder.footer;
 
 			if (loadRollsTask != null)
 				loadRollsTask.onScreenLoad(this);
@@ -68,12 +70,17 @@ public class RollList extends ListActivity {
 		else
 			setupSubscription();
 		
+		if (footer != null)
+			footer.onScreenLoad(this);
+		else
+			footer = Footer.from(this);
+		
 		setupControls();
 	}
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new RollListHolder(rolls, loadRollsTask);
+		return new RollListHolder(rolls, loadRollsTask, footer);
 	}
 	
 	@Override
@@ -117,7 +124,7 @@ public class RollList extends ListActivity {
 		else if (type == ROLLS_NOMINATIONS)
 			subscription = new Subscription("Nominations", "Recent Nominations", "RollsNominationsSubscriber", null);
 		
-		Footer.from(this).init(subscription, rolls);
+		footer.init(subscription, rolls);
 	}
 
 	@Override
@@ -358,10 +365,12 @@ public class RollList extends ListActivity {
 	static class RollListHolder {
 		List<Roll> rolls;
 		LoadRollsTask loadRollsTask;
+		Footer footer;
 
-		public RollListHolder(List<Roll> rolls, LoadRollsTask loadRollsTask) {
+		public RollListHolder(List<Roll> rolls, LoadRollsTask loadRollsTask, Footer footer) {
 			this.rolls = rolls;
 			this.loadRollsTask = loadRollsTask;
+			this.footer = footer;
 		}
 	}
 	

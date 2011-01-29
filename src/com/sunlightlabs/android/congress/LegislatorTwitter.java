@@ -31,6 +31,7 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 	private LoadTweetsTask loadTweetsTask = null;
 	
 	private Legislator legislator;
+	private Footer footer;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -44,22 +45,25 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
     	if (holder != null) {
     		tweets = holder.tweets;
     		loadTweetsTask = holder.loadTweetsTask;
-    		if (loadTweetsTask != null)
-    			loadTweetsTask.onScreenLoad(this);
+    		footer = holder.footer;
     	}
     	
     	setupControls();
 
-    	if (loadTweetsTask == null)
+    	if (footer != null)
+			footer.onScreenLoad(this);
+		else
+			footer = Footer.from(this);
+    	
+    	if (loadTweetsTask != null)
+			loadTweetsTask.onScreenLoad(this);
+    	else
     		loadTweets();
 	}
 	
 	@Override
     public Object onRetainNonConfigurationInstance() {
-		LegislatorTwitterHolder holder = new LegislatorTwitterHolder();
-		holder.tweets = tweets;
-		holder.loadTweetsTask = loadTweetsTask;
-    	return holder;
+		return new LegislatorTwitterHolder(tweets, loadTweetsTask, footer);
     }
 	
 	@Override
@@ -81,7 +85,7 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 	}
 
 	private void setupSubscription() {
-		Footer.from(this).init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "TwitterSubscriber", legislator.twitter_id), tweets);
+		footer.init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "TwitterSubscriber", legislator.twitter_id), tweets);
 	}
 
 	protected void loadTweets() {	    
@@ -188,6 +192,13 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
     static class LegislatorTwitterHolder {
     	List<Twitter.Status> tweets;
     	LoadTweetsTask loadTweetsTask;
+    	Footer footer;
+    	
+    	public LegislatorTwitterHolder(List<Twitter.Status> tweets, LoadTweetsTask loadTweetsTask, Footer footer) {
+    		this.tweets = tweets;
+    		this.loadTweetsTask = loadTweetsTask;
+    		this.footer = footer;
+    	}
     }
 
 	public void onLoadTweets(List<Status> tweets) {

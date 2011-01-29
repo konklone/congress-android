@@ -142,8 +142,10 @@
     
     <string name="footer_on">You will be notified of updates.</string>
     <string name="footer_off">Tap to be notified of updates.</string>
+    <string name="footer_working">Updating your subscription...</string>
     <string name="footer_disabled">Notifications are disabled. Tap to enable.</string>
     <string name="footer_first_time">You can be notified of updates. Tap to enable.</string>
+    <string name="footer_error">There was an error subscribing you for notifications.</string>
     
     <string name="notify_enable">Enable Notifications</string>
     <string name="notify_enable_summary_on">Notifications are enabled</string>
