@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask;
@@ -80,7 +81,7 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 	}
 
 	private void setupSubscription() {
-		Utils.getFooter(this).init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "TwitterSubscriber", legislator.twitter_id), tweets);
+		Footer.from(this).init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "TwitterSubscriber", legislator.twitter_id), tweets);
 	}
 
 	protected void loadTweets() {	    

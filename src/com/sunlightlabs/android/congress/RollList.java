@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -116,7 +117,7 @@ public class RollList extends ListActivity {
 		else if (type == ROLLS_NOMINATIONS)
 			subscription = new Subscription("Nominations", "Recent Nominations", "RollsNominationsSubscriber", null);
 		
-		Utils.getFooter(this).init(subscription, rolls);
+		Footer.from(this).init(subscription, rolls);
 	}
 
 	@Override

@@ -29,6 +29,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.LegislatorYouTube.VideoAdapter.VideoHolder;
+import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask;
@@ -110,7 +111,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	}
 
 	private void setupSubscription() {
-		Utils.getFooter(this).init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "YoutubeSubscriber", youtubeUsername), videos);
+		Footer.from(this).init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "YoutubeSubscriber", youtubeUsername), videos);
 	}
     
 	protected void loadVideos() {

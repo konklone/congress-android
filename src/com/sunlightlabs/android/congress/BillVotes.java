@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
@@ -55,7 +56,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	}
 
 	private void setupSubscription() {
-		Utils.getFooter(this).init(new Subscription(bill.id, Subscriber.notificationName(bill), "VotesBillSubscriber", bill.id), bill.passage_votes);
+		Footer.from(this).init(new Subscription(bill.id, Subscriber.notificationName(bill), "VotesBillSubscriber", bill.id), bill.passage_votes);
 	}
 
 	public void loadBill() {

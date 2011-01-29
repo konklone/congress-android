@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadNewsTask;
 import com.sunlightlabs.android.congress.tasks.LoadNewsTask.LoadsNews;
@@ -98,7 +99,7 @@ public class NewsList extends ListActivity implements LoadsNews {
 	}
 
 	private void setupSubscription() {
-		Utils.getFooter(this).init(new Subscription(subscriptionId, subscriptionName, subscriptionClass, searchTerm), items);
+		Footer.from(this).init(new Subscription(subscriptionId, subscriptionName, subscriptionClass, searchTerm), items);
 	}
 
 	@Override

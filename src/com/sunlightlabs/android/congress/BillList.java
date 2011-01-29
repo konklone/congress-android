@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -39,6 +40,7 @@ public class BillList extends ListActivity {
 	private Legislator sponsor;
 	private int type;
 	
+	private Footer footer;
 	private LoadingWrapper lw;
 
 	@Override
@@ -114,7 +116,8 @@ public class BillList extends ListActivity {
 		else if (type == BILLS_LAW)
 			subscription = new Subscription("RecentLaws", "New Laws", "BillsLawsSubscriber", null); 
 		
-		Utils.getFooter(this).init(subscription, bills);
+		footer = Footer.from(this);
+		footer.init(subscription, bills);
 	}
 
 	protected void onListItemClick(ListView parent, View v, int position, long id) {

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Footer is a subclass of RelativeLayout -->
-<com.sunlightlabs.android.congress.notifications.Footer
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:footer="http://schemas.android.com/apk/res/com.sunlightlabs.android.congress"
 	android:id="@+id/footer"
 	
 	android:layout_width="fill_parent"
@@ -48,4 +47,18 @@
 		android:visibility="gone"
 		/>
 	
-</com.sunlightlabs.android.congress.notifications.Footer>
+<!--	<ProgressBar android:id="@+id/loading_spinner"-->
+<!--   		android:layout_width="wrap_content"-->
+<!--   		android:layout_height="wrap_content"-->
+<!--   		style="?android:attr/progressBarStyleSmallTitle"-->
+<!--   		-->
+<!--   		android:layout_toLeftOf="@id/text"-->
+<!--		android:layout_alignTop="@id/text"-->
+<!--		-->
+<!--		android:paddingTop="6dp"-->
+<!--		android:paddingBottom="2dp"-->
+<!--   		-->
+<!--   		android:visibility="gone"-->
+<!--   		/>-->
+	
+</RelativeLayout>
