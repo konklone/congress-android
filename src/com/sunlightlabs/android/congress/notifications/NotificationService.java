@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -45,6 +46,13 @@ public class NotificationService extends WakefulIntentService {
 
 	@Override
 	protected void doWakefulWork(Intent intent) {
+		// only proceed if background data is disabled
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (!cm.getBackgroundDataSetting()) {
+			Log.i(Utils.TAG, "User has background data disabled, not polling. Alarms remain scheduled.");
+			return;
+		}
+		
 		Cursor cursor = database.getSubscriptions();
 		
 		if (!cursor.moveToFirst()) {
