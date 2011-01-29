@@ -9,18 +9,6 @@ public class Subscription implements Serializable {
 
 	public String id, name, notificationClass, data;
 	
-	//REMOVETHIS
-	public String lastSeenId;
-	
-	//REMOVETHIS
-	public Subscription(String id, String name, String notificationClass, String data, String lastSeenId) {
-		this.id = id;
-		this.name = name;
-		this.notificationClass = notificationClass;
-		this.data = data;
-		this.lastSeenId = lastSeenId;
-	}
-	
 	public Subscription(String id, String name, String notificationClass, String data) {
 		this.id = id;
 		this.name = name;
@@ -38,6 +26,6 @@ public class Subscription implements Serializable {
 
 	@Override
 	public String toString() {
-		return "{id:" + id + ", name:" + name + ", data:" + data + ", lastSeenId:" + lastSeenId + "}";
+		return "{id: " + id + ", name: " + name + ", notificationClass: " + notificationClass + ", data: " + data + "}";
 	}
 }

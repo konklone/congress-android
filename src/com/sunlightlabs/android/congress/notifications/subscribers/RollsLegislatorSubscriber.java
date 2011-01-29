@@ -14,8 +14,7 @@ import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.RollService;
 
 public class RollsLegislatorSubscriber extends Subscriber {
-	private static final int PER_PAGE = 40;
-
+	
 	@Override
 	public String decodeId(Object result) {
 		return ((Roll) result).id;
@@ -27,7 +26,7 @@ public class RollsLegislatorSubscriber extends Subscriber {
 		String chamber = subscription.data;
 		
 		try {
-			return RollService.latestVotes(subscription.id, chamber, 1, PER_PAGE);
+			return RollService.latestVotes(subscription.id, chamber, 1, RollList.PER_PAGE);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest votes for " + subscription, e);
 			return null;

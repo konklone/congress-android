@@ -18,12 +18,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
-import com.sunlightlabs.android.congress.notifications.subscribers.BillsLawsSubscriber;
-import com.sunlightlabs.android.congress.notifications.subscribers.BillsLegislatorSubscriber;
-import com.sunlightlabs.android.congress.notifications.subscribers.BillsRecentSubscriber;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
@@ -31,7 +27,7 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.BillService;
 
 public class BillList extends ListActivity {
-	private static final int PER_PAGE = 20;
+	public static final int PER_PAGE = 20;
 
 	public static final int BILLS_LAW = 0;
 	public static final int BILLS_RECENT = 1;
@@ -44,7 +40,6 @@ public class BillList extends ListActivity {
 	private int type;
 	
 	private LoadingWrapper lw;
-	private Footer footer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +68,7 @@ public class BillList extends ListActivity {
 		if (bills.size() == 0)
 			loadBills();
 		else
-			setupSubscription(bills.get(0));
+			setupSubscription();
 	}
 
 	@Override
@@ -82,17 +77,10 @@ public class BillList extends ListActivity {
 	}
 	
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (footer != null)
-			footer.onDestroy();
-	}
-	
-	@Override
 	protected void onResume() {
 		super.onResume();
 		if (bills != null && bills.size() > 0)
-			setupSubscription(bills.get(0));
+			setupSubscription();
 	}
 
 	public void setupControls() {
@@ -117,24 +105,16 @@ public class BillList extends ListActivity {
 		}
 	}
 	
-	private void setupSubscription(Object lastResult) {
-		footer = (Footer) findViewById(R.id.footer);
+	private void setupSubscription() {
+		Subscription subscription = null;
+		if (type == BILLS_RECENT)
+			subscription = new Subscription("RecentBills", "Introduced Bills", "BillsRecentSubscriber", null);
+		else if (type == BILLS_SPONSOR)
+			subscription = new Subscription(sponsor.id, Subscriber.notificationName(sponsor), "BillsLegislatorSubscriber", null);
+		else if (type == BILLS_LAW)
+			subscription = new Subscription("RecentLaws", "New Laws", "BillsLawsSubscriber", null); 
 		
-		String lastSeenId;
-		switch (type) {
-		case BILLS_RECENT:
-			lastSeenId = (lastResult == null) ? null : new BillsRecentSubscriber().decodeId(lastResult);
-			footer.init(new Subscription("RecentBills", "Introduced Bills", "BillsRecentSubscriber", null, lastSeenId));
-			break;
-		case BILLS_SPONSOR:
-			lastSeenId = (lastResult == null) ? null : new BillsLegislatorSubscriber().decodeId(lastResult);
-			footer.init(new Subscription(sponsor.id, Subscriber.notificationName(sponsor), "BillsLegislatorSubscriber", null, lastSeenId));
-			break;
-		case BILLS_LAW:
-			lastSeenId = (lastResult == null) ? null : new BillsLawsSubscriber().decodeId(lastResult);
-			footer.init(new Subscription("RecentLaws", "New Laws", "BillsLawsSubscriber", null, lastSeenId));
-			break; 
-		}
+		Utils.getFooter(this).init(subscription, bills);
 	}
 
 	protected void onListItemClick(ListView parent, View v, int position, long id) {
@@ -152,10 +132,7 @@ public class BillList extends ListActivity {
 	public void onLoadBills(List<Bill> newBills) {
 		// if this is the first page of rolls, set up the subscription
 		if (bills.size() == 0) {
-			if (newBills.size() > 0) {
-				setupSubscription(newBills.get(0));
-			} else {
-				setupSubscription(null);
+			if (newBills.size() == 0) {
 				if (type == BILLS_SPONSOR)
 					Utils.showBack(this, R.string.empty_bills_sponsored);
 				else
@@ -163,7 +140,6 @@ public class BillList extends ListActivity {
 				return;
 			}
 		}
-		
 		
 		// remove the placeholder and add the new bills in the array
 		if (bills.size() > 0) {
@@ -180,6 +156,8 @@ public class BillList extends ListActivity {
 			bills.add(null);
 
 		((BillAdapter) getListAdapter()).notifyDataSetChanged();
+		
+		setupSubscription();
 	}
 
 	public void onLoadBills(CongressException exception) {

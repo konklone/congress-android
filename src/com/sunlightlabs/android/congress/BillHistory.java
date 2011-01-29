@@ -18,10 +18,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
-import com.sunlightlabs.android.congress.notifications.subscribers.ActionsBillSubscriber;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
@@ -30,8 +28,6 @@ import com.sunlightlabs.congress.models.CongressException;
 public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill {
 	private LoadBillTask loadBillTask;
 	private Bill bill;
-
-	private Footer footer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,29 +57,16 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 	public Context getContext() {
 		return this;
 	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (footer != null)
-			footer.onDestroy();
-	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (bill.actions != null) {
-			if (bill.actions.size() > 0)
-				setupSubscription(bill.actions.get(0));
-			else
-				setupSubscription(null);
-		}
+		if (bill.actions != null)
+			setupSubscription();
 	}
 
-	private void setupSubscription(Object lastResult) {
-		footer = (Footer) findViewById(R.id.footer);
-		String lastSeenId = (lastResult == null) ? null : new ActionsBillSubscriber().decodeId(lastResult);
-		footer.init(new Subscription(bill.id,  Subscriber.notificationName(bill), "ActionsBillSubscriber", bill.id, lastSeenId));
+	private void setupSubscription() {
+		Utils.getFooter(this).init(new Subscription(bill.id,  Subscriber.notificationName(bill), "ActionsBillSubscriber", bill.id), bill.actions);
 	}
 	
 	public void loadBill() {
@@ -104,13 +87,12 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 	}
 	
 	public void displayBill() {
-		if (bill.actions != null && bill.actions.size() > 0) {
-			setupSubscription(bill.actions.get(0));
+		if (bill.actions != null && bill.actions.size() > 0)
 			setListAdapter(new BillActionAdapter(this, BillActionAdapter.transformActions(bill.actions)));
-		} else {
-			setupSubscription(null);
+		else
 			Utils.showEmpty(this, R.string.bill_actions_empty);
-		}
+		
+		setupSubscription();
 	}
 	
 	static class BillActionAdapter extends ArrayAdapter<BillActionAdapter.Item> {

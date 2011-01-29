@@ -16,10 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
-import com.sunlightlabs.android.congress.notifications.subscribers.VotesBillSubscriber;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
@@ -29,8 +27,6 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	private LoadBillTask loadBillTask;
 	private Bill bill;
 	
-	private Footer footer;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,27 +48,14 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	}
 	
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (footer != null)
-			footer.onDestroy();
-	}
-	
-	@Override
 	protected void onResume() {
 		super.onResume();
-		if (bill.passage_votes != null) {
-			if (bill.passage_votes.size() > 0)
-				setupSubscription(bill.passage_votes.get(0));
-			else
-				setupSubscription(null);
-		}
+		if (bill.passage_votes != null)
+			setupSubscription();
 	}
 
-	private void setupSubscription(Object lastResult) {
-		footer = (Footer) findViewById(R.id.footer);
-		String lastSeenId = (lastResult == null) ? null : new VotesBillSubscriber().decodeId(lastResult);
-		footer.init(new Subscription(bill.id, Subscriber.notificationName(bill), "VotesBillSubscriber", bill.id, lastSeenId));
+	private void setupSubscription() {
+		Utils.getFooter(this).init(new Subscription(bill.id, Subscriber.notificationName(bill), "VotesBillSubscriber", bill.id), bill.passage_votes);
 	}
 
 	public void loadBill() {
@@ -102,13 +85,12 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	}
 	
 	public void displayBill() {
-		if (bill.passage_votes.size() > 0) {
-			setupSubscription(bill.passage_votes.get(0));
+		if (bill.passage_votes.size() > 0)
 			setListAdapter(new BillVoteAdapter(this, bill.passage_votes));
-		} else {
-			setupSubscription(null);
+		else
 			Utils.showEmpty(this, R.string.bill_votes_empty);
-		}
+		
+		setupSubscription();
 	}
 	
 	@Override

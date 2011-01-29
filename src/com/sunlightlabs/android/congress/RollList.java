@@ -18,12 +18,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
-import com.sunlightlabs.android.congress.notifications.subscribers.RollsLegislatorSubscriber;
-import com.sunlightlabs.android.congress.notifications.subscribers.RollsNominationsSubscriber;
-import com.sunlightlabs.android.congress.notifications.subscribers.RollsRecentSubscriber;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -31,7 +27,7 @@ import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.RollService;
 
 public class RollList extends ListActivity {
-	private static final int PER_PAGE = 20;
+	public static final int PER_PAGE = 20;
 	
 	public static final int ROLLS_VOTER = 0;
 	public static final int ROLLS_LATEST = 1;
@@ -44,7 +40,6 @@ public class RollList extends ListActivity {
 	private int type;
 	
 	private LoadingWrapper loading;
-	private Footer footer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +65,7 @@ public class RollList extends ListActivity {
 		if (rolls.size() == 0)
 			loadRolls();
 		else
-			setupSubscription(rolls.get(0));
+			setupSubscription();
 		
 		setupControls();
 	}
@@ -79,19 +74,12 @@ public class RollList extends ListActivity {
 	public Object onRetainNonConfigurationInstance() {
 		return new RollListHolder(rolls, loadRollsTask);
 	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (footer != null) 
-			footer.onDestroy();
-	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		if (rolls != null && rolls.size() > 0)
-			setupSubscription(rolls.get(0));
+			setupSubscription();
 	}
 
 	public void setupControls() {
@@ -118,24 +106,17 @@ public class RollList extends ListActivity {
 		}
 	}
 
-	private void setupSubscription(Object lastResult) {
-		footer = (Footer) findViewById(R.id.footer);
+	private void setupSubscription() {
+		Subscription subscription = null;
 		
-		String lastSeenId;
-		switch (type) {
-		case ROLLS_VOTER:
-			lastSeenId = (lastResult == null) ? null : new RollsLegislatorSubscriber().decodeId(lastResult);
-			footer.init(new Subscription(voter.id, Subscriber.notificationName(voter), "RollsLegislatorSubscriber", voter.chamber, lastSeenId));
-			break;
-		case ROLLS_LATEST:
-			lastSeenId = (lastResult == null) ? null : new RollsRecentSubscriber().decodeId(lastResult);
-			footer.init(new Subscription("RecentVotes", "Recent Votes", "RollsRecentSubscriber", null, lastSeenId));
-			break;
-		case ROLLS_NOMINATIONS:
-			lastSeenId = (lastResult == null) ? null : new RollsNominationsSubscriber().decodeId(lastResult);
-			footer.init(new Subscription("Nominations", "Recent Nominations", "RollsNominationsSubscriber", null, lastSeenId));
-			break;
-		}
+		if (type == ROLLS_VOTER)
+			subscription = new Subscription(voter.id, Subscriber.notificationName(voter), "RollsLegislatorSubscriber", voter.chamber);
+		if (type == ROLLS_LATEST)
+			subscription = new Subscription("RecentVotes", "Recent Votes", "RollsRecentSubscriber", null);
+		if (type == ROLLS_NOMINATIONS)
+			subscription = new Subscription("Nominations", "Recent Nominations", "RollsNominationsSubscriber", null);
+		
+		Utils.getFooter(this).init(subscription, rolls);
 	}
 
 	@Override
@@ -154,15 +135,11 @@ public class RollList extends ListActivity {
 	public void onLoadRolls(List<Roll> newRolls) {
 		// if this is the first page of rolls, set up the subscription
 		if (rolls.size() == 0) {
-			if (newRolls.size() > 0)
-				setupSubscription(newRolls.get(0));
-			else {
-				setupSubscription(null);
+			if (newRolls.size() == 0) {
 				Utils.showBack(this, R.string.empty_rolls);
 				return;
 			}
 		}
-		
 		
 		// remove the placeholder and add the new bills in the array
 		if (rolls.size() > 0) {
@@ -172,12 +149,14 @@ public class RollList extends ListActivity {
 		}
 
 		rolls.addAll(newRolls);
-
-		// if we got back a full page of bills, there may be more yet to come
+		
+				// if we got back a full page of bills, there may be more yet to come
 		if (newRolls.size() == PER_PAGE)
 			rolls.add(null);
 
 		((RollAdapter) getListAdapter()).notifyDataSetChanged();
+		
+		setupSubscription();
 	}
 
 	public void onLoadRolls(CongressException exception) {

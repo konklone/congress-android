@@ -18,10 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
-import com.sunlightlabs.android.congress.notifications.subscribers.TwitterSubscriber;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask.LoadsTweets;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -32,7 +30,6 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 	private LoadTweetsTask loadTweetsTask = null;
 	
 	private Legislator legislator;
-	private Footer footer;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,23 +60,12 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 		holder.loadTweetsTask = loadTweetsTask;
     	return holder;
     }
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (footer != null)
-			footer.onDestroy();
-	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (tweets != null) {
-			if (tweets.size() > 0)
-				setupSubscription(tweets.get(0));
-			else
-				setupSubscription(null);
-		}
+		if (tweets != null)
+			setupSubscription();
 	}
 
 	private void setupControls() {
@@ -93,10 +79,8 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 		});
 	}
 
-	private void setupSubscription(Object lastResult) {
-		footer = (Footer) findViewById(R.id.footer);
-		String lastSeenId = (lastResult == null) ? null : new TwitterSubscriber().decodeId(lastResult);
-		footer.init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "TwitterSubscriber", legislator.twitter_id, lastSeenId));
+	private void setupSubscription() {
+		Utils.getFooter(this).init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "TwitterSubscriber", legislator.twitter_id), tweets);
 	}
 
 	protected void loadTweets() {	    
@@ -108,13 +92,12 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 	
 	public void displayTweets() {
     	if (tweets != null && tweets.size() > 0) {
-    		setupSubscription(tweets.get(0));
 	    	setListAdapter(new TweetAdapter(this, tweets));
 	    	firstToast();
-    	} else {
-    		setupSubscription(null);
+    	} else
 	    	Utils.showRefresh(this, R.string.twitter_empty);
-    	}
+    	
+    	setupSubscription();
     }
 	
 	public void firstToast() {

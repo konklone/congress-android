@@ -205,26 +205,6 @@ public class Database {
 		return hasItem;
 	}
 
-	//REMOVETHIS
-	public boolean hasSubscriptions() {
-		Cursor c = database.rawQuery("SELECT * FROM subscriptions LIMIT 1", null);
-		boolean hasSubscriptions = c.moveToFirst();
-		c.close();
-		return hasSubscriptions;
-	}
-
-	//REMOVETHIS
-	public long addSubscription(Subscription subscription) {
-		ContentValues cv = new ContentValues(SUBSCRIPTION_COLUMNS.length);
-		cv.put("id", subscription.id);
-		cv.put("name", subscription.name);
-		cv.put("notification_class", subscription.notificationClass);
-		cv.put("data", subscription.data);
-		cv.put("seen_id", (String) subscription.lastSeenId);
-		
-		return database.insert("subscriptions", null, cv);
-	}
-	
 	public long addSubscription(Subscription subscription, List<String> latestIds) {
 		ContentValues cv = new ContentValues(SUBSCRIPTION_COLUMNS.length);
 		cv.put("id", subscription.id);
@@ -259,26 +239,6 @@ public class Database {
 		String notificationClass = c.getString(c.getColumnIndex("notification_class"));
 		
 		return new Subscription(id, name, notificationClass, data);
-	}
-
-	//REMOVETHIS
-	public Subscription loadSubscription(String id, String notificationClass) {
-		Cursor c = getSubscription(id, notificationClass);
-		if (c.moveToFirst()) {
-			Subscription subscription = loadSubscription(c);
-			c.close();
-			return subscription;
-		} else
-			return null;
-	}
-
-	//REMOVETHIS
-	public int updateLastSeenId(Subscription subscription, String lastSeenId) {
-		ContentValues cv = new ContentValues(1);
-		cv.put("seen_id", lastSeenId);
-
-		return database.update("subscriptions", cv, "id=? AND notification_class=?",
-				new String[] { subscription.id, subscription.notificationClass });
 	}
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {

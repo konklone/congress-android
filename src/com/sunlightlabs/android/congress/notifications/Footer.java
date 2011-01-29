@@ -50,16 +50,11 @@ public class Footer extends RelativeLayout {
 		image = (ImageView) findViewById(R.id.image);
 	}
 	
-	//REMOVETHIS
-	public void init(Subscription subscription) {
+	public void init(Subscription subscription, List<?> objects) {
 		this.subscription = subscription;
 		database = new Database(context);
 
 		setupControls();
-	}
-	
-	public void init(Subscription subscription, List<?> objects) {
-		init(subscription);
 		
 		Subscriber subscriber;
 		try {
@@ -67,8 +62,12 @@ public class Footer extends RelativeLayout {
 			List<String> ids = new ArrayList<String>();
 			if (objects != null) {
 				int size = objects.size();
-				for (int i=0; i<size; i++)
-					ids.add(subscriber.decodeId(objects.get(i)));
+				for (int i=0; i<size; i++) {
+					// can get rid of this null check when we switch to a pagination approach that doesn't use a null entry 
+					Object obj = objects.get(i);
+					if (obj != null)
+						ids.add(subscriber.decodeId(obj));
+				}
 			}
 			
 			this.latestIds = ids;
@@ -168,10 +167,5 @@ public class Footer extends RelativeLayout {
 	// will turn false once the user has visited the notification settings (and seen the explanation dialog) for the first time
 	private boolean firstTime() {
 		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(NotificationSettings.KEY_FIRST_TIME_SETTINGS, NotificationSettings.DEFAULT_FIRST_TIME_SETTINGS);
-	}
-
-	//REMOVETHIS
-	public void onDestroy() {
-		
 	}
 }

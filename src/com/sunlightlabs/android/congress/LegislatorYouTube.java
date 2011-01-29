@@ -16,26 +16,24 @@ import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.text.Html;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.sunlightlabs.android.congress.LegislatorYouTube.VideoAdapter.VideoHolder;
-import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
-import com.sunlightlabs.android.congress.notifications.subscribers.YoutubeSubscriber;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask;
-import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask.LoadsThumb;
+import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask.LoadsYoutubeVideos;
 import com.sunlightlabs.android.congress.utils.ImageUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -53,8 +51,6 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	private Legislator legislator;
 	private String youtubeUsername;
 	
-	private Footer footer;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -92,23 +88,12 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 		holder.loadThumbTasks = this.loadThumbTasks;
     	return holder;
     }
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (footer != null)
-			footer.onDestroy();
-	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (videos != null) {
-			if (videos.size() > 0)
-				setupSubscription(videos.get(0));
-			else
-				setupSubscription(null);
-		}
+		if (videos != null)
+			setupSubscription();
 	}
 
 	private void setupControls() {
@@ -124,10 +109,8 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 		registerForContextMenu(getListView());
 	}
 
-	private void setupSubscription(Object lastResult) {
-		footer = (Footer) findViewById(R.id.footer);
-		String lastSeenId = (lastResult == null) ? null : new YoutubeSubscriber().decodeId(lastResult);
-		footer.init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "YoutubeSubscriber", youtubeUsername, lastSeenId));
+	private void setupSubscription() {
+		Utils.getFooter(this).init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "YoutubeSubscriber", youtubeUsername), videos);
 	}
     
 	protected void loadVideos() {
@@ -138,13 +121,12 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	}
 	
 	protected void displayVideos() {
-    	if (videos != null && videos.size() > 0) {
-    		setupSubscription(videos.get(0));
+    	if (videos != null && videos.size() > 0)
 	    	setListAdapter(new VideoAdapter(LegislatorYouTube.this, videos));
-    	} else {
-    		setupSubscription(null);
+    	else
 	    	Utils.showRefresh(this, R.string.youtube_empty);
-    	}
+    	
+    	setupSubscription();
     }
 	
 	@Override

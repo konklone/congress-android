@@ -14,8 +14,7 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.BillService;
 
 public class BillsLawsSubscriber extends Subscriber {
-	private static final int PER_PAGE = 40;
-
+	
 	@Override
 	public String decodeId(Object result) {
 		return ((Bill) result).id;
@@ -26,7 +25,7 @@ public class BillsLawsSubscriber extends Subscriber {
 		Utils.setupRTC(context);
 		
 		try {
-			return BillService.recentLaws(1, PER_PAGE);
+			return BillService.recentLaws(1, BillList.PER_PAGE);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest bills for " + subscription, e);
 			return null;
