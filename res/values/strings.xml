@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Congress</string>
     <string name="app_version">2.9.7.2</string>
-    <string name="app_version_older">Version 2.7</string>
+    <string name="app_version_older">Version 2.9</string>
     <string name="app_donation_package_name">com.sunlightlabs.android.congress.donate</string>
     
     <string name="create_shortcuts">Legislator</string>
@@ -67,7 +67,7 @@
     <string name="explanation_1">You can be notified of new votes, bills, and all sorts of things.</string>
     <string name="explanation_2">First, enable this feature, then find what you\'re interested in and tap the blue bar at the bottom.</string>
     <string name="explanation_3">Please note:</string>
-    <string name="explanation_3a">Information on new bills and votes can be delayed up to a day. (We hope to remove this delay.)</string>
+    <string name="explanation_3a">New bills can be delayed up to a day, votes up to an hour.</string>
     <string name="explanation_3b">Other updates (tweets, videos, news) are not delayed.</string>
     <string name="explanation_3c">Congress operates in bursts, so days may go by without any activity.</string>
     
