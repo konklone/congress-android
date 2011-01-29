@@ -300,8 +300,7 @@ public class Database {
 			if (oldVersion < 4) {
 				// no SQL commands needed for timeline, columns are left abandoned
 				
-				// abandon lastSeenId column, clear existing table
-				clearTable(db, "subscriptions");
+				// abandon lastSeenId column
 				addColumn(db, "subscriptions", "seen_id");
 			}
 			
