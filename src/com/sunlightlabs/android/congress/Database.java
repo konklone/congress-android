@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -31,8 +32,7 @@ public class Database {
 			"youtube_url" };
 	private static final String[] BILL_COLUMNS = new String[] { "id", "code", "short_title", "official_title" };
 
-	private static final String[] SUBSCRIPTION_COLUMNS = new String[] {
-			"id", "name", "data", "seen_id", "notification_class" };
+	private static final String[] SUBSCRIPTION_COLUMNS = new String[] {"id", "name", "data", "seen_id", "notification_class" };
 
 	private DatabaseHelper helper;
 	private SQLiteDatabase database;
@@ -270,10 +270,6 @@ public class Database {
 		private void addColumn(SQLiteDatabase db, String table, String newColumn) {
 			db.execSQL("ALTER TABLE " + table + " ADD COLUMN " + newColumn + " TEXT;");
 		}
-		
-		private void clearTable(SQLiteDatabase db, String table) {
-			db.execSQL("DELETE FROM " + table + ";");
-		}
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
@@ -293,7 +289,7 @@ public class Database {
 			// Version 3 - Notifications (subscriptions table)
 			// 	 released in version 2.9
 			if (oldVersion < 3)
-				createTable(db, "subscriptions", SUBSCRIPTION_COLUMNS);
+				createTable(db, "subscriptions", new String[] {"id", "name", "data", "last_seen_id", "notification_class" });
 			
 			// Version 4 - Remove a bunch of timeline columns, update subscription structure
 			//   released in version 2.9.8
@@ -301,7 +297,16 @@ public class Database {
 				// no SQL commands needed for timeline, columns are left abandoned
 				
 				// abandon lastSeenId column
-				addColumn(db, "subscriptions", "seen_id");
+				try {
+					addColumn(db, "subscriptions", "seen_id");
+				} catch(SQLiteException e) {
+					// need this to catch a bug I created by having my old 2->3 migration not use the original column names,
+					// which caused there to be a dupe seen_id column for users upgrading directly from 2->4. 
+					// I fixed the 2->3 createTable line, but for those stuck in that state, I need to swallow their dupe
+					// column exception and let them move on with their lives.
+					
+					// swallow!
+				}
 			}
 			
 			
