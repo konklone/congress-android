@@ -115,20 +115,14 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 		setContentView(R.layout.main_menu);
 
 		// open the database to get the favorites
-		try {
-			database = new Database(this);
-			database.open();
+		database = new Database(this);
+		database.open();
 			
-			billCursor = database.getBills();
-			startManagingCursor(billCursor);
-			
-			peopleCursor = database.getLegislators();
-			startManagingCursor(peopleCursor);
-		} catch(SQLiteException e) {
-			Utils.alert(this, R.string.error_loading_favorites);
-			billCursor = null;
-			peopleCursor = null;
-		}
+		billCursor = database.getBills();
+		startManagingCursor(billCursor);
+		
+		peopleCursor = database.getLegislators();
+		startManagingCursor(peopleCursor);
 
 		MainMenuHolder holder = (MainMenuHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
