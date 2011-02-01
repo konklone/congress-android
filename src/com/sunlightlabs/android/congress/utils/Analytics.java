@@ -108,4 +108,12 @@ public class Analytics {
 		event(tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_REMOVE_BILL, billId);
 	}
 	
+	public static void subscribeNotification(GoogleAnalyticsTracker tracker, String subscriber) {
+		event(tracker, EVENT_NOTIFICATION_CATEGORY, NOTIFICATION_ADD, subscriber);
+	}
+	
+	public static void unsubscribeNotification(GoogleAnalyticsTracker tracker, String subscriber) {
+		event(tracker, EVENT_NOTIFICATION_CATEGORY, NOTIFICATION_REMOVE, subscriber);
+	}
+	
 }

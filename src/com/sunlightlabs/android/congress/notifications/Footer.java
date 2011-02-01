@@ -16,9 +16,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.Database;
 import com.sunlightlabs.android.congress.NotificationSettings;
 import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 
@@ -37,8 +39,7 @@ public class Footer {
 	private Context context;
 	private Resources resources;
 	private ViewGroup footerView;
-	
-	
+		
 	private Subscription subscription;
 	private List<String> latestIds;
 	
@@ -55,7 +56,6 @@ public class Footer {
 		this.text = (TextView) footerView.findViewById(R.id.text);
 		this.image = (ImageView) footerView.findViewById(R.id.image);
 		this.working = (ProgressBar) footerView.findViewById(R.id.working);
-		
 	}
 	
 	public static Footer from(Activity activity) {
@@ -120,7 +120,6 @@ public class Footer {
 		}
 		
 		footerView.setVisibility(View.VISIBLE);
-		
 	}
 	
 
@@ -224,7 +223,13 @@ public class Footer {
 			if (rows != -1) {
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
 					"Added notification in the db for subscription with " + rows + " new inserted IDs");
+				
 				setOn();
+				
+				GoogleAnalyticsTracker tracker = Analytics.start(footer.context);
+				Analytics.subscribeNotification(tracker, subscription.notificationClass);
+				Analytics.stop(tracker);
+				
 			} else {
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " +
 					"Error saving notifications, -1 returned from one or more insert calls");
@@ -257,6 +262,11 @@ public class Footer {
 		public void onPostExecute(Integer rows) {
 			Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
 					"Removed notification from the db, " + rows + " deleted");
+			
+			GoogleAnalyticsTracker tracker = Analytics.start(footer.context);
+			Analytics.unsubscribeNotification(tracker, subscription.notificationClass);
+			Analytics.stop(tracker);
+			
 			setOff();
 		}
 	}
