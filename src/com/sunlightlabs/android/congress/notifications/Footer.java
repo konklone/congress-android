@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
@@ -36,7 +35,7 @@ public class Footer {
 
 	private int state;
 
-	private Context context;
+	private Activity context;
 	private Resources resources;
 	private ViewGroup footerView;
 		

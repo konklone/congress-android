@@ -18,11 +18,13 @@ import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.sunlightlabs.android.congress.Database;
 import com.sunlightlabs.android.congress.NotificationSettings;
 import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class NotificationService extends WakefulIntentService {
 	public static final int NOTIFY_UPDATES = 0;
-
+	
+	
 	private NotificationManager notifyManager;
 	private Database database;
 
@@ -136,6 +138,7 @@ public class NotificationService extends WakefulIntentService {
 		Notification notification = new Notification(icon, ticker, when);
 
 		intent.setData(uri);
+		intent.putExtra(Analytics.EXTRA_ENTRY_FROM, Analytics.ENTRY_NOTIFICATION);
 		
 		PendingIntent contentIntent = PendingIntent
 				.getActivity(this, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);

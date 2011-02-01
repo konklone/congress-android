@@ -117,7 +117,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
-
+		
 		MainMenuHolder holder = (MainMenuHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
 			addressUpdater = holder.addressUpdater;
@@ -297,9 +297,8 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 		setupDebugBar();
 		
 		tracker = Analytics.start(this);
-		
 		if (!tracked) {
-			Analytics.page(this, tracker, "/index", Analytics.ENTRY_MAIN);
+			Analytics.page(this, tracker, "/index");
 			tracked = true;
 		}
 	}

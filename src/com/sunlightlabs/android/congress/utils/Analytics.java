@@ -1,6 +1,8 @@
 package com.sunlightlabs.android.congress.utils;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
@@ -25,6 +27,9 @@ public class Analytics {
 	public static final int CUSTOM_ENTRY_SLOT = 1;
 	public static final String CUSTOM_ENTRY_NAME = "Entry";
 	
+	// for use in investigating intents for entry sources
+	public static final String EXTRA_ENTRY_FROM = "com.sunlightlabs.android.congress.utils.ENTRY_FROM";
+	
 	// types of entry into the application
 	public static final String ENTRY_MAIN = "main";
 	public static final String ENTRY_SHORTCUT = "shortcut";
@@ -43,29 +48,35 @@ public class Analytics {
 	public static final String NOTIFICATION_REMOVE = "unsubscribe";
 	
 	
-	public static GoogleAnalyticsTracker start(Context context) {
+	public static GoogleAnalyticsTracker start(Activity activity) {
 		GoogleAnalyticsTracker tracker = null;
 		
-		if (analyticsEnabled(context)) {
+		if (analyticsEnabled(activity)) {
 			Log.i(Utils.TAG, "[Analytics] Tracker starting");
 			tracker = GoogleAnalyticsTracker.getInstance();
-			String code = context.getResources().getString(R.string.google_analytics_tracking_code);
-			tracker.start(code, context);
+			String code = activity.getResources().getString(R.string.google_analytics_tracking_code);
+			tracker.start(code, activity);
 		}
 		
 		return tracker;
 	}
 	
-	public static void page(Context context, GoogleAnalyticsTracker tracker, String page) {
-		if (tracker != null && analyticsEnabled(context)) {
+	public static void page(Activity activity, GoogleAnalyticsTracker tracker, String page) {
+		if (tracker != null && analyticsEnabled(activity)) {
+			String source = entrySource(activity);
+			if (source != null) {
+				Log.i(Utils.TAG, "[Analytics] Marking next page view as an entry to the app of type: " + source);
+				tracker.setCustomVar(CUSTOM_ENTRY_SLOT, CUSTOM_ENTRY_NAME, source, SCOPE_SESSION);
+			}
+			
 			Log.i(Utils.TAG, "[Analytics] Tracking page - " + page);
 			tracker.trackPageView(page);
 			tracker.dispatch();
 		}
 	}
 		
-	public static void event(Context context, GoogleAnalyticsTracker tracker, String category, String action, String label) {
-		if (tracker != null && analyticsEnabled(context)) {
+	public static void event(Activity activity, GoogleAnalyticsTracker tracker, String category, String action, String label) {
+		if (tracker != null && analyticsEnabled(activity)) {
 			Log.i(Utils.TAG, "[Analytics] Tracking event - category: " + category + ", action: " + action + ", label: " + label);
 			tracker.trackEvent(category, action, label, -1);
 			tracker.dispatch();
@@ -79,43 +90,52 @@ public class Analytics {
 		}
 	}
 	
-	public static boolean analyticsEnabled(Context context) {
-		boolean debugDisabled = context.getResources().getString(R.string.debug_disable_analytics).equals("true");
-		boolean userEnabled = Utils.getBooleanPreference(context, Settings.ANALYTICS_ENABLED_KEY, Settings.ANALYTICS_ENABLED_DEFAULT);
+	public static boolean analyticsEnabled(Activity activity) {
+		boolean debugDisabled = activity.getResources().getString(R.string.debug_disable_analytics).equals("true");
+		boolean userEnabled = Utils.getBooleanPreference(activity, Settings.ANALYTICS_ENABLED_KEY, Settings.ANALYTICS_ENABLED_DEFAULT);
 		return (!debugDisabled && userEnabled);
 	}
 	
-	/** Track a pageview, and mark it as an "entry" into the app, with the source provided. */ 
-	public static void page(Context context, GoogleAnalyticsTracker tracker, String page, String source) {
-		if (tracker != null && analyticsEnabled(context)) {
-			Log.i(Utils.TAG, "[Analytics] Marking next page view as an entry to the app of type: " + source);
-			tracker.setCustomVar(CUSTOM_ENTRY_SLOT, CUSTOM_ENTRY_NAME, source, SCOPE_SESSION);
-			page(context, tracker, page);
-		}
+	public static void addFavoriteLegislator(Activity activity, GoogleAnalyticsTracker tracker, String bioguideId) {
+		event(activity, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_ADD_LEGISLATOR, bioguideId);
 	}
 	
-	public static void addFavoriteLegislator(Context context, GoogleAnalyticsTracker tracker, String bioguideId) {
-		event(context, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_ADD_LEGISLATOR, bioguideId);
+	public static void removeFavoriteLegislator(Activity activity, GoogleAnalyticsTracker tracker, String bioguideId) {
+		event(activity, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_REMOVE_LEGISLATOR, bioguideId);
 	}
 	
-	public static void removeFavoriteLegislator(Context context, GoogleAnalyticsTracker tracker, String bioguideId) {
-		event(context, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_REMOVE_LEGISLATOR, bioguideId);
+	public static void addFavoriteBill(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
+		event(activity, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_ADD_BILL, billId);
 	}
 	
-	public static void addFavoriteBill(Context context, GoogleAnalyticsTracker tracker, String billId) {
-		event(context, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_ADD_BILL, billId);
+	public static void removeFavoriteBill(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
+		event(activity, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_REMOVE_BILL, billId);
 	}
 	
-	public static void removeFavoriteBill(Context context, GoogleAnalyticsTracker tracker, String billId) {
-		event(context, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_REMOVE_BILL, billId);
+	public static void subscribeNotification(Activity activity, GoogleAnalyticsTracker tracker, String subscriber) {
+		event(activity, tracker, EVENT_NOTIFICATION_CATEGORY, NOTIFICATION_ADD, subscriber);
 	}
 	
-	public static void subscribeNotification(Context context, GoogleAnalyticsTracker tracker, String subscriber) {
-		event(context, tracker, EVENT_NOTIFICATION_CATEGORY, NOTIFICATION_ADD, subscriber);
+	public static void unsubscribeNotification(Activity activity, GoogleAnalyticsTracker tracker, String subscriber) {
+		event(activity, tracker, EVENT_NOTIFICATION_CATEGORY, NOTIFICATION_REMOVE, subscriber);
 	}
 	
-	public static void unsubscribeNotification(Context context, GoogleAnalyticsTracker tracker, String subscriber) {
-		event(context, tracker, EVENT_NOTIFICATION_CATEGORY, NOTIFICATION_REMOVE, subscriber);
+	/** Utility function for discerning an entry source from an activity's Intent. */ 
+	public static String entrySource(Activity activity) {
+		Intent intent = activity.getIntent();
+		String action = intent.getAction();
+		boolean main = action != null && action.equals(Intent.ACTION_MAIN);
+		if (main) {
+			String source = ENTRY_MAIN;
+			Bundle extras = intent.getExtras();
+			if (extras != null) {
+				String extra = extras.getString(EXTRA_ENTRY_FROM);
+				if (extra != null)
+					source = extra;
+			}
+			return source;
+		} else
+			return null;
 	}
 	
 }
