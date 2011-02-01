@@ -93,6 +93,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 	private AddressUpdater addressUpdater;
 	
 	private GoogleAnalyticsTracker tracker;
+	private boolean tracked = false;
 
 	private SearchViewWrapper searchLocationView;
 	private ViewArrayAdapter searchLocationAdapter;
@@ -131,6 +132,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 					iterator.next().onScreenLoad(this);
 			}
 			favoritePeopleWrappers = holder.favoritePeopleWrappers;
+			tracked = holder.tracked;
 		}
 
 		if (addressUpdater != null)
@@ -156,17 +158,23 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 		String address;
 		Map<String, LoadPhotoTask> loadPhotoTasks;
 		Map<String, FavoriteLegislatorWrapper> favoritePeopleWrappers;
+		boolean tracked;
+		
+		public MainMenuHolder(AddressUpdater addressUpdater, Location location, String address, 
+				Map<String, LoadPhotoTask> loadPhotoTasks, Map<String, FavoriteLegislatorWrapper> favoritePeopleWrappers, 
+				boolean tracked) {
+			this.addressUpdater = addressUpdater;
+			this.location = location;
+			this.address = address;
+			this.loadPhotoTasks = loadPhotoTasks;
+			this.favoritePeopleWrappers = favoritePeopleWrappers;
+			this.tracked = tracked;
+		}
 	}
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		MainMenuHolder holder = new MainMenuHolder();
-		holder.addressUpdater = addressUpdater;
-		holder.location = location;
-		holder.address = address;
-		holder.loadPhotoTasks = loadPhotoTasks;
-		holder.favoritePeopleWrappers = favoritePeopleWrappers;
-		return holder;
+		return new MainMenuHolder(addressUpdater, location, address, loadPhotoTasks, favoritePeopleWrappers, tracked);
 	}
 
 	@Override
@@ -289,7 +297,11 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 		setupDebugBar();
 		
 		tracker = Analytics.start(this);
-		Analytics.page(tracker, "/index");
+		
+		if (!tracked) {
+			Analytics.page(tracker, "/index", Analytics.ENTRY_MAIN);
+			tracked = true;
+		}
 	}
 	
 	private void setupDebugBar() {
