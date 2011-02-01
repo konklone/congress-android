@@ -12,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 
@@ -24,6 +26,8 @@ public class BillTabs extends TabActivity {
 	private Cursor cursor;
 
 	private ImageView star;
+	
+	private GoogleAnalyticsTracker tracker;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,11 +38,6 @@ public class BillTabs extends TabActivity {
 		bill = (Bill) extras.getSerializable("bill");
 		tab = extras.getString("tab");
 		
-		database = new Database(this);
-		database.open();
-		cursor = database.getBill(bill.id);
-		startManagingCursor(cursor);
-
 		setupControls();
 		setupTabs();
 		
@@ -50,9 +49,15 @@ public class BillTabs extends TabActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		database.close();
+		Analytics.stop(tracker);
 	}
 
 	public void setupControls() {
+		database = new Database(this);
+		database.open();
+		cursor = database.getBill(bill.id);
+		startManagingCursor(cursor);
+		
 		star = (ImageView) findViewById(R.id.favorite);
 		star.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -72,6 +77,8 @@ public class BillTabs extends TabActivity {
 	    		startActivity(Intent.createChooser(intent, "Share bill via:"));
 			}
 		});
+		
+		tracker = Analytics.start(this);
 	}
 	
 	public String shareText() {
@@ -95,13 +102,15 @@ public class BillTabs extends TabActivity {
 		cursor.requery();
 		
 		if (cursor.getCount() == 1) {
-			if (database.removeBill(id) != 0)
+			if (database.removeBill(id) != 0) {
 				toggleFavoriteStar(false);
-			else
+				Analytics.removeFavoriteBill(tracker, id);
+			} else
 				Utils.alert(this, "Problem unstarring bill.");
 		} else {
 			if (database.addBill(bill) != -1) {
 				toggleFavoriteStar(true);
+				Analytics.addFavoriteBill(tracker, id);
 				
 				if (!Utils.hasShownFavoritesMessage(this)) {
 					Utils.alert(this, R.string.bill_favorites_message);

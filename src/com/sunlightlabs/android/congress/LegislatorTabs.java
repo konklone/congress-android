@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
@@ -22,6 +24,8 @@ public class LegislatorTabs extends TabActivity {
 	private Cursor cursor;
 	
 	private ImageView star;
+	
+	private GoogleAnalyticsTracker tracker;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,7 @@ public class LegislatorTabs extends TabActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		database.close();
+		Analytics.stop(tracker);
 	}
 
 	public void setupControls() {
@@ -65,6 +70,8 @@ public class LegislatorTabs extends TabActivity {
 		nameTitle.setText(titledName);
 		if (titledName.length() >= 23)
 			nameTitle.setTextSize(19);
+		
+		tracker = Analytics.start(this);
 	}
 
 	private void toggleFavoriteStar(boolean enabled) {
@@ -78,11 +85,14 @@ public class LegislatorTabs extends TabActivity {
 		String id = legislator.getId();
 		cursor.requery();
 		if (cursor.getCount() == 1) {
-			if (database.removeLegislator(id) != 0)
+			if (database.removeLegislator(id) != 0) {
 				toggleFavoriteStar(false);
+				Analytics.removeFavoriteLegislator(tracker, id);
+			}
 		} else {
 			if (database.addLegislator(legislator) != -1) {
 				toggleFavoriteStar(true);
+				Analytics.addFavoriteLegislator(tracker, id);
 				
 				if (!Utils.hasShownFavoritesMessage(this)) {
 					Utils.alert(this, R.string.legislator_favorites_message);
