@@ -94,6 +94,10 @@
         	android:label="@string/menu_notification_settings"
         	android:theme="@android:style/Theme.NoTitleBar" 
         	/>
+        	
+        <activity android:name=".Settings" 
+        	android:label="@string/menu_settings" 
+        	/>
         
         <receiver android:name=".notifications.OnBootReceiver">
         	<intent-filter>

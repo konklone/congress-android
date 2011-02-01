@@ -52,7 +52,7 @@ public class LegislatorTabs extends TabActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		database.close();
-		Analytics.stop(tracker);
+		Analytics.stop(this, tracker);
 	}
 
 	public void setupControls() {
@@ -87,12 +87,12 @@ public class LegislatorTabs extends TabActivity {
 		if (cursor.getCount() == 1) {
 			if (database.removeLegislator(id) != 0) {
 				toggleFavoriteStar(false);
-				Analytics.removeFavoriteLegislator(tracker, id);
+				Analytics.removeFavoriteLegislator(this, tracker, id);
 			}
 		} else {
 			if (database.addLegislator(legislator) != -1) {
 				toggleFavoriteStar(true);
-				Analytics.addFavoriteLegislator(tracker, id);
+				Analytics.addFavoriteLegislator(this, tracker, id);
 				
 				if (!Utils.hasShownFavoritesMessage(this)) {
 					Utils.alert(this, R.string.legislator_favorites_message);

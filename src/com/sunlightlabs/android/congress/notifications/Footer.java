@@ -227,8 +227,8 @@ public class Footer {
 				setOn();
 				
 				GoogleAnalyticsTracker tracker = Analytics.start(footer.context);
-				Analytics.subscribeNotification(tracker, subscription.notificationClass);
-				Analytics.stop(tracker);
+				Analytics.subscribeNotification(footer.context, tracker, subscription.notificationClass);
+				Analytics.stop(footer.context, tracker);
 				
 			} else {
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " +
@@ -264,8 +264,8 @@ public class Footer {
 					"Removed notification from the db, " + rows + " deleted");
 			
 			GoogleAnalyticsTracker tracker = Analytics.start(footer.context);
-			Analytics.unsubscribeNotification(tracker, subscription.notificationClass);
-			Analytics.stop(tracker);
+			Analytics.unsubscribeNotification(footer.context, tracker, subscription.notificationClass);
+			Analytics.stop(footer.context, tracker);
 			
 			setOff();
 		}

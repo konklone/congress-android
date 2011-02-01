@@ -49,7 +49,7 @@ public class BillTabs extends TabActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		database.close();
-		Analytics.stop(tracker);
+		Analytics.stop(this, tracker);
 	}
 
 	public void setupControls() {
@@ -104,13 +104,13 @@ public class BillTabs extends TabActivity {
 		if (cursor.getCount() == 1) {
 			if (database.removeBill(id) != 0) {
 				toggleFavoriteStar(false);
-				Analytics.removeFavoriteBill(tracker, id);
+				Analytics.removeFavoriteBill(this, tracker, id);
 			} else
 				Utils.alert(this, "Problem unstarring bill.");
 		} else {
 			if (database.addBill(bill) != -1) {
 				toggleFavoriteStar(true);
-				Analytics.addFavoriteBill(tracker, id);
+				Analytics.addFavoriteBill(this, tracker, id);
 				
 				if (!Utils.hasShownFavoritesMessage(this)) {
 					Utils.alert(this, R.string.bill_favorites_message);

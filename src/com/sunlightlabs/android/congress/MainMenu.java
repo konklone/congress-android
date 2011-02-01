@@ -187,7 +187,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 	protected void onDestroy() {
 		super.onDestroy();
 		database.close();
-		Analytics.stop(tracker);
+		Analytics.stop(this, tracker);
 	}
 
 	@Override
@@ -299,13 +299,13 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 		tracker = Analytics.start(this);
 		
 		if (!tracked) {
-			Analytics.page(tracker, "/index", Analytics.ENTRY_MAIN);
+			Analytics.page(this, tracker, "/index", Analytics.ENTRY_MAIN);
 			tracked = true;
 		}
 	}
 	
 	private void setupDebugBar() {
-		if (getResources().getString(R.string.debug).equals("true")) {
+		if (getResources().getString(R.string.debug_show_buttons).equals("true")) {
 			findViewById(R.id.debug_bar).setVisibility(View.VISIBLE);
 			findViewById(R.id.check).setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
@@ -648,8 +648,11 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) { 
-		case R.id.preferences:
+		case R.id.notification_settings:
 			startActivity(new Intent(this, NotificationSettings.class));
+			break;
+		case R.id.settings:
+			startActivity(new Intent(this, Settings.class));
 			break;
 		case R.id.feedback:
 			Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getResources().getString(R.string.contact_email), null));

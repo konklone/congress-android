@@ -11,5 +11,6 @@
     
     <string name="google_analytics_tracking_code"></string>
     
-    <string name="debug">false</string>
+    <string name="debug_disable_analytics">false</string>
+    <string name="debug_show_buttons">false</string>
 </resources>

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.android.congress.Settings;
 
 /**
  * Helper class to manage Google Analytics tracking. All calls to log a page view or event should go through this class,
@@ -45,7 +46,7 @@ public class Analytics {
 	public static GoogleAnalyticsTracker start(Context context) {
 		GoogleAnalyticsTracker tracker = null;
 		
-		if (analyticsEnabled()) {
+		if (analyticsEnabled(context)) {
 			Log.i(Utils.TAG, "[Analytics] Tracker starting");
 			tracker = GoogleAnalyticsTracker.getInstance();
 			String code = context.getResources().getString(R.string.google_analytics_tracking_code);
@@ -55,65 +56,66 @@ public class Analytics {
 		return tracker;
 	}
 	
-	public static void page(GoogleAnalyticsTracker tracker, String page) {
-		if (tracker != null && analyticsEnabled()) {
+	public static void page(Context context, GoogleAnalyticsTracker tracker, String page) {
+		if (tracker != null && analyticsEnabled(context)) {
 			Log.i(Utils.TAG, "[Analytics] Tracking page - " + page);
 			tracker.trackPageView(page);
 			tracker.dispatch();
 		}
 	}
 		
-	public static void event(GoogleAnalyticsTracker tracker, String category, String action, String label) {
-		if (tracker != null && analyticsEnabled()) {
+	public static void event(Context context, GoogleAnalyticsTracker tracker, String category, String action, String label) {
+		if (tracker != null && analyticsEnabled(context)) {
 			Log.i(Utils.TAG, "[Analytics] Tracking event - category: " + category + ", action: " + action + ", label: " + label);
 			tracker.trackEvent(category, action, label, -1);
 			tracker.dispatch();
 		}
 	}
 	
-	public static void stop(GoogleAnalyticsTracker tracker) {
+	public static void stop(Context context, GoogleAnalyticsTracker tracker) {
 		if (tracker != null) {
 			Log.i(Utils.TAG, "[Analytics] Tracker stopping");
 			tracker.stop();
 		}
 	}
 	
-	public static boolean analyticsEnabled() {
-		//TODO: check flag in keys.xml, and user settings flag
-		return true;
+	public static boolean analyticsEnabled(Context context) {
+		boolean debugDisabled = context.getResources().getString(R.string.debug_disable_analytics).equals("true");
+		boolean userEnabled = Utils.getBooleanPreference(context, Settings.ANALYTICS_ENABLED_KEY, Settings.ANALYTICS_ENABLED_DEFAULT);
+		return (!debugDisabled && userEnabled);
 	}
 	
 	/** Track a pageview, and mark it as an "entry" into the app, with the source provided. */ 
-	public static void page(GoogleAnalyticsTracker tracker, String page, String source) {
-		if (tracker != null && analyticsEnabled()) {
+	public static void page(Context context, GoogleAnalyticsTracker tracker, String page, String source) {
+		if (tracker != null && analyticsEnabled(context)) {
 			Log.i(Utils.TAG, "[Analytics] Marking next page view as an entry to the app of type: " + source);
 			tracker.setCustomVar(CUSTOM_ENTRY_SLOT, CUSTOM_ENTRY_NAME, source, SCOPE_SESSION);
-			page(tracker, page);
+			page(context, tracker, page);
 		}
 	}
 	
-	public static void addFavoriteLegislator(GoogleAnalyticsTracker tracker, String bioguideId) {
-		event(tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_ADD_LEGISLATOR, bioguideId);
+	public static void addFavoriteLegislator(Context context, GoogleAnalyticsTracker tracker, String bioguideId) {
+		event(context, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_ADD_LEGISLATOR, bioguideId);
 	}
 	
-	public static void removeFavoriteLegislator(GoogleAnalyticsTracker tracker, String bioguideId) {
-		event(tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_REMOVE_LEGISLATOR, bioguideId);
+	public static void removeFavoriteLegislator(Context context, GoogleAnalyticsTracker tracker, String bioguideId) {
+		event(context, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_REMOVE_LEGISLATOR, bioguideId);
 	}
 	
-	public static void addFavoriteBill(GoogleAnalyticsTracker tracker, String billId) {
-		event(tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_ADD_BILL, billId);
+	public static void addFavoriteBill(Context context, GoogleAnalyticsTracker tracker, String billId) {
+		event(context, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_ADD_BILL, billId);
 	}
 	
-	public static void removeFavoriteBill(GoogleAnalyticsTracker tracker, String billId) {
-		event(tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_REMOVE_BILL, billId);
+	public static void removeFavoriteBill(Context context, GoogleAnalyticsTracker tracker, String billId) {
+		event(context, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_REMOVE_BILL, billId);
 	}
 	
-	public static void subscribeNotification(GoogleAnalyticsTracker tracker, String subscriber) {
-		event(tracker, EVENT_NOTIFICATION_CATEGORY, NOTIFICATION_ADD, subscriber);
+	public static void subscribeNotification(Context context, GoogleAnalyticsTracker tracker, String subscriber) {
+		event(context, tracker, EVENT_NOTIFICATION_CATEGORY, NOTIFICATION_ADD, subscriber);
 	}
 	
-	public static void unsubscribeNotification(GoogleAnalyticsTracker tracker, String subscriber) {
-		event(tracker, EVENT_NOTIFICATION_CATEGORY, NOTIFICATION_REMOVE, subscriber);
+	public static void unsubscribeNotification(Context context, GoogleAnalyticsTracker tracker, String subscriber) {
+		event(context, tracker, EVENT_NOTIFICATION_CATEGORY, NOTIFICATION_REMOVE, subscriber);
 	}
 	
 }
