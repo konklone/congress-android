@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -41,12 +40,14 @@ import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.commonsware.cwac.wakeful.WakefulIntentService;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteBillsAdapter.FavoriteBillWrapper;
 import com.sunlightlabs.android.congress.MainMenu.FavoriteLegislatorsAdapter.FavoriteLegislatorWrapper;
 import com.sunlightlabs.android.congress.notifications.NotificationService;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
 import com.sunlightlabs.android.congress.utils.AddressUpdater.AddressUpdateable;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LocationUtils;
 import com.sunlightlabs.android.congress.utils.LocationUtils.LocationListenerTimeout;
@@ -90,6 +91,8 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 	private LocationTimer timer;
 	private String address;
 	private AddressUpdater addressUpdater;
+	
+	private GoogleAnalyticsTracker tracker;
 
 	private SearchViewWrapper searchLocationView;
 	private ViewArrayAdapter searchLocationAdapter;
@@ -113,16 +116,6 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
-
-		// open the database to get the favorites
-		database = new Database(this);
-		database.open();
-			
-		billCursor = database.getBills();
-		startManagingCursor(billCursor);
-		
-		peopleCursor = database.getLegislators();
-		startManagingCursor(peopleCursor);
 
 		MainMenuHolder holder = (MainMenuHolder) getLastNonConfigurationInstance();
 		if (holder != null) {
@@ -186,6 +179,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 	protected void onDestroy() {
 		super.onDestroy();
 		database.close();
+		Analytics.stop(tracker);
 	}
 
 	@Override
@@ -254,8 +248,21 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 			startActivity(Utils.billLoadIntent(bill.id, bill.code));
 		}
 	}
+	
+	public void setupDatabase() {
+		database = new Database(this);
+		database.open();
+			
+		billCursor = database.getBills();
+		startManagingCursor(billCursor);
+		
+		peopleCursor = database.getLegislators();
+		startManagingCursor(peopleCursor);
+	}
 
 	public void setupControls() {
+		setupDatabase();
+		
 		LayoutInflater inflater = LayoutInflater.from(this);
 		adapter = new MergeAdapter();
 
@@ -280,6 +287,9 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 		setListAdapter(adapter);
 		
 		setupDebugBar();
+		
+		tracker = Analytics.start(this);
+		Analytics.page(tracker, "/index");
 	}
 	
 	private void setupDebugBar() {

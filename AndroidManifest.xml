@@ -111,6 +111,13 @@
         </receiver>
 		
 		<service android:name=".notifications.NotificationService" />
+		
+		<!-- Used for install referrer tracking -->
+		<receiver android:name="com.google.android.apps.analytics.AnalyticsReceiver" android:exported="true">
+		  <intent-filter>
+		    <action android:name="com.android.vending.INSTALL_REFERRER" />
+		  </intent-filter>
+		</receiver>
     </application>
     
     <uses-permission android:name="android.permission.INTERNET" />
