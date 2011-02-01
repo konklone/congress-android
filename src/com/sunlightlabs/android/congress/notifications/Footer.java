@@ -43,12 +43,13 @@ public class Footer {
 	private Subscription subscription;
 	private List<String> latestIds;
 	
+	GoogleAnalyticsTracker tracker;
 	
-	public Footer(Activity context) {
-		onScreenLoad(context);
+	public Footer(Activity context, GoogleAnalyticsTracker tracker) {
+		onScreenLoad(context, tracker);
 	}
 	
-	public void onScreenLoad(Activity context) {
+	public void onScreenLoad(Activity context, GoogleAnalyticsTracker tracker) {
 		this.context = context;
 		this.resources = context.getResources();
 		
@@ -56,10 +57,12 @@ public class Footer {
 		this.text = (TextView) footerView.findViewById(R.id.text);
 		this.image = (ImageView) footerView.findViewById(R.id.image);
 		this.working = (ProgressBar) footerView.findViewById(R.id.working);
+		
+		this.tracker = tracker;
 	}
 	
-	public static Footer from(Activity activity) {
-		return new Footer(activity);
+	public static Footer from(Activity activity, GoogleAnalyticsTracker tracker) {
+		return new Footer(activity, tracker);
 	}
 	
 	public void init(Subscription subscription, List<?> objects) {
@@ -126,11 +129,13 @@ public class Footer {
 	private void onTap() {
 		if (state == OFF) {
 			setWorking();
+			Analytics.subscribeNotification(context, tracker, subscription.notificationClass);
 			new SubscribeTask(this).execute();
 		}
 		
 		else if (state == ON) {
 			setWorking();
+			Analytics.unsubscribeNotification(context, tracker, subscription.notificationClass);
 			new UnsubscribeTask(this).execute();
 		}
 		
@@ -225,11 +230,6 @@ public class Footer {
 					"Added notification in the db for subscription with " + rows + " new inserted IDs");
 				
 				setOn();
-				
-				GoogleAnalyticsTracker tracker = Analytics.start(footer.context);
-				Analytics.subscribeNotification(footer.context, tracker, subscription.notificationClass);
-				Analytics.stop(footer.context, tracker);
-				
 			} else {
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " +
 					"Error saving notifications, -1 returned from one or more insert calls");
@@ -262,10 +262,6 @@ public class Footer {
 		public void onPostExecute(Integer rows) {
 			Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
 					"Removed notification from the db, " + rows + " deleted");
-			
-			GoogleAnalyticsTracker tracker = Analytics.start(footer.context);
-			Analytics.unsubscribeNotification(footer.context, tracker, subscription.notificationClass);
-			Analytics.stop(footer.context, tracker);
 			
 			setOff();
 		}

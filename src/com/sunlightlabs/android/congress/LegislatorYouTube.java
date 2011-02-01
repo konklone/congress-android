@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.LegislatorYouTube.VideoAdapter.VideoHolder;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
@@ -36,6 +37,7 @@ import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask.LoadsThumb;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask.LoadsYoutubeVideos;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.ImageUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
@@ -48,7 +50,9 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	private List<Video> videos;
 	private LoadYoutubeVideosTask loadVideosTask = null;
 	private Map<Integer, LoadYoutubeThumbTask> loadThumbTasks = new HashMap<Integer, LoadYoutubeThumbTask>();
+	
 	private Footer footer;
+	private GoogleAnalyticsTracker tracker;
 	
 	private Legislator legislator;
 	private String youtubeUsername;
@@ -70,11 +74,13 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
     	}
     	
     	setupControls();
+    	
+    	tracker = Analytics.start(this);
 
     	if (footer != null)
-			footer.onScreenLoad(this);
+			footer.onScreenLoad(this, tracker);
 		else
-			footer = Footer.from(this);
+			footer = Footer.from(this, tracker);
     	
     	if (loadVideosTask != null)
 			loadVideosTask.onScreenLoad(this);
@@ -98,6 +104,12 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 		super.onResume();
 		if (videos != null)
 			setupSubscription();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Analytics.stop(tracker);
 	}
 
 	private void setupControls() {

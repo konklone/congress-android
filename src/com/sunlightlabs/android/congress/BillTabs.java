@@ -49,7 +49,7 @@ public class BillTabs extends TabActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		database.close();
-		Analytics.stop(this, tracker);
+		Analytics.stop(tracker);
 	}
 
 	public void setupControls() {

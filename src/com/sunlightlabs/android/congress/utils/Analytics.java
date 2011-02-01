@@ -72,7 +72,7 @@ public class Analytics {
 		}
 	}
 	
-	public static void stop(Context context, GoogleAnalyticsTracker tracker) {
+	public static void stop(GoogleAnalyticsTracker tracker) {
 		if (tracker != null) {
 			Log.i(Utils.TAG, "[Analytics] Tracker stopping");
 			tracker.stop();

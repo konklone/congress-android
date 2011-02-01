@@ -23,10 +23,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadNewsTask;
 import com.sunlightlabs.android.congress.tasks.LoadNewsTask.LoadsNews;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.google.news.NewsItem;
@@ -38,7 +40,9 @@ public class NewsList extends ListActivity implements LoadsNews {
 	private String searchTerm;
 	private List<NewsItem> items;
 	private LoadNewsTask loadNewsTask;
+	
 	private Footer footer;
+	private GoogleAnalyticsTracker tracker;
 	
 	private String subscriptionId, subscriptionName, subscriptionClass;
 
@@ -62,10 +66,12 @@ public class NewsList extends ListActivity implements LoadsNews {
 
 		setupControls();
 		
+		tracker = Analytics.start(this);
+		
 		if (footer != null)
-			footer.onScreenLoad(this);
+			footer.onScreenLoad(this, tracker);
 		else
-			footer = Footer.from(this);
+			footer = Footer.from(this, tracker);
 
 		if (loadNewsTask != null)
 			loadNewsTask.onScreenLoad(this);
@@ -83,6 +89,12 @@ public class NewsList extends ListActivity implements LoadsNews {
 		super.onResume();
 		if (items != null)
 			setupSubscription();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Analytics.stop(tracker);
 	}
 
 	private void setupControls() {

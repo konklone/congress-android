@@ -18,11 +18,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask.LoadsTweets;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
@@ -32,6 +34,7 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 	
 	private Legislator legislator;
 	private Footer footer;
+	private GoogleAnalyticsTracker tracker;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,11 +52,13 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
     	}
     	
     	setupControls();
+    	
+    	tracker = Analytics.start(this);
 
     	if (footer != null)
-			footer.onScreenLoad(this);
+			footer.onScreenLoad(this, tracker);
 		else
-			footer = Footer.from(this);
+			footer = Footer.from(this, tracker);
     	
     	if (loadTweetsTask != null)
 			loadTweetsTask.onScreenLoad(this);
@@ -71,6 +76,12 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 		super.onResume();
 		if (tweets != null)
 			setupSubscription();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Analytics.stop(tracker);
 	}
 
 	private void setupControls() {

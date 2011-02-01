@@ -18,9 +18,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -36,7 +38,9 @@ public class RollList extends ListActivity {
 	
 	private List<Roll> rolls;
 	private LoadRollsTask loadRollsTask;
+	
 	private Footer footer;
+	private GoogleAnalyticsTracker tracker;
 
 	private Legislator voter;
 	private int type;
@@ -70,10 +74,12 @@ public class RollList extends ListActivity {
 		else
 			setupSubscription();
 		
+		tracker = Analytics.start(this);
+		
 		if (footer != null)
-			footer.onScreenLoad(this);
+			footer.onScreenLoad(this, tracker);
 		else
-			footer = Footer.from(this);
+			footer = Footer.from(this, tracker);
 		
 		setupControls();
 	}
@@ -88,6 +94,12 @@ public class RollList extends ListActivity {
 		super.onResume();
 		if (rolls != null && rolls.size() > 0)
 			setupSubscription();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Analytics.stop(tracker);
 	}
 
 	public void setupControls() {

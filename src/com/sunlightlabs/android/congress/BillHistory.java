@@ -18,10 +18,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
@@ -29,7 +31,9 @@ import com.sunlightlabs.congress.models.CongressException;
 public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill {
 	private LoadBillTask loadBillTask;
 	private Bill bill;
+	
 	private Footer footer;
+	private GoogleAnalyticsTracker tracker;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,10 +50,12 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 			this.footer = holder.footer;
 		}
 		
+		tracker = Analytics.start(this);
+		
 		if (footer != null)
-			footer.onScreenLoad(this);
+			footer.onScreenLoad(this, tracker);
 		else
-			footer = Footer.from(this);
+			footer = Footer.from(this, tracker);
 		
 		if (loadBillTask != null)
 			loadBillTask.onScreenLoad(this);
@@ -64,6 +70,12 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
 
 	public Context getContext() {
 		return this;
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Analytics.stop(tracker);
 	}
 	
 	@Override

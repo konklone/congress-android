@@ -187,7 +187,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 	protected void onDestroy() {
 		super.onDestroy();
 		database.close();
-		Analytics.stop(this, tracker);
+		Analytics.stop(tracker);
 	}
 
 	@Override
