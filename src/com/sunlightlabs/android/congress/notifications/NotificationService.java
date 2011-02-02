@@ -104,9 +104,6 @@ public class NotificationService extends WakefulIntentService {
 			
 			int results = unseenIds.size();
 			
-			//REMOVETHIS
-			results = 1;
-			
 			// if there's at least one new item, notify the user
 			if (results > 0) {
 				
