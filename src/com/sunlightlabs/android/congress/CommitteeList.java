@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Committee;
 import com.sunlightlabs.congress.models.CongressException;
@@ -28,6 +30,9 @@ public class CommitteeList extends ListActivity {
 	private List<Committee> committees;
 	private String chamber;
 	private LoadCommitteesTask loadCommitteesTask;
+	
+	private GoogleAnalyticsTracker tracker;
+	private boolean tracked = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,13 @@ public class CommitteeList extends ListActivity {
 			committees = holder.committees;
 			loadCommitteesTask = holder.loadCommitteesTask;
 			chamber = holder.chamber;
+			tracked = holder.tracked;
+		}
+		
+		tracker = Analytics.start(this);
+		if (!tracked) {
+			Analytics.page(this, tracker, "/committees/" + chamber);
+			tracked = true;
 		}
 
 		if (loadCommitteesTask == null)
@@ -56,11 +68,13 @@ public class CommitteeList extends ListActivity {
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		CommitteeListHolder holder = new CommitteeListHolder();
-		holder.committees = this.committees;
-		holder.chamber = this.chamber;
-		holder.loadCommitteesTask = this.loadCommitteesTask;
-		return holder;
+		return new CommitteeListHolder(committees, chamber, loadCommitteesTask, tracked);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Analytics.stop(tracker);
 	}
 	
 	private void setupControls() {
@@ -187,8 +201,16 @@ public class CommitteeList extends ListActivity {
 	
 	private class CommitteeListHolder {
 		List<Committee> committees;
-		LoadCommitteesTask loadCommitteesTask;
 		String chamber;
+		LoadCommitteesTask loadCommitteesTask;
+		boolean tracked;
+		
+		CommitteeListHolder(List<Committee> committees, String chamber, LoadCommitteesTask loadCommitteesTask, boolean tracked) {
+			this.committees = committees;
+			this.loadCommitteesTask = loadCommitteesTask;
+			this.chamber = chamber;
+			this.tracked = tracked;
+		}
 	}
 
 }
