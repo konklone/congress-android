@@ -145,7 +145,10 @@ public class Utils {
 		Parcelable resource = Intent.ShortcutIconResource.fromContext(context, R.drawable.bill);
 		return new Intent()
 			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
-				billLoadIntent(billId, code).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
+				billLoadIntent(billId, code)
+					.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+					.putExtra(Analytics.EXTRA_ENTRY_FROM, Analytics.ENTRY_SHORTCUT)
+				)
 			.putExtra(Intent.EXTRA_SHORTCUT_NAME, Bill.formatCodeShort(code))
 			.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, resource);
 	}
@@ -157,7 +160,10 @@ public class Utils {
 	public static Intent shortcutIntent(Context context, String legislatorId, String name, Bitmap icon) {
 		Intent intent = new Intent()
 			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
-					Utils.legislatorLoadIntent(legislatorId).addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK))
+					Utils.legislatorLoadIntent(legislatorId)
+						.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+						.putExtra(Analytics.EXTRA_ENTRY_FROM, Analytics.ENTRY_SHORTCUT)
+					)
 			.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
 
 		if (icon != null)
@@ -168,21 +174,6 @@ public class Utils {
 		}
 
 		return intent;
-	}
-	
-	public static Intent shortcutIntent(Context context, Roll roll) {
-		Intent rollIntent = new Intent(Intent.ACTION_MAIN)
-			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.RollInfo")
-			.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-			.putExtra("id", roll.id);
-		
-		Parcelable resource = Intent.ShortcutIconResource.fromContext(context, R.drawable.rolls);
-		String title = Utils.capitalize(roll.chamber) + " Roll No. " + roll.number;
-		
-		return new Intent()
-			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, rollIntent)
-			.putExtra(Intent.EXTRA_SHORTCUT_NAME, title)
-			.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, resource);
 	}
 	
 	public static void installShortcutIcon(Context context, Legislator legislator, Bitmap icon) {
