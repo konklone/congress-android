@@ -37,6 +37,8 @@ public class BillTabs extends TabActivity {
 		Bundle extras = getIntent().getExtras();
 		bill = (Bill) extras.getSerializable("bill");
 		tab = extras.getString("tab");
+		if (tab == null)
+			tab = "info";
 		
 		setupControls();
 		setupTabs();
@@ -140,31 +142,43 @@ public class BillTabs extends TabActivity {
 		if (bill.last_passage_vote_at != null && bill.last_passage_vote_at.getTime() > 0)
 			Utils.addTab(this, tabHost, "votes", votesIntent(), getString(R.string.tab_votes), res.getDrawable(R.drawable.tab_video));
 		
-		if (tab != null) 
-			tabHost.setCurrentTabByTag(tab);
-		else
-			tabHost.setCurrentTabByTag("info");
+		tabHost.setCurrentTabByTag(tab);
 	}
 	
 	
 	public Intent detailsIntent() {
-		return Utils.billIntent(this, BillInfo.class, bill);
+		Intent intent = Utils.billIntent(this, BillInfo.class, bill);
+		if (tab.equals("info"))
+			Analytics.passEntry(this, intent);
+		return intent;
 	}
 	
 	public Intent newsIntent() {
-		return new Intent(this, NewsList.class)
+		Intent intent = new Intent(this, NewsList.class)
 			.putExtra("searchTerm", searchTermFor(bill))
+			.putExtra("trackUrl", "/bill/" + bill.id + "/news")
 			.putExtra("subscriptionId", bill.id)
 			.putExtra("subscriptionName", Subscriber.notificationName(bill))
 			.putExtra("subscriptionClass", "NewsBillSubscriber");
+		
+		if (tab.equals("news"))
+			Analytics.passEntry(this, intent);
+		
+		return intent;
 	}
 	
 	public Intent historyIntent() {
-		return new Intent(this, BillHistory.class).putExtra("bill", bill);
+		Intent intent = new Intent(this, BillHistory.class).putExtra("bill", bill);
+		if (tab.equals("history"))
+			Analytics.passEntry(this, intent);
+		return intent;
 	}
 	
 	public Intent votesIntent() {
-		return new Intent(this, BillVotes.class).putExtra("bill", bill);
+		Intent intent = new Intent(this, BillVotes.class).putExtra("bill", bill);
+		if (tab.equals("votes"))
+			Analytics.passEntry(this, intent);
+		return intent;
 	}
 	
 	

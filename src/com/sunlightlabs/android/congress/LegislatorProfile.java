@@ -26,8 +26,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.tasks.ShortcutImageTask;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
@@ -49,6 +51,9 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 	private LoadPhotoTask loadPhotoTask;
 	private LoadCommitteesTask loadCommitteesTask;
 	private ShortcutImageTask shortcutImageTask;
+	
+	private GoogleAnalyticsTracker tracker;
+	private boolean tracked = false;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,8 +66,19 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
         setupControls();
         
         LegislatorProfileHolder holder = (LegislatorProfileHolder) getLastNonConfigurationInstance();
-        if (holder != null)
-        	holder.loadInto(this);
+        if (holder != null) {
+        	this.loadPhotoTask = holder.loadPhotoTask;
+			this.loadCommitteesTask = holder.loadCommitteesTask;
+			this.shortcutImageTask = holder.shortcutImageTask;
+			this.committees = holder.committees;
+			this.tracked = holder.tracked;
+        }
+        
+        tracker = Analytics.start(this);
+    	if (!tracked) {
+			Analytics.page(this, tracker, "/legislator/" + legislator.id);
+			tracked = true;
+		}
         
         loadPhoto();
         
@@ -75,7 +91,13 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new LegislatorProfileHolder(loadPhotoTask, loadCommitteesTask, shortcutImageTask, committees);
+		return new LegislatorProfileHolder(loadPhotoTask, loadCommitteesTask, shortcutImageTask, committees, tracked);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Analytics.stop(tracker);
 	}
 	
 	// committee callbacks and display function not being used at this time
@@ -434,19 +456,15 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		LoadCommitteesTask loadCommitteesTask;
 		ShortcutImageTask shortcutImageTask;
 		List<Committee> committees;
+		boolean tracked;
 		
-		LegislatorProfileHolder(LoadPhotoTask loadPhotoTask, LoadCommitteesTask loadCommitteesTask, ShortcutImageTask shortcutImageTask, List<Committee> committees) {
+		LegislatorProfileHolder(LoadPhotoTask loadPhotoTask, LoadCommitteesTask loadCommitteesTask, 
+				ShortcutImageTask shortcutImageTask, List<Committee> committees, boolean tracked) {
 			this.loadPhotoTask = loadPhotoTask;
 			this.loadCommitteesTask = loadCommitteesTask;
 			this.shortcutImageTask = shortcutImageTask;
 			this.committees = committees;
-		}
-		
-		public void loadInto(LegislatorProfile context) {
-			context.loadPhotoTask = loadPhotoTask;
-			context.loadCommitteesTask = loadCommitteesTask;
-			context.shortcutImageTask = shortcutImageTask;
-			context.committees = committees;
+			this.tracked = tracked;
 		}
 	}
 }

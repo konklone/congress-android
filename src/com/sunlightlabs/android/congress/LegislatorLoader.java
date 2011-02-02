@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.sunlightlabs.android.congress.tasks.LoadLegislatorTask;
 import com.sunlightlabs.android.congress.tasks.LoadLegislatorTask.LoadsLegislator;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
@@ -40,13 +41,12 @@ public class LegislatorLoader extends Activity implements LoadsLegislator {
 		return loadLegislatorTask;
 	}
 	
-	
 	public void onLoadLegislator(Legislator legislator) {
 		if (legislator != null) {
 			intent.putExtra("legislator", legislator);
-			startActivity(intent);
-		}
-		else
+			// pass entry info along, this loader class is an implementation detail
+			startActivity(Analytics.passEntry(this, intent));
+		} else
 			Utils.alert(this, R.string.error_connection);
 		
 		loadLegislatorTask = null;

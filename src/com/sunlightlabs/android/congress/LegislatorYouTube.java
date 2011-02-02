@@ -53,6 +53,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	
 	private Footer footer;
 	private GoogleAnalyticsTracker tracker;
+	private boolean tracked = false;
 	
 	private Legislator legislator;
 	private String youtubeUsername;
@@ -67,15 +68,20 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
     	
     	LegislatorYouTubeHolder holder = (LegislatorYouTubeHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
-    		videos = holder.videos;
-    		loadVideosTask = holder.loadVideosTask;
-    		loadThumbTasks = holder.loadThumbTasks;
-    		footer = holder.footer;
+    		this.videos = holder.videos;
+    		this.loadVideosTask = holder.loadVideosTask;
+    		this.loadThumbTasks = holder.loadThumbTasks;
+    		this.footer = holder.footer;
+    		this.tracked = holder.tracked;
     	}
     	
     	setupControls();
     	
     	tracker = Analytics.start(this);
+    	if (!tracked) {
+			Analytics.page(this, tracker, "/legislator/" + legislator.id + "/videos");
+			tracked = true;
+		}
 
     	if (footer != null)
 			footer.onScreenLoad(this, tracker);
@@ -96,7 +102,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	
 	@Override
     public Object onRetainNonConfigurationInstance() {
-    	return new LegislatorYouTubeHolder(videos, loadVideosTask, loadThumbTasks, footer);
+    	return new LegislatorYouTubeHolder(videos, loadVideosTask, loadThumbTasks, footer, tracked);
     }
 	
 	@Override
@@ -270,13 +276,15 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 		LoadYoutubeVideosTask loadVideosTask;
 		Map<Integer, LoadYoutubeThumbTask> loadThumbTasks;
 		Footer footer;
+		boolean tracked;
 		
 		public LegislatorYouTubeHolder(List<Video> videos, LoadYoutubeVideosTask loadVideosTask, 
-				Map<Integer, LoadYoutubeThumbTask> loadThumbTasks, Footer footer) {
+				Map<Integer, LoadYoutubeThumbTask> loadThumbTasks, Footer footer, boolean tracked) {
 			this.videos = videos;
 			this.loadVideosTask = loadVideosTask;
 			this.loadThumbTasks = loadThumbTasks;
 			this.footer = footer;
+			this.tracked = tracked;
 		}
 	}
 	

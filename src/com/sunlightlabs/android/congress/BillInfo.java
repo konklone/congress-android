@@ -23,9 +23,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.tasks.LoadLegislatorTask;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
@@ -47,6 +49,9 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	private LoadLegislatorTask loadSponsorTask;
 	private View loadingContainer, sponsorView;
 	
+	private GoogleAnalyticsTracker tracker;
+	private boolean tracked = false;
+	
 	private Drawable sponsorPhoto;
 	
 	private SimpleDateFormat timelineFormat = new SimpleDateFormat("MMM dd, yyyy");
@@ -62,17 +67,30 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		
 		BillInfoHolder holder = (BillInfoHolder) getLastNonConfigurationInstance();
         if (holder != null) {
-        	loadBillTask = holder.loadBillTask;
-        	loadPhotoTask = holder.loadPhotoTask;
-        	loadSponsorTask = holder.loadSponsorTask;
-        	summary = holder.summary;
-        	detailedSponsor = holder.detailedSponsor;
+        	this.loadBillTask = holder.loadBillTask;
+        	this.loadPhotoTask = holder.loadPhotoTask;
+        	this.loadSponsorTask = holder.loadSponsorTask;
+        	this.summary = holder.summary;
+        	this.detailedSponsor = holder.detailedSponsor;
+        	this.tracked = holder.tracked;
         }
+        
+        tracker = Analytics.start(this);
+    	if (!tracked) {
+			Analytics.page(this, tracker, "/bill/" + bill.id);
+			tracked = true;
+		}
 		
         if (loadSponsorTask != null)
         	loadSponsorTask.onScreenLoad(this);
         
 		loadSummary();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Analytics.stop(tracker);
 	}
 	
 	public void setupControls() {
@@ -179,7 +197,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new BillInfoHolder(loadBillTask, loadPhotoTask, loadSponsorTask, summary, detailedSponsor);
+		return new BillInfoHolder(loadBillTask, loadPhotoTask, loadSponsorTask, summary, detailedSponsor, tracked);
 	}
 	
 	private void loadSponsor() {
@@ -389,16 +407,17 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		LoadLegislatorTask loadSponsorTask;
 		String summary;
 		Legislator detailedSponsor;
+		boolean tracked;
 
-		public BillInfoHolder(LoadBillTask loadBillTask,
-		                      LoadPhotoTask loadPhotoTask,
-		                      LoadLegislatorTask loadSponsorTask,
-		                      String summary, Legislator detailedSponsor) {
+		public BillInfoHolder(LoadBillTask loadBillTask, LoadPhotoTask loadPhotoTask,
+		                      LoadLegislatorTask loadSponsorTask, String summary, 
+		                      Legislator detailedSponsor, boolean tracked) {
 			this.loadBillTask = loadBillTask;
 			this.loadPhotoTask = loadPhotoTask;
 			this.loadSponsorTask = loadSponsorTask;
 			this.summary = summary;
 			this.detailedSponsor = detailedSponsor;
+			this.tracked = tracked;
 		}
 	}
 }

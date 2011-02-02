@@ -43,8 +43,10 @@ public class BillList extends ListActivity {
 	private int type;
 	
 	private Footer footer;
-	private LoadingWrapper lw;
 	private GoogleAnalyticsTracker tracker;
+	private boolean tracked = false;
+	
+	private LoadingWrapper lw;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class BillList extends ListActivity {
 			this.bills = holder.bills;
 			this.loadBillsTask = holder.loadBillsTask;
 			this.footer = holder.footer;
+			this.tracked = holder.tracked;
 
 			if (loadBillsTask != null)
 				loadBillsTask.onScreenLoad(this);
@@ -70,6 +73,10 @@ public class BillList extends ListActivity {
 			bills = new ArrayList<Bill>();
 		
 		tracker = Analytics.start(this);
+		if (!tracked) {
+			Analytics.page(this, tracker, url());
+			tracked = true;
+		}
 		
 		if (footer != null)
 			footer.onScreenLoad(this, tracker);
@@ -86,7 +93,7 @@ public class BillList extends ListActivity {
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new BillListHolder(bills, loadBillsTask, footer);
+		return new BillListHolder(bills, loadBillsTask, footer, tracked);
 	}
 	
 	@Override
@@ -122,6 +129,17 @@ public class BillList extends ListActivity {
 			Utils.setTitleSize(this, 18);
 			break;
 		}
+	}
+	
+	private String url() {
+		if (type == BILLS_RECENT)
+			return "/bills/introduced";
+		else if (type == BILLS_SPONSOR)
+			return "/legislator/" + sponsor.getId() + "/bills";
+		else if (type == BILLS_LAW)
+			return "/bills/laws";
+		else
+			return "/bills";
 	}
 	
 	private void setupSubscription() {
@@ -366,11 +384,13 @@ public class BillList extends ListActivity {
 		List<Bill> bills;
 		LoadBillsTask loadBillsTask;
 		Footer footer;
+		boolean tracked;
 
-		public BillListHolder(List<Bill> bills, LoadBillsTask loadBillsTask, Footer footer) {
+		public BillListHolder(List<Bill> bills, LoadBillsTask loadBillsTask, Footer footer, boolean tracked) {
 			this.bills = bills;
 			this.loadBillsTask = loadBillsTask;
 			this.footer = footer;
+			this.tracked = tracked;
 		}
 	}
 	

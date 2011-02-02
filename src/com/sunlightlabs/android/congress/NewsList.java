@@ -37,12 +37,13 @@ public class NewsList extends ListActivity implements LoadsNews {
 	private static final int MENU_VIEW = 0;
 	private static final int MENU_COPY = 1;
 
-	private String searchTerm;
+	private String searchTerm, trackUrl;
 	private List<NewsItem> items;
 	private LoadNewsTask loadNewsTask;
 	
 	private Footer footer;
 	private GoogleAnalyticsTracker tracker;
+	private boolean tracked = false;
 	
 	private String subscriptionId, subscriptionName, subscriptionClass;
 
@@ -53,6 +54,7 @@ public class NewsList extends ListActivity implements LoadsNews {
 
 		Bundle extras = getIntent().getExtras();
 		searchTerm = extras.getString("searchTerm");
+		trackUrl = extras.getString("trackUrl");
 		subscriptionId = extras.getString("subscriptionId");
 		subscriptionName = extras.getString("subscriptionName");
 		subscriptionClass = extras.getString("subscriptionClass");
@@ -62,11 +64,16 @@ public class NewsList extends ListActivity implements LoadsNews {
 			items = holder.items;
 			loadNewsTask = holder.loadNewsTask;
 			footer = holder.footer;
+			tracked = holder.tracked;
 		}
 
 		setupControls();
 		
 		tracker = Analytics.start(this);
+		if (!tracked) {
+			Analytics.page(this, tracker, trackUrl);
+			tracked = true;
+		}
 		
 		if (footer != null)
 			footer.onScreenLoad(this, tracker);
@@ -81,7 +88,7 @@ public class NewsList extends ListActivity implements LoadsNews {
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new NewsListHolder(items, loadNewsTask, footer);
+		return new NewsListHolder(items, loadNewsTask, footer, tracked);
 	}
 	
 	@Override
@@ -212,11 +219,13 @@ public class NewsList extends ListActivity implements LoadsNews {
 		List<NewsItem> items;
 		LoadNewsTask loadNewsTask;
 		Footer footer;
+		boolean tracked;
 		
-		public NewsListHolder(List<NewsItem> items, LoadNewsTask loadNewsTask, Footer footer) {
+		public NewsListHolder(List<NewsItem> items, LoadNewsTask loadNewsTask, Footer footer, boolean tracked) {
 			this.items = items;
 			this.loadNewsTask = loadNewsTask;
 			this.footer = footer;
+			this.tracked = tracked;
 		}
 	}
 

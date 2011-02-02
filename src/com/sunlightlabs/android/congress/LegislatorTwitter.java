@@ -33,8 +33,10 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 	private LoadTweetsTask loadTweetsTask = null;
 	
 	private Legislator legislator;
+	
 	private Footer footer;
 	private GoogleAnalyticsTracker tracker;
+	private boolean tracked = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,14 +48,19 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
     
     	LegislatorTwitterHolder holder = (LegislatorTwitterHolder) getLastNonConfigurationInstance();
     	if (holder != null) {
-    		tweets = holder.tweets;
-    		loadTweetsTask = holder.loadTweetsTask;
-    		footer = holder.footer;
+    		this.tweets = holder.tweets;
+    		this.loadTweetsTask = holder.loadTweetsTask;
+    		this.footer = holder.footer;
+    		this.tracked = holder.tracked;
     	}
     	
     	setupControls();
     	
     	tracker = Analytics.start(this);
+    	if (!tracked) {
+			Analytics.page(this, tracker, "/legislator/" + legislator.id + "/tweets");
+			tracked = true;
+		}
 
     	if (footer != null)
 			footer.onScreenLoad(this, tracker);
@@ -68,7 +75,7 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
 	
 	@Override
     public Object onRetainNonConfigurationInstance() {
-		return new LegislatorTwitterHolder(tweets, loadTweetsTask, footer);
+		return new LegislatorTwitterHolder(tweets, loadTweetsTask, footer, tracked);
     }
 	
 	@Override
@@ -204,11 +211,13 @@ public class LegislatorTwitter extends ListActivity implements LoadsTweets {
     	List<Twitter.Status> tweets;
     	LoadTweetsTask loadTweetsTask;
     	Footer footer;
+    	boolean tracked;
     	
-    	public LegislatorTwitterHolder(List<Twitter.Status> tweets, LoadTweetsTask loadTweetsTask, Footer footer) {
+    	public LegislatorTwitterHolder(List<Twitter.Status> tweets, LoadTweetsTask loadTweetsTask, Footer footer, boolean tracked) {
     		this.tweets = tweets;
     		this.loadTweetsTask = loadTweetsTask;
     		this.footer = footer;
+    		this.tracked = tracked;
     	}
     }
 

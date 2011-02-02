@@ -138,4 +138,14 @@ public class Analytics {
 			return null;
 	}
 	
+	public static Intent passEntry(Activity activity, Intent intent) {
+		String action = activity.getIntent().getAction();
+		if (action != null && action.equals(Intent.ACTION_MAIN)) {
+			intent.setAction(Intent.ACTION_MAIN);
+			intent.putExtra(Analytics.EXTRA_ENTRY_FROM, activity.getIntent().getStringExtra(Analytics.EXTRA_ENTRY_FROM));
+		}
+		
+		return intent;
+	}
+	
 }

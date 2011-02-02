@@ -35,6 +35,8 @@ public class LegislatorTabs extends TabActivity {
 		Bundle extras = getIntent().getExtras();
 		legislator = (Legislator) extras.getSerializable("legislator");
 		tab = extras.getString("tab");
+		if (tab == null)
+			tab = "profile";
 		
 		database = new Database(this);
 		database.open();
@@ -124,31 +126,43 @@ public class LegislatorTabs extends TabActivity {
 		String youtube_id = legislator.youtubeUsername();
 		if (legislator.in_office && youtube_id != null && !(youtube_id.equals("")))
 			Utils.addTab(this, tabHost, "videos", youtubeIntent(), getString(R.string.tab_videos), res.getDrawable(R.drawable.tab_video));
-		
-		if (tab != null) 
-			tabHost.setCurrentTabByTag(tab);
-		else
-			tabHost.setCurrentTabByTag("profile");
+		 
+		tabHost.setCurrentTabByTag(tab);
 	}
 	
 	public Intent profileIntent() {
-		return Utils.legislatorIntent(this, LegislatorProfile.class, legislator);
+		Intent intent = Utils.legislatorIntent(this, LegislatorProfile.class, legislator);
+		if (tab.equals("profile"))
+			Analytics.passEntry(this, intent);
+		return intent;
 	}
 	
 	public Intent newsIntent() {
-		return new Intent(this, NewsList.class)
+		Intent intent = new Intent(this, NewsList.class)
 			.putExtra("searchTerm", correctExceptions(searchTermFor(legislator)))
+			.putExtra("trackUrl", "/legislator/" + legislator.id + "/news")
 			.putExtra("subscriptionId", legislator.id)
 			.putExtra("subscriptionName", Subscriber.notificationName(legislator))
 			.putExtra("subscriptionClass", "NewsLegislatorSubscriber");
+		
+		if (tab.equals("news"))
+			Analytics.passEntry(this, intent);
+		
+		return intent;
 	}
 	
 	public Intent twitterIntent() {
-		return new Intent(this, LegislatorTwitter.class).putExtra("legislator", legislator);
+		Intent intent = new Intent(this, LegislatorTwitter.class).putExtra("legislator", legislator);
+		if (tab.equals("twitter"))
+			Analytics.passEntry(this, intent);
+		return intent;
 	}
 	
 	public Intent youtubeIntent() {
-		return new Intent(this, LegislatorYouTube.class).putExtra("legislator", legislator);
+		Intent intent = new Intent(this, LegislatorYouTube.class).putExtra("legislator", legislator);
+		if (tab.equals("videos"))
+			Analytics.passEntry(this, intent);
+		return intent;
 	}
 	
 	

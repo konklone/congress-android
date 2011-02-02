@@ -39,11 +39,12 @@ public class RollList extends ListActivity {
 	private List<Roll> rolls;
 	private LoadRollsTask loadRollsTask;
 	
-	private Footer footer;
-	private GoogleAnalyticsTracker tracker;
-
 	private Legislator voter;
 	private int type;
+	
+	private Footer footer;
+	private GoogleAnalyticsTracker tracker;
+	private boolean tracked = false;
 	
 	private LoadingWrapper loading;
 
@@ -61,6 +62,7 @@ public class RollList extends ListActivity {
 			this.rolls = holder.rolls;
 			this.loadRollsTask = holder.loadRollsTask;
 			this.footer = holder.footer;
+			this.tracked = holder.tracked;
 
 			if (loadRollsTask != null)
 				loadRollsTask.onScreenLoad(this);
@@ -75,6 +77,10 @@ public class RollList extends ListActivity {
 			setupSubscription();
 		
 		tracker = Analytics.start(this);
+		if (!tracked) {
+			Analytics.page(this, tracker, url());
+			tracked = true;
+		}
 		
 		if (footer != null)
 			footer.onScreenLoad(this, tracker);
@@ -86,7 +92,7 @@ public class RollList extends ListActivity {
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new RollListHolder(rolls, loadRollsTask, footer);
+		return new RollListHolder(rolls, loadRollsTask, footer, tracked);
 	}
 	
 	@Override
@@ -101,7 +107,7 @@ public class RollList extends ListActivity {
 		super.onDestroy();
 		Analytics.stop(tracker);
 	}
-
+	
 	public void setupControls() {
 		((Button) findViewById(R.id.back)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -137,6 +143,17 @@ public class RollList extends ListActivity {
 			subscription = new Subscription("Nominations", "Recent Nominations", "RollsNominationsSubscriber", null);
 		
 		footer.init(subscription, rolls);
+	}
+	
+	private String url() {
+		if (type == ROLLS_VOTER)
+			return "/legislator/" + voter.id + "/votes";
+		else if (type == ROLLS_LATEST)
+			return "/votes/latest";
+		else if (type == ROLLS_NOMINATIONS)
+			return "/votes/nominations";
+		else
+			return "/votes";
 	}
 
 	@Override
@@ -378,11 +395,13 @@ public class RollList extends ListActivity {
 		List<Roll> rolls;
 		LoadRollsTask loadRollsTask;
 		Footer footer;
+		boolean tracked;
 
-		public RollListHolder(List<Roll> rolls, LoadRollsTask loadRollsTask, Footer footer) {
+		public RollListHolder(List<Roll> rolls, LoadRollsTask loadRollsTask, Footer footer, boolean tracked) {
 			this.rolls = rolls;
 			this.loadRollsTask = loadRollsTask;
 			this.footer = footer;
+			this.tracked = tracked;
 		}
 	}
 	

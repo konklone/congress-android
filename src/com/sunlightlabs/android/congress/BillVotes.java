@@ -32,6 +32,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	
 	private Footer footer;
 	private GoogleAnalyticsTracker tracker;
+	private boolean tracked = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,9 +47,14 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 			this.loadBillTask = holder.loadBillTask;
 			this.bill = holder.bill;
 			this.footer = holder.footer;
+			this.tracked = holder.tracked;
 		}
 		
 		tracker = Analytics.start(this);
+		if (!tracked) {
+			Analytics.page(this, tracker, "/bill/" + bill.id + "/votes");
+			tracked = true;
+		}
 		
 		if (footer != null)
 			footer.onScreenLoad(this, tracker);
@@ -63,7 +69,7 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new BillVotesHolder(loadBillTask, bill, footer);
+		return new BillVotesHolder(loadBillTask, bill, footer, tracked);
 	}
 	
 	@Override
@@ -190,11 +196,13 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 		LoadBillTask loadBillTask;
 		Bill bill;
 		Footer footer;
+		boolean tracked;
 		
-		public BillVotesHolder(LoadBillTask loadBillTask, Bill bill, Footer footer) {
+		public BillVotesHolder(LoadBillTask loadBillTask, Bill bill, Footer footer, boolean tracked) {
 			this.loadBillTask = loadBillTask;
 			this.bill = bill;
 			this.footer = footer;
+			this.tracked = tracked;
 		}
 	}
 }
