@@ -42,8 +42,7 @@ public class BillsRecentSubscriber extends Subscriber {
 
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
-		return new Intent(Intent.ACTION_MAIN)
-			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.BillList")
+		return new Intent().setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.BillList")
 			.putExtra("type", BillList.BILLS_RECENT);
 	}
 }

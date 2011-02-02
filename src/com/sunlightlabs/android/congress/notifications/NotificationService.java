@@ -104,6 +104,9 @@ public class NotificationService extends WakefulIntentService {
 			
 			int results = unseenIds.size();
 			
+			//REMOVETHIS
+			results = 1;
+			
 			// if there's at least one new item, notify the user
 			if (results > 0) {
 				
@@ -137,6 +140,7 @@ public class NotificationService extends WakefulIntentService {
 		
 		Notification notification = new Notification(icon, ticker, when);
 
+		intent.setAction(Intent.ACTION_MAIN);
 		intent.setData(uri);
 		intent.putExtra(Analytics.EXTRA_ENTRY_FROM, Analytics.ENTRY_NOTIFICATION);
 		

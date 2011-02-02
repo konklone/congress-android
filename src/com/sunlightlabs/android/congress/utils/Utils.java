@@ -64,7 +64,7 @@ public class Utils {
 
 	// Suitable for a legislator desktop shortcut, load a legislator by ID only
 	public static Intent legislatorLoadIntent(String id) {
-		return new Intent(Intent.ACTION_MAIN).setClassName(
+		return new Intent().setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.LegislatorLoader")
 			.putExtra("id", id)
@@ -72,7 +72,7 @@ public class Utils {
 	}
 
 	public static Intent legislatorLoadIntent(String id, Intent intent) {
-		return new Intent(Intent.ACTION_MAIN).setClassName(
+		return new Intent().setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.LegislatorLoader")
 			.putExtra("id", id)
@@ -80,7 +80,7 @@ public class Utils {
 	}
 	
 	public static Intent legislatorTabsIntent() {
-		return new Intent(Intent.ACTION_MAIN).setClassName(
+		return new Intent().setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.LegislatorTabs");
 	}
@@ -115,7 +115,7 @@ public class Utils {
 
 	public static Intent billLoadIntent(String billId, String code) {
 		Intent intent = billTabsIntent();
-		return new Intent(Intent.ACTION_MAIN).setClassName(
+		return new Intent().setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.BillLoader")
 			.putExtra("id", billId)
@@ -128,7 +128,7 @@ public class Utils {
 	}
 
 	public static Intent billLoadIntent(String billId, Intent intent) {
-		return new Intent(Intent.ACTION_MAIN).setClassName(
+		return new Intent().setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.BillLoader")
 			.putExtra("id", billId)
@@ -136,7 +136,7 @@ public class Utils {
 	}
 
 	public static Intent billTabsIntent() {
-		return new Intent(Intent.ACTION_MAIN).setClassName(
+		return new Intent().setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.BillTabs");
 	}
@@ -147,6 +147,7 @@ public class Utils {
 			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
 				billLoadIntent(billId, code)
 					.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+					.setAction(Intent.ACTION_MAIN)
 					.putExtra(Analytics.EXTRA_ENTRY_FROM, Analytics.ENTRY_SHORTCUT)
 				)
 			.putExtra(Intent.EXTRA_SHORTCUT_NAME, Bill.formatCodeShort(code))
@@ -162,6 +163,7 @@ public class Utils {
 			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
 					Utils.legislatorLoadIntent(legislatorId)
 						.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+						.setAction(Intent.ACTION_MAIN)
 						.putExtra(Analytics.EXTRA_ENTRY_FROM, Analytics.ENTRY_SHORTCUT)
 					)
 			.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);

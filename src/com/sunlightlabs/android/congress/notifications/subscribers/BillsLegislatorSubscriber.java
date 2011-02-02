@@ -42,8 +42,7 @@ public class BillsLegislatorSubscriber extends Subscriber {
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
 		return Utils.legislatorLoadIntent(subscription.id, 
-			new Intent(Intent.ACTION_MAIN)
-				.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.BillList")
+			new Intent().setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.BillList")
 				.putExtra("type", BillList.BILLS_SPONSOR));
 	}
 }
