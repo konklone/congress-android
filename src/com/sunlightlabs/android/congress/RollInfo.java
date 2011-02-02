@@ -30,7 +30,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
@@ -72,6 +74,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	
 	LayoutInflater inflater;
 	
+	private GoogleAnalyticsTracker tracker;
+	private boolean tracked = false;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,6 +103,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			this.voters = holder.voters;
 			this.loadPhotoTasks = holder.loadPhotoTasks;
 			this.currentTab = holder.currentTab;
+			this.tracked = holder.tracked;
 			
 			if (loadPhotoTasks != null) {
 				Iterator<LoadPhotoTask> iterator = loadPhotoTasks.values().iterator();
@@ -106,19 +112,26 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			}
 		}
 		
+		tracker = Analytics.start(this);
+		if (!tracked) {
+			Analytics.page(this, tracker, "/vote/roll/" + id);
+			tracked = true;
+		}
+		
 		loadRoll();
 	}
 	
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new RollInfoHolder(loadRollTask, roll, loadVotersTask, voters, loadPhotoTasks, currentTab);
+		return new RollInfoHolder(loadRollTask, roll, loadVotersTask, voters, loadPhotoTasks, currentTab, tracked);
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		database.close();
+		Analytics.stop(tracker);
 	}
 	
 	public void setupControls() {
@@ -617,19 +630,21 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	}
 	
 	static class RollInfoHolder {
-		private LoadRollTask loadRollTask, loadVotersTask;
-		private Roll roll;
-		private Map<String,Roll.Vote> voters;
+		LoadRollTask loadRollTask, loadVotersTask;
+		Roll roll;
+		Map<String,Roll.Vote> voters;
 		Map<String,LoadPhotoTask> loadPhotoTasks;
-		private String currentTab;
+		String currentTab;
+		boolean tracked;
 		
-		public RollInfoHolder(LoadRollTask loadRollTask, Roll roll, LoadRollTask loadVotersTask, Map<String,Roll.Vote> voters, Map<String,LoadPhotoTask> loadPhotoTasks, String currentTab) {
+		public RollInfoHolder(LoadRollTask loadRollTask, Roll roll, LoadRollTask loadVotersTask, Map<String,Roll.Vote> voters, Map<String,LoadPhotoTask> loadPhotoTasks, String currentTab, boolean tracked) {
 			this.loadRollTask = loadRollTask;
 			this.roll = roll;
 			this.loadVotersTask = loadVotersTask;
 			this.voters = voters;
 			this.loadPhotoTasks = loadPhotoTasks;
 			this.currentTab = currentTab;
+			this.tracked = tracked;
 		}
 	}
 }

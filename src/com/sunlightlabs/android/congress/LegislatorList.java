@@ -29,8 +29,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.AddressUpdater;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LocationUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -74,6 +76,9 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	private boolean relocating = false;
 
 	private HeaderViewWrapper headerWrapper;
+	
+	private GoogleAnalyticsTracker tracker;
+	private boolean tracked = false;
 
 	private Handler handler = new Handler() {
 		@Override
@@ -117,6 +122,13 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			addressUpdater = holder.addressUpdater;
 			address = holder.address;
 			relocating = holder.relocating;
+			tracked = holder.tracked;
+		}
+		
+		tracker = Analytics.start(this);
+		if (!tracked) {
+			Analytics.page(this, tracker, url());
+			tracked = true;
 		}
 
 		if (loadLegislatorsTask == null)
@@ -132,15 +144,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		LegislatorListHolder holder = new LegislatorListHolder();
-		holder.legislators = this.legislators;
-		holder.loadLegislatorsTask = this.loadLegislatorsTask;
-		holder.loadPhotoTasks = this.loadPhotoTasks;
-
-		holder.addressUpdater = addressUpdater;
-		holder.address = address;
-		holder.relocating = relocating;
-		return holder;
+		return new LegislatorListHolder(legislators, loadLegislatorsTask, loadPhotoTasks, addressUpdater, address, relocating, tracked);
 	}
 
 	@Override
@@ -151,6 +155,12 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			relocating = false;
 			toggleRelocating();
 		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Analytics.stop(tracker);
 	}
 
 	public void loadLegislators() {
@@ -179,7 +189,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			}
 		}
 	}
-
+	
 	public void loadPhoto(String bioguide_id) {
 		if (!loadPhotoTasks.containsKey(bioguide_id)) {
 			try {
@@ -245,6 +255,23 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		default:
 			Utils.setTitle(this, "Legislator Search");
 		}
+	}
+	
+	public String url() {
+		if (type == SEARCH_ZIP)
+			return "/legislators/zip";
+		else if (type == SEARCH_LOCATION)
+			return "/legislators/location";
+		else if (type == SEARCH_LASTNAME)
+			return "/legislators/lastname";
+		else if (type == SEARCH_COMMITTEE)
+			return "/committee/" + committeeId + "/legislators";
+		else if (type == SEARCH_STATE)
+			return "/legislators/state";
+		else if (type == SEARCH_COSPONSORS)
+			return "/bill/" + bill_id + "/cosponsors";
+		else
+			return "/legislators";
 	}
 
 	@Override
@@ -437,6 +464,18 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		AddressUpdater addressUpdater;
 		String address;
 		boolean relocating;
+		boolean tracked;
+		
+		LegislatorListHolder(List<Legislator> legislators, LoadLegislatorsTask loadLegislatorsTask, Map<String,LoadPhotoTask> loadPhotoTasks,
+				AddressUpdater addressUpdater, String address, boolean relocating, boolean tracked) {
+			this.legislators = legislators;
+			this.loadLegislatorsTask = loadLegislatorsTask;
+			this.loadPhotoTasks = loadPhotoTasks;
+			this.addressUpdater = addressUpdater;
+			this.address = address;
+			this.relocating = relocating;
+			this.tracked = tracked;
+		}
 	}
 
 	private class HeaderViewWrapper {

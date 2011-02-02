@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class NotificationSettings extends PreferenceActivity {
@@ -36,6 +38,8 @@ public class NotificationSettings extends PreferenceActivity {
 	public static final String KEY_FIRST_TIME_SETTINGS = "first_time_settings";
 	public static final boolean DEFAULT_FIRST_TIME_SETTINGS = true;
 
+	private GoogleAnalyticsTracker tracker;
+	private boolean tracked = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +56,22 @@ public class NotificationSettings extends PreferenceActivity {
 			showDialog(EXPLANATION);
 		}
 		
+		NotificationSettingsHolder holder = (NotificationSettingsHolder) getLastNonConfigurationInstance();
+		if (holder != null)
+			this.tracked = holder.tracked;
+		
+		tracker = Analytics.start(this);
+		if (!tracked) {
+			Analytics.page(this, tracker, "/notifications/settings");
+			tracked = true;
+		}
+		
 		setupControls();
+	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return new NotificationSettingsHolder(tracked);
 	}
 	
 	public void setupControls() {
@@ -90,6 +109,12 @@ public class NotificationSettings extends PreferenceActivity {
 				return true;
 			}
 		});
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Analytics.stop(tracker);
 	}
 
 	private void updateIntervalSummary(String newCode) {
@@ -152,6 +177,14 @@ public class NotificationSettings extends PreferenceActivity {
 		}
 		
 		return builder.create();
+	}
+	
+	class NotificationSettingsHolder {
+		boolean tracked;
+		
+		NotificationSettingsHolder(boolean tracked) {
+			this.tracked = tracked;
+		}
 	}
 	
 }
