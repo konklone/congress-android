@@ -75,6 +75,7 @@ public class BillTabs extends TabActivity {
 		share.setVisibility(View.VISIBLE);
 		share.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				Analytics.billShare(BillTabs.this, tracker, bill.id);
 	    		Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, shareText());
 	    		startActivity(Intent.createChooser(intent, "Share bill via:"));
 			}

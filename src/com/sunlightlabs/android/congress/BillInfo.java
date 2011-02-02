@@ -375,12 +375,15 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
     				.setAction("com.android.launcher.action.INSTALL_SHORTCUT"));
     		break;
     	case R.id.thomas:
+    		Analytics.billThomas(this, tracker, bill.id);
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.thomasUrl(bill.bill_type, bill.number, bill.session))));
     		break;
     	case R.id.govtrack:
+    		Analytics.billGovTrack(this, tracker, bill.id);
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.govTrackUrl(bill.bill_type, bill.number, bill.session))));
     		break;
     	case R.id.opencongress:
+    		Analytics.billOpenCongress(this, tracker, bill.id);
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.openCongressUrl(bill.bill_type, bill.number, bill.session))));
     		break;
     	}

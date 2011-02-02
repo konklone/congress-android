@@ -36,9 +36,10 @@ public class Analytics {
 	public static final String ENTRY_NOTIFICATION = "notification";
 	
 	// categories of events
-	public static final String EVENT_FAVORITE_CATEGORY = "favorites";
-	public static final String EVENT_NOTIFICATION_CATEGORY = "notifications";
-	public static final String EVENT_LEGISLATOR_CATEGORY = "legislator";
+	public static final String EVENT_FAVORITE = "favorites";
+	public static final String EVENT_NOTIFICATION = "notifications";
+	public static final String EVENT_LEGISLATOR = "legislator";
+	public static final String EVENT_BILL = "bill"; 
 	
 	// event values
 	public static final String FAVORITE_ADD_LEGISLATOR = "add_legislator";
@@ -50,6 +51,10 @@ public class Analytics {
 	public static final String LEGISLATOR_CALL = "call";
 	public static final String LEGISLATOR_WEBSITE = "website";
 	public static final String LEGISLATOR_DISTRICT = "district";
+	public static final String BILL_SHARE = "share";
+	public static final String BILL_THOMAS = "thomas";
+	public static final String BILL_OPENCONGRESS = "opencongress";
+	public static final String BILL_GOVTRACK = "govtrack";
 	
 	
 	public static GoogleAnalyticsTracker start(Activity activity) {
@@ -108,39 +113,55 @@ public class Analytics {
 	}
 	
 	public static void addFavoriteLegislator(Activity activity, GoogleAnalyticsTracker tracker, String bioguideId) {
-		event(activity, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_ADD_LEGISLATOR, bioguideId);
+		event(activity, tracker, EVENT_FAVORITE, FAVORITE_ADD_LEGISLATOR, bioguideId);
 	}
 	
 	public static void removeFavoriteLegislator(Activity activity, GoogleAnalyticsTracker tracker, String bioguideId) {
-		event(activity, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_REMOVE_LEGISLATOR, bioguideId);
+		event(activity, tracker, EVENT_FAVORITE, FAVORITE_REMOVE_LEGISLATOR, bioguideId);
 	}
 	
 	public static void addFavoriteBill(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
-		event(activity, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_ADD_BILL, billId);
+		event(activity, tracker, EVENT_FAVORITE, FAVORITE_ADD_BILL, billId);
 	}
 	
 	public static void removeFavoriteBill(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
-		event(activity, tracker, EVENT_FAVORITE_CATEGORY, FAVORITE_REMOVE_BILL, billId);
+		event(activity, tracker, EVENT_FAVORITE, FAVORITE_REMOVE_BILL, billId);
 	}
 	
 	public static void subscribeNotification(Activity activity, GoogleAnalyticsTracker tracker, String subscriber) {
-		event(activity, tracker, EVENT_NOTIFICATION_CATEGORY, NOTIFICATION_ADD, subscriber);
+		event(activity, tracker, EVENT_NOTIFICATION, NOTIFICATION_ADD, subscriber);
 	}
 	
 	public static void unsubscribeNotification(Activity activity, GoogleAnalyticsTracker tracker, String subscriber) {
-		event(activity, tracker, EVENT_NOTIFICATION_CATEGORY, NOTIFICATION_REMOVE, subscriber);
+		event(activity, tracker, EVENT_NOTIFICATION, NOTIFICATION_REMOVE, subscriber);
 	}
 	
 	public static void legislatorCall(Activity activity, GoogleAnalyticsTracker tracker, String bioguideId) {
-		event(activity, tracker, EVENT_LEGISLATOR_CATEGORY, LEGISLATOR_CALL, bioguideId);
+		event(activity, tracker, EVENT_LEGISLATOR, LEGISLATOR_CALL, bioguideId);
 	}
 	
 	public static void legislatorWebsite(Activity activity, GoogleAnalyticsTracker tracker, String bioguideId) {
-		event(activity, tracker, EVENT_LEGISLATOR_CATEGORY, LEGISLATOR_WEBSITE, bioguideId);
+		event(activity, tracker, EVENT_LEGISLATOR, LEGISLATOR_WEBSITE, bioguideId);
 	}
 	
 	public static void legislatorDistrict(Activity activity, GoogleAnalyticsTracker tracker, String bioguideId) {
-		event(activity, tracker, EVENT_LEGISLATOR_CATEGORY, LEGISLATOR_DISTRICT, bioguideId);
+		event(activity, tracker, EVENT_LEGISLATOR, LEGISLATOR_DISTRICT, bioguideId);
+	}
+	
+	public static void billShare(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
+		event(activity, tracker, EVENT_BILL, BILL_SHARE, billId);
+	}
+	
+	public static void billThomas(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
+		event(activity, tracker, EVENT_BILL, BILL_THOMAS, billId);
+	}
+	
+	public static void billOpenCongress(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
+		event(activity, tracker, EVENT_BILL, BILL_OPENCONGRESS, billId);
+	}
+	
+	public static void billGovTrack(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
+		event(activity, tracker, EVENT_BILL, BILL_GOVTRACK, billId);
 	}
 	
 	/** Utility function for discerning an entry source from an activity's Intent. */ 
