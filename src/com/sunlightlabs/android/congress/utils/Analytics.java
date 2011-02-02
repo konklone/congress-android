@@ -38,6 +38,7 @@ public class Analytics {
 	// categories of events
 	public static final String EVENT_FAVORITE_CATEGORY = "favorites";
 	public static final String EVENT_NOTIFICATION_CATEGORY = "notifications";
+	public static final String EVENT_LEGISLATOR_CATEGORY = "legislator";
 	
 	// event values
 	public static final String FAVORITE_ADD_LEGISLATOR = "add_legislator";
@@ -46,6 +47,9 @@ public class Analytics {
 	public static final String FAVORITE_REMOVE_BILL = "remove_bill";
 	public static final String NOTIFICATION_ADD = "subscribe";
 	public static final String NOTIFICATION_REMOVE = "unsubscribe";
+	public static final String LEGISLATOR_CALL = "call";
+	public static final String LEGISLATOR_WEBSITE = "website";
+	public static final String LEGISLATOR_DISTRICT = "district";
 	
 	
 	public static GoogleAnalyticsTracker start(Activity activity) {
@@ -118,6 +122,18 @@ public class Analytics {
 	
 	public static void unsubscribeNotification(Activity activity, GoogleAnalyticsTracker tracker, String subscriber) {
 		event(activity, tracker, EVENT_NOTIFICATION_CATEGORY, NOTIFICATION_REMOVE, subscriber);
+	}
+	
+	public static void legislatorCall(Activity activity, GoogleAnalyticsTracker tracker, String bioguideId) {
+		event(activity, tracker, EVENT_LEGISLATOR_CATEGORY, LEGISLATOR_CALL, bioguideId);
+	}
+	
+	public static void legislatorWebsite(Activity activity, GoogleAnalyticsTracker tracker, String bioguideId) {
+		event(activity, tracker, EVENT_LEGISLATOR_CATEGORY, LEGISLATOR_WEBSITE, bioguideId);
+	}
+	
+	public static void legislatorDistrict(Activity activity, GoogleAnalyticsTracker tracker, String bioguideId) {
+		event(activity, tracker, EVENT_LEGISLATOR_CATEGORY, LEGISLATOR_DISTRICT, bioguideId);
 	}
 	
 	/** Utility function for discerning an entry source from an activity's Intent. */ 

@@ -199,10 +199,12 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
     }
     
     public void callOffice() {
+    	Analytics.legislatorCall(this, tracker, legislator.id);
     	startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel://" + legislator.phone)));
     }
     
     public void visitWebsite() {
+    	Analytics.legislatorWebsite(this, tracker, legislator.id);
     	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(legislator.website)));
     }
     
@@ -232,7 +234,10 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		String url = Utils.districtMapUrl(legislator.title, legislator.state, legislator.district);
 		Uri uri = Uri.parse("geo:0,0?q=" + url);
 		Intent mapIntent = new Intent(Intent.ACTION_VIEW, uri); 
-		mapIntent.setData(uri); 
+		mapIntent.setData(uri);
+		
+		Analytics.legislatorDistrict(this, tracker, legislator.id);
+		
 		startActivity(Intent.createChooser(mapIntent, getString(R.string.view_legislator_district)));
 	}
 	
