@@ -66,11 +66,18 @@ public class Analytics {
 	}
 	
 	public static void page(Activity activity, GoogleAnalyticsTracker tracker, String page) {
+		page(activity, tracker, page, true);
+	}
+	
+	public static void page(Activity activity, GoogleAnalyticsTracker tracker, String page, boolean checkEntry) {
 		if (tracker != null && analyticsEnabled(activity)) {
-			String source = entrySource(activity);
-			if (source != null) {
-				Log.i(Utils.TAG, "[Analytics] Marking next page view as an entry to the app of type: " + source);
-				tracker.setCustomVar(CUSTOM_ENTRY_SLOT, CUSTOM_ENTRY_NAME, source, SCOPE_SESSION);
+			
+			if (checkEntry) {
+				String source = entrySource(activity);
+				if (source != null) {
+					Log.i(Utils.TAG, "[Analytics] Marking next page view as an entry to the app of type: " + source);
+					tracker.setCustomVar(CUSTOM_ENTRY_SLOT, CUSTOM_ENTRY_NAME, source, SCOPE_SESSION);
+				}
 			}
 			
 			Log.i(Utils.TAG, "[Analytics] Tracking page - " + page);

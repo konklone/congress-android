@@ -659,12 +659,15 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 			startActivity(intent);
 			break;
 		case R.id.changelog:
+			Analytics.page(this, tracker, "/changelog", false);
 			showDialog(CHANGELOG);
 			break;
 		case R.id.about:
+			Analytics.page(this, tracker, "/about", false);
 			showDialog(ABOUT);
 			break;
 		case R.id.donate:
+			Analytics.page(this, tracker, "/donate", false);
 			donationPage();
 			break;
 		}
