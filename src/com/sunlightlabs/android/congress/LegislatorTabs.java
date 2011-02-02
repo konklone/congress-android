@@ -153,7 +153,7 @@ public class LegislatorTabs extends TabActivity {
 	
 	public Intent twitterIntent() {
 		Intent intent = new Intent(this, LegislatorTwitter.class).putExtra("legislator", legislator);
-		if (tab.equals("twitter"))
+		if (tab.equals("tweets"))
 			Analytics.passEntry(this, intent);
 		return intent;
 	}
