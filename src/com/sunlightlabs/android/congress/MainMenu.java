@@ -298,7 +298,7 @@ public class MainMenu extends ListActivity implements LocationListenerTimeout, A
 		
 		tracker = Analytics.start(this);
 		if (!tracked) {
-			Analytics.page(this, tracker, "/index");
+			Analytics.page(this, tracker, "/");
 			tracked = true;
 		}
 	}
