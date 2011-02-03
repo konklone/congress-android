@@ -39,7 +39,8 @@ public class Analytics {
 	public static final String EVENT_FAVORITE = "favorites";
 	public static final String EVENT_NOTIFICATION = "notifications";
 	public static final String EVENT_LEGISLATOR = "legislator";
-	public static final String EVENT_BILL = "bill"; 
+	public static final String EVENT_BILL = "bill";
+	public static final String EVENT_ANALYTICS = "analytics";
 	
 	// event values
 	public static final String FAVORITE_ADD_LEGISLATOR = "add_legislator";
@@ -55,6 +56,7 @@ public class Analytics {
 	public static final String BILL_THOMAS = "thomas";
 	public static final String BILL_OPENCONGRESS = "opencongress";
 	public static final String BILL_GOVTRACK = "govtrack";
+	public static final String ANALYTICS_DISABLE = "disable";
 	
 	
 	public static GoogleAnalyticsTracker start(Activity activity) {
@@ -162,6 +164,10 @@ public class Analytics {
 	
 	public static void billGovTrack(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
 		event(activity, tracker, EVENT_BILL, BILL_GOVTRACK, billId);
+	}
+	
+	public static void analyticsDisable(Activity activity, GoogleAnalyticsTracker tracker) {
+		event(activity, tracker, EVENT_ANALYTICS, ANALYTICS_DISABLE, "");
 	}
 	
 	/** Utility function for discerning an entry source from an activity's Intent. */ 
