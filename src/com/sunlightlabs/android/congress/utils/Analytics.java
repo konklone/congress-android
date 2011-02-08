@@ -27,6 +27,10 @@ public class Analytics {
 	public static final int CUSTOM_ENTRY_SLOT = 1;
 	public static final String CUSTOM_ENTRY_NAME = "Entry";
 	
+	// custom variable slot info for app version
+	public static final int CUSTOM_VERSION_SLOT = 2;
+	public static final String CUSTOM_VERSION_NAME = "Version";
+	
 	// for use in investigating intents for entry sources
 	public static final String EXTRA_ENTRY_FROM = "com.sunlightlabs.android.congress.utils.ENTRY_FROM";
 	
@@ -87,6 +91,10 @@ public class Analytics {
 				}
 			}
 			
+			// attach custom variable with app version
+			String appVersion = activity.getResources().getString(R.string.app_version);
+			tracker.setCustomVar(CUSTOM_VERSION_SLOT, CUSTOM_VERSION_NAME, appVersion, SCOPE_SESSION);
+			
 			Log.i(Utils.TAG, "[Analytics] Tracking page - " + page);
 			tracker.trackPageView(page);
 			tracker.dispatch();
@@ -95,6 +103,11 @@ public class Analytics {
 		
 	public static void event(Activity activity, GoogleAnalyticsTracker tracker, String category, String action, String label) {
 		if (tracker != null && analyticsEnabled(activity)) {
+			
+			// attach custom variable with app version
+			String appVersion = activity.getResources().getString(R.string.app_version);
+			tracker.setCustomVar(CUSTOM_VERSION_SLOT, CUSTOM_VERSION_NAME, appVersion, SCOPE_SESSION);
+			
 			Log.i(Utils.TAG, "[Analytics] Tracking event - category: " + category + ", action: " + action + ", label: " + label);
 			tracker.trackEvent(category, action, label, -1);
 			tracker.dispatch();
