@@ -83,16 +83,19 @@
     <string name="donation_ok">Dismiss</string>
     <string name="donation_donate">Donate</string>
     
-    <string name="menu_bills_header">Bills</string>
+    <string name="menu_main_bills">Bills</string>
+    <string name="menu_main_votes">Votes</string>
+    <string name="menu_main_legislators">Legislators</string>
+    <string name="menu_main_committees">Committees</string>
+    
+    <string name="menu_bills_favorite">Favorites</string>
     <string name="menu_bills_law">New Laws</string>
     <string name="menu_bills_recent">Just Introduced</string>
-    <string name="menu_bills_code">By Bill Code</string>
-    <string name="menu_legislators_header">Legislators</string>
+    <string name="menu_legislators_favorite">Favorites</string>
     <string name="menu_legislators_location">My Location</string>
     <string name="menu_legislators_state">State</string>
     <string name="menu_legislators_lastname">Last Name</string>
     <string name="menu_legislators_zip">Zip Code</string>
-    <string name="menu_votes_header">Votes</string>
     <string name="menu_votes_latest">Most Recent</string>
     <string name="menu_votes_nominations">Nominations</string>
     <string name="menu_location_no_location">Cannot update location</string>

@@ -368,7 +368,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId()) {
     	case R.id.main:
-    		startActivity(new Intent(this, MainMenu.class));
+    		startActivity(new Intent(this, MenuMain.class));
     		break;
     	case R.id.shortcut:
 			sendBroadcast(Utils.shortcutIntent(this, bill.id, bill.code)

@@ -323,7 +323,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId()) {
     	case R.id.main:
-    		startActivity(new Intent(this, MainMenu.class));
+    		startActivity(new Intent(this, MenuMain.class));
     		break;
     	case R.id.shortcut:
     		if (shortcutImageTask == null)

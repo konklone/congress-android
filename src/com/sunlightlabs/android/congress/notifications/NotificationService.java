@@ -75,8 +75,7 @@ public class NotificationService extends WakefulIntentService {
 				continue;
 			}
 			
-			Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
-				"About to fetch updates.");
+			Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " + "About to fetch updates.");
 			
 			
 			// ask the finder for the latest updates

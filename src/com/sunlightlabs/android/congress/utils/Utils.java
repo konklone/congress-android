@@ -221,6 +221,12 @@ public class Utils {
 		else
 			return text;
 	}
+	
+	public static View inflateHeader(LayoutInflater inflater, int text) {
+		View view = inflater.inflate(R.layout.header_layout, null);
+		((TextView) view.findViewById(R.id.header_text)).setText(text);
+		return view;
+	}
 
 	public static void showLoading(Activity activity) {
 		activity.findViewById(R.id.empty_message).setVisibility(View.GONE);
