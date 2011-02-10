@@ -210,9 +210,8 @@ public class BillList extends ListActivity {
 		// remove the placeholder and add the new bills in the array
 		if (bills.size() > 0) {
 			int lastIndex = bills.size() - 1;
-			if (bills.get(lastIndex) == null) {
+			if (bills.get(lastIndex) == null)
 				bills.remove(lastIndex);
-			}
 		}
 
 		bills.addAll(newBills);
