@@ -86,6 +86,11 @@ public class MenuMain extends Activity {
 		GridView grid = (GridView) findViewById(R.id.grid);
 		grid.setAdapter(new MenuAdapter(this));
 		setupDebugBar();
+		findViewById(R.id.notifications).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				startActivity(new Intent(MenuMain.this, NotificationSettings.class));
+			}
+		});
 	}
 	
 	private void setupDebugBar() {
@@ -250,9 +255,6 @@ public class MenuMain extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) { 
-		case R.id.notification_settings:
-			startActivity(new Intent(this, NotificationSettings.class));
-			break;
 		case R.id.settings:
 			startActivity(new Intent(this, Settings.class));
 			break;

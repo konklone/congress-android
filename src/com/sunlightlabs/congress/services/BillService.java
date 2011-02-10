@@ -48,6 +48,25 @@ public class BillService {
 		
 		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
 	}
+	
+	public static List<Bill> search(String query, int page, int per_page) throws CongressException {
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("search", query);
+		params.put("order", "introduced_at");
+		
+		String[] sections = new String[] {"basic", "sponsor"};
+		
+		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
+	}
+	
+	public static List<Bill> where(Map<String,String> params, int page, int per_page) throws CongressException {
+		if (!params.containsKey("order"))
+			params.put("order", "introduced_at");
+		
+		String[] sections = new String[] {"basic", "sponsor"};
+		
+		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
+	}
 
 	public static Bill find(String id, String[] sections) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();

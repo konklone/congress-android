@@ -88,6 +88,7 @@
     <string name="menu_main_legislators">Legislators</string>
     <string name="menu_main_committees">Committees</string>
     
+    <string name="menu_bills_search_hint">enter keywords or bill code</string>
     <string name="menu_bills_favorite">Favorites</string>
     <string name="menu_bills_law">New Laws</string>
     <string name="menu_bills_recent">Just Introduced</string>

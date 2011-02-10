@@ -57,9 +57,12 @@ public class Bill implements Serializable {
 		public Date voted_at;
 	}
 	
-	// takes a potentially user entered, variably formatted code and transforms it into a bill_id
-	public static String codeToBillId(String code) {
-		return code.toLowerCase().replaceAll("[^\\w\\d]", "").replace("con", "c").replace("joint", "j").replace(" ", "").replace(".", "") + "-" + currentSession();
+	public static String normalizeCode(String code) {
+		return code.toLowerCase().replaceAll("[^\\w\\d]", "").replace("con", "c").replace("joint", "j").replace(" ", "").replace(".", "");
+	}
+	
+	public static boolean isCode(String code) {
+		return Pattern.compile("^(hr|hres|hjres|hcres|s|sres|sjres|scres)(\\d+)$").matcher(code).matches();
 	}
 	
 	public static String currentSession() {

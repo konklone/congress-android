@@ -3,7 +3,9 @@ package com.sunlightlabs.android.congress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.app.ListActivity;
 import android.os.AsyncTask;
@@ -35,11 +37,14 @@ public class BillList extends ListActivity {
 	public static final int BILLS_LAW = 0;
 	public static final int BILLS_RECENT = 1;
 	public static final int BILLS_SPONSOR = 2;
+	public static final int BILLS_SEARCH = 3;
+	public static final int BILLS_CODE = 4;
 
 	private List<Bill> bills;
 	private LoadBillsTask loadBillsTask;
 
 	private Legislator sponsor;
+	private String query, code;
 	private int type;
 	
 	private Footer footer;
@@ -56,6 +61,8 @@ public class BillList extends ListActivity {
 		Bundle extras = getIntent().getExtras();
 		type = extras.getInt("type", BILLS_RECENT);
 		sponsor = (Legislator) extras.getSerializable("legislator");
+		query = extras.getString("query");
+		code = extras.getString("code");
 
 		setupControls();
 
@@ -124,6 +131,14 @@ public class BillList extends ListActivity {
 		case BILLS_LAW:
 			Utils.setTitle(this, R.string.menu_bills_law, R.drawable.bill_law);
 			break;
+		case BILLS_SEARCH:
+			Utils.setTitle(this, "Bills matching \"" + query + "\"", R.drawable.bill_multiple);
+			Utils.setTitleSize(this, 18);
+			break;
+		case BILLS_CODE:
+			Utils.setTitle(this, "Bills with code " + Bill.formatCodeShort(code), R.drawable.bill_multiple);
+			Utils.setTitleSize(this, 18);
+			break;
 		case BILLS_SPONSOR:
 			Utils.setTitle(this, "Latest Bills by\n" + sponsor.titledName(), R.drawable.bill_multiple);
 			Utils.setTitleSize(this, 18);
@@ -138,6 +153,10 @@ public class BillList extends ListActivity {
 			return "/legislator/" + sponsor.getId() + "/bills";
 		else if (type == BILLS_LAW)
 			return "/bills/laws";
+		else if (type == BILLS_SEARCH)
+			return "/bills/search?query=" + query;
+		else if (type == BILLS_CODE)
+			return "/bills/search?code=" + code;
 		else
 			return "/bills";
 	}
@@ -149,9 +168,13 @@ public class BillList extends ListActivity {
 		else if (type == BILLS_SPONSOR)
 			subscription = new Subscription(sponsor.id, Subscriber.notificationName(sponsor), "BillsLegislatorSubscriber", null);
 		else if (type == BILLS_LAW)
-			subscription = new Subscription("RecentLaws", "New Laws", "BillsLawsSubscriber", null); 
+			subscription = new Subscription("RecentLaws", "New Laws", "BillsLawsSubscriber", null);
+		else if (type == BILLS_SEARCH)
+			subscription = new Subscription(query, query, "BillsSearchSubscriber", query);
+		// no subscription offered for a bill code search
 		
-		footer.init(subscription, bills);
+		if (subscription != null)
+			footer.init(subscription, bills);
 	}
 
 	protected void onListItemClick(ListView parent, View v, int position, long id) {
@@ -175,6 +198,11 @@ public class BillList extends ListActivity {
 				else
 					Utils.showBack(this, R.string.empty_bills);
 				setupSubscription();
+				return;
+			} 
+			else if (type == BILLS_CODE && newBills.size() == 1) {
+				startActivity(Utils.billIntent(this, newBills.get(0)));
+				finish();
 				return;
 			}
 		}
@@ -242,6 +270,12 @@ public class BillList extends ListActivity {
 					return BillService.recentLaws(page, PER_PAGE);
 				case BILLS_SPONSOR:
 					return BillService.recentlySponsored(sponsor.id, page, PER_PAGE);
+				case BILLS_CODE:
+					Map<String,String> conditions = new HashMap<String,String>();
+					conditions.put("code", code);
+					return BillService.where(conditions, page, PER_PAGE);
+				case BILLS_SEARCH:
+					return BillService.search(query, page, PER_PAGE);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
 				}
@@ -332,14 +366,16 @@ public class BillList extends ListActivity {
 			Date date = null;
 			switch (context.type) {
 			case BILLS_LAW:
-				code = Bill.formatCode(bill.code);
+				code = Bill.formatCodeShort(bill.code);
 				date = bill.enacted_at;
 				action = "became law";
 				break;
 			case BILLS_RECENT:
 			case BILLS_SPONSOR:
+			case BILLS_SEARCH:
+			case BILLS_CODE:
 			default:
-				code = Bill.formatCode(bill.code);
+				code = Bill.formatCodeShort(bill.code);
 				date = bill.introduced_at;
 				action = "was introduced";
 				break;
@@ -350,9 +386,9 @@ public class BillList extends ListActivity {
 			if (date != null) {
 				SimpleDateFormat format = null;
 				if(date.getYear() == new Date().getYear()) 
-					format = new SimpleDateFormat("MMM dd");
+					format = new SimpleDateFormat("MMM d");
 				else
-					format = new SimpleDateFormat("MMM dd, yyyy");
+					format = new SimpleDateFormat("MMM d, yyyy");
 				holder.date.setText(format.format(date));
 			}
 

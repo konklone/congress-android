@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ public class MenuBills extends ListActivity {
 	private Database database;
 	private Cursor cursor;
 	
+	private EditText searchField;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,16 @@ public class MenuBills extends ListActivity {
 			adapter.addAdapter(new FavoriteBillsAdapter(this, cursor));
 		
 		setListAdapter(adapter);
+		
+		searchField = (EditText) findViewById(R.id.bill_query);
+		findViewById(R.id.bill_search).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				String query = searchField.getText().toString().trim();
+				
+				if (!query.equals(""))
+					searchFor(query);
+			}
+		});
 	}
 	
 	private View inflateItem(LayoutInflater inflater, int icon, int text, Object tag) {
@@ -111,6 +123,26 @@ public class MenuBills extends ListActivity {
 		
 		cursor = database.getBills();
 		startManagingCursor(cursor);
+	}
+	
+	// query guaranteed to be non-null and blank
+	public void searchFor(String query) {
+		// if it's a bill code, do code search
+		String code = Bill.normalizeCode(query);
+		if (Bill.isCode(code)) {
+			startActivity(new Intent(this, BillList.class)
+				.putExtra("type", BillList.BILLS_CODE)
+				.putExtra("code", code)
+			);
+		}
+		
+		// else, do generic search
+		else {
+			startActivity(new Intent(this, BillList.class)
+				.putExtra("type", BillList.BILLS_SEARCH)
+				.putExtra("query", query)
+			);
+		}
 	}
 	
 	@Override
