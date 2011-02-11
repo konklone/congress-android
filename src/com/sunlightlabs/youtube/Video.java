@@ -17,7 +17,7 @@ public class Video {
 		this.thumbnailUrl = json.getJSONObject("thumbnail").getString("sqDefault");
 		this.duration = json.getInt("duration");
 		
-		String updated = json.getString("updated");
+		String updated = json.getString("uploaded");
 		this.timestamp = new Time();
 		this.timestamp.parse3339(updated);
 	}

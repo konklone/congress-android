@@ -55,6 +55,6 @@ public class YouTube {
 	}
 	
 	private String feedUrl(String username) {
-		return "http://gdata.youtube.com/feeds/api/users/" + username + "/uploads?orderby=updated&alt=jsonc&v=2"; 
+		return "http://gdata.youtube.com/feeds/api/users/" + username + "/uploads?alt=jsonc&v=2"; 
 	}
 }
