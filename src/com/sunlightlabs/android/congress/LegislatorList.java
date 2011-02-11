@@ -31,14 +31,12 @@ import android.widget.Toast;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
-import com.sunlightlabs.android.congress.utils.AddressUpdater;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LocationUtils;
-import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.android.congress.utils.AddressUpdater.AddressUpdateable;
 import com.sunlightlabs.android.congress.utils.LocationUtils.LocationListenerTimeout;
 import com.sunlightlabs.android.congress.utils.LocationUtils.LocationTimer;
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -47,7 +45,7 @@ import com.sunlightlabs.congress.services.CommitteeService;
 import com.sunlightlabs.congress.services.LegislatorService;
 
 public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsPhoto,
-		LocationListenerTimeout, AddressUpdateable<LegislatorList> {
+		LocationListenerTimeout {
 	public final static int SEARCH_ZIP = 0;
 	public final static int SEARCH_LOCATION = 1;
 	public final static int SEARCH_STATE = 2;
@@ -71,8 +69,6 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	private double longitude = -1;
 
 	private LocationTimer timer;
-	private String address;
-	private AddressUpdater addressUpdater;
 	private boolean relocating = false;
 
 	private HeaderViewWrapper headerWrapper;
@@ -100,7 +96,6 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		zipCode = extras.getString("zip_code");
 		latitude = extras.getDouble("latitude");
 		longitude = extras.getDouble("longitude");
-		address = extras.getString("address");
 		lastName = extras.getString("last_name");
 		state = extras.getString("state");
 		committeeId = extras.getString("committeeId");
@@ -118,12 +113,12 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 				while (iterator.hasNext())
 					iterator.next().onScreenLoad(this);
 			}
-
-			addressUpdater = holder.addressUpdater;
-			address = holder.address;
+			
 			relocating = holder.relocating;
 			tracked = holder.tracked;
 		}
+		
+		setupControls();
 		
 		tracker = Analytics.start(this);
 		if (!tracked) {
@@ -131,20 +126,20 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			tracked = true;
 		}
 
-		if (loadLegislatorsTask == null)
-			loadLegislators();
-		else
+		if (loadLegislatorsTask == null) {
+			if (legislators == null && type == SEARCH_LOCATION) {
+				if (!relocating)
+					updateLocation();
+				// if currently relocating, do nothing and just wait for it to complete
+			} else
+				loadLegislators();
+		} else
 			loadLegislatorsTask.onScreenLoad(this);
-
-		if (addressUpdater != null)
-			addressUpdater.onScreenLoad(this);
-
-		setupControls();
 	}
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new LegislatorListHolder(legislators, loadLegislatorsTask, loadPhotoTasks, addressUpdater, address, relocating, tracked);
+		return new LegislatorListHolder(legislators, loadLegislatorsTask, loadPhotoTasks, relocating, tracked);
 	}
 
 	@Override
@@ -171,6 +166,9 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	}
 
 	public void displayLegislators() {
+		if (type == SEARCH_LOCATION)
+			headerWrapper.getBase().setVisibility(View.VISIBLE);
+		
 		if (legislators.size() > 0)
 			setListAdapter(new LegislatorAdapter(this, legislators));
 		else {
@@ -236,7 +234,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			break;
 		case SEARCH_LOCATION:
 			showHeader(); // make the location update header visible
-			displayAddress(address);
+			Utils.setTitle(this, "Your Legislators");
 			break;
 		case SEARCH_LASTNAME:
 			Utils.setTitle(this, "Legislators Named \"" + lastName + "\"");
@@ -461,18 +459,14 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		LoadLegislatorsTask loadLegislatorsTask;
 		Map<String,LoadPhotoTask> loadPhotoTasks;
 
-		AddressUpdater addressUpdater;
-		String address;
 		boolean relocating;
 		boolean tracked;
 		
 		LegislatorListHolder(List<Legislator> legislators, LoadLegislatorsTask loadLegislatorsTask, Map<String,LoadPhotoTask> loadPhotoTasks,
-				AddressUpdater addressUpdater, String address, boolean relocating, boolean tracked) {
+				boolean relocating, boolean tracked) {
 			this.legislators = legislators;
 			this.loadLegislatorsTask = loadLegislatorsTask;
 			this.loadPhotoTasks = loadPhotoTasks;
-			this.addressUpdater = addressUpdater;
-			this.address = address;
 			this.relocating = relocating;
 			this.tracked = tracked;
 		}
@@ -486,38 +480,34 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		public HeaderViewWrapper(View base) {
 			this.base = base;
 		}
+		
 		public View getBase() {
 			return base;
 		}
+		
 		public TextView getTxt() {
-			return (txt == null ? txt = (TextView) base.findViewById(R.id.text_2) : txt);
+			return (txt == null ? txt = (TextView) base.findViewById(R.id.text_1) : txt);
 		}
 
 		public View getLoading() {
-			return (loading == null ? loading = base
-					.findViewById(R.id.updating_spinner) : loading);
+			return (loading == null ? loading = base.findViewById(R.id.updating_spinner) : loading);
 		}
 	}
 
 	private void showHeader() {
 		headerWrapper = new HeaderViewWrapper(findViewById(R.id.list_header));
-		headerWrapper.getBase().setVisibility(View.VISIBLE);
-		((TextView) headerWrapper.getBase().findViewById(R.id.text_1)).setText(R.string.location_not_accurate);
-		TextView txt = headerWrapper.getTxt();
-		txt.setText(R.string.update);
-		txt.setClickable(true);
-		txt.setFocusable(true);
-		txt.setOnClickListener(new View.OnClickListener() {
+		headerWrapper.getTxt().setText(R.string.location_update);
+		headerWrapper.getBase().setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				updateLocation();
+				if (!relocating)
+					updateLocation();
 			}
 		});
 	}
 
 	private void toggleRelocating() {
 		Log.d(TAG, "LegislatorList - toggleRelocating(): relocating is " + relocating);
-		headerWrapper.getTxt().setText(relocating ? R.string.updating : R.string.update);
-		headerWrapper.getTxt().setEnabled(relocating ? false : true);
+		headerWrapper.getBase().setEnabled(relocating ? false : true);
 		headerWrapper.getLoading().setVisibility(relocating ? View.VISIBLE : View.GONE);
 	}
 
@@ -534,32 +524,9 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		timer = LocationUtils.requestLocationUpdate(this, handler, LocationManager.GPS_PROVIDER);
 	}
 
-	private void displayAddress(String address) {
-		Utils.setTitle(this, "Legislators For " + ((address == null || address.equals("")) ? "Your Location" : address));
-	}
-
 	private void reloadLegislators() {
 		legislators = null;
 		loadLegislators();
-	}
-
-	public void onAddressUpdate(String address) {
-		this.address = address;
-		addressUpdater = null;
-		relocating = false;
-		toggleRelocating();
-
-		displayAddress(address);
-		reloadLegislators();
-	}
-
-	public void onAddressUpdateError(CongressException e) {
-		this.address = "";
-		addressUpdater = null;
-		relocating = false;
-		toggleRelocating();
-
-		displayAddress(address);
 	}
 	
 	public void onLocationUpdateError() {
@@ -575,8 +542,12 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	public void onLocationChanged(Location location) {
 		latitude = location.getLatitude();
 		longitude = location.getLongitude();
-		addressUpdater = (AddressUpdater) new AddressUpdater(this).execute(location);
 		cancelTimer();
+		
+		relocating = false;
+		toggleRelocating();
+		
+		reloadLegislators();
 	}
 
 	public void onProviderDisabled(String provider) {}

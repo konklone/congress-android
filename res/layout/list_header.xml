@@ -4,40 +4,36 @@
 	android:layout_height="wrap_content"
 	android:orientation="horizontal"
 	
-	android:paddingTop="15dp"
-	android:paddingBottom="15dp"
-	android:paddingLeft="5dp"
-	android:paddingRight="5dp"
+	android:focusable="true"
+	
+	android:gravity="center"
+	
+	android:background="@drawable/general_selector"
 	>
 	
 	<TextView android:id="@+id/text_1"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		
-		android:textSize="16sp"	
-		android:text="Text 1"
+		android:paddingTop="15dp"
+		android:paddingBottom="15dp"
+		android:layout_marginLeft="5dp"
+		
+		android:textSize="14sp"	
+		android:text="@string/location_update"
 		/>
 	
-	<TextView android:id="@+id/text_2"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@+id/text_1"		
-		android:layout_marginLeft="10dp"
-			
-		android:textSize="16sp"	
-		android:textStyle="bold"
-		android:text="Text 2"
-		/>
-		
 	<ProgressBar android:id="@+id/updating_spinner"
   		android:layout_width="wrap_content"
   		android:layout_height="wrap_content"
   		style="?android:attr/progressBarStyleSmallTitle"
   		
   		android:layout_marginLeft="10dp"
-  		android:layout_marginTop="5dp"
+  		android:layout_marginTop="15dp"
+		android:layout_marginBottom="15dp"
+		android:layout_marginRight="15dp"
   		
-  		android:layout_toRightOf="@+id/text_2"
+  		android:layout_toRightOf="@+id/text_1"
   		android:visibility="gone"
   		/>
   		
