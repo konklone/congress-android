@@ -77,11 +77,17 @@
 		android:textStyle="bold"
 		
 		android:text="@string/bill_vote_roll"
+		
 		/>
 	
-	<include layout="@layout/line"
-		android:layout_below="@id/type_message"
+	 <View
+		android:layout_width="fill_parent"
+		android:layout_height="1px"
 		android:layout_marginTop="10dp"
+		
+		android:background="@color/header_line"
+
+		android:layout_below="@id/type_message"
 		/>
 		
 </RelativeLayout>
