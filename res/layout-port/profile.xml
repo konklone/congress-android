@@ -132,7 +132,7 @@
  	<View
  		android:layout_width="fill_parent"
  		android:layout_height="1dp"
- 		android:background="#5c5e5d"
+ 		android:background="@color/header_line"
  		/>
  	
 </LinearLayout>

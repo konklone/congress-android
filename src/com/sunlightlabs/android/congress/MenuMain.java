@@ -188,24 +188,24 @@ public class MenuMain extends Activity {
 			TextView aboutView2 = (TextView) aboutView.findViewById(R.id.about_2);
 			aboutView2.setText(about2);
 			aboutView2.setMovementMethod(LinkMovementMethod.getInstance());
-
-			builder.setIcon(R.drawable.icon);
-			builder.setTitle(R.string.app_name);
-			builder.setView(aboutView);
-			builder.setPositiveButton(R.string.about_button, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {}
-			});
-			return builder.create();
+			
+			return builder.setIcon(R.drawable.icon)
+				.setTitle(R.string.app_name)
+				.setView(aboutView)
+				.setPositiveButton(R.string.about_button, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {}
+				})
+				.create();
 		case FIRST:
 			View firstView = inflater.inflate(R.layout.first_time, null);
 
-			builder.setIcon(R.drawable.icon);
-			builder.setTitle(R.string.app_name);
-			builder.setView(firstView);
-			builder.setPositiveButton(R.string.first_button, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {}
-			});
-			return builder.create();
+			return builder.setIcon(R.drawable.icon)
+				.setTitle(R.string.app_name)
+				.setView(firstView)
+				.setPositiveButton(R.string.first_button, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {}
+				})
+				.create();
 		case CHANGELOG:
 			View changelogView = inflater.inflate(R.layout.changelog, null);
 
@@ -216,13 +216,17 @@ public class MenuMain extends Activity {
 			((TextView) changelogView.findViewById(R.id.changelog_last_title)).setText(R.string.app_version_older);
 			((TextView) changelogView.findViewById(R.id.changelog_last)).setText(changelogLast);
 
-			builder.setIcon(R.drawable.icon);
-			builder.setTitle(getResources().getString(R.string.changelog_title_prefix) + " " + getResources().getString(R.string.app_version));
-			builder.setView(changelogView);
-			builder.setPositiveButton(R.string.changelog_button, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {}
-			});
-			return builder.create();
+			ViewGroup title = (ViewGroup) inflater.inflate(R.layout.alert_dialog_title, null);
+			TextView titleText = (TextView) title.findViewById(R.id.title);
+			titleText.setText(getResources().getString(R.string.changelog_title_prefix) + " " + getResources().getString(R.string.app_version));
+			
+			return builder.setIcon(R.drawable.icon)
+				.setCustomTitle(title)
+				.setView(changelogView)
+				.setPositiveButton(R.string.changelog_button, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {}
+				})
+				.create();
 		case DONATION:
 			View donateView = inflater.inflate(R.layout.donation, null);
 			

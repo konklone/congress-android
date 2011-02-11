@@ -20,11 +20,7 @@
 			android:visibility="gone" 
 			/>
 		
-		<View
-			android:layout_width="fill_parent"
-			android:layout_height="1px"
-			android:background="#5c5e5d"
-		/>
+		<include layout="@layout/line" />
 	</LinearLayout>
  
     <ListView android:id="@id/android:list"

@@ -2,6 +2,8 @@
 <resources>
 	<color name="background">#192a3c</color>
 	
+	<color name="alert_title">#44000000</color>
+	
 	<color name="main_title_gradient_top">#333333</color>
 	<color name="main_title_gradient_bottom">#141414</color>
 	

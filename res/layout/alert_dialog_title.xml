@@ -3,7 +3,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	
-	android:background="#44111111"
+	android:background="@color/alert_title"
 	android:orientation="vertical"
 	>
 	
@@ -25,10 +25,5 @@
 		android:text="Title of Dialog"
 		/>
 	
-	<View 
-		android:layout_width="fill_parent"
-		android:layout_height="1px"
-		
-		android:background="#999999"
-		/>
+	<include layout="@layout/line" />
 </LinearLayout>
