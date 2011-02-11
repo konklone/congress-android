@@ -11,6 +11,10 @@
 	<color name="main_gradient_top">#192a3c</color>
 	<color name="main_gradient_center">#192a3c</color>
 	<color name="main_gradient_bottom">#192a3c</color>
+	
+	<color name="main_footer_gradient_top">#191919</color>
+	<color name="main_footer_gradient_center">#232323</color>
+	<color name="main_footer_gradient_bottom">#191919</color>
 
 	<color name="action_vote">#f1ef34</color>
 	<color name="action_enacted">#4ac956</color>

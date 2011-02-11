@@ -24,7 +24,11 @@
 		android:id="@+id/grid"
 		/>
 	
-	<include layout="@layout/line" />
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="1px"
+		android:background="@color/main_line"
+		/>
 	
 	<LinearLayout android:id="@+id/notifications"
 		android:orientation="horizontal"
@@ -35,11 +39,13 @@
 		
 		android:layout_weight="0"
 		
-		android:paddingTop="10dp"
-		android:paddingBottom="10dp"
+		android:paddingTop="2dp"
+		android:paddingBottom="2dp"
 		
 		android:paddingLeft="15dp"
 		android:paddingRight="15dp"
+		
+		android:background="@drawable/main_footer_gradient"
 		>
 		<ImageView
 			android:layout_width="32dp"
@@ -55,7 +61,7 @@
 			android:layout_height="wrap_content"
 			
 			android:textColor="@android:color/white"
-			android:textSize="18sp"
+			android:textSize="14sp"
 			android:text="@string/menu_notification_settings"
 			/>
 	</LinearLayout>

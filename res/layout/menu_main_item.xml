@@ -26,7 +26,7 @@
 		
 		android:layout_gravity="center_horizontal"
 		
-		android:textSize="18sp"
+		android:textSize="16sp"
 		android:textColor="@android:color/white"
 		
 		android:text="Text"
