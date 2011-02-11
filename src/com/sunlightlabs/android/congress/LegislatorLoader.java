@@ -34,11 +34,17 @@ public class LegislatorLoader extends Activity implements LoadsLegislator {
         	loadLegislatorTask.onScreenLoad(this);
         else
 			loadLegislatorTask = (LoadLegislatorTask) new LoadLegislatorTask(this).execute(id);
+        
+        setupControls();
 	}
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		return loadLegislatorTask;
+	}
+	
+	public void setupControls() {
+		Utils.setTitleIcon(this, R.drawable.person);
 	}
 	
 	public void onLoadLegislator(Legislator legislator) {

@@ -44,6 +44,7 @@ public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 	public void setupControls() {
 		if (code != null && !code.equals(""))
 			Utils.setTitle(this, Bill.formatCode(code));
+		Utils.setTitleIcon(this, R.drawable.bill);
 	}
 	
 	@Override
