@@ -5,31 +5,45 @@
 	android:orientation="horizontal"
 	android:gravity="center_vertical"
 	
-	android:paddingTop="6dp"
-	android:paddingBottom="6dp"
-	android:paddingLeft="14dp"
-	android:paddingRight="12dp"
+	android:paddingTop="11dp"
+	android:paddingBottom="11dp"
 	
-	android:background="@drawable/main_menu_gradient"
+	android:paddingLeft="15dp"
+	android:paddingRight="15dp"
+	
+	android:background="@drawable/main_title_gradient"
 	>
 	
 	<ImageView android:id="@+id/title_icon"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_width="32dp"
+		android:layout_height="32dp"
 		android:layout_marginLeft="5dp"
    		android:layout_marginRight="14dp"
+   		
+   		android:layout_weight="0"
    		
 		android:src="@drawable/icon"
 		/>
 		
 	<TextView android:id="@+id/title_text"
-		android:layout_width="wrap_content"
+		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		
+		android:layout_weight="1"
 		
 		android:textSize="24sp"
 		android:textColor="@android:color/white"
 		
 		android:text="@string/app_name"
 		/>
+	
+<!--	<ImageView-->
+<!--		android:layout_width="32dp"-->
+<!--		android:layout_height="32dp"-->
+<!--		-->
+<!--		android:layout_weight="0"-->
+<!--		-->
+<!--		android:src="@android:drawable/ic_menu_preferences"-->
+<!--		/>-->
 	
 </LinearLayout>

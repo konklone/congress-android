@@ -7,8 +7,7 @@
 	
 	android:padding="10dp"
 	
-	android:focusable="false"
-	android:enabled="false"
+	
 	>
 
 	<ImageView android:id="@+id/icon"
@@ -19,8 +18,6 @@
 		
 		android:layout_marginBottom="5dp"
 		
-		android:focusable="true"
-		android:enabled="true"
 		/>
 		
 	<TextView android:id="@+id/text"

@@ -20,6 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -85,6 +87,21 @@ public class MenuMain extends Activity {
 	public void setupControls() {		
 		GridView grid = (GridView) findViewById(R.id.grid);
 		grid.setAdapter(new MenuAdapter(this));
+		grid.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				String tag = (String) view.getTag();
+				if (tag.equals("committees"))
+					startActivity(new Intent(MenuMain.this, CommitteeTabs.class));
+				else if (tag.equals("bills"))
+					startActivity(new Intent(MenuMain.this, MenuBills.class));
+				else if (tag.equals("votes"))
+					startActivity(new Intent(MenuMain.this, RollList.class).putExtra("type", RollList.ROLLS_LATEST));
+				else if (tag.equals("legislators"))
+					startActivity(new Intent(MenuMain.this, MenuLegislators.class));
+			}
+		});
+		
+		
 		setupDebugBar();
 		findViewById(R.id.notifications).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -285,16 +302,14 @@ public class MenuMain extends Activity {
 	}
 	
 	private static class MenuAdapter extends BaseAdapter {
-		Context context;
-		LayoutInflater inflater;
-		
 		private static final int BILLS = 0;
 		private static final int VOTES = 1;
 		private static final int LEGISLATORS = 2;
 		private static final int COMMITTEES = 3;
 		
+		LayoutInflater inflater;
+		
 		public MenuAdapter(Context context) {
-			this.context = context;
 			this.inflater = LayoutInflater.from(context);
 		}
 
@@ -320,35 +335,19 @@ public class MenuMain extends Activity {
 			if (position == BILLS) {
 				icon.setImageResource(R.drawable.bill_multiple);
 				text.setText(R.string.menu_main_bills);
-				view.setOnClickListener(new View.OnClickListener() {
-					public void onClick(View v) {
-						context.startActivity(new Intent(context, MenuBills.class));
-					}
-				});
+				view.setTag("bills");
 			} else if (position == VOTES) {
 				icon.setImageResource(R.drawable.rolls_menu);
 				text.setText(R.string.menu_main_votes);
-				view.setOnClickListener(new View.OnClickListener() {
-					public void onClick(View v) {
-						context.startActivity(new Intent(context, RollList.class).putExtra("type", RollList.ROLLS_LATEST));
-					}
-				});
+				view.setTag("votes");
 			} else if (position == LEGISLATORS) {
 				icon.setImageResource(R.drawable.search_all);
 				text.setText(R.string.menu_main_legislators);
-				view.setOnClickListener(new View.OnClickListener() {
-					public void onClick(View v) {
-						context.startActivity(new Intent(context, MenuLegislators.class));
-					}
-				});
+				view.setTag("legislators");
 			} else if (position == COMMITTEES) {
 				icon.setImageResource(R.drawable.committee);
 				text.setText(R.string.menu_main_committees);
-				view.setOnClickListener(new View.OnClickListener() {
-					public void onClick(View v) {
-						context.startActivity(new Intent(context, CommitteeTabs.class));
-					}
-				});
+				view.setTag("committees");
 			}
 			
 			return view;

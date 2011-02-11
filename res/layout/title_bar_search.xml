@@ -10,7 +10,7 @@
 	android:paddingLeft="14dp"
 	android:paddingRight="12dp"
 	
-	android:background="@drawable/main_menu_gradient"
+	android:background="@drawable/main_title_gradient"
 	>
 	
 	<ImageView android:id="@+id/title_icon"

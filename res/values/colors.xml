@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<color name="background">#192a3c</color>
+	
+	<color name="main_title_gradient_top">#232323</color>
+<!--	<color name="main_title_gradient_center">#232323</color>-->
+	<color name="main_title_gradient_bottom">#141414</color>
+	
+	<color name="main_line">#353535</color>
+	
+	<color name="main_gradient_top">#192a3c</color>
+	<color name="main_gradient_center">#192a3c</color>
+	<color name="main_gradient_bottom">#192a3c</color>
+
 	<color name="action_vote">#f1ef34</color>
 	<color name="action_enacted">#4ac956</color>
 	<color name="action_vetoed">#ef2f25</color>
