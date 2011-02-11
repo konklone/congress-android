@@ -43,7 +43,6 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 	public static final int SEARCH_ZIP = 4;
 	public static final int SEARCH_STATE = 5;
 	public static final int SEARCH_NAME = 6;
-	public static final int SEARCH_COMMITTEE = 7;
 	
 	private GoogleAnalyticsTracker tracker;
 	private boolean tracked;
@@ -110,7 +109,6 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 		searchViews.add(inflateItem(inflater, R.drawable.search_all, R.string.menu_legislators_state, SEARCH_STATE));
 		searchViews.add(inflateItem(inflater, R.drawable.search_lastname, R.string.menu_legislators_lastname, SEARCH_NAME));            
 		searchViews.add(inflateItem(inflater, R.drawable.search_zip, R.string.menu_legislators_zip, SEARCH_ZIP));
-		searchViews.add(inflateItem(inflater, R.drawable.committee, R.string.menu_committees, SEARCH_COMMITTEE));
 		adapter.addAdapter(new ViewArrayAdapter(this, searchViews));
 		
 		adapter.addView(Utils.inflateHeader(inflater, R.string.menu_legislators_favorite));
@@ -183,9 +181,6 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 				break;
 			case SEARCH_STATE:
 				getResponse(RESULT_STATE);
-				break;
-			case SEARCH_COMMITTEE:
-				startActivity(new Intent(this, CommitteeTabs.class));
 				break;
 			default:
 				break;
