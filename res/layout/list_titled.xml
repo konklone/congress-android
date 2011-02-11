@@ -5,10 +5,9 @@
     android:layout_height="fill_parent"
     >
     
-    <include layout="@layout/title_bar_search" />
+    <include layout="@layout/title_bar_small" />
     	
-    <include layout="@layout/line"
-		android:background="#5c5e5d"/>
+    <include layout="@layout/line" />
  
     <ListView android:id="@id/android:list"
 	    android:layout_width="fill_parent" 

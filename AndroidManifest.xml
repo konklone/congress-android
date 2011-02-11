@@ -19,24 +19,12 @@
         </activity>
         
         <activity android:name=".MenuBills"
-        	android:label="Cong. Bills"
         	android:theme="@android:style/Theme.NoTitleBar"
-        	>
-        	<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        	/>
         
         <activity android:name=".MenuLegislators"
-        	android:label="Cong. Legs"
         	android:theme="@android:style/Theme.NoTitleBar"
-        	>
-        	<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        	/>
         
         <activity android:name=".GetText"
         	android:theme="@android:style/Theme.Dialog" 

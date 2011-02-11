@@ -9,9 +9,12 @@
 		android:orientation="vertical"
 		android:id="@+id/header_container">
 		
-    	<include layout="@layout/title_bar_search" />	   
+    	<include layout="@layout/title_bar_small" />	   
 			
-		<include layout="@layout/list_header" android:id="@+id/list_header" android:visibility="gone" />
+		<include layout="@layout/list_header" 
+			android:id="@+id/list_header" 
+			android:visibility="gone" 
+			/>
 		
 		<View
 			android:layout_width="fill_parent"
