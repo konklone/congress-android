@@ -3,6 +3,8 @@
     android:orientation="vertical"
     android:layout_width="fill_parent" 
     android:layout_height="fill_parent"
+    
+    android:background="@color/background"
     >
     
     <include layout="@layout/title_bar_small" />
@@ -11,6 +13,9 @@
     <ListView android:id="@id/android:list"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="fill_parent"
+	    
+	    android:cacheColorHint="@color/background"
+	    
 	    android:fastScrollEnabled="true"
 		/>
 	

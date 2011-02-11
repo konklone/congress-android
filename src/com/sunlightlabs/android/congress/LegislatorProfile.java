@@ -58,6 +58,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.list_bare);
         
         Utils.setupSunlight(this);
         

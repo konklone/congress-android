@@ -59,6 +59,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.list_bare);
 		
 		bill = (Bill) getIntent().getExtras().getSerializable("bill");
 		sponsor = bill.sponsor;
