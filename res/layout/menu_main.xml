@@ -63,7 +63,7 @@
 				android:layout_marginTop="5dp"
 				android:layout_marginBottom="5dp"
 				
-				android:src="@android:drawable/ic_menu_help"
+				android:src="@drawable/about"
 				
 				android:layout_marginRight="5dp"
 				/>
@@ -108,7 +108,7 @@
 				android:layout_marginTop="5dp"
 				android:layout_marginBottom="5dp"
 				
-				android:src="@drawable/ic_menu_send"
+				android:src="@drawable/feedback"
 				
 				android:layout_marginRight="5dp"
 				/>
@@ -150,7 +150,7 @@
 				android:layout_width="32dp"
 				android:layout_height="32dp"
 				
-				android:src="@drawable/ic_menu_market"
+				android:src="@drawable/donate"
 				
 				android:layout_marginTop="5dp"
 				android:layout_marginBottom="5dp"
