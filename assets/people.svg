@@ -7,7 +7,6 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="72"
@@ -16,9 +15,9 @@
    version="1.1"
    inkscape:version="0.48.0 r9654"
    sodipodi:docname="people.svg"
-   inkscape:export-filename="/home/eric/space/congress/res/drawable-hdpi/people.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-filename="/home/eric/space/congress/res/drawable-mdpi/people.png"
+   inkscape:export-xdpi="60"
+   inkscape:export-ydpi="60">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -29,8 +28,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="15.839192"
-     inkscape:cx="25.994362"
-     inkscape:cy="37.607004"
+     inkscape:cx="42.187145"
+     inkscape:cy="50.374804"
      inkscape:document-units="px"
      inkscape:current-layer="g3945"
      showgrid="true"
@@ -71,19 +70,15 @@
        style="fill:#e1e1e1;fill-opacity:1;stroke:#ffffff;stroke-opacity:1"
        transform="translate(0,980.36218)">
       <path
-         inkscape:connector-curvature="0"
+         style="fill:#e1e1e1;fill-opacity:1;stroke:#ffffff;stroke-width:0.86206895px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 21.15625,10.46875 c -4.761075,0 -8.59375,3.863925 -8.59375,8.625 0,2.822969 1.34034,5.333749 3.4375,6.90625 l -1.71875,0 C 9.591434,28.298696 8.360041,33.92027 7.375,39.78125 c 3.49741,3.328535 8.113508,4.187985 13.09375,4.28125 1.135551,-2.138175 2.681214,-3.878156 4.90625,-4.96875 l 2,0 c -2.432705,-1.824101 -4,-4.725356 -4,-8 0,-4.068169 2.419203,-7.563069 5.90625,-9.125 0.319525,-0.901475 0.5,-1.862789 0.5,-2.875 0,-4.761075 -3.863925,-8.625 -8.625,-8.625 z"
          id="use3815"
-         d="m 23.793103,11.37931 c -4.761075,0 -8.620689,3.859615 -8.620689,8.62069 0,2.822969 1.351116,5.324051 3.448276,6.896552 l -1.724138,0 C 12.206736,29.195248 10.985041,34.828675 10,40.689655 13.659809,44.172748 18.548262,44.975159 23.793103,45 29.037945,44.975155 33.926398,44.172748 37.586207,40.689655 36.601166,34.828675 35.379471,29.195248 30.689655,26.896552 l -1.724138,0 C 31.062677,25.324051 32.413793,22.822969 32.413793,20 c 0,-4.761075 -3.859615,-8.62069 -8.62069,-8.62069 z"
-         style="fill:#e1e1e1;fill-opacity:1;stroke:#ffffff;stroke-width:0.86206895px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-      <use
-         x="0"
-         y="0"
-         xlink:href="#use3815"
+         inkscape:connector-curvature="0" />
+      <path
+         style="fill:#e1e1e1;fill-opacity:1;stroke:#ffffff;stroke-width:0.86206895px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 50.1875,10.6875 c -4.761075,0 -8.59375,3.863925 -8.59375,8.625 0,0.942166 0.158995,1.839598 0.4375,2.6875 3.731276,1.451533 6.375,5.067927 6.375,9.3125 0,3.274644 -1.567295,6.175899 -4,8 l 2,0 c 2.225036,1.090594 3.770699,2.830575 4.90625,4.96875 C 56.131356,44.146031 60.601573,43.234332 64,40 63.014959,34.13902 61.783566,28.517446 57.09375,26.21875 l -1.71875,0 c 2.09716,-1.572501 3.4375,-4.083281 3.4375,-6.90625 0,-4.761075 -3.863925,-8.625 -8.625,-8.625 z"
          id="use3819"
-         transform="translate(24,0)"
-         width="72"
-         height="72"
-         style="stroke:#ffffff;stroke-opacity:1" />
+         inkscape:connector-curvature="0" />
       <path
          style="fill:#e1e1e1;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
          d="m 36,22 c -5.522847,0 -10,4.477153 -10,10 0,3.274644 1.567295,6.175899 4,8 l -2,0 c -5.440186,2.666488 -6.857353,9.201263 -8,16 4.245378,4.040388 9.915984,4.971185 16,5 6.084016,-0.02882 11.754622,-0.959612 16,-5 -1.142647,-6.798737 -2.559814,-13.333512 -8,-16 l -2,0 c 2.432705,-1.824101 4,-4.725356 4,-8 0,-5.522847 -4.477153,-10 -10,-10 z"
