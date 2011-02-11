@@ -7,7 +7,7 @@
 		android:centerColor="@color/main_gradient_center"
 		android:endColor="@color/main_gradient_bottom"
 		
-		android:centerY="0.15"
+		android:centerY="0.80"
 		
 		android:angle="270"
 		/>
