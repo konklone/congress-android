@@ -123,7 +123,7 @@ public class RollList extends ListActivity {
 			Utils.setTitleSize(this, 18);
 			break;
 		case ROLLS_NOMINATIONS:
-			Utils.setTitle(this, R.string.menu_votes_nominations, R.drawable.rolls_nominations);
+			Utils.setTitle(this, R.string.menu_votes_nominations, R.drawable.people);
 			break;
 		case ROLLS_LATEST:
 		default:
