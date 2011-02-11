@@ -47,6 +47,8 @@
 			
 			android:gravity="center"
 			
+			android:focusable="true"
+			
 			android:layout_weight="1"
 			
 			android:paddingLeft="3dp"
@@ -89,6 +91,8 @@
 			
 			android:gravity="center"
 			
+			android:focusable="true"
+			
 			android:layout_weight="1"
 			
 			android:paddingLeft="3dp"
@@ -129,6 +133,8 @@
 			android:orientation="horizontal"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
+			
+			android:focusable="true"
 			
 			android:gravity="center"
 			
