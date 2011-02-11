@@ -291,7 +291,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		
 		View votingRecordView = inflater.inflate(R.layout.icon_list_item_1, null);
 		((TextView) votingRecordView.findViewById(R.id.text)).setText(R.string.voting_record);
-		((ImageView) votingRecordView.findViewById(R.id.icon)).setImageResource(R.drawable.rolls);
+		((ImageView) votingRecordView.findViewById(R.id.icon)).setImageResource(R.drawable.votes);
 		votingRecordView.setTag("voting");
 		contactViews.add(votingRecordView);
 		
