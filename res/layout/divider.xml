@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"> 
+	<View 
+		android:layout_width="1px"
+		android:layout_height="fill_parent"
+		android:background="@android:color/black"
+		/>
+	<View
+		android:layout_width="1px"
+		android:layout_height="fill_parent"
+		android:background="@color/main_title_divider"
+		/>
+</merge>

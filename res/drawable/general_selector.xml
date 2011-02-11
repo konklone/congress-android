@@ -8,6 +8,4 @@
 		android:state_focused="true"
 		/>
 		
-	<item android:drawable="@drawable/main_title_gradient"
-		/>
 </selector>

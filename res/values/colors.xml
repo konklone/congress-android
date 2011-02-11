@@ -6,6 +6,7 @@
 	
 	<color name="main_title_gradient_top">#333333</color>
 	<color name="main_title_gradient_bottom">#141414</color>
+	
 	<color name="main_title_divider">#535353</color>
 	
 	<color name="main_line">#353535</color>
@@ -15,15 +16,16 @@
 	<color name="main_gradient_bottom">#192a3c</color>
 	
 	<color name="main_footer_gradient_top">#191919</color>
-	<color name="main_footer_gradient_center">#232323</color>
+	<color name="main_footer_gradient_center">#272727</color>
 	<color name="main_footer_gradient_bottom">#191919</color>
+	<color name="main_footer_divider">#535353</color>
+
+	<color name="pressed_top">#f58525</color>
+	<color name="pressed_bottom">#c56520</color>
 
 	<color name="tab_edges">#080808</color>
 	<color name="tab_top">#080808</color>
 	
-	<color name="tab_pressed_top">#f58525</color>
-	<color name="tab_pressed_bottom">#c56520</color>
-
 	<color name="tab_selected_top">#3c3c3c</color>
 	<color name="tab_selected_bottom">#232323</color>
 	<color name="tab_dim_top">#101010</color>

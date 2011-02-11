@@ -5,20 +5,17 @@
 	android:orientation="horizontal"
 	android:gravity="center_vertical"
 	
-	android:paddingTop="11dp"
-	android:paddingBottom="11dp"
-	
-	android:paddingLeft="15dp"
-	android:paddingRight="15dp"
-	
 	android:background="@drawable/main_title_gradient"
 	>
 	
 	<ImageView android:id="@+id/title_icon"
 		android:layout_width="32dp"
 		android:layout_height="32dp"
-		android:layout_marginLeft="5dp"
+		android:layout_marginLeft="20dp"
    		android:layout_marginRight="14dp"
+   		
+   		android:layout_marginTop="11dp"
+		android:layout_marginBottom="11dp"
    		
    		android:layout_weight="0"
    		
@@ -31,19 +28,37 @@
 		
 		android:layout_weight="1"
 		
+		android:layout_marginTop="11dp"
+		android:layout_marginBottom="11dp"
+		
 		android:textSize="24sp"
 		android:textColor="@android:color/white"
 		
 		android:text="@string/app_name"
 		/>
+		
+	<include layout="@layout/divider" />
 	
-<!--	<ImageView-->
-<!--		android:layout_width="32dp"-->
-<!--		android:layout_height="32dp"-->
-<!--		-->
-<!--		android:layout_weight="0"-->
-<!--		-->
-<!--		android:src="@android:drawable/ic_menu_preferences"-->
-<!--		/>-->
+	<FrameLayout android:id="@+id/notifications"
+  		android:layout_width="55dp"
+ 		android:layout_height="fill_parent"
+ 		android:layout_weight="0"
+ 			
+  		android:background="@drawable/main_title_button_gradient"
+  		
+  		android:clickable="true"
+  		android:focusable="true"
+  		>
+  		
+  		<ImageView 
+  			android:layout_width="32dp"
+ 			android:layout_height="32dp"
+  			
+  			android:layout_gravity="center"
+  			
+  			android:src="@drawable/ic_menu_notifications"
+  			/>
+ 			
+	</FrameLayout>
 	
 </LinearLayout>

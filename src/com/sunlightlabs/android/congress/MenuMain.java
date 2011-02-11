@@ -101,12 +101,22 @@ public class MenuMain extends Activity {
 			}
 		});
 		
-		
 		setupDebugBar();
+		
+		findViewById(R.id.about).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) { showAbout(); }
+		});
+		
+		findViewById(R.id.donate).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) { goDonate(); }
+		});
+		
+		findViewById(R.id.feedback).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) { doFeedback(); }
+		});
+		
 		findViewById(R.id.notifications).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				startActivity(new Intent(MenuMain.this, NotificationSettings.class));
-			}
+			public void onClick(View v) { goNotifications(); }
 		});
 	}
 	
@@ -272,6 +282,26 @@ public class MenuMain extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	public void goDonate() {
+		Analytics.page(this, tracker, "/donate", false);
+		donationPage();
+	}
+	
+	public void showAbout() {
+		Analytics.page(this, tracker, "/about", false);
+		showDialog(ABOUT);
+	}
+	
+	public void doFeedback() {
+		Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getResources().getString(R.string.contact_email), null));
+		intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_subject));
+		startActivity(intent);
+	}
+	
+	public void goNotifications() {
+		startActivity(new Intent(this, NotificationSettings.class));
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -279,22 +309,9 @@ public class MenuMain extends Activity {
 		case R.id.settings:
 			startActivity(new Intent(this, Settings.class));
 			break;
-		case R.id.feedback:
-			Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getResources().getString(R.string.contact_email), null));
-			intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_subject));
-			startActivity(intent);
-			break;
 		case R.id.changelog:
 			Analytics.page(this, tracker, "/changelog", false);
 			showDialog(CHANGELOG);
-			break;
-		case R.id.about:
-			Analytics.page(this, tracker, "/about", false);
-			showDialog(ABOUT);
-			break;
-		case R.id.donate:
-			Analytics.page(this, tracker, "/donate", false);
-			donationPage();
 			break;
 		}
 		return true;
