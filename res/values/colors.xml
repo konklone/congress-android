@@ -15,16 +15,16 @@
 	<color name="main_footer_gradient_center">#232323</color>
 	<color name="main_footer_gradient_bottom">#191919</color>
 
-	<color name="tab_edges">#04081a</color>
-	<color name="tab_top">#04081a</color>
+	<color name="tab_edges">#080808</color>
+	<color name="tab_top">#080808</color>
 	
 	<color name="tab_pressed_top">#f58525</color>
 	<color name="tab_pressed_bottom">#c56520</color>
-	
-	<color name="tab_selected_top">#234065</color>
-	<color name="tab_selected_bottom">#09264f</color>
-	<color name="tab_dim_top">#082048</color>
-	<color name="tab_dim_bottom">#02112f</color>
+
+	<color name="tab_selected_top">#3c3c3c</color>
+	<color name="tab_selected_bottom">#232323</color>
+	<color name="tab_dim_top">#101010</color>
+	<color name="tab_dim_bottom">#070707</color>
 	
 	<color name="tab_text_deselected">#aaaaaa</color>
 	<color name="tab_text_selected">#f5f5f5</color>

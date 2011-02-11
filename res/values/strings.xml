@@ -15,7 +15,7 @@
     
     <string name="empty_bills_sponsored">This legislator has not sponsored any bills.</string>
     <string name="empty_bills">There are no bills that match your search.</string>
-    <string name="empty_rolls">This legislator has not cast any recent roll call votes.</string>
+    <string name="empty_votes">This legislator has not cast any recent votes.</string>
     
     <string name="bill_no_title">(no title)</string>
     <string name="bill_no_title_yet">(title not yet known)</string>
@@ -36,7 +36,7 @@
     <string name="bills_loading">Searching for bills...</string>
     <string name="legislators_loading">Searching for legislators...</string>
     <string name="legislators_loading_cosponsors">Loading cosponsors...</string>
-    <string name="rolls_loading">Searching for roll calls...</string>
+    <string name="votes_loading">Searching for votes...</string>
    
    	<string name="committees_title">Committees</string>
     <string name="committees_loading">Searching for committees...</string>
@@ -115,7 +115,7 @@
     <string name="bill_vote_roll">Tap to see how each legislator voted.</string>
     <string name="bill_vote_not_roll">No roll call was taken for this vote.</string>
     
-    <string name="roll_loading">Loading roll call details...</string>
+    <string name="vote_loading">Loading vote details...</string>
     <string name="related_to_bill">Related to bill</string>
     
     <string name="update">Update</string>

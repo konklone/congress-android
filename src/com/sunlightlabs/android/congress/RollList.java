@@ -115,7 +115,7 @@ public class RollList extends ListActivity {
 			}
 		});
 
-		Utils.setLoading(this, R.string.rolls_loading);
+		Utils.setLoading(this, R.string.votes_loading);
 		
 		switch (type) {
 		case ROLLS_VOTER:
@@ -173,7 +173,7 @@ public class RollList extends ListActivity {
 		// if this is the first page of rolls, set up the subscription
 		if (rolls.size() == 0) {
 			if (newRolls.size() == 0) {
-				Utils.showBack(this, R.string.empty_rolls);
+				Utils.showBack(this, R.string.empty_votes);
 				setupSubscription(); // this extra call should get removed when we refactor pagination
 				return;
 			}

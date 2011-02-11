@@ -16,7 +16,7 @@
 	 	android:layout_gravity="center"
 	 	android:layout_marginRight="15dp"
 	 	
-	 	android:background="#000000"
+	 	android:background="@color/background"
 	 	>
 	 	
 		<ImageView android:id="@+id/picture"
