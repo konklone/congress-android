@@ -127,7 +127,7 @@ public class RollList extends ListActivity {
 			break;
 		case ROLLS_LATEST:
 		default:
-			Utils.setTitle(this, R.string.menu_votes_latest, R.drawable.rolls_menu);
+			Utils.setTitle(this, R.string.menu_main_votes, R.drawable.rolls_menu);
 			break;
 		}
 	}
