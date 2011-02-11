@@ -115,8 +115,13 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 		
 		adapter.addView(Utils.inflateHeader(inflater, R.string.menu_legislators_favorite));
 		
-		if (cursor != null)
+		if (cursor != null && cursor.getCount() > 0) {
 			adapter.addAdapter(new FavoriteLegislatorsAdapter(this, cursor));
+		} else {
+			TextView noFavorites = (TextView) inflater.inflate(R.layout.menu_no_favorites, null);
+			noFavorites.setText(R.string.menu_legislators_no_favorites);
+			adapter.addView(noFavorites);
+		}
 		
 		setListAdapter(adapter);
 	}

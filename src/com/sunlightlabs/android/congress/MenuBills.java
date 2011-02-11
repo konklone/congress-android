@@ -96,8 +96,14 @@ public class MenuBills extends ListActivity {
 		adapter.addAdapter(new ViewArrayAdapter(this, billViews));
 		
 		adapter.addView(Utils.inflateHeader(inflater, R.string.menu_legislators_favorite));
-		if (cursor != null)
+		
+		if (cursor != null && cursor.getCount() > 0) {
 			adapter.addAdapter(new FavoriteBillsAdapter(this, cursor));
+		} else {
+			TextView noFavorites = (TextView) inflater.inflate(R.layout.menu_no_favorites, null);
+			noFavorites.setText(R.string.menu_bills_no_favorites);
+			adapter.addView(noFavorites);
+		}
 		
 		setListAdapter(adapter);
 		

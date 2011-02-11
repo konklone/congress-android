@@ -85,8 +85,11 @@
     
     <string name="menu_main_bills">Bills</string>
     <string name="menu_main_votes">Votes</string>
-    <string name="menu_main_legislators">Legislators</string>
+    <string name="menu_main_legislators">People</string>
     <string name="menu_main_committees">Committees</string>
+    
+    <string name="menu_legislators_no_favorites">You can add senators and representatives to this menu for quick access. To add a person, tap the star in the upper left corner when you\'re looking at them.</string>
+    <string name="menu_bills_no_favorites">You can add bills to this menu for quick access. To add a bill, tap the star in the upper left corner when you\'re looking at it.</string>
     
     <string name="menu_bills_search_hint">enter keywords or bill code</string>
     <string name="menu_bills_favorite">Favorites</string>
