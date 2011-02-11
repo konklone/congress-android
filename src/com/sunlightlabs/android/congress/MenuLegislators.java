@@ -106,7 +106,7 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 
 		List<View> searchViews = new ArrayList<View>(5);
 		searchViews.add(inflateItem(inflater, R.drawable.search_location, R.string.menu_legislators_location, SEARCH_LOCATION));
-		searchViews.add(inflateItem(inflater, R.drawable.search_all, R.string.menu_legislators_state, SEARCH_STATE));
+		searchViews.add(inflateItem(inflater, R.drawable.people, R.string.menu_legislators_state, SEARCH_STATE));
 		searchViews.add(inflateItem(inflater, R.drawable.search_lastname, R.string.menu_legislators_lastname, SEARCH_NAME));            
 		searchViews.add(inflateItem(inflater, R.drawable.search_zip, R.string.menu_legislators_zip, SEARCH_ZIP));
 		adapter.addAdapter(new ViewArrayAdapter(this, searchViews));

@@ -149,7 +149,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		if (bill.cosponsors_count > 0) {
 			View cosponsorView = inflater.inflate(R.layout.bill_cosponsors, null);
 			String cosponsorText = bill.cosponsors_count + (bill.cosponsors_count == 1 ? " Cosponsor" : " Cosponsors");
-			((ImageView) cosponsorView.findViewById(R.id.icon)).setImageResource(R.drawable.committee);
+			((ImageView) cosponsorView.findViewById(R.id.icon)).setImageResource(R.drawable.people);
 			((TextView) cosponsorView.findViewById(R.id.text)).setText(cosponsorText);
 			cosponsorView.setTag("cosponsors");
 			listViews.add(cosponsorView);

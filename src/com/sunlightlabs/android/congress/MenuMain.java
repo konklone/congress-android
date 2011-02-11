@@ -366,7 +366,7 @@ public class MenuMain extends Activity {
 				text.setText(R.string.menu_main_legislators);
 				view.setTag("legislators");
 			} else if (position == COMMITTEES) {
-				icon.setImageResource(R.drawable.committee);
+				icon.setImageResource(R.drawable.people);
 				text.setText(R.string.menu_main_committees);
 				view.setTag("committees");
 			}
