@@ -8,6 +8,7 @@
 	>
 	
 	<include layout="@layout/title_bar_small" />
+	<include layout="@layout/line" />
 	
 	<RelativeLayout
 		android:layout_width="fill_parent"
