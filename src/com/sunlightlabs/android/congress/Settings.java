@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.utils.Analytics;
+import com.sunlightlabs.android.congress.utils.Utils;
 
 public class Settings extends PreferenceActivity {
 	
@@ -19,6 +20,8 @@ public class Settings extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.list_titled);
+		Utils.setTitle(this, R.string.menu_settings, android.R.drawable.ic_menu_preferences);
 		
 		addPreferencesFromResource(R.xml.settings);
 		PreferenceManager.setDefaultValues(this, R.xml.settings, false);

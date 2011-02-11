@@ -99,12 +99,11 @@
         	/>
         	
         <activity android:name=".NotificationSettings" 
-        	android:label="@string/menu_notification_settings"
         	android:theme="@android:style/Theme.NoTitleBar" 
         	/>
         	
         <activity android:name=".Settings" 
-        	android:label="@string/menu_settings" 
+        	android:theme="@android:style/Theme.NoTitleBar" 
         	/>
         
         <receiver android:name=".notifications.OnBootReceiver">
