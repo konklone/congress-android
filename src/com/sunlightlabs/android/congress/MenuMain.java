@@ -362,7 +362,7 @@ public class MenuMain extends Activity {
 				text.setText(R.string.menu_main_votes);
 				view.setTag("votes");
 			} else if (position == LEGISLATORS) {
-				icon.setImageResource(R.drawable.search_all);
+				icon.setImageResource(R.drawable.person);
 				text.setText(R.string.menu_main_legislators);
 				view.setTag("legislators");
 			} else if (position == COMMITTEES) {

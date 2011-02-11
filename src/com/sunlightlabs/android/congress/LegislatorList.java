@@ -227,6 +227,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 
 		Utils.setLoading(this, R.string.legislators_loading);
 		Utils.setTitleSize(this, 20);
+		Utils.setTitleIcon(this, R.drawable.person);
 		
 		switch (type) {
 		case SEARCH_ZIP:
