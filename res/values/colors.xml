@@ -6,6 +6,7 @@
 	
 	<color name="main_title_gradient_top">#333333</color>
 	<color name="main_title_gradient_bottom">#141414</color>
+	<color name="main_title_divider">#535353</color>
 	
 	<color name="main_line">#353535</color>
 	
