@@ -174,7 +174,7 @@ public class BillList extends ListActivity {
 		// no subscription offered for a bill code search
 		
 		if (subscription != null)
-			footer.init(subscription, bills);
+			footer.init(subscription, bills.subList(0, PER_PAGE));
 	}
 
 	protected void onListItemClick(ListView parent, View v, int position, long id) {
@@ -197,7 +197,6 @@ public class BillList extends ListActivity {
 					Utils.showBack(this, R.string.empty_bills_sponsored);
 				else
 					Utils.showBack(this, R.string.empty_bills);
-				setupSubscription();
 				return;
 			} 
 			else if (type == BILLS_CODE && newBills.size() == 1) {
