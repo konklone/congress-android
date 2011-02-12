@@ -354,19 +354,19 @@ public class MenuMain extends Activity {
 			TextView text = (TextView) view.findViewById(R.id.text);
 			
 			if (position == BILLS) {
-				icon.setImageResource(R.drawable.bill_multiple);
+				icon.setImageResource(R.drawable.menu_selector_bills);
 				text.setText(R.string.menu_main_bills);
 				view.setTag("bills");
 			} else if (position == VOTES) {
-				icon.setImageResource(R.drawable.votes);
+				icon.setImageResource(R.drawable.menu_selector_votes);
 				text.setText(R.string.menu_main_votes);
 				view.setTag("votes");
 			} else if (position == LEGISLATORS) {
-				icon.setImageResource(R.drawable.person);
+				icon.setImageResource(R.drawable.menu_selector_people);
 				text.setText(R.string.menu_main_legislators);
 				view.setTag("legislators");
 			} else if (position == COMMITTEES) {
-				icon.setImageResource(R.drawable.people);
+				icon.setImageResource(R.drawable.menu_selector_committees);
 				text.setText(R.string.menu_main_committees);
 				view.setTag("committees");
 			}

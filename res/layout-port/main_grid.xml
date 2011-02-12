@@ -9,4 +9,6 @@
     android:verticalSpacing="10dp"
     
     android:layout_weight="1"
+    
+    android:listSelector="#00000000"
     />

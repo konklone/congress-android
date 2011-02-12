@@ -297,7 +297,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
 		
 		View sponsoredView = inflater.inflate(R.layout.icon_list_item_1, null);
 		((TextView) sponsoredView.findViewById(R.id.text)).setText(R.string.sponsored_bills);
-		((ImageView) sponsoredView.findViewById(R.id.icon)).setImageResource(R.drawable.bill_multiple);
+		((ImageView) sponsoredView.findViewById(R.id.icon)).setImageResource(R.drawable.bills);
 		sponsoredView.setTag("sponsored");
 		contactViews.add(sponsoredView);
 		
