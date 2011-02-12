@@ -119,15 +119,15 @@ public class RollList extends ListActivity {
 		
 		switch (type) {
 		case ROLLS_VOTER:
-			Utils.setTitle(this, "Latest Votes By\n" + voter.titledName(), R.drawable.rolls);
+			Utils.setTitle(this, "Latest Votes By\n" + voter.titledName(), R.drawable.votes);
 			Utils.setTitleSize(this, 18);
 			break;
 		case ROLLS_NOMINATIONS:
-			Utils.setTitle(this, R.string.menu_votes_nominations, R.drawable.people);
+			Utils.setTitle(this, R.string.menu_votes_nominations, R.drawable.votes);
 			break;
 		case ROLLS_LATEST:
 		default:
-			Utils.setTitle(this, R.string.menu_main_votes, R.drawable.rolls_menu);
+			Utils.setTitle(this, R.string.menu_main_votes, R.drawable.votes);
 			break;
 		}
 	}

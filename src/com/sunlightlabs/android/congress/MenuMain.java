@@ -358,7 +358,7 @@ public class MenuMain extends Activity {
 				text.setText(R.string.menu_main_bills);
 				view.setTag("bills");
 			} else if (position == VOTES) {
-				icon.setImageResource(R.drawable.rolls_menu);
+				icon.setImageResource(R.drawable.votes);
 				text.setText(R.string.menu_main_votes);
 				view.setTag("votes");
 			} else if (position == LEGISLATORS) {
