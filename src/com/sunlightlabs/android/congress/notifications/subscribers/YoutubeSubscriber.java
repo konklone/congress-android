@@ -13,7 +13,8 @@ import com.sunlightlabs.youtube.YouTube;
 import com.sunlightlabs.youtube.YouTubeException;
 
 public class YoutubeSubscriber extends Subscriber {
-
+	public static final int PER_PAGE = 25; // what YouTube returns by default
+	
 	@Override
 	public String decodeId(Object result) {
 		return "" + ((Video) result).timestamp;
@@ -33,7 +34,9 @@ public class YoutubeSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results > 1)
+		if (results == PER_PAGE)
+			return results + " or more new videos.";
+		else if (results > 1)
 			return results + " new videos.";
 		else
 			return results + " new video.";

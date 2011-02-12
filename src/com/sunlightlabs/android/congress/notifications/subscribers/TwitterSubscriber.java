@@ -13,7 +13,8 @@ import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class TwitterSubscriber extends Subscriber {
-
+	public static final int PER_PAGE = 20; // this is what the third-party library we use hardcodes it to
+	
 	@Override
 	public String decodeId(Object result) {
 		return String.valueOf(((Status) result).id);
@@ -33,7 +34,9 @@ public class TwitterSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results > 1)
+		if (results == PER_PAGE)
+			return results + " or more new tweets.";
+		else if (results > 1)
 			return results + " new tweets.";
 		else
 			return results + " new tweet.";

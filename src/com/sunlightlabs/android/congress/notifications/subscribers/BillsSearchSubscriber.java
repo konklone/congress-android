@@ -34,7 +34,9 @@ public class BillsSearchSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results > 1)
+		if (results == BillList.PER_PAGE)
+			return results + " or more new bills for search \"" + subscription.data + "\".";
+		else if (results > 1)
 			return results + " new bills for search \"" + subscription.data + "\".";
 		else
 			return results + " new bill for search \"" + subscription.data + "\".";

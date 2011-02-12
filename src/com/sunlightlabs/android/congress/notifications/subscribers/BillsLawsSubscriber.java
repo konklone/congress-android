@@ -34,7 +34,9 @@ public class BillsLawsSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results > 1)
+		if (results == BillList.PER_PAGE)
+			return results + " or more new bills signed into law.";
+		else if (results > 1)
 			return results + " new bills signed into law.";
 		else
 			return results + " new bill signed into law.";

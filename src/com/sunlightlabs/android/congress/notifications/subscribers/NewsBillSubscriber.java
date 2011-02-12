@@ -35,7 +35,9 @@ public class NewsBillSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results > 1)
+		if (results == NewsService.RESULTS)
+			return results + " or more new mentions in the news.";
+		else if (results > 1)
 			return results + " new mentions in the news.";
 		else
 			return results + " new mention in the news.";

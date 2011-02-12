@@ -35,7 +35,9 @@ public class RollsLegislatorSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results > 1)
+		if (results == RollList.PER_PAGE)
+			return results + " or more new votes cast.";
+		else if (results > 1)
 			return results + " new votes cast.";
 		else
 			return results + " new vote cast.";

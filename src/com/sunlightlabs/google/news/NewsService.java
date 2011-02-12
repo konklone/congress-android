@@ -15,6 +15,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class NewsService {
+	public static final int RESULTS = 8;
+	
 	public static final String BASE_URL = "https://ajax.googleapis.com/ajax/services/search/news";
 	public static final String USER_AGENT = "Sunlight's Congress Android App (http://github.com/sunlightlabs/congress)";
 	
@@ -23,11 +25,9 @@ public class NewsService {
 	public String referer; 
 	
 	public String ned; // news edition (country)
-	public int rsz; // number of results
 	
 	
 	public NewsService(String apiKey, String referer) {
-		this.rsz = 8; // maximum number of results
 		this.ned = "us"; // US edition
 		
 		this.apiKey = apiKey;
@@ -80,7 +80,7 @@ public class NewsService {
 	private String queryString(String query) {
 		StringBuffer sb = new StringBuffer();
 		
-		sb.append(queryPair("rsz", "" + rsz));
+		sb.append(queryPair("rsz", "" + RESULTS));
 		sb.append("&");
 		sb.append(queryPair("ned", ned));
 		sb.append("&");

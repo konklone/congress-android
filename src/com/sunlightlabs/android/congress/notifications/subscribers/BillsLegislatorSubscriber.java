@@ -33,7 +33,9 @@ public class BillsLegislatorSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results > 1)
+		if (results == BillList.PER_PAGE)
+			return results + " or more new bills sponsored.";
+		else if (results > 1)
 			return results + " new bills sponsored.";
 		else
 			return results + " new bill sponsored.";
