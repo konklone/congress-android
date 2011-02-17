@@ -142,7 +142,7 @@ public class RollList extends ListActivity {
 		else if (type == ROLLS_NOMINATIONS)
 			subscription = new Subscription("Nominations", "Recent Nominations", "RollsNominationsSubscriber", null);
 		
-		footer.init(subscription, rolls.subList(0, PER_PAGE));
+		footer.init(subscription, rolls.subList(0, Math.min(rolls.size(), PER_PAGE)));
 	}
 	
 	private String url() {

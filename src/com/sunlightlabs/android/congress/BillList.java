@@ -174,7 +174,7 @@ public class BillList extends ListActivity {
 		// no subscription offered for a bill code search
 		
 		if (subscription != null)
-			footer.init(subscription, bills.subList(0, PER_PAGE));
+			footer.init(subscription, bills.subList(0, Math.min(bills.size(), PER_PAGE)));
 	}
 
 	protected void onListItemClick(ListView parent, View v, int position, long id) {
