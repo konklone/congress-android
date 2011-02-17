@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<color name="background">#192a3c</color>
+	<color name="background_transparent">#00192a3c</color>
+	
 	<color name="link">#4c98d7</color>
 	<color name="alert_title">#44000000</color>
 	
