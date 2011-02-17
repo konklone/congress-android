@@ -137,7 +137,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	public void setupControls() {
 		Roll tempRoll = Roll.splitRollId(id);
 		String title = Utils.capitalize(tempRoll.chamber) + " Roll No. " + tempRoll.number;
-		((TextView) findViewById(R.id.title_text)).setText(title);
+		Utils.setTitle(this, title, R.drawable.votes);
 		Utils.setLoading(this, R.string.vote_loading);
 	}
 	
