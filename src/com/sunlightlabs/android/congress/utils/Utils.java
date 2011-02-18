@@ -61,6 +61,11 @@ public class Utils {
 		String message = exception == null ? "Unhandled error." : exception.getMessage();
 		Toast.makeText(context, message, Toast.LENGTH_LONG).show();
 	}
+	
+	public static String formatRollId(String id) {
+		Roll tempRoll = Roll.splitRollId(id);
+		return Utils.capitalize(tempRoll.chamber) + " Roll No. " + tempRoll.number;
+	}
 
 	// Suitable for a legislator desktop shortcut, load a legislator by ID only
 	public static Intent legislatorLoadIntent(String id) {

@@ -38,7 +38,7 @@
 	
 	<color name="header_top">#232323</color>
 	<color name="header_bottom">#141414</color>
-	<color name="header_line">#353535</color>
+	<color name="header_line">#555555</color>
 	<color name="header_text">#cccccc</color>
 	
 	<color name="footer_on_top">#3c3c3c</color>

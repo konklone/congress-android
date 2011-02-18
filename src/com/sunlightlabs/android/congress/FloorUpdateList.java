@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
@@ -90,10 +91,21 @@ public class FloorUpdateList extends ListActivity {
 		Utils.setLoading(this, R.string.floor_updates_loading);
 	}
 	
+	@Override
+	protected void onListItemClick(ListView parent, View v, int position, long id) {
+		FloorUpdateAdapter.Item item = (FloorUpdateAdapter.Item) parent.getItemAtPosition(position);
+		if (item instanceof FloorUpdateAdapter.Roll)
+			selectRoll(((FloorUpdateAdapter.Roll) item).rollId);
+	}
+
+	private void selectRoll(String rollId) {
+		startActivity(Utils.rollIntent(this, rollId));
+	}
+	
 	public void loadUpdates() {
-		if (updates == null) {
+		if (updates == null)
 			loadUpdatesTask = (LoadUpdatesTask) new LoadUpdatesTask(this).execute(chamber);
-		} else
+		else
 			displayUpdates();
 	}
 	
@@ -110,7 +122,7 @@ public class FloorUpdateList extends ListActivity {
 	
 	public void displayUpdates() {
 		if (updates.size() > 0)
-			setListAdapter(new FloorUpdateAdapter(this, FloorUpdateAdapter.transformUpdates(updates), chamber));
+			setListAdapter(new FloorUpdateAdapter(this, FloorUpdateAdapter.transformUpdates(updates)));
 		else
 			Utils.showRefresh(this, R.string.floor_updates_error); // should not happen
 	}
@@ -118,21 +130,23 @@ public class FloorUpdateList extends ListActivity {
 	static class FloorUpdateAdapter extends ArrayAdapter<FloorUpdateAdapter.Item> {
     	LayoutInflater inflater;
     	Resources resources;
-    	String chamber;
     	
     	public static final int TYPE_DATE = 0;
-    	public static final int TYPE_UPDATE = 1; 
+    	public static final int TYPE_UPDATE = 1;
+    	public static final int TYPE_ROLL = 2;
 
-        public FloorUpdateAdapter(Activity context, List<FloorUpdateAdapter.Item> items, String chamber) {
+        public FloorUpdateAdapter(Activity context, List<FloorUpdateAdapter.Item> items) {
             super(context, 0, items);
             inflater = LayoutInflater.from(context);
             resources = context.getResources();
-            this.chamber = chamber; 
         }
         
         @Override
         public boolean isEnabled(int position) {
-        	return false;
+        	if (getItemViewType(position) == FloorUpdateAdapter.TYPE_ROLL)
+        		return true;
+        	else
+        		return false;
         }
         
         @Override
@@ -145,13 +159,15 @@ public class FloorUpdateList extends ListActivity {
         	Item item = getItem(position);
         	if (item instanceof FloorUpdateAdapter.Date)
         		return FloorUpdateAdapter.TYPE_DATE;
-        	else
+        	else if (item instanceof FloorUpdateAdapter.Update)
         		return FloorUpdateAdapter.TYPE_UPDATE;
+        	else // roll
+        		return FloorUpdateAdapter.TYPE_ROLL;
         }
         
         @Override
         public int getViewTypeCount() {
-        	return 2;
+        	return 3;
         }
 
 		@Override
@@ -163,7 +179,7 @@ public class FloorUpdateList extends ListActivity {
 				
 				((TextView) view.findViewById(R.id.date)).setText(((Date) item).date);				
 				
-			} else { // instanceof Update
+			} else if (item instanceof Update){
 				// don't recycle
 				view = inflater.inflate(R.layout.floor_update, null);
 				
@@ -178,6 +194,11 @@ public class FloorUpdateList extends ListActivity {
 					((TextView) event.findViewById(R.id.text)).setText(update.events.get(i));
 					((ViewGroup) view).addView(event);
 				}
+			} else { // instanceof Roll
+				view = inflater.inflate(R.layout.floor_update_roll, null);
+				
+				String rollId = ((Roll) item).rollId;
+				((TextView) view.findViewById(R.id.roll)).setText(Utils.formatRollId(rollId));
 			}
 
 			return view;
@@ -201,6 +222,14 @@ public class FloorUpdateList extends ListActivity {
 			}
 		}
 		
+		static class Roll extends Item {
+			String rollId;
+			
+			public Roll(String rollId) {
+				this.rollId = rollId;
+			}
+		}
+		
 		static List<Item> transformUpdates(List<FloorUpdate> updates) {
 			List<Item> items = new ArrayList<Item>();
 			
@@ -213,6 +242,7 @@ public class FloorUpdateList extends ListActivity {
 			for (int i=0; i<updates.size(); i++) {
 				FloorUpdate update = updates.get(i);
 				
+				// 1) see if a date needs to be pre-prended
 				GregorianCalendar calendar = new GregorianCalendar();
 				calendar.setTime(update.timestamp);
 				
@@ -229,7 +259,16 @@ public class FloorUpdateList extends ListActivity {
 					currentYear = year;
 				}
 				
+				// 2) add the update itself
 				items.add(new Update(update));
+				
+				// 3) See if one or more roll call votes need to be appended
+				int length = (update.rollIds != null ? update.rollIds.size() : 0);
+				if (length > 0) {
+					for (int j=0; j<length; j++)
+						items.add(new Roll(update.rollIds.get(j)));
+				}
+					
 			}
 			
 			return items;

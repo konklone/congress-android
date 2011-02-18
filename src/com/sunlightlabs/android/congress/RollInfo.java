@@ -135,9 +135,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	}
 	
 	public void setupControls() {
-		Roll tempRoll = Roll.splitRollId(id);
-		String title = Utils.capitalize(tempRoll.chamber) + " Roll No. " + tempRoll.number;
-		Utils.setTitle(this, title, R.drawable.votes);
+		Utils.setTitle(this, Utils.formatRollId(id), R.drawable.votes);
 		Utils.setLoading(this, R.string.vote_loading);
 	}
 	
@@ -187,8 +185,12 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	}
 	
 	public void onLoadRoll(String tag, CongressException exception) {
-		Utils.alert(this, R.string.error_connection);
 		if (tag.equals("basic")) {
+			if (exception instanceof CongressException.NotFound)
+				Utils.alert(this, R.string.vote_not_found);
+			else
+				Utils.alert(this, R.string.error_connection);
+			
 			this.loadRollTask = null;
 			finish();
 		} else if (tag.equals("voters")) {

@@ -170,7 +170,7 @@ public class RollService {
 		try {
 			JSONArray results = new JSONObject(rawJSON).getJSONArray("votes");
 			if (results.length() == 0)
-				throw new CongressException("Vote not found.");
+				throw new CongressException.NotFound("Vote not found.");
 			else
 				return fromRTC(results.getJSONObject(0));
 		} catch (JSONException e) {
