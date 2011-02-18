@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	
+	android:orientation="vertical"
+	
+	android:paddingBottom="20dp"
+	
+	android:paddingLeft="15dp"
+	android:paddingRight="15dp"
+	>
+	
+	<TextView android:id="@+id/timestamp"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		
+		android:textSize="16sp"
+		/>
+	
+	<!--  event items get added here dynamically from floor_update_event.xml -->
+	
+</LinearLayout>

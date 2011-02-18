@@ -23,6 +23,7 @@ import com.sunlightlabs.congress.models.CongressException;
 
 public class RealTimeCongress {
 	public static final String dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+	public static final String dateOnlyFormat = "yyyy-MM-dd";
 	
 	public static final String baseUrl = "http://api.realtimecongress.org/api/v1/";
 	public static final String format = "json";
@@ -33,6 +34,7 @@ public class RealTimeCongress {
 	public static String osVersion = null;
 	public static String apiKey = "";
 	
+	public static final int MAX_PER_PAGE = 500;
 	
 	public static String url(String method, String[] sections, Map<String,String> params) {
 		return url(method, sections, params, -1, -1);
@@ -40,7 +42,9 @@ public class RealTimeCongress {
 	
 	public static String url(String method, String[] sections, Map<String,String> params, int page, int per_page) {
 		params.put("apikey", apiKey);
-		params.put("sections", TextUtils.join(",", sections));
+		
+		if (sections != null && sections.length > 0)
+			params.put("sections", TextUtils.join(",", sections));
 		
 		if (page > 0 && per_page > 0) {
 			params.put("page", String.valueOf(page));
@@ -63,6 +67,12 @@ public class RealTimeCongress {
 	
 	public static Date parseDate(String date) throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat(dateFormat);
+		format.setTimeZone(DateUtils.GMT);
+		return format.parse(date);
+	}
+	
+	public static Date parseDateOnly(String date) throws ParseException {
+		SimpleDateFormat format = new SimpleDateFormat(dateOnlyFormat);
 		format.setTimeZone(DateUtils.GMT);
 		return format.parse(date);
 	}

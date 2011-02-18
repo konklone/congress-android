@@ -98,6 +98,8 @@ public class MenuMain extends Activity {
 					startActivity(new Intent(MenuMain.this, RollList.class).putExtra("type", RollList.ROLLS_LATEST));
 				else if (tag.equals("legislators"))
 					startActivity(new Intent(MenuMain.this, MenuLegislators.class));
+				else if (tag.equals("floor_updates"))
+					startActivity(new Intent(MenuMain.this, FloorUpdateList.class).putExtra("chamber", "house"));
 			}
 		});
 		
@@ -327,6 +329,7 @@ public class MenuMain extends Activity {
 		private static final int VOTES = 1;
 		private static final int LEGISLATORS = 2;
 		private static final int COMMITTEES = 3;
+		private static final int FLOOR = 4;
 		
 		LayoutInflater inflater;
 		
@@ -335,7 +338,7 @@ public class MenuMain extends Activity {
 		}
 
 		public int getCount() {
-			return 4;
+			return 5;
 		}
 
 		public Object getItem(int position) {
@@ -369,6 +372,10 @@ public class MenuMain extends Activity {
 				icon.setImageResource(R.drawable.menu_selector_committees);
 				text.setText(R.string.menu_main_committees);
 				view.setTag("committees");
+			} else if (position == FLOOR) {
+				icon.setImageResource(R.drawable.menu_selector_committees);
+				text.setText(R.string.menu_main_floor_updates);
+				view.setTag("floor_updates");
 			}
 			
 			return view;

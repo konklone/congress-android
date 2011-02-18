@@ -125,8 +125,8 @@ public class BillHistory extends ListActivity implements LoadBillTask.LoadsBill 
     	LayoutInflater inflater;
     	Resources resources;
     	
-    	public static final int TYPE_DATE = 0;
-    	public static final int TYPE_ACTION = 1; 
+    	private static final int TYPE_DATE = 0;
+    	private static final int TYPE_ACTION = 1; 
 
         public BillActionAdapter(Activity context, List<BillActionAdapter.Item> items) {
             super(context, 0, items);

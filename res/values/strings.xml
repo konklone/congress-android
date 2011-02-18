@@ -45,6 +45,9 @@
     <string name="committees_joint">Joint Committees</string>
     <string name="committees_empty">No committees found.</string>
     
+    <string name="floor_updates_loading">Loading latest from the floor...</string>
+    <string name="floor_updates_error">Error loading the House floor.</string>
+    
     <string name="voting_record">Voting Record</string>
     <string name="sponsored_bills">Sponsored Bills</string>
     <string name="committees">Committees</string>
@@ -87,9 +90,10 @@
     <string name="menu_main_votes">Votes</string>
     <string name="menu_main_legislators">People</string>
     <string name="menu_main_committees">Committees</string>
+    <string name="menu_main_floor_updates">House Floor</string>
     
-    <string name="menu_legislators_no_favorites">You can add senators and representatives to this menu for quick access. To add a person, tap the star in the upper left corner when you\'re looking at them.</string>
-    <string name="menu_bills_no_favorites">You can add bills to this menu for quick access. To add a bill, tap the star in the upper left corner when you\'re looking at it.</string>
+    <string name="menu_legislators_no_favorites">You can add senators and representatives to this menu for quick access. When viewing a person, tap the star in the upper left corner.</string>
+    <string name="menu_bills_no_favorites">You can add bills to this menu for quick access. When viewing a bill, tap the star in the upper left corner.</string>
     
     <string name="menu_bills_search_hint">enter keywords or bill code</string>
     <string name="menu_bills_favorite">Favorites</string>

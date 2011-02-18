@@ -25,8 +25,6 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.CommitteeService;
 
 public class CommitteeList extends ListActivity {
-	public static final String TAG = "CONGRESS";
-
 	private List<Committee> committees;
 	private String chamber;
 	private LoadCommitteesTask loadCommitteesTask;
@@ -48,7 +46,6 @@ public class CommitteeList extends ListActivity {
 		if (holder != null) {
 			committees = holder.committees;
 			loadCommitteesTask = holder.loadCommitteesTask;
-			chamber = holder.chamber;
 			tracked = holder.tracked;
 		}
 		
@@ -68,7 +65,7 @@ public class CommitteeList extends ListActivity {
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new CommitteeListHolder(committees, chamber, loadCommitteesTask, tracked);
+		return new CommitteeListHolder(committees, loadCommitteesTask, tracked);
 	}
 	
 	@Override
@@ -186,7 +183,7 @@ public class CommitteeList extends ListActivity {
 			try {
 				result = CommitteeService.getAll(chamber);
 			} catch (CongressException e) {
-				Log.e(TAG, "There has been an exception while getting the committees for chamber "
+				Log.e(Utils.TAG, "There has been an exception while getting the committees for chamber "
 						+ chamber + ": " + e.getMessage());
 			}
 			return result;
@@ -201,14 +198,12 @@ public class CommitteeList extends ListActivity {
 	
 	private class CommitteeListHolder {
 		List<Committee> committees;
-		String chamber;
 		LoadCommitteesTask loadCommitteesTask;
 		boolean tracked;
 		
-		CommitteeListHolder(List<Committee> committees, String chamber, LoadCommitteesTask loadCommitteesTask, boolean tracked) {
+		CommitteeListHolder(List<Committee> committees, LoadCommitteesTask loadCommitteesTask, boolean tracked) {
 			this.committees = committees;
 			this.loadCommitteesTask = loadCommitteesTask;
-			this.chamber = chamber;
 			this.tracked = tracked;
 		}
 	}

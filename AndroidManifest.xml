@@ -97,6 +97,14 @@
         <activity android:name=".CommitteeList" 
         	android:theme="@android:style/Theme.NoTitleBar"
         	/>
+        
+        <activity android:name=".FloorUpdateTabs"
+        	android:theme="@android:style/Theme.NoTitleBar"
+        	/>
+        
+        <activity android:name=".FloorUpdateList" 
+        	android:theme="@android:style/Theme.NoTitleBar"
+        	/>
         	
         <activity android:name=".NotificationSettings" 
         	android:theme="@android:style/Theme.NoTitleBar" 
