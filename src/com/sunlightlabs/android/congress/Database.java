@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.notifications.Subscription;
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.RealTimeCongress;
@@ -94,6 +95,7 @@ public class Database {
 		return date == null ? null : format.parse(date);
 	}
 
+	// error condition is -1
 	public long addBill(Bill bill) {
 		try {
 			Class<?> cls = Class.forName("com.sunlightlabs.congress.models.Bill");
@@ -108,13 +110,18 @@ public class Database {
 		}
 	}
 
+	// error condition is 0
 	public int removeBill(String id) {
-		return database.delete("bills", "id=?", new String[] { id });
+		try { 
+			return database.delete("bills", "id=?", new String[] { id });
+		} catch (SQLiteException e) {
+			Log.w(Utils.TAG, "Exception while unstarring bill: " + e.getMessage());
+			return 0;
+		}
 	}
-
+	
 	public Cursor getBill(String id) {
-		Cursor cursor = database.query("bills", BILL_COLUMNS, "id=?", new String[] { id },
-				null, null, null);
+		Cursor cursor = database.query("bills", BILL_COLUMNS, "id=?", new String[] { id }, null, null, null);
 
 		cursor.moveToFirst();
 		return cursor;
