@@ -44,7 +44,7 @@ public class RollsRecentSubscriber extends Subscriber {
 
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
-		return new Intent(Intent.ACTION_MAIN)
+		return new Intent()
 			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.RollList")
 			.putExtra("type", RollList.ROLLS_LATEST);
 	}
