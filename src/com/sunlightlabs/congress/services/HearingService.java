@@ -24,7 +24,7 @@ public class HearingService {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("occurs_at__gte", RealTimeCongress.formatDate(now));
 		params.put("committee__exists", "true");
-		params.put("sort", "asc");
+		params.put("sort", "asc"); // start with the hearings closest to now
 		
 		return hearingsFor(RealTimeCongress.url("committee_hearings", null, params, page, per_page));
 	}

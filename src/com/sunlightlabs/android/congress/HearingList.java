@@ -2,11 +2,7 @@ package com.sunlightlabs.android.congress;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
-
-import org.apache.http.impl.cookie.DateUtils;
 
 import android.app.Activity;
 import android.app.ListActivity;
