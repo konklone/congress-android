@@ -77,6 +77,10 @@ public class RealTimeCongress {
 		return format.parse(date);
 	}
 	
+	public static String formatDate(Date date) {
+		return DateUtils.formatDate(date, dateFormat);
+	}
+	
 	public static String fetchJSON(String url) throws CongressException {
 		HttpGet request = new HttpGet(url);
         request.addHeader("User-Agent", userAgent);

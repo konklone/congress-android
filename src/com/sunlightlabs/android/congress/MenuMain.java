@@ -100,6 +100,8 @@ public class MenuMain extends Activity {
 					startActivity(new Intent(MenuMain.this, MenuLegislators.class));
 				else if (tag.equals("floor_updates"))
 					startActivity(new Intent(MenuMain.this, FloorUpdateList.class).putExtra("chamber", "house"));
+				else if (tag.equals("hearings"))
+					startActivity(new Intent(MenuMain.this, HearingList.class));
 			}
 		});
 		
@@ -330,6 +332,7 @@ public class MenuMain extends Activity {
 		private static final int LEGISLATORS = 2;
 		private static final int COMMITTEES = 3;
 		private static final int FLOOR = 4;
+		private static final int HEARINGS = 5;
 		
 		LayoutInflater inflater;
 		
@@ -338,7 +341,7 @@ public class MenuMain extends Activity {
 		}
 
 		public int getCount() {
-			return 5;
+			return 6;
 		}
 
 		public Object getItem(int position) {
@@ -376,6 +379,10 @@ public class MenuMain extends Activity {
 				icon.setImageResource(R.drawable.menu_selector_committees);
 				text.setText(R.string.menu_main_floor_updates);
 				view.setTag("floor_updates");
+			} else if (position == HEARINGS) {
+				icon.setImageResource(R.drawable.menu_selector_committees);
+				text.setText(R.string.menu_main_hearings);
+				view.setTag("hearings");
 			}
 			
 			return view;

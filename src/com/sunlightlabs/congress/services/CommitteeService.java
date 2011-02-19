@@ -48,6 +48,14 @@ public class CommitteeService {
 		return committee;
 	}
 	
+	protected static Committee fromRTC(JSONObject json) throws JSONException {
+		Committee committee = new Committee();
+		committee.id = json.getString("committee_id");
+		committee.name = json.getString("name");
+		committee.chamber = json.getString("chamber");
+		return committee;
+	}
+	
 	
 	/* Private helpers for loading single or plural bill objects */
 
