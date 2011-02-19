@@ -32,6 +32,11 @@ public class FloorUpdatesSubscriber extends Subscriber {
 			return null;
 		}
 	}
+	
+	@Override
+	public String notificationTitle(Subscription subscription) {
+		return Utils.capitalize(subscription.data) + " Floor"; 
+	}
 
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {

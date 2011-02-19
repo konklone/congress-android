@@ -21,6 +21,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.sunlightlabs.android.congress.notifications.Footer;
+import com.sunlightlabs.android.congress.notifications.Subscriber;
+import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
@@ -35,6 +38,7 @@ public class FloorUpdateList extends ListActivity {
 	private List<FloorUpdate> updates;
 	private LoadUpdatesTask loadUpdatesTask;
 	
+	private Footer footer;
 	private GoogleAnalyticsTracker tracker;
 	private boolean tracked = false;
 	
@@ -59,6 +63,11 @@ public class FloorUpdateList extends ListActivity {
 			tracked = true;
 		}
 		
+		if (footer != null)
+			footer.onScreenLoad(this, tracker);
+		else
+			footer = Footer.from(this, tracker);
+		
 		if (loadUpdatesTask == null)
 			loadUpdates();
 		else
@@ -69,13 +78,20 @@ public class FloorUpdateList extends ListActivity {
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new FloorUpdateListHolder(updates, loadUpdatesTask, tracked);
+		return new FloorUpdateListHolder(updates, loadUpdatesTask, footer, tracked);
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		Analytics.stop(tracker);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (updates != null)
+			setupSubscription();
 	}
 	
 	private void setupControls() {
@@ -89,6 +105,10 @@ public class FloorUpdateList extends ListActivity {
 
 		Utils.setTitle(this, R.string.menu_main_floor_updates, R.drawable.people);
 		Utils.setLoading(this, R.string.floor_updates_loading);
+	}
+	
+	private void setupSubscription() {
+		footer.init(new Subscription(chamber, chamber, "FloorUpdatesSubscriber", chamber), updates);
 	}
 	
 	@Override
@@ -121,9 +141,10 @@ public class FloorUpdateList extends ListActivity {
 	}
 	
 	public void displayUpdates() {
-		if (updates.size() > 0)
+		if (updates.size() > 0) {
 			setListAdapter(new FloorUpdateAdapter(this, FloorUpdateAdapter.transformUpdates(updates)));
-		else
+			setupSubscription();
+		} else
 			Utils.showRefresh(this, R.string.floor_updates_error); // should not happen
 	}
 	
@@ -320,11 +341,13 @@ public class FloorUpdateList extends ListActivity {
 	private class FloorUpdateListHolder {
 		List<FloorUpdate> updates;
 		LoadUpdatesTask loadUpdatesTask;
+		Footer footer;
 		boolean tracked;
 		
-		FloorUpdateListHolder(List<FloorUpdate> updates, LoadUpdatesTask loadUpdatesTask, boolean tracked) {
+		FloorUpdateListHolder(List<FloorUpdate> updates, LoadUpdatesTask loadUpdatesTask, Footer footer, boolean tracked) {
 			this.updates = updates;
 			this.loadUpdatesTask = loadUpdatesTask;
+			this.footer = footer;
 			this.tracked = tracked;
 		}
 	}
