@@ -188,8 +188,9 @@ public class FloorUpdateList extends ListActivity {
 				FloorUpdate update = ((Update) item).update;
 				((TextView) view.findViewById(R.id.timestamp)).setText(timeFormat.format(update.timestamp));
 				
+				// go in reverse order, so that the most recent thing is always at the top
 				int length = update.events.size();
-				for (int i=0; i<length; i++) {
+				for (int i=length-1; i>=0; i--) {
 					View event = inflater.inflate(R.layout.floor_update_event, null);
 					((TextView) event.findViewById(R.id.text)).setText(update.events.get(i));
 					((ViewGroup) view).addView(event);
