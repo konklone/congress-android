@@ -34,6 +34,10 @@
 				
 				android:inputType="text"
 				android:hint="@string/menu_bills_search_hint"
+				
+				android:imeOptions="actionDone"
+				android:imeActionId="6"
+				android:imeActionLabel="@string/menu_bills_search_button"
 				/>
 				
 			<ImageButton android:id="@+id/bill_search"

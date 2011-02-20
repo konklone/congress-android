@@ -8,9 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -110,12 +112,34 @@ public class MenuBills extends ListActivity {
 		searchField = (EditText) findViewById(R.id.bill_query);
 		findViewById(R.id.bill_search).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				String query = searchField.getText().toString().trim();
-				
-				if (!query.equals(""))
-					searchFor(query);
+				search();
 			}
 		});
+		
+		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_DONE)
+					search();
+				return false;
+			}
+		});
+		
+		searchField.setOnKeyListener(new View.OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if (keyCode == KeyEvent.KEYCODE_ENTER) {
+					search();
+					return true;
+				}
+				return false;
+			}
+		});
+	}
+	
+	private void search() {
+		String query = searchField.getText().toString().trim();
+		
+		if (!query.equals(""))
+			searchFor(query);
 	}
 	
 	private View inflateItem(LayoutInflater inflater, int icon, int text, Object tag) {
