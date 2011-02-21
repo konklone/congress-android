@@ -14,6 +14,7 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -303,6 +304,13 @@ public class Utils {
 
 	public static void setTitleSize(Activity activity, float size) {
 		((TextView) activity.findViewById(R.id.title_text)).setTextSize(size);
+	}
+	
+	public static void setActionButton(Activity activity, int id, int icon, View.OnClickListener listener) {
+		ViewGroup button = (ViewGroup) activity.findViewById(id);
+		((ImageView) button.findViewById(R.id.icon)).setImageResource(icon);
+		button.findViewById(R.id.button).setOnClickListener(listener);
+		button.setVisibility(View.VISIBLE);
 	}
 
 	public static String capitalize(String text) {

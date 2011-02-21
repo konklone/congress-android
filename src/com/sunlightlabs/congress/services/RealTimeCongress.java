@@ -100,11 +100,10 @@ public class RealTimeCongress {
 	        if (statusCode == HttpStatus.SC_OK) {
 	        	String body = EntityUtils.toString(response.getEntity());
 	        	return body;
-	        } else if (statusCode == HttpStatus.SC_NOT_FOUND){
+	        } else if (statusCode == HttpStatus.SC_NOT_FOUND)
 	        	throw new CongressException.NotFound("404 Not Found from " + url);
-	        } else {
+	        else
 	        	throw new CongressException("Bad status code " + statusCode + " on fetching JSON from " + url);
-	        }
         } catch (ClientProtocolException e) {
 	    	throw new CongressException(e, "Problem fetching JSON from " + url);
 	    } catch (IOException e) {

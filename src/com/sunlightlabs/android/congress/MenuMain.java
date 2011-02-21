@@ -84,7 +84,9 @@ public class MenuMain extends Activity {
 		Analytics.stop(tracker);
 	}
 
-	public void setupControls() {		
+	public void setupControls() {
+		Utils.setTitleSize(this, 24);
+		
 		GridView grid = (GridView) findViewById(R.id.grid);
 		grid.setAdapter(new MenuAdapter(this));
 		grid.setOnItemClickListener(new OnItemClickListener() {
@@ -119,8 +121,11 @@ public class MenuMain extends Activity {
 			public void onClick(View v) { doFeedback(); }
 		});
 		
-		findViewById(R.id.notifications).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) { goNotifications(); }
+		
+		Utils.setActionButton(this, R.id.action_1, R.drawable.notifications, new View.OnClickListener() {
+			public void onClick(View v) { 
+				goNotifications(); 
+			}
 		});
 	}
 	
