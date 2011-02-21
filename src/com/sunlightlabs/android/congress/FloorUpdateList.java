@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.notifications.Footer;
-import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -55,6 +54,7 @@ public class FloorUpdateList extends ListActivity {
 			updates = holder.updates;
 			loadUpdatesTask = holder.loadUpdatesTask;
 			tracked = holder.tracked;
+			footer = holder.footer;
 		}
 		
 		tracker = Analytics.start(this);
@@ -97,9 +97,7 @@ public class FloorUpdateList extends ListActivity {
 	private void setupControls() {
 		((Button) findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				updates = null;
-				Utils.showLoading(FloorUpdateList.this);
-				loadUpdates();
+				refresh();
 			}
 		});
 
@@ -109,6 +107,12 @@ public class FloorUpdateList extends ListActivity {
 	
 	private void setupSubscription() {
 		footer.init(new Subscription(chamber, chamber, "FloorUpdatesSubscriber", chamber), updates);
+	}
+	
+	private void refresh() {
+		updates = null;
+		Utils.showLoading(this);
+		loadUpdates();
 	}
 	
 	@Override
