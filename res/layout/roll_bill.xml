@@ -35,12 +35,12 @@
 			android:layout_marginTop="5dp"
 			>
 			
-			<TextView 
+			<TextView android:id="@+id/related_message"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				
 				android:textSize="12sp"
-				android:text="@string/related_to_bill"
+				android:text="@string/vote_related_to_bill"
 				/>
 			
 			<TextView android:id="@+id/code"

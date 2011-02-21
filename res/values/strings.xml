@@ -133,7 +133,9 @@
     <string name="bill_vote_not_roll">No roll call was taken for this vote.</string>
     
     <string name="vote_loading">Loading vote details...</string>
-    <string name="related_to_bill">Related to bill</string>
+    <string name="vote_related_to_bill">Related to</string>
+    <string name="vote_related_to_bill_passage">On passage of</string>
+    <string name="vote_related_to_bill_cloture">On cloture for</string>
        
     <string name="location_update">Tap to try again to find your location.</string>
     <string name="location_update_fail">Couldn\'t update your location. Please try again later.</string>
