@@ -185,6 +185,10 @@ public class Database {
 	public Cursor getSubscriptions() {
 		return database.rawQuery("SELECT DISTINCT id, name, data, notification_class FROM subscriptions", null);
 	}
+	
+	public Cursor allSubscriptions() {
+		return database.rawQuery("SELECT * from subscriptions WHERE seen_id IS NULL", null);
+	}
 
 	public Cursor getSubscription(String id, String notificationClass) {
 		StringBuilder query = new StringBuilder("id=? AND notification_class=?");
@@ -212,7 +216,7 @@ public class Database {
 		return hasItem;
 	}
 
-	public long addSubscription(Subscription subscription, List<String> latestIds) {
+	public long addSubscription(Subscription subscription) {
 		ContentValues cv = new ContentValues(SUBSCRIPTION_COLUMNS.length);
 		cv.put("id", subscription.id);
 		cv.put("name", subscription.name);
@@ -220,8 +224,15 @@ public class Database {
 		cv.put("data", subscription.data);
 		
 		// insert placeholder item with null seen_id, so that a subscription is registered even for empty lists
-		if (database.insert("subscriptions", null, cv) < 0)
-			return -1;
+		return database.insert("subscriptions", null, cv);
+	}
+	
+	public long addSeenIds(Subscription subscription, List<String> latestIds) {
+		ContentValues cv = new ContentValues(SUBSCRIPTION_COLUMNS.length);
+		cv.put("id", subscription.id);
+		cv.put("name", subscription.name);
+		cv.put("notification_class", subscription.notificationClass);
+		cv.put("data", subscription.data);
 		
 		int rows = 0;
 		boolean failed = false;
@@ -243,7 +254,7 @@ public class Database {
 				new String[] { id , notificationClass });
 	}
 	
-	public Subscription loadSubscription(Cursor c) {
+	public static Subscription loadSubscription(Cursor c) {
 		String id = c.getString(c.getColumnIndex("id"));
 		String name = c.getString(c.getColumnIndex("name"));
 		String data = c.getString(c.getColumnIndex("data"));

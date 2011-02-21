@@ -85,7 +85,7 @@ public class HearingList extends ListActivity {
 			}
 		});
 
-		Utils.setTitle(this, R.string.hearings_title, R.drawable.people);
+		Utils.setTitle(this, R.string.hearings_title, R.drawable.hearings);
 		Utils.setLoading(this, R.string.hearings_loading);
 	}
 	

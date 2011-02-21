@@ -48,4 +48,14 @@ public class NewsBillSubscriber extends Subscriber {
 		return Utils.billLoadIntent(subscription.id, 
 				Utils.billTabsIntent().putExtra("tab", "news"));
 	}
+	
+	@Override
+	public String subscriptionName(Subscription subscription) {
+		return "News: " + subscription.name;
+	}
+	
+	@Override
+	public int subscriptionIcon(Subscription subscription) {
+		return R.drawable.bill;
+	}
 }

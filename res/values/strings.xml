@@ -160,6 +160,8 @@
     <string name="menu_donate">Donate</string>
     
     <string name="notifications">Notifications</string>
+    <string name="notifications_empty">You haven\'t subscribed for any notifications yet.</string>
+    <string name="notification_not_found">Problem loading subscription.</string>
     
     <string name="footer_on">You will be notified of updates.</string>
     <string name="footer_off">Tap to be notified of updates.</string>

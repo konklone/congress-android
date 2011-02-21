@@ -93,10 +93,7 @@
         <activity android:name=".CommitteeTabs"
         	android:theme="@android:style/Theme.NoTitleBar"
         	/>
-        
-        <activity android:name=".CommitteeList" 
-        	android:theme="@android:style/Theme.NoTitleBar"
-        	/>
+        <activity android:name=".CommitteeList" />
         
         <activity android:name=".FloorUpdateList" 
         	android:theme="@android:style/Theme.NoTitleBar"
@@ -106,9 +103,11 @@
         	android:theme="@android:style/Theme.NoTitleBar"
         	/>
         	
-        <activity android:name=".NotificationSettings" 
+        <activity android:name=".NotificationTabs" 
         	android:theme="@android:style/Theme.NoTitleBar" 
         	/>
+        <activity android:name=".NotificationSettings" />
+        <activity android:name=".NotificationSubscriptions" />
         	
         <activity android:name=".Settings" 
         	android:theme="@android:style/Theme.NoTitleBar" 

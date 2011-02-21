@@ -101,7 +101,7 @@ public class FloorUpdateList extends ListActivity {
 			}
 		});
 
-		Utils.setTitle(this, R.string.menu_main_floor_updates, R.drawable.people);
+		Utils.setTitle(this, R.string.menu_main_floor_updates, R.drawable.floor);
 		Utils.setLoading(this, R.string.floor_updates_loading);
 	}
 	

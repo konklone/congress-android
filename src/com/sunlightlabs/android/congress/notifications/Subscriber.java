@@ -31,6 +31,10 @@ public abstract class Subscriber {
 	public abstract String notificationMessage(Subscription subscription, int results);
 	public abstract Intent notificationIntent(Subscription subscription);
 	
+	// for listing in the subscription manager
+	
+	public abstract String subscriptionName(Subscription subscription);
+	public abstract int subscriptionIcon(Subscription subscription);
 	
 	// utility methods
 	

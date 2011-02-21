@@ -8,6 +8,7 @@ import winterwell.jtwitter.Twitter.Status;
 import android.content.Intent;
 import android.util.Log;
 
+import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -46,5 +47,15 @@ public class TwitterSubscriber extends Subscriber {
 	public Intent notificationIntent(Subscription subscription) {
 		return Utils.legislatorLoadIntent(subscription.id, Utils
 				.legislatorTabsIntent().putExtra("tab", "tweets"));
+	}
+	
+	@Override
+	public String subscriptionName(Subscription subscription) {
+		return "Tweets: " + subscription.name;
+	}
+	
+	@Override
+	public int subscriptionIcon(Subscription subscription) {
+		return R.drawable.person;
 	}
 }

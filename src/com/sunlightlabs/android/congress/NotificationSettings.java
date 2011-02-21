@@ -44,9 +44,7 @@ public class NotificationSettings extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		setContentView(R.layout.list_titled);
-		Utils.setTitle(this, R.string.menu_notification_settings, R.drawable.notifications);
+		setContentView(R.layout.list_bare);
 		
 		addPreferencesFromResource(R.xml.notification_settings);
 		PreferenceManager.setDefaultValues(this, R.xml.notification_settings, false);

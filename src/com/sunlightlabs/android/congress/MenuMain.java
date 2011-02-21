@@ -271,7 +271,7 @@ public class MenuMain extends Activity {
 	}
 	
 	public void goNotifications() {
-		startActivity(new Intent(this, NotificationSettings.class));
+		startActivity(new Intent(this, NotificationTabs.class));
 	}
 
 	@Override

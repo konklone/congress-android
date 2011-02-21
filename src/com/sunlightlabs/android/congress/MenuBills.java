@@ -75,7 +75,7 @@ public class MenuBills extends ListActivity {
 		super.onResume();
 		if (cursor != null)
 			cursor.requery();
-		adapter.notifyDataSetChanged();
+		setupControls();
 	}
 	
 	@Override

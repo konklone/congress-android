@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.FloorUpdateList;
+import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -54,5 +55,15 @@ public class FloorUpdatesSubscriber extends Subscriber {
 		return new Intent()
 			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.FloorUpdateList")
 			.putExtra("chamber", subscription.data);
+	}
+	
+	@Override
+	public String subscriptionName(Subscription subscription) {
+		return context.getResources().getString(R.string.menu_main_floor_updates);
+	}
+	
+	@Override
+	public int subscriptionIcon(Subscription subscription) {
+		return R.drawable.floor;
 	}
 }

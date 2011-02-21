@@ -5,6 +5,7 @@ import java.util.List;
 import android.content.Intent;
 import android.util.Log;
 
+import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.RollList;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
@@ -45,5 +46,15 @@ public class RollsNominationsSubscriber extends Subscriber {
 		return new Intent()
 			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.RollList")
 			.putExtra("type", RollList.ROLLS_NOMINATIONS);
+	}
+	
+	@Override
+	public String subscriptionName(Subscription subscription) {
+		return context.getResources().getString(R.string.menu_votes_nominations);
+	}
+	
+	@Override
+	public int subscriptionIcon(Subscription subscription) {
+		return R.drawable.votes;
 	}
 }

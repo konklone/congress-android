@@ -94,7 +94,7 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 		super.onResume();
 		if (cursor != null)
 			cursor.requery();
-		adapter.notifyDataSetChanged();
+		setupControls();
 	}
 	
 	private void setupControls() {

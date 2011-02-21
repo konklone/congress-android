@@ -217,7 +217,10 @@ public class Footer {
 		public Integer doInBackground(Void... nothing) {
 			Database database = new Database(footer.context);
 			database.open();
-			int results = (int) database.addSubscription(subscription, latestIds);
+			
+			database.addSubscription(subscription);
+			int results = (int) database.addSeenIds(subscription, latestIds);
+			
 			database.close();
 			return results;
 		}

@@ -48,4 +48,14 @@ public class NewsLegislatorSubscriber extends Subscriber {
 		return Utils.legislatorLoadIntent(subscription.id, 
 				Utils.legislatorTabsIntent().putExtra("tab", "news"));
 	}
+	
+	@Override
+	public String subscriptionName(Subscription subscription) {
+		return "News: " + subscription.name;
+	}
+	
+	@Override
+	public int subscriptionIcon(Subscription subscription) {
+		return R.drawable.person;
+	}
 }

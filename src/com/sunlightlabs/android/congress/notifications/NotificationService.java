@@ -63,7 +63,7 @@ public class NotificationService extends WakefulIntentService {
 		}
 		
 		do {
-			Subscription subscription = database.loadSubscription(cursor);
+			Subscription subscription = Database.loadSubscription(cursor);
 			
 			// load the appropriate finder for this subscription 
 			Subscriber subscriber;
@@ -99,7 +99,7 @@ public class NotificationService extends WakefulIntentService {
 					unseenIds.add(itemId);
 			}
 			
-			database.addSubscription(subscription, unseenIds);
+			database.addSeenIds(subscription, unseenIds);
 			
 			int results = unseenIds.size();
 			
