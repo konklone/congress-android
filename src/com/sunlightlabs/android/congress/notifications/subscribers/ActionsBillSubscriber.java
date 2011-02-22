@@ -49,7 +49,7 @@ public class ActionsBillSubscriber extends Subscriber {
 	
 	@Override
 	public String subscriptionName(Subscription subscription) {
-		return "History: " + subscription.name;
+		return "Activity: " + subscription.name;
 	}
 	
 	@Override

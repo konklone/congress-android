@@ -107,14 +107,14 @@
     <string name="menu_bills_search_button">Search</string>
     <string name="menu_bills_search_hint">enter keywords or bill code</string>
     <string name="menu_bills_favorite">Favorites</string>
-    <string name="menu_bills_law">New Laws</string>
-    <string name="menu_bills_recent">Just Introduced</string>
+    <string name="menu_bills_law">Newest Laws</string>
+    <string name="menu_bills_recent">Newest Bills</string>
     <string name="menu_legislators_favorite">Favorites</string>
     <string name="menu_legislators_location">My Location</string>
     <string name="menu_legislators_state">State</string>
     <string name="menu_legislators_lastname">Last Name</string>
     <string name="menu_legislators_zip">Zip Code</string>
-    <string name="menu_votes_latest">Most Recent</string>
+    <string name="menu_votes_latest">Votes</string>
     <string name="menu_votes_nominations">Nominations</string>
     <string name="menu_location_no_location">Cannot update location</string>
     <string name="menu_location_updating">Updating location...</string>
@@ -126,7 +126,7 @@
     <string name="bills_retry_note">Couldn\'t load bills.</string>
     <string name="bills_retry_button">Retry</string>
 
-    <string name="bill_actions_empty">This bill has no action history at this time.</string>
+    <string name="bill_actions_empty">This bill has no activity at this time.</string>
     <string name="bill_votes_empty">No votes have taken place on this bill yet.</string>
     
     <string name="bill_vote_roll">Tap to see how each legislator voted.</string>
@@ -190,7 +190,7 @@
     <string name="tab_videos">Videos</string>
     <string name="tab_news">News</string>
     <string name="tab_details">Details</string>
-    <string name="tab_history">History</string>
+    <string name="tab_history">Activity</string>
     <string name="tab_votes">Votes</string>
 
 </resources>
