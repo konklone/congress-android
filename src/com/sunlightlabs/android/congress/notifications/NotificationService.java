@@ -15,10 +15,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
-import com.sunlightlabs.android.congress.Database;
 import com.sunlightlabs.android.congress.NotificationSettings;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Analytics;
+import com.sunlightlabs.android.congress.utils.Database;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class NotificationService extends WakefulIntentService {

@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.congress;
+package com.sunlightlabs.android.congress.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,17 +14,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.notifications.Subscription;
-import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.RealTimeCongress;
 
 public class Database {
-	private static final int DATABASE_VERSION = 4; // updated last for version 2.9.8
+	private static final int DATABASE_VERSION = 5; // updated last for version 3.0
 
 	public boolean closed = true;
 
-	private static final String TAG = "CongressDatabase";
 	private static final String DATABASE_NAME = "congress.db";
 
 	private static final String[] LEGISLATOR_COLUMNS = new String[] { "id", "bioguide_id",
@@ -298,8 +296,7 @@ public class Database {
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			Log.w(TAG, "Upgrading " + DATABASE_NAME + " from version " + oldVersion + " to "
-					+ newVersion + ", wiping old data");
+			Log.i(Utils.TAG, "Upgrading " + DATABASE_NAME + " from version " + oldVersion + " to " + newVersion);
 
 			// Version 2 - Favorites (bills and legislators table), 
 			//   first release, in version 2.6
@@ -327,6 +324,47 @@ public class Database {
 				}
 			}
 			
+			if (oldVersion < 5) {
+				// Problem: notification checker was accidentally adding duplicate rows with null seen_id's on each run, 
+				// meaning that when loading a list of all subscriptions, there would be many many duplicate rows.
+				// This migration finds all distinct subscriptions, removes all rows where the seen_id is null, and then
+				// recreates one row with that information, essentially cleaning out duplicates.
+				
+				// get all unique subscriptions (with columns as they existed at this state)
+				Cursor cursor = db.rawQuery("SELECT DISTINCT id, name, data, notification_class FROM subscriptions", null);
+				if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+					Log.i(Utils.TAG, "Beginning migration, " + cursor.getCount() + " subscriptions to de-dupe");
+					int i = 0;
+					do {
+						// load subscription data
+						String id = cursor.getString(cursor.getColumnIndexOrThrow("id"));
+						String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+						String data = cursor.getString(cursor.getColumnIndexOrThrow("data"));
+						String notificationClass = cursor.getString(cursor.getColumnIndexOrThrow("notification_class"));
+						
+						// delete all rows for this subscription where seen_id is null
+						long rows = db.delete("subscriptions", "id=? AND notification_class=? AND seen_id IS NULL", 
+								new String[] { id , notificationClass });
+						Log.i(Utils.TAG, "Removed " + rows + " rows for subscription with {id: " + id + ", notificationClass: " + notificationClass + ", name: " + name + ", data: " + data + "}"); 
+						
+						// insert placeholder item with null seen_id, so that a subscription is registered even for empty lists
+						ContentValues cv = new ContentValues(SUBSCRIPTION_COLUMNS.length);
+						cv.put("id", id);
+						cv.put("name", name);
+						cv.put("notification_class", notificationClass);
+						cv.put("data", data);
+						long results = db.insert("subscriptions", null, cv);
+						Log.i(Utils.TAG, "Inserted row with ID " + results + " in their place");
+						
+						i += 1;
+					} while (cursor.moveToNext());
+					
+					cursor.close();
+					
+					Log.i(Utils.TAG, "Migration to level 5 complete, de-duped " + i + " subscriptions");
+				}
+				
+			}
 			
 		}
 	}
