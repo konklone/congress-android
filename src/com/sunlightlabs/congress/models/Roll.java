@@ -34,6 +34,9 @@ public class Roll implements Serializable {
 	// voter_ids
 	public Map<String,Vote> voter_ids;
 	
+	// amendment purpose
+	public String amendmentPurpose;
+	
 	/**
 	 * Represents the vote of a legislator in a roll call. In almost all cases, votes will be 
 	 * "Yea", "Nay", "Present", or "Not Voting". There are constants for these as well, since 

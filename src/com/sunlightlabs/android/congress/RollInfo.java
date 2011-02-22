@@ -158,7 +158,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			if (roll != null)
 				displayRoll();
 			else
-				loadRollTask = (LoadRollTask) new LoadRollTask(this, id, "basic").execute("basic");
+				loadRollTask = (LoadRollTask) new LoadRollTask(this, id, "basic").execute("basic", "amendment.purpose");
 		}
 	}
 	
@@ -214,6 +214,13 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		adapter.addView(headerTop);
 		
+		if (roll.amendmentPurpose != null && !roll.amendmentPurpose.equals("")) {
+			View amendment = inflater.inflate(R.layout.roll_amendment_purpose, null);
+			//((TextView) amendment.findViewById(R.id.header_text)).setText(R.string.vote_amendment_purpose);
+			((TextView) amendment.findViewById(R.id.amendment_purpose)).setText(roll.amendmentPurpose);
+			amendment.setEnabled(false);
+			adapter.addView(amendment);
+		}
 		
 		if (roll.bill_id != null && !roll.bill_id.equals("")) {
 			adapter.addView(inflater.inflate(R.layout.line, null));
@@ -233,6 +240,8 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			billArray.add(bill);
 			adapter.addAdapter(new ViewArrayAdapter(this, billArray));
 		}
+		
+		
 		
 		
 		header = inflater.inflate(R.layout.roll_basic_2, null);

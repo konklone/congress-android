@@ -34,7 +34,7 @@ public class RollService {
 		params.put("how", "roll");
 		params.put("voter_ids." + bioguideId + "__exists", "true");
 		
-		String[] sections = new String[] {"basic", "voter_ids." + bioguideId};
+		String[] sections = new String[] {"basic", "voter_ids." + bioguideId, "amendment.purpose"};
 		
 		return rollsFor(RealTimeCongress.url("votes", sections, params, page, per_page)); 
 	}
@@ -44,7 +44,7 @@ public class RollService {
 		params.put("order", "voted_at");
 		params.put("how", "roll");
 		
-		String[] sections = new String[] {"basic"};
+		String[] sections = new String[] {"basic", "amendment.purpose"};
 		
 		return rollsFor(RealTimeCongress.url("votes", sections, params, page, per_page));
 	}
@@ -141,6 +141,16 @@ public class RollService {
 				String vote_name = voterIdsObject.getString(voter_id);
 				
 				roll.voter_ids.put(voter_id, voteFromRTC(voter_id, vote_name));
+			}
+		}
+		
+		// placeholder until we load in all of amendments
+		if (!json.isNull("amendment_id") && !json.isNull("amendment")) {
+			String amendment_id = json.getString("amendment_id");
+			if (!amendment_id.equals("")) {
+				JSONObject amendment = json.getJSONObject("amendment");
+				if (!amendment.isNull("purpose"))
+					roll.amendmentPurpose = amendment.getString("purpose"); 
 			}
 		}
 

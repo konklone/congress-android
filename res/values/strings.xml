@@ -136,6 +136,7 @@
     <string name="vote_related_to_bill">Related to</string>
     <string name="vote_related_to_bill_passage">On passage of</string>
     <string name="vote_related_to_bill_cloture">On cloture for</string>
+    <string name="vote_amendment_purpose">Amendment Purpose</string>
        
     <string name="location_update">Tap to try again to find your location.</string>
     <string name="location_update_fail">Couldn\'t update your location. Please try again later.</string>
