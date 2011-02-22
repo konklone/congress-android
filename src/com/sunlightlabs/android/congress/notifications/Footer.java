@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.NotificationSettings;
+import com.sunlightlabs.android.congress.NotificationTabs;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Database;
@@ -139,7 +140,7 @@ public class Footer {
 		}
 		
 		else if (state == DISABLED)
-			context.startActivity(new Intent(context, NotificationSettings.class));
+			context.startActivity(new Intent(context, NotificationTabs.class));
 	}
 
 	private void setOn() { 

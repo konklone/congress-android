@@ -94,8 +94,8 @@ public class MenuBills extends ListActivity {
 		adapter = new MergeAdapter();
 		
 		List<View> billViews = new ArrayList<View>();
+		billViews.add(inflateItem(inflater, R.drawable.bill_recent, R.string.menu_bills_recent, BILLS_RECENT));
 		billViews.add(inflateItem(inflater, R.drawable.bill_law, R.string.menu_bills_law, BILLS_LAW));
-		billViews.add(inflateItem(inflater, R.drawable.bill_recent, R.string.menu_bills_recent, BILLS_RECENT)); 
 		adapter.addAdapter(new ViewArrayAdapter(this, billViews));
 		
 		adapter.addView(Utils.inflateHeader(inflater, R.string.menu_legislators_favorite));
