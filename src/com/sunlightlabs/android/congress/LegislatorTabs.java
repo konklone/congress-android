@@ -46,9 +46,6 @@ public class LegislatorTabs extends TabActivity {
 
         setupControls();
         setupTabs();
-        
-        if (firstTimeLoadingStar())
-        	Utils.alert(this, R.string.first_time_loading_star);
 	}
 	
 	@Override
@@ -91,26 +88,15 @@ public class LegislatorTabs extends TabActivity {
 			if (database.removeLegislator(id) != 0) {
 				toggleFavoriteStar(false);
 				Analytics.removeFavoriteLegislator(this, tracker, id);
-			}
+			} else
+				Utils.alert(this, "Problem unstarring legislator.");
 		} else {
 			if (database.addLegislator(legislator) != -1) {
 				toggleFavoriteStar(true);
 				Analytics.addFavoriteLegislator(this, tracker, id);
-				
-				if (!Utils.hasShownFavoritesMessage(this)) {
-					Utils.alert(this, R.string.legislator_favorites_message);
-					Utils.markShownFavoritesMessage(this);
-				}
-			}
+			} else
+				Utils.alert(this, "Problem starring legislator.");
 		}
-	}
-	
-	public boolean firstTimeLoadingStar() {
-		if (Utils.getBooleanPreference(this, "first_time_loading_star", true)) {
-			Utils.setBooleanPreference(this, "first_time_loading_star", false);
-			return true;
-		}
-		return false;
 	}
 
 	public void setupTabs() {

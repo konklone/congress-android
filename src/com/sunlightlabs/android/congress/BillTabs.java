@@ -43,9 +43,6 @@ public class BillTabs extends TabActivity {
 		
 		setupControls();
 		setupTabs();
-		
-		if (firstTimeLoadingStar())
-        	Utils.alert(this, R.string.first_time_loading_star);
 	}
 	
 	@Override
@@ -113,22 +110,9 @@ public class BillTabs extends TabActivity {
 			if (database.addBill(bill) != -1) {
 				toggleFavoriteStar(true);
 				Analytics.addFavoriteBill(this, tracker, id);
-				
-				if (!Utils.hasShownFavoritesMessage(this)) {
-					Utils.alert(this, R.string.bill_favorites_message);
-					Utils.markShownFavoritesMessage(this);
-				}
 			} else
 				Utils.alert(this, "Problem starring bill.");
 		}
-	}
-	
-	public boolean firstTimeLoadingStar() {
-		if (Utils.getBooleanPreference(this, "first_time_loading_star", true)) {
-			Utils.setBooleanPreference(this, "first_time_loading_star", false);
-			return true;
-		}
-		return false;
 	}
 
 	public void setupTabs() {

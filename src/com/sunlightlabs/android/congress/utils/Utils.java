@@ -323,14 +323,6 @@ public class Utils {
 		return text.substring(0, 1).toUpperCase() + text.substring(1);
 	}
 	
-	public static boolean hasShownFavoritesMessage(Context context) {
-		return getBooleanPreference(context, "favorites_toast", false);
-	}
-	
-	public static void markShownFavoritesMessage(Context context) {
-		setBooleanPreference(context, "favorites_toast", true);
-	}
-	
 	public static String getStringPreference(Context context, String key) {
 		return PreferenceManager.getDefaultSharedPreferences(context).getString(key, null);
 	}
