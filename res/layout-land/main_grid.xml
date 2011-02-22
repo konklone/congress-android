@@ -3,9 +3,9 @@
     android:layout_width="fill_parent" 
     android:layout_height="fill_parent"
     
-    android:layout_marginTop="15dp"
+    android:layout_marginTop="0dp"
     
-    android:numColumns="4"
+    android:numColumns="3"
     android:verticalSpacing="10dp"
     
     android:layout_weight="1"
