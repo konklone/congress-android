@@ -56,6 +56,6 @@ public class BillsRecentSubscriber extends Subscriber {
 	
 	@Override
 	public int subscriptionIcon(Subscription subscription) {
-		return R.drawable.bill_recent;
+		return R.drawable.bill;
 	}
 }

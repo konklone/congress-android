@@ -126,7 +126,7 @@ public class BillList extends ListActivity {
 		Utils.setLoading(this, R.string.bills_loading);
 		switch (type) {
 		case BILLS_RECENT:
-			Utils.setTitle(this, R.string.menu_bills_recent, R.drawable.bill_recent);
+			Utils.setTitle(this, R.string.menu_bills_recent, R.drawable.bill);
 			break;
 		case BILLS_LAW:
 			Utils.setTitle(this, R.string.menu_bills_law, R.drawable.bill_law);
