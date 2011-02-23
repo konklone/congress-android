@@ -95,7 +95,7 @@
 		  			
 		  			android:layout_gravity="center"
 		  			
-		  			android:src="@drawable/web_small"
+		  			android:src="@drawable/web"
 		  			/>
 	  			
   			</FrameLayout>
@@ -119,7 +119,7 @@
 		  			
 		  			android:layout_gravity="center"
 		  			
-		  			android:src="@drawable/globe_small"
+		  			android:src="@drawable/globe"
 		  			/>
 	  			
   			</FrameLayout>
