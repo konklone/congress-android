@@ -42,7 +42,7 @@ public class CommitteeList extends ListActivity {
 		Bundle extras = getIntent().getExtras();
 		chamber = extras.getString("chamber");
 
-		CommitteeListHolder holder = (CommitteeListHolder) getLastNonConfigurationInstance();
+		Holder holder = (Holder) getLastNonConfigurationInstance();
 		if (holder != null) {
 			committees = holder.committees;
 			loadCommitteesTask = holder.loadCommitteesTask;
@@ -65,7 +65,7 @@ public class CommitteeList extends ListActivity {
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new CommitteeListHolder(committees, loadCommitteesTask, tracked);
+		return new Holder(committees, loadCommitteesTask, tracked);
 	}
 	
 	@Override
@@ -104,6 +104,7 @@ public class CommitteeList extends ListActivity {
 	}
 	
 	public void onLoadCommittees(List<Committee> committees) {
+		loadCommitteesTask = null;
 		Collections.sort(committees);
 		this.committees = committees;
 		displayCommittees();
@@ -196,12 +197,12 @@ public class CommitteeList extends ListActivity {
 
 	}
 	
-	private class CommitteeListHolder {
+	private class Holder {
 		List<Committee> committees;
 		LoadCommitteesTask loadCommitteesTask;
 		boolean tracked;
 		
-		CommitteeListHolder(List<Committee> committees, LoadCommitteesTask loadCommitteesTask, boolean tracked) {
+		Holder(List<Committee> committees, LoadCommitteesTask loadCommitteesTask, boolean tracked) {
 			this.committees = committees;
 			this.loadCommitteesTask = loadCommitteesTask;
 			this.tracked = tracked;
