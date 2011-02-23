@@ -343,11 +343,11 @@ public class MenuMain extends Activity {
 				text.setText(R.string.menu_main_committees);
 				view.setTag("committees");
 			} else if (position == FLOOR) {
-				icon.setImageResource(R.drawable.menu_selector_committees);
+				icon.setImageResource(R.drawable.menu_selector_floor);
 				text.setText(R.string.menu_main_floor_updates);
 				view.setTag("floor_updates");
 			} else if (position == HEARINGS) {
-				icon.setImageResource(R.drawable.menu_selector_committees);
+				icon.setImageResource(R.drawable.menu_selector_hearings);
 				text.setText(R.string.menu_main_hearings);
 				view.setTag("hearings");
 			}
