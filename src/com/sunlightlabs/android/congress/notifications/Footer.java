@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -219,25 +220,32 @@ public class Footer {
 			Database database = new Database(footer.context);
 			database.open();
 			
-			database.addSubscription(subscription);
-			int results = (int) database.addSeenIds(subscription, latestIds);
-			
-			database.close();
-			return results;
+			try {
+				database.addSubscription(subscription);
+				int results = (int) database.addSeenIds(subscription, latestIds);
+				
+				database.close();
+				return results;
+			} 
+			// most likely a locked database
+			catch (SQLiteException e) {
+				database.close();
+				return -1;
+			}
 		}
 
 		@Override
 		public void onPostExecute(Integer rows) {
-			if (rows != -1) {
+			if (rows == -1) {
+				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " +
+				"Error saving notifications, -1 returned from one or more insert calls");
+				Utils.alert(footer.context, R.string.footer_error);
+				setOff();
+			} else {
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
 					"Added notification in the db for subscription with " + rows + " new inserted IDs");
 				
 				setOn();
-			} else {
-				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " +
-					"Error saving notifications, -1 returned from one or more insert calls");
-				Utils.alert(footer.context, R.string.footer_error);
-				setOff();
 			}
 		}
 	}
@@ -256,17 +264,31 @@ public class Footer {
 		public Integer doInBackground(Void... nothing) {
 			Database database = new Database(footer.context);
 			database.open();
-			int results = (int) database.removeSubscription(subscription.id, subscription.notificationClass);
-			database.close();
-			return results;
+			try {
+				int results = (int) database.removeSubscription(subscription.id, subscription.notificationClass);
+				database.close();
+				return results;
+			}
+			// most likely a locked database
+			catch (SQLiteException e) {
+				database.close();
+				return -1;
+			}
 		}
 
 		@Override
 		public void onPostExecute(Integer rows) {
-			Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
-					"Removed notification from the db, " + rows + " deleted");
-			
-			setOff();
+			if (rows == -1) {
+				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " +
+				"Error saving notifications, -1 returned from a delete call");
+				Utils.alert(footer.context, R.string.footer_error);
+				setOn();
+			} else {
+				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
+						"Removed notification from the db, " + rows + " deleted");
+				
+				setOff();
+			}
 		}
 	}
 }
