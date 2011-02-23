@@ -107,8 +107,8 @@
     <string name="menu_bills_search_button">Search</string>
     <string name="menu_bills_search_hint">enter keywords or bill code</string>
     <string name="menu_bills_favorite">Favorites</string>
-    <string name="menu_bills_law">Newest Laws</string>
-    <string name="menu_bills_recent">Newest Bills</string>
+    <string name="menu_bills_law">New Laws</string>
+    <string name="menu_bills_recent">New Bills</string>
     <string name="menu_legislators_favorite">Favorites</string>
     <string name="menu_legislators_location">My Location</string>
     <string name="menu_legislators_state">State</string>
