@@ -48,7 +48,7 @@ public class NotificationSettings extends PreferenceActivity {
 		
 		addPreferencesFromResource(R.xml.notification_settings);
 		PreferenceManager.setDefaultValues(this, R.xml.notification_settings, false);
-
+		
 		if (firstTime()) {
 			tripFirstTimeFlag();
 			showDialog(EXPLANATION);

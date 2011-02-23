@@ -59,7 +59,7 @@ public class MenuMain extends Activity {
 		}
 		
 		setupControls();
-
+		
 		if (firstTime()) {
 			newVersion(); // don't need to see the changelog on first install
 			showDialog(FIRST);
