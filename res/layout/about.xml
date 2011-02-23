@@ -14,24 +14,24 @@
 		android:orientation="vertical"
 		>
 		
+		<TextView android:id="@+id/about_2"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			
+			android:textColorLink="@color/link"
+			android:textSize="16sp"
+			android:textColor="@android:color/white"
+			/>
 		
 		<TextView android:id="@+id/about_1"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			
-			android:textSize="16sp"
-			android:textColorLink="#4c98d7"
-			android:textColor="@android:color/white"
-			/>
-		
-		<TextView android:id="@+id/about_2"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
 			android:layout_marginTop="10dp"
 			
+			android:textSize="16sp"
 			android:textColorLink="@color/link"
-			android:textSize="14sp"
-			android:textColor="#cccccc"
+			android:textColor="@android:color/white"
 			/>
 		
 	</LinearLayout>

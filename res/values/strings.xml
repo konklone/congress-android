@@ -76,18 +76,18 @@
     <string name="explanation_title">Notifications</string>
     
     <string name="explanation_1">You can be notified of new votes, bills, and all sorts of things.</string>
-    <string name="explanation_2">First, enable this feature, then find what you\'re interested in and tap the blue bar at the bottom.</string>
+    <string name="explanation_2">First, enable this feature, then find what you\'re interested in and tap the bar at the bottom.</string>
     <string name="explanation_3">Please note:</string>
     <string name="explanation_3a">New bills can be delayed up to a day, votes up to an hour.</string>
     <string name="explanation_3b">Other updates (tweets, videos, news) are not delayed.</string>
     <string name="explanation_3c">Congress operates in bursts, so days may go by without any activity.</string>
     
-    <string name="first_tip_1_header">Call your representatives.</string>
-    <string name="first_tip_1_body">Tap \"My Location\" to find your district\'s representatives.</string>
+    <string name="first_tip_1_header">Follow your representatives.</string>
+    <string name="first_tip_1_body">Use your location to find, track, and call your representatives.</string>
     <string name="first_tip_2_header">See the latest bills and votes.</string>
-    <string name="first_tip_2_body">Read up on what your legislators are introducing and voting on.</string>
+    <string name="first_tip_2_body">Read up on what your reps are introducing and voting on.</string>
     <string name="first_tip_3_header">Keep up to date.</string>
-    <string name="first_tip_3_body">Get notifications around the clock about new votes, bills, and more.</string>
+    <string name="first_tip_3_body">Get notified in real time of new votes, floor activity, and more.</string>
     
     <string name="donation_title">Making a Donation</string>
     <string name="donation_1">If you\'ve found this app useful, consider donating $1 to support its developer, the Sunlight Foundation, a non-profit non-partisan organization dedicated to increasing government transparency.</string>

@@ -178,18 +178,25 @@ public class MenuMain extends Activity {
 			View aboutView = inflater.inflate(R.layout.about, null);
 
 			Spanned about1 = Html.fromHtml(
-					"Bill information provided by <a href=\"http://govtrack.us\">GovTrack</a>, through the Library of Congress.  Bill summaries written by the Congressional Research Service.<br/><br/>" +
-					"Legislator search and information powered by the <a href=\"http://services.sunlightlabs.com/api/\">Sunlight Labs Congress API</a>.<br/><br/>" + 
-					"News mentions provided by the <a href=\"http://code.google.com/apis/newssearch/v1/\">Google News Search API</a>, and Twitter search powered by <a href=\"http://www.winterwell.com/software/jtwitter.php\">JTwitter</a>."
+					"Bill information provided by <a href=\"http://govtrack.us\">GovTrack</a>, " +
+					"through the Library of Congress.  Bill summaries written by the Congressional Research Service.<br/><br/>" +
+					
+					"Votes, committee hearings, and floor updates come from the official " +
+					"<a href=\"http://senate.gov/\">Senate</a> and <a href=\"http://clerk.house.gov/\">House</a> websites.<br/><br/>" +
+					
+					"Legislator and committee information powered by the " + 
+					"<a href=\"http://services.sunlightlabs.com/api/\">Sunlight Labs Congress API</a>.<br/><br/>" + 
+					
+					"News mentions provided by the <a href=\"http://code.google.com/apis/newssearch/v1/\">Google News Search API</a>," +
+					" and Twitter search powered by <a href=\"http://www.winterwell.com/software/jtwitter.php\">JTwitter</a>."
 			);
 			TextView aboutView1 = (TextView) aboutView.findViewById(R.id.about_1);
 			aboutView1.setText(about1);
 			aboutView1.setMovementMethod(LinkMovementMethod.getInstance());
 
 			Spanned about2 = Html.fromHtml(
-					"This app is made by <a href=\"http://sunlightlabs.com\">Sunlight Labs</a>, " + 
-					"a division of the <a href=\"http://sunlightfoundation.com\">Sunlight Foundation</a> " +
-					"that is dedicated to increasing government transparency through the power of technology."
+					"This app is made by the <a href=\"http://sunlightfoundation.com\">Sunlight Foundation</a>, " +
+					"a non-partisan non-profit dedicated to increasing government transparency through the power of technology."
 			);
 			TextView aboutView2 = (TextView) aboutView.findViewById(R.id.about_2);
 			aboutView2.setText(about2);
