@@ -100,7 +100,7 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 	
 	private void setupControls() {
 		Utils.setTitle(this, R.string.menu_main_legislators);
-		Utils.setTitleIcon(this, R.drawable.person);
+		Utils.setTitleIcon(this, R.drawable.people);
 		
 		LayoutInflater inflater = LayoutInflater.from(this);
 		adapter = new MergeAdapter();
