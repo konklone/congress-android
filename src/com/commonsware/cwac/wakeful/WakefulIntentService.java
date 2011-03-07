@@ -28,32 +28,43 @@ abstract public class WakefulIntentService extends IntentService {
 	private static WifiManager.WifiLock lockWifi = null;
 
 	public static void acquireStaticLock(Context context) {
-		getCpuLock(context).acquire();
+		// better check if the lock is aquired or not
+		if (!getCpuLock(context).isHeld()) {
+			getCpuLock(context).acquire();
+		}
+
 		WifiManager.WifiLock lock = getWifiLock(context);
 		try {
-			lock.acquire();
-		} 
+			if (!lock.isHeld()) {
+				lock.acquire();
+			}
+		}
 		// too many wifi locks, couldn't acquire one
-		catch(UnsupportedOperationException ex) {
+		catch (UnsupportedOperationException ex) {
 			// swallow it. oh well, no wifi lock this time.
 		}
 	}
 
-	synchronized protected static PowerManager.WakeLock getCpuLock(Context context) {
+	synchronized protected static PowerManager.WakeLock getCpuLock(
+			Context context) {
 		if (lockCpu == null) {
-			PowerManager mgr = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+			PowerManager mgr = (PowerManager) context
+					.getSystemService(Context.POWER_SERVICE);
 
 			// wake up the CPU
-			lockCpu = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, LOCK_NAME_STATIC);
+			lockCpu = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+					LOCK_NAME_STATIC);
 			lockCpu.setReferenceCounted(true);
 		}
 
 		return lockCpu;
 	}
 
-	synchronized protected static WifiManager.WifiLock getWifiLock(Context context) {
+	synchronized protected static WifiManager.WifiLock getWifiLock(
+			Context context) {
 		if (lockWifi == null) {
-			WifiManager mgr = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+			WifiManager mgr = (WifiManager) context
+					.getSystemService(Context.WIFI_SERVICE);
 
 			// wake up the WiFi
 			lockWifi = mgr.createWifiLock(LOCK_NAME_STATIC);
@@ -86,6 +97,19 @@ abstract public class WakefulIntentService extends IntentService {
 		}
 
 		super.onStart(intent, startId);
+	}
+
+	@Override
+	public void onDestroy() {
+		// must release locks when the service is destroyed, otherwise will
+		// drain up the battery
+		if (getCpuLock(this).isHeld()) {
+			getCpuLock(this).release();
+		}
+		if (getWifiLock(this).isHeld()) {
+			getWifiLock(this).release();
+		}
+		super.onDestroy();
 	}
 
 	@Override
