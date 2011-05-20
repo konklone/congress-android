@@ -2,7 +2,6 @@ package com.sunlightlabs.android.congress;
 
 import android.app.TabActivity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TabHost;
 
@@ -24,12 +23,11 @@ public class CommitteeTabs extends TabActivity {
 	}
 
 	private void setupTabs() {
-		Resources res = getResources();
 		TabHost tabHost = getTabHost();
 
-		Utils.addTab(this, tabHost, "committee_house", committeeIntent("house"), "House", res.getDrawable(R.drawable.committees));
-		Utils.addTab(this, tabHost, "committee_senate", committeeIntent("senate"), "Senate", res.getDrawable(R.drawable.committees));
-		Utils.addTab(this, tabHost, "committee_joint", committeeIntent("joint"), "Joint", res.getDrawable(R.drawable.committees));
+		Utils.addTab(this, tabHost, "committee_house", committeeIntent("house"), R.string.tab_house);
+		Utils.addTab(this, tabHost, "committee_senate", committeeIntent("senate"), R.string.tab_senate);
+		Utils.addTab(this, tabHost, "committee_joint", committeeIntent("joint"), R.string.tab_joint);
 
 		tabHost.setCurrentTab(0);
 	}

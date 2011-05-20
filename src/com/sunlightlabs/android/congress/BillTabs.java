@@ -4,7 +4,6 @@ import java.util.regex.Pattern;
 
 import android.app.TabActivity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -116,15 +115,14 @@ public class BillTabs extends TabActivity {
 	}
 
 	public void setupTabs() {
-		Resources res = getResources();
 		TabHost tabHost = getTabHost();
 		
-		Utils.addTab(this, tabHost, "info", detailsIntent(), getString(R.string.tab_details), res.getDrawable(R.drawable.tab_profile));
-		Utils.addTab(this, tabHost, "news", newsIntent(), getString(R.string.tab_news), res.getDrawable(R.drawable.tab_news));
-		Utils.addTab(this, tabHost, "history", historyIntent(), getString(R.string.tab_history), res.getDrawable(R.drawable.tab_history));
+		Utils.addTab(this, tabHost, "info", detailsIntent(), R.string.tab_details);
+		Utils.addTab(this, tabHost, "news", newsIntent(), R.string.tab_news);
+		Utils.addTab(this, tabHost, "history", historyIntent(), R.string.tab_history);
 		
 		if (bill.last_passage_vote_at != null && bill.last_passage_vote_at.getTime() > 0)
-			Utils.addTab(this, tabHost, "votes", votesIntent(), getString(R.string.tab_votes), res.getDrawable(R.drawable.tab_video));
+			Utils.addTab(this, tabHost, "votes", votesIntent(), R.string.tab_votes);
 		
 		tabHost.setCurrentTabByTag(tab);
 	}

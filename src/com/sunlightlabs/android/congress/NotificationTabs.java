@@ -2,7 +2,6 @@ package com.sunlightlabs.android.congress;
 
 import android.app.TabActivity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TabHost;
 
@@ -24,11 +23,10 @@ public class NotificationTabs extends TabActivity {
 	}
 
 	private void setupTabs() {
-		Resources res = getResources();
 		TabHost tabHost = getTabHost();
 
-		Utils.addTab(this, tabHost, "settings", settingsIntent(), "Settings", res.getDrawable(android.R.drawable.ic_menu_preferences));
-		Utils.addTab(this, tabHost, "subscriptions", subscriptionsIntent(), "Subscriptions", res.getDrawable(R.drawable.notifications));
+		Utils.addTab(this, tabHost, "settings", settingsIntent(), R.string.tab_settings);
+		Utils.addTab(this, tabHost, "subscriptions", subscriptionsIntent(), R.string.tab_subscriptions);
 
 		tabHost.setCurrentTab(0);
 	}

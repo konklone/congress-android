@@ -189,5 +189,10 @@
     <string name="tab_details">Details</string>
     <string name="tab_history">Activity</string>
     <string name="tab_votes">Votes</string>
+    <string name="tab_settings">Settings</string>
+    <string name="tab_subscriptions">Subscriptions</string>
+    <string name="tab_house">House</string>
+    <string name="tab_senate">Senate</string>
+    <string name="tab_joint">Joint</string>
 
 </resources>

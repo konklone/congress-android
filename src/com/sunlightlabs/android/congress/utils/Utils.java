@@ -1,14 +1,10 @@
 package com.sunlightlabs.android.congress.utils;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -32,7 +28,6 @@ import com.sunlightlabs.congress.services.RealTimeCongress;
 import com.sunlightlabs.congress.services.Sunlight;
 
 public class Utils {
-	private static Method setView = null;
 	public static final String TAG = "CONGRESS";
 	
 	public static void setupRTC(Context context) {
@@ -344,8 +339,10 @@ public class Utils {
 	}
 	
 	/* 
-	 * Using reflection to support custom tabs for 1.6 and up, and default to regular tabs for 1.5.
-	 */
+	Reflection example: now-deprecated use to handle custom tabs in Android 1.5.
+	
+	
+	private static Method setIndicator = null;
 	
 	static {
 		checkCustomTabs();
@@ -354,16 +351,16 @@ public class Utils {
 	// check for existence of TabHost.TabSpec#setIndicator(View)
 	private static void checkCustomTabs() {
 		try {
-    	   setView = TabHost.TabSpec.class.getMethod("setIndicator", new Class[] { View.class } );
+    	   setIndicator = TabHost.TabSpec.class.getMethod("setIndicator", new Class[] { View.class } );
        } catch (NoSuchMethodException nsme) {}
 	}
 	
 	public static void addTab(Activity activity, TabHost tabHost, String tag, Intent intent, String name, Drawable backup) {
 		TabHost.TabSpec tab = tabHost.newTabSpec(tag).setContent(intent);
 	
-		if (setView != null) {
+		if (setIndicator != null) {
 			try {
-				setView.invoke(tab, tabView(activity, name));
+				setIndicator.invoke(tab, tabView(activity, name));
 			} catch (IllegalAccessException ie) {
 				throw new RuntimeException(ie);
 			} catch (InvocationTargetException ite) {
@@ -381,7 +378,13 @@ public class Utils {
 		tabHost.addTab(tab);
 	}
 	
-	public static View tabView(Context context, String name) {
+	*/
+	
+	public static void addTab(Activity activity, TabHost tabHost, String tag, Intent intent, int name) {
+		tabHost.addTab(tabHost.newTabSpec(tag).setContent(intent).setIndicator(tabView(activity, name)));
+	}
+	
+	public static View tabView(Context context, int name) {
 		LayoutInflater inflater = LayoutInflater.from(context);
 		View tab = inflater.inflate(R.layout.tab_1, null);
 		((TextView) tab.findViewById(R.id.tab_name)).setText(name);

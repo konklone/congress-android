@@ -2,7 +2,6 @@ package com.sunlightlabs.android.congress;
 
 import android.app.TabActivity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -100,19 +99,18 @@ public class LegislatorTabs extends TabActivity {
 	}
 
 	public void setupTabs() {
-		Resources res = getResources();
 		TabHost tabHost = getTabHost();
 		
-		Utils.addTab(this, tabHost, "profile", profileIntent(), getString(R.string.tab_profile), res.getDrawable(R.drawable.tab_profile));
-		Utils.addTab(this, tabHost, "news", newsIntent(), getString(R.string.tab_news), res.getDrawable(R.drawable.tab_news));
+		Utils.addTab(this, tabHost, "profile", profileIntent(), R.string.tab_profile);
+		Utils.addTab(this, tabHost, "news", newsIntent(), R.string.tab_news);
 		
 		String twitter_id = legislator.twitter_id;
 		if (legislator.in_office && twitter_id != null && !(twitter_id.equals("")))
-			Utils.addTab(this, tabHost, "tweets", twitterIntent(), getString(R.string.tab_tweets), res.getDrawable(R.drawable.tab_twitter));
+			Utils.addTab(this, tabHost, "tweets", twitterIntent(), R.string.tab_tweets);
 		
 		String youtube_id = legislator.youtubeUsername();
 		if (legislator.in_office && youtube_id != null && !(youtube_id.equals("")))
-			Utils.addTab(this, tabHost, "videos", youtubeIntent(), getString(R.string.tab_videos), res.getDrawable(R.drawable.tab_video));
+			Utils.addTab(this, tabHost, "videos", youtubeIntent(), R.string.tab_videos);
 		 
 		tabHost.setCurrentTabByTag(tab);
 	}
