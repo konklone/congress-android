@@ -73,6 +73,12 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 			favoritePeopleWrappers = holder.favoritePeopleWrappers;
 			tracked = holder.tracked;
 		}
+		
+		tracker = Analytics.start(this);
+		if (!tracked) {
+			Analytics.page(this, tracker, "/menu/legislators");
+			tracked = true;
+		}
 
 		setupDatabase();
 		setupControls();
