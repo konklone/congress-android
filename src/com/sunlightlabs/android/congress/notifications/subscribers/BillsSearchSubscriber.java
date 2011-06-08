@@ -1,6 +1,8 @@
 package com.sunlightlabs.android.congress.notifications.subscribers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Intent;
 import android.util.Log;
@@ -26,7 +28,9 @@ public class BillsSearchSubscriber extends Subscriber {
 		Utils.setupRTC(context);
 		
 		try {
-			return BillService.search(subscription.data, 1, BillList.PER_PAGE);
+			Map<String,String> params = new HashMap<String,String>();
+			params.put("order", "introduced_at");
+			return BillService.search(subscription.data, params, 1, BillList.PER_PAGE);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest bill search results for " + subscription, e);
 			return null;

@@ -202,9 +202,8 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	}
 	
 	private void loadSponsor() {
-		if (loadSponsorTask == null) {
+		if (loadSponsorTask == null)
 			loadSponsorTask = (LoadLegislatorTask) new LoadLegislatorTask(this).execute(sponsor.getId());
-		}
 	}
 	
 	public void loadSummary() {

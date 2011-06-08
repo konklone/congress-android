@@ -273,7 +273,9 @@ public class BillList extends ListActivity {
 					conditions.put("code", code);
 					return BillService.where(conditions, page, PER_PAGE);
 				case BILLS_SEARCH:
-					return BillService.search(query, page, PER_PAGE);
+					Map<String,String> params = new HashMap<String,String>();
+					params.put("order", "introduced_at");
+					return BillService.search(query, params, page, PER_PAGE);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
 				}

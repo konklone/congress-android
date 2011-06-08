@@ -49,14 +49,14 @@ public class BillService {
 		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
 	}
 	
-	public static List<Bill> search(String query, int page, int per_page) throws CongressException {
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("search", query);
-		params.put("order", "introduced_at");
+	public static List<Bill> search(String query, Map<String,String> params, int page, int per_page) throws CongressException {
+		if (!params.containsKey("order"))
+			params.put("order", "introduced_at");
 		
-		String[] sections = new String[] {"basic", "sponsor"};
+		// default to all result fields (includes basic and sponsor)
+		String[] sections = new String[] {};
 		
-		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
+		return billsFor(RealTimeCongress.searchUrl("bills", query, true, sections, params, page, per_page));
 	}
 	
 	public static List<Bill> where(Map<String,String> params, int page, int per_page) throws CongressException {
@@ -188,6 +188,10 @@ public class BillService {
 			for (int i = 0; i < length; i++)
 				bill.actions.add(0, actionFromRTC(actionObjects.getJSONObject(i)));
 		}
+		
+		// coming from a search endpoint, generate a search object
+		if (!json.isNull("search"))
+			bill.search = RealTimeCongress.SearchResult.from(json.getJSONObject("search"));
 		
 		return bill;
 	}

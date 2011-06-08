@@ -44,6 +44,8 @@ public class Bill implements Serializable {
 	// actions
 	public List<Bill.Action> actions;
 	
+	// search result metadata (if coming from a search)
+	public SearchResult search;
 
 	public static class Action implements Serializable {
 		private static final long serialVersionUID = 1L;

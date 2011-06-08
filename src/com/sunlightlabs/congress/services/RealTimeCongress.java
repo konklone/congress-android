@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -15,6 +17,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.cookie.DateUtils;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.text.TextUtils;
 
@@ -25,8 +30,10 @@ public class RealTimeCongress {
 	public static final String dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 	public static final String dateOnlyFormat = "yyyy-MM-dd";
 	
-	public static final String baseUrl = "http://api.realtimecongress.org/api/v1/";
+	public static final String baseUrl = "http://rtc.sunlightlabs.com/api/v1/";
 	public static final String format = "json";
+	
+	public static final String highlightTags = "<b>,</b>"; // default highlight tags
 	
 	// filled in by the client
 	public static String userAgent = "com.sunlightlabs.congress.services.RealTimeCongress";
@@ -35,6 +42,36 @@ public class RealTimeCongress {
 	public static String apiKey = "";
 	
 	public static final int MAX_PER_PAGE = 500;
+	
+	public static class SearchResult extends com.sunlightlabs.congress.models.SearchResult {
+		
+		static SearchResult from(JSONObject json) throws JSONException {
+			SearchResult search = new SearchResult();
+			
+			if (!json.isNull("score"))
+				search.score = json.getDouble("score");
+			
+			if (!json.isNull("highlight")) {
+				Map<String,ArrayList<String>> highlight = new HashMap<String,ArrayList<String>>();
+				
+				JSONObject obj = json.getJSONObject("highlight");
+				Iterator<?> iter = obj.keys();
+				while (iter.hasNext()) {
+					String key = (String) iter.next();
+					JSONArray highlighted = obj.getJSONArray(key);
+					ArrayList<String> temp = new ArrayList<String>(highlighted.length());
+					for (int i=0; i<highlighted.length(); i++)
+						temp.add(highlighted.getString(i));
+					highlight.put(key, temp);
+				}
+				
+				search.highlight = highlight;
+			}
+			
+			return null;
+		}
+		
+	}
 	
 	public static String url(String method, String[] sections, Map<String,String> params) {
 		return url(method, sections, params, -1, -1);
@@ -63,6 +100,18 @@ public class RealTimeCongress {
 		}
 		
 		return baseUrl + method + "." + format + "?" + query.toString();
+	}
+	
+	public static String searchUrl(String method, String query, boolean highlight, String[] sections, Map<String,String> params, int page, int per_page) {
+		if (highlight) {
+			params.put("highlight", "true");
+			if (!params.containsKey("highlight_tags"))
+				params.put("highlight_tags", RealTimeCongress.highlightTags);
+		}
+		
+		params.put("query", query);
+		
+		return url("search/" + method, sections, params, page, per_page);
 	}
 	
 	public static Date parseDate(String date) throws ParseException {
