@@ -53,10 +53,7 @@ public class BillService {
 		if (!params.containsKey("order"))
 			params.put("order", "introduced_at");
 		
-		// default to all result fields (includes basic and sponsor)
-		String[] sections = new String[] {};
-		
-		return billsFor(RealTimeCongress.searchUrl("bills", query, true, sections, params, page, per_page));
+		return billsFor(RealTimeCongress.searchUrl("bills", query, true, null, params, page, per_page));
 	}
 	
 	public static List<Bill> where(Map<String,String> params, int page, int per_page) throws CongressException {

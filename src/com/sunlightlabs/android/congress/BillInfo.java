@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -157,6 +158,26 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		
 		if (!listViews.isEmpty())
 			adapter.addAdapter(new ViewArrayAdapter(this, listViews));
+		
+		// if this was coming in from a search result and has associated highlight data, show it
+		if (bill.search != null && bill.search.highlight != null) {
+			View searchHeader = inflater.inflate(R.layout.header_alone, null);
+			((TextView) searchHeader.findViewById(R.id.header_text)).setText("Search results for \"" + bill.search.query + "\"");
+			adapter.addView(inflater.inflate(R.layout.line, null));
+			adapter.addView(searchHeader);
+			adapter.addView(inflater.inflate(R.layout.line, null));
+			
+			View searchView = inflater.inflate(R.layout.bill_search_data, null);
+			
+			String field = Bill.matchField(bill.search.highlight);
+			String matchText = "Matched the bill's " + Bill.matchText(field) + ":";
+			Spanned highlightText = Html.fromHtml(Utils.truncate(bill.search.highlight.get(field).get(0), 300));
+			
+			((TextView) searchView.findViewById(R.id.match_field)).setText(matchText);
+			((TextView) searchView.findViewById(R.id.highlight_field)).setText(highlightText);
+			
+			adapter.addView(searchView);
+		}
 		
 		loadingContainer = inflater.inflate(R.layout.header_loading, null);
 		((TextView) loadingContainer.findViewById(R.id.header_text)).setText("Summary");

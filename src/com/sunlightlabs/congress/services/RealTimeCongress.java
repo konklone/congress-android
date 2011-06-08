@@ -1,6 +1,7 @@
 package com.sunlightlabs.congress.services;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,7 +44,8 @@ public class RealTimeCongress {
 	
 	public static final int MAX_PER_PAGE = 500;
 	
-	public static class SearchResult extends com.sunlightlabs.congress.models.SearchResult {
+	public static class SearchResult extends com.sunlightlabs.congress.models.SearchResult implements Serializable {
+		private static final long serialVersionUID = 1L;
 		
 		static SearchResult from(JSONObject json) throws JSONException {
 			SearchResult search = new SearchResult();
@@ -68,7 +70,10 @@ public class RealTimeCongress {
 				search.highlight = highlight;
 			}
 			
-			return null;
+			if (!json.isNull("query"))
+				search.query = json.getString("query");
+			
+			return search;
 		}
 		
 	}

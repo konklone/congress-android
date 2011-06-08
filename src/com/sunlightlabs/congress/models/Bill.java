@@ -1,8 +1,10 @@
 package com.sunlightlabs.congress.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -75,6 +77,45 @@ public class Bill implements Serializable {
 	public static String formatId(String id) {
 		String code = id.replaceAll("-\\d+$", "");
 		return formatCode(code);
+	}
+	
+	public static String matchText(String field) {
+		if (field.equals("versions"))
+			return "text";
+		else if (field.equals("short_title"))
+			return "title";
+		else if (field.equals("popular_title"))
+			return "nickname";
+		else if (field.equals("official_title"))
+			return "official title";
+		else if (field.equals("summary"))
+			return "summary";
+		else if (field.equals("keywords"))
+			return "official keywords";
+		else
+			return "";
+	}
+	
+	// from a highlight hash, return the field name with the highest priority
+	public static String matchField(Map<String,ArrayList<String>> highlight) {
+		String[] priorities = new String[] {"popular_title", "short_title", "official_title", "summary", "versions", "keywords"};
+		String field = null;
+		
+		for (int i=0; i<priorities.length; i++) {
+			if (highlight.containsKey(priorities[i])) {
+				field = priorities[i];
+				return field;
+			}
+		}
+		
+		return field;
+	}
+	
+	private static String truncate(String text, int length) {
+		if (text.length() > length)
+			return text.substring(0, length - 3) + "...";
+		else
+			return text;
 	}
 	
 	public static String formatCode(String code) {
