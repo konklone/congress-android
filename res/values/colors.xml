@@ -77,4 +77,6 @@
 	<color name="nay">#cf2f25</color>
 	<color name="present">#dddddd</color>
 	<color name="not_voting">#dddddd</color>
+	
+	<color name="search_data">#111111</color>
 </resources>

@@ -4,26 +4,38 @@
 	android:layout_height="wrap_content"
 	
 	android:orientation="vertical"
-	android:padding="10dp"
 	>
-	
-	<TextView android:id="@+id/match_field"
-		android:layout_width="wrap_content"
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		
-		android:textSize="16sp"
-		android:textColor="@android:color/white"
-		android:text="Matched the text of the bill:"
+		android:padding="10dp"
+	
+		android:background="@color/search_data"
+		>
+	
+		<TextView android:id="@+id/match_field"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:textSize="16sp"
+			android:textColor="@android:color/white"
+			android:text="Matched the text of the bill:"
+			/>
+		
+		<TextView android:id="@+id/highlight_field"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:layout_marginTop="5dp"
+			
+			android:textSize="14sp"
+			android:text="Some matching text of the bill, it goes on and on, could be quite long in fact, many hundreds of characters, and will likely have to be truncated in some fashion."
+			/>
+			
+	</LinearLayout>
+	
+	<include layout="@layout/line"
+		android:background="@android:color/white"
 		/>
-	
-	<TextView android:id="@+id/highlight_field"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		
-		android:layout_marginTop="10dp"
-		
-		android:textSize="14sp"
-		android:text="Some matching text of the bill, it goes on and on, could be quite long in fact, many hundreds of characters, and will likely have to be truncated in some fashion."
-		/> 
-		
 </LinearLayout>

@@ -57,6 +57,8 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	
 	private SimpleDateFormat timelineFormat = new SimpleDateFormat("MMM dd, yyyy");
 	
+	//private View searchView; // kept to be dismissed later
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,6 +100,21 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	public void setupControls() {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		MergeAdapter adapter = new MergeAdapter();
+		
+		// if this was coming in from a search result and has associated highlight data, show it
+		if (bill.search != null && bill.search.highlight != null) {
+			
+			final View searchView = inflater.inflate(R.layout.bill_search_data, null);
+			
+			String field = Bill.matchField(bill.search.highlight);
+			String matchText = "\"" + bill.search.query + "\" matched the bill's " + Bill.matchText(field) + ":";
+			Spanned highlightText = Html.fromHtml(Utils.truncate(bill.search.highlight.get(field).get(0), 300));
+			
+			((TextView) searchView.findViewById(R.id.match_field)).setText(matchText);
+			((TextView) searchView.findViewById(R.id.highlight_field)).setText(highlightText);
+			
+			adapter.addView(searchView);
+		}
 		
 		View header = inflater.inflate(R.layout.bill_header, null);
 		
@@ -158,26 +175,6 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		
 		if (!listViews.isEmpty())
 			adapter.addAdapter(new ViewArrayAdapter(this, listViews));
-		
-		// if this was coming in from a search result and has associated highlight data, show it
-		if (bill.search != null && bill.search.highlight != null) {
-			View searchHeader = inflater.inflate(R.layout.header_alone, null);
-			((TextView) searchHeader.findViewById(R.id.header_text)).setText("Search results for \"" + bill.search.query + "\"");
-			adapter.addView(inflater.inflate(R.layout.line, null));
-			adapter.addView(searchHeader);
-			adapter.addView(inflater.inflate(R.layout.line, null));
-			
-			View searchView = inflater.inflate(R.layout.bill_search_data, null);
-			
-			String field = Bill.matchField(bill.search.highlight);
-			String matchText = "Matched the bill's " + Bill.matchText(field) + ":";
-			Spanned highlightText = Html.fromHtml(Utils.truncate(bill.search.highlight.get(field).get(0), 300));
-			
-			((TextView) searchView.findViewById(R.id.match_field)).setText(matchText);
-			((TextView) searchView.findViewById(R.id.highlight_field)).setText(highlightText);
-			
-			adapter.addView(searchView);
-		}
 		
 		loadingContainer = inflater.inflate(R.layout.header_loading, null);
 		((TextView) loadingContainer.findViewById(R.id.header_text)).setText("Summary");
