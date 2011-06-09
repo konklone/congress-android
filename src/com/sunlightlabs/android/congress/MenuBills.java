@@ -173,7 +173,7 @@ public class MenuBills extends ListActivity {
 		// else, do generic search
 		else {
 			startActivity(new Intent(this, BillList.class)
-				.putExtra("type", BillList.BILLS_SEARCH)
+				.putExtra("type", BillList.BILLS_SEARCH_NEWEST)
 				.putExtra("query", query)
 			);
 		}

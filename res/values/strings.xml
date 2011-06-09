@@ -132,6 +132,10 @@
     <string name="bill_vote_roll">Tap to see how each legislator voted.</string>
     <string name="bill_vote_not_roll">No roll call was taken for this vote.</string>
     
+    <string name="bill_sort">Sort by</string>
+    <string name="bill_sort_newest">Newest</string>
+    <string name="bill_sort_best">Best</string>
+    
     <string name="vote_loading">Loading vote details...</string>
     <string name="vote_related_to_bill">Related to</string>
     <string name="vote_related_to_bill_passage">On passage of</string>

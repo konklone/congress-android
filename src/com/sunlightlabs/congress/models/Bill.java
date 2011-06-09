@@ -111,13 +111,6 @@ public class Bill implements Serializable {
 		return field;
 	}
 	
-	private static String truncate(String text, int length) {
-		if (text.length() > length)
-			return text.substring(0, length - 3) + "...";
-		else
-			return text;
-	}
-	
 	public static String formatCode(String code) {
 		code = code.toLowerCase().replace(" ", "").replace(".", "");
 		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");

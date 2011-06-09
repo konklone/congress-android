@@ -91,6 +91,10 @@ public class Footer {
 		}
 	}
 	
+	public void hide() {
+		this.footerView.setVisibility(View.GONE);
+	}
+	
 	public void setupControls() {
 		
 		footerView.setOnClickListener(new View.OnClickListener() {

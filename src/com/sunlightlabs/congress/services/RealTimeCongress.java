@@ -23,11 +23,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.sunlightlabs.congress.models.CongressException;
 
 
 public class RealTimeCongress {
+	public static final String TAG = "RealTimeCongress";
+	
 	public static final String dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 	public static final String dateOnlyFormat = "yyyy-MM-dd";
 	
@@ -136,6 +139,8 @@ public class RealTimeCongress {
 	}
 	
 	public static String fetchJSON(String url) throws CongressException {
+		Log.d(TAG, "Fetching URL: " + url);
+		
 		HttpGet request = new HttpGet(url);
         request.addHeader("User-Agent", userAgent);
         

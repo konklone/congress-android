@@ -79,4 +79,5 @@
 	<color name="not_voting">#dddddd</color>
 	
 	<color name="search_data">#111111</color>
+	<color name="bill_search_options">#111111</color>
 </resources>

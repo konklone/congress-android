@@ -37,8 +37,10 @@ public class BillList extends ListActivity {
 	public static final int BILLS_LAW = 0;
 	public static final int BILLS_RECENT = 1;
 	public static final int BILLS_SPONSOR = 2;
-	public static final int BILLS_SEARCH = 3;
-	public static final int BILLS_CODE = 4;
+	public static final int BILLS_SEARCH_NEWEST = 3;
+	public static final int BILLS_SEARCH_BEST = 4;
+	public static final int BILLS_CODE = 5;
+	
 
 	private List<Bill> bills;
 	private LoadBillsTask loadBillsTask;
@@ -56,15 +58,14 @@ public class BillList extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list_footer_titled);
+		
+		setContentView(R.layout.list_bill_sort);
 
 		Bundle extras = getIntent().getExtras();
 		type = extras.getInt("type", BILLS_RECENT);
 		sponsor = (Legislator) extras.getSerializable("legislator");
 		query = extras.getString("query");
 		code = extras.getString("code");
-
-		setupControls();
 
 		BillListHolder holder = (BillListHolder) getLastNonConfigurationInstance();
 
@@ -73,17 +74,22 @@ public class BillList extends ListActivity {
 			this.loadBillsTask = holder.loadBillsTask;
 			this.footer = holder.footer;
 			this.tracked = holder.tracked;
-
-			if (loadBillsTask != null)
-				loadBillsTask.onScreenLoad(this);
-		} else
-			bills = new ArrayList<Bill>();
+			this.type = holder.type; // override what may have come in with the activity
+		}
+		
+		setupControls();
 		
 		tracker = Analytics.start(this);
 		if (!tracked) {
 			Analytics.page(this, tracker, url());
 			tracked = true;
 		}
+		
+		if (bills == null)
+			bills = new ArrayList<Bill>();
+		
+		if (loadBillsTask != null)
+			loadBillsTask.onScreenLoad(this);
 		
 		if (footer != null)
 			footer.onScreenLoad(this, tracker);
@@ -100,7 +106,7 @@ public class BillList extends ListActivity {
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new BillListHolder(bills, loadBillsTask, footer, tracked);
+		return new BillListHolder(bills, loadBillsTask, footer, tracked, type);
 	}
 	
 	@Override
@@ -131,9 +137,11 @@ public class BillList extends ListActivity {
 		case BILLS_LAW:
 			Utils.setTitle(this, R.string.menu_bills_law, R.drawable.bill_law);
 			break;
-		case BILLS_SEARCH:
+		case BILLS_SEARCH_NEWEST:
+		case BILLS_SEARCH_BEST:
 			Utils.setTitle(this, "Bills matching \"" + query + "\"", R.drawable.bills);
 			Utils.setTitleSize(this, 18);
+			findViewById(R.id.bill_search_options).setVisibility(View.VISIBLE);
 			break;
 		case BILLS_CODE:
 			Utils.setTitle(this, "Bills with code " + Bill.formatCodeShort(code), R.drawable.bills);
@@ -144,6 +152,26 @@ public class BillList extends ListActivity {
 			Utils.setTitleSize(this, 18);
 			break;
 		}
+		
+		// set up radio buttons
+		findViewById(R.id.bill_sort_newest).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				if (type != BILLS_SEARCH_NEWEST) {
+					type = BILLS_SEARCH_NEWEST;
+					reloadBills();
+				}
+			}
+		});
+		
+		
+		findViewById(R.id.bill_sort_best).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				if (type != BILLS_SEARCH_BEST) {
+					type = BILLS_SEARCH_BEST;
+					reloadBills();
+				}
+			}
+		});
 	}
 	
 	private String url() {
@@ -153,10 +181,12 @@ public class BillList extends ListActivity {
 			return "/legislator/" + sponsor.getId() + "/bills";
 		else if (type == BILLS_LAW)
 			return "/bills/laws";
-		else if (type == BILLS_SEARCH)
-			return "/bills/search?query=" + query;
+		else if (type == BILLS_SEARCH_NEWEST)
+			return "/bills/search/newest?query=" + query;
+		else if (type == BILLS_SEARCH_BEST)
+			return "/bills/search/best?query=" + query;
 		else if (type == BILLS_CODE)
-			return "/bills/search?code=" + code;
+			return "/bills/search/code?code=" + code;
 		else
 			return "/bills";
 	}
@@ -169,9 +199,11 @@ public class BillList extends ListActivity {
 			subscription = new Subscription(sponsor.id, Subscriber.notificationName(sponsor), "BillsLegislatorSubscriber", null);
 		else if (type == BILLS_LAW)
 			subscription = new Subscription("RecentLaws", "New Laws", "BillsLawsSubscriber", null);
-		else if (type == BILLS_SEARCH)
+		else if (type == BILLS_SEARCH_NEWEST)
 			subscription = new Subscription(query, query, "BillsSearchSubscriber", query);
+		
 		// no subscription offered for a bill code search
+		// no subscription offered for "best match" searches
 		
 		if (subscription != null)
 			footer.init(subscription, bills.subList(0, Math.min(bills.size(), PER_PAGE)));
@@ -188,6 +220,15 @@ public class BillList extends ListActivity {
 			loadBillsTask = (LoadBillsTask) new LoadBillsTask(this).execute();
 	}
 
+	public void reloadBills() {
+		if (footer != null)
+			footer.hide();
+		bills.clear();
+		Utils.showLoading(BillList.this);
+		((BillAdapter) getListAdapter()).notifyDataSetChanged();
+		
+		loadBills();
+	}
 
 	public void onLoadBills(List<Bill> newBills) {
 		// if this is the first page of rolls, set up the subscription
@@ -260,7 +301,9 @@ public class BillList extends ListActivity {
 		public List<Bill> doInBackground(Void... nothing) {
 			try {
 				int page = (context.bills.size() / PER_PAGE) + 1;
-
+				
+				Map<String,String> params = new HashMap<String,String>();
+				
 				switch (context.type) {
 				case BILLS_RECENT:
 					return BillService.recentlyIntroduced(page, PER_PAGE);
@@ -269,12 +312,13 @@ public class BillList extends ListActivity {
 				case BILLS_SPONSOR:
 					return BillService.recentlySponsored(sponsor.id, page, PER_PAGE);
 				case BILLS_CODE:
-					Map<String,String> conditions = new HashMap<String,String>();
-					conditions.put("code", code);
-					return BillService.where(conditions, page, PER_PAGE);
-				case BILLS_SEARCH:
-					Map<String,String> params = new HashMap<String,String>();
+					params.put("code", code);
+					return BillService.where(params, page, PER_PAGE);
+				case BILLS_SEARCH_NEWEST:
 					params.put("order", "introduced_at");
+					return BillService.search(query, params, page, PER_PAGE);
+				case BILLS_SEARCH_BEST:
+					params.put("order", "_score");
 					return BillService.search(query, params, page, PER_PAGE);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
@@ -362,35 +406,31 @@ public class BillList extends ListActivity {
 			} else
 				holder = (ViewHolder) view.getTag();
 			
-			String code, action;
-			Date date = null;
+			String date = "";
+			String action = "";
 			switch (context.type) {
 			case BILLS_LAW:
-				code = Bill.formatCodeShort(bill.code);
-				date = bill.enacted_at;
-				action = "became law";
+				date = shortDate(bill.enacted_at);
+				action = "became law:";
+				break;
+			case BILLS_SEARCH_BEST:
+				date = shortDate(bill.introduced_at);
 				break;
 			case BILLS_RECENT:
 			case BILLS_SPONSOR:
-			case BILLS_SEARCH:
+			case BILLS_SEARCH_NEWEST:
 			case BILLS_CODE:
 			default:
-				code = Bill.formatCodeShort(bill.code);
-				date = bill.introduced_at;
-				action = "was introduced";
+				date = shortDate(bill.introduced_at);
+				action = "was introduced:";
 				break;
 			}
-			Spanned byline = Html.fromHtml("<b>" + code + "</b> " + action + ":");
+			
+			String code = Bill.formatCodeShort(bill.code);
+			
+			Spanned byline = Html.fromHtml("<b>" + code + "</b> " + action);
 			holder.byline.setText(byline);
-
-			if (date != null) {
-				SimpleDateFormat format = null;
-				if(date.getYear() == new Date().getYear()) 
-					format = new SimpleDateFormat("MMM d");
-				else
-					format = new SimpleDateFormat("MMM d, yyyy");
-				holder.date.setText(format.format(date));
-			}
+			holder.date.setText(date);
 
 			if (bill.short_title != null) {
 				String title = Utils.truncate(bill.short_title, 300);
@@ -414,6 +454,15 @@ public class BillList extends ListActivity {
 		static class ViewHolder {
 			TextView byline, date, title;
 		}
+		
+		private String shortDate(Date date) {
+			SimpleDateFormat format = null;
+			if (date.getYear() == new Date().getYear()) 
+				format = new SimpleDateFormat("MMM d");
+			else
+				format = new SimpleDateFormat("MMM d, yyyy");
+			return format.format(date);
+		}
 	}
 
 	static class BillListHolder {
@@ -421,12 +470,14 @@ public class BillList extends ListActivity {
 		LoadBillsTask loadBillsTask;
 		Footer footer;
 		boolean tracked;
+		int type;
 
-		public BillListHolder(List<Bill> bills, LoadBillsTask loadBillsTask, Footer footer, boolean tracked) {
+		public BillListHolder(List<Bill> bills, LoadBillsTask loadBillsTask, Footer footer, boolean tracked, int type) {
 			this.bills = bills;
 			this.loadBillsTask = loadBillsTask;
 			this.footer = footer;
 			this.tracked = tracked;
+			this.type = type;
 		}
 	}
 	
