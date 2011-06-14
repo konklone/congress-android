@@ -34,7 +34,7 @@ public class RealTimeCongress {
 	public static final String dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 	public static final String dateOnlyFormat = "yyyy-MM-dd";
 	
-	public static final String baseUrl = "http://rtc.sunlightlabs.com/api/v1/";
+	public static final String baseUrl = "http://api.realtimecongress.org/api/v1/";
 	public static final String format = "json";
 	
 	public static final String highlightTags = "<b>,</b>"; // default highlight tags
