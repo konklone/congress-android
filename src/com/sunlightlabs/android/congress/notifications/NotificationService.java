@@ -92,6 +92,10 @@ public class NotificationService extends WakefulIntentService {
 			// keep a record of the un-seen matches as we go through the updates
 			List<String> unseenIds = new ArrayList<String>();
 			
+			// in case the database got closed by now (has happened before)
+			if (!database.isOpen())
+				database.open();
+			
 			int size = updates.size();
 			for (int i=0; i<size; i++) {
 				String itemId = subscriber.decodeId(updates.get(i));
