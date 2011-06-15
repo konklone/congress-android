@@ -187,8 +187,12 @@ public class HearingList extends ListActivity {
 				Hearing hearing = ((HearingItem) item).hearing;
 				String time = timeFormat.format(hearing.occursAt);
 				
+				String timeAndRoom = time + "";
+				if (hearing.room != null)
+					timeAndRoom += ", Room " + hearing.room;
+				
 				((TextView) view.findViewById(R.id.name)).setText(hearing.committee.name);
-				((TextView) view.findViewById(R.id.time_and_room)).setText(time + ", Room " + hearing.room);
+				((TextView) view.findViewById(R.id.time_and_room)).setText(timeAndRoom);
 				((TextView) view.findViewById(R.id.description)).setText(hearing.description);
 				
 			} else { // instanceof CommitteeItem
