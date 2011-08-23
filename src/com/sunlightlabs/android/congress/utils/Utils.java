@@ -28,7 +28,7 @@ import com.sunlightlabs.congress.services.RealTimeCongress;
 import com.sunlightlabs.congress.services.Sunlight;
 
 public class Utils {
-	public static final String TAG = "CONGRESS";
+	public static final String TAG = "Congress";
 	
 	public static void setupRTC(Context context) {
 		Resources resources = context.getResources();

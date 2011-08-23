@@ -5,13 +5,12 @@ import java.util.List;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.youtube.Video;
 import com.sunlightlabs.youtube.YouTube;
 import com.sunlightlabs.youtube.YouTubeException;
 
 public class LoadYoutubeVideosTask extends AsyncTask<String, Void, List<Video>> {
-	private final static String TAG = "CONGRESS";
-
 	public static interface LoadsYoutubeVideos {
 		void onLoadYoutubeVideos(List<Video> videos);
 	}
@@ -32,7 +31,7 @@ public class LoadYoutubeVideosTask extends AsyncTask<String, Void, List<Video>> 
 		try {
 			return new YouTube().getVideos(username[0]);
 		} catch (YouTubeException e) {
-			Log.w(TAG, "Could not load youtube videos for " + username[0]);
+			Log.w(Utils.TAG, "Could not load youtube videos for " + username[0]);
 			return null;
 		}
 	}

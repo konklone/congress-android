@@ -7,14 +7,13 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.google.news.NewsException;
 import com.sunlightlabs.google.news.NewsItem;
 import com.sunlightlabs.google.news.NewsService;
 
 public class LoadNewsTask extends AsyncTask<String, Void, List<NewsItem>> {
-	private final static String TAG = "CONGRESS";
-
 	private CongressException exception;
 
 	public static interface LoadsNews {
@@ -43,7 +42,7 @@ public class LoadNewsTask extends AsyncTask<String, Void, List<NewsItem>> {
 		try {
 			return new NewsService(apiKey, referer).fetchNewsResults(searchTerm);
 		} catch (NewsException e) {
-			Log.w(TAG, "Could not fetch news for search term " + searchTerm);
+			Log.w(Utils.TAG, "Could not fetch news for search term " + searchTerm);
 			String message = context.getContext().getResources().getString(R.string.error_fetching_news);
 			this.exception = new CongressException(e, message);
 			return null;

@@ -10,7 +10,6 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.LegislatorService;
 
 public class LoadLegislatorTask extends AsyncTask<String, Void, Legislator> {
-	private final static String TAG = "CONGRESS";
 	private LoadsLegislator context;
 
 	public LoadLegislatorTask(LoadsLegislator context) {
@@ -27,7 +26,7 @@ public class LoadLegislatorTask extends AsyncTask<String, Void, Legislator> {
 		try {
 			return LegislatorService.find(params[0]);
 		} catch (CongressException exception) {
-			Log.w(TAG, "Could not load the legislator with id " + params[0] + " from Sunlight");
+			Log.w(Utils.TAG, "Could not load the legislator with id " + params[0] + " from Sunlight");
 			return null;
 		}
 	}

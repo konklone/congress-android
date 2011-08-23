@@ -77,7 +77,7 @@ public class LegislatorProfile extends ListActivity implements LoadPhotoTask.Loa
         
         tracker = Analytics.start(this);
     	if (!tracked) {
-			Analytics.page(this, tracker, "/legislator/" + legislator.id);
+			Analytics.page(this, tracker, "/legislator/info?bioguide_id=" + legislator.id);
 			tracked = true;
 		}
         

@@ -45,8 +45,6 @@ import com.sunlightlabs.congress.models.Roll.Vote;
 import com.sunlightlabs.congress.services.RollService;
 
 public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
-	public final static String TAG = "CONGRESS";
-	
 	private String id;
 	
 	private Roll roll;
@@ -427,7 +425,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 				try {
 					loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
 				} catch(RejectedExecutionException e) {
-					Log.e(TAG, "[RollInfo] RejectedExecutionException occurred while loading photo.", e);
+					Log.e(Utils.TAG, "[RollInfo] RejectedExecutionException occurred while loading photo.", e);
 					loadNoPhoto(bioguide_id);
 				}
 			}

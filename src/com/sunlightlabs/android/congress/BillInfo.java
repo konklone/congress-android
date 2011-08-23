@@ -81,7 +81,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
         
         tracker = Analytics.start(this);
     	if (!tracked) {
-			Analytics.page(this, tracker, "/bill/" + bill.id);
+			Analytics.page(this, tracker, "/bill/info?bill_id=" + bill.id);
 			tracked = true;
 		}
 		
