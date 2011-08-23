@@ -111,9 +111,9 @@ public class BillList extends ListActivity {
 	
 	@Override
 	protected void onResume() {
-		super.onResume();
 		if (bills != null && bills.size() > 0)
-			setupSubscription();
+			super.onResume();
+		setupSubscription();
 	}
 	
 	@Override
