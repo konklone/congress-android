@@ -37,9 +37,8 @@ public class BillList extends ListActivity {
 	public static final int BILLS_LAW = 0;
 	public static final int BILLS_RECENT = 1;
 	public static final int BILLS_SPONSOR = 2;
-	public static final int BILLS_SEARCH_NEWEST = 3;
-	public static final int BILLS_SEARCH_BEST = 4;
-	public static final int BILLS_CODE = 5;
+	public static final int BILLS_SEARCH = 3;
+	public static final int BILLS_CODE = 4;
 	
 
 	private List<Bill> bills;
@@ -59,7 +58,7 @@ public class BillList extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.list_bill_sort);
+		setContentView(R.layout.list_footer_titled);
 
 		Bundle extras = getIntent().getExtras();
 		type = extras.getInt("type", BILLS_RECENT);
@@ -74,7 +73,6 @@ public class BillList extends ListActivity {
 			this.loadBillsTask = holder.loadBillsTask;
 			this.footer = holder.footer;
 			this.tracked = holder.tracked;
-			this.type = holder.type; // override what may have come in with the activity
 		}
 		
 		setupControls();
@@ -106,7 +104,7 @@ public class BillList extends ListActivity {
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new BillListHolder(bills, loadBillsTask, footer, tracked, type);
+		return new BillListHolder(bills, loadBillsTask, footer, tracked);
 	}
 	
 	@Override
@@ -137,11 +135,9 @@ public class BillList extends ListActivity {
 		case BILLS_LAW:
 			Utils.setTitle(this, R.string.menu_bills_law, R.drawable.bill_law);
 			break;
-		case BILLS_SEARCH_NEWEST:
-		case BILLS_SEARCH_BEST:
+		case BILLS_SEARCH:
 			Utils.setTitle(this, "Bills matching \"" + query + "\"", R.drawable.bills);
 			Utils.setTitleSize(this, 18);
-			findViewById(R.id.bill_search_options).setVisibility(View.VISIBLE);
 			break;
 		case BILLS_CODE:
 			Utils.setTitle(this, "Bills with code " + Bill.formatCodeShort(code), R.drawable.bills);
@@ -152,26 +148,6 @@ public class BillList extends ListActivity {
 			Utils.setTitleSize(this, 18);
 			break;
 		}
-		
-		// set up radio buttons
-		findViewById(R.id.bill_sort_newest).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
-				if (type != BILLS_SEARCH_NEWEST) {
-					type = BILLS_SEARCH_NEWEST;
-					reloadBills();
-				}
-			}
-		});
-		
-		
-		findViewById(R.id.bill_sort_best).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
-				if (type != BILLS_SEARCH_BEST) {
-					type = BILLS_SEARCH_BEST;
-					reloadBills();
-				}
-			}
-		});
 	}
 	
 	private String url() {
@@ -181,10 +157,8 @@ public class BillList extends ListActivity {
 			return "/legislator/" + sponsor.getId() + "/bills";
 		else if (type == BILLS_LAW)
 			return "/bills/laws";
-		else if (type == BILLS_SEARCH_NEWEST)
+		else if (type == BILLS_SEARCH)
 			return "/bills/search/newest?query=" + query;
-		else if (type == BILLS_SEARCH_BEST)
-			return "/bills/search/best?query=" + query;
 		else if (type == BILLS_CODE)
 			return "/bills/search/code?code=" + code;
 		else
@@ -199,7 +173,7 @@ public class BillList extends ListActivity {
 			subscription = new Subscription(sponsor.id, Subscriber.notificationName(sponsor), "BillsLegislatorSubscriber", null);
 		else if (type == BILLS_LAW)
 			subscription = new Subscription("RecentLaws", "New Laws", "BillsLawsSubscriber", null);
-		else if (type == BILLS_SEARCH_NEWEST)
+		else if (type == BILLS_SEARCH)
 			subscription = new Subscription(query, query, "BillsSearchSubscriber", query);
 		
 		// no subscription offered for a bill code search
@@ -218,16 +192,6 @@ public class BillList extends ListActivity {
 	public void loadBills() {
 		if (loadBillsTask == null)
 			loadBillsTask = (LoadBillsTask) new LoadBillsTask(this).execute();
-	}
-
-	public void reloadBills() {
-		if (footer != null)
-			footer.hide();
-		bills.clear();
-		Utils.showLoading(BillList.this);
-		((BillAdapter) getListAdapter()).notifyDataSetChanged();
-		
-		loadBills();
 	}
 
 	public void onLoadBills(List<Bill> newBills) {
@@ -314,11 +278,8 @@ public class BillList extends ListActivity {
 				case BILLS_CODE:
 					params.put("code", code);
 					return BillService.where(params, page, PER_PAGE);
-				case BILLS_SEARCH_NEWEST:
+				case BILLS_SEARCH:
 					params.put("order", "introduced_at");
-					return BillService.search(query, params, page, PER_PAGE);
-				case BILLS_SEARCH_BEST:
-					params.put("order", "_score");
 					return BillService.search(query, params, page, PER_PAGE);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
@@ -413,12 +374,9 @@ public class BillList extends ListActivity {
 				date = shortDate(bill.enacted_at);
 				action = "became law:";
 				break;
-			case BILLS_SEARCH_BEST:
-				date = shortDate(bill.introduced_at);
-				break;
 			case BILLS_RECENT:
 			case BILLS_SPONSOR:
-			case BILLS_SEARCH_NEWEST:
+			case BILLS_SEARCH:
 			case BILLS_CODE:
 			default:
 				date = shortDate(bill.introduced_at);
@@ -470,14 +428,12 @@ public class BillList extends ListActivity {
 		LoadBillsTask loadBillsTask;
 		Footer footer;
 		boolean tracked;
-		int type;
-
-		public BillListHolder(List<Bill> bills, LoadBillsTask loadBillsTask, Footer footer, boolean tracked, int type) {
+		
+		public BillListHolder(List<Bill> bills, LoadBillsTask loadBillsTask, Footer footer, boolean tracked) {
 			this.bills = bills;
 			this.loadBillsTask = loadBillsTask;
 			this.footer = footer;
 			this.tracked = tracked;
-			this.type = type;
 		}
 	}
 	

@@ -13,6 +13,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="1px"
 		android:background="@color/main_line"
+		android:id="@+id/a_line"
 		/>
 	
 	<include layout="@layout/debug_bar"
