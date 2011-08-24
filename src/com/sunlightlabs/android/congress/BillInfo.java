@@ -104,16 +104,20 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		// if this was coming in from a search result and has associated highlight data, show it
 		if (bill.search != null && bill.search.highlight != null) {
 			
-			final View searchView = inflater.inflate(R.layout.bill_search_data, null);
-			
 			String field = Bill.matchField(bill.search.highlight);
-			String matchText = "\"" + bill.search.query + "\" matched the bill's " + Bill.matchText(field) + ":";
-			Spanned highlightText = Html.fromHtml(Utils.truncate(bill.search.highlight.get(field).get(0), 300));
 			
-			((TextView) searchView.findViewById(R.id.match_field)).setText(matchText);
-			((TextView) searchView.findViewById(R.id.highlight_field)).setText(highlightText);
-			
-			adapter.addView(searchView);
+			// don't bother showing the short title, or the official title if it's the official title being shown
+			if (!field.equals("short_title") && !(field.equals("official_title") && bill.short_title == null)) {
+				final View searchView = inflater.inflate(R.layout.bill_search_data, null);
+				
+				String matchText = "\"" + bill.search.query + "\" matched the bill's " + Bill.matchText(field) + ":";
+				Spanned highlightText = Html.fromHtml(Utils.truncate(bill.search.highlight.get(field).get(0), 300));
+				
+				((TextView) searchView.findViewById(R.id.match_field)).setText(matchText);
+				((TextView) searchView.findViewById(R.id.highlight_field)).setText(highlightText);
+				
+				adapter.addView(searchView);
+			}
 		}
 		
 		View header = inflater.inflate(R.layout.bill_header, null);
