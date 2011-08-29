@@ -53,6 +53,10 @@
 	<color name="footer_disabled_bottom">#333333</color>
 	<color name="footer_disabled_text">#aaaaaa</color>
 	
+	<color name="footer_error_top">#333333</color>
+	<color name="footer_error_bottom">#333333</color>
+	<color name="footer_error_text">#aaaaaa</color>
+	
 	<color name="footer_first_time_top">#232323</color>
 	<color name="footer_first_time_bottom">#141414</color>
 	<color name="footer_first_time_text">#f5f5f5</color>

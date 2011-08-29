@@ -26,6 +26,7 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 
 public class Footer {
+	public static final int ERROR = -2;
 	public static final int DISABLED = -1;
 	public static final int OFF = 0;
 	public static final int ON = 1;
@@ -111,14 +112,19 @@ public class Footer {
 				setWorking();
 			else {
 				Database database = new Database(context);
-				database.open();
-				boolean on = database.hasSubscription(subscription.id, subscription.notificationClass);
-				database.close();
+				try {
+					database.open();
+					boolean on = database.hasSubscription(subscription.id, subscription.notificationClass);
+					database.close();
 				
-				if (on)
-					setOn();
-				else
-					setOff();
+					if (on)
+						setOn();
+					else
+						setOff();
+				} catch(SQLiteException e) {
+					Log.e(Utils.TAG, "Error on initializing footer, giving up and letting the user know.", e);
+					setError();
+				}
 			}
 		} else {
 			if (firstTime())
@@ -198,8 +204,21 @@ public class Footer {
 		
 		text.setText(R.string.footer_first_time);
 		text.setTextColor(resources.getColor(R.color.footer_first_time_text));
+		working.setVisibility(View.GONE);
 		
 		footerView.setBackgroundDrawable(resources.getDrawable(R.drawable.footer_first_time));
+	}
+	
+	// used when there's a database error on initialization and there's not much else to do
+	private void setError() {
+		state = ERROR;
+		
+		text.setText(R.string.footer_error);
+		text.setTextColor(resources.getColor(R.color.footer_error_text));
+		image.setVisibility(View.GONE);
+		working.setVisibility(View.GONE);
+		
+		footerView.setBackgroundDrawable(resources.getDrawable(R.drawable.footer_error));
 	}
 	
 	// will turn false once the user has visited the notification settings (and seen the explanation dialog) for the first time
@@ -233,6 +252,7 @@ public class Footer {
 			} 
 			// most likely a locked database
 			catch (SQLiteException e) {
+				Log.e(Utils.TAG, "Database exception on subscribe tap.", e);
 				database.close();
 				return -1;
 			}
@@ -243,7 +263,7 @@ public class Footer {
 			if (rows == -1) {
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " +
 				"Error saving notifications, -1 returned from one or more insert calls");
-				Utils.alert(footer.context, R.string.footer_error);
+				Utils.alert(footer.context, R.string.footer_busy);
 				setOff();
 			} else {
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
@@ -275,6 +295,7 @@ public class Footer {
 			}
 			// most likely a locked database
 			catch (SQLiteException e) {
+				Log.e(Utils.TAG, "Database exception on unsubscribe tap.", e);
 				database.close();
 				return -1;
 			}
@@ -285,7 +306,7 @@ public class Footer {
 			if (rows == -1) {
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " +
 				"Error saving notifications, -1 returned from a delete call");
-				Utils.alert(footer.context, R.string.footer_error);
+				Utils.alert(footer.context, R.string.footer_busy);
 				setOn();
 			} else {
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
