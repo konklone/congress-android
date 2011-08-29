@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -122,9 +123,13 @@ public class NotificationSettings extends PreferenceActivity {
 	private void updateRingtoneSummary(String uri) {
 		String summary;
 		
-		if (uri != null && !uri.equals(""))
-			summary = RingtoneManager.getRingtone(this, Uri.parse(uri)).getTitle(this);
-		else
+		if (uri != null && !uri.equals("")) {
+			Ringtone ringtone = RingtoneManager.getRingtone(this, Uri.parse(uri));
+			if (ringtone != null)
+				summary = ringtone.getTitle(this);
+			else
+				summary = "Unknown";
+		} else
 			summary = "Silent";
 		
 		findPreference(KEY_NOTIFY_RINGTONE).setSummary(summary);
