@@ -139,17 +139,17 @@
 	</string-array>
     
     <string-array name="changelog">
+		<item>Bill keyword searches now also search the full text of bills</item>
+		<item>Fixed sharing of bills to Facebook</item>
+		<item>Various other bugfixes</item>
+    </string-array>
+    
+    <string-array name="changelogLast">
 		<item>New visual theme and menu system</item>
 		<item>Upcoming committee hearings</item>
 		<item>Live updates from the House floor</item>
 		<item>Search for bills by keywords</item>
 		<item>Votes on amendments show purpose of amendment</item>
 		<item>See a list of one\'s notification subscriptions</item>
-		<item>Lots of small improvements and bugfixes</item>
-    </string-array>
-    
-    <string-array name="changelogLast">
-		<item>Votes now updated within an hour</item>
-		<item>Improved precision of notifications</item>
 	</string-array>
 </resources>
