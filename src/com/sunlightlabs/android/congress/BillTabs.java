@@ -80,12 +80,7 @@ public class BillTabs extends TabActivity {
 	}
 	
 	public String shareText() {
-		String url = Bill.thomasUrl(bill.bill_type, bill.number, bill.session);
-		String short_title = bill.short_title;
-		if (short_title != null && !short_title.equals(""))
-			return "Check out the " + short_title + " on THOMAS: " + url;
-		else
-			return "Check out the bill " + Bill.formatCode(bill.code) + " on THOMAS: " + url;
+		return Bill.govTrackUrl(bill.bill_type, bill.number, bill.session);
 	}
 	
 	private void toggleFavoriteStar(boolean enabled) {
