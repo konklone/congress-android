@@ -78,41 +78,51 @@ public class Analytics {
 		}
 	}
 	
+	// Convenience function.
 	// Will take care of logging the pageview, and then *not* logging it if the activity restarts because of a screen flip.
 	// Uses a fragment's presence as a marker of whether the initial pageview has been tracked already,
 	// and uses it as a holder for the tracker itself, returning it and replacing it when the activity changes.
-	// Finally, also uses its lifecycle as a way to automatically stop the tracker. 
-	public static GoogleAnalyticsTracker track(FragmentActivity activity, String url) {
+	// Finally, also uses its lifecycle as a way to automatically stop the tracker.
+	
+	public static TrackerFragment track(FragmentActivity activity, String url) {
 		if (analyticsEnabled(activity)) {
 			
-			// I initialize the tracker and call Analytics.start(tracker) here, instead of inside the fragment using callbacks,
-			// so that the Activity can have a tracker instance returned to it to use in subsequent event and pageview calls.
-			
+			// I initialize the tracker here and call start(), instead of inside the fragment using callbacks,
+			// so that we can log the inaugural pageview here, where we know whether it's the first time it happened
 			FragmentManager manager = activity.getSupportFragmentManager();
 			TrackerFragment fragment = (TrackerFragment) manager.findFragmentByTag(FRAGMENT_TAG);
-			
 			if (fragment == null) {
 				fragment = new TrackerFragment();
-				fragment.tracker = start(activity);
-				
-				// only do this the first time this method is called, when the fragment doesn't exist yet
-				page(activity, fragment.tracker, url);
-				
 				fragment.setRetainInstance(true);
 				manager.beginTransaction().add(fragment, FRAGMENT_TAG).commit();
-			} else
+				
+				// initialize the tracker immediately, so it can be used by the caller
+				fragment.tracker = start(activity);
+				
+				// if this was used as a convenience function in an activity, 
+				// log the pageview only once, when the fragment is first created
+				if (url != null)
+					page(activity, fragment.tracker, url);
+			} 
+			
+			// if this was used as a convenience function in an activity, reassign and restart 
+			// the tracker since we'll assume that this is the first call after the activity was restarted
+			else if (url != null) 
 				fragment.tracker = start(activity);
 			
-			return fragment.tracker;
-		} 
-		
-		// as long as all subsequent uses of this tracker go through the API in this class, a null tracker is harmless and intended
-		else
+			// otherwise, leave the fragment alone, nothing to do here
+			
+			return fragment;
+		} else
 			return null;
 	}
 	
-	// can be used by an activity that tracks events and pageviews but does not itself represent a pageview, 
-	// or does not otherwise need the lifecycle handling of the track() method 
+	// used to get the same fragment initialization but to not bother with the initial pageview hit 
+	public static GoogleAnalyticsTracker trackerFor(FragmentActivity activity) {
+		return track(activity, null).tracker;
+	}
+	
+	// begin the tracker for an activity - should be called only once per activity instance 
 	public static GoogleAnalyticsTracker start(Activity activity) {
 		if (analyticsEnabled(activity)) {
 			Log.i(Utils.TAG, "[Analytics] Tracker starting");
@@ -122,6 +132,15 @@ public class Analytics {
 			return tracker;
 		} else
 			return null;
+	}
+	
+	
+	public static void page(FragmentActivity activity, String page) {
+		page(activity, page, true);
+	}
+	
+	public static void page(FragmentActivity activity, String page, boolean checkEntry) {
+		page(activity, trackerFor(activity), page, checkEntry);
 	}
 	
 	public static void page(Activity activity, GoogleAnalyticsTracker tracker, String page) {

@@ -27,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.notifications.NotificationService;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -38,14 +37,12 @@ public class MenuMain extends FragmentActivity {
 
 	private static final String BULLET = "<b>&#183;</b> "; 
 	
-	GoogleAnalyticsTracker tracker;
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menu_main);
 
-		tracker = Analytics.track(this, "/");
+		Analytics.track(this, "/");
 		
 		setupControls();
 		
@@ -206,12 +203,12 @@ public class MenuMain extends FragmentActivity {
 	}
 	
 	public void goDonate() {
-		Analytics.page(this, tracker, "/donate", false);
+		Analytics.page(this, "/donate", false);
 		donationPage();
 	}
 	
 	public void showAbout() {
-		Analytics.page(this, tracker, "/about", false);
+		Analytics.page(this, "/about", false);
 		Utils.alertDialog(this, AlertFragment.ABOUT);
 	}
 	
@@ -232,7 +229,7 @@ public class MenuMain extends FragmentActivity {
 			startActivity(new Intent(this, Settings.class));
 			break;
 		case R.id.changelog:
-			Analytics.page(this, tracker, "/changelog", false);
+			Analytics.page(this, "/changelog", false);
 			showDialog(CHANGELOG);
 			break;
 		}
