@@ -83,43 +83,45 @@ public class Analytics {
 	// and uses it as a holder for the tracker itself, returning it and replacing it when the activity changes.
 	// Finally, also uses its lifecycle as a way to automatically stop the tracker. 
 	public static GoogleAnalyticsTracker track(FragmentActivity activity, String url) {
-		FragmentManager manager = activity.getSupportFragmentManager();
-		
-		// I initialize the tracker and call Analytics.start(tracker) here, instead of inside the fragment using callbacks,
-		// so that the Activity can have a tracker instance returned to it to use in subsequent event and pageview calls.
-		
-		TrackerFragment fragment = (TrackerFragment) manager.findFragmentByTag(FRAGMENT_TAG);
-		if (fragment == null) {
-			Log.i(Utils.TAG, "[Analytics] Initializing tracker fragment");
+		if (analyticsEnabled(activity)) {
 			
-			fragment = new TrackerFragment();
-			fragment.tracker = start(activity);
+			// I initialize the tracker and call Analytics.start(tracker) here, instead of inside the fragment using callbacks,
+			// so that the Activity can have a tracker instance returned to it to use in subsequent event and pageview calls.
 			
-			// only do this the first time this method is called, when the fragment doesn't exist yet
-			page(activity, fragment.tracker, url);
+			FragmentManager manager = activity.getSupportFragmentManager();
+			TrackerFragment fragment = (TrackerFragment) manager.findFragmentByTag(FRAGMENT_TAG);
 			
-			fragment.setRetainInstance(true);
-			manager.beginTransaction().add(fragment, FRAGMENT_TAG).commit();
-		} else {
-			Log.i(Utils.TAG, "[Analytics] Found already-made tracker fragment");
-			fragment.tracker = start(activity);
-		}
+			if (fragment == null) {
+				fragment = new TrackerFragment();
+				fragment.tracker = start(activity);
+				
+				// only do this the first time this method is called, when the fragment doesn't exist yet
+				page(activity, fragment.tracker, url);
+				
+				fragment.setRetainInstance(true);
+				manager.beginTransaction().add(fragment, FRAGMENT_TAG).commit();
+			} else
+				fragment.tracker = start(activity);
+			
+			return fragment.tracker;
+		} 
 		
-		return fragment.tracker;
+		// as long as all subsequent uses of this tracker go through the API in this class, a null tracker is harmless and intended
+		else
+			return null;
 	}
 	
-	// todo: remove this entirely and integrate into the fragment() method (then rename that method start()) 
+	// can be used by an activity that tracks events and pageviews but does not itself represent a pageview, 
+	// or does not otherwise need the lifecycle handling of the track() method 
 	public static GoogleAnalyticsTracker start(Activity activity) {
-		GoogleAnalyticsTracker tracker = null;
-		
 		if (analyticsEnabled(activity)) {
 			Log.i(Utils.TAG, "[Analytics] Tracker starting");
-			tracker = GoogleAnalyticsTracker.getInstance();
+			GoogleAnalyticsTracker tracker = GoogleAnalyticsTracker.getInstance();
 			String code = activity.getResources().getString(R.string.google_analytics_tracking_code);
 			tracker.start(code, activity);
-		}
-		
-		return tracker;
+			return tracker;
+		} else
+			return null;
 	}
 	
 	public static void page(Activity activity, GoogleAnalyticsTracker tracker, String page) {
