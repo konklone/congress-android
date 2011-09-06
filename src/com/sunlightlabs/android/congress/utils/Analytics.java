@@ -3,6 +3,9 @@ package com.sunlightlabs.android.congress.utils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
@@ -62,7 +65,50 @@ public class Analytics {
 	public static final String BILL_GOVTRACK = "govtrack";
 	public static final String ANALYTICS_DISABLE = "disable";
 	
+	private static final String FRAGMENT_TAG = "com.sunlightlabs.android.congress.utils.Analytics.analytics";
 	
+	// wrapper fragment for a GoogleAnalyticsTracker, manages its own state across activity restarts
+	static class TrackerFragment extends Fragment {
+		public GoogleAnalyticsTracker tracker;
+		
+		@Override
+		public void onDetach() {
+			super.onDetach();
+			Analytics.stop(tracker);
+		}
+	}
+	
+	// Will take care of logging the pageview, and then *not* logging it if the activity restarts because of a screen flip.
+	// Uses a fragment's presence as a marker of whether the initial pageview has been tracked already,
+	// and uses it as a holder for the tracker itself, returning it and replacing it when the activity changes.
+	// Finally, also uses its lifecycle as a way to automatically stop the tracker. 
+	public static GoogleAnalyticsTracker track(FragmentActivity activity, String url) {
+		FragmentManager manager = activity.getSupportFragmentManager();
+		
+		// I initialize the tracker and call Analytics.start(tracker) here, instead of inside the fragment using callbacks,
+		// so that the Activity can have a tracker instance returned to it to use in subsequent event and pageview calls.
+		
+		TrackerFragment fragment = (TrackerFragment) manager.findFragmentByTag(FRAGMENT_TAG);
+		if (fragment == null) {
+			Log.i(Utils.TAG, "[Analytics] Initializing tracker fragment");
+			
+			fragment = new TrackerFragment();
+			fragment.tracker = start(activity);
+			
+			// only do this the first time this method is called, when the fragment doesn't exist yet
+			page(activity, fragment.tracker, url);
+			
+			fragment.setRetainInstance(true);
+			manager.beginTransaction().add(fragment, FRAGMENT_TAG).commit();
+		} else {
+			Log.i(Utils.TAG, "[Analytics] Found already-made tracker fragment");
+			fragment.tracker = start(activity);
+		}
+		
+		return fragment.tracker;
+	}
+	
+	// todo: remove this entirely and integrate into the fragment() method (then rename that method start()) 
 	public static GoogleAnalyticsTracker start(Activity activity) {
 		GoogleAnalyticsTracker tracker = null;
 		
