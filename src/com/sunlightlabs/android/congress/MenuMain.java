@@ -1,9 +1,6 @@
 package com.sunlightlabs.android.congress;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,8 +23,6 @@ import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class MenuMain extends FragmentActivity {
-	private static final int FIRST = 1;
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,7 +34,7 @@ public class MenuMain extends FragmentActivity {
 		
 		if (firstTime()) {
 			newVersion(); // don't need to see the changelog on first install
-			showDialog(FIRST);
+			Utils.alertDialog(this, AlertFragment.FIRST);
 			setNotificationState(); // initially, all notifications are stopped
 		} else if (newVersion())
 			showChangelog();
@@ -85,7 +80,7 @@ public class MenuMain extends FragmentActivity {
 		
 		Utils.setActionButton(this, R.id.action_1, R.drawable.notifications, new View.OnClickListener() {
 			public void onClick(View v) { 
-				goNotifications(); 
+				startActivity(new Intent(MenuMain.this, NotificationTabs.class)); 
 			}
 		});
 	}
@@ -135,27 +130,6 @@ public class MenuMain extends FragmentActivity {
 		return Utils.getStringPreference(this, "last_version_seen");
 	}
 
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		LayoutInflater inflater = getLayoutInflater();
-
-		switch(id) {
-		case FIRST:
-			View firstView = inflater.inflate(R.layout.first_time, null);
-
-			return builder.setIcon(R.drawable.icon)
-				.setTitle(R.string.app_name)
-				.setView(firstView)
-				.setPositiveButton(R.string.first_button, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {}
-				})
-				.create();
-		default:
-			return null;
-		}
-	}
-
 
 	@Override 
 	public boolean onCreateOptionsMenu(Menu menu) { 
@@ -166,7 +140,8 @@ public class MenuMain extends FragmentActivity {
 	
 	public void goDonate() {
 		Analytics.page(this, "/donate", false);
-		donationPage();
+		String packageName = getResources().getString(R.string.app_donation_package_name);
+		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
 	}
 	
 	public void showAbout() {
@@ -184,10 +159,6 @@ public class MenuMain extends FragmentActivity {
 		intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_subject));
 		startActivity(intent);
 	}
-	
-	public void goNotifications() {
-		startActivity(new Intent(this, NotificationTabs.class));
-	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -202,10 +173,6 @@ public class MenuMain extends FragmentActivity {
 		return true;
 	}
 	
-	private void donationPage() {
-		String packageName = getResources().getString(R.string.app_donation_package_name);
-		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
-	}
 	
 	private static class MenuAdapter extends BaseAdapter {
 		private static final int BILLS = 0;

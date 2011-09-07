@@ -21,6 +21,7 @@ public class AlertFragment extends DialogFragment {
 
 	public static final int ABOUT = 1;
 	public static final int CHANGELOG = 2;
+	public static final int FIRST = 3;
 	
 	public static AlertFragment create(int type) {
 		AlertFragment fragment = new AlertFragment();
@@ -36,14 +37,28 @@ public class AlertFragment extends DialogFragment {
 		int type = getArguments().getInt("type");
 		
 		if (type == ABOUT)
-			return aboutDialog(inflater);
+			return about(inflater);
 		else if (type == CHANGELOG)
 			return changelog(inflater);
+		else if (type == FIRST)
+			return firstTime(inflater);
 		else
 			return null;
 	}
 	
-	public Dialog aboutDialog(LayoutInflater inflater) {
+	public Dialog firstTime(LayoutInflater inflater) {
+		View firstView = inflater.inflate(R.layout.first_time, null);
+
+		return new AlertDialog.Builder(getActivity()).setIcon(R.drawable.icon)
+			.setTitle(R.string.app_name)
+			.setView(firstView)
+			.setPositiveButton(R.string.first_button, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {}
+			})
+			.create();
+	}
+	
+	public Dialog about(LayoutInflater inflater) {
 		View aboutView = inflater.inflate(R.layout.about, null);
 
 		Spanned about1 = Html.fromHtml(
