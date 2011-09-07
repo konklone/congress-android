@@ -1,5 +1,8 @@
 package com.sunlightlabs.android.congress;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -7,14 +10,17 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class AlertFragment extends DialogFragment {
 
 	public static final int ABOUT = 1;
+	public static final int CHANGELOG = 2;
 	
 	public static AlertFragment create(int type) {
 		AlertFragment fragment = new AlertFragment();
@@ -31,6 +37,8 @@ public class AlertFragment extends DialogFragment {
 		
 		if (type == ABOUT)
 			return aboutDialog(inflater);
+		else if (type == CHANGELOG)
+			return changelog(inflater);
 		else
 			return null;
 	}
@@ -69,6 +77,37 @@ public class AlertFragment extends DialogFragment {
 				public void onClick(DialogInterface dialog, int which) {}
 			})
 			.create();
+	}
+	
+	public Dialog changelog(LayoutInflater inflater) {
+		View changelogView = inflater.inflate(R.layout.changelog, null);
+
+		Spanned changelog = getChangelogHtml(R.array.changelog);
+		Spanned changelogLast = getChangelogHtml(R.array.changelogLast);
+
+		((TextView) changelogView.findViewById(R.id.changelog)).setText(changelog);
+		((TextView) changelogView.findViewById(R.id.changelog_last_title)).setText(R.string.app_version_older);
+		((TextView) changelogView.findViewById(R.id.changelog_last)).setText(changelogLast);
+
+		ViewGroup title = (ViewGroup) inflater.inflate(R.layout.alert_dialog_title, null);
+		TextView titleText = (TextView) title.findViewById(R.id.title);
+		titleText.setText(getResources().getString(R.string.changelog_title_prefix) + " " + getResources().getString(R.string.app_version));
+		
+		return new AlertDialog.Builder(getActivity()).setIcon(R.drawable.icon)
+			.setCustomTitle(title)
+			.setView(changelogView)
+			.setPositiveButton(R.string.changelog_button, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {}
+			})
+			.create();
+	}
+	
+	private Spanned getChangelogHtml(int stringArrayId) {
+		String[] array = getActivity().getResources().getStringArray(stringArrayId);
+		List<String> items = new ArrayList<String>();
+		for (String item : array)
+			items.add("<b>&#183;</b> " + item); 
+		return Html.fromHtml(TextUtils.join("<br/><br/>", items));
 	}
 	
 }

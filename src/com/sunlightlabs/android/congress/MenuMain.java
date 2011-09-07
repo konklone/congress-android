@@ -1,8 +1,5 @@
 package com.sunlightlabs.android.congress;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -11,9 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,9 +27,6 @@ import com.sunlightlabs.android.congress.utils.Utils;
 
 public class MenuMain extends FragmentActivity {
 	private static final int FIRST = 1;
-	private static final int CHANGELOG = 2;
-
-	private static final String BULLET = "<b>&#183;</b> "; 
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +42,7 @@ public class MenuMain extends FragmentActivity {
 			showDialog(FIRST);
 			setNotificationState(); // initially, all notifications are stopped
 		} else if (newVersion())
-			showDialog(CHANGELOG);
+			showChangelog();
 	}
 
 	public void setupControls() {
@@ -160,40 +151,11 @@ public class MenuMain extends FragmentActivity {
 					public void onClick(DialogInterface dialog, int which) {}
 				})
 				.create();
-		case CHANGELOG:
-			View changelogView = inflater.inflate(R.layout.changelog, null);
-
-			Spanned changelog = getChangelogHtml(R.array.changelog);
-			Spanned changelogLast = getChangelogHtml(R.array.changelogLast);
-
-			((TextView) changelogView.findViewById(R.id.changelog)).setText(changelog);
-			((TextView) changelogView.findViewById(R.id.changelog_last_title)).setText(R.string.app_version_older);
-			((TextView) changelogView.findViewById(R.id.changelog_last)).setText(changelogLast);
-
-			ViewGroup title = (ViewGroup) inflater.inflate(R.layout.alert_dialog_title, null);
-			TextView titleText = (TextView) title.findViewById(R.id.title);
-			titleText.setText(getResources().getString(R.string.changelog_title_prefix) + " " + getResources().getString(R.string.app_version));
-			
-			return builder.setIcon(R.drawable.icon)
-				.setCustomTitle(title)
-				.setView(changelogView)
-				.setPositiveButton(R.string.changelog_button, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {}
-				})
-				.create();
 		default:
 			return null;
 		}
 	}
 
-	private Spanned getChangelogHtml(int stringArrayId) {
-		String[] array = getResources().getStringArray(stringArrayId);
-		List<String> items = new ArrayList<String>();
-		for (String item : array) { 
-			items.add(BULLET + item); 
-		}
-		return Html.fromHtml(TextUtils.join("<br/><br/>", items));
-	}
 
 	@Override 
 	public boolean onCreateOptionsMenu(Menu menu) { 
@@ -210,6 +172,11 @@ public class MenuMain extends FragmentActivity {
 	public void showAbout() {
 		Analytics.page(this, "/about", false);
 		Utils.alertDialog(this, AlertFragment.ABOUT);
+	}
+	
+	public void showChangelog() {
+		Analytics.page(this, "/changelog", false);
+		Utils.alertDialog(this, AlertFragment.CHANGELOG);
 	}
 	
 	public void doFeedback() {
@@ -229,8 +196,7 @@ public class MenuMain extends FragmentActivity {
 			startActivity(new Intent(this, Settings.class));
 			break;
 		case R.id.changelog:
-			Analytics.page(this, "/changelog", false);
-			showDialog(CHANGELOG);
+			showChangelog();
 			break;
 		}
 		return true;
