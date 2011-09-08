@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.sunlightlabs.android.congress.notifications.NotificationService;
 import com.sunlightlabs.android.congress.utils.Analytics;
+import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class MenuMain extends FragmentActivity {
@@ -34,7 +35,7 @@ public class MenuMain extends FragmentActivity {
 		
 		if (firstTime()) {
 			newVersion(); // don't need to see the changelog on first install
-			Utils.alertDialog(this, AlertFragment.FIRST);
+			FragmentUtils.alertDialog(this, AlertFragment.FIRST);
 			setNotificationState(); // initially, all notifications are stopped
 		} else if (newVersion())
 			showChangelog();
@@ -146,12 +147,12 @@ public class MenuMain extends FragmentActivity {
 	
 	public void showAbout() {
 		Analytics.page(this, "/about", false);
-		Utils.alertDialog(this, AlertFragment.ABOUT);
+		FragmentUtils.alertDialog(this, AlertFragment.ABOUT);
 	}
 	
 	public void showChangelog() {
 		Analytics.page(this, "/changelog", false);
-		Utils.alertDialog(this, AlertFragment.CHANGELOG);
+		FragmentUtils.alertDialog(this, AlertFragment.CHANGELOG);
 	}
 	
 	public void doFeedback() {

@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sunlightlabs.android.congress.AlertFragment;
 import com.sunlightlabs.android.congress.BillTabs;
 import com.sunlightlabs.android.congress.LegislatorTabs;
 import com.sunlightlabs.android.congress.R;
@@ -58,10 +56,6 @@ public class Utils {
 	public static void alert(Context context, CongressException exception) {
 		String message = exception == null ? "Unhandled error." : exception.getMessage();
 		Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-	}
-	
-	public static void alertDialog(FragmentActivity activity, int type) {
-		AlertFragment.create(type).show(activity.getSupportFragmentManager(), "dialog");
 	}
 	
 	public static String formatRollId(String id) {
@@ -235,6 +229,8 @@ public class Utils {
 		return view;
 	}
 
+	/* TODO: Remove these list-oriented show methods entirely once we're all on ListFragments */
+	
 	public static void showLoading(Activity activity) {
 		activity.findViewById(R.id.empty_message).setVisibility(View.GONE);
 		activity.findViewById(R.id.refresh).setVisibility(View.GONE);
