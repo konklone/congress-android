@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Window;
 import android.widget.TabHost;
 
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -12,6 +13,7 @@ public class CommitteeTabs extends TabActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.tabs_plain);
 
 		setupControls();
@@ -33,6 +35,8 @@ public class CommitteeTabs extends TabActivity {
 	}
 
 	private Intent committeeIntent(String chamber) {
-		return new Intent(this, CommitteeList.class).putExtra("chamber", chamber);
+		return new Intent(this, CommitteeList.class)
+			.putExtra("chamber", chamber)
+			.putExtra("type", CommitteeList.CHAMBER);
 	}
 }

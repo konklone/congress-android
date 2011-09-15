@@ -91,9 +91,7 @@
         	</intent-filter>
         </activity>
         
-        <activity android:name=".CommitteeTabs"
-        	android:theme="@android:style/Theme.NoTitleBar"
-        	/>
+        <activity android:name=".CommitteeTabs" />
         <activity android:name=".CommitteeList" />
         
         <activity android:name=".FloorUpdateList" 

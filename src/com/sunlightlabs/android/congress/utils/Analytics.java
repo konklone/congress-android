@@ -168,6 +168,10 @@ public class Analytics {
 		}
 	}
 		
+	public static void event(FragmentActivity activity, String category, String action, String label) {
+		event(activity, trackerFor(activity), category, action, label);
+	}
+	
 	public static void event(Activity activity, GoogleAnalyticsTracker tracker, String category, String action, String label) {
 		if (tracker != null && analyticsEnabled(activity)) {
 			
@@ -218,16 +222,16 @@ public class Analytics {
 		event(activity, tracker, EVENT_NOTIFICATION, NOTIFICATION_REMOVE, subscriber);
 	}
 	
-	public static void legislatorCall(Activity activity, GoogleAnalyticsTracker tracker, String bioguideId) {
-		event(activity, tracker, EVENT_LEGISLATOR, LEGISLATOR_CALL, bioguideId);
+	public static void legislatorCall(FragmentActivity activity, String bioguideId) {
+		event(activity, EVENT_LEGISLATOR, LEGISLATOR_CALL, bioguideId);
 	}
 	
-	public static void legislatorWebsite(Activity activity, GoogleAnalyticsTracker tracker, String bioguideId) {
-		event(activity, tracker, EVENT_LEGISLATOR, LEGISLATOR_WEBSITE, bioguideId);
+	public static void legislatorWebsite(FragmentActivity activity, String bioguideId) {
+		event(activity, EVENT_LEGISLATOR, LEGISLATOR_WEBSITE, bioguideId);
 	}
 	
-	public static void legislatorDistrict(Activity activity, GoogleAnalyticsTracker tracker, String bioguideId) {
-		event(activity, tracker, EVENT_LEGISLATOR, LEGISLATOR_DISTRICT, bioguideId);
+	public static void legislatorDistrict(FragmentActivity activity, String bioguideId) {
+		event(activity, EVENT_LEGISLATOR, LEGISLATOR_DISTRICT, bioguideId);
 	}
 	
 	public static void billShare(Activity activity, GoogleAnalyticsTracker tracker, String billId) {

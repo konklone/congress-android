@@ -11,6 +11,10 @@ import com.sunlightlabs.android.congress.R;
 
 public class FragmentUtils {
 	
+	public static void setupSunlight(Fragment fragment) {
+		Utils.setupSunlight(fragment.getActivity());
+	}
+	
 	public static void alertDialog(FragmentActivity activity, int type) {
 		AlertFragment.create(type).show(activity.getSupportFragmentManager(), "dialog");
 	}

@@ -4,6 +4,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:clickable="false"
+	android:id="@+id/profile_container"
 	>
 	
 	<include layout="@layout/legislator_out_of_office" />

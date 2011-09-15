@@ -44,6 +44,8 @@
     <string name="committees_senate">Senate Committees</string>
     <string name="committees_joint">Joint Committees</string>
     <string name="committees_empty">No committees found.</string>
+    <string name="committees_error">Error loading committees.</string>
+    <string name="legislator_no_committees">Belongs to no committees.</string>
     
     <string name="floor_updates_loading">Loading latest from the floor...</string>
     <string name="floor_updates_error">Error loading the House floor.</string>

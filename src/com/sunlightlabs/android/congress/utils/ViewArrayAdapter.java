@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress.utils;
 import java.util.List;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -16,6 +17,10 @@ public class ViewArrayAdapter extends ArrayAdapter<View> {
 
 	public ViewArrayAdapter(Activity context, List<View> items) {
 		super(context, 0, items);
+	}
+	
+	public ViewArrayAdapter(Fragment context, List<View> items) {
+		super(context.getActivity(), 0, items);
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
