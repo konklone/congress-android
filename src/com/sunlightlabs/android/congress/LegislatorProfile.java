@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
+import com.sunlightlabs.android.congress.tasks.ShortcutImageTask;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
@@ -30,7 +32,7 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class LegislatorProfile extends FragmentActivity { // implements ShortcutImageTask.CreatesShortcutImage {
+public class LegislatorProfile extends FragmentActivity { 
 	Legislator legislator; 
 	
 	@Override
@@ -49,8 +51,9 @@ public class LegislatorProfile extends FragmentActivity { // implements Shortcut
 	}
 	
 	
-	public static class LegislatorFragment extends ListFragment implements LoadPhotoTask.LoadsPhoto {
+	public static class LegislatorFragment extends ListFragment implements LoadPhotoTask.LoadsPhoto, ShortcutImageTask.CreatesShortcutImage {
 		private Legislator legislator;
+		private ShortcutImageTask shortcutImageTask;
 		
 		private Drawable avatar;
 		private ViewGroup mainView;
@@ -107,10 +110,11 @@ public class LegislatorProfile extends FragmentActivity { // implements Shortcut
 			if (isAdded())
 				displayAvatar();
 		}
-	//	
-	//	public void onCreateShortcutIcon(Bitmap icon) {
-	//		Utils.installShortcutIcon(this, legislator, icon);
-	//	}
+		
+		public void onCreateShortcutIcon(Bitmap icon) {
+			shortcutImageTask = null;
+			Utils.installShortcutIcon(getActivity(), legislator, icon);
+		}
 		
 		public Context getContext() {
 			return getActivity();
@@ -260,10 +264,10 @@ public class LegislatorProfile extends FragmentActivity { // implements Shortcut
 	    	case R.id.main:
 	    		startActivity(new Intent(getActivity(), MenuMain.class));
 	    		break;
-//	    	case R.id.shortcut:
-//	    		if (shortcutImageTask == null)
-//	    			shortcutImageTask = (ShortcutImageTask) new ShortcutImageTask(this).execute(legislator.getId());
-//	    		break;
+	    	case R.id.shortcut:
+	    		if (shortcutImageTask == null)
+	    			shortcutImageTask = (ShortcutImageTask) new ShortcutImageTask(this).execute(legislator.getId());
+	    		break;
 	    	case R.id.govtrack:
 	    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.govTrackUrl(legislator.govtrack_id))));
 	    		break;
