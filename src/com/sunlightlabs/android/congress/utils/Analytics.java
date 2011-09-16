@@ -119,7 +119,8 @@ public class Analytics {
 	
 	// used to get the same fragment initialization but to not bother with the initial pageview hit 
 	public static GoogleAnalyticsTracker trackerFor(FragmentActivity activity) {
-		return track(activity, null).tracker;
+		TrackerFragment fragment = track(activity, null);
+		return (fragment != null ? fragment.tracker : null);
 	}
 	
 	// begin the tracker for an activity - should be called only once per activity instance 
