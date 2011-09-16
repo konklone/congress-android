@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Congress</string>
-    <string name="app_version">3.1</string>
-    <string name="app_version_older">Version 3.0</string>
+    <string name="app_version">3.2</string>
+    <string name="app_version_older">Version 3.1</string>
     <string name="app_donation_package_name">com.sunlightlabs.android.congress.donate</string>
     
     <string name="create_shortcuts">Legislator</string>
