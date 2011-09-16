@@ -1,5 +1,6 @@
 package com.sunlightlabs.android.congress;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -142,7 +143,11 @@ public class MenuMain extends FragmentActivity {
 	public void goDonate() {
 		Analytics.page(this, "/donate", false);
 		String packageName = getResources().getString(R.string.app_donation_package_name);
-		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
+		try {
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
+		} catch(ActivityNotFoundException e) {
+			Utils.alert(this, R.string.no_market_installed);
+		}
 	}
 	
 	public void showAbout() {

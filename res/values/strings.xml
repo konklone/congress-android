@@ -7,6 +7,7 @@
     
     <string name="create_shortcuts">Legislator</string>
     <string name="first_time_twitter">Tap to the right of a tweet to reply using a Twitter app.</string>
+    <string name="no_market_installed">You need to have the Android Market in order to donate.</string>
     
     <string name="empty_zipcode">No legislators found for your zipcode.</string>
     <string name="empty_location">No legislators found for your location.</string>
