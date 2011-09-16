@@ -51,6 +51,7 @@
     <string name="floor_updates_loading">Loading latest from the floor...</string>
     <string name="floor_updates_error">Error loading the latest from the floor.</string>
     <string name="floor_updates_related_roll">Related vote</string>
+    <string name="floor_updates_related_bill">Related bill</string>
     
     <string name="hearings_title">Upcoming Hearings</string>
     <string name="hearings_loading">Loading upcoming hearings...</string>

@@ -62,6 +62,10 @@ public class Utils {
 		Roll tempRoll = Roll.splitRollId(id);
 		return Utils.capitalize(tempRoll.chamber) + " Roll No. " + tempRoll.number;
 	}
+	
+	public static String formatBillId(String id) {
+		return Bill.formatId(id);
+	}
 
 	// Suitable for a legislator desktop shortcut, load a legislator by ID only
 	public static Intent legislatorLoadIntent(String id) {

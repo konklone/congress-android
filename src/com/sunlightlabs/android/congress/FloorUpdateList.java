@@ -121,10 +121,16 @@ public class FloorUpdateList extends ListActivity {
 		FloorUpdateAdapter.Item item = (FloorUpdateAdapter.Item) parent.getItemAtPosition(position);
 		if (item instanceof FloorUpdateAdapter.Roll)
 			selectRoll(((FloorUpdateAdapter.Roll) item).rollId);
+		else if (item instanceof FloorUpdateAdapter.Bill)
+			selectBill(((FloorUpdateAdapter.Bill) item).billId);
 	}
 
 	private void selectRoll(String rollId) {
 		startActivity(Utils.rollIntent(this, rollId));
+	}
+	
+	private void selectBill(String billId) {
+		startActivity(Utils.billLoadIntent(billId));
 	}
 	
 	public void loadUpdates() {
@@ -160,6 +166,7 @@ public class FloorUpdateList extends ListActivity {
     	public static final int TYPE_DATE = 0;
     	public static final int TYPE_UPDATE = 1;
     	public static final int TYPE_ROLL = 2;
+    	public static final int TYPE_BILL = 3;
 
         public FloorUpdateAdapter(Activity context, List<FloorUpdateAdapter.Item> items) {
             super(context, 0, items);
@@ -169,7 +176,7 @@ public class FloorUpdateList extends ListActivity {
         
         @Override
         public boolean isEnabled(int position) {
-        	if (getItemViewType(position) == FloorUpdateAdapter.TYPE_ROLL)
+        	if (getItemViewType(position) >= FloorUpdateAdapter.TYPE_ROLL)
         		return true;
         	else
         		return false;
@@ -187,13 +194,15 @@ public class FloorUpdateList extends ListActivity {
         		return FloorUpdateAdapter.TYPE_DATE;
         	else if (item instanceof FloorUpdateAdapter.Update)
         		return FloorUpdateAdapter.TYPE_UPDATE;
-        	else // roll
+        	else if (item instanceof FloorUpdateAdapter.Roll)
         		return FloorUpdateAdapter.TYPE_ROLL;
+        	else
+        		return FloorUpdateAdapter.TYPE_BILL;
         }
         
         @Override
         public int getViewTypeCount() {
-        	return 3;
+        	return 4;
         }
 
 		@Override
@@ -205,7 +214,7 @@ public class FloorUpdateList extends ListActivity {
 				
 				((TextView) view.findViewById(R.id.date)).setText(((Date) item).date);				
 				
-			} else if (item instanceof Update){
+			} else if (item instanceof Update) {
 				// don't recycle
 				view = inflater.inflate(R.layout.floor_update, null);
 				
@@ -221,11 +230,16 @@ public class FloorUpdateList extends ListActivity {
 					((TextView) event.findViewById(R.id.text)).setText(update.events.get(i));
 					((ViewGroup) view).addView(event);
 				}
-			} else { // instanceof Roll
+			} else if (item instanceof Roll) {
 				view = inflater.inflate(R.layout.floor_update_roll, null);
 				
 				String rollId = ((Roll) item).rollId;
 				((TextView) view.findViewById(R.id.roll)).setText(Utils.formatRollId(rollId));
+			} else { // instanceof Bill
+				view = inflater.inflate(R.layout.floor_update_bill, null);
+				
+				String billId = ((Bill) item).billId;
+				((TextView) view.findViewById(R.id.bill)).setText(Utils.formatBillId(billId));
 			}
 
 			return view;
@@ -254,6 +268,14 @@ public class FloorUpdateList extends ListActivity {
 			
 			public Roll(String rollId) {
 				this.rollId = rollId;
+			}
+		}
+		
+		static class Bill extends Item {
+			String billId;
+			
+			public Bill(String billId) {
+				this.billId = billId;
 			}
 		}
 		
@@ -295,7 +317,12 @@ public class FloorUpdateList extends ListActivity {
 					for (int j=0; j<length; j++)
 						items.add(new Roll(update.rollIds.get(j)));
 				}
-					
+				
+				int bills = (update.billIds != null ? update.billIds.size() : 0);
+				if (bills > 0) {
+					for (int j=0; j<bills; j++)
+						items.add(new Bill(update.billIds.get(j)));
+				}
 			}
 			
 			return items;
