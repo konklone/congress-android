@@ -94,9 +94,8 @@
         <activity android:name=".CommitteeTabs" />
         <activity android:name=".CommitteeList" />
         
-        <activity android:name=".FloorUpdateList" 
-        	android:theme="@android:style/Theme.NoTitleBar"
-        	/>
+        <activity android:name=".FloorUpdateTabs" />
+        <activity android:name=".FloorUpdateList" />
         	
         <activity android:name=".HearingList" 
         	android:theme="@android:style/Theme.NoTitleBar"

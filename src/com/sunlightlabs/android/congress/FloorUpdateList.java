@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -44,7 +45,8 @@ public class FloorUpdateList extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list_footer_titled);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.list_footer);
 		
 		Bundle extras = getIntent().getExtras();
 		this.chamber = extras.getString("chamber");
@@ -101,7 +103,6 @@ public class FloorUpdateList extends ListActivity {
 			}
 		});
 
-		Utils.setTitle(this, R.string.menu_main_floor_updates, R.drawable.floor);
 		Utils.setLoading(this, R.string.floor_updates_loading);
 	}
 	

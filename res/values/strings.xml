@@ -47,8 +47,9 @@
     <string name="committees_error">Error loading committees.</string>
     <string name="legislator_no_committees">Belongs to no committees.</string>
     
+    <string name="floor_updates_title">The Floor</string>
     <string name="floor_updates_loading">Loading latest from the floor...</string>
-    <string name="floor_updates_error">Error loading the House floor.</string>
+    <string name="floor_updates_error">Error loading the latest from the floor.</string>
     <string name="floor_updates_related_roll">Related vote</string>
     
     <string name="hearings_title">Upcoming Hearings</string>
@@ -100,7 +101,7 @@
     <string name="menu_main_votes">Votes</string>
     <string name="menu_main_legislators">People</string>
     <string name="menu_main_committees">Committees</string>
-    <string name="menu_main_floor_updates">House Floor</string>
+    <string name="menu_main_floor_updates">The Floor</string>
     <string name="menu_main_hearings">Hearings</string>
     
     <string name="menu_legislators_no_favorites">You can add senators and representatives to this menu for quick access. When viewing a person, tap the star in the upper left corner.</string>
