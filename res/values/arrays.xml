@@ -139,6 +139,7 @@
 	</string-array>
     
     <string-array name="changelog">
+    	<item>3.2.1 - Fixed several bad crashing bugs</item>
 		<item>Added updates from the Senate Floor</item>
 		<item>Showing links to bills mentioned on the House and Senate floor</item>
     </string-array>
