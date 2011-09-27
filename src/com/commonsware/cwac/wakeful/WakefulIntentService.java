@@ -107,8 +107,10 @@ abstract public class WakefulIntentService extends IntentService {
 		try {
 			doWakefulWork(intent);
 		} finally {
-			getCpuLock(this).release();
-			getWifiLock(this).release();
+			if (getCpuLock(this).isHeld())
+				getCpuLock(this).release();
+			if (getWifiLock(this).isHeld())
+				getWifiLock(this).release();
 		}
 	}
 }
