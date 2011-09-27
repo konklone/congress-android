@@ -101,9 +101,9 @@ public class LegislatorProfile extends FragmentActivity {
 		public void onLoadPhoto(Drawable avatar, Object tag) {
 			if (avatar == null) {
 				if (legislator.gender.equals("M"))
-					avatar = getResources().getDrawable(R.drawable.no_photo_male);
+					avatar = getActivity().getResources().getDrawable(R.drawable.no_photo_male);
 				else // "F"
-					avatar = getResources().getDrawable(R.drawable.no_photo_female);
+					avatar = getActivity().getResources().getDrawable(R.drawable.no_photo_female);
 			}
 			this.avatar = avatar;
 			
