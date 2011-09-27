@@ -68,7 +68,7 @@ public class Analytics {
 	private static final String FRAGMENT_TAG = "com.sunlightlabs.android.congress.utils.Analytics.analytics";
 	
 	// wrapper fragment for a GoogleAnalyticsTracker, manages its own state across activity restarts
-	static class TrackerFragment extends Fragment {
+	public static class TrackerFragment extends Fragment {
 		public GoogleAnalyticsTracker tracker;
 		
 		@Override
@@ -76,6 +76,8 @@ public class Analytics {
 			super.onDetach();
 			Analytics.stop(tracker);
 		}
+		
+		public TrackerFragment() {}
 	}
 	
 	// Convenience function.
