@@ -7,6 +7,8 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -94,7 +96,31 @@ public class HearingList extends ListActivity {
 	
 	@Override
 	protected void onListItemClick(ListView parent, View v, int position, long id) {
+		Hearing hearing = (Hearing) parent.getItemAtPosition(position);
+		selectHearing(hearing);
+	}
+	
+	public void selectHearing(Hearing hearing) {
+		Date date = hearing.occursAt;
+		long startTime = date.getTime();
+		long endTime = startTime + (3 * 60 * 60 * 1000);
 		
+		Intent intent = new Intent(Intent.ACTION_EDIT);
+		intent.setType("vnd.android.cursor.item/event");
+		
+		intent.putExtra("title", "Hearing: " + hearing.committee.name);
+		intent.putExtra("description", hearing.description);
+		intent.putExtra("eventLocation", hearing.room);
+		
+		intent.putExtra("beginTime", startTime);
+		intent.putExtra("endTime", endTime);
+		intent.putExtra("allDay", false);
+		
+		try {
+			startActivity(intent);
+		} catch (ActivityNotFoundException e) {
+			Utils.alert(this, R.string.hearings_no_calendar);
+		}
 	}
 	
 	public void loadHearings() {
@@ -117,11 +143,11 @@ public class HearingList extends ListActivity {
 	
 	public void displayHearings() {
 		if (hearings.size() > 0) {
+			ViewGroup header = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.list_header_simple, null);
+			((TextView) header.findViewById(R.id.text)).setText(R.string.hearings_header);
+			getListView().addHeaderView(header, null, false);
+			
 			setListAdapter(new HearingAdapter(this, hearings));
-//			ViewGroup header = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.list_header_simple, null);
-//			
-//			((TextView) header.findViewById(R.id.text)).setText(R.string.google_news_branding);
-//			getListView().addHeaderView(header, null, false);
 		} else
 			Utils.showRefresh(this, R.string.hearings_empty);
 	}
