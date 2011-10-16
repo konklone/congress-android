@@ -18,10 +18,11 @@ import com.sunlightlabs.congress.models.Hearing;
 
 public class HearingService {
 
-	public static List<Hearing> upcoming(int page, int per_page) throws CongressException {
+	public static List<Hearing> upcoming(String chamber, int page, int per_page) throws CongressException {
 		Date now = new GregorianCalendar(DateUtils.GMT).getTime();
 		
 		Map<String,String> params = new HashMap<String,String>();
+		params.put("chamber", chamber);
 		params.put("occurs_at__gte", RealTimeCongress.formatDate(now));
 		params.put("committee__exists", "true");
 		params.put("sort", "asc"); // start with the hearings closest to now

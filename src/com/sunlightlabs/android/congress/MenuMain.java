@@ -61,7 +61,7 @@ public class MenuMain extends FragmentActivity {
 				else if (tag.equals("floor_updates"))
 					startActivity(new Intent(MenuMain.this, FloorUpdateTabs.class));
 				else if (tag.equals("hearings"))
-					startActivity(new Intent(MenuMain.this, HearingList.class));
+					startActivity(new Intent(MenuMain.this, HearingList.class).putExtra("chamber", "senate"));
 			}
 		});
 		

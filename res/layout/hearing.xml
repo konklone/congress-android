@@ -3,38 +3,84 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	
-	android:orientation="vertical"
+	android:orientation="horizontal"
 	
+	android:paddingLeft="10dp"
+	android:paddingRight="10dp"
 	android:paddingTop="15dp"
-	android:paddingBottom="10dp"
-	
-	android:paddingLeft="15dp"
-	android:paddingRight="15dp"
+	android:paddingBottom="15dp"
 	>
 	
-	<TextView android:id="@+id/name"
+	<LinearLayout android:orientation="vertical"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_weight="0"
 		
-		android:textSize="18sp"
-		android:textColor="@android:color/white"
-		/>
+		android:paddingRight="15dp"
+		
+		android:gravity="center_horizontal"
+		>
+		
+		<TextView android:id="@+id/month"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@android:color/white"
+			android:textSize="26sp"
+			
+			android:text="Oct 18"
+			/>
+		
+		<TextView android:id="@+id/time"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="5dp"
+			
+			android:textSize="16sp"
+			android:textColor="@android:color/white"
+			
+			android:text="10:00AM"
+			/>
+		
+		<TextView android:id="@+id/room"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:layout_marginTop="5dp"
+			android:textSize="16sp"
+			
+			android:text="SD-234"
+			/>
 	
-	<TextView android:id="@+id/time_and_room"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		
-		android:textSize="16sp"
-		/>
+	</LinearLayout>
 	
-	<TextView android:id="@+id/description"
-		android:layout_width="wrap_content"
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		>
 		
-		android:layout_marginTop="5dp"
-		
-		android:textSize="16sp"
-		android:textColor="@android:color/white"
-		/>
+		<TextView android:id="@+id/name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingTop="2dp"
+			
+			android:textSize="18sp"
+			android:textColor="@android:color/white"
+			
+			android:text="Homeland Security and Governmental Affairs"
+			/>
+			
+		<TextView android:id="@+id/description"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:layout_marginTop="5dp"
+			
+			android:textSize="16sp"
+			
+			android:text="Hearings to examine ten years after 9/11 and the anthrax attacks, focusing on protecting against biological threats."
+			/>
+	
+	</LinearLayout>
 	
 </LinearLayout>

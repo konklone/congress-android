@@ -34,16 +34,13 @@
     <string name="twitter_empty">No tweets found.</string>
     <string name="youtube_loading">Plucking videos from the air...</string>
     <string name="youtube_empty">No videos found.</string>
-    <string name="bills_loading">Searching for bills...</string>
-    <string name="legislators_loading">Searching for legislators...</string>
+    <string name="bills_loading">Plucking bills from the air...</string>
+    <string name="legislators_loading">Searching for lawmakers...</string>
     <string name="legislators_loading_cosponsors">Loading cosponsors...</string>
-    <string name="votes_loading">Searching for votes...</string>
+    <string name="votes_loading">Plucking votes from the air...</string>
    
    	<string name="committees_title">Committees</string>
-    <string name="committees_loading">Searching for committees...</string>
-    <string name="committees_house">House Committees</string>
-    <string name="committees_senate">Senate Committees</string>
-    <string name="committees_joint">Joint Committees</string>
+    <string name="committees_loading">Plucking committees from the air...</string>
     <string name="committees_empty">No committees found.</string>
     <string name="committees_error">Error loading committees.</string>
     <string name="legislator_no_committees">Belongs to no committees.</string>
@@ -54,7 +51,7 @@
     <string name="floor_updates_related_roll">Related vote</string>
     <string name="floor_updates_related_bill">Related bill</string>
     
-    <string name="hearings_title">Upcoming Hearings</string>
+    <string name="hearings_title">Upcoming Senate Hearings</string>
     <string name="hearings_loading">Loading upcoming hearings...</string>
     <string name="hearings_empty">No known upcoming hearings.</string>
     <string name="hearings_error">Error loading upcoming hearings.</string>
@@ -104,7 +101,7 @@
     <string name="menu_main_legislators">People</string>
     <string name="menu_main_committees">Committees</string>
     <string name="menu_main_floor_updates">The Floor</string>
-    <string name="menu_main_hearings">Hearings</string>
+    <string name="menu_main_hearings">Senate Hearings</string>
     
     <string name="menu_legislators_no_favorites">You can add senators and representatives to this menu for quick access. When viewing a person, tap the star in the upper left corner.</string>
     <string name="menu_bills_no_favorites">You can add bills to this menu for quick access. When viewing a bill, tap the star in the upper left corner.</string>
