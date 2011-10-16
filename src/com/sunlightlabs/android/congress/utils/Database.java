@@ -19,7 +19,7 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.RealTimeCongress;
 
 public class Database {
-	private static final int DATABASE_VERSION = 5; // updated last for version 3.0
+	private static final int DATABASE_VERSION = 6; // updated last for version 3.3
 
 	public boolean closed = true;
 
@@ -32,6 +32,7 @@ public class Database {
 	private static final String[] BILL_COLUMNS = new String[] { "id", "code", "short_title", "official_title" };
 
 	private static final String[] SUBSCRIPTION_COLUMNS = new String[] {"id", "name", "data", "seen_id", "notification_class" };
+	
 
 	private DatabaseHelper helper;
 	private SQLiteDatabase database;
@@ -366,6 +367,14 @@ public class Database {
 				
 			}
 			
+			// remove nominations subscriber from people's databases if it exists
+			// restructure subscriptions tables to split them out into two
+			// much cleaner, and sets the foundation for proper accumulated unseen counts
+			if (oldVersion < 6) {
+				// remove nominations subscriber 
+				long rows = db.delete("subscriptions", "notification_class=?", new String[] {"RollsNominationsSubscriber"});
+				Log.i(Utils.TAG, "Removed " + rows + " RollsNominationsSubscriber entries from database");
+			}
 		}
 	}
 }
