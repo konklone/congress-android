@@ -65,7 +65,7 @@ public class NotificationSubscriptions extends ListActivity {
 		database = new Database(this);
 		database.open();
 		
-		cursor = database.allSubscriptions();
+		cursor = database.getSubscriptions();
 		startManagingCursor(cursor);
 	}
 	

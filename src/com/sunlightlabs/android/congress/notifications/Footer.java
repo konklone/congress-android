@@ -310,7 +310,7 @@ public class Footer {
 				setOn();
 			} else {
 				Log.i(Utils.TAG, "Footer: [" + subscription.notificationClass + "][" + subscription.id + "] " + 
-						"Removed notification from the db, " + rows + " deleted");
+						"Removed notification from the db, " + rows + " rows deleted");
 				
 				setOff();
 			}

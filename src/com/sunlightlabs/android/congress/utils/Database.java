@@ -31,8 +31,9 @@ public class Database {
 			"youtube_url" };
 	private static final String[] BILL_COLUMNS = new String[] { "id", "code", "short_title", "official_title" };
 
-	private static final String[] SUBSCRIPTION_COLUMNS = new String[] {"id", "name", "data", "seen_id", "notification_class" };
+	private static final String[] SUBSCRIPTION_COLUMNS = new String[] { "id", "name", "data", "notification_class", "unseen_count" };
 	
+	private static final String[] SEEN_COLUMNS = new String[] { "subscription_id", "subscription_class", "seen_id" };
 
 	private DatabaseHelper helper;
 	private SQLiteDatabase database;
@@ -44,6 +45,24 @@ public class Database {
 	public Database(Context context) {
 		this.context = context;
 	}
+	
+	public Database open() {
+		helper = new DatabaseHelper(context);
+		closed = false;
+		database = helper.getWritableDatabase();
+		return this;
+	}
+
+	public boolean isOpen() {
+		return database.isOpen();
+	}
+
+	public void close() {
+		closed = true;
+		helper.close();
+	}
+	
+	/** Legislators */
 
 	private ContentValues fromLegislator(Legislator legislator, int size) {
 		try {
@@ -85,6 +104,30 @@ public class Database {
 	public Cursor getLegislators() {
 		return database.rawQuery("SELECT * FROM legislators", null);
 	}
+	
+	public static Legislator loadLegislator(Cursor c) {
+		Legislator legislator = new Legislator();
+
+		legislator.id = c.getString(c.getColumnIndex("id"));
+		legislator.bioguide_id = c.getString(c.getColumnIndex("bioguide_id"));
+		legislator.govtrack_id = c.getString(c.getColumnIndex("govtrack_id"));
+		legislator.first_name = c.getString(c.getColumnIndex("first_name"));
+		legislator.last_name = c.getString(c.getColumnIndex("last_name"));
+		legislator.nickname = c.getString(c.getColumnIndex("nickname"));
+		legislator.name_suffix = c.getString(c.getColumnIndex("name_suffix"));
+		legislator.title = c.getString(c.getColumnIndex("title"));
+		legislator.party = c.getString(c.getColumnIndex("party"));
+		legislator.state = c.getString(c.getColumnIndex("state"));
+		legislator.district = c.getString(c.getColumnIndex("district"));
+		legislator.gender = c.getString(c.getColumnIndex("gender"));
+		legislator.congress_office = c.getString(c.getColumnIndex("congress_office"));
+		legislator.website = c.getString(c.getColumnIndex("website"));
+		legislator.phone = c.getString(c.getColumnIndex("phone"));
+		legislator.twitter_id = c.getString(c.getColumnIndex("twitter_id"));
+		legislator.youtube_url = c.getString(c.getColumnIndex("youtube_url"));
+		
+		return legislator;
+	}
 
 	public static String formatDate(Date date) {
 		return date == null ? null : format.format(date);
@@ -93,6 +136,8 @@ public class Database {
 	public static Date parseDate(String date) throws ParseException {
 		return date == null ? null : format.parse(date);
 	}
+	
+	/** Bills */
 
 	// error condition is -1
 	public long addBill(Bill bill) {
@@ -121,29 +166,12 @@ public class Database {
 	
 	public Cursor getBill(String id) {
 		Cursor cursor = database.query("bills", BILL_COLUMNS, "id=?", new String[] { id }, null, null, null);
-
 		cursor.moveToFirst();
 		return cursor;
 	}
 
 	public Cursor getBills() {
 		return database.rawQuery("SELECT * FROM bills", null);
-	}
-
-	public Database open() {
-		helper = new DatabaseHelper(context);
-		closed = false;
-		database = helper.getWritableDatabase();
-		return this;
-	}
-
-	public boolean isOpen() {
-		return database.isOpen();
-	}
-
-	public void close() {
-		closed = true;
-		helper.close();
 	}
 
 	public static Bill loadBill(Cursor c) {
@@ -157,42 +185,15 @@ public class Database {
 		return bill;
 	}
 
-	public static Legislator loadLegislator(Cursor c) {
-		Legislator legislator = new Legislator();
-
-		legislator.id = c.getString(c.getColumnIndex("id"));
-		legislator.bioguide_id = c.getString(c.getColumnIndex("bioguide_id"));
-		legislator.govtrack_id = c.getString(c.getColumnIndex("govtrack_id"));
-		legislator.first_name = c.getString(c.getColumnIndex("first_name"));
-		legislator.last_name = c.getString(c.getColumnIndex("last_name"));
-		legislator.nickname = c.getString(c.getColumnIndex("nickname"));
-		legislator.name_suffix = c.getString(c.getColumnIndex("name_suffix"));
-		legislator.title = c.getString(c.getColumnIndex("title"));
-		legislator.party = c.getString(c.getColumnIndex("party"));
-		legislator.state = c.getString(c.getColumnIndex("state"));
-		legislator.district = c.getString(c.getColumnIndex("district"));
-		legislator.gender = c.getString(c.getColumnIndex("gender"));
-		legislator.congress_office = c.getString(c.getColumnIndex("congress_office"));
-		legislator.website = c.getString(c.getColumnIndex("website"));
-		legislator.phone = c.getString(c.getColumnIndex("phone"));
-		legislator.twitter_id = c.getString(c.getColumnIndex("twitter_id"));
-		legislator.youtube_url = c.getString(c.getColumnIndex("youtube_url"));
-		
-		return legislator;
-	}
+	
+	/** Subscriptions */
 
 	public Cursor getSubscriptions() {
-		return database.rawQuery("SELECT DISTINCT id, name, data, notification_class FROM subscriptions", null);
-	}
-	
-	public Cursor allSubscriptions() {
-		return database.rawQuery("SELECT * from subscriptions WHERE seen_id IS NULL", null);
+		return database.rawQuery("SELECT * FROM subscriptions", null);
 	}
 
 	public Cursor getSubscription(String id, String notificationClass) {
-		StringBuilder query = new StringBuilder("id=? AND notification_class=?");
-
-		return database.query("subscriptions", SUBSCRIPTION_COLUMNS, query.toString(),
+		return database.query("subscriptions", SUBSCRIPTION_COLUMNS, "id=? AND notification_class=?",
 				new String[] { id, notificationClass }, null, null, null);
 	}
 	
@@ -204,11 +205,9 @@ public class Database {
 		return hasSubscription;
 	}
 	
-	public boolean hasSubscriptionItem(String id, String notificationClass, String itemId) {
-		StringBuilder query = new StringBuilder("id=? AND notification_class=? AND seen_id=?");
-
-		Cursor c = database.query("subscriptions", SUBSCRIPTION_COLUMNS, query.toString(),
-				new String[] { id, notificationClass, itemId }, null, null, null);
+	public boolean hasSubscriptionItem(String subscriptionId, String subscriptionClass, String itemId) {
+		Cursor c = database.query("seen_items", SEEN_COLUMNS, "subscription_id=? AND subscription_class=? AND seen_id=?",
+				new String[] { subscriptionId, subscriptionClass, itemId }, null, null, null);
 		boolean hasItem = c.moveToFirst();
 		c.close();
 		
@@ -221,25 +220,20 @@ public class Database {
 		cv.put("name", subscription.name);
 		cv.put("notification_class", subscription.notificationClass);
 		cv.put("data", subscription.data);
-		
-		// insert placeholder item with null seen_id, so that a subscription is registered even for empty lists
 		return database.insert("subscriptions", null, cv);
 	}
 	
 	public long addSeenIds(Subscription subscription, List<String> latestIds) {
-		ContentValues cv = new ContentValues(SUBSCRIPTION_COLUMNS.length);
-		cv.put("id", subscription.id);
-		cv.put("name", subscription.name);
-		cv.put("notification_class", subscription.notificationClass);
-		cv.put("data", subscription.data);
-		
 		int rows = 0;
 		boolean failed = false;
 		
 		int size = latestIds.size();
 		for (int i=0; i<size; i++) {
+			ContentValues cv = new ContentValues(SUBSCRIPTION_COLUMNS.length);
+			cv.put("subscription_id", subscription.id);
+			cv.put("subscription_class", subscription.notificationClass);
 			cv.put("seen_id", latestIds.get(i));
-			if (database.insert("subscriptions", null, cv) >= 0)
+			if (database.insert("seen_items", null, cv) >= 0)
 				rows += 1;
 			else
 				failed = true;
@@ -249,8 +243,11 @@ public class Database {
 	}
 	
 	public long removeSubscription(String id, String notificationClass) {
-		return database.delete("subscriptions", "id=? AND notification_class=?", 
+		long first = database.delete("subscriptions", "id=? AND notification_class=?", 
 				new String[] { id , notificationClass });
+		long second = database.delete("seen_items", "subscription_id=? AND subscription_class=?", 
+				new String[] { id , notificationClass });
+		return first + second;
 	}
 	
 	public static Subscription loadSubscription(Cursor c) {
@@ -278,12 +275,6 @@ public class Database {
 			db.execSQL(sql.toString());
 		}
 		
-//		private void renameColumn(SQLiteDatabase db, String table, String oldColumn, String newColumn) {
-//			addColumn(db, table, newColumn);
-//			db.execSQL("UPDATE " + table + " SET " + newColumn + "=" + oldColumn + ";");
-//			// abandon old column, no way to remove columns in SQLite
-//		}
-		
 		private void addColumn(SQLiteDatabase db, String table, String newColumn) {
 			db.execSQL("ALTER TABLE " + table + " ADD COLUMN " + newColumn + " TEXT;");
 		}
@@ -293,6 +284,7 @@ public class Database {
 			createTable(db, "bills", BILL_COLUMNS);
 			createTable(db, "legislators", LEGISLATOR_COLUMNS);
 			createTable(db, "subscriptions", SUBSCRIPTION_COLUMNS);
+			createTable(db, "seen_items", SEEN_COLUMNS);
 		}
 
 		@Override
@@ -304,8 +296,10 @@ public class Database {
 			
 			// Version 3 - Notifications (subscriptions table)
 			// 	 released in version 2.9
-			if (oldVersion < 3)
+			if (oldVersion < 3) {
+				// add the table as it was then, not as it may be now, so that future migrations run correctly
 				createTable(db, "subscriptions", new String[] {"id", "name", "data", "last_seen_id", "notification_class" });
+			}
 			
 			// Version 4 - Remove a bunch of timeline columns, update subscription structure
 			//   released in version 2.9.8
@@ -325,6 +319,8 @@ public class Database {
 				}
 			}
 			
+			// Version 5 - Fix bug in subscription rows
+			//   released in version 3.0
 			if (oldVersion < 5) {
 				// Problem: notification checker was accidentally adding duplicate rows with null seen_id's on each run, 
 				// meaning that when loading a list of all subscriptions, there would be many many duplicate rows.
@@ -367,13 +363,56 @@ public class Database {
 				
 			}
 			
-			// remove nominations subscriber from people's databases if it exists
-			// restructure subscriptions tables to split them out into two
-			// much cleaner, and sets the foundation for proper accumulated unseen counts
+			// Version 6 - Remove nominations subscriber, split subscriptions tables in two 
+			//   released in version 3.3
 			if (oldVersion < 6) {
 				// remove nominations subscriber 
+				Log.i(Utils.TAG, "Expunging RollsNominationSubscriber rows from database...");
 				long rows = db.delete("subscriptions", "notification_class=?", new String[] {"RollsNominationsSubscriber"});
 				Log.i(Utils.TAG, "Removed " + rows + " RollsNominationsSubscriber entries from database");
+				
+				// Restructure subscriptions tables to split them out into two.
+				// This is much cleaner, and sets the foundation for proper accumulated unseen counts.
+				
+				// remove subscriptions->seen_id (no SQL necessary, column abandoned)
+				Log.i(Utils.TAG, "Creating seen_items table...");
+				createTable(db, "seen_items", new String[] { "subscription_id", "subscription_class", "seen_id" });
+				
+				// move existing seen items into the new table
+				Cursor cursor = db.rawQuery("SELECT id, notification_class, seen_id FROM subscriptions WHERE seen_id IS NOT NULL", null);
+				if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+					Log.i(Utils.TAG, "Beginning migration of seen items, " + cursor.getCount() + " seen items to transfer");
+					int i = 0;
+					do {
+						String subscriptionId = cursor.getString(cursor.getColumnIndexOrThrow("id"));
+						String subscriptionClass = cursor.getString(cursor.getColumnIndexOrThrow("notification_class"));
+						String seenId = cursor.getString(cursor.getColumnIndexOrThrow("seen_id"));
+						
+						ContentValues cv = new ContentValues(3);
+						cv.put("subscription_id", subscriptionId);
+						cv.put("subscription_class", subscriptionClass);
+						cv.put("seen_id", seenId);
+						
+						long results = db.insert("seen_items", null, cv);
+						Log.i(Utils.TAG, "Transferred seen_item into seen_items with ID " + results);
+						
+						i += 1;
+					} while (cursor.moveToNext());
+					
+					Log.i(Utils.TAG, "Finished transfer, counted " + i + " transferrals");
+				}
+				
+				// delete all those seen items from the original table
+				Log.i(Utils.TAG, "Clearing out subscriptions with a seen_id...");
+				long seenRows = db.delete("subscriptions", "seen_id IS NOT NULL", null);
+				Log.i(Utils.TAG, "Removed " + seenRows + " subscription rows with a seen_id");
+				
+				
+				// add accumulated unseen_items field on subscriptions
+				Log.i(Utils.TAG, "Adding unseen_count to subscriptions table...");
+				addColumn(db, "subscriptions", "unseen_count");
+				
+				Log.i(Utils.TAG, "Migration to level 6 complete");
 			}
 		}
 	}
