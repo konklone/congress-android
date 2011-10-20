@@ -23,7 +23,7 @@ public abstract class Subscriber {
 	// notification formatting methods
 	
 	public String notificationTicker(Subscription subscription) {
-		return "Updates for " + subscription.name;
+		return "Updates for " + notificationTitle(subscription);
 	}
 	public String notificationTitle(Subscription subscription) {
 		return subscription.name;
