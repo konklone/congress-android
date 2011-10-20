@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -99,11 +100,17 @@ public class LegislatorProfile extends FragmentActivity {
 		}
 	
 		public void onLoadPhoto(Drawable avatar, Object tag) {
-			if (avatar == null && isAdded()) {
-				if (legislator.gender.equals("M"))
-					avatar = getActivity().getResources().getDrawable(R.drawable.no_photo_male);
-				else // "F"
-					avatar = getActivity().getResources().getDrawable(R.drawable.no_photo_female);
+			if (avatar == null) {
+				Resources resources = null;
+				if (getActivity() != null)
+					resources = getActivity().getResources();
+				
+				if (resources != null) {
+					if (legislator.gender.equals("M"))
+						avatar = resources.getDrawable(R.drawable.no_photo_male);
+					else // "F"
+						avatar = resources.getDrawable(R.drawable.no_photo_female);
+				}
 			}
 			this.avatar = avatar;
 			
