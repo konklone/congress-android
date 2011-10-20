@@ -53,7 +53,7 @@ public class FloorUpdatesSubscriber extends Subscriber {
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
 		return new Intent()
-			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.FloorUpdateList")
+			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.FloorUpdateTabs")
 			.putExtra("chamber", subscription.data);
 	}
 	
