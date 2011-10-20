@@ -139,13 +139,14 @@
 	</string-array>
     
     <string-array name="changelog">
-    	<item>3.2.1 - Fixed several bad crashing bugs</item>
-		<item>Added updates from the Senate Floor</item>
-		<item>Showing links to bills mentioned on the House and Senate floor</item>
+    	<item>Redesigned hearings page, limited it to Senate</item>
+    	<item>Tapping a hearing adds it to your calendar</item>
+    	<item>Fixed bug with lawmaker photo loading</item>
+    	<item>Fixed floor update notifications to go to right screen</item>
     </string-array>
     
     <string-array name="changelogLast">
-		<item>Bill keyword searches now also search the full text of bills</item>
-		<item>Fixed sharing of bills to Facebook</item>
+		<item>Added updates from the Senate Floor</item>
+        <item>Showing links to bills mentioned on the House and Senate floor</item>
 	</string-array>
 </resources>
