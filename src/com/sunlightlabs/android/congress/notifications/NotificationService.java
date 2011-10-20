@@ -107,8 +107,11 @@ public class NotificationService extends WakefulIntentService {
 			
 			int results = unseenIds.size();
 			
+			// debug flag
+			boolean alwaysNotify = getResources().getString(R.string.debug_always_notify).equals("true");
+			
 			// if there's at least one new item, notify the user
-			if (results > 0) {
+			if (alwaysNotify || (results > 0)) {
 				
 				notifyManager.notify(
 					(subscription.id + subscription.notificationClass).hashCode(), 
