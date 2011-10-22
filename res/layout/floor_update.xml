@@ -49,29 +49,47 @@
     <LinearLayout android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        
-        android:gravity="right"
+        android:paddingTop="10dp"
         >
+	    <LinearLayout android:orientation="vertical"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:paddingRight="10dp"
+	        
+	        android:gravity="center_horizontal"
+	        >
+	        
+	        <TextView android:id="@+id/timestamp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				
+				android:textSize="18sp"
+				
+				android:text="12:34 PM"
+				/>
+	        
+	        <TextView android:id="@+id/bill_id"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				
+				android:layout_marginTop="10dp"
+				android:padding="5dp"
+				
+				android:textSize="14sp"
+				
+				android:text="H.R. 4637"
+				
+				android:visibility="gone"
+				/>
+	        
+	    </LinearLayout>
 	    
-        <TextView android:id="@+id/timestamp"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			
-			android:paddingRight="10dp"
-			
-			android:textSize="16sp"
-			
-			android:text="12:34 PM"
-			/>
-        
         <TextView
 			android:id="@+id/text"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			
-			android:paddingTop="10dp"
-			
-			android:textSize="14sp"
+			android:textSize="16sp"
 			android:textColor="@android:color/white"
 			
 			android:text="Motion to Invoke Cloture on Inouye amend #738 (In the nature of a substitute). Yeas and nays ordered. The Motion was agreed to by a vote of 83-16. Under a previous agreement, the substitute amendment is agreed to."
