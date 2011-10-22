@@ -5,20 +5,78 @@
 	
 	android:orientation="vertical"
 	
-	android:paddingTop="15dp"
-	android:paddingBottom="10dp"
+	android:paddingTop="5dp"
+	android:paddingBottom="5dp"
 	
 	android:paddingLeft="15dp"
 	android:paddingRight="15dp"
 	>
 	
-	<TextView android:id="@+id/timestamp"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		
-		android:textSize="16sp"
-		/>
-	
-	<!--  event items get added here dynamically from floor_update_event.xml -->
+    <LinearLayout android:id="@+id/date_line"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        
+        android:gravity="center_vertical"
+        >
+        
+	    <TextView android:id="@+id/datestamp"
+	        android:layout_weight="0"
+	       	android:layout_width="wrap_content"
+	       	android:layout_height="wrap_content"
+	       	
+	       	android:textSize="20sp"
+	       	android:textColor="@android:color/white"
+	       	
+	       	android:text="Today, Oct 20"
+	       	/>
+	    
+	    <View
+	        android:layout_weight="1"
+	        android:layout_width="fill_parent"
+	        android:layout_height="1dp"
+	        
+	        android:layout_marginLeft="10dp"
+	        
+	        android:background="@android:color/darker_gray"
+	        />
+	    
+    </LinearLayout>
+    
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        
+        android:gravity="right"
+        >
+	    
+        <TextView android:id="@+id/timestamp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:paddingRight="10dp"
+			
+			android:textSize="16sp"
+			
+			android:text="12:34 PM"
+			/>
+        
+        <TextView
+			android:id="@+id/text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:paddingTop="10dp"
+			
+			android:textSize="14sp"
+			android:textColor="@android:color/white"
+			
+			android:text="Motion to Invoke Cloture on Inouye amend #738 (In the nature of a substitute). Yeas and nays ordered. The Motion was agreed to by a vote of 83-16. Under a previous agreement, the substitute amendment is agreed to."
+			/>
+        
+	</LinearLayout>
 	
 </LinearLayout>

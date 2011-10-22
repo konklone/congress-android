@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
@@ -116,15 +115,6 @@ public class FloorUpdateList extends ListActivity {
 		loadUpdates();
 	}
 	
-	@Override
-	protected void onListItemClick(ListView parent, View v, int position, long id) {
-		FloorUpdateAdapter.Item item = (FloorUpdateAdapter.Item) parent.getItemAtPosition(position);
-		if (item instanceof FloorUpdateAdapter.Roll)
-			selectRoll(((FloorUpdateAdapter.Roll) item).rollId);
-		else if (item instanceof FloorUpdateAdapter.Bill)
-			selectBill(((FloorUpdateAdapter.Bill) item).billId);
-	}
-
 	private void selectRoll(String rollId) {
 		startActivity(Utils.rollIntent(this, rollId));
 	}
@@ -153,22 +143,23 @@ public class FloorUpdateList extends ListActivity {
 	
 	public void displayUpdates() {
 		if (updates.size() > 0) {
-			setListAdapter(new FloorUpdateAdapter(this, FloorUpdateAdapter.transformUpdates(updates)));
+			setListAdapter(new FloorUpdateAdapter(this, FloorUpdateAdapter.wrapUpdates(updates)));
 			setupSubscription();
 		} else
 			Utils.showRefresh(this, R.string.floor_updates_error); // should not happen
 	}
 	
-	static class FloorUpdateAdapter extends ArrayAdapter<FloorUpdateAdapter.Item> {
+	static class FloorUpdateAdapter extends ArrayAdapter<FloorUpdateAdapter.UpdateWrapper> {
     	LayoutInflater inflater;
     	Resources resources;
     	
+    	static SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd");
+    	static SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm aa");
+    	
     	public static final int TYPE_DATE = 0;
     	public static final int TYPE_UPDATE = 1;
-    	public static final int TYPE_ROLL = 2;
-    	public static final int TYPE_BILL = 3;
 
-        public FloorUpdateAdapter(Activity context, List<FloorUpdateAdapter.Item> items) {
+        public FloorUpdateAdapter(Activity context, List<FloorUpdateAdapter.UpdateWrapper> items) {
             super(context, 0, items);
             inflater = LayoutInflater.from(context);
             resources = context.getResources();
@@ -176,10 +167,7 @@ public class FloorUpdateList extends ListActivity {
         
         @Override
         public boolean isEnabled(int position) {
-        	if (getItemViewType(position) >= FloorUpdateAdapter.TYPE_ROLL)
-        		return true;
-        	else
-        		return false;
+        	return false;
         }
         
         @Override
@@ -188,144 +176,83 @@ public class FloorUpdateList extends ListActivity {
         }
         
         @Override
-        public int getItemViewType(int position) {
-        	Item item = getItem(position);
-        	if (item instanceof FloorUpdateAdapter.Date)
-        		return FloorUpdateAdapter.TYPE_DATE;
-        	else if (item instanceof FloorUpdateAdapter.Update)
-        		return FloorUpdateAdapter.TYPE_UPDATE;
-        	else if (item instanceof FloorUpdateAdapter.Roll)
-        		return FloorUpdateAdapter.TYPE_ROLL;
-        	else
-        		return FloorUpdateAdapter.TYPE_BILL;
-        }
-        
-        @Override
         public int getViewTypeCount() {
-        	return 4;
+        	return 1;
         }
 
 		@Override
 		public View getView(int position, View view, ViewGroup parent) {
-			Item item = getItem(position);
-			if (item instanceof Date) {
-				if (view == null)
-					view = inflater.inflate(R.layout.floor_update_date, null);
-				
-				((TextView) view.findViewById(R.id.date)).setText(((Date) item).date);				
-				
-			} else if (item instanceof Update) {
-				// don't recycle
-				view = inflater.inflate(R.layout.floor_update, null);
-				
-				SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm aa");
-				
-				FloorUpdate update = ((Update) item).update;
-				((TextView) view.findViewById(R.id.timestamp)).setText(timeFormat.format(update.timestamp));
-				
-				// go in reverse order, so that the most recent thing is always at the top
-				int length = update.events.size();
-				for (int i=length-1; i>=0; i--) {
-					View event = inflater.inflate(R.layout.floor_update_event, null);
-					((TextView) event.findViewById(R.id.text)).setText(update.events.get(i));
-					((ViewGroup) view).addView(event);
-				}
-			} else if (item instanceof Roll) {
-				view = inflater.inflate(R.layout.floor_update_roll, null);
-				
-				String rollId = ((Roll) item).rollId;
-				((TextView) view.findViewById(R.id.roll)).setText(Utils.formatRollId(rollId));
-			} else { // instanceof Bill
-				view = inflater.inflate(R.layout.floor_update_bill, null);
-				
-				String billId = ((Bill) item).billId;
-				((TextView) view.findViewById(R.id.bill)).setText(Utils.formatBillId(billId));
-			}
+			UpdateWrapper item = getItem(position);
+			FloorUpdate update = item.update;
+			
+			view = inflater.inflate(R.layout.floor_update, null);
+			view.setEnabled(false);
+			
+			ViewGroup dateView = (ViewGroup) view.findViewById(R.id.date_line);
+			TextView timeView = (TextView) view.findViewById(R.id.timestamp);
+			
+			Calendar calendar = GregorianCalendar.getInstance();
+			String today = dateFormat.format(calendar.getTime());
+			String date = dateFormat.format(update.timestamp);
+			if (today.equals(date))
+				date = "Today, " + date;
+			
+			((TextView) view.findViewById(R.id.datestamp)).setText(date);
+			
+			timeView.setText(timeFormat.format(update.timestamp));
+			if (update.events.size() > 0)
+				((TextView) view.findViewById(R.id.text)).setText(update.events.get(0));
 
+			if (item.showDate)
+				dateView.setVisibility(View.VISIBLE);
+			else
+				dateView.setVisibility(View.GONE);
+			
+			if (item.showTime)
+				timeView.setVisibility(View.VISIBLE);
+			else
+				timeView.setVisibility(View.INVISIBLE);
+			
 			return view;
 		}
 		
-		static class Item {}
-		
-		static class Date extends Item {
-			String date;
-			
-			public Date(String date) {
-				this.date = date;
-			}
-		}
-		
-		static class Update extends Item {
+		static class UpdateWrapper {
 			FloorUpdate update;
+			boolean showDate, showTime;
 			
-			public Update(FloorUpdate update) {
+			public UpdateWrapper(FloorUpdate update) {
 				this.update = update;
+				this.showDate = false;
+				this.showTime = false;
 			}
 		}
 		
-		static class Roll extends Item {
-			String rollId;
+		static List<UpdateWrapper> wrapUpdates(List<FloorUpdate> updates) {
+			List<UpdateWrapper> wrappers = new ArrayList<UpdateWrapper>();
 			
-			public Roll(String rollId) {
-				this.rollId = rollId;
-			}
-		}
-		
-		static class Bill extends Item {
-			String billId;
-			
-			public Bill(String billId) {
-				this.billId = billId;
-			}
-		}
-		
-		static List<Item> transformUpdates(List<FloorUpdate> updates) {
-			List<Item> items = new ArrayList<Item>();
-			
-			SimpleDateFormat thisYearFormat = new SimpleDateFormat("MMMMMM dd, yyyy");
-			
-			int currentMonth = -1;
-			int currentDay = -1;
-			int currentYear = -1;
+			String currentDate = "";
+			String currentTime = "";
 			
 			for (int i=0; i<updates.size(); i++) {
 				FloorUpdate update = updates.get(i);
+				UpdateWrapper wrapper = new UpdateWrapper(update);
 				
-				// 1) see if a date needs to be pre-prended
-				GregorianCalendar calendar = new GregorianCalendar();
-				calendar.setTime(update.timestamp);
+				String date = dateFormat.format(update.timestamp);
+				String time = timeFormat.format(update.timestamp);
 				
-				int month = calendar.get(Calendar.MONTH);
-				int day = calendar.get(Calendar.DAY_OF_MONTH);
-				int year = calendar.get(Calendar.YEAR);
+				if (!currentDate.equals(date))
+					wrapper.showDate = true;
 				
-				if (currentMonth != month || currentDay != day || currentYear != year) {
-					String timestamp = thisYearFormat.format(update.timestamp);
-					items.add(new Date(timestamp));
-					
-					currentMonth = month;
-					currentDay = day;
-					currentYear = year;
-				}
+				if (!currentTime.equals(time))
+					wrapper.showTime = true;
 				
-				// 2) add the update itself
-				items.add(new Update(update));
+				currentDate = date;
+				currentTime = time;
 				
-				// 3) See if one or more roll call votes need to be appended
-				int length = (update.rollIds != null ? update.rollIds.size() : 0);
-				if (length > 0) {
-					for (int j=0; j<length; j++)
-						items.add(new Roll(update.rollIds.get(j)));
-				}
-				
-				int bills = (update.billIds != null ? update.billIds.size() : 0);
-				if (bills > 0) {
-					for (int j=0; j<bills; j++)
-						items.add(new Bill(update.billIds.get(j)));
-				}
+				wrappers.add(wrapper);
 			}
 			
-			return items;
+			return wrappers;
 		}
 
     }
