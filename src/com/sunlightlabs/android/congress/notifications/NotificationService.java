@@ -48,7 +48,7 @@ public class NotificationService extends WakefulIntentService {
 
 	@Override
 	protected void doWakefulWork(Intent intent) {
-		// only proceed if background data is disabled
+		// only proceed if background data is enabled
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		if (!cm.getBackgroundDataSetting()) {
 			Log.i(Utils.TAG, "User has background data disabled, not polling. Alarms remain scheduled.");
