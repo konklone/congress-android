@@ -8,7 +8,7 @@
 	android:background="@color/background"
 	>
 	
-	<include layout="@layout/title_bar_small" />
+	<include layout="@layout/title_bar_main" />
 	
 	<LinearLayout 
 		android:orientation="horizontal"

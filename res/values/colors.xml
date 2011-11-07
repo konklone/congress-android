@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="background">#192a3c</color>
+	<color name="background">#21374F</color>
 	<color name="background_transparent">#00192a3c</color>
 	
 	<color name="link">#4c98d7</color>
 	<color name="alert_title">#44000000</color>
 	
-	<color name="main_title_gradient_top">#333333</color>
+	<color name="main_title_gradient_top">#141414</color>
 	<color name="main_title_gradient_bottom">#141414</color>
 	
-	<color name="main_title_divider">#535353</color>
+	<color name="main_title_divider">#3f3f3f</color>
 	
 	<color name="main_line">#353535</color>
 	
@@ -36,10 +36,10 @@
 	<color name="tab_text_deselected">#aaaaaa</color>
 	<color name="tab_text_selected">#f5f5f5</color>
 	
-	<color name="header_top">#232323</color>
+	<color name="header_top">#141414</color>
 	<color name="header_bottom">#141414</color>
 	<color name="header_line">#555555</color>
-	<color name="header_text">#cccccc</color>
+	<color name="header_text">#f5f5f5</color>
 	
 	<color name="footer_on_top">#3c3c3c</color>
 	<color name="footer_on_bottom">#232323</color>
@@ -64,9 +64,8 @@
 	<color name="out_of_office_text">#ffffff</color>
 	<color name="out_of_office_background">#662222</color>
 	
-	<!--  used only in NewsList -->
-	<color name="header_simple_background">#2a2a2a</color>
-	<color name="header_simple_foreground">#cccccc</color>
+	<color name="list_header_background">#2a2a2a</color>
+	<color name="list_header_foreground">#cccccc</color>
 	
 	<color name="action_vote">#f1ef34</color>
 	<color name="action_enacted">#4ac956</color>

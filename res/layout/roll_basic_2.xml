@@ -6,9 +6,7 @@
 	android:orientation="vertical"
 	>
 	
-	<include layout="@layout/line" />
-	<include layout="@layout/header_alone_2" android:id="@+id/result_header" />
-	<include layout="@layout/line" />
+	<include layout="@layout/header_2" android:id="@+id/result_header" />
 	
 	<TextView android:id="@+id/result"
 		android:layout_width="fill_parent"

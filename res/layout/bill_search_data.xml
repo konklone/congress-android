@@ -34,8 +34,4 @@
 			/>
 			
 	</LinearLayout>
-	
-	<include layout="@layout/line"
-		android:background="@android:color/white"
-		/>
 </LinearLayout>

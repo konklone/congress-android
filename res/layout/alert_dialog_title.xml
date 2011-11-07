@@ -25,5 +25,4 @@
 		android:text="Title of Dialog"
 		/>
 	
-	<include layout="@layout/line" />
 </LinearLayout>

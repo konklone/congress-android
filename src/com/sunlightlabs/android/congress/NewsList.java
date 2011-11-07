@@ -105,7 +105,7 @@ public class NewsList extends ListActivity implements LoadsNews {
 	}
 
 	private void setupControls() {
-		ViewGroup header = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.list_header_simple, null);
+		View header = LayoutInflater.from(this).inflate(R.layout.list_header_simple, null);
 		
 		((TextView) header.findViewById(R.id.text)).setText(R.string.google_news_branding);
 		getListView().addHeaderView(header, null, false);

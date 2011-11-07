@@ -6,7 +6,6 @@
 	android:layout_weight="0"
 	android:visibility="gone"
 	>
-	<include layout="@layout/divider" />
 	
 	<FrameLayout android:id="@+id/button"
 		android:layout_height="fill_parent"

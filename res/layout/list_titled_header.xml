@@ -13,14 +13,13 @@
 		android:id="@+id/header_container"
 		>
 		
-    	<include layout="@layout/title_bar_small" />	   
+    	<include layout="@layout/title_bar_main" />	   
 			
 		<include layout="@layout/list_header" 
 			android:id="@+id/list_header" 
 			android:visibility="gone" 
 			/>
 		
-		<include layout="@layout/line" />
 	</LinearLayout>
  
     <ListView android:id="@id/android:list"

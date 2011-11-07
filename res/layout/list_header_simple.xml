@@ -1,29 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
-	
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/text"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	
-	android:background="@color/header_simple_background"
-	>
+	android:background="@color/list_header_background"
 	
-	<TextView android:id="@+id/text"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		
-		android:gravity="center"
-		
-		android:paddingTop="3dp"
-		android:paddingBottom="3dp"
-		android:paddingLeft="5dp"
-		android:paddingRight="5dp"
-		
-		android:text="Simple header text"
-		android:textSize="14sp"
-		
-		android:textColor="@color/header_simple_foreground"
-		/>
+	android:gravity="center"
 	
-	<include layout="@layout/line" />
-</LinearLayout>
+	android:paddingTop="3dp"
+	android:paddingBottom="3dp"
+	android:paddingLeft="5dp"
+	android:paddingRight="5dp"
+	
+	android:text="Simple header text"
+	android:textSize="14sp"
+	
+	android:textColor="@color/list_header_foreground"
+	/>

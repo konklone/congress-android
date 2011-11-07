@@ -12,13 +12,8 @@
     	android:layout_height="fill_parent"
     	>
     	
-    	<include layout="@layout/title_bar_small" />
+    	<include layout="@layout/title_bar_main" />
     	
-    	<View
-			android:layout_width="fill_parent"
-			android:layout_height="1px"
-			android:background="@color/tab_top"
-			/>
     	
 	  	<TabWidget
 	  		android:id="@android:id/tabs"

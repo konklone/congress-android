@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -28,6 +29,7 @@ public class MenuMain extends FragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.menu_main);
 
 		Analytics.track(this, "/");
@@ -43,8 +45,6 @@ public class MenuMain extends FragmentActivity {
 	}
 
 	public void setupControls() {
-		Utils.setTitleSize(this, 24);
-		
 		GridView grid = (GridView) findViewById(R.id.grid);
 		grid.setAdapter(new MenuAdapter(this));
 		grid.setOnItemClickListener(new OnItemClickListener() {
