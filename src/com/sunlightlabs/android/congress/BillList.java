@@ -137,15 +137,15 @@ public class BillList extends ListActivity {
 			break;
 		case BILLS_SEARCH:
 			Utils.setTitle(this, "Bills matching \"" + query + "\"", R.drawable.bills);
-			Utils.setTitleSize(this, 18);
+			Utils.setTitleSize(this, 16);
 			break;
 		case BILLS_CODE:
 			Utils.setTitle(this, "Bills with code " + Bill.formatCodeShort(code), R.drawable.bills);
-			Utils.setTitleSize(this, 18);
+			Utils.setTitleSize(this, 16);
 			break;
 		case BILLS_SPONSOR:
 			Utils.setTitle(this, "Latest Bills by\n" + sponsor.titledName(), R.drawable.bills);
-			Utils.setTitleSize(this, 18);
+			Utils.setTitleSize(this, 16);
 			break;
 		}
 	}
@@ -204,7 +204,7 @@ public class BillList extends ListActivity {
 					Utils.showBack(this, R.string.empty_bills);
 				return;
 			} 
-			else if (type == BILLS_CODE && newBills.size() == 1) {
+			else if ((type == BILLS_CODE || type == BILLS_SEARCH) && newBills.size() == 1) {
 				startActivity(Utils.billIntent(this, newBills.get(0)));
 				finish();
 				return;
