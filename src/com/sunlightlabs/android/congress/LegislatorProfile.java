@@ -254,8 +254,6 @@ public class LegislatorProfile extends FragmentActivity {
 			
 			adapter.addAdapter(new ViewArrayAdapter(this, contactViews));
 			
-			//adapter.addViews(contactViews);
-			
 			setListAdapter(adapter);
 		}
 		
