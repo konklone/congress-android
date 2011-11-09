@@ -115,14 +115,6 @@ public class FloorUpdateList extends ListActivity {
 		loadUpdates();
 	}
 	
-	private void selectRoll(String rollId) {
-		startActivity(Utils.rollIntent(this, rollId));
-	}
-	
-	private void selectBill(String billId) {
-		startActivity(Utils.billLoadIntent(billId));
-	}
-	
 	public void loadUpdates() {
 		if (updates == null)
 			loadUpdatesTask = (LoadUpdatesTask) new LoadUpdatesTask(this).execute(chamber);
