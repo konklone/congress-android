@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MainNavigationFrame">
+        <item name="android:layout_width">250dp</item>
+    </style>
+    <style name="MainNavigationGrid">
+        <item name="android:numColumns">2</item>
+    </style>
+</resources>

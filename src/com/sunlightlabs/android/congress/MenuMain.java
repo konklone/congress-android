@@ -1,11 +1,16 @@
 package com.sunlightlabs.android.congress;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,8 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +28,7 @@ import com.sunlightlabs.android.congress.notifications.NotificationService;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 
 public class MenuMain extends FragmentActivity {
 	@Override
@@ -35,6 +40,7 @@ public class MenuMain extends FragmentActivity {
 		Analytics.track(this, "/");
 		
 		setupControls();
+		setupFragments();
 		
 		if (firstTime()) {
 			newVersion(); // don't need to see the changelog on first install
@@ -45,26 +51,6 @@ public class MenuMain extends FragmentActivity {
 	}
 
 	public void setupControls() {
-		GridView grid = (GridView) findViewById(R.id.grid);
-		grid.setAdapter(new MenuAdapter(this));
-		grid.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				String tag = (String) view.getTag();
-				if (tag.equals("committees"))
-					startActivity(new Intent(MenuMain.this, CommitteeTabs.class));
-				else if (tag.equals("bills"))
-					startActivity(new Intent(MenuMain.this, MenuBills.class));
-				else if (tag.equals("votes"))
-					startActivity(new Intent(MenuMain.this, RollList.class).putExtra("type", RollList.ROLLS_LATEST));
-				else if (tag.equals("legislators"))
-					startActivity(new Intent(MenuMain.this, MenuLegislators.class));
-				else if (tag.equals("floor_updates"))
-					startActivity(new Intent(MenuMain.this, FloorUpdateTabs.class));
-				else if (tag.equals("hearings"))
-					startActivity(new Intent(MenuMain.this, HearingList.class).putExtra("chamber", "senate"));
-			}
-		});
-		
 		setupDebugBar();
 		
 		findViewById(R.id.about).setOnClickListener(new View.OnClickListener() {
@@ -85,6 +71,14 @@ public class MenuMain extends FragmentActivity {
 				startActivity(new Intent(MenuMain.this, NotificationTabs.class)); 
 			}
 		});
+	}
+	
+	private void setupFragments() {
+		FragmentManager manager = getSupportFragmentManager();
+		if (manager.findFragmentById(R.id.main_navigation) == null)
+			manager.beginTransaction().add(R.id.main_navigation, MainMenuFragment.newInstance()).commit();
+		if (manager.findFragmentById(R.id.upcoming_list) == null)
+			manager.beginTransaction().add(R.id.upcoming_list, UpcomingFragment.newInstance()).commit();
 	}
 	
 	private void setupDebugBar() {
@@ -179,68 +173,89 @@ public class MenuMain extends FragmentActivity {
 		return true;
 	}
 	
+	static class MainMenuFragment extends Fragment {
+		
+		public static MainMenuFragment newInstance() {
+			MainMenuFragment frag = new MainMenuFragment();
+			frag.setRetainInstance(true);
+			return frag;
+		}
+		
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			return inflater.inflate(R.layout.main_navigation_frame, container, false);
+		}
+		
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+			setupControls();
+		}
+		
+		private void setupControls() {
+			List<View> views = new ArrayList<View>(6);
+			views.add(menuItem(R.id.menu_legislators, R.drawable.people, R.string.menu_main_legislators,
+					new Intent(getActivity(), MenuLegislators.class)));
+			
+			views.add(menuItem(R.id.menu_bills, R.drawable.bills, R.string.menu_main_bills,
+					new Intent(getActivity(), MenuBills.class)));
+			
+			views.add(menuItem(R.id.menu_votes, R.drawable.votes, R.string.menu_main_votes,
+					new Intent(getActivity(), RollList.class)
+						.putExtra("type", RollList.ROLLS_LATEST)));
+			
+			views.add(menuItem(R.id.menu_floor, R.drawable.floor, R.string.menu_main_floor_updates,
+					new Intent(getActivity(), FloorUpdateTabs.class)));
+			
+			views.add(menuItem(R.id.menu_hearings, R.drawable.hearings, R.string.menu_main_hearings,
+					new Intent(getActivity(), HearingList.class)
+						.putExtra("chamber", "senate")));
+			
+			views.add(menuItem(R.id.menu_committees, R.drawable.committees, R.string.menu_main_committees,
+					new Intent(getActivity(), CommitteeTabs.class)));
+		}
+		
+		private View menuItem(int id, int icon, int text, final Intent intent) {
+			ViewGroup item = (ViewGroup) getView().findViewById(id);
+			((ImageView) item.findViewById(R.id.icon)).setImageResource(icon);
+			((TextView) item.findViewById(R.id.text)).setText(text);
+			
+			//item.setTag(intent);
+			item.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					startActivity(intent);
+				}
+			});
+			
+			return item;
+		}
+		
+	}
 	
-	private static class MenuAdapter extends BaseAdapter {
-		private static final int BILLS = 0;
-		private static final int VOTES = 1;
-		private static final int LEGISLATORS = 2;
-		private static final int COMMITTEES = 3;
-		private static final int FLOOR = 4;
-		private static final int HEARINGS = 5;
+	static class UpcomingFragment extends ListFragment {
 		
-		LayoutInflater inflater;
-		
-		public MenuAdapter(Context context) {
-			this.inflater = LayoutInflater.from(context);
-		}
-
-		public int getCount() {
-			return 6;
-		}
-
-		public Object getItem(int position) {
-			return null;
-		}
-
-		public long getItemId(int position) {
-			return 0;
-		}
-
-		public View getView(int position, View view, ViewGroup parent) {
-			if (view == null)
-				view = inflater.inflate(R.layout.menu_main_item, null);
-			
-			ImageView icon = (ImageView) view.findViewById(R.id.icon);
-			TextView text = (TextView) view.findViewById(R.id.text);
-			
-			if (position == BILLS) {
-				icon.setImageResource(R.drawable.menu_selector_bills);
-				text.setText(R.string.menu_main_bills);
-				view.setTag("bills");
-			} else if (position == VOTES) {
-				icon.setImageResource(R.drawable.menu_selector_votes);
-				text.setText(R.string.menu_main_votes);
-				view.setTag("votes");
-			} else if (position == LEGISLATORS) {
-				icon.setImageResource(R.drawable.menu_selector_people);
-				text.setText(R.string.menu_main_legislators);
-				view.setTag("legislators");
-			} else if (position == COMMITTEES) {
-				icon.setImageResource(R.drawable.menu_selector_committees);
-				text.setText(R.string.menu_main_committees);
-				view.setTag("committees");
-			} else if (position == FLOOR) {
-				icon.setImageResource(R.drawable.menu_selector_floor);
-				text.setText(R.string.menu_main_floor_updates);
-				view.setTag("floor_updates");
-			} else if (position == HEARINGS) {
-				icon.setImageResource(R.drawable.menu_selector_hearings);
-				text.setText(R.string.menu_main_hearings);
-				view.setTag("hearings");
-			}
-			
-			return view;
+		public static UpcomingFragment newInstance() {
+			UpcomingFragment fragment = new UpcomingFragment();
+			fragment.setRetainInstance(true);
+			return fragment;
 		}
 		
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			return inflater.inflate(R.layout.list, container, false);
+		}
+		
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+			setupControls();
+		}
+		
+		private void setupControls() {
+			setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new String[] {"yes", "no", "maybe", "also", "whatever"}));
+		}
+		
+		//static class UpcomingAdapter extends 
 	}
 }
