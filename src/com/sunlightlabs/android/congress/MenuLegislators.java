@@ -175,7 +175,7 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 		Object tag = v.getTag();
 		if (tag instanceof ViewWrapper) {
 			ViewWrapper wrapper = (ViewWrapper) v.getTag();
-			int type = ((Integer) wrapper.getTag()).intValue();
+			int type = ((Integer) wrapper.tag).intValue();
 			switch (type) {
 			case SEARCH_LOCATION:
 				searchByLocation();

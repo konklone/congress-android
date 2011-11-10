@@ -26,12 +26,26 @@
 	        android:layout_weight="0"
 	        android:layout_height="fill_parent"
 	        />
+	    
+	   <View
+	       android:layout_width="3dp"
+	       android:layout_height="fill_parent"
+	       android:background="@color/background_dark"
+	       />
+	   
+		<LinearLayout android:orientation="vertical"
+			android:layout_weight="1"
+			android:layout_width="0dp"
+			android:layout_height="fill_parent"
+			>
+			
+		    <include layout="@layout/upcoming_header" />
 		
-		<FrameLayout android:id="@+id/upcoming_list"
-		    android:layout_weight="1"
-		    android:layout_width="0dp"
-		    android:layout_height="fill_parent"
-		    />
+			<FrameLayout android:id="@+id/upcoming_list"
+			    android:layout_width="fill_parent"
+				android:layout_height="fill_parent"
+			    />
+		</LinearLayout>
 	
 	</LinearLayout>
 	
@@ -42,7 +56,7 @@
 		
 		android:layout_weight="0"
 		
-		android:background="@drawable/main_footer_gradient"
+		android:background="@color/background_dark"
 		>
 		
 		<LinearLayout android:id="@+id/about" 

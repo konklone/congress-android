@@ -29,15 +29,11 @@ public class ViewArrayAdapter extends ArrayAdapter<View> {
 
 	@Override
 	public boolean areAllItemsEnabled() {
-		return false; // allow items to be enabled/disabled programmatically
+		return false;
 	}
 
 	@Override
 	public boolean isEnabled(int position) {
-		View view = getItem(position);
-		if (view.getTag() instanceof ViewWrapper) 
-			return ((ViewWrapper) view.getTag()).isEnabled();
-		
-		return true; // if we don't use the ViewWrapper class, all items are enabled
+		return getItem(position).isEnabled();
 	}
 }

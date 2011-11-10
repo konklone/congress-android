@@ -17,9 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -173,13 +170,15 @@ public class MenuMain extends FragmentActivity {
 		return true;
 	}
 	
-	static class MainMenuFragment extends Fragment {
+	public static class MainMenuFragment extends Fragment {
 		
 		public static MainMenuFragment newInstance() {
 			MainMenuFragment frag = new MainMenuFragment();
 			frag.setRetainInstance(true);
 			return frag;
 		}
+		
+		public MainMenuFragment() {}
 		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -241,9 +240,11 @@ public class MenuMain extends FragmentActivity {
 			return fragment;
 		}
 		
+		public UpcomingFragment() {}
+		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			return inflater.inflate(R.layout.list, container, false);
+			return inflater.inflate(R.layout.list_bare_no_divider, container, false);
 		}
 		
 		@Override
@@ -253,9 +254,53 @@ public class MenuMain extends FragmentActivity {
 		}
 		
 		private void setupControls() {
-			setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new String[] {"yes", "no", "maybe", "also", "whatever"}));
+			LayoutInflater inflater = getActivity().getLayoutInflater();
+			
+			List<View> views = new ArrayList<View>();
+			
+			ViewGroup header = (ViewGroup) inflater.inflate(R.layout.upcoming_header, null);
+			((TextView) header.findViewById(R.id.text)).setText("COMING UP");
+			header.setEnabled(false);
+			//views.add(header);
+			
+			views.add(dateView("TODAY", "NOV 8"));
+			views.add(billView("H.R. 3200", "House", "Protect IP Act of 2011"));
+			views.add(billView("H.Res. 3200", "Senate", "An act to prevent the stomach flu in any area in which it may possibly appear."));
+			views.add(dateView("TOMORROW", "NOV 9"));
+			views.add(billView("H.Res. 3200", "Senate", "An act to prevent the stomach flu in any area in which it may possibly appear."));
+			views.add(dateView("WEDNESDAY", "NOV 10"));
+			views.add(billView("S.J.Res. 300", "Senate", "A constitutional amendment to amend the constitution for bugs."));
+			views.add(billView("H.Res. 3200", "Senate", "An act to prevent the stomach flu in any area in which it may possibly appear."));
+			views.add(dateView("THURSDAY", "NOV 11"));
+			views.add(billView("H.Res. 3200", "Senate", "An act to prevent the stomach flu in any area in which it may possibly appear."));
+			views.add(dateView("FRIDAY", "NOV 12"));
+			views.add(billView("S.J.Res. 300", "Senate", "A constitutional amendment to amend the constitution for bugs."));
+			
+			setListAdapter(new ViewArrayAdapter(getActivity(), views));
 		}
 		
-		//static class UpcomingAdapter extends 
+		private ViewGroup dateView(String nickname, String full) {
+			LayoutInflater inflater = getActivity().getLayoutInflater();
+			
+			ViewGroup view = (ViewGroup) inflater.inflate(R.layout.upcoming_date, null);
+			((TextView) view.findViewById(R.id.date_name)).setText(nickname);
+			if (full != null)
+				((TextView) view.findViewById(R.id.date_full)).setText(full);
+			else
+				view.findViewById(R.id.date_full).setVisibility(View.INVISIBLE);
+			view.setEnabled(false);
+			
+			return view;
+		}
+		
+		private ViewGroup billView(String code, String chamber, String title) {
+			LayoutInflater inflater = getActivity().getLayoutInflater();
+			
+			ViewGroup view = (ViewGroup) inflater.inflate(R.layout.upcoming_bill, null);
+			((TextView) view.findViewById(R.id.bill_code)).setText(code);
+			((TextView) view.findViewById(R.id.title)).setText(Utils.truncate(title, 40));
+			
+			return view;
+		}
 	}
 }

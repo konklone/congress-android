@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="background">#1F334A</color>
+	<color name="background">#2D4B6E</color>
+	<color name="background_dark">#141414</color>
+	<color name="background_light">#2D4B6E</color>
 	<color name="background_transparent">#00192a3c</color>
+	
+<!-- 	<color name="main_menu_item_light">#365A82</color> -->
+<!-- 	<color name="main_menu_item_light">#2D4B6E</color> -->
+<!-- 	<color name="main_menu_item_light">#1F334A</color> -->
 	
 	<color name="link">#4c98d7</color>
 	<color name="alert_title">#44000000</color>
@@ -40,6 +46,17 @@
 	<color name="header_bottom">#141414</color>
 	<color name="header_line">#555555</color>
 	<color name="header_text">#f5f5f5</color>
+	
+	<color name="main_menu_item_light">#263F5C</color>
+	<color name="double_line_top">#141414</color>
+	<color name="double_line_bottom">#6f6f6f</color>
+	
+	<color name="upcoming_header">#365A82</color>
+	<color name="upcoming_header_text">#f5f5f5</color>
+	<color name="upcoming_date">#141414</color>
+	<color name="upcoming_date_text">#f5f5f5</color>
+	<color name="upcoming_date_text_secondary">#b5b5b5</color>
+	<color name="upcoming_bill">#5f5f5f</color>
 	
 	<color name="footer_on_top">#3c3c3c</color>
 	<color name="footer_on_bottom">#232323</color>

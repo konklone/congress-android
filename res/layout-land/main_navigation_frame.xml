@@ -17,14 +17,24 @@
 	        android:id="@+id/menu_legislators"
 	        />
 	    
+	    <include layout="@layout/line_thick" />
+	    
 	    <include layout="@layout/menu_main_item"
 	        android:id="@+id/menu_bills"
 	        />
+	    
+	    <include layout="@layout/line_thick" />
 	    
 	    <include layout="@layout/menu_main_item"
 	        android:id="@+id/menu_votes"
 	        />
 	</LinearLayout>
+	
+   	<View
+       android:layout_width="1dp"
+       android:layout_height="fill_parent"
+       android:background="@color/background_dark"
+       />
 	
 	<LinearLayout
 		android:layout_weight="1"
@@ -37,9 +47,13 @@
 	        android:id="@+id/menu_floor"
 	        />
 	    
+	    <include layout="@layout/line_thick" />
+	    
 	    <include layout="@layout/menu_main_item"
 	        android:id="@+id/menu_hearings"
 	        />
+	    
+	    <include layout="@layout/line_thick" />
 	    
 	    <include layout="@layout/menu_main_item"
 	        android:id="@+id/menu_committees"

@@ -77,7 +77,7 @@ public class CommitteeList extends FragmentActivity {
         }
 	}
 	
-	static class CommitteeListFragment extends ListFragment {
+	public static class CommitteeListFragment extends ListFragment {
 		public static final int CHAMBER = 1;
 		public static final int LEGISLATOR = 2;
 		
@@ -103,6 +103,8 @@ public class CommitteeList extends FragmentActivity {
 			frag.setRetainInstance(true);
 			return frag;
 		}
+		
+		public CommitteeListFragment() {}
 		
 		@Override
 		public void onCreate(Bundle savedInstanceState) {

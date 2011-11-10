@@ -147,9 +147,6 @@ public class FloorUpdateList extends ListActivity {
     	
     	static SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd");
     	static SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm aa");
-    	
-    	public static final int TYPE_DATE = 0;
-    	public static final int TYPE_UPDATE = 1;
 
         public FloorUpdateAdapter(Activity context, List<FloorUpdateAdapter.UpdateWrapper> items) {
             super(context, 0, items);

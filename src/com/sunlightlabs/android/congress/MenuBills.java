@@ -184,7 +184,7 @@ public class MenuBills extends ListActivity {
 		Object tag = v.getTag();
 		if (tag instanceof ViewWrapper) {
 			ViewWrapper wrapper = (ViewWrapper) v.getTag();
-			int type = ((Integer) wrapper.getTag()).intValue();
+			int type = ((Integer) wrapper.tag).intValue();
 			switch (type) {
 			case BILLS_RECENT:
 				startActivity(new Intent(this, BillList.class).putExtra("type",	BillList.BILLS_RECENT));

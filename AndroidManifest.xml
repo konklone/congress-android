@@ -8,6 +8,7 @@
     <application android:icon="@drawable/icon" 
     	android:label="@string/app_name"
     	android:debuggable="true"
+    	android:theme="@style/MainTheme"
     	>
         <activity android:name=".MenuMain"
                   android:label="@string/app_name"
@@ -18,13 +19,9 @@
             </intent-filter>
         </activity>
         
-        <activity android:name=".MenuBills"
-        	android:theme="@android:style/Theme.NoTitleBar"
-        	/>
+        <activity android:name=".MenuBills" />
         
-        <activity android:name=".MenuLegislators"
-        	android:theme="@android:style/Theme.NoTitleBar"
-        	/>
+        <activity android:name=".MenuLegislators" />
         
         <activity android:name=".GetText"
         	android:theme="@android:style/Theme.Dialog" 
@@ -34,56 +31,40 @@
         	/>
         	
         <activity android:name=".NewsList" />
-        
-        <activity android:name=".LegislatorList"
-        	android:theme="@android:style/Theme.NoTitleBar" 
-        	/>
-        	
-        <activity android:name=".LegislatorLoader"
-        	android:theme="@android:style/Theme.NoTitleBar"
-        	>
+        <activity android:name=".LegislatorList" />
+        <activity android:name=".LegislatorLoader">
         	<intent-filter>
         		<action android:name="android.intent.action.MAIN" />
         		<category android:name="android.intent.category.DEFAULT" />
         	</intent-filter>
         </activity>
         
-        <activity android:name=".LegislatorTabs" 
-        	android:theme="@android:style/Theme.NoTitleBar"
-        	/>
+        <activity android:name=".LegislatorTabs" />
         
         <activity android:name=".LegislatorProfile" />
         <activity android:name=".LegislatorTwitter" />
         <activity android:name=".LegislatorYouTube" />
         
-        <activity android:name=".BillList" 
-        	android:theme="@android:style/Theme.NoTitleBar"
-        	/>
+        <activity android:name=".BillList" />
         	
-        <activity android:name=".BillLoader"
-        	android:theme="@android:style/Theme.NoTitleBar"
-        	>
+        <activity android:name=".BillLoader">
         	<intent-filter>
         		<action android:name="android.intent.action.MAIN" />
         		<category android:name="android.intent.category.DEFAULT" />
         	</intent-filter>
         </activity>
         
-        <activity android:name=".BillTabs" 
-        	android:theme="@android:style/Theme.NoTitleBar"
-        	/>
+        <activity android:name=".BillTabs" />
         	
         <activity android:name=".BillInfo" />
         <activity android:name=".BillHistory" />
         <activity android:name=".BillVotes" />
         
-        <activity android:name=".RollList"
-        	android:theme="@android:style/Theme.NoTitleBar"
+        <activity android:name=".RollList" 
+            android:theme="@style/MainTheme"
         	/>
         
-        <activity android:name=".RollInfo" 
-        	android:theme="@android:style/Theme.NoTitleBar"
-        	>
+        <activity android:name=".RollInfo">
         	<intent-filter>
         		<action android:name="android.intent.action.MAIN" />
         		<category android:name="android.intent.category.DEFAULT" />
@@ -96,19 +77,13 @@
         <activity android:name=".FloorUpdateTabs" />
         <activity android:name=".FloorUpdateList" />
         	
-        <activity android:name=".HearingList" 
-        	android:theme="@android:style/Theme.NoTitleBar"
-        	/>
+        <activity android:name=".HearingList" />
         	
-        <activity android:name=".NotificationTabs" 
-        	android:theme="@android:style/Theme.NoTitleBar" 
-        	/>
+        <activity android:name=".NotificationTabs" />
         <activity android:name=".NotificationSettings" />
         <activity android:name=".NotificationSubscriptions" />
         	
-        <activity android:name=".Settings" 
-        	android:theme="@android:style/Theme.NoTitleBar" 
-        	/>
+        <activity android:name=".Settings" />
         
         <receiver android:name=".notifications.OnBootReceiver">
         	<intent-filter>

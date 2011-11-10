@@ -12,7 +12,6 @@
 	    android:layout_height="fill_parent"
 	    android:layout_weight="1"
 	    
-	    android:cacheColorHint="@color/background"
 		/>
 	
 	<include layout="@layout/list_empty"
