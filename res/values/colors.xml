@@ -2,12 +2,14 @@
 <resources>
 	<color name="background">#2D4B6E</color>
 	<color name="background_dark">#141414</color>
-	<color name="background_light">#2D4B6E</color>
+	<color name="background_light">#365A82</color>
 	<color name="background_transparent">#00192a3c</color>
 	
-<!-- 	<color name="main_menu_item_light">#365A82</color> -->
-<!-- 	<color name="main_menu_item_light">#2D4B6E</color> -->
-<!-- 	<color name="main_menu_item_light">#1F334A</color> -->
+	<!-- 
+	#365A82 
+	#2D4B6E
+	#1F334A
+	-->
 	
 	<color name="link">#4c98d7</color>
 	<color name="alert_title">#44000000</color>

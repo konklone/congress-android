@@ -5,8 +5,6 @@
     android:layout_height="fill_parent"
     
     android:gravity="center"
-    
-    android:background="@color/background"
     >
  
     <ListView android:id="@id/android:list"

@@ -10,31 +10,31 @@
         android:id="@+id/menu_legislators"
         />
     
-    <include layout="@layout/line_thick" />
+    <include layout="@layout/line" />
     
     <include layout="@layout/menu_main_item"
         android:id="@+id/menu_bills"
         />
     
-    <include layout="@layout/line_thick" />
+    <include layout="@layout/line" />
     
     <include layout="@layout/menu_main_item"
         android:id="@+id/menu_votes"
         />
     
-    <include layout="@layout/line_thick" />
+    <include layout="@layout/line" />
     
     <include layout="@layout/menu_main_item"
         android:id="@+id/menu_floor"
         />
     
-    <include layout="@layout/line_thick" />
+    <include layout="@layout/line" />
     
     <include layout="@layout/menu_main_item"
         android:id="@+id/menu_hearings"
         />
     
-    <include layout="@layout/line_thick" />
+    <include layout="@layout/line" />
     
     <include layout="@layout/menu_main_item"
         android:id="@+id/menu_committees"

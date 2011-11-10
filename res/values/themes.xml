@@ -9,6 +9,8 @@
     
     <style name="MainTheme" parent="android:Theme.NoTitleBar">
         <item name="android:listViewStyle">@style/MainList</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:colorBackground">@color/background</item>
     </style>
     
 </resources>

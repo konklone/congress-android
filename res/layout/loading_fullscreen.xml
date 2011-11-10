@@ -4,8 +4,6 @@
 	android:layout_height="fill_parent"
 	
 	android:orientation="vertical"
-	
-	android:background="@color/background"
 	>
 	
 	<include layout="@layout/title_bar_main" />

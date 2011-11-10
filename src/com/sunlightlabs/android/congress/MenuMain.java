@@ -192,26 +192,25 @@ public class MenuMain extends FragmentActivity {
 		}
 		
 		private void setupControls() {
-			List<View> views = new ArrayList<View>(6);
-			views.add(menuItem(R.id.menu_legislators, R.drawable.people, R.string.menu_main_legislators,
-					new Intent(getActivity(), MenuLegislators.class)));
+			menuItem(R.id.menu_legislators, R.drawable.people, R.string.menu_main_legislators,
+					new Intent(getActivity(), MenuLegislators.class));
 			
-			views.add(menuItem(R.id.menu_bills, R.drawable.bills, R.string.menu_main_bills,
-					new Intent(getActivity(), MenuBills.class)));
+			menuItem(R.id.menu_bills, R.drawable.bills, R.string.menu_main_bills,
+					new Intent(getActivity(), MenuBills.class));
 			
-			views.add(menuItem(R.id.menu_votes, R.drawable.votes, R.string.menu_main_votes,
+			menuItem(R.id.menu_votes, R.drawable.votes, R.string.menu_main_votes,
 					new Intent(getActivity(), RollList.class)
-						.putExtra("type", RollList.ROLLS_LATEST)));
+						.putExtra("type", RollList.ROLLS_LATEST));
 			
-			views.add(menuItem(R.id.menu_floor, R.drawable.floor, R.string.menu_main_floor_updates,
-					new Intent(getActivity(), FloorUpdateTabs.class)));
+			menuItem(R.id.menu_floor, R.drawable.floor, R.string.menu_main_floor_updates,
+					new Intent(getActivity(), FloorUpdateTabs.class));
 			
-			views.add(menuItem(R.id.menu_hearings, R.drawable.hearings, R.string.menu_main_hearings,
+			menuItem(R.id.menu_hearings, R.drawable.hearings, R.string.menu_main_hearings,
 					new Intent(getActivity(), HearingList.class)
-						.putExtra("chamber", "senate")));
+						.putExtra("chamber", "senate"));
 			
-			views.add(menuItem(R.id.menu_committees, R.drawable.committees, R.string.menu_main_committees,
-					new Intent(getActivity(), CommitteeTabs.class)));
+			menuItem(R.id.menu_committees, R.drawable.committees, R.string.menu_main_committees,
+					new Intent(getActivity(), CommitteeTabs.class));
 		}
 		
 		private View menuItem(int id, int icon, int text, final Intent intent) {
@@ -219,7 +218,6 @@ public class MenuMain extends FragmentActivity {
 			((ImageView) item.findViewById(R.id.icon)).setImageResource(icon);
 			((TextView) item.findViewById(R.id.text)).setText(text);
 			
-			//item.setTag(intent);
 			item.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {

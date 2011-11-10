@@ -4,7 +4,6 @@
 	android:layout_height="fill_parent"
 	android:orientation="vertical"
 	
-	android:background="@color/background"
 	>
 	
 	<include layout="@layout/title_bar_main" />
@@ -56,8 +55,6 @@
 	    android:layout_width="fill_parent" 
 	    android:layout_height="fill_parent"
 	    android:layout_weight="1"
-	    
-	    android:cacheColorHint="@color/background"
 	    />
 	
 </LinearLayout>

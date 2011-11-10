@@ -33,6 +33,6 @@
 		android:text="Protect IP Act of 2011"
 		/>
 	
-	<include layout="@layout/line_thick_divider" />
+	<include layout="@layout/line_divider" />
 		
 </LinearLayout>
