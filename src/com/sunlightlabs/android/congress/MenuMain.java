@@ -1,11 +1,14 @@
 package com.sunlightlabs.android.congress;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -26,6 +29,10 @@ import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
+import com.sunlightlabs.congress.models.Committee;
+import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.UpcomingBill;
+import com.sunlightlabs.congress.services.UpcomingBillService;
 
 public class MenuMain extends FragmentActivity {
 	@Override
@@ -230,7 +237,9 @@ public class MenuMain extends FragmentActivity {
 		
 	}
 	
-	static class UpcomingFragment extends ListFragment {
+	public static class UpcomingFragment extends ListFragment {
+		
+		List<UpcomingBill> upcomingBills;
 		
 		public static UpcomingFragment newInstance() {
 			UpcomingFragment fragment = new UpcomingFragment();
@@ -241,40 +250,43 @@ public class MenuMain extends FragmentActivity {
 		public UpcomingFragment() {}
 		
 		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			
+			FragmentUtils.setupRTC(this);
+			
+			new UpcomingBillsTask(this).execute();
+		}
+		
+		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			return inflater.inflate(R.layout.list_bare_no_divider, container, false);
+			return inflater.inflate(R.layout.list_no_divider, container, false);
 		}
 		
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState);
 			setupControls();
+			
+			if (upcomingBills != null)
+				displayUpcomingBills();
 		}
 		
 		private void setupControls() {
-			LayoutInflater inflater = getActivity().getLayoutInflater();
-			
-			List<View> views = new ArrayList<View>();
-			
-			ViewGroup header = (ViewGroup) inflater.inflate(R.layout.upcoming_header, null);
-			((TextView) header.findViewById(R.id.text)).setText("COMING UP");
-			header.setEnabled(false);
-			//views.add(header);
-			
-			views.add(dateView("TODAY", "NOV 8"));
-			views.add(billView("H.R. 3200", "House", "Protect IP Act of 2011"));
-			views.add(billView("H.Res. 3200", "Senate", "An act to prevent the stomach flu in any area in which it may possibly appear."));
-			views.add(dateView("TOMORROW", "NOV 9"));
-			views.add(billView("H.Res. 3200", "Senate", "An act to prevent the stomach flu in any area in which it may possibly appear."));
-			views.add(dateView("WEDNESDAY", "NOV 10"));
-			views.add(billView("S.J.Res. 300", "Senate", "A constitutional amendment to amend the constitution for bugs."));
-			views.add(billView("H.Res. 3200", "Senate", "An act to prevent the stomach flu in any area in which it may possibly appear."));
-			views.add(dateView("THURSDAY", "NOV 11"));
-			views.add(billView("H.Res. 3200", "Senate", "An act to prevent the stomach flu in any area in which it may possibly appear."));
-			views.add(dateView("FRIDAY", "NOV 12"));
-			views.add(billView("S.J.Res. 300", "Senate", "A constitutional amendment to amend the constitution for bugs."));
-			
-			setListAdapter(new ViewArrayAdapter(getActivity(), views));
+			// setup refresh button behavior
+		}
+		
+		private void onLoadUpcomingBills(List<UpcomingBill> upcomingBills) {
+			this.upcomingBills = upcomingBills;
+			displayUpcomingBills();
+		}
+		
+		private void onLoadUpcomingBills(CongressException exception) {
+			FragmentUtils.showRefresh(this, exception.getMessage());
+		}
+		
+		private void displayUpcomingBills() {
+			FragmentUtils.showEmpty(this, "Loaded " + upcomingBills.size() + " upcoming bills!");
 		}
 		
 		private ViewGroup dateView(String nickname, String full) {
@@ -299,6 +311,34 @@ public class MenuMain extends FragmentActivity {
 			((TextView) view.findViewById(R.id.title)).setText(Utils.truncate(title, 40));
 			
 			return view;
+		}
+		
+		private static class UpcomingBillsTask extends AsyncTask<String, Void, List<UpcomingBill>> {
+			private UpcomingFragment context;
+			private CongressException exception;
+
+			public UpcomingBillsTask(UpcomingFragment context) {
+				this.context = context;
+			}
+
+			@Override
+			protected List<UpcomingBill> doInBackground(String... params) {
+				try {
+					Date today = new GregorianCalendar().getTime();
+					return UpcomingBillService.comingUp(today);
+				} catch (CongressException e) {
+					this.exception = new CongressException(e, "Error loading upcoming activity.");
+					return null;
+				}
+			}
+			
+			@Override
+			protected void onPostExecute(List<UpcomingBill> result) {
+				if (result != null && exception == null)
+					context.onLoadUpcomingBills(result);
+				else
+					context.onLoadUpcomingBills(exception);
+			}
 		}
 	}
 }

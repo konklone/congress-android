@@ -15,6 +15,10 @@ public class FragmentUtils {
 		Utils.setupSunlight(fragment.getActivity());
 	}
 	
+	public static void setupRTC(Fragment fragment) {
+		Utils.setupRTC(fragment.getActivity());
+	}
+	
 	public static void alertDialog(FragmentActivity activity, int type) {
 		AlertFragment.create(type).show(activity.getSupportFragmentManager(), "dialog");
 	}

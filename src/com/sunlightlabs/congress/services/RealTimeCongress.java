@@ -138,6 +138,10 @@ public class RealTimeCongress {
 		return DateUtils.formatDate(date, dateFormat);
 	}
 	
+	public static String formatDateOnly(Date date) {
+		return DateUtils.formatDate(date, dateOnlyFormat);
+	}
+	
 	public static String fetchJSON(String url) throws CongressException {
 		Log.d(TAG, "Fetching URL: " + url);
 		
