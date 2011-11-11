@@ -6,7 +6,9 @@ import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -122,16 +124,26 @@ public class RealTimeCongress {
 		return url("search/" + method, sections, params, page, per_page);
 	}
 	
+	// assumes timestamps are in UTC, which by RTC fiat, they are
 	public static Date parseDate(String date) throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat(dateFormat);
 		format.setTimeZone(DateUtils.GMT);
 		return format.parse(date);
 	}
 	
+	// assumes date stamps are in "YYYY-MM-DD" format, which they will be for all RTC dates
+	// Date objects automatically assign a time of midnight, but these dates are meant to represent whole days.
+	// If we read these in as UTC, or even EST (Congress' time), then when formatted for display in the user's local timezone,
+	// they could be printed as the day before the one they represent.
+	// To work around Java/Android not having a class that represents a time-less day, we force the hour to be noon UTC, 
+	// which means that no matter which timezone it is formatted as, it will be the same day.
 	public static Date parseDateOnly(String date) throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat(dateOnlyFormat);
 		format.setTimeZone(DateUtils.GMT);
-		return format.parse(date);
+		Calendar calendar = new GregorianCalendar(DateUtils.GMT);
+		calendar.setTime(format.parse(date));
+		calendar.set(Calendar.HOUR_OF_DAY, 12);
+		return calendar.getTime();
 	}
 	
 	public static String formatDate(Date date) {

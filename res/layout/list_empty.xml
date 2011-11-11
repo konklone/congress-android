@@ -14,6 +14,8 @@
     	
     	android:orientation="horizontal"
     	android:gravity="center"
+    	
+    	android:padding="10dp"
     	>
     	
     	<ProgressBar android:id="@+id/loading_spinner"
@@ -29,6 +31,8 @@
     		android:layout_height="wrap_content"
     		
     		android:text="Loading..."
+    		
+    		android:textColor="@android:color/white"
     		/>
     	
     </LinearLayout>
@@ -39,6 +43,7 @@
 		
 		android:layout_gravity="center"
 		android:layout_margin="10dp"
+		android:textColor="@android:color/white"
 		
 		android:visibility="gone"
 		/>

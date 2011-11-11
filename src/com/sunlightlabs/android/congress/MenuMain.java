@@ -1,6 +1,8 @@
 package com.sunlightlabs.android.congress;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -20,7 +22,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
@@ -28,8 +32,7 @@ import com.sunlightlabs.android.congress.notifications.NotificationService;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
-import com.sunlightlabs.congress.models.Committee;
+import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.UpcomingBill;
 import com.sunlightlabs.congress.services.UpcomingBillService;
@@ -273,47 +276,39 @@ public class MenuMain extends FragmentActivity {
 		}
 		
 		private void setupControls() {
-			// setup refresh button behavior
+			FragmentUtils.setLoading(this, R.string.upcoming_bills_loading);
+			
+			// TODO: setup refresh button behavior
+		}
+		
+		@Override
+		public void onListItemClick(ListView parent, View v, int position, long id) {
+			if (isAdded()) {
+				Bill bill = ((UpcomingAdapter.Bill) parent.getItemAtPosition(position)).bill;
+				startActivity(Utils.billLoadIntent(bill.id, bill.code));
+			}
 		}
 		
 		private void onLoadUpcomingBills(List<UpcomingBill> upcomingBills) {
 			this.upcomingBills = upcomingBills;
-			displayUpcomingBills();
+			
+			if (isAdded())
+				displayUpcomingBills();
 		}
 		
 		private void onLoadUpcomingBills(CongressException exception) {
-			FragmentUtils.showRefresh(this, exception.getMessage());
+			if (isAdded())
+				FragmentUtils.showRefresh(this, R.string.upcoming_bills_error);
 		}
 		
 		private void displayUpcomingBills() {
-			FragmentUtils.showEmpty(this, "Loaded " + upcomingBills.size() + " upcoming bills!");
-		}
-		
-		private ViewGroup dateView(String nickname, String full) {
-			LayoutInflater inflater = getActivity().getLayoutInflater();
-			
-			ViewGroup view = (ViewGroup) inflater.inflate(R.layout.upcoming_date, null);
-			((TextView) view.findViewById(R.id.date_name)).setText(nickname);
-			if (full != null)
-				((TextView) view.findViewById(R.id.date_full)).setText(full);
+			if (upcomingBills.size() > 0)
+				setListAdapter(new UpcomingAdapter(this, UpcomingAdapter.wrapUpcoming(upcomingBills)));
 			else
-				view.findViewById(R.id.date_full).setVisibility(View.INVISIBLE);
-			view.setEnabled(false);
-			
-			return view;
+				FragmentUtils.showEmpty(this, R.string.upcoming_bills_empty);
 		}
 		
-		private ViewGroup billView(String code, String chamber, String title) {
-			LayoutInflater inflater = getActivity().getLayoutInflater();
-			
-			ViewGroup view = (ViewGroup) inflater.inflate(R.layout.upcoming_bill, null);
-			((TextView) view.findViewById(R.id.bill_code)).setText(code);
-			((TextView) view.findViewById(R.id.title)).setText(Utils.truncate(title, 40));
-			
-			return view;
-		}
-		
-		private static class UpcomingBillsTask extends AsyncTask<String, Void, List<UpcomingBill>> {
+		static class UpcomingBillsTask extends AsyncTask<String, Void, List<UpcomingBill>> {
 			private UpcomingFragment context;
 			private CongressException exception;
 
@@ -338,6 +333,136 @@ public class MenuMain extends FragmentActivity {
 					context.onLoadUpcomingBills(result);
 				else
 					context.onLoadUpcomingBills(exception);
+			}
+		}
+		
+		static class UpcomingAdapter extends ArrayAdapter<UpcomingAdapter.Item> {
+			LayoutInflater inflater;
+			
+			private static final int TYPE_DATE = 0;
+			private static final int TYPE_BILL = 1;
+
+			public UpcomingAdapter(Fragment context, List<UpcomingAdapter.Item> items) {
+				super(context.getActivity(), 0, items);
+				this.inflater = LayoutInflater.from(context.getActivity());
+			}
+			
+			@Override
+	        public boolean isEnabled(int position) {
+	        	return getItemViewType(position) == UpcomingAdapter.TYPE_BILL;
+	        }
+	        
+	        @Override
+	        public boolean areAllItemsEnabled() {
+	        	return false;
+	        }
+	        
+	        @Override
+	        public int getItemViewType(int position) {
+	        	Item item = getItem(position);
+	        	if (item instanceof UpcomingAdapter.Date)
+	        		return UpcomingAdapter.TYPE_DATE;
+	        	else
+	        		return UpcomingAdapter.TYPE_BILL;
+	        }
+	        
+	        @Override
+	        public int getViewTypeCount() {
+	        	return 2;
+	        }
+
+			@Override
+			public View getView(int position, View view, ViewGroup parent) {
+				Item item = getItem(position);
+				if (item instanceof Date) {
+					if (view == null)
+						view = inflater.inflate(R.layout.upcoming_date, null);
+					
+					Date date = (Date) item;
+					
+					View x = view.findViewById(R.id.date_name);
+					
+					((TextView) view.findViewById(R.id.date_name)).setText(date.dateName);
+					((TextView) view.findViewById(R.id.date_full)).setText(date.dateFull);
+				} else { // instanceof Action
+					if (view == null)
+						view = inflater.inflate(R.layout.upcoming_bill, null);
+					
+					Bill bill = (Bill) item;
+					
+					((TextView) view.findViewById(R.id.code)).setText(bill.code);
+					((TextView) view.findViewById(R.id.title)).setText(bill.title);
+				}
+
+				return view;
+			}
+			
+			static class Item {}
+			static class Date extends Item {
+				String dateName, dateFull;
+			}
+			static class Bill extends Item {
+				String code, title;
+				com.sunlightlabs.congress.models.Bill bill;
+				String context;
+			}
+			
+			static List<UpcomingAdapter.Item> wrapUpcoming(List<UpcomingBill> upcomingBills) {
+				List<Item> items = new ArrayList<Item>();
+				
+				SimpleDateFormat dateNameFormat = new SimpleDateFormat("EEEE");
+				SimpleDateFormat dateFullFormat = new SimpleDateFormat("MMM d");
+				SimpleDateFormat testFormat = new SimpleDateFormat("yyyy-MM-dd");
+				
+				String today = testFormat.format(Calendar.getInstance().getTime());
+				Calendar cal = Calendar.getInstance();
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+				String tomorrow = testFormat.format(cal.getTime());
+				
+				
+				String currentDay = "";
+				
+				for (int i=0; i<upcomingBills.size(); i++) {
+					UpcomingBill upcomingBill = upcomingBills.get(i);
+					
+					GregorianCalendar calendar = new GregorianCalendar();
+					calendar.setTime(upcomingBill.legislativeDay);
+					
+					String testDay = testFormat.format(upcomingBill.legislativeDay);
+					
+					if (!currentDay.equals(testDay)) {
+						Date date = new Date();
+						if (today.equals(testDay))
+							date.dateName = "TODAY";
+						else if (tomorrow.equals(testDay))
+							date.dateName = "TOMORROW";
+						else
+							date.dateName = dateNameFormat.format(upcomingBill.legislativeDay).toUpperCase();
+						
+						date.dateFull = dateFullFormat.format(upcomingBill.legislativeDay).toUpperCase();
+						items.add(date);
+						
+						currentDay = testDay;
+					}
+					
+					com.sunlightlabs.congress.models.Bill rootBill = upcomingBill.bill;
+					Bill bill = new Bill();
+					
+					bill.code = com.sunlightlabs.congress.models.Bill.formatCodeShort(rootBill.code);
+					
+					String title;
+					if (rootBill.short_title != null && !rootBill.short_title.equals(""))
+						title = rootBill.short_title;
+					else
+						title = Utils.truncate(rootBill.official_title, 60);
+					
+					bill.title = title;
+					bill.bill = rootBill;
+					
+					items.add(bill);
+				}
+				
+				return items;
 			}
 		}
 	}
