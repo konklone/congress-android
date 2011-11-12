@@ -11,7 +11,7 @@
 	
         android:focusable="true"
 		android:gravity="center"
-		android:background="@drawable/general_selector"				
+		android:background="@drawable/selector_clear"
         >
 	
 		<TextView android:id="@+id/text_1"

@@ -5,11 +5,10 @@
 	<color name="background_light">#365A82</color>
 	<color name="background_transparent">#00192a3c</color>
 	
-	<!-- 
-	#365A82 
-	#2D4B6E
-	#1F334A
-	-->
+	<!--  background selectors -->
+	<color name="background_grey">#5f5f5f</color>
+	<color name="selector_focused">#f58525</color> <!-- #FFBB00 -->
+	<color name="selector_pressed">#f58525</color>
 	
 	<color name="link">#4c98d7</color>
 	<color name="alert_title">#44000000</color>

@@ -11,7 +11,7 @@
 		android:layout_height="fill_parent"
 		android:layout_width="48dp"
 		
-		android:background="@drawable/action_button_selector"
+		android:background="@drawable/selector_clear"
 		
 		android:focusable="true"
 		>

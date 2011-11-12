@@ -71,7 +71,7 @@
 			android:paddingLeft="3dp"
 			android:paddingRight="3dp"
 			
-			android:background="@drawable/general_selector"
+			android:background="@drawable/selector_clear"
 			>
 			
 			<ImageView
@@ -115,7 +115,7 @@
 			android:paddingLeft="3dp"
 			android:paddingRight="3dp"
 			
-			android:background="@drawable/general_selector"
+			android:background="@drawable/selector_clear"
 			>
 			
 			<ImageView
@@ -160,7 +160,7 @@
 			android:paddingLeft="3dp"
 			android:paddingRight="3dp"
 			
-			android:background="@drawable/general_selector"
+			android:background="@drawable/selector_clear"
 			>
 			
 			<ImageView
