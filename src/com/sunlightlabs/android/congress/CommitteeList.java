@@ -186,7 +186,7 @@ public class CommitteeList extends FragmentActivity {
 				View view = null;
 				ViewHolder holder;
 				if (convertView == null) {
-					view = inflater.inflate(R.layout.profile_committee, null);
+					view = inflater.inflate(R.layout.committee_item, null);
 					holder = new ViewHolder();
 					holder.name = (TextView) view.findViewById(R.id.name);
 					view.setTag(holder);
