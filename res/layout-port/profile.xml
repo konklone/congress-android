@@ -34,8 +34,7 @@
 	  			android:layout_marginBottom="2dp"
 	  			
 	  			android:textSize="15sp"
-	  			android:textColor="@android:color/white"
-	  			
+	  				  			
 	  			android:text="Democrat"
 	  			
 		  		/>
@@ -48,7 +47,6 @@
 		  		android:layout_marginBottom="2dp"
 		  		
 		  		android:textSize="15sp"
-		  		android:textColor="@android:color/white"
 		  		
 		  		android:text="District of Columbia"
 		  		/>
@@ -61,7 +59,6 @@
 	  			android:layout_marginBottom="2dp"
 	  			
 	  			android:textSize="15sp"
-	  			android:textColor="@android:color/white"
 	  			
 	  			android:text="Senior Senator"
 		  		/>
@@ -72,7 +69,6 @@
 	  			android:layout_below="@id/profile_domain"
 	  			
 	  			android:textSize="15sp"
-	  			android:textColor="@android:color/white"
 	  			
 	  			android:text="3445 Rayburn"
 	  			/>

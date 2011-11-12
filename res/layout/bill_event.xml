@@ -7,5 +7,7 @@
 	android:layout_marginBottom="3dp"
 	
 	android:textSize="14sp"
+	android:textColor="@color/text_grey"
+	
 	android:text="Introduced on Feb 12, 2010"
 	/>

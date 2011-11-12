@@ -92,15 +92,12 @@
 				android:layout_marginTop="5dp"
 				android:layout_marginBottom="5dp"
 				
-				android:textColor="@android:color/white"
 				android:textSize="14sp"
 				android:text="@string/menu_about"
 				/>
 			
 		</LinearLayout>
-		
-		<include layout="@layout/divider" />
-		
+				
 		<LinearLayout android:id="@+id/feedback" 
 			android:orientation="horizontal"
 			android:layout_width="0dp"
@@ -137,14 +134,11 @@
 				android:layout_marginTop="5dp"
 				android:layout_marginBottom="5dp"
 				
-				android:textColor="@android:color/white"
 				android:textSize="14sp"
 				android:text="@string/menu_feedback"
 				/>
 			
 		</LinearLayout>
-		
-		<include layout="@layout/divider" />
 		
 		<LinearLayout android:id="@+id/donate"
 			android:orientation="horizontal"
@@ -182,7 +176,6 @@
 				android:layout_marginTop="5dp"
 				android:layout_marginBottom="5dp"
 				
-				android:textColor="@android:color/white"
 				android:textSize="14sp"
 				android:text="@string/menu_donate"
 				/>

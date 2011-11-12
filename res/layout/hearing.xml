@@ -24,7 +24,6 @@
 		<TextView android:id="@+id/month"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textColor="@android:color/white"
 			android:textSize="26sp"
 			
 			android:text="Oct 18"
@@ -36,7 +35,6 @@
 			android:layout_marginTop="5dp"
 			
 			android:textSize="16sp"
-			android:textColor="@android:color/white"
 			
 			android:text="10:00AM"
 			/>
@@ -65,7 +63,6 @@
 			android:paddingTop="2dp"
 			
 			android:textSize="18sp"
-			android:textColor="@android:color/white"
 			
 			android:text="Homeland Security and Governmental Affairs"
 			/>

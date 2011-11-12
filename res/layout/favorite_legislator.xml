@@ -38,7 +38,6 @@
 			android:layout_height="wrap_content"
 			
 			android:textSize="18sp"
-			android:textColor="@android:color/white"
 			
 			android:text="Text"
 			/>
@@ -49,7 +48,7 @@
 			android:layout_marginTop="2dp"
 			
 			android:textSize="12sp"
-			android:textColor="#cccccc"
+			android:textColor="@color/text_grey"
 			
 			android:text="Subtext"
 			/>

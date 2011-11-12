@@ -12,7 +12,5 @@
 	
 	android:background="@color/background_dark"
 	
-	android:textColor="@color/text"
-	
 	android:text="Header Text"
 	/>

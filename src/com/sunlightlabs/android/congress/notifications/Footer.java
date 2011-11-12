@@ -160,7 +160,7 @@ public class Footer {
 		text.setText(R.string.footer_on);
 		text.setTextColor(resources.getColor(R.color.text));
 		image.setVisibility(View.VISIBLE);
-		image.setImageResource(R.drawable.notifications_on);
+		image.setImageResource(R.drawable.circle_on);
 		working.setVisibility(View.GONE);
 		
 		footerView.setBackgroundColor(resources.getColor(R.color.background_dark));
@@ -172,7 +172,7 @@ public class Footer {
 		text.setText(R.string.footer_off);
 		text.setTextColor(resources.getColor(R.color.text_grey));
 		image.setVisibility(View.VISIBLE);
-		image.setImageResource(R.drawable.notifications_off);
+		image.setImageResource(R.drawable.circle_off);
 		working.setVisibility(View.GONE);
 		
 		footerView.setBackgroundColor(resources.getColor(R.color.background_dark));

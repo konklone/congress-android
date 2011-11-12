@@ -23,7 +23,6 @@
     	android:layout_height="wrap_content"
     	android:layout_marginBottom="5dp"
     	
-    	android:drawSelectorOnTop="true"
     	android:prompt="@string/state_prompt"
     	android:entries="@array/state_names"
     	/>

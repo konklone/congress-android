@@ -114,7 +114,7 @@ public class NotificationSubscriptions extends ListActivity {
 			} catch (Exception e) {
 				Log.e(Utils.TAG, "Could not instantiate a Subscriber of class " + subscription.notificationClass, e);
 				
-				icon.setImageResource(R.drawable.notifications_off);
+				icon.setImageResource(R.drawable.circle_off);
 				text.setText(R.string.notification_not_found);
 				view.setTag(null);
 				view.setEnabled(false);

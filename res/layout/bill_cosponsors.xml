@@ -23,7 +23,6 @@
 		android:layout_marginTop="10dp"
 		
 		android:textSize="19sp"
-		android:textColor="@android:color/white"
 		
 		android:text="Text"
 		/>

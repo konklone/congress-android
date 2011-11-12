@@ -42,6 +42,7 @@
 			android:layout_marginBottom="1dp"
 			
 			android:textSize="14sp"
+			android:textColor="@color/text_grey"
 			android:text="Sponsored by"
 			/>
 			
@@ -51,7 +52,6 @@
 			
 			android:layout_marginBottom="1dp"
 			
-			android:textColor="@android:color/white"
 			android:textSize="19sp"
 			
 			android:text="Sen. Kirsten Gillibrand"
@@ -62,6 +62,8 @@
 			android:layout_height="wrap_content"
 			
 			android:textSize="14sp"
+			android:textColor="@color/text_grey"
+			
 			android:text="Democrat from New York"
 			/>
 	

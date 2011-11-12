@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="MainList">
+    <style name="MainList" parent="@android:style/Widget.ListView">
         <item name="android:dividerHeight">1dp</item>
 	    <item name="android:divider">@color/background_dark</item>
 	    <item name="android:cacheColorHint">@color/background</item>
@@ -12,6 +12,7 @@
         <item name="android:windowBackground">@color/background</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="android:textColorLink">@color/text_link</item>
+        <item name="android:textColor">@color/text</item>
     </style>
     
 </resources>
