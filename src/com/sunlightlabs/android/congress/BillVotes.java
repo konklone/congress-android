@@ -50,6 +50,8 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 			this.tracked = holder.tracked;
 		}
 		
+		setupControls();
+		
 		tracker = Analytics.start(this);
 		if (!tracked) {
 			Analytics.page(this, tracker, "/bill/" + bill.id + "/votes");
@@ -70,6 +72,10 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		return new BillVotesHolder(loadBillTask, bill, footer, tracked);
+	}
+	
+	public void setupControls() {
+		Utils.setLoading(this, R.string.bill_votes_loading);
 	}
 	
 	@Override
