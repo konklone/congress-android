@@ -220,11 +220,15 @@ public class Utils {
 		return 0;
 	}
 
-	public static String truncate(String text, int length) {
+	public static String truncate(String text, int length, boolean ellipses) {
 		if (text.length() > length)
-			return text.substring(0, length - 3) + "...";
+			return text.substring(0, length - 3) + (ellipses ? "..." : "");
 		else
 			return text;
+	}
+	
+	public static String truncate(String text, int length) {
+		return truncate(text, length, true);
 	}
 	
 	public static View inflateHeader(LayoutInflater inflater, int text) {
