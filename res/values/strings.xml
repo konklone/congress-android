@@ -43,6 +43,8 @@
     <string name="legislators_loading">Searching for lawmakers...</string>
     <string name="legislators_loading_cosponsors">Loading cosponsors...</string>
     <string name="votes_loading">Plucking votes from the air...</string>
+    <string name="bill_loading">Plucking bill from the air...</string>
+    <string name="legislator_loading">Plucking a person from the air...</string>
    
    	<string name="committees_title">Committees</string>
     <string name="committees_loading">Plucking committees from the air...</string>
