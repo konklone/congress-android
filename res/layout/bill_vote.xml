@@ -41,33 +41,18 @@
 		android:layout_marginRight="10dp"
 		
 		android:textSize="16sp"
-		android:textColor="#dddddd"
+		android:textColor="@color/text_grey"
 		
 		android:text="May 24, 2010"
-		/>
-		
-	<TextView android:id="@+id/text"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		
-		android:layout_below="@id/voted_at"
-		android:layout_alignLeft="@id/result"
-		android:layout_marginTop="7dp"
-		android:layout_marginRight="10dp"
-		
-		android:textSize="14sp"
-		android:textColor="#dddddd"
-		
-		android:text="On motion to suspend the rules and pass the bill Agreed to by the Yeas and Nays: (2/3 required): 416 - 0 (Roll no. 768). (text: CR 10/7/2009 H10550)"
 		/>
 	
 	<TextView android:id="@+id/type_message"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		
-		android:layout_below="@id/text"
+		android:layout_below="@id/result"
 		android:layout_alignLeft="@id/result"
-		android:layout_marginTop="5dp"
+		android:layout_marginTop="10dp"
 		
 		android:textSize="16sp"
 		android:textStyle="bold"

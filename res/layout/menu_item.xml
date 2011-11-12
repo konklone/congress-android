@@ -22,7 +22,7 @@
 		android:layout_gravity="center_vertical"
 		
 		android:textSize="18sp"
-		android:textColor="#dddddd"
+		android:textColor="@color/text_grey"
 		
 		android:text="Text"
 		/>

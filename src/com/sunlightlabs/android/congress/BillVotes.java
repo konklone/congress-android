@@ -166,7 +166,6 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 			
 			String timestamp = new SimpleDateFormat("MMM dd, yyyy").format(vote.voted_at);
 			((TextView) view.findViewById(R.id.voted_at)).setText(timestamp);
-			((TextView) view.findViewById(R.id.text)).setText(vote.text);
 			((TextView) view.findViewById(R.id.chamber)).setText("the " + Utils.capitalize(vote.chamber));
 			
 			TextView resultView = (TextView) view.findViewById(R.id.result);

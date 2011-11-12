@@ -14,7 +14,6 @@
 		android:paddingBottom="12dp"
 		
 		android:textSize="16sp"
-		android:textColor="#dddddd"
 		
 		android:text="Committee Name"
 		/>
