@@ -84,7 +84,7 @@
 		android:layout_height="1px"
 		android:layout_marginTop="10dp"
 		
-		android:background="@color/header_line"
+		android:background="@color/background_dark"
 
 		android:layout_below="@id/type_message"
 		/>

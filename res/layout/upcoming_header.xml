@@ -16,9 +16,9 @@
 		android:layout_height="wrap_content"
 		
 		android:textSize="14sp"
-		android:textColor="@color/upcoming_header_text"
+		android:textColor="@color/text"
 		
-		android:text="COMING UP"
+		android:text="@string/upcoming_header"
 		/>
 		
 </RelativeLayout>

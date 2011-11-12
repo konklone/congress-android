@@ -126,6 +126,7 @@
 		  			/>
 	  			
   			</FrameLayout>
+  			
   		</RelativeLayout>
   	
  	</LinearLayout>
@@ -133,7 +134,7 @@
  	<View
  		android:layout_width="fill_parent"
  		android:layout_height="1dp"
- 		android:background="@color/header_line"
+ 		android:background="@color/background_dark"
  		/>
  	
 </LinearLayout>

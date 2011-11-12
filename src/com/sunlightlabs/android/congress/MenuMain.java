@@ -276,7 +276,7 @@ public class MenuMain extends FragmentActivity {
 		}
 		
 		private void setupControls() {
-			FragmentUtils.setLoading(this, R.string.upcoming_bills_loading);
+			FragmentUtils.setLoading(this, R.string.upcoming_loading);
 			
 			// TODO: setup refresh button behavior
 		}
@@ -298,14 +298,14 @@ public class MenuMain extends FragmentActivity {
 		
 		private void onLoadUpcomingBills(CongressException exception) {
 			if (isAdded())
-				FragmentUtils.showRefresh(this, R.string.upcoming_bills_error);
+				FragmentUtils.showRefresh(this, R.string.upcoming_error);
 		}
 		
 		private void displayUpcomingBills() {
 			if (upcomingBills.size() > 0)
 				setListAdapter(new UpcomingAdapter(this, UpcomingAdapter.wrapUpcoming(upcomingBills)));
 			else
-				FragmentUtils.showEmpty(this, R.string.upcoming_bills_empty);
+				FragmentUtils.showEmpty(this, R.string.upcoming_empty);
 		}
 		
 		static class UpcomingBillsTask extends AsyncTask<String, Void, List<UpcomingBill>> {

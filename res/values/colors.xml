@@ -15,19 +15,4 @@
 	
 	<color name="tab_selected">#8f8f8f</color>
 	<color name="tab_dim">#3f3f3f</color>
-	
-	<color name="header_line">#555555</color>
-	<color name="header_text">#f5f5f5</color>
-	
-	<color name="upcoming_header">#365A82</color>
-	<color name="upcoming_header_text">#f5f5f5</color>
-	<color name="upcoming_date">#141414</color>
-	<color name="upcoming_date_text">#f5f5f5</color>
-	<color name="upcoming_date_text_secondary">#b5b5b5</color>
-	
-	<color name="out_of_office_background">#662222</color>
-	
-	<color name="action_vote">#f1ef34</color>
-	<color name="action_enacted">#4ac956</color>
-	<color name="action_vetoed">#ef2f25</color>
 </resources>

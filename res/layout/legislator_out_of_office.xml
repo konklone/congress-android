@@ -21,7 +21,7 @@
 		android:paddingTop="5dp"
 		android:paddingBottom="5dp"
 		
-		android:background="@color/out_of_office_background"
+		android:background="@color/background_grey"
 		android:textColor="@color/text"
 		
 		android:text="@string/out_of_office_message"

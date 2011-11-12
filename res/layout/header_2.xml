@@ -18,7 +18,7 @@
 		android:layout_marginBottom="5dp"
 		
 		android:textSize="16sp"
-		android:textColor="@color/header_text"
+		android:textColor="@color/text"
 		
 		android:text="Header Text"
 		/>
@@ -32,7 +32,7 @@
 		android:paddingTop="2dp"
 		
 		android:textSize="14sp"
-		android:textColor="@color/header_text"
+		android:textColor="@color/text"
 		
 		android:text="Header Text"
 		/>

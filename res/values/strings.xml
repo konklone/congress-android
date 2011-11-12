@@ -18,9 +18,10 @@
     <string name="empty_bills">There are no bills that match your search.</string>
     <string name="empty_votes">This legislator has not cast any recent votes.</string>
     
-    <string name="upcoming_bills_loading">Finding out what\'s coming up...</string>
-    <string name="upcoming_bills_empty">No details on upcoming activity right now.</string>
-    <string name="upcoming_bills_error">Error loading upcoming activity.</string>
+    <string name="upcoming_header">COMING UP</string>
+    <string name="upcoming_loading">Finding out...</string>
+    <string name="upcoming_empty">No details on upcoming activity right now.</string>
+    <string name="upcoming_error">Error loading upcoming activity.</string>
         
     <string name="bill_no_title">(no title)</string>
     <string name="bill_no_title_yet">(title not yet known)</string>
