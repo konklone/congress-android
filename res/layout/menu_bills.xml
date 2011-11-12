@@ -6,7 +6,7 @@
 	
 	>
 	
-	<include layout="@layout/title_bar_main" />
+	<include layout="@layout/title_bar" />
 	
 	<RelativeLayout
 		android:layout_width="fill_parent"

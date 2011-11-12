@@ -6,7 +6,7 @@
 	
 	android:layout_weight="1"
 	
-	android:background="@drawable/tab_gradient"
+	android:background="@drawable/tab"
 	
 	android:focusable="true"
 	android:clickable="true"
@@ -20,7 +20,7 @@
 		<View 
 			android:layout_width="1px"
 			android:layout_height="fill_parent"
-			android:background="@color/tab_edges"
+			android:background="@color/background_dark"
 			/>
 		
 		<LinearLayout
@@ -41,7 +41,7 @@
 				android:gravity="center"
 				
 				android:textSize="14dp"
-				android:textColor="@color/tab_text_color"
+				android:textColor="@color/text"
 				android:textStyle="bold"
 				
 				android:text="Name"
@@ -56,7 +56,7 @@
 				android:gravity="center"
 				
 				android:textSize="12dp"
-				android:textColor="@color/tab_text_color"
+				android:textColor="@color/text"
 				
 				android:text="Sub"
 				/>
@@ -66,7 +66,7 @@
 			android:layout_width="1px"
 			android:layout_height="fill_parent"
 			
-			android:background="@color/tab_edges"
+			android:background="@color/background_dark"
 			/>
 			
 	</LinearLayout>
@@ -74,7 +74,7 @@
 	<View 
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
-		android:background="@color/tab_selected_bottom"
+		android:background="@color/tab_selected"
 		/>
 		
 </LinearLayout>

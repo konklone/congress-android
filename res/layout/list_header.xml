@@ -24,7 +24,7 @@
 			
 			android:textSize="14sp"	
 			android:text="@string/location_update"
-			android:textColor="@color/list_header_foreground"
+			android:textColor="@color/text"
 			/>
 		
 		<ProgressBar android:id="@+id/updating_spinner"

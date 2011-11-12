@@ -14,7 +14,7 @@
 	android:lineSpacingExtra="2dp"
 	
 	android:textSize="14sp"
-	android:textColor="@color/grey"
+	android:textColor="@color/text_grey"
 	
 	android:text="DEBATE - The House proceeded with forty minutes of debate on H.R. 5160."
 	/>

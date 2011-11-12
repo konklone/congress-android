@@ -380,8 +380,6 @@ public class MenuMain extends FragmentActivity {
 					
 					Date date = (Date) item;
 					
-					View x = view.findViewById(R.id.date_name);
-					
 					((TextView) view.findViewById(R.id.date_name)).setText(date.dateName);
 					((TextView) view.findViewById(R.id.date_full)).setText(date.dateFull);
 				} else { // instanceof Action

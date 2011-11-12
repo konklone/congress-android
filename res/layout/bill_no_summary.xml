@@ -13,7 +13,6 @@
 		android:layout_margin="20dp"
 		
 		android:textSize="16sp"
-		android:textColorLink="@color/link"
 		android:text="No summary available."
 		/>
 	

@@ -4,7 +4,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	
-	android:background="@color/list_header_background"
+	android:background="@color/background_dark"
 	
 	android:gravity="center"
 	
@@ -16,5 +16,5 @@
 	android:text="Simple header text"
 	android:textSize="14sp"
 	
-	android:textColor="@color/list_header_foreground"
+	android:textColor="@color/text"
 	/>

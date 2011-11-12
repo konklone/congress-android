@@ -166,10 +166,10 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 			TextView resultView = (TextView) view.findViewById(R.id.result);
 			String result = vote.result;
 			if (result.equals("pass")) {
-				resultView.setTextColor(resources.getColor(R.color.bill_passed));
+				resultView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 				resultView.setText("Passed");
 			} else if (result.equals("fail")) {
-				resultView.setTextColor(resources.getColor(R.color.bill_failed));
+				resultView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
 				resultView.setText("Failed");
 			}
 			
@@ -177,12 +177,12 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 			TextView typeMessage = (TextView) view.findViewById(R.id.type_message);
 			if (roll_id != null) {
 				typeMessage.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-				typeMessage.setTextColor(resources.getColor(android.R.color.white));
+				typeMessage.setTextColor(resources.getColor(R.color.text));
 				typeMessage.setText(R.string.bill_vote_roll);
 				view.setTag(vote.roll_id);
 			} else {
 				typeMessage.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-				typeMessage.setTextColor(resources.getColor(R.color.faded_grey));
+				typeMessage.setTextColor(resources.getColor(R.color.text_grey));
 				typeMessage.setText(R.string.bill_vote_not_roll);
 				view.setTag(null);
 			}

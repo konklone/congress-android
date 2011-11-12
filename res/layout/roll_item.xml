@@ -28,7 +28,7 @@
 		android:layout_alignTop="@id/roll"
 		
 		android:textSize="16sp"
-		android:textColor="@color/grey"
+		android:textColor="@color/text_grey"
 		
 		android:text="Feb 22, 2010"
 		/>
@@ -42,7 +42,7 @@
 		android:layout_marginTop="7dp"
 		
 		android:textSize="14sp"
-		android:textColor="@color/grey"
+		android:textColor="@color/text_grey"
 		
 		android:text="On Passage: H R 5114 Flood Insurance Reform Priorities Act"
 		/>

@@ -46,7 +46,7 @@
 		android:layout_gravity="center_vertical"
 		
 		android:textSize="14sp"
-		android:textColor="@android:color/white"
+		android:textColor="@color/text"
 		
 		android:text="Committees"
 		/>

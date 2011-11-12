@@ -12,7 +12,7 @@
 	
 	android:lineSpacingExtra="2sp"
 	android:textSize="14sp"
-	android:textColor="@color/grey"
+	android:textColor="@color/text_grey"
 	
 	android:text="No favorites"
 	/>

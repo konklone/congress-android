@@ -12,7 +12,6 @@ import java.util.concurrent.RejectedExecutionException;
 
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -517,14 +516,12 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private static class VoterAdapter extends ArrayAdapter<Roll.Vote> {
 		LayoutInflater inflater;
 		RollInfo context;
-		Resources resources;
 		
 		private boolean starred;
 
 	    public VoterAdapter(RollInfo context, List<Vote> rest) {
 	        super(context, 0, rest);
 	        this.context = context;
-	        this.resources = context.getResources();
 	        this.inflater = LayoutInflater.from(context);
 	        this.starred = false;
 	    }
@@ -532,7 +529,6 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	    public VoterAdapter(RollInfo context, List<Vote> starred2, boolean starred) {
 	        super(context, 0, starred2);
 	        this.context = context;
-	        this.resources = context.getResources();
 	        this.inflater = LayoutInflater.from(context);
 	        this.starred = starred;
 	    }
@@ -579,22 +575,16 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			
 			TextView voteView = holder.vote;
 			String value = vote.vote;
-			if (value.equals(Roll.YEA)) {
+			if (value.equals(Roll.YEA))
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-				voteView.setTextColor(resources.getColor(R.color.yea));
-			} else if (value.equals(Roll.NAY)) {
+			else if (value.equals(Roll.NAY))
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-				voteView.setTextColor(resources.getColor(R.color.nay));
-			} else if (value.equals(Roll.PRESENT)) {
+			else if (value.equals(Roll.PRESENT))
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-				voteView.setTextColor(resources.getColor(R.color.present));
-			} else if (value.equals(Roll.NOT_VOTING)) {
+			else if (value.equals(Roll.NOT_VOTING))
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-				voteView.setTextColor(resources.getColor(R.color.not_voting));
-			} else {
+			else
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-				voteView.setTextColor(resources.getColor(android.R.color.white));
-			}
 			
 			voteView.setText(vote.vote);
 			

@@ -11,7 +11,7 @@
 		
 		android:padding="10dp"
 	
-		android:background="@color/search_data"
+		android:background="@color/background_dark"
 		>
 	
 		<TextView android:id="@+id/match_field"

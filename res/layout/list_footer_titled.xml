@@ -7,7 +7,7 @@
     android:background="@color/background"
     >
     
-  	<include layout="@layout/title_bar_main" />
+  	<include layout="@layout/title_bar" />
  	
   	<include layout="@layout/list_footer" />
 </LinearLayout>

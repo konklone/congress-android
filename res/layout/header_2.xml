@@ -3,7 +3,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	
-	android:background="@drawable/header_gradient"
+	android:background="@color/background_dark"
 	
 	android:paddingLeft="10dp"
 	android:paddingRight="10dp"

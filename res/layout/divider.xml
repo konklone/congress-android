@@ -4,6 +4,6 @@
 	<View
 		android:layout_width="1px"
 		android:layout_height="fill_parent"
-		android:background="@color/main_title_divider"
+		android:background="@color/background_dark"
 		/>
 </merge>

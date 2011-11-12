@@ -6,14 +6,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.app.ListActivity;
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -220,7 +218,6 @@ public class RollList extends ListActivity {
 	private static class RollAdapter extends ArrayAdapter<Roll> {
 		private LayoutInflater inflater;
 		private RollList context;
-		private Resources resources;
 		
 		private static final int ROLL = 0;
 		private static final int LOADING = 1;
@@ -229,7 +226,6 @@ public class RollList extends ListActivity {
 			super(context, 0, rolls);
 			this.inflater = LayoutInflater.from(context);
 			this.context = context;
-			this.resources = context.getResources();
 		}
 
 		@Override
@@ -291,23 +287,18 @@ public class RollList extends ListActivity {
 				Roll.Vote vote = roll.voter_ids.get(context.voter.bioguide_id);
 				if (vote == null || vote.vote.equals(Roll.NOT_VOTING)) {
 					msgView.setText("Did Not Vote");
-					msgView.setTextColor(resources.getColor(android.R.color.white));
 					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
 				} else if (vote.vote.equals(Roll.YEA)) {
 					msgView.setText(vote.vote);
-					msgView.setTextColor(resources.getColor(R.color.yea));
 					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 				} else if (vote.vote.equals(Roll.NAY)) {
 					msgView.setText(vote.vote);
-					msgView.setTextColor(resources.getColor(R.color.nay));
 					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 				} else if (vote.vote.equals(Roll.PRESENT)) {
 					msgView.setText(vote.vote);
-					msgView.setTextColor(resources.getColor(android.R.color.white));
 					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
 				} else {
 					msgView.setText(vote.vote);
-					msgView.setTextColor(resources.getColor(android.R.color.white));
 					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
 				} 
 				

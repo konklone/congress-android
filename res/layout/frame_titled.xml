@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     >
     
-    <include layout="@layout/title_bar_main" />
+    <include layout="@layout/title_bar" />
  
     <FrameLayout android:id="@+id/frame"
 	    android:layout_width="fill_parent" 

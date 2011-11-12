@@ -2,51 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:background="@drawable/tab_gradient"
+	android:background="@drawable/tab"
 	
 	android:orientation="vertical"
 	>
-	<LinearLayout
+		
+	<TextView android:id="@+id/tab_name"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		>
+		android:layout_weight="1"
 		
-		<View 
-			android:layout_width="1px"
-			android:layout_height="fill_parent"
-			android:background="@color/tab_edges"
-			/>
+		android:paddingTop="10dp"
+		android:paddingBottom="10dp"
 		
-		<TextView android:id="@+id/tab_name"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			
-			android:paddingTop="10dp"
-			android:paddingBottom="10dp"
-			
-			android:gravity="center"
-			
-			android:textSize="14dp"
-			android:textColor="@color/tab_text_color"
-			android:textStyle="bold"
-			
-			android:text="Name"
-			/>
+		android:gravity="center"
 		
-		<View 
-			android:layout_width="1px"
-			android:layout_height="fill_parent"
-			android:background="@color/tab_edges"
-			/>
-			
-	</LinearLayout>
+		android:textSize="16dp"
+		android:textColor="@color/text"
+		
+		android:text="Name"
+		/>
 	
 	<View 
 		android:layout_width="fill_parent"
 		android:layout_height="2dp"
-		android:background="@color/tab_selected_bottom"
+		android:background="@color/tab_selected"
 		/>
 		
 </LinearLayout>

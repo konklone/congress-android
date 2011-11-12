@@ -5,7 +5,7 @@
 	android:orientation="vertical"
 	>
 	
-	<include layout="@layout/title_bar_main" />
+	<include layout="@layout/title_bar" />
 	
 	<include layout="@layout/debug_bar"
 		android:visibility="gone"

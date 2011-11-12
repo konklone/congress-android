@@ -158,24 +158,24 @@ public class Footer {
 		state = ON;
 		
 		text.setText(R.string.footer_on);
-		text.setTextColor(resources.getColor(R.color.footer_on_text));
+		text.setTextColor(resources.getColor(R.color.text));
 		image.setVisibility(View.VISIBLE);
 		image.setImageResource(R.drawable.notifications_on);
 		working.setVisibility(View.GONE);
 		
-		footerView.setBackgroundDrawable(resources.getDrawable(R.drawable.footer_on));
+		footerView.setBackgroundColor(resources.getColor(R.color.background_dark));
 	}
 
 	private void setOff() {
 		state = OFF;
 		
 		text.setText(R.string.footer_off);
-		text.setTextColor(resources.getColor(R.color.footer_off_text));
+		text.setTextColor(resources.getColor(R.color.text_grey));
 		image.setVisibility(View.VISIBLE);
 		image.setImageResource(R.drawable.notifications_off);
 		working.setVisibility(View.GONE);
 		
-		footerView.setBackgroundDrawable(resources.getDrawable(R.drawable.footer_off));
+		footerView.setBackgroundColor(resources.getColor(R.color.background_dark));
 	}
 	
 	private void setWorking() {
@@ -185,28 +185,28 @@ public class Footer {
 		image.setVisibility(View.GONE);
 		working.setVisibility(View.VISIBLE);
 		
-		text.setTextColor(resources.getColor(R.color.footer_off_text));
-		footerView.setBackgroundDrawable(resources.getDrawable(R.drawable.footer_off));
+		text.setTextColor(resources.getColor(R.color.text_grey));
+		footerView.setBackgroundColor(resources.getColor(R.color.background_dark));
 	}
 	
 	private void setDisabled() {
 		state = DISABLED;
 		
 		text.setText(R.string.footer_disabled);
-		text.setTextColor(resources.getColor(R.color.footer_disabled_text));
+		text.setTextColor(resources.getColor(R.color.text_grey));
 		working.setVisibility(View.GONE);
 		
-		footerView.setBackgroundDrawable(resources.getDrawable(R.drawable.footer_disabled));
+		footerView.setBackgroundColor(resources.getColor(R.color.background_grey));
 	}
 	
 	private void setFirstTime() {
 		state = DISABLED; // leave it at disabled for purposes of tapping
 		
 		text.setText(R.string.footer_first_time);
-		text.setTextColor(resources.getColor(R.color.footer_first_time_text));
+		text.setTextColor(resources.getColor(R.color.text));
 		working.setVisibility(View.GONE);
 		
-		footerView.setBackgroundDrawable(resources.getDrawable(R.drawable.footer_first_time));
+		footerView.setBackgroundColor(resources.getColor(R.color.background_grey));
 	}
 	
 	// used when there's a database error on initialization and there's not much else to do
@@ -214,11 +214,11 @@ public class Footer {
 		state = ERROR;
 		
 		text.setText(R.string.footer_error);
-		text.setTextColor(resources.getColor(R.color.footer_error_text));
+		text.setTextColor(resources.getColor(R.color.text_grey));
 		image.setVisibility(View.GONE);
 		working.setVisibility(View.GONE);
 		
-		footerView.setBackgroundDrawable(resources.getDrawable(R.drawable.footer_error));
+		footerView.setBackgroundColor(resources.getColor(R.color.background_dark));
 	}
 	
 	// will turn false once the user has visited the notification settings (and seen the explanation dialog) for the first time

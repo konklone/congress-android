@@ -23,7 +23,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="1px"
 		
-		android:background="@color/grey"
+		android:background="@color/text_grey"
 		
 		android:layout_marginTop="2dp"
 		/>

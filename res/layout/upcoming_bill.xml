@@ -13,6 +13,7 @@
        	android:paddingTop="3dp"
        	
 		android:textSize="12sp"
+		android:textColor="@color/text_grey"
 		
 		android:text="H.R. 3222"
 		/>
