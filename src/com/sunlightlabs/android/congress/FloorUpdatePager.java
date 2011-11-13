@@ -31,7 +31,7 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.FloorUpdate;
 import com.sunlightlabs.congress.services.FloorUpdateService;
 
-public class FloorUpdateList extends FragmentActivity {
+public class FloorUpdatePager extends FragmentActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -78,8 +78,7 @@ public class FloorUpdateList extends FragmentActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			
-			Bundle args = getArguments();
-			chamber = args.getString("chamber");
+			chamber = getArguments().getString("chamber");
 			
 			loadUpdates();
 		}
@@ -98,9 +97,6 @@ public class FloorUpdateList extends FragmentActivity {
 			if (updates != null)
 				displayUpdates();
 		}
-		
-//		Bundle extras = getIntent().getExtras();
-//		this.chamber = extras.getString("chamber");
 		
 		public void setupControls() {
 			((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {

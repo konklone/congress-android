@@ -213,7 +213,7 @@ public class MenuMain extends FragmentActivity {
 						.putExtra("type", RollList.ROLLS_LATEST));
 			
 			menuItem(R.id.menu_floor, R.drawable.floor, R.string.menu_main_floor_updates,
-					new Intent(getActivity(), FloorUpdateList.class));
+					new Intent(getActivity(), FloorUpdatePager.class));
 			
 			menuItem(R.id.menu_hearings, R.drawable.hearings, R.string.menu_main_hearings,
 					new Intent(getActivity(), HearingList.class)
