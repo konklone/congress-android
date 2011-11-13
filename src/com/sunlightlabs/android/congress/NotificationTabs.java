@@ -19,7 +19,7 @@ public class NotificationTabs extends TabActivity {
 	}
 
 	private void setupControls() {
-		Utils.setTitle(this, R.string.menu_notification_settings, R.drawable.notifications);
+		Utils.setTitle(this, R.string.menu_notification_settings);
 	}
 
 	private void setupTabs() {

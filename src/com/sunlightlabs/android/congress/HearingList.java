@@ -57,7 +57,7 @@ public class HearingList extends ListActivity {
 		
 		tracker = Analytics.start(this);
 		if (!tracked) {
-			Analytics.page(this, tracker, "/hearings/upcoming");
+			Analytics.page(this, tracker, "/hearings/senate");
 			tracked = true;
 		}
 		
@@ -89,7 +89,7 @@ public class HearingList extends ListActivity {
 			}
 		});
 
-		Utils.setTitle(this, R.string.hearings_title, R.drawable.hearings);
+		Utils.setTitle(this, R.string.hearings_title);
 		Utils.setTitleSize(this, 18);
 		Utils.setLoading(this, R.string.hearings_loading);
 	}

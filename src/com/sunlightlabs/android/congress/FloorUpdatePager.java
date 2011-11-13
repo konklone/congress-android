@@ -41,7 +41,7 @@ public class FloorUpdatePager extends FragmentActivity {
 			
 		Analytics.track(this, "/floor_updates");
 		
-		Utils.setTitle(this, R.string.floor_updates_title, R.drawable.floor);
+		Utils.setTitle(this, R.string.floor_updates_title);
 		setupPager();
 	}
 

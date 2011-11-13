@@ -21,7 +21,7 @@ public class Settings extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_titled);
-		Utils.setTitle(this, R.string.menu_settings, android.R.drawable.ic_menu_preferences);
+		Utils.setTitle(this, R.string.menu_settings);
 		
 		addPreferencesFromResource(R.xml.settings);
 		PreferenceManager.setDefaultValues(this, R.xml.settings, false);

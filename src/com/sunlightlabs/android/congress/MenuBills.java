@@ -88,7 +88,6 @@ public class MenuBills extends ListActivity {
 	
 	public void setupControls() {
 		Utils.setTitle(this, R.string.menu_main_bills);
-		Utils.setTitleIcon(this, R.drawable.bills);
 		
 		LayoutInflater inflater = LayoutInflater.from(this);
 		adapter = new MergeAdapter();

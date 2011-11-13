@@ -133,7 +133,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	}
 	
 	public void setupControls() {
-		Utils.setTitle(this, Utils.formatRollId(id), R.drawable.votes);
+		Utils.setTitle(this, Utils.formatRollId(id));
 		Utils.setLoading(this, R.string.vote_loading);
 	}
 	

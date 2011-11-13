@@ -296,20 +296,6 @@ public class Utils {
 		((TextView) activity.findViewById(R.id.title_text)).setText(title);
 	}
 
-	public static void setTitleIcon(Activity activity, int icon) {
-		((ImageView) activity.findViewById(R.id.title_icon)).setImageResource(icon);
-	}
-
-	public static void setTitle(Activity activity, int title, int icon) {
-		setTitle(activity, title);
-		setTitleIcon(activity, icon);
-	}
-
-	public static void setTitle(Activity activity, String title, int icon) {
-		setTitle(activity, title);
-		setTitleIcon(activity, icon);
-	}
-
 	public static void setTitleSize(Activity activity, float size) {
 		((TextView) activity.findViewById(R.id.title_text)).setTextSize(size);
 	}

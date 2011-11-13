@@ -44,7 +44,6 @@ public class LegislatorLoader extends Activity implements LoadsLegislator {
 	}
 	
 	public void setupControls() {
-		Utils.setTitleIcon(this, R.drawable.person);
 		Utils.setLoading(this, R.string.legislator_loading);
 	}
 	

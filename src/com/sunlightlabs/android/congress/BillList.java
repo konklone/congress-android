@@ -130,21 +130,21 @@ public class BillList extends ListActivity {
 		Utils.setLoading(this, R.string.bills_loading);
 		switch (type) {
 		case BILLS_RECENT:
-			Utils.setTitle(this, R.string.menu_bills_recent, R.drawable.bill);
+			Utils.setTitle(this, R.string.menu_bills_recent);
 			break;
 		case BILLS_LAW:
-			Utils.setTitle(this, R.string.menu_bills_law, R.drawable.bill_law);
+			Utils.setTitle(this, R.string.menu_bills_law);
 			break;
 		case BILLS_SEARCH:
-			Utils.setTitle(this, "Bills matching \"" + query + "\"", R.drawable.bills);
+			Utils.setTitle(this, "Bills matching \"" + query + "\"");
 			Utils.setTitleSize(this, 16);
 			break;
 		case BILLS_CODE:
-			Utils.setTitle(this, "Bills with code " + Bill.formatCodeShort(code), R.drawable.bills);
+			Utils.setTitle(this, "Bills with code " + Bill.formatCodeShort(code));
 			Utils.setTitleSize(this, 16);
 			break;
 		case BILLS_SPONSOR:
-			Utils.setTitle(this, "Latest Bills by\n" + sponsor.titledName(), R.drawable.bills);
+			Utils.setTitle(this, "Latest Bills by\n" + sponsor.titledName());
 			Utils.setTitleSize(this, 16);
 			break;
 		}

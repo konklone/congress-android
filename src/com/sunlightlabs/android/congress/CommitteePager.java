@@ -50,11 +50,12 @@ public class CommitteePager extends FragmentActivity {
 			
 			Analytics.track(this, "/legislator/committees?bioguide_id=" + legislator.id);
 			
-			Utils.setTitle(this, "Committees for " + legislator.titledName(), R.drawable.committees);
+			Utils.setTitle(this, "Committees for " + legislator.titledName());
 			Utils.setTitleSize(this, 16);
 			getSupportFragmentManager().beginTransaction().add(R.id.frame, CommitteeListFragment.forLegislator(legislator)).commit();
 		} else {
 			setContentView(R.layout.pager_titled);
+			Utils.setTitle(this, "Committees");
 			
 			Analytics.track(this, "/committees");
 			
