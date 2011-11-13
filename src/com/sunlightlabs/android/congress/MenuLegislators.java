@@ -258,18 +258,6 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 				}
 			}
 			break;
-//		case RESULT_BILL_CODE:
-//			if (resultCode == RESULT_OK) {
-//				String code = data.getExtras().getString("response").trim();
-//				if (!code.equals("")) {
-//					String billId = Bill.codeToBillId(code);
-//					if (billId != null) {
-//						Utils.setStringPreference(this, "search_bill_code", code); // store the code, not the bill_id
-//						searchByBillId(billId, code);
-//					}
-//				}
-//			}
-//			break;
 		}
 	}
 	
@@ -292,7 +280,6 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 		favoritePeopleWrappers.remove(bioguide_id);
 	}
 	
-	// Favorite legislators adapter for the menu
 	public class FavoriteLegislatorsAdapter extends CursorAdapter {
 
 		public FavoriteLegislatorsAdapter(Context context, Cursor c) {
@@ -318,7 +305,7 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 		public class FavoriteLegislatorWrapper {
 			private View row;
 
-			private TextView name, position;
+			private TextView name;
 			private ImageView photo;
 			
 			public Legislator legislator;
@@ -331,9 +318,6 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 				legislator = Database.loadLegislator(c);
 				
 				getName().setText(legislator.titledName());
-				String position = Legislator.partyName(legislator.party) + " from " 
-					+ Utils.stateCodeToName(context, legislator.state);
-				getPosition().setText(position);
 				
 				BitmapDrawable picture = LegislatorImage.quickGetImage(LegislatorImage.PIC_MEDIUM, legislator.bioguide_id, context);
 				
@@ -361,10 +345,6 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 			
 			private TextView getName() {
 				return name == null ? name = (TextView) row.findViewById(R.id.name) : name;
-			}
-			
-			private TextView getPosition() {
-				return position == null ? position = (TextView) row.findViewById(R.id.position) : position;
 			}
 			
 			private ImageView getPhoto() {

@@ -232,7 +232,7 @@ public class Utils {
 	}
 	
 	public static View inflateHeader(LayoutInflater inflater, int text) {
-		View view = inflater.inflate(R.layout.header_layout, null);
+		View view = inflater.inflate(R.layout.header, null);
 		((TextView) view.findViewById(R.id.header_text)).setText(text);
 		return view;
 	}
