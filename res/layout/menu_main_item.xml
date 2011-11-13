@@ -28,7 +28,7 @@
 			
 			android:layout_gravity="center_vertical|center_horizontal"
 			
-			android:src="@drawable/bills"
+			android:src="@drawable/bill"
 			/>
 	    
 	</FrameLayout>
@@ -45,10 +45,10 @@
 		
 		android:layout_gravity="center_vertical"
 		
-		android:textSize="14sp"
+		android:textSize="16sp"
 		android:textColor="@color/text"
 		
-		android:text="Committees"
+		android:text="Bills"
 		/>
 		
 </LinearLayout>

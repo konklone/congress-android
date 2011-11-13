@@ -202,32 +202,34 @@ public class MenuMain extends FragmentActivity {
 		}
 		
 		private void setupControls() {
-			menuItem(R.id.menu_legislators, R.drawable.people, R.string.menu_main_legislators,
+			menuItem(R.id.menu_legislators, R.drawable.people, R.string.menu_main_legislators, 16,
 					new Intent(getActivity(), MenuLegislators.class));
 			
-			menuItem(R.id.menu_bills, R.drawable.bills, R.string.menu_main_bills,
+			menuItem(R.id.menu_bills, R.drawable.bills, R.string.menu_main_bills, 16,
 					new Intent(getActivity(), MenuBills.class));
 			
-			menuItem(R.id.menu_votes, R.drawable.votes, R.string.menu_main_votes,
+			menuItem(R.id.menu_votes, R.drawable.votes, R.string.menu_main_votes, 16,
 					new Intent(getActivity(), RollList.class)
 						.putExtra("type", RollList.ROLLS_LATEST));
 			
-			menuItem(R.id.menu_floor, R.drawable.floor, R.string.menu_main_floor_updates,
+			menuItem(R.id.menu_floor, R.drawable.floor, R.string.menu_main_floor_updates, 16,
 					new Intent(getActivity(), FloorUpdatePager.class));
 			
-			menuItem(R.id.menu_hearings, R.drawable.hearings, R.string.menu_main_hearings,
+			menuItem(R.id.menu_hearings, R.drawable.hearings, R.string.menu_main_hearings, 16,
 					new Intent(getActivity(), HearingList.class)
 						.putExtra("chamber", "senate"));
 			
-			menuItem(R.id.menu_committees, R.drawable.committees, R.string.menu_main_committees,
+			menuItem(R.id.menu_committees, R.drawable.committees, R.string.menu_main_committees, 14,
 					new Intent(getActivity(), CommitteePager.class)
 						.putExtra("type", CommitteePager.CHAMBERS));
 		}
 		
-		private View menuItem(int id, int icon, int text, final Intent intent) {
+		private View menuItem(int id, int icon, int text, float size, final Intent intent) {
 			ViewGroup item = (ViewGroup) getView().findViewById(id);
 			((ImageView) item.findViewById(R.id.icon)).setImageResource(icon);
-			((TextView) item.findViewById(R.id.text)).setText(text);
+			TextView textView = (TextView) item.findViewById(R.id.text);
+			textView.setText(text);
+			textView.setTextSize(size);
 			
 			item.setOnClickListener(new View.OnClickListener() {
 				@Override
