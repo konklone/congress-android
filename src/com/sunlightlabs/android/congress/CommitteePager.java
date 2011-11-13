@@ -28,7 +28,7 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.CommitteeService;
 
-public class CommitteeList extends FragmentActivity {
+public class CommitteePager extends FragmentActivity {
 	public static final int CHAMBERS = 1;
 	public static final int LEGISLATOR = 2;
 	

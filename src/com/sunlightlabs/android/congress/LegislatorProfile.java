@@ -171,8 +171,8 @@ public class LegislatorProfile extends FragmentActivity {
 	    }
 	    
 	    public void viewCommittees() {
-	    	startActivity(new Intent(getActivity(), CommitteeList.class)
-    			.putExtra("type", CommitteeList.LEGISLATOR)
+	    	startActivity(new Intent(getActivity(), CommitteePager.class)
+    			.putExtra("type", CommitteePager.LEGISLATOR)
     			.putExtra("legislator", legislator));
 	    }
 	    

@@ -72,7 +72,7 @@
         </activity>
         
         <activity android:name=".CommitteeTabs" />
-        <activity android:name=".CommitteeList" />
+        <activity android:name=".CommitteePager" />
         
         <activity android:name=".FloorUpdateTabs" />
         <activity android:name=".FloorUpdatePager" />
