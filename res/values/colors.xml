@@ -2,17 +2,17 @@
 <resources>
 	<color name="background">#2D4B6E</color>
 	<color name="background_dark">#141414</color>
-	<color name="background_light">#365A82</color>
+	<color name="background_light">#4470A3</color>
 	<color name="background_transparent">#00192a3c</color>
 	<color name="background_grey">#5f5f5f</color>
 	
-	<color name="selector_focused">#f58525</color> <!-- #FFBB00 -->
+	<color name="selector_focused">#f58525</color>
 	<color name="selector_pressed">#f58525</color>
 	
 	<color name="text">@android:color/white</color>
 	<color name="text_grey">#c5c5c5</color>
 	<color name="text_link">#4c98d7</color>
 	
-	<color name="tab_selected">#8f8f8f</color>
-	<color name="tab_dim">#3f3f3f</color>
+	<color name="tab_selected">#4F84BF</color>
+	<color name="tab_dim">#4f4f4f</color>
 </resources>

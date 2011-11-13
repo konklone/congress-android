@@ -80,6 +80,17 @@ public class Analytics {
 		public TrackerFragment() {}
 	}
 	
+	// simple convenience function for when a fragment wants to log a URL
+	// don't need to worry about making sure it only happens once, because Fragments manage their own state
+	// in a way that activities do not.
+	public static void track(Fragment fragment, String url) {
+		if (fragment.isAdded()) {
+			GoogleAnalyticsTracker tracker = start(fragment.getActivity());
+			page(fragment.getActivity(), tracker, url);
+			stop(tracker);
+		}
+	}
+	
 	// Convenience function.
 	// Will take care of logging the pageview, and then *not* logging it if the activity restarts because of a screen flip.
 	// Uses a fragment's presence as a marker of whether the initial pageview has been tracked already,

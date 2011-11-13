@@ -31,8 +31,8 @@ public class FragmentUtils {
 	}
 
 	public static void setLoading(Fragment fragment, int message) {
-		Activity activity = fragment.getActivity();
-		((TextView) activity.findViewById(R.id.loading_message)).setText(message);
+		//Activity activity = fragment.getActivity();
+		((TextView) fragment.getView().findViewById(R.id.loading_message)).setText(message);
 	}
 	
 	public static void showBack(Fragment fragment, int message) {
