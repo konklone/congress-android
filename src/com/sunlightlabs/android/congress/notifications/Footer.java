@@ -9,6 +9,8 @@ import android.content.res.Resources;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +53,18 @@ public class Footer {
 		onScreenLoad(context, tracker);
 	}
 	
+	public Footer(Fragment fragment) {
+		FragmentActivity activity = fragment.getActivity();
+		this.context = activity;
+		this.resources = activity.getResources();
+		this.tracker = Analytics.trackerFor(activity);
+		
+		this.footerView = (ViewGroup) fragment.getView().findViewById(R.id.footer);
+		this.text = (TextView) footerView.findViewById(R.id.text);
+		this.image = (ImageView) footerView.findViewById(R.id.image);
+		this.working = (ProgressBar) footerView.findViewById(R.id.working);
+	}
+	
 	public void onScreenLoad(Activity context, GoogleAnalyticsTracker tracker) {
 		this.context = context;
 		this.resources = context.getResources();
@@ -67,6 +81,12 @@ public class Footer {
 		return new Footer(activity, tracker);
 	}
 	
+	// initialize the footer to a fragment, obtain a tracker from its activity's fragment pool
+	// set it up with a subscription and a list of seen items
+	public static void setup(Fragment fragment, Subscription subscription, List<?> objects) {
+		new Footer(fragment).init(subscription, objects);
+	}
+	
 	public void init(Subscription subscription, List<?> objects) {
 		this.subscription = subscription;
 		
@@ -79,7 +99,7 @@ public class Footer {
 			if (objects != null) {
 				int size = objects.size();
 				for (int i=0; i<size; i++) {
-					// can get rid of this null check when we switch to a pagination approach that doesn't use a null entry 
+					// TODO: can get rid of this null check when we switch to a pagination approach that doesn't use a null entry 
 					Object obj = objects.get(i);
 					if (obj != null)
 						ids.add(subscriber.decodeId(obj));

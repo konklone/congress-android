@@ -104,8 +104,6 @@ public class CommitteeList extends FragmentActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			
-			FragmentUtils.setupSunlight(this);
-			
 			Bundle args = getArguments();
 			type = args.getInt("type");
 			chamber = args.getString("chamber");
@@ -216,6 +214,7 @@ public class CommitteeList extends FragmentActivity {
 			private CongressException exception;
 
 			public LoadCommitteesTask(CommitteeListFragment context) {
+				FragmentUtils.setupSunlight(context);
 				this.context = context;
 			}
 

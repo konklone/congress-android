@@ -237,7 +237,7 @@ public class Utils {
 		return view;
 	}
 
-	/* TODO: Remove these list-oriented show methods entirely once we're all on ListFragments */
+	/** TODO: Remove these list-oriented show methods entirely once we're all on ListFragments */
 	
 	public static void showLoading(Activity activity) {
 		activity.findViewById(R.id.empty_message).setVisibility(View.GONE);
@@ -284,6 +284,9 @@ public class Utils {
 		messageView.setText(message);
 		messageView.setVisibility(View.VISIBLE);
 	}
+	
+	/** End list of methods marked for death */
+	
 
 	public static void setTitle(Activity activity, String title) {
 		((TextView) activity.findViewById(R.id.title_text)).setText(title);
@@ -348,47 +351,7 @@ public class Utils {
 		return PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(key, value).commit();
 	}
 	
-	/* 
-	Reflection example: now-deprecated use to handle custom tabs in Android 1.5.
 	
-	
-	private static Method setIndicator = null;
-	
-	static {
-		checkCustomTabs();
-	}
-	
-	// check for existence of TabHost.TabSpec#setIndicator(View)
-	private static void checkCustomTabs() {
-		try {
-    	   setIndicator = TabHost.TabSpec.class.getMethod("setIndicator", new Class[] { View.class } );
-       } catch (NoSuchMethodException nsme) {}
-	}
-	
-	public static void addTab(Activity activity, TabHost tabHost, String tag, Intent intent, String name, Drawable backup) {
-		TabHost.TabSpec tab = tabHost.newTabSpec(tag).setContent(intent);
-	
-		if (setIndicator != null) {
-			try {
-				setIndicator.invoke(tab, tabView(activity, name));
-			} catch (IllegalAccessException ie) {
-				throw new RuntimeException(ie);
-			} catch (InvocationTargetException ite) {
-				Throwable cause = ite.getCause();
-				if (cause instanceof RuntimeException)
-					throw (RuntimeException) cause;
-				else if (cause instanceof Error)
-					throw (Error) cause;
-				else
-					throw new RuntimeException(ite);
-			}
-		} else // default 1.5 tabs
-			tab.setIndicator(name, backup);
-		
-		tabHost.addTab(tab);
-	}
-	
-	*/
 	
 	public static void addTab(Activity activity, TabHost tabHost, String tag, Intent intent, int name) {
 		tabHost.addTab(tabHost.newTabSpec(tag).setContent(intent).setIndicator(tabView(activity, name)));

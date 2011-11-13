@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.FloorUpdateList;
+import com.sunlightlabs.android.congress.FloorUpdateList.FloorUpdateFragment;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
@@ -27,7 +28,7 @@ public class FloorUpdatesSubscriber extends Subscriber {
 		String chamber = subscription.data;
 		
 		try {
-			return FloorUpdateService.latest(chamber, 1, FloorUpdateList.PER_PAGE);
+			return FloorUpdateService.latest(chamber, 1, FloorUpdateFragment.PER_PAGE);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest floor updates for " + subscription, e);
 			return null;
@@ -42,7 +43,7 @@ public class FloorUpdatesSubscriber extends Subscriber {
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
 		String chamber = Utils.capitalize(subscription.data);
-		if (results == FloorUpdateList.PER_PAGE)
+		if (results == FloorUpdateFragment.PER_PAGE)
 			return results + " or more new updates from the " + chamber + " floor.";
 		else if (results > 1)
 			return results + " new updates from the " + chamber + " floor.";
@@ -53,13 +54,13 @@ public class FloorUpdatesSubscriber extends Subscriber {
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
 		return new Intent()
-			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.FloorUpdateTabs")
+			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.FloorUpdateList")
 			.putExtra("chamber", subscription.data);
 	}
 	
 	@Override
 	public String subscriptionName(Subscription subscription) {
-		return context.getResources().getString(R.string.menu_main_floor_updates);
+		return Utils.capitalize(subscription.data) + " Floor";
 	}
 	
 	@Override

@@ -213,7 +213,7 @@ public class MenuMain extends FragmentActivity {
 						.putExtra("type", RollList.ROLLS_LATEST));
 			
 			menuItem(R.id.menu_floor, R.drawable.floor, R.string.menu_main_floor_updates,
-					new Intent(getActivity(), FloorUpdateTabs.class));
+					new Intent(getActivity(), FloorUpdateList.class));
 			
 			menuItem(R.id.menu_hearings, R.drawable.hearings, R.string.menu_main_hearings,
 					new Intent(getActivity(), HearingList.class)
@@ -256,8 +256,6 @@ public class MenuMain extends FragmentActivity {
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-			
-			FragmentUtils.setupRTC(this);
 			
 			new UpcomingBillsTask(this).execute();
 		}
@@ -314,6 +312,7 @@ public class MenuMain extends FragmentActivity {
 			private CongressException exception;
 
 			public UpcomingBillsTask(UpcomingFragment context) {
+				FragmentUtils.setupRTC(context);
 				this.context = context;
 			}
 

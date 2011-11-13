@@ -87,7 +87,7 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
         return fragments.get(position);
     }
     
-    public void selectPage(int position) {
+    public void pageSelected(int position) {
     	String newHandle = handles.get(position);
     	Log.d(Utils.TAG, "Selected page with handle " + newHandle);
     	
@@ -95,6 +95,10 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
     	markOn(newHandle);
     	
     	currentHandle = newHandle;
+    }
+    
+    public void selectPage(int position) {
+    	pager.setCurrentItem(position);
     }
     
     private void markOff(String handle) {
@@ -114,7 +118,7 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
     	
     	@Override
     	public void onPageSelected(int position) {
-    		adapter.selectPage(position);
+    		adapter.pageSelected(position);
     	}
     }
 }
