@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.BillList;
-import com.sunlightlabs.android.congress.CommitteePager;
+import com.sunlightlabs.android.congress.CommitteeList;
 import com.sunlightlabs.android.congress.MenuMain;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.RollList;
@@ -157,8 +157,7 @@ public class LegislatorProfileFragment extends ListFragment implements LoadPhoto
     }
     
     public void viewCommittees() {
-    	startActivity(new Intent(getActivity(), CommitteePager.class)
-			.putExtra("type", CommitteePager.LEGISLATOR)
+    	startActivity(new Intent(getActivity(), CommitteeList.class)
 			.putExtra("legislator", legislator));
     }
     

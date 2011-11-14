@@ -20,7 +20,6 @@
         </activity>
         
         <activity android:name=".MenuBills" />
-        
         <activity android:name=".MenuLegislators" />
         
         <activity android:name=".GetText"
@@ -30,6 +29,7 @@
         	android:theme="@android:style/Theme.Dialog" 
         	/>
         	
+        <activity android:name=".LegislatorPager" />
         <activity android:name=".LegislatorList" />
         <activity android:name=".LegislatorLoader">
         	<intent-filter>
@@ -38,10 +38,7 @@
         	</intent-filter>
         </activity>
         
-        <activity android:name=".LegislatorPager" />
-        
         <activity android:name=".BillList" />
-        	
         <activity android:name=".BillLoader">
         	<intent-filter>
         		<action android:name="android.intent.action.MAIN" />
@@ -66,12 +63,10 @@
         	</intent-filter>
         </activity>
         
-        <activity android:name=".CommitteeTabs" />
         <activity android:name=".CommitteePager" />
+        <activity android:name=".CommitteeList" />
         
-        <activity android:name=".FloorUpdateTabs" />
         <activity android:name=".FloorUpdatePager" />
-        	
         <activity android:name=".HearingList" />
         	
         <activity android:name=".NotificationTabs" />

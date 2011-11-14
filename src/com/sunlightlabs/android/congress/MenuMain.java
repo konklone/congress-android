@@ -206,8 +206,7 @@ public class MenuMain extends FragmentActivity {
 						.putExtra("chamber", "senate"));
 			
 			menuItem(R.id.menu_committees, R.drawable.committees, R.string.menu_main_committees, 14,
-					new Intent(getActivity(), CommitteePager.class)
-						.putExtra("type", CommitteePager.CHAMBERS));
+					new Intent(getActivity(), CommitteePager.class));
 		}
 		
 		private View menuItem(int id, int icon, int text, float size, final Intent intent) {
