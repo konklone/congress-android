@@ -212,27 +212,26 @@ public class LegislatorProfileFragment extends ListFragment implements LoadPhoto
 		
 		String phone = legislator.phone;
 		if (legislator.in_office && phone != null && !phone.equals("")) {
-			View phoneView = inflater.inflate(R.layout.icon_list_item_2, null);
-			((TextView) phoneView.findViewById(R.id.text_1)).setText("Call " + pronoun(legislator.gender) + " office");
-			((TextView) phoneView.findViewById(R.id.text_2)).setText(phone);
+			View phoneView = inflater.inflate(R.layout.icon_list_item, null);
+			((TextView) phoneView.findViewById(R.id.text)).setText("Call " + pronoun(legislator.gender) + " office");
 			((ImageView) phoneView.findViewById(R.id.icon)).setImageResource(R.drawable.phone);
 			phoneView.setTag("phone");
 			contactViews.add(phoneView);
 		}
 		
-		View votingRecordView = inflater.inflate(R.layout.icon_list_item_1, null);
+		View votingRecordView = inflater.inflate(R.layout.icon_list_item, null);
 		((TextView) votingRecordView.findViewById(R.id.text)).setText(R.string.voting_record);
 		((ImageView) votingRecordView.findViewById(R.id.icon)).setImageResource(R.drawable.votes);
 		votingRecordView.setTag("voting");
 		contactViews.add(votingRecordView);
 		
-		View sponsoredView = inflater.inflate(R.layout.icon_list_item_1, null);
+		View sponsoredView = inflater.inflate(R.layout.icon_list_item, null);
 		((TextView) sponsoredView.findViewById(R.id.text)).setText(R.string.sponsored_bills);
 		((ImageView) sponsoredView.findViewById(R.id.icon)).setImageResource(R.drawable.bills);
 		sponsoredView.setTag("sponsored");
 		contactViews.add(sponsoredView);
 		
-		View committeesView = inflater.inflate(R.layout.icon_list_item_1, null);
+		View committeesView = inflater.inflate(R.layout.icon_list_item, null);
 		((TextView) committeesView.findViewById(R.id.text)).setText(R.string.committees);
 		((ImageView) committeesView.findViewById(R.id.icon)).setImageResource(R.drawable.committees);
 		committeesView.setTag("committees");

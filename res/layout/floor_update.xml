@@ -29,7 +29,6 @@
 	       	android:layout_height="wrap_content"
 	       	
 	       	android:textSize="20sp"
-	       	android:textColor="@android:color/white"
 	       	
 	       	android:text="Today, Oct 20"
 	       	/>
@@ -64,22 +63,9 @@
 				android:layout_height="wrap_content"
 				
 				android:textSize="18sp"
+				android:textColor="@color/text_grey"
 				
 				android:text="12:34 PM"
-				/>
-	        
-	        <TextView android:id="@+id/bill_id"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				
-				android:layout_marginTop="10dp"
-				android:padding="5dp"
-				
-				android:textSize="14sp"
-				
-				android:text="H.R. 4637"
-				
-				android:visibility="gone"
 				/>
 	        
 	    </LinearLayout>
@@ -90,7 +76,6 @@
 			android:layout_height="wrap_content"
 			
 			android:textSize="16sp"
-			android:textColor="@android:color/white"
 			
 			android:text="Motion to Invoke Cloture on Inouye amend #738 (In the nature of a substitute). Yeas and nays ordered. The Motion was agreed to by a vote of 83-16. Under a previous agreement, the substitute amendment is agreed to."
 			/>

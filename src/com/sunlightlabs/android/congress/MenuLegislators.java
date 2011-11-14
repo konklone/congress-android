@@ -139,7 +139,7 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 	}
 	
 	private View inflateItem(LayoutInflater inflater, int icon, int text, Object tag) {
-		View item = inflater.inflate(R.layout.menu_item, null);
+		View item = inflater.inflate(R.layout.icon_list_item, null);
 		((ImageView) item.findViewById(R.id.icon)).setImageResource(icon);
 		((TextView) item.findViewById(R.id.text)).setText(text);
 		item.setTag(new ViewWrapper(item, tag));

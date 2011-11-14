@@ -35,7 +35,6 @@
 			android:layout_marginBottom="3dp"
 			
 			android:textSize="20sp"
-			android:textColor="@android:color/white"
 			
 			android:text="Johnson, John"
 			/>
@@ -45,6 +44,7 @@
 			android:layout_height="wrap_content"
 			
 			android:textSize="14sp"
+			android:textColor="@color/text_grey"
 			
 			android:text="Representative for Utopia-45"
 			/>

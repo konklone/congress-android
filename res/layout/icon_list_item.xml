@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
-	android:id="@+id/profile_website_row"
 	android:orientation="horizontal"
 	
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:paddingLeft="15dp"
+	android:paddingLeft="5dp"
 	android:paddingTop="5dp"
 	android:paddingBottom="5dp"
-	
-	
 	>
 
 	<ImageView android:id="@+id/icon"
@@ -25,7 +22,6 @@
 		android:layout_marginTop="10dp"
 		
 		android:textSize="20sp"
-		android:textColor="@color/text_grey"
 		
 		android:text="Text"
 		/>

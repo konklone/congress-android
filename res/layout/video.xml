@@ -27,7 +27,6 @@
 			
 			android:layout_gravity="center_vertical"
 			
-			android:textColor="@android:color/white"
 			android:textSize="16sp"
 			
 			android:text="Title of the YouTube Video And Then Some"
@@ -39,7 +38,10 @@
 		android:layout_height="wrap_content"
 		android:layout_marginTop="5dp"
 		android:layout_marginBottom="5dp"
+		
 		android:textSize="14sp"
+		android:textColor="@color/text_grey"
+		
 		android:text="September 22 - The summary of a video could be quite long and would look daunting unless wrapped and truncated appropriately.  Be sure to do this in all cases."
 		/>
 </LinearLayout>

@@ -19,7 +19,6 @@
 		android:lineSpacingExtra="2dp"
 		
 		android:textSize="14sp"
-		android:textColor="@android:color/white"
 		/>
 	
 </LinearLayout>
