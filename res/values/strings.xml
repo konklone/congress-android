@@ -119,10 +119,10 @@
     
     <string name="menu_bills_search_button">Search</string>
     <string name="menu_bills_search_hint">keywords or bill code</string>
-    <string name="menu_bills_favorite">Favorites</string>
+    <string name="menu_bills_favorite">Starred</string>
     <string name="menu_bills_law">New Laws</string>
     <string name="menu_bills_recent">New Bills</string>
-    <string name="menu_legislators_favorite">Favorites</string>
+    <string name="menu_legislators_favorite">Starred</string>
     <string name="menu_legislators_location">My Location</string>
     <string name="menu_legislators_state">State</string>
     <string name="menu_legislators_lastname">Last Name</string>
