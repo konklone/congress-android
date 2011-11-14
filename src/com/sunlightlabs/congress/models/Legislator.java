@@ -129,5 +129,10 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	public int compareTo(Legislator another) {
 		return this.last_name.compareTo(another.last_name);
 	}
+	
+	// for news searching, don't use legislator.titledName() because we don't want to use the name_suffix
+	public static String searchTermFor(Legislator legislator) {
+    	return "\"" + legislator.title + ". " + legislator.firstName() + " " + legislator.last_name + "\"";
+    }
 
 }

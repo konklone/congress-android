@@ -220,6 +220,14 @@ public class Analytics {
 		event(activity, tracker, EVENT_FAVORITE, FAVORITE_REMOVE_LEGISLATOR, bioguideId);
 	}
 	
+	public static void addFavoriteLegislator(FragmentActivity activity, String bioguideId) {
+		addFavoriteLegislator(activity, trackerFor(activity), bioguideId);
+	}
+	
+	public static void removeFavoriteLegislator(FragmentActivity activity, String bioguideId) {
+		removeFavoriteLegislator(activity, trackerFor(activity), bioguideId);
+	}
+	
 	public static void addFavoriteBill(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
 		event(activity, tracker, EVENT_FAVORITE, FAVORITE_ADD_BILL, billId);
 	}

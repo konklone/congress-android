@@ -21,6 +21,7 @@ import com.sunlightlabs.android.congress.R;
 public class TitlePageAdapter extends FragmentPagerAdapter {
 	private List<String> handles = new ArrayList<String>();
 	private List<Fragment> fragments = new ArrayList<Fragment>();
+	private Map<String,Integer> positionsByHandle = new HashMap<String,Integer>();
 	
 	private ViewGroup mainView;
 	private Map<String,View> titleViews = new HashMap<String,View>();
@@ -55,6 +56,8 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
 		
 		final int position = fragments.size() - 1;
 		
+		positionsByHandle.put(handle, position);
+		
 		View titleView = LayoutInflater.from(activity).inflate(R.layout.pager_tab, null);
 		((TextView) titleView.findViewById(R.id.tab_name)).setText(title);
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
@@ -68,7 +71,7 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
 		mainView.addView(titleView, params);
 		titleViews.put(handle, titleView);
 		
-		// mark first item on by default
+		// mark default handle as on, or the first item
 		if (position == 0) {
 			currentHandle = handle;
 			markOn(handle);
@@ -99,6 +102,10 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
     
     public void selectPage(int position) {
     	pager.setCurrentItem(position);
+    }
+    
+    public void selectPage(String handle) {
+    	selectPage(positionsByHandle.get(handle));
     }
     
     private void markOff(String handle) {

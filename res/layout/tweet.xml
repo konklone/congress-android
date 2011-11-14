@@ -13,49 +13,31 @@
 	android:focusable="false"
 	>
 
-
-	<LinearLayout android:orientation="horizontal"
+	<TextView android:id="@+id/tweet_text"
+		
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="2dp"
-		>
 		
-		<TextView android:id="@+id/tweet_text"
-			
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			
-			android:layout_gravity="left"
-			android:layout_weight="1"
-			
-			android:textSize="16sp"
-			android:textColor="@android:color/white"
-			android:autoLink="web"
-			
-			android:focusable="true"
-			android:clickable="true"
-			
-			android:text="This tweet could be as long as 140 characters, which is longer than you may think. And it might start with an @reply."
-			/>
+		android:layout_gravity="left"
+		android:layout_weight="1"
 		
-		<ImageView android:id="@+id/tweet_button"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			
-			android:layout_gravity="right|center_vertical"
-			android:layout_weight="0"
-			
-			android:src="@drawable/more"
-			/>
+		android:textSize="16sp"
+		android:autoLink="web"
 		
-	</LinearLayout>
+		android:focusable="true"
+		android:clickable="true"
+		
+		android:text="This tweet could be as long as 140 characters, which is longer than you may think. And it might start with an @reply."
+		/>
 		
 	<TextView android:id="@+id/tweet_byline"
 		
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="3dp"
+		android:layout_marginTop="5dp"
 		
+		android:textColor="@color/text_grey"
 		android:textSize="14sp"
 		
 		android:text="posted 1 day ago by @SomeBody"

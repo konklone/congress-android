@@ -21,11 +21,6 @@ public class LoadTweetsTask extends AsyncTask<String, Void, List<Twitter.Status>
 		this.context = context;
 	}
 
-
-	public void onScreenLoad(LoadsTweets context) {
-		this.context = context;
-	}
-
 	@Override
 	protected List<Twitter.Status> doInBackground(String... username) {
 		try {

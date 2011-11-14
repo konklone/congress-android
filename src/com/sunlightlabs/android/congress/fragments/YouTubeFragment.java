@@ -1,35 +1,27 @@
-package com.sunlightlabs.android.congress;
+package com.sunlightlabs.android.congress.fragments;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import android.app.Activity;
-import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.ClipboardManager;
+import android.support.v4.app.ListFragment;
 import android.text.Html;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.sunlightlabs.android.congress.LegislatorYouTube.VideoAdapter.VideoHolder;
+import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.android.congress.fragments.YouTubeFragment.VideoAdapter.VideoHolder;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
@@ -37,148 +29,95 @@ import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeThumbTask.LoadsThumb;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask;
 import com.sunlightlabs.android.congress.tasks.LoadYoutubeVideosTask.LoadsYoutubeVideos;
-import com.sunlightlabs.android.congress.utils.Analytics;
+import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.ImageUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.youtube.Video;
 
-public class LegislatorYouTube extends ListActivity implements LoadsThumb, LoadsYoutubeVideos {
-	private static final int MENU_WATCH = 0;
-	private static final int MENU_COPY = 1;
-	
+public class YouTubeFragment extends ListFragment implements LoadsThumb, LoadsYoutubeVideos {
 	private List<Video> videos;
-	private LoadYoutubeVideosTask loadVideosTask = null;
 	private Map<Integer, LoadYoutubeThumbTask> loadThumbTasks = new HashMap<Integer, LoadYoutubeThumbTask>();
-	
-	private Footer footer;
-	private GoogleAnalyticsTracker tracker;
-	private boolean tracked = false;
 	
 	private Legislator legislator;
 	private String youtubeUsername;
 	
+	public static YouTubeFragment create(Legislator legislator) {
+		YouTubeFragment frag = new YouTubeFragment();
+		Bundle args = new Bundle();
+		
+		args.putSerializable("legislator", legislator);
+		
+		frag.setArguments(args);
+		frag.setRetainInstance(true);
+		return frag;
+	}
+	
+	public YouTubeFragment() {}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-    	super.onCreate(savedInstanceState);
-		setContentView(R.layout.list_footer);
-
-		legislator = (Legislator) getIntent().getSerializableExtra("legislator");
+		super.onCreate(savedInstanceState);
+		
+		Bundle args = getArguments();
+		legislator = (Legislator) args.getSerializable("legislator");
 		youtubeUsername = legislator.youtubeUsername();
-    	
-    	LegislatorYouTubeHolder holder = (LegislatorYouTubeHolder) getLastNonConfigurationInstance();
-    	if (holder != null) {
-    		this.videos = holder.videos;
-    		this.loadVideosTask = holder.loadVideosTask;
-    		this.loadThumbTasks = holder.loadThumbTasks;
-    		this.footer = holder.footer;
-    		this.tracked = holder.tracked;
-    	}
-    	
-    	setupControls();
-    	
-    	tracker = Analytics.start(this);
-    	if (!tracked) {
-			Analytics.page(this, tracker, "/legislator/" + legislator.id + "/videos");
-			tracked = true;
-		}
-
-    	if (footer != null)
-			footer.onScreenLoad(this, tracker);
-		else
-			footer = Footer.from(this, tracker);
-    	
-    	if (loadVideosTask != null)
-			loadVideosTask.onScreenLoad(this);
-    	else
-    		loadVideos();
-    	
-		if (loadThumbTasks != null) {
-			Iterator<LoadYoutubeThumbTask> iterator = loadThumbTasks.values().iterator();
-			while (iterator.hasNext())
-				iterator.next().onScreenLoad(this);
-		}
+		
+		loadVideos();
 	}
 	
 	@Override
-    public Object onRetainNonConfigurationInstance() {
-    	return new LegislatorYouTubeHolder(videos, loadVideosTask, loadThumbTasks, footer, tracked);
-    }
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.list_footer, container, false);
+	}
 	
 	@Override
-	protected void onResume() {
-		super.onResume();
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		
+		setupControls();
+		
 		if (videos != null)
-			setupSubscription();
+			displayVideos();
 	}
 	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		Analytics.stop(tracker);
-	}
-
 	private void setupControls() {
-		Utils.setLoading(this, R.string.youtube_loading);
-		((Button) findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+		FragmentUtils.setLoading(this, R.string.youtube_loading);
+		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				videos = null;
-				Utils.showLoading(LegislatorYouTube.this);
+				FragmentUtils.showLoading(YouTubeFragment.this);
 				loadVideos();
 			}
 		});
-
-		registerForContextMenu(getListView());
 	}
 
 	private void setupSubscription() {
-		footer.init(new Subscription(legislator.id, Subscriber.notificationName(legislator), "YoutubeSubscriber", youtubeUsername), videos);
+		Footer.setup(this, new Subscription(legislator.id, Subscriber.notificationName(legislator), "YoutubeSubscriber", youtubeUsername), videos);
 	}
     
 	protected void loadVideos() {
-	    if (videos == null)
-			loadVideosTask = (LoadYoutubeVideosTask) new LoadYoutubeVideosTask(this).execute(youtubeUsername);
-    	else
-    		displayVideos();
+		new LoadYoutubeVideosTask(this).execute(youtubeUsername);
+	}
+	
+	public void onLoadVideos(List<Video> videos) {
+		this.videos = videos;
+		if (isAdded())
+			displayVideos();
 	}
 	
 	protected void displayVideos() {
     	if (videos != null && videos.size() > 0)
-	    	setListAdapter(new VideoAdapter(LegislatorYouTube.this, videos));
+	    	setListAdapter(new VideoAdapter(YouTubeFragment.this, videos));
     	else
-	    	Utils.showRefresh(this, R.string.youtube_empty);
+	    	FragmentUtils.showRefresh(this, R.string.youtube_empty);
     	
     	setupSubscription();
     }
 	
 	@Override
 	public void onListItemClick(ListView parent, View view, int position, long id) {
-		Video video = (Video) parent.getItemAtPosition(position);
-		launchVideo(video);
-	}
-	
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, view, menuInfo);
-		menu.add(0, MENU_WATCH, 0, "Watch");
-		menu.add(0, MENU_COPY, 1, "Copy link");
-	}
-	
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		Video video = (Video) getListView().getItemAtPosition(info.position);
-		
-		switch (item.getItemId()) {
-		case MENU_WATCH:
-			launchVideo(video);
-			return true;
-		case MENU_COPY:
-			ClipboardManager cm = (ClipboardManager) getSystemService(Activity.CLIPBOARD_SERVICE);
-			cm.setText(video.url);
-		}
-		
-		return super.onContextItemSelected(item);
+		launchVideo((Video) parent.getItemAtPosition(position));
 	}
 	
 	private void launchVideo(Video video) {
@@ -187,12 +126,12 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	
 	protected class VideoAdapter extends ArrayAdapter<Video> {
 		LayoutInflater inflater;
-		LegislatorYouTube context;
+		YouTubeFragment context;
 
-        public VideoAdapter(LegislatorYouTube context, List<Video> videos) {
-            super(context, 0, videos);
+        public VideoAdapter(YouTubeFragment context, List<Video> videos) {
+            super(context.getActivity(), 0, videos);
 			this.context = context;
-            inflater = LayoutInflater.from(context);
+            inflater = LayoutInflater.from(context.getActivity());
         }
         
         @Override
@@ -237,7 +176,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 			holder.thumb = thumb;
 
 			if (holder.hash != null) {
-				BitmapDrawable pic = ImageUtils.quickGetImage(ImageUtils.YOUTUBE_THUMB, holder.hash, context);
+				BitmapDrawable pic = ImageUtils.quickGetImage(ImageUtils.YOUTUBE_THUMB, holder.hash, context.getActivity());
 				if (pic != null) {
 					holder.thumb.setImageDrawable(pic);
 				} else {
@@ -271,25 +210,7 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
     }
     
     
-    static class LegislatorYouTubeHolder {
-		List<Video> videos;
-		LoadYoutubeVideosTask loadVideosTask;
-		Map<Integer, LoadYoutubeThumbTask> loadThumbTasks;
-		Footer footer;
-		boolean tracked;
-		
-		public LegislatorYouTubeHolder(List<Video> videos, LoadYoutubeVideosTask loadVideosTask, 
-				Map<Integer, LoadYoutubeThumbTask> loadThumbTasks, Footer footer, boolean tracked) {
-			this.videos = videos;
-			this.loadVideosTask = loadVideosTask;
-			this.loadThumbTasks = loadThumbTasks;
-			this.footer = footer;
-			this.tracked = tracked;
-		}
-	}
-	
-
-	public void loadThumb(VideoAdapter.VideoHolder holder) {
+ 	public void loadThumb(VideoAdapter.VideoHolder holder) {
 		int hash = holder.url.hashCode();
 		if (!loadThumbTasks.containsKey(hash))
 			loadThumbTasks.put(hash, (LoadYoutubeThumbTask) new LoadYoutubeThumbTask(this,
@@ -297,6 +218,9 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 	}
 
 	public void onLoadThumb(Drawable thumb, Object tag) {
+		if (!isAdded())
+			return;
+		
 		VideoAdapter.VideoHolder holder = (VideoHolder) tag;
 
 		loadThumbTasks.remove(holder.hash);
@@ -310,13 +234,6 @@ public class LegislatorYouTube extends ListActivity implements LoadsThumb, Loads
 		}
 	}
 
-	public Context getContext() {
-		return this;
-	}
 
-	public void onLoadYoutubeVideos(List<Video> videos) {
-		this.videos = videos;
-		displayVideos();
-		loadVideosTask = null;
-	}
+	
 }

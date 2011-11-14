@@ -1,10 +1,10 @@
 package com.sunlightlabs.android.congress.tasks;
 
-import com.sunlightlabs.android.congress.utils.ImageUtils;
-
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+
+import com.sunlightlabs.android.congress.fragments.YouTubeFragment;
+import com.sunlightlabs.android.congress.utils.ImageUtils;
 
 public class LoadYoutubeThumbTask extends AsyncTask<String, Void, Drawable> {
 	private LoadsThumb context;
@@ -21,12 +21,9 @@ public class LoadYoutubeThumbTask extends AsyncTask<String, Void, Drawable> {
 		this.tag = tag;
 	}
 
-	public void onScreenLoad(LoadsThumb context) {
-		this.context = context;
-	}
 	@Override
 	protected Drawable doInBackground(String... url) {
-		return ImageUtils.getImage(ImageUtils.YOUTUBE_THUMB, url[0], context.getContext());
+		return ImageUtils.getImage(ImageUtils.YOUTUBE_THUMB, url[0], ((YouTubeFragment) context).getActivity());
 	}
 
 	@Override
@@ -36,7 +33,5 @@ public class LoadYoutubeThumbTask extends AsyncTask<String, Void, Drawable> {
 
 	public interface LoadsThumb {
 		public void onLoadThumb(Drawable thumb, Object tag);
-
-		public Context getContext();
 	}
 }

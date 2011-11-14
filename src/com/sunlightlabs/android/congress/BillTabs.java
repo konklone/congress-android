@@ -1,7 +1,5 @@
 package com.sunlightlabs.android.congress;
 
-import java.util.regex.Pattern;
-
 import android.app.TabActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,7 +10,6 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Database;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -113,7 +110,7 @@ public class BillTabs extends TabActivity {
 		TabHost tabHost = getTabHost();
 		
 		Utils.addTab(this, tabHost, "info", detailsIntent(), R.string.tab_details);
-		Utils.addTab(this, tabHost, "news", newsIntent(), R.string.tab_news);
+//		Utils.addTab(this, tabHost, "news", newsIntent(), R.string.tab_news);
 		Utils.addTab(this, tabHost, "history", historyIntent(), R.string.tab_history);
 		
 		if (bill.last_passage_vote_at != null && bill.last_passage_vote_at.getTime() > 0)
@@ -130,20 +127,20 @@ public class BillTabs extends TabActivity {
 		return intent;
 	}
 	
-	public Intent newsIntent() {
-		Intent intent = new Intent(this, NewsList.class)
-			.putExtra("searchTerm", searchTermFor(bill))
-			.putExtra("trackUrl", "/bill/" + bill.id + "/news")
-			.putExtra("subscriptionId", bill.id)
-			.putExtra("subscriptionName", Subscriber.notificationName(bill))
-			.putExtra("subscriptionClass", "NewsBillSubscriber");
-		
-		if (tab.equals("news"))
-			Analytics.passEntry(this, intent);
-		
-		return intent;
-	}
-	
+//	public Intent newsIntent() {
+//		Intent intent = new Intent(this, NewsList.class)
+//			.putExtra("searchTerm", searchTermFor(bill))
+//			.putExtra("trackUrl", "/bill/" + bill.id + "/news")
+//			.putExtra("subscriptionId", bill.id)
+//			.putExtra("subscriptionName", Subscriber.notificationName(bill))
+//			.putExtra("subscriptionClass", "NewsBillSubscriber");
+//		
+//		if (tab.equals("news"))
+//			Analytics.passEntry(this, intent);
+//		
+//		return intent;
+//	}
+//	
 	public Intent historyIntent() {
 		Intent intent = new Intent(this, BillHistory.class).putExtra("bill", bill);
 		if (tab.equals("history"))
@@ -157,24 +154,4 @@ public class BillTabs extends TabActivity {
 			Analytics.passEntry(this, intent);
 		return intent;
 	}
-	
-	
-	/**
-	 * Regex for finding bills that end in "of 2009" or the like:
-	 *   * \s+   = one or more spaces (or other whitespace)
-	 *   * of     = "of"
-	 *   * \s+   = one or more spaces (or other whitespace)
-	 *   * \d{4} = 4 digits in a row (we'll need to update this to {5} in late 9999)
-	 *   * \s*   = zero or more spaces (probably unnecessary)
-	 *   * $      = end of line
-	 */
-	private static Pattern NEWS_SEARCH_REGEX = Pattern.compile("\\s+of\\s+\\d{4}\\s*$", Pattern.CASE_INSENSITIVE);
-	
-	// for news searching, don't use legislator.titledName() because we don't want to use the name_suffix
-	private static String searchTermFor(Bill bill) {
-    	if (bill.short_title != null && !bill.short_title.equals(""))
-    		return "\"" + NEWS_SEARCH_REGEX.matcher(bill.short_title).replaceFirst("") + "\" OR \"" + Bill.formatCodeShort(bill.code) + "\"";
-    	else
-    		return "\"" + Bill.formatCodeShort(bill.code) + "\"";
-    }
 }

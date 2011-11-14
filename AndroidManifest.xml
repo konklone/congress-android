@@ -30,7 +30,6 @@
         	android:theme="@android:style/Theme.Dialog" 
         	/>
         	
-        <activity android:name=".NewsList" />
         <activity android:name=".LegislatorList" />
         <activity android:name=".LegislatorLoader">
         	<intent-filter>
@@ -39,11 +38,7 @@
         	</intent-filter>
         </activity>
         
-        <activity android:name=".LegislatorTabs" />
-        
-        <activity android:name=".LegislatorProfile" />
-        <activity android:name=".LegislatorTwitter" />
-        <activity android:name=".LegislatorYouTube" />
+        <activity android:name=".LegislatorPager" />
         
         <activity android:name=".BillList" />
         	

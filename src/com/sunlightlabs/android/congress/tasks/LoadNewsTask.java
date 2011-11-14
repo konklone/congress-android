@@ -2,12 +2,9 @@ package com.sunlightlabs.android.congress.tasks;
 
 import java.util.List;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
+import android.support.v4.app.Fragment;
 
-import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.google.news.NewsException;
 import com.sunlightlabs.google.news.NewsItem;
@@ -19,20 +16,14 @@ public class LoadNewsTask extends AsyncTask<String, Void, List<NewsItem>> {
 	public static interface LoadsNews {
 		void onLoadNews(List<NewsItem> news);
 		void onLoadNews(CongressException e);
-		Context getContext();
 	}
 
-	private LoadsNews context;
+	private Fragment context;
 
-	public LoadNewsTask(LoadsNews context) {
-		super();
+	public LoadNewsTask(Fragment context) {
 		this.context = context;
 	}
-
-	public void onScreenLoad(LoadsNews context) {
-		this.context = context;
-	}
-
+	
 	@Override
 	protected List<NewsItem> doInBackground(String... params) {
 		String searchTerm = params[0];
@@ -41,10 +32,8 @@ public class LoadNewsTask extends AsyncTask<String, Void, List<NewsItem>> {
 		
 		try {
 			return new NewsService(apiKey, referer).fetchNewsResults(searchTerm);
-		} catch (NewsException e) {
-			Log.w(Utils.TAG, "Could not fetch news for search term " + searchTerm);
-			String message = context.getContext().getResources().getString(R.string.error_fetching_news);
-			this.exception = new CongressException(e, message);
+		} catch (NewsException exception) {
+			this.exception = new CongressException(exception, "Exception fetching news");
 			return null;
 		}
 	}
@@ -52,9 +41,9 @@ public class LoadNewsTask extends AsyncTask<String, Void, List<NewsItem>> {
 	@Override
 	protected void onPostExecute(List<NewsItem> news) {
 		if (news == null && exception != null)
-			context.onLoadNews(exception);
+			((LoadsNews) context).onLoadNews(exception);
 		else
-			context.onLoadNews(news);
+			((LoadsNews) context).onLoadNews(news);
 	}
 
 }

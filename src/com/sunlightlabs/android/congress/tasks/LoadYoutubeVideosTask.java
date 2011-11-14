@@ -12,17 +12,13 @@ import com.sunlightlabs.youtube.YouTubeException;
 
 public class LoadYoutubeVideosTask extends AsyncTask<String, Void, List<Video>> {
 	public static interface LoadsYoutubeVideos {
-		void onLoadYoutubeVideos(List<Video> videos);
+		void onLoadVideos(List<Video> videos);
 	}
 
 	private LoadsYoutubeVideos context;
 
 	public LoadYoutubeVideosTask(LoadsYoutubeVideos context) {
 		super();
-		this.context = context;
-	}
-
-	public void onScreenLoad(LoadsYoutubeVideos context) {
 		this.context = context;
 	}
 
@@ -38,6 +34,6 @@ public class LoadYoutubeVideosTask extends AsyncTask<String, Void, List<Video>> 
 
 	@Override
 	protected void onPostExecute(List<Video> videos) {
-		context.onLoadYoutubeVideos(videos);
+		context.onLoadVideos(videos);
 	}
 }

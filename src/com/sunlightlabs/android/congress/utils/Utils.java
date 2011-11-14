@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sunlightlabs.android.congress.BillTabs;
-import com.sunlightlabs.android.congress.LegislatorTabs;
+import com.sunlightlabs.android.congress.LegislatorPager;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.RollInfo;
 import com.sunlightlabs.congress.models.Bill;
@@ -87,12 +87,12 @@ public class Utils {
 	public static Intent legislatorTabsIntent() {
 		return new Intent().setClassName(
 				"com.sunlightlabs.android.congress",
-				"com.sunlightlabs.android.congress.LegislatorTabs");
+				"com.sunlightlabs.android.congress.LegislatorPager");
 	}
 	
 	// Suitable for a direct link to a legislator, bypassing the LegislatorLoader entirely
 	public static Intent legislatorIntent(Context context, Legislator legislator) {
-		return new Intent(context, LegislatorTabs.class).putExtra("legislator", legislator);
+		return new Intent(context, LegislatorPager.class).putExtra("legislator", legislator);
 	}
 
 	public static Intent legislatorIntent(Context context, Class<?> activityClass, Legislator legislator) {
@@ -302,9 +302,14 @@ public class Utils {
 	
 	public static void setActionButton(Activity activity, int id, int icon, View.OnClickListener listener) {
 		ViewGroup button = (ViewGroup) activity.findViewById(id);
-		((ImageView) button.findViewById(R.id.icon)).setImageResource(icon);
 		button.findViewById(R.id.button).setOnClickListener(listener);
+		((ImageView) button.findViewById(R.id.icon)).setImageResource(icon);
 		button.setVisibility(View.VISIBLE);
+	}
+	
+	public static void setActionIcon(Activity activity, int id, int icon) {
+		ViewGroup button = (ViewGroup) activity.findViewById(id);
+		((ImageView) button.findViewById(R.id.icon)).setImageResource(icon);
 	}
 
 	public static String capitalize(String text) {
