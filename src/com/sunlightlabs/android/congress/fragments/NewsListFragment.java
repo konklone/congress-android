@@ -24,6 +24,7 @@ import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadNewsTask;
 import com.sunlightlabs.android.congress.tasks.LoadNewsTask.LoadsNews;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -180,7 +181,7 @@ public class NewsListFragment extends ListFragment implements LoadsNews {
 			
 			((TextView) view.findViewById(R.id.news_item_title)).setText(item.title);
 			((TextView) view.findViewById(R.id.news_item_summary))
-				.setText(Html.fromHtml(item.summary));
+				.setText(Html.fromHtml(Utils.truncate(item.summary, 140)));
 			((TextView) view.findViewById(R.id.news_item_when_where))
 				.setText(format.format(item.timestamp.getTime()) + ", " + item.source);
 
