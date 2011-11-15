@@ -20,7 +20,14 @@ public class UpcomingBillService {
 		String[] sections = new String[] {"basic", "bill"};
 		
 		Map<String,String> params = new HashMap<String,String>();
+		
+		// only today and in the future
 		params.put("legislative_day__gte", RealTimeCongress.formatDateOnly(day));
+		
+		// require an attached bill
+		params.put("bill__exists", "true");
+		
+		// soonest first, since this is the future
 		params.put("sort", "asc");
 		
 		return upcomingBillsFor(RealTimeCongress.url("upcoming_bills", sections, params, 1, 5000));

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -42,7 +43,7 @@ public class UpcomingFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		new UpcomingBillsTask(this).execute();
+		loadUpcoming();
 	}
 	
 	@Override
@@ -62,7 +63,17 @@ public class UpcomingFragment extends ListFragment {
 	private void setupControls() {
 		FragmentUtils.setLoading(this, R.string.upcoming_loading);
 		
-		// TODO: setup refresh button behavior
+		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				upcomingBills = null;
+				FragmentUtils.showLoading(UpcomingFragment.this);
+				loadUpcoming();
+			}
+		});
+	}
+	
+	public void loadUpcoming() {
+		new UpcomingBillsTask(this).execute();
 	}
 	
 	@Override
@@ -173,7 +184,7 @@ public class UpcomingFragment extends ListFragment {
 				
 				Bill bill = (Bill) item;
 				
-				//((TextView) view.findViewById(R.id.code)).setText(bill.code);
+				((TextView) view.findViewById(R.id.code)).setText(bill.code);
 				((TextView) view.findViewById(R.id.title)).setText(bill.title);
 			}
 
@@ -240,7 +251,7 @@ public class UpcomingFragment extends ListFragment {
 				if (rootBill.short_title != null && !rootBill.short_title.equals(""))
 					title = rootBill.short_title;
 				else
-					title = Utils.truncate(rootBill.official_title, 60);
+					title = Utils.truncate(rootBill.official_title, 55);
 				
 				bill.title = title;
 				bill.bill = rootBill;
