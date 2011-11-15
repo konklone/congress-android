@@ -212,28 +212,20 @@ public class Analytics {
 		return (!debugDisabled && userEnabled);
 	}
 	
-	public static void addFavoriteLegislator(Activity activity, GoogleAnalyticsTracker tracker, String bioguideId) {
-		event(activity, tracker, EVENT_FAVORITE, FAVORITE_ADD_LEGISLATOR, bioguideId);
-	}
-	
-	public static void removeFavoriteLegislator(Activity activity, GoogleAnalyticsTracker tracker, String bioguideId) {
-		event(activity, tracker, EVENT_FAVORITE, FAVORITE_REMOVE_LEGISLATOR, bioguideId);
-	}
-	
 	public static void addFavoriteLegislator(FragmentActivity activity, String bioguideId) {
-		addFavoriteLegislator(activity, trackerFor(activity), bioguideId);
+		event(activity, trackerFor(activity), EVENT_FAVORITE, FAVORITE_ADD_LEGISLATOR, bioguideId);
 	}
 	
 	public static void removeFavoriteLegislator(FragmentActivity activity, String bioguideId) {
-		removeFavoriteLegislator(activity, trackerFor(activity), bioguideId);
+		event(activity, trackerFor(activity), EVENT_FAVORITE, FAVORITE_REMOVE_LEGISLATOR, bioguideId);
 	}
 	
-	public static void addFavoriteBill(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
-		event(activity, tracker, EVENT_FAVORITE, FAVORITE_ADD_BILL, billId);
+	public static void addFavoriteBill(FragmentActivity activity, String billId) {
+		event(activity, trackerFor(activity), EVENT_FAVORITE, FAVORITE_ADD_BILL, billId);
 	}
 	
-	public static void removeFavoriteBill(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
-		event(activity, tracker, EVENT_FAVORITE, FAVORITE_REMOVE_BILL, billId);
+	public static void removeFavoriteBill(FragmentActivity activity, String billId) {
+		event(activity, trackerFor(activity), EVENT_FAVORITE, FAVORITE_REMOVE_BILL, billId);
 	}
 	
 	public static void subscribeNotification(Activity activity, GoogleAnalyticsTracker tracker, String subscriber) {
@@ -256,20 +248,20 @@ public class Analytics {
 		event(activity, EVENT_LEGISLATOR, LEGISLATOR_DISTRICT, bioguideId);
 	}
 	
-	public static void billShare(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
-		event(activity, tracker, EVENT_BILL, BILL_SHARE, billId);
+	public static void billShare(FragmentActivity activity, String billId) {
+		event(activity, trackerFor(activity), EVENT_BILL, BILL_SHARE, billId);
 	}
 	
-	public static void billThomas(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
-		event(activity, tracker, EVENT_BILL, BILL_THOMAS, billId);
+	public static void billThomas(FragmentActivity activity, String billId) {
+		event(activity, trackerFor(activity), EVENT_BILL, BILL_THOMAS, billId);
 	}
 	
-	public static void billOpenCongress(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
-		event(activity, tracker, EVENT_BILL, BILL_OPENCONGRESS, billId);
+	public static void billOpenCongress(FragmentActivity activity, String billId) {
+		event(activity, trackerFor(activity), EVENT_BILL, BILL_OPENCONGRESS, billId);
 	}
 	
-	public static void billGovTrack(Activity activity, GoogleAnalyticsTracker tracker, String billId) {
-		event(activity, tracker, EVENT_BILL, BILL_GOVTRACK, billId);
+	public static void billGovTrack(FragmentActivity activity, String billId) {
+		event(activity, trackerFor(activity), EVENT_BILL, BILL_GOVTRACK, billId);
 	}
 	
 	public static void analyticsDisable(Activity activity, GoogleAnalyticsTracker tracker) {

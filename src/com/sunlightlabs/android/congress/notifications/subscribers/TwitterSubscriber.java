@@ -46,7 +46,7 @@ public class TwitterSubscriber extends Subscriber {
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
 		return Utils.legislatorLoadIntent(subscription.id, Utils
-				.legislatorTabsIntent().putExtra("tab", "tweets"));
+				.legislatorPagerIntent().putExtra("tab", "tweets"));
 	}
 	
 	@Override

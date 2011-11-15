@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.os.Build;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sunlightlabs.android.congress.BillTabs;
+import com.sunlightlabs.android.congress.BillPager;
 import com.sunlightlabs.android.congress.LegislatorPager;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.RollInfo;
@@ -73,7 +71,7 @@ public class Utils {
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.LegislatorLoader")
 			.putExtra("id", id)
-			.putExtra("intent", legislatorTabsIntent());
+			.putExtra("intent", legislatorPagerIntent());
 	}
 
 	public static Intent legislatorLoadIntent(String id, Intent intent) {
@@ -84,7 +82,7 @@ public class Utils {
 			.putExtra("intent", intent);
 	}
 	
-	public static Intent legislatorTabsIntent() {
+	public static Intent legislatorPagerIntent() {
 		return new Intent().setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.LegislatorPager");
@@ -100,7 +98,7 @@ public class Utils {
 	}
 
 	public static Intent billIntent(Context context, Bill bill) {
-		return billIntent(context, BillTabs.class, bill);
+		return billIntent(context, BillPager.class, bill);
 	}
 
 	public static Intent billIntent(Context context, Class<?> cls, Bill bill) {
@@ -119,7 +117,7 @@ public class Utils {
 	}
 
 	public static Intent billLoadIntent(String billId, String code) {
-		Intent intent = billTabsIntent();
+		Intent intent = billPagerIntent();
 		return new Intent().setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.BillLoader")
@@ -140,52 +138,10 @@ public class Utils {
 			.putExtra("intent", intent);
 	}
 
-	public static Intent billTabsIntent() {
+	public static Intent billPagerIntent() {
 		return new Intent().setClassName(
 				"com.sunlightlabs.android.congress",
-				"com.sunlightlabs.android.congress.BillTabs");
-	}
-
-	public static Intent shortcutIntent(Context context, String billId, String code) {
-		Parcelable resource = Intent.ShortcutIconResource.fromContext(context, R.drawable.bill);
-		return new Intent()
-			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
-				billLoadIntent(billId, code)
-					.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-					.setAction(Intent.ACTION_MAIN)
-					.putExtra(Analytics.EXTRA_ENTRY_FROM, Analytics.ENTRY_SHORTCUT)
-				)
-			.putExtra(Intent.EXTRA_SHORTCUT_NAME, Bill.formatCodeShort(code))
-			.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, resource);
-	}
-
-	public static Intent shortcutIntent(Context context, Legislator legislator, Bitmap icon) {
-		return shortcutIntent(context, legislator.getId(), legislator.last_name, icon);
-	}
-
-	public static Intent shortcutIntent(Context context, String legislatorId, String name, Bitmap icon) {
-		Intent intent = new Intent()
-			.putExtra(Intent.EXTRA_SHORTCUT_INTENT, 
-					Utils.legislatorLoadIntent(legislatorId)
-						.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-						.setAction(Intent.ACTION_MAIN)
-						.putExtra(Analytics.EXTRA_ENTRY_FROM, Analytics.ENTRY_SHORTCUT)
-					)
-			.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
-
-		if (icon != null)
-			intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, icon);
-		else {
-			Parcelable resource = Intent.ShortcutIconResource.fromContext(context, R.drawable.no_photo_male);
-			intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, resource);
-		}
-
-		return intent;
-	}
-	
-	public static void installShortcutIcon(Context context, Legislator legislator, Bitmap icon) {
-		context.sendBroadcast(shortcutIntent(context, legislator, icon)
-				.setAction("com.android.launcher.action.INSTALL_SHORTCUT"));
+				"com.sunlightlabs.android.congress.BillPager");
 	}
 
 	public static String stateCodeToName(Context context, String code) {
@@ -341,7 +297,6 @@ public class Utils {
 	public static boolean setBooleanPreference(Context context, String key, boolean value) {
 		return PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(key, value).commit();
 	}
-	
 	
 	
 	public static void addTab(Activity activity, TabHost tabHost, String tag, Intent intent, int name) {

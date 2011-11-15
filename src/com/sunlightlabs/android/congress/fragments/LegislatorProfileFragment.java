@@ -6,15 +6,11 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,11 +20,9 @@ import android.widget.TextView;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.sunlightlabs.android.congress.BillList;
 import com.sunlightlabs.android.congress.CommitteeList;
-import com.sunlightlabs.android.congress.MenuMain;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.RollList;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
-import com.sunlightlabs.android.congress.tasks.ShortcutImageTask;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
@@ -36,9 +30,8 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class LegislatorProfileFragment extends ListFragment implements LoadPhotoTask.LoadsPhoto, ShortcutImageTask.CreatesShortcutImage {
+public class LegislatorProfileFragment extends ListFragment implements LoadPhotoTask.LoadsPhoto {
 	private Legislator legislator;
-	private ShortcutImageTask shortcutImageTask;
 	
 	private Drawable avatar;
 	private ViewGroup mainView;
@@ -49,7 +42,6 @@ public class LegislatorProfileFragment extends ListFragment implements LoadPhoto
 		args.putSerializable("legislator", legislator);
 		frag.setArguments(args);
 		frag.setRetainInstance(true);
-		frag.setHasOptionsMenu(true);
 		return frag;
 	}
 	
@@ -102,11 +94,6 @@ public class LegislatorProfileFragment extends ListFragment implements LoadPhoto
 		
 		if (isAdded())
 			displayAvatar();
-	}
-	
-	public void onCreateShortcutIcon(Bitmap icon) {
-		shortcutImageTask = null;
-		Utils.installShortcutIcon(getActivity(), legislator, icon);
 	}
 	
 	public Context getContext() {
@@ -240,35 +227,6 @@ public class LegislatorProfileFragment extends ListFragment implements LoadPhoto
 		
 		setListAdapter(adapter);
 	}
-	
-	@Override 
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) { 
-	    super.onCreateOptionsMenu(menu, inflater); 
-	    inflater.inflate(R.menu.legislator, menu);
-    }
-	
-	@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	switch(item.getItemId()) {
-    	case R.id.main:
-    		startActivity(new Intent(getActivity(), MenuMain.class));
-    		break;
-    	case R.id.shortcut:
-    		if (shortcutImageTask == null)
-    			shortcutImageTask = (ShortcutImageTask) new ShortcutImageTask(this).execute(legislator.getId());
-    		break;
-    	case R.id.govtrack:
-    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.govTrackUrl(legislator.govtrack_id))));
-    		break;
-    	case R.id.opencongress:
-    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.openCongressUrl(legislator.govtrack_id))));
-    		break;
-    	case R.id.bioguide:
-    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.bioguideUrl(legislator.bioguide_id))));
-    		break;
-    	}
-    	return true;
-    }
 	
 	public static String partyName(String code) {
 		if (code.equals("D"))

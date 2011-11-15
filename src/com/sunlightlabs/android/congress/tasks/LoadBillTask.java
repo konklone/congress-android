@@ -2,6 +2,7 @@ package com.sunlightlabs.android.congress.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
@@ -9,17 +10,24 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.BillService;
 
 public class LoadBillTask extends AsyncTask<String,Void,Bill> {
-	private LoadsBill context;
+	private Context context;
+	private Fragment fragment;
 	private CongressException exception;
 	private String billId;
 	
-	public LoadBillTask(LoadsBill context, String billId) {
+	public LoadBillTask(Context context, String billId) {
 		this.context = context;
 		this.billId = billId;
-		Utils.setupRTC(context.getContext());
+		Utils.setupRTC(context);
+	}
+	
+	public LoadBillTask(Fragment fragment, String billId) {
+		this.fragment = fragment;
+		this.billId = billId;
+		Utils.setupRTC(fragment.getActivity());
 	}
 
-	public void onScreenLoad(LoadsBill context) {
+	public void onScreenLoad(Context context) {
 		this.context = context;
 	}
 	
@@ -35,17 +43,15 @@ public class LoadBillTask extends AsyncTask<String,Void,Bill> {
 	
 	@Override
 	public void onPostExecute(Bill bill) {
-		if (isCancelled()) return;
-		
+		LoadsBill loader = (LoadsBill) (context != null ? context : fragment);
 		if (exception != null && bill == null)
-			context.onLoadBill(exception);
+			loader.onLoadBill(exception);
 		else
-			context.onLoadBill(bill);
+			loader.onLoadBill(bill);
 	}
 	
 	public interface LoadsBill {
 		public void onLoadBill(Bill bill);
 		public void onLoadBill(CongressException exception);
-		public Context getContext();
 	}
 }

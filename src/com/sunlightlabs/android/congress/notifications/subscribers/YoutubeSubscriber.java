@@ -46,7 +46,7 @@ public class YoutubeSubscriber extends Subscriber {
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
 		return Utils.legislatorLoadIntent(subscription.id, Utils
-				.legislatorTabsIntent().putExtra("tab", "videos"));
+				.legislatorPagerIntent().putExtra("tab", "videos"));
 	}
 	
 	@Override

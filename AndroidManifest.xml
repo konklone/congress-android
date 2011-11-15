@@ -38,6 +38,7 @@
         	</intent-filter>
         </activity>
         
+        <activity android:name=".BillPager" />
         <activity android:name=".BillList" />
         <activity android:name=".BillLoader">
         	<intent-filter>
@@ -45,12 +46,6 @@
         		<category android:name="android.intent.category.DEFAULT" />
         	</intent-filter>
         </activity>
-        
-        <activity android:name=".BillTabs" />
-        	
-        <activity android:name=".BillInfo" />
-        <activity android:name=".BillHistory" />
-        <activity android:name=".BillVotes" />
         
         <activity android:name=".RollList" 
             android:theme="@style/MainTheme"

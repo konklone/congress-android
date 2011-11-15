@@ -1,14 +1,13 @@
-package com.sunlightlabs.android.congress;
+package com.sunlightlabs.android.congress.fragments;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import android.app.Activity;
-import android.app.ListActivity;
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,129 +15,99 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
-import com.sunlightlabs.android.congress.utils.Analytics;
+import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 
-public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
-	private LoadBillTask loadBillTask;
+public class BillVoteFragment extends ListFragment implements LoadBillTask.LoadsBill {
 	private Bill bill;
+
+	public static BillVoteFragment create(Bill bill) {
+		BillVoteFragment frag = new BillVoteFragment();
+		Bundle args = new Bundle();
+		
+		args.putSerializable("bill", bill);
+		
+		frag.setArguments(args);
+		frag.setRetainInstance(true);
+		return frag;
+	}
 	
-	private Footer footer;
-	private GoogleAnalyticsTracker tracker;
-	private boolean tracked = false;
+	public BillVoteFragment() {}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list_footer);
-
-		Bundle extras = getIntent().getExtras();
-		bill = (Bill) extras.getSerializable("bill");
 		
-		BillVotesHolder holder = (BillVotesHolder) getLastNonConfigurationInstance();
-		if (holder != null) {
-			this.loadBillTask = holder.loadBillTask;
-			this.bill = holder.bill;
-			this.footer = holder.footer;
-			this.tracked = holder.tracked;
-		}
+		Bundle args = getArguments();
+		bill = (Bill) args.getSerializable("bill");
 		
-		setupControls();
-		
-		tracker = Analytics.start(this);
-		if (!tracked) {
-			Analytics.page(this, tracker, "/bill/" + bill.id + "/votes");
-			tracked = true;
-		}
-		
-		if (footer != null)
-			footer.onScreenLoad(this, tracker);
-		else
-			footer = Footer.from(this, tracker);
-		
-		if (loadBillTask != null)
-			loadBillTask.onScreenLoad(this);
-		else
-			loadBill();
+		loadBill();
 	}
 	
 	@Override
-	public Object onRetainNonConfigurationInstance() {
-		return new BillVotesHolder(loadBillTask, bill, footer, tracked);
-	}
-	
-	public void setupControls() {
-		Utils.setLoading(this, R.string.bill_votes_loading);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.list_footer, container, false);
 	}
 	
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		Analytics.stop(tracker);
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		
+		FragmentUtils.setLoading(this, R.string.bill_votes_loading);
+		
 		if (bill.passage_votes != null)
-			setupSubscription();
+			displayBill();
 	}
-
+	
 	private void setupSubscription() {
-		footer.init(new Subscription(bill.id, Subscriber.notificationName(bill), "VotesBillSubscriber", bill.id), bill.passage_votes);
+		Footer.setup(this, new Subscription(bill.id, Subscriber.notificationName(bill), "VotesBillSubscriber", bill.id), bill.passage_votes);
 	}
 
 	public void loadBill() {
-		if (bill.passage_votes == null)
-			loadBillTask = (LoadBillTask) new LoadBillTask(this, bill.id).execute("passage_votes");
-		else
-			displayBill();
-	}
-
-	public Context getContext() {
-		return this;
+		new LoadBillTask(this, bill.id).execute("passage_votes");
 	}
 	
 	public void onLoadBill(Bill bill) {
-		this.loadBillTask = null;
 		this.bill.passage_votes = bill.passage_votes;
-		displayBill();
+		if (isAdded())
+			displayBill();
 	}
 	
 	public void onLoadBill(CongressException exception) {
-		Utils.showRefresh(this, R.string.error_connection);
+		if (isAdded())
+			FragmentUtils.showRefresh(this, R.string.error_connection);
 	}
 	
 	public void displayBill() {
 		if (bill.passage_votes.size() > 0)
 			setListAdapter(new BillVoteAdapter(this, bill.passage_votes));
 		else
-			Utils.showEmpty(this, R.string.bill_votes_empty);
+			FragmentUtils.showEmpty(this, R.string.bill_votes_empty);
 		
 		setupSubscription();
 	}
 	
 	@Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(ListView l, View v, int position, long id) {
 		String rollId = (String) v.getTag();
     	if (rollId != null)
-    		startActivity(Utils.rollIntent(this, rollId));
+    		startActivity(Utils.rollIntent(getActivity(), rollId));
     }
 	
 	protected class BillVoteAdapter extends ArrayAdapter<Bill.Vote> {
     	LayoutInflater inflater;
     	Resources resources;
 
-        public BillVoteAdapter(Activity context, List<Bill.Vote> items) {
-            super(context, 0, items);
-            inflater = LayoutInflater.from(context);
+        public BillVoteAdapter(Fragment context, List<Bill.Vote> items) {
+            super(context.getActivity(), 0, items);
+            inflater = LayoutInflater.from(context.getActivity());
             resources = context.getResources();
         }
         
@@ -196,18 +165,4 @@ public class BillVotes extends ListActivity implements LoadBillTask.LoadsBill {
 		}
 
     }
-	
-	static class BillVotesHolder {
-		LoadBillTask loadBillTask;
-		Bill bill;
-		Footer footer;
-		boolean tracked;
-		
-		public BillVotesHolder(LoadBillTask loadBillTask, Bill bill, Footer footer, boolean tracked) {
-			this.loadBillTask = loadBillTask;
-			this.bill = bill;
-			this.footer = footer;
-			this.tracked = tracked;
-		}
-	}
 }

@@ -27,7 +27,7 @@ public class LegislatorLoader extends Activity implements LoadsLegislator {
 		// if coming from a shortcut intent, there appears to be a bug with packaging sub-intents
 		// and the intent will be null
 		if (intent == null)
-			intent = Utils.legislatorTabsIntent();
+			intent = Utils.legislatorPagerIntent();
 
         loadLegislatorTask = (LoadLegislatorTask) getLastNonConfigurationInstance();
         if (loadLegislatorTask != null)

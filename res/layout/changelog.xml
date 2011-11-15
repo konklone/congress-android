@@ -19,7 +19,6 @@
 			android:layout_height="wrap_content"
 			
 			android:textSize="16sp"
-			android:textColor="@android:color/white"
 			/>
 			
 		<TextView android:id="@+id/changelog_last_title"
@@ -31,7 +30,6 @@
 			
 			android:textStyle="bold"
 			android:textSize="16sp"
-			android:textColor="@android:color/white"
 			/>
 			
 		<TextView android:id="@+id/changelog_last"
@@ -41,7 +39,6 @@
 			android:layout_marginTop="5dp"
 			
 			android:textSize="16sp"
-			android:textColor="@android:color/white"
 			/>
 		
 	</LinearLayout>

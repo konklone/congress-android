@@ -1,21 +1,18 @@
-package com.sunlightlabs.android.congress;
+package com.sunlightlabs.android.congress.fragments;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,11 +20,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.sunlightlabs.android.congress.LegislatorList;
+import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.tasks.LoadLegislatorTask;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
-import com.sunlightlabs.android.congress.utils.Analytics;
+import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
@@ -35,7 +33,7 @@ import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, LoadBillTask.LoadsBill, LoadLegislatorTask.LoadsLegislator {	
+public class BillInfoFragment extends ListFragment implements LoadPhotoTask.LoadsPhoto, LoadBillTask.LoadsBill, LoadLegislatorTask.LoadsLegislator {	
 	// fields from the intent 
 	private Bill bill;
 	private Legislator sponsor;
@@ -44,60 +42,55 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	// fields fetched remotely
 	private String summary;
 	
-	private LoadBillTask loadBillTask;
-	private LoadPhotoTask loadPhotoTask;
-	private LoadLegislatorTask loadSponsorTask;
 	private View loadingContainer, sponsorView;
-	
-	private GoogleAnalyticsTracker tracker;
-	private boolean tracked = false;
 	
 	private Drawable sponsorPhoto;
 	
 	private SimpleDateFormat timelineFormat = new SimpleDateFormat("MMM dd, yyyy");
 	
-	//private View searchView; // kept to be dismissed later
+	public static BillInfoFragment create(Bill bill) {
+		BillInfoFragment frag = new BillInfoFragment();
+		Bundle args = new Bundle();
+		args.putSerializable("bill", bill);
+		frag.setArguments(args);
+		frag.setRetainInstance(true);
+		return frag;
+	}
+	
+	public BillInfoFragment() {}
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list_bare_no_divider);
-		
-		bill = (Bill) getIntent().getExtras().getSerializable("bill");
-		sponsor = bill.sponsor;
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+        FragmentUtils.setupRTC(this);
+        
+        bill = (Bill) getArguments().getSerializable("bill");
+        sponsor = bill.sponsor;
+        
+        loadSummary();
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.list_bare, container, false);
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 		
 		setupControls();
 		
-		BillInfoHolder holder = (BillInfoHolder) getLastNonConfigurationInstance();
-        if (holder != null) {
-        	this.loadBillTask = holder.loadBillTask;
-        	this.loadPhotoTask = holder.loadPhotoTask;
-        	this.loadSponsorTask = holder.loadSponsorTask;
-        	this.summary = holder.summary;
-        	this.detailedSponsor = holder.detailedSponsor;
-        	this.tracked = holder.tracked;
-        }
-        
-        tracker = Analytics.start(this);
-    	if (!tracked) {
-			Analytics.page(this, tracker, "/bill/info?bill_id=" + bill.id);
-			tracked = true;
-		}
+		if (summary != null)
+			displaySummary();
 		
-        if (loadSponsorTask != null)
-        	loadSponsorTask.onScreenLoad(this);
-        
-		loadSummary();
-	}
-	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		Analytics.stop(tracker);
+		if (sponsorPhoto != null)
+    		displayPhoto();
 	}
 	
 	public void setupControls() {
-		LayoutInflater inflater = LayoutInflater.from(this);
+		LayoutInflater inflater = LayoutInflater.from(getActivity());
 		MergeAdapter adapter = new MergeAdapter();
 		
 		// if this was coming in from a search result and has associated highlight data, show it
@@ -154,7 +147,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 			((TextView) sponsorView.findViewById(R.id.name)).setText(name);
 			
 			String description = Legislator.partyName(sponsor.party) + " from "
-					+ Utils.stateCodeToName(this, sponsor.state);
+					+ Utils.stateCodeToName(getActivity(), sponsor.state);
 			((TextView) sponsorView.findViewById(R.id.description)).setText(description);
 			
 			sponsorView.setTag("sponsor");
@@ -192,12 +185,12 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	}
 	
 	public void displayPhoto() {
-		if (sponsorPhoto != null && sponsorView != null)
+		if (sponsorView != null)
     		((ImageView) sponsorView.findViewById(R.id.picture)).setImageDrawable(sponsorPhoto);
 	}
 	
 	public void displaySummary() {
-		LayoutInflater inflater = LayoutInflater.from(this);
+		LayoutInflater inflater = LayoutInflater.from(getActivity());
 		MergeAdapter adapter = (MergeAdapter) getListAdapter();
 		
 		loadingContainer.findViewById(R.id.loading).setVisibility(View.GONE);
@@ -219,66 +212,41 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		setListAdapter(adapter);
 	}
 	
-	@Override
-	public Object onRetainNonConfigurationInstance() {
-		return new BillInfoHolder(loadBillTask, loadPhotoTask, loadSponsorTask, summary, detailedSponsor, tracked);
-	}
-	
 	private void loadSponsor() {
-		if (loadSponsorTask == null)
-			loadSponsorTask = (LoadLegislatorTask) new LoadLegislatorTask(this).execute(sponsor.getId());
+		new LoadLegislatorTask(this).execute(sponsor.getId());
 	}
 	
 	public void loadSummary() {
-		if (loadBillTask != null)
-			loadBillTask.onScreenLoad(this);
-		else {
-			if (summary != null)
-				displaySummary();
-			else
-				loadBillTask = (LoadBillTask) new LoadBillTask(this, bill.id).execute("summary");
-		}
+		new LoadBillTask(this, bill.id).execute("summary");
 	}
 	
 	public void loadPhoto() {
-		if (loadPhotoTask != null)
-        	loadPhotoTask.onScreenLoad(this);
-        else {
-        	if (sponsorPhoto != null)
-        		displayPhoto();
-        	else
-				loadPhotoTask = (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_LARGE)
-						.execute(sponsor.getId());
-        }
+		new LoadPhotoTask(this, LegislatorImage.PIC_LARGE).execute(sponsor.getId());
 	}
 	
 	public void onLoadBill(Bill bill) {
-		this.loadBillTask = null;
 		this.summary = bill.summary;
-		displaySummary();
+		
+		if (isAdded())
+			displaySummary();
+		
 		if (sponsor != null)
 			loadSponsor();
 	}
 	
 	public void onLoadBill(CongressException exception) {
-		this.loadBillTask = null;
-		Utils.alert(this, R.string.error_connection);
-		finish();
+		if (isAdded())
+			Utils.alert(getActivity(), R.string.error_connection);
 	}
 	
 	public void onLoadPhoto(Drawable photo, Object tag) {
 		sponsorPhoto = photo;
-		loadPhotoTask = null;
-		displayPhoto();
+		if (isAdded())
+			displayPhoto();
 	}
 	
 	public void onLoadLegislator(Legislator legislator) {
-		loadSponsorTask = null;
 		detailedSponsor = legislator;
-	}
-
-	public Context getContext() {
-		return this;
 	}
 	
 	
@@ -350,13 +318,13 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 	
 	public void addTimelinePiece(ViewGroup container, String prefix, long timestamp) {
 		String date = prefix + " " + timelineFormat.format(new Date(timestamp));
-		TextView piece = (TextView) LayoutInflater.from(this).inflate(R.layout.bill_event, null);
+		TextView piece = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.bill_event, null);
 		piece.setText(date);
 		container.addView(piece);
 	}
 	
 	@Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(ListView l, View v, int position, long id) {
 		String type = (String) v.getTag();
 		
 		// safety check - don't know why this would happen, but Market error reports imply it can
@@ -366,7 +334,7 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 		if (type.equals("sponsor") && sponsor != null)
 			startSponsorActivity();
 		else if (type.equals("cosponsors")) {
-			Intent intent = new Intent(this, LegislatorList.class)
+			Intent intent = new Intent(getActivity(), LegislatorList.class)
 				.putExtra("type", LegislatorList.SEARCH_COSPONSORS)
 				.putExtra("bill_id", bill.id);
 			startActivity(intent);
@@ -375,43 +343,10 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 
 	private void startSponsorActivity() {
 		if (detailedSponsor != null)
-			startActivity(Utils.legislatorTabsIntent().putExtra("legislator", detailedSponsor));
+			startActivity(Utils.legislatorPagerIntent().putExtra("legislator", detailedSponsor));
 		else
 			startActivity(Utils.legislatorLoadIntent(sponsor.getId()));
 	}
-	
-	@Override 
-    public boolean onCreateOptionsMenu(Menu menu) { 
-	    super.onCreateOptionsMenu(menu); 
-	    getMenuInflater().inflate(R.menu.bill, menu);
-	    return true;
-    }
-	
-	@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	switch(item.getItemId()) {
-    	case R.id.main:
-    		startActivity(new Intent(this, MenuMain.class));
-    		break;
-    	case R.id.shortcut:
-			sendBroadcast(Utils.shortcutIntent(this, bill.id, bill.code)
-    				.setAction("com.android.launcher.action.INSTALL_SHORTCUT"));
-    		break;
-    	case R.id.thomas:
-    		Analytics.billThomas(this, tracker, bill.id);
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.thomasUrl(bill.bill_type, bill.number, bill.session))));
-    		break;
-    	case R.id.govtrack:
-    		Analytics.billGovTrack(this, tracker, bill.id);
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.govTrackUrl(bill.bill_type, bill.number, bill.session))));
-    		break;
-    	case R.id.opencongress:
-    		Analytics.billOpenCongress(this, tracker, bill.id);
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.openCongressUrl(bill.bill_type, bill.number, bill.session))));
-    		break;
-    	}
-    	return true;
-    }
 	
 	public int sizeOfTitle(String title) {
 		int length = title.length();
@@ -427,23 +362,8 @@ public class BillInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto, 
 			return 12;
 	}
 	
-	static class BillInfoHolder {
-		LoadBillTask loadBillTask;
-		LoadPhotoTask loadPhotoTask;
-		LoadLegislatorTask loadSponsorTask;
-		String summary;
-		Legislator detailedSponsor;
-		boolean tracked;
-
-		public BillInfoHolder(LoadBillTask loadBillTask, LoadPhotoTask loadPhotoTask,
-		                      LoadLegislatorTask loadSponsorTask, String summary, 
-		                      Legislator detailedSponsor, boolean tracked) {
-			this.loadBillTask = loadBillTask;
-			this.loadPhotoTask = loadPhotoTask;
-			this.loadSponsorTask = loadSponsorTask;
-			this.summary = summary;
-			this.detailedSponsor = detailedSponsor;
-			this.tracked = tracked;
-		}
+	public Context getContext() {
+		return getActivity();
 	}
+	
 }

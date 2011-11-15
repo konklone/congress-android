@@ -29,7 +29,7 @@ public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 		// if coming from a shortcut intent, there appears to be a bug with packaging sub-intents
 		// and the intent will be null
 		if (intent == null)
-			intent = Utils.billTabsIntent();
+			intent = Utils.billPagerIntent();
 		
 		loadBillTask = (LoadBillTask) getLastNonConfigurationInstance();
 		if (loadBillTask != null)

@@ -173,7 +173,7 @@ public class UpcomingFragment extends ListFragment {
 				
 				Bill bill = (Bill) item;
 				
-				((TextView) view.findViewById(R.id.code)).setText(bill.code);
+				//((TextView) view.findViewById(R.id.code)).setText(bill.code);
 				((TextView) view.findViewById(R.id.title)).setText(bill.title);
 			}
 
@@ -229,6 +229,9 @@ public class UpcomingFragment extends ListFragment {
 				}
 				
 				com.sunlightlabs.congress.models.Bill rootBill = upcomingBill.bill;
+				if (rootBill == null)
+					continue;
+				
 				Bill bill = new Bill();
 				
 				bill.code = com.sunlightlabs.congress.models.Bill.formatCodeShort(rootBill.code);

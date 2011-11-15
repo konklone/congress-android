@@ -1,6 +1,5 @@
 package com.sunlightlabs.android.congress.utils;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -23,11 +22,7 @@ public class FragmentUtils {
 		AlertFragment.create(type).show(activity.getSupportFragmentManager(), "dialog");
 	}
 	
-	
-	
 
-	
-	
 	public static void showLoading(Fragment fragment) {
 		View view = fragment.getView();
 		view.findViewById(R.id.empty_message).setVisibility(View.GONE);
@@ -54,10 +49,10 @@ public class FragmentUtils {
 	}
 	
 	public static void showEmpty(Fragment fragment, String message) {
-		Activity activity = fragment.getActivity();
-		activity.findViewById(R.id.loading).setVisibility(View.GONE);
-		activity.findViewById(R.id.back).setVisibility(View.GONE);
-		TextView messageView = (TextView) activity.findViewById(R.id.empty_message);
+		View view = fragment.getView();
+		view.findViewById(R.id.loading).setVisibility(View.GONE);
+		view.findViewById(R.id.back).setVisibility(View.GONE);
+		TextView messageView = (TextView) view.findViewById(R.id.empty_message);
 		messageView.setText(message);
 		messageView.setVisibility(View.VISIBLE);
 	}

@@ -2,23 +2,31 @@ package com.sunlightlabs.android.congress.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.LegislatorService;
 
 public class LoadLegislatorTask extends AsyncTask<String, Void, Legislator> {
-	private LoadsLegislator context;
+	private Context context;
+	private Fragment fragment;
 
-	public LoadLegislatorTask(LoadsLegislator context) {
+	public LoadLegislatorTask(Context context) {
 		this.context = context;
-		Utils.setupSunlight((Context) context);
+		Utils.setupSunlight(context);
 	}
 
-	public void onScreenLoad(LoadsLegislator context) {
+	public void onScreenLoad(Context context) {
 		this.context = context;
+	}
+	
+	public LoadLegislatorTask(Fragment fragment) {
+		this.fragment = fragment;
+		FragmentUtils.setupSunlight(fragment);
 	}
 
 	@Override
@@ -33,9 +41,8 @@ public class LoadLegislatorTask extends AsyncTask<String, Void, Legislator> {
 
 	@Override
 	protected void onPostExecute(Legislator legislator) {
-		if (isCancelled())
-			return;
-		context.onLoadLegislator(legislator);
+		LoadsLegislator loader = (LoadsLegislator) (context != null ? context : fragment);
+		loader.onLoadLegislator(legislator);
 	}
 
 	public interface LoadsLegislator {

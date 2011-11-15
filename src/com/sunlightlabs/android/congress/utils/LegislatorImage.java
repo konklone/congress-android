@@ -13,9 +13,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
 /**
@@ -48,34 +46,6 @@ public class LegislatorImage {
 			return null;
 		else
 			return new BitmapDrawable(picPath(size, bioguideId, context));
-	}
-	
-	public static Bitmap shortcutImage(String bioguideId, Context context) {
-		Bitmap profile, scaled;
-		
-		
-		int density = context.getResources().getDisplayMetrics().densityDpi;
-		switch (density) {
-		case DisplayMetrics.DENSITY_LOW:
-			profile = getImage(PIC_SMALL, bioguideId, context).getBitmap();
-			scaled = Bitmap.createScaledBitmap(profile, 32, 40, true);
-			return Bitmap.createBitmap(scaled, 0, 2, scaled.getWidth(), scaled.getHeight() - 4);
-		case DisplayMetrics.DENSITY_MEDIUM:
-			// this will be a 40x50 image, that I want to turn into a 40x48 image
-			profile = getImage(PIC_SMALL, bioguideId, context).getBitmap();
-			return Bitmap.createBitmap(profile, 0, 1, profile.getWidth(), profile.getHeight() - 2);
-		case DisplayMetrics.DENSITY_HIGH:
-		default:
-			// will be a 100x125 image, I want to scale it down to 60x75, and then chop 3 lines off of it
-			BitmapDrawable drawable = getImage(PIC_MEDIUM, bioguideId, context);
-			if (drawable == null)
-				return null;
-			
-			profile = drawable.getBitmap();
-			scaled = Bitmap.createScaledBitmap(profile, 60, 75, true);
-			return Bitmap.createBitmap(scaled, 0, 1, scaled.getWidth(), scaled.getHeight() - 3);
-		}
-		
 	}
 	
 	// assumes you've already checked to make sure the file exists
