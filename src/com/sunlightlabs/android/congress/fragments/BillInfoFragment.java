@@ -3,11 +3,13 @@ package com.sunlightlabs.android.congress.fragments;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Html;
@@ -25,6 +27,7 @@ import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.tasks.LoadLegislatorTask;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -32,6 +35,7 @@ import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
+import com.sunlightlabs.congress.models.UpcomingBill;
 
 public class BillInfoFragment extends ListFragment implements LoadPhotoTask.LoadsPhoto, LoadBillTask.LoadsBill, LoadLegislatorTask.LoadsLegislator {	
 	// fields from the intent 
@@ -41,8 +45,11 @@ public class BillInfoFragment extends ListFragment implements LoadPhotoTask.Load
 
 	// fields fetched remotely
 	private String summary;
+	private List<UpcomingBill> latestUpcoming;
 	
 	private View loadingContainer, sponsorView;
+	private TextView upcomingHeader;
+	private ViewGroup upcomingContainer;
 	
 	private Drawable sponsorPhoto;
 	
@@ -68,6 +75,9 @@ public class BillInfoFragment extends ListFragment implements LoadPhotoTask.Load
         bill = (Bill) getArguments().getSerializable("bill");
         sponsor = bill.sponsor;
         
+        // filter out old upcoming activity (don't depend on server to flush it out)
+        latestUpcoming = bill.upcomingSince(GregorianCalendar.getInstance().getTime());
+        
         loadSummary();
 	}
 	
@@ -81,6 +91,9 @@ public class BillInfoFragment extends ListFragment implements LoadPhotoTask.Load
 		super.onActivityCreated(savedInstanceState);
 		
 		setupControls();
+		
+		if (latestUpcoming != null)
+			displayLatestUpcoming();
 		
 		if (summary != null)
 			displaySummary();
@@ -121,7 +134,7 @@ public class BillInfoFragment extends ListFragment implements LoadPhotoTask.Load
 		
 		if (bill.short_title != null) {
 			title = Utils.truncate(bill.short_title, 400);
-			titleView.setTextSize(22);
+			titleView.setTextSize(18);
 		} else if (bill.official_title != null) {
 			title = bill.official_title;
 			titleView.setTextSize(16);
@@ -130,7 +143,7 @@ public class BillInfoFragment extends ListFragment implements LoadPhotoTask.Load
 				title = getResources().getString(R.string.bill_no_title_yet);
 			else
 				title = getResources().getString(R.string.bill_no_title);
-			titleView.setTextSize(22);
+			titleView.setTextSize(18);
 		}
 		titleView.setText(title);
 		
@@ -174,6 +187,16 @@ public class BillInfoFragment extends ListFragment implements LoadPhotoTask.Load
 		if (!listViews.isEmpty())
 			adapter.addAdapter(new ViewArrayAdapter(this, listViews));
 		
+		// prepare the upcoming container if one is necessary
+		upcomingHeader = (TextView) inflater.inflate(R.layout.header, null);
+		upcomingHeader.setText(R.string.upcoming_header);
+		upcomingHeader.setVisibility(View.GONE);
+		
+		upcomingContainer = (ViewGroup) inflater.inflate(R.layout.bill_upcoming, null);
+		upcomingContainer.setVisibility(View.GONE);
+		adapter.addView(upcomingHeader);
+		adapter.addView(upcomingContainer);
+		
 		loadingContainer = inflater.inflate(R.layout.header_loading, null);
 		((TextView) loadingContainer.findViewById(R.id.header_text)).setText("Summary");
 		adapter.addView(loadingContainer);
@@ -182,6 +205,55 @@ public class BillInfoFragment extends ListFragment implements LoadPhotoTask.Load
 		loadingContainer.findViewById(R.id.loading).setVisibility(View.VISIBLE);
 		
 		setListAdapter(adapter);
+	}
+	
+	public void displayLatestUpcoming() {
+		if (latestUpcoming.size() > 0) {
+			
+			upcomingHeader.setVisibility(View.VISIBLE);
+			upcomingContainer.setVisibility(View.VISIBLE);
+			
+			for (int i=0; i<latestUpcoming.size(); i++)
+				upcomingContainer.addView(upcomingView(latestUpcoming.get(i)));
+		}
+	}
+	
+	public View upcomingView(final UpcomingBill upcoming) {
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		ViewGroup view = (ViewGroup) inflater.inflate(R.layout.bill_upcoming_item, null);
+		
+		((TextView) view.findViewById(R.id.date)).setText(Utils.upcomingDate(upcoming.legislativeDay));
+		((TextView) view.findViewById(R.id.where)).setText(upcomingSource(upcoming.sourceType, upcoming.chamber));
+		
+		View moreView = view.findViewById(R.id.more);
+		if (upcoming.permalink != null) {
+			moreView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Analytics.billUpcoming(getActivity(), upcoming.sourceType);
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(upcoming.permalink)));
+				}
+			});
+		} else
+			moreView.setVisibility(View.GONE);
+		
+		return view;
+	}
+	
+	public String upcomingSource(String type, String chamber) {
+		if (type.equals("senate_daily"))
+			return "On the Senate Floor";
+		else if (type.equals("house_daily"))
+			return "On the House Floor";
+		
+		// fallbacks, if we add more upcoming source types
+		else if (chamber.equals("senate"))
+			return "In the Senate";
+		else if (chamber.equals("house"))
+			return "In the House";
+		
+		else // should never happen
+			return "In Congress";
 	}
 	
 	public void displayPhoto() {

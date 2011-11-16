@@ -57,6 +57,9 @@ public class UpcomingBillService {
 		if (!json.isNull("session"))
 			upcoming.session = json.getInt("session");
 		
+		if (!json.isNull("permalink"))
+			upcoming.permalink = json.getString("permalink");
+		
 		if (!json.isNull("bill"))
 			upcoming.bill = BillService.fromRTC(json.getJSONObject("bill"));
 		

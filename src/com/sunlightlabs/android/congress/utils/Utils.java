@@ -1,5 +1,9 @@
 package com.sunlightlabs.android.congress.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -356,5 +360,25 @@ public class Utils {
 
 	public static void stopNotificationsBroadcast(Context context) {
 		context.sendBroadcast(new Intent(STOP_NOTIFICATION_SERVICE));
+	}
+	
+	public static String upcomingDate(Date subject) {
+		SimpleDateFormat testFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String today = testFormat.format(Calendar.getInstance().getTime());
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		String tomorrow = testFormat.format(cal.getTime());
+		
+		String subjectDate = testFormat.format(subject);
+		
+		SimpleDateFormat dateNameFormat = new SimpleDateFormat("EEEE");
+		SimpleDateFormat dateFullFormat = new SimpleDateFormat("MMM d");
+		
+		if (today.equals(subjectDate))
+			return "TODAY";
+		else if (tomorrow.equals(subjectDate))
+			return "TOMORROW";
+		else
+			return dateFullFormat.format(subject).toUpperCase();
 	}
 }

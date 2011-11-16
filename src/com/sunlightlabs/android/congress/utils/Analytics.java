@@ -63,6 +63,7 @@ public class Analytics {
 	public static final String BILL_THOMAS = "thomas";
 	public static final String BILL_OPENCONGRESS = "opencongress";
 	public static final String BILL_GOVTRACK = "govtrack";
+	public static final String BILL_UPCOMING = "upcoming";
 	public static final String ANALYTICS_DISABLE = "disable";
 	
 	private static final String FRAGMENT_TAG = "com.sunlightlabs.android.congress.utils.Analytics.analytics";
@@ -262,6 +263,10 @@ public class Analytics {
 	
 	public static void billGovTrack(FragmentActivity activity, String billId) {
 		event(activity, trackerFor(activity), EVENT_BILL, BILL_GOVTRACK, billId);
+	}
+	
+	public static void billUpcoming(FragmentActivity activity, String sourceType) {
+		event(activity, trackerFor(activity), EVENT_BILL, BILL_UPCOMING, sourceType);
 	}
 	
 	public static void analyticsDisable(Activity activity, GoogleAnalyticsTracker tracker) {

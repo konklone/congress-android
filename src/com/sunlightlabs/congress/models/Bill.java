@@ -48,6 +48,9 @@ public class Bill implements Serializable {
 	
 	// search result metadata (if coming from a search)
 	public SearchResult search;
+	
+	// latest upcoming bill data
+	public List<UpcomingBill> latestUpcoming;
 
 	public static class Action implements Serializable {
 		private static final long serialVersionUID = 1L;
@@ -250,4 +253,20 @@ public class Bill implements Serializable {
     	else
     		return "\"" + Bill.formatCodeShort(bill.code) + "\"";
     }
+	
+	
+	// filters down any upcoming bill data, if any, to ones that happen either today or in the future 
+	public List<UpcomingBill> upcomingSince(Date time) {
+		List<UpcomingBill> results = new ArrayList<UpcomingBill>();
+		
+		if (latestUpcoming == null || latestUpcoming.size() == 0)
+			return results;
+		
+		for (int i=0; i<latestUpcoming.size(); i++) {
+			UpcomingBill current = latestUpcoming.get(i);
+			results.add(current);
+		}
+		
+		return results;
+	}
 }

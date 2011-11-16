@@ -2,6 +2,8 @@ package com.sunlightlabs.congress.services;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,7 @@ import com.sunlightlabs.congress.models.Bill.Action;
 import com.sunlightlabs.congress.models.Bill.Vote;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
+import com.sunlightlabs.congress.models.UpcomingBill;
 
 public class BillService {
 	
@@ -24,7 +27,7 @@ public class BillService {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("order", "introduced_at");
 		
-		String[] sections = new String[] {"basic", "sponsor"};
+		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming"};
 		
 		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page)); 
 	}
@@ -34,7 +37,7 @@ public class BillService {
 		params.put("order", "enacted_at");
 		params.put("enacted", "true");
 		
-		String[] sections = new String[] {"basic", "sponsor"};
+		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming"};
 		
 		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
 	}
@@ -44,7 +47,7 @@ public class BillService {
 		params.put("order", "introduced_at");
 		params.put("sponsor_id", sponsorId);
 		
-		String[] sections = new String[] {"basic", "sponsor"};
+		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming"};
 		
 		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
 	}
@@ -60,7 +63,7 @@ public class BillService {
 		if (!params.containsKey("order"))
 			params.put("order", "introduced_at");
 		
-		String[] sections = new String[] {"basic", "sponsor"};
+		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming"};
 		
 		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
 	}
@@ -184,6 +187,26 @@ public class BillService {
 			// load in descending order
 			for (int i = 0; i < length; i++)
 				bill.actions.add(0, actionFromRTC(actionObjects.getJSONObject(i)));
+		}
+		
+		if (!json.isNull("latest_upcoming")) {
+			JSONArray upcomingObjects = json.getJSONArray("latest_upcoming");
+			int length = upcomingObjects.length();
+			
+			List<UpcomingBill> latestUpcoming = new ArrayList<UpcomingBill>();
+			
+			for (int i = 0; i < length; i++)
+				latestUpcoming.add(UpcomingBillService.fromRTC(upcomingObjects.getJSONObject(i)));
+			
+			// sort in order of legislative day
+			Collections.sort(latestUpcoming, new Comparator<UpcomingBill>() {
+				@Override
+				public int compare(UpcomingBill a, UpcomingBill b) {
+					return a.legislativeDay.compareTo(b.legislativeDay);
+				}
+			});
+			
+			bill.latestUpcoming = latestUpcoming;
 		}
 		
 		// coming from a search endpoint, generate a search object
