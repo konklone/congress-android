@@ -10,17 +10,21 @@
 	android:id="@+id/bar"
 	>
 	
-	<ImageView android:id="@+id/title_icon"
-		android:layout_width="44dp"
+    <FrameLayout android:id="@+id/title_button"
+        android:layout_width="44dp"
 		android:layout_height="44dp"
+		android:layout_marginRight="12dp"
+		android:layout_weight="0"
 		
-   		android:layout_marginRight="12dp"
-   		
-   		android:layout_weight="0"
-   		
-		android:src="@drawable/title_icon"
-		/>
-		
+		android:background="@drawable/selector_clear"
+        >
+		<ImageView android:id="@+id/title_icon"
+			android:layout_width="44dp"
+			android:layout_height="44dp"
+			android:src="@drawable/title_icon"
+			/>
+	</FrameLayout>
+	
 	<TextView android:id="@+id/title_text"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"

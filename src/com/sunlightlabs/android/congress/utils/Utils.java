@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.sunlightlabs.android.congress.BillPager;
 import com.sunlightlabs.android.congress.LegislatorPager;
+import com.sunlightlabs.android.congress.MenuMain;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.RollInfo;
 import com.sunlightlabs.congress.models.Bill;
@@ -245,11 +246,33 @@ public class Utils {
 	
 
 	public static void setTitle(Activity activity, String title) {
-		((TextView) activity.findViewById(R.id.title_text)).setText(title);
+		setTitle(activity, title, true);
 	}
 
 	public static void setTitle(Activity activity, int title) {
+		setTitle(activity, activity.getResources().getString(title));
+	}
+	
+	public static void setTitle(Activity activity, int title, boolean enableButton) {
+		setTitle(activity, activity.getResources().getString(title), enableButton);
+	}
+	
+	public static void setTitle(Activity activity, String title, boolean enableButton) {
 		((TextView) activity.findViewById(R.id.title_text)).setText(title);
+		
+		if (enableButton)
+			setTitleButton(activity);
+	}
+	
+	public static void setTitleButton(final Activity activity) {
+		View button = activity.findViewById(R.id.title_button);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				activity.startActivity(new Intent(activity, MenuMain.class));
+			}
+		});
+		button.setFocusable(true);
 	}
 
 	public static void setTitleSize(Activity activity, float size) {
@@ -258,7 +281,7 @@ public class Utils {
 	
 	public static void setActionButton(Activity activity, int id, int icon, View.OnClickListener listener) {
 		ViewGroup button = (ViewGroup) activity.findViewById(id);
-		button.findViewById(R.id.button).setOnClickListener(listener);
+		button.setOnClickListener(listener);
 		((ImageView) button.findViewById(R.id.icon)).setImageResource(icon);
 		button.setVisibility(View.VISIBLE);
 	}

@@ -58,6 +58,7 @@ public class MenuMain extends FragmentActivity {
 			public void onClick(View v) { doFeedback(); }
 		});
 		
+		Utils.setTitle(this, R.string.app_name, false);
 		
 		Utils.setActionButton(this, R.id.action_1, R.drawable.notifications, new View.OnClickListener() {
 			public void onClick(View v) { 

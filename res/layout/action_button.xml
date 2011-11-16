@@ -1,27 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="horizontal"
-	android:layout_width="wrap_content"
-	android:layout_height="fill_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_height="fill_parent"
+	android:layout_width="48dp"
 	android:layout_weight="0"
+	
+	android:background="@drawable/selector_clear"
 	android:visibility="gone"
+	
+	android:focusable="true"
 	>
 	
-	<FrameLayout android:id="@+id/button"
-		android:layout_height="fill_parent"
-		android:layout_width="48dp"
+	<ImageView android:id="@+id/icon"
+		android:layout_width="32dp"
+		android:layout_height="32dp"
 		
-		android:background="@drawable/selector_clear"
-		
-		android:focusable="true"
-		>
-		
-		<ImageView android:id="@+id/icon"
-			android:layout_width="32dp"
-			android:layout_height="32dp"
+		android:layout_gravity="center"
+		/>
 			
-			android:layout_gravity="center"
-			/>
-				
-	</FrameLayout>
-</LinearLayout>
+</FrameLayout>
