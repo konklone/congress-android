@@ -139,14 +139,13 @@
 	</string-array>
     
     <string-array name="changelog">
-    	<item>Redesigned hearings page, limited it to Senate</item>
-    	<item>Tapping a hearing adds it to your calendar</item>
-    	<item>Fixed bug with lawmaker photo loading</item>
-    	<item>Fixed floor update notifications to go to right screen</item>
+        <item>Showing what bills are coming up on the House and Senate floor</item>
+    	<item>New visual theme</item>
+    	<item>Ordering news results correctly by date</item>
     </string-array>
     
     <string-array name="changelogLast">
-		<item>Added updates from the Senate Floor</item>
-        <item>Showing links to bills mentioned on the House and Senate floor</item>
+        <item>Limited hearings page to Senate</item>
+    	<item>Tapping a hearing adds it to your calendar</item>
 	</string-array>
 </resources>
