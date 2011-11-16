@@ -65,7 +65,7 @@
  	        android:id="@+id/profile_phone"
  	        />
  	    
- 	    <include layout="@layout/line_vertical" />
+ 	    <include layout="@layout/line_divider_vertical" />
  	    
  	    <include layout="@layout/profile_item"
  	        android:id="@+id/profile_website"
@@ -73,7 +73,7 @@
  	    
 	</LinearLayout>
 	
- 	<include layout="@layout/line" />
+ 	<include layout="@layout/line_divider" />
 	
  	<LinearLayout android:orientation="horizontal"
  	    android:layout_width="fill_parent"
@@ -85,7 +85,7 @@
  	        android:id="@+id/profile_voting"
  	        />
  	    
- 	    <include layout="@layout/line_vertical" />
+ 	    <include layout="@layout/line_divider_vertical" />
  	    
  	    <include layout="@layout/profile_item"
  	        android:id="@+id/profile_bills"
@@ -93,7 +93,7 @@
  	    
 	</LinearLayout>
 	
- 	<include layout="@layout/line" />
+ 	<include layout="@layout/line_divider" />
 	
  	<LinearLayout android:orientation="horizontal"
  	    android:layout_width="fill_parent"
@@ -105,7 +105,7 @@
  	        android:id="@+id/profile_committees"
  	        />
  	    
- 	    <include layout="@layout/line_vertical" />
+ 	    <include layout="@layout/line_divider_vertical" />
  	    
  	    <include layout="@layout/profile_item"
  	        android:id="@+id/profile_district"
