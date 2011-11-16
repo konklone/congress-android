@@ -48,8 +48,6 @@ public class BillInfoFragment extends ListFragment implements LoadPhotoTask.Load
 	private List<UpcomingBill> latestUpcoming;
 	
 	private View loadingContainer, sponsorView;
-	private TextView upcomingHeader;
-	private ViewGroup upcomingContainer;
 	
 	private Drawable sponsorPhoto;
 	
@@ -91,9 +89,6 @@ public class BillInfoFragment extends ListFragment implements LoadPhotoTask.Load
 		super.onActivityCreated(savedInstanceState);
 		
 		setupControls();
-		
-		if (latestUpcoming != null)
-			displayLatestUpcoming();
 		
 		if (summary != null)
 			displaySummary();
@@ -188,14 +183,17 @@ public class BillInfoFragment extends ListFragment implements LoadPhotoTask.Load
 			adapter.addAdapter(new ViewArrayAdapter(this, listViews));
 		
 		// prepare the upcoming container if one is necessary
-		upcomingHeader = (TextView) inflater.inflate(R.layout.header, null);
-		upcomingHeader.setText(R.string.upcoming_header);
-		upcomingHeader.setVisibility(View.GONE);
-		
-		upcomingContainer = (ViewGroup) inflater.inflate(R.layout.bill_upcoming, null);
-		upcomingContainer.setVisibility(View.GONE);
-		adapter.addView(upcomingHeader);
-		adapter.addView(upcomingContainer);
+		if (latestUpcoming != null && latestUpcoming.size() > 0) {
+			TextView upcomingHeader = (TextView) inflater.inflate(R.layout.header, null);
+			upcomingHeader.setText(R.string.upcoming_header);
+			
+			ViewGroup upcomingContainer = (ViewGroup) inflater.inflate(R.layout.bill_upcoming, null);
+			for (int i=0; i<latestUpcoming.size(); i++)
+				upcomingContainer.addView(upcomingView(latestUpcoming.get(i)));
+			
+			adapter.addView(upcomingHeader);
+			adapter.addView(upcomingContainer);
+		}
 		
 		loadingContainer = inflater.inflate(R.layout.header_loading, null);
 		((TextView) loadingContainer.findViewById(R.id.header_text)).setText("Summary");
@@ -205,17 +203,6 @@ public class BillInfoFragment extends ListFragment implements LoadPhotoTask.Load
 		loadingContainer.findViewById(R.id.loading).setVisibility(View.VISIBLE);
 		
 		setListAdapter(adapter);
-	}
-	
-	public void displayLatestUpcoming() {
-		if (latestUpcoming.size() > 0) {
-			
-			upcomingHeader.setVisibility(View.VISIBLE);
-			upcomingContainer.setVisibility(View.VISIBLE);
-			
-			for (int i=0; i<latestUpcoming.size(); i++)
-				upcomingContainer.addView(upcomingView(latestUpcoming.get(i)));
-		}
 	}
 	
 	public View upcomingView(final UpcomingBill upcoming) {
