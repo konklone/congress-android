@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
@@ -82,6 +83,7 @@ public class UpcomingFragment extends ListFragment {
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		if (isAdded()) {
 			Bill bill = ((UpcomingAdapter.Bill) parent.getItemAtPosition(position)).bill;
+			Analytics.billUpcoming(getActivity(), bill.id);
 			startActivity(Utils.billLoadIntent(bill.id, bill.code));
 		}
 	}

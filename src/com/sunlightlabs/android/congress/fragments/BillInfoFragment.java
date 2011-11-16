@@ -217,7 +217,7 @@ public class BillInfoFragment extends ListFragment implements LoadPhotoTask.Load
 			moreView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Analytics.billUpcoming(getActivity(), upcoming.sourceType);
+					Analytics.billUpcomingMore(getActivity(), upcoming.sourceType);
 					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(upcoming.permalink)));
 				}
 			});
