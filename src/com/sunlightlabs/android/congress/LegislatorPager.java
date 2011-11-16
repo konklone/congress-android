@@ -75,7 +75,7 @@ public class LegislatorPager extends FragmentActivity {
 		String titledName = legislator.titledName();
 		Utils.setTitle(this, titledName);
 		if (titledName.length() >= 23)
-			Utils.setTitleSize(this, 19);
+			Utils.setTitleSize(this, 16);
 		
 		Utils.setActionButton(this, R.id.action_1, R.drawable.star_off, new View.OnClickListener() {
 			public void onClick(View v) { 
