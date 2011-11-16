@@ -9,7 +9,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +30,10 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class LegislatorProfileFragment extends ListFragment implements LoadPhotoTask.LoadsPhoto {
+public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask.LoadsPhoto {
 	private Legislator legislator;
 	
 	private Drawable avatar;
-	private ViewGroup mainView;
 	
 	public static LegislatorProfileFragment create(Legislator legislator) {
 		LegislatorProfileFragment frag = new LegislatorProfileFragment();
@@ -60,7 +59,7 @@ public class LegislatorProfileFragment extends ListFragment implements LoadPhoto
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.list_bare, container, false);
+		return inflater.inflate(R.layout.legislator_profile, container, false);
 	}
 	
 	@Override
@@ -101,24 +100,7 @@ public class LegislatorProfileFragment extends ListFragment implements LoadPhoto
 	}
 	
     public void displayAvatar() {
-    	((ImageView) mainView.findViewById(R.id.profile_picture)).setImageDrawable(avatar);
-    }
-    
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-    	Object tag = v.getTag();
-    	if (tag == null) // not sure how this would happen, but Market error reports indicate it can
-    		return;
-    
-		String type = (String) tag;
-    	if (type.equals("phone"))
-    		callOffice();
-    	else if (type.equals("voting"))
-    		votingRecord();
-    	else if (type.equals("sponsored"))
-    		sponsoredBills();
-    	else if (type.equals("committees"))
-    		viewCommittees();
+    	((ImageView) getView().findViewById(R.id.profile_picture)).setImageDrawable(avatar);
     }
     
     public void callOffice() {
@@ -161,71 +143,57 @@ public class LegislatorProfileFragment extends ListFragment implements LoadPhoto
 
 
 	public void setupControls() {
-		MergeAdapter adapter = new MergeAdapter();
-		LayoutInflater inflater = LayoutInflater.from(getActivity());
+		View mainView = getView();
 		
-		mainView = (ViewGroup) inflater.inflate(R.layout.profile, null);
-		
-		mainView.setEnabled(false);
-		
-		if (!legislator.in_office) {
+		if (!legislator.in_office)
 			mainView.findViewById(R.id.out_of_office_text).setVisibility(View.VISIBLE);
-			mainView.findViewById(R.id.website).setVisibility(View.GONE);
-		}
-		
-		if (legislator.website == null || legislator.website.equals(""))
-			mainView.findViewById(R.id.website).setVisibility(View.GONE);
-		
-		mainView.findViewById(R.id.website).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View arg0) {
-				visitWebsite();
-			}
-		});
-		mainView.findViewById(R.id.district).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				districtMap();
-			}
-		});
 		
 		((TextView) mainView.findViewById(R.id.profile_party)).setText(partyName(legislator.party));
 		((TextView) mainView.findViewById(R.id.profile_state)).setText(Utils.stateCodeToName(getActivity(), legislator.state));
 		((TextView) mainView.findViewById(R.id.profile_domain)).setText(domainName(legislator.getDomain()));
 		((TextView) mainView.findViewById(R.id.profile_office)).setText(officeName(legislator.congress_office));
-		
-		adapter.addView(mainView);
 	
-		List<View> contactViews = new ArrayList<View>(4);
+		profileItem(R.id.profile_phone, R.drawable.phone, "Call " + pronoun(legislator.gender) + " office", new View.OnClickListener() {
+			public void onClick(View v) {callOffice();}
+		});
 		
-		String phone = legislator.phone;
-		if (legislator.in_office && phone != null && !phone.equals("")) {
-			View phoneView = inflater.inflate(R.layout.icon_list_item, null);
-			((TextView) phoneView.findViewById(R.id.text)).setText("Call " + pronoun(legislator.gender) + " office");
-			((ImageView) phoneView.findViewById(R.id.icon)).setImageResource(R.drawable.phone);
-			phoneView.setTag("phone");
-			contactViews.add(phoneView);
-		}
+		profileItem(R.id.profile_website, R.drawable.web, "Website", new View.OnClickListener() {
+			public void onClick(View v) {visitWebsite();}
+		});
 		
-		View votingRecordView = inflater.inflate(R.layout.icon_list_item, null);
-		((TextView) votingRecordView.findViewById(R.id.text)).setText(R.string.voting_record);
-		((ImageView) votingRecordView.findViewById(R.id.icon)).setImageResource(R.drawable.votes);
-		votingRecordView.setTag("voting");
-		contactViews.add(votingRecordView);
+		profileItem(R.id.profile_voting, R.drawable.votes, R.string.voting_record, new View.OnClickListener() {
+			public void onClick(View v) {votingRecord();}
+		});
 		
-		View sponsoredView = inflater.inflate(R.layout.icon_list_item, null);
-		((TextView) sponsoredView.findViewById(R.id.text)).setText(R.string.sponsored_bills);
-		((ImageView) sponsoredView.findViewById(R.id.icon)).setImageResource(R.drawable.bills);
-		sponsoredView.setTag("sponsored");
-		contactViews.add(sponsoredView);
+		profileItem(R.id.profile_bills, R.drawable.bills, R.string.sponsored_bills, new View.OnClickListener() {
+			public void onClick(View v) {sponsoredBills();}
+		});
 		
-		View committeesView = inflater.inflate(R.layout.icon_list_item, null);
-		((TextView) committeesView.findViewById(R.id.text)).setText(R.string.committees);
-		((ImageView) committeesView.findViewById(R.id.icon)).setImageResource(R.drawable.committees);
-		committeesView.setTag("committees");
-		contactViews.add(committeesView);
+		profileItem(R.id.profile_committees, R.drawable.committees, R.string.committees, new View.OnClickListener() {
+			public void onClick(View v) {viewCommittees();}
+		});
 		
-		adapter.addAdapter(new ViewArrayAdapter(this, contactViews));
+		profileItem(R.id.profile_district, R.drawable.globe, "District Map", new View.OnClickListener() {
+			public void onClick(View v) {districtMap();}
+		});
 		
-		setListAdapter(adapter);
+		if (legislator.website == null || legislator.website.equals(""))
+			mainView.findViewById(R.id.profile_website).setVisibility(View.GONE);
+	}
+	
+	private View profileItem(int id, int icon, int text, View.OnClickListener listener) {
+		return profileItem(id, icon, getActivity().getResources().getString(text), listener);
+	}
+	
+	private View profileItem(int id, int icon, String text, View.OnClickListener listener) {
+		ViewGroup item = (ViewGroup) getView().findViewById(id);
+		((ImageView) item.findViewById(R.id.icon)).setImageResource(icon);
+		TextView textView = (TextView) item.findViewById(R.id.text);
+		textView.setText(text);
+		
+		item.setOnClickListener(listener);
+		
+		return item;
 	}
 	
 	public static String partyName(String code) {

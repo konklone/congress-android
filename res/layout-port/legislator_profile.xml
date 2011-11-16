@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:clickable="false"
+	android:id="@+id/profile_container"
+	>
+	
+	<include layout="@layout/legislator_out_of_office" />
+	
+	<LinearLayout 
+		android:orientation="horizontal"
+		style="@style/ProfileHead"
+		android:layout_width="wrap_content"
+		android:layout_weight="0"
+		>
+		
+		<ImageView  
+		    android:id="@+id/profile_picture"
+			style="@style/ProfilePicture"
+			
+			android:src="@drawable/loading_photo"
+			/>
+	  	
+	  	<LinearLayout android:id="@+id/profile_basic"
+	  		style="@style/ProfileTextWidth"
+	  		android:layout_height="fill_parent"
+	  		android:orientation="vertical"
+	  		>
+	 		
+	  		<TextView android:id="@+id/profile_party"
+		  		style="@style/LegislatorProfileText"
+	  			android:text="Democrat"
+		  		/>
+	  		
+	  		<TextView android:id="@+id/profile_state"
+		  		style="@style/LegislatorProfileText"
+		  		android:text="District of Columbia"
+		  		/>
+		  	
+		  	<TextView android:id="@+id/profile_domain"
+		  		style="@style/LegislatorProfileText"
+	  			android:text="Senior Senator"
+		  		/>
+		  		
+		  	<TextView android:id="@+id/profile_office"
+		  		style="@style/LegislatorProfileText"
+	  			android:text="3445 Rayburn"
+	  			/>
+		  
+	 	</LinearLayout>
+	 	
+	</LinearLayout>
+ 	
+	<include layout="@layout/line_divider" />
+ 	
+ 	<LinearLayout android:orientation="horizontal"
+ 	    android:layout_width="fill_parent"
+ 	    android:layout_height="wrap_content"
+ 	    android:layout_weight="1"
+ 	    >
+	  	
+ 	    <include layout="@layout/profile_item"
+ 	        android:id="@+id/profile_phone"
+ 	        />
+ 	    
+ 	    <include layout="@layout/line_vertical" />
+ 	    
+ 	    <include layout="@layout/profile_item"
+ 	        android:id="@+id/profile_website"
+ 	        />
+ 	    
+	</LinearLayout>
+	
+ 	<include layout="@layout/line" />
+	
+ 	<LinearLayout android:orientation="horizontal"
+ 	    android:layout_width="fill_parent"
+ 	    android:layout_height="wrap_content"
+ 	    android:layout_weight="1"
+ 	    >
+	  	
+ 	    <include layout="@layout/profile_item"
+ 	        android:id="@+id/profile_voting"
+ 	        />
+ 	    
+ 	    <include layout="@layout/line_vertical" />
+ 	    
+ 	    <include layout="@layout/profile_item"
+ 	        android:id="@+id/profile_bills"
+ 	        />
+ 	    
+	</LinearLayout>
+	
+ 	<include layout="@layout/line" />
+	
+ 	<LinearLayout android:orientation="horizontal"
+ 	    android:layout_width="fill_parent"
+ 	    android:layout_height="wrap_content"
+ 	    android:layout_weight="1"
+ 	    >
+	  	
+ 	    <include layout="@layout/profile_item"
+ 	        android:id="@+id/profile_committees"
+ 	        />
+ 	    
+ 	    <include layout="@layout/line_vertical" />
+ 	    
+ 	    <include layout="@layout/profile_item"
+ 	        android:id="@+id/profile_district"
+ 	        />
+ 	    
+	</LinearLayout>
+</LinearLayout>

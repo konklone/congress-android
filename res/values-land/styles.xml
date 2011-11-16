@@ -6,4 +6,10 @@
     <style name="MainNavigationGrid">
         <item name="android:numColumns">2</item>
     </style>
+    <style name="ProfileTextWidth">
+    	<item name="android:layout_width">125dp</item>
+    </style>
+    <style name="ProfileItemText">
+    	<item name="android:textSize">14sp</item>
+    </style>
 </resources>
