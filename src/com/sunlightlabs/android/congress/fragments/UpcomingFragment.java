@@ -3,6 +3,8 @@ package com.sunlightlabs.android.congress.fragments;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -101,35 +103,6 @@ public class UpcomingFragment extends ListFragment {
 			setListAdapter(new UpcomingAdapter(this, UpcomingAdapter.wrapUpcoming(upcomingBills)));
 		else
 			FragmentUtils.showEmpty(this, R.string.upcoming_empty);
-	}
-	
-	static class UpcomingBillsTask extends AsyncTask<String, Void, List<UpcomingBill>> {
-		private UpcomingFragment context;
-		private CongressException exception;
-
-		public UpcomingBillsTask(UpcomingFragment context) {
-			FragmentUtils.setupRTC(context);
-			this.context = context;
-		}
-
-		@Override
-		protected List<UpcomingBill> doInBackground(String... params) {
-			try {
-				Date today = new GregorianCalendar().getTime();
-				return UpcomingBillService.comingUp(today);
-			} catch (CongressException e) {
-				this.exception = new CongressException(e, "Error loading upcoming activity.");
-				return null;
-			}
-		}
-		
-		@Override
-		protected void onPostExecute(List<UpcomingBill> result) {
-			if (result != null && exception == null)
-				context.onLoadUpcomingBills(result);
-			else
-				context.onLoadUpcomingBills(exception);
-		}
 	}
 	
 	static class UpcomingAdapter extends ArrayAdapter<UpcomingAdapter.Item> {
@@ -260,6 +233,51 @@ public class UpcomingFragment extends ListFragment {
 			}
 			
 			return items;
+		}
+	}
+	
+	static class UpcomingBillsTask extends AsyncTask<String, Void, List<UpcomingBill>> {
+		private UpcomingFragment context;
+		private CongressException exception;
+
+		public UpcomingBillsTask(UpcomingFragment context) {
+			FragmentUtils.setupRTC(context);
+			this.context = context;
+		}
+
+		@Override
+		protected List<UpcomingBill> doInBackground(String... params) {
+			try {
+				Date today = new GregorianCalendar().getTime();
+				List<UpcomingBill> upcoming = UpcomingBillService.comingUp(today);
+				
+				// put upcoming bills with nicknames at the top of that legislative day
+				// e.g. shove the post office bills to the bottom of the day
+				Collections.sort(upcoming, new Comparator<UpcomingBill>() {
+					@Override
+					public int compare(UpcomingBill a, UpcomingBill b) {
+						int day = a.legislativeDay.compareTo(b.legislativeDay);
+						if (day != 0)
+							return day;
+						else
+							return (a.bill.short_title != null ? -1 : 1);
+							
+					}
+				});
+				
+				return upcoming;
+			} catch (CongressException e) {
+				this.exception = new CongressException(e, "Error loading upcoming activity.");
+				return null;
+			}
+		}
+		
+		@Override
+		protected void onPostExecute(List<UpcomingBill> result) {
+			if (result != null && exception == null)
+				context.onLoadUpcomingBills(result);
+			else
+				context.onLoadUpcomingBills(exception);
 		}
 	}
 }
