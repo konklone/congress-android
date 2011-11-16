@@ -73,7 +73,7 @@ public class BillInfoFragment extends ListFragment implements LoadPhotoTask.Load
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.list_bare, container, false);
+		return inflater.inflate(R.layout.list_bare_no_divider, container, false);
 	}
 	
 	@Override

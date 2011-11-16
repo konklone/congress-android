@@ -1,30 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
-	android:id="@+id/profile_website_row"
-	android:orientation="horizontal"
-	
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:paddingLeft="15dp"
-	android:paddingTop="2dp"
-	android:paddingBottom="2dp"
-	>
-
-	<ImageView android:id="@+id/icon"
-		android:layout_width="48dp"
-		android:layout_height="48dp"
-		android:layout_marginRight="20dp"
-		/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+    
+    <include layout="@layout/line" />
+    
+	<LinearLayout 
+		android:orientation="horizontal"
 		
-	<TextView android:id="@+id/text"
-	
-		android:layout_width="wrap_content"
+		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="10dp"
+		android:paddingLeft="15dp"
+		android:paddingTop="2dp"
+		android:paddingBottom="2dp"
+		>
+	
+		<ImageView android:id="@+id/icon"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			android:layout_marginRight="20dp"
+			/>
+			
+		<TextView android:id="@+id/text"
 		
-		android:textSize="19sp"
-		
-		android:text="Text"
-		/>
-		
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="10dp"
+			
+			android:textSize="19sp"
+			
+			android:text="Text"
+			/>
+			
+	</LinearLayout>
 </LinearLayout>
