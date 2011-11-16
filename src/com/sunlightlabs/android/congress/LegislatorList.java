@@ -224,7 +224,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		});
 
 		Utils.setLoading(this, R.string.legislators_loading);
-		Utils.setTitleSize(this, 20);
+		Utils.setTitleSize(this, 16);
 		
 		switch (type) {
 		case SEARCH_ZIP:
@@ -244,8 +244,8 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			Utils.setTitle(this, "Legislators from " + Utils.stateCodeToName(this, state));
 			break;
 		case SEARCH_COSPONSORS:
-			Utils.setTitle(this, "Cosponsors for\n" + Bill.formatId(bill_id));
-			Utils.setTitleSize(this, 18);
+			Utils.setTitle(this, "Cosponsors for " + Bill.formatId(bill_id));
+			Utils.setTitleSize(this, 16);
 			Utils.setLoading(this, R.string.legislators_loading_cosponsors);
 			break;
 		default:

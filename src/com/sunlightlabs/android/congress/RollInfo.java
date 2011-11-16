@@ -370,7 +370,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			header.findViewById(R.id.vote_tabs).setVisibility(View.VISIBLE);
 			
 			// initialize adapters, add them beneath the tabs
-			starredAdapter = new VoterAdapter(this, starred, true);
+			starredAdapter = new VoterAdapter(this, starred);
 			restAdapter = new VoterAdapter(this, rest);
 			
 			MergeAdapter adapter = (MergeAdapter) getListAdapter();
@@ -517,20 +517,10 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		LayoutInflater inflater;
 		RollInfo context;
 		
-		private boolean starred;
-
 	    public VoterAdapter(RollInfo context, List<Vote> rest) {
 	        super(context, 0, rest);
 	        this.context = context;
 	        this.inflater = LayoutInflater.from(context);
-	        this.starred = false;
-	    }
-	    
-	    public VoterAdapter(RollInfo context, List<Vote> starred2, boolean starred) {
-	        super(context, 0, starred2);
-	        this.context = context;
-	        this.inflater = LayoutInflater.from(context);
-	        this.starred = starred;
 	    }
 	    
 	    public boolean areAllItemsEnabled() {
@@ -550,10 +540,8 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 				
 				holder = new ViewHolder();
 				holder.name = (TextView) view.findViewById(R.id.name);
-				holder.position = (TextView) view.findViewById(R.id.position);
 				holder.vote = (TextView) view.findViewById(R.id.vote);
 				holder.photo = (ImageView) view.findViewById(R.id.photo);
-				holder.star = (ImageView) view.findViewById(R.id.star);
 				
 				view.setTag(holder);
 			} else {
@@ -569,9 +557,6 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			holder.bioguide_id = vote.voter_id;
 			
 			holder.name.setText(nameFor(legislator));
-			holder.position.setText(positionFor(legislator));
-			
-			holder.star.setVisibility(starred ? View.VISIBLE : View.GONE);
 			
 			TextView voteView = holder.vote;
 			String value = vote.vote;
@@ -600,32 +585,13 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		}
 		
 		public String nameFor(Legislator legislator) {
-			return legislator.last_name + ", " + legislator.firstName();
-		}
-		
-		public String positionFor(Legislator legislator) {
-			String district = legislator.district;
-			String stateName = Utils.stateCodeToName(context, legislator.state);
-			
-			String position = "";
-			if (district.equals("Senior Seat"))
-				position = "Senior Senator from " + stateName;
-			else if (district.equals("Junior Seat"))
-				position = "Junior Senator from " + stateName;
-			else if (district.equals("0")) {
-				if (legislator.title.equals("Rep"))
-					position = "Representative for " + stateName + " At-Large";
-				else
-					position = legislator.fullTitle() + " for " + stateName;
-			} else
-				position = "Representative for " + stateName + "-" + district;
-			
-			return "(" + legislator.party + ") " + position; 
+			String position = legislator.party + "-" + legislator.state;
+			return legislator.last_name + ", " + legislator.firstName() + " [" + position + "]";
 		}
 		
 		static class ViewHolder {
-			TextView name, position, vote;
-			ImageView photo, star;
+			TextView name, vote;
+			ImageView photo;
 			String bioguide_id;
 			
 			@Override

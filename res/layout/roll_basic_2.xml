@@ -27,8 +27,6 @@
 		
 		android:orientation="horizontal"
 		
-		android:layout_marginBottom="10dp"
-		
 		android:visibility="gone"
 		/>
 	
