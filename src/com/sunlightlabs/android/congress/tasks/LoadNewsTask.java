@@ -1,5 +1,7 @@
 package com.sunlightlabs.android.congress.tasks;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.os.AsyncTask;
@@ -31,7 +33,14 @@ public class LoadNewsTask extends AsyncTask<String, Void, List<NewsItem>> {
 		String referer = params[2];
 		
 		try {
-			return new NewsService(apiKey, referer).fetchNewsResults(searchTerm);
+			List<NewsItem> results = new NewsService(apiKey, referer).fetchNewsResults(searchTerm);
+			Collections.sort(results, new Comparator<NewsItem>() {
+				@Override
+				public int compare(NewsItem a, NewsItem b) {
+					return b.timestamp.compareTo(a.timestamp);
+				}
+			});
+			return results;
 		} catch (NewsException exception) {
 			this.exception = new CongressException(exception, "Exception fetching news");
 			return null;
