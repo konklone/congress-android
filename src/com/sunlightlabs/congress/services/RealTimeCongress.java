@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -150,8 +151,11 @@ public class RealTimeCongress {
 		return DateUtils.formatDate(date, dateFormat);
 	}
 	
+	// format dates using the local time zone, not UTC - otherwise things start to not make sense
 	public static String formatDateOnly(Date date) {
-		return DateUtils.formatDate(date, dateOnlyFormat);
+		SimpleDateFormat format = new SimpleDateFormat(dateOnlyFormat);
+		format.setTimeZone(TimeZone.getDefault());
+		return format.format(date);
 	}
 	
 	public static String fetchJSON(String url) throws CongressException {
