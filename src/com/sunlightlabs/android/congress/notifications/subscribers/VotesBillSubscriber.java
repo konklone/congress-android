@@ -5,9 +5,8 @@ import java.util.List;
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
+import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
@@ -52,10 +51,5 @@ public class VotesBillSubscriber extends Subscriber {
 	@Override
 	public String subscriptionName(Subscription subscription) {
 		return "Votes: " + subscription.name;
-	}
-	
-	@Override
-	public int subscriptionIcon(Subscription subscription) {
-		return R.drawable.bill;
 	}
 }

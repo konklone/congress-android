@@ -34,7 +34,6 @@ public abstract class Subscriber {
 	// for listing in the subscription manager
 	
 	public abstract String subscriptionName(Subscription subscription);
-	public abstract int subscriptionIcon(Subscription subscription);
 	
 	// utility methods
 	

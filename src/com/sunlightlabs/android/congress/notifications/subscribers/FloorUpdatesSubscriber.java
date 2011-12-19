@@ -5,7 +5,6 @@ import java.util.List;
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.fragments.FloorUpdateFragment;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
@@ -60,10 +59,5 @@ public class FloorUpdatesSubscriber extends Subscriber {
 	@Override
 	public String subscriptionName(Subscription subscription) {
 		return Utils.capitalize(subscription.data) + " Floor";
-	}
-	
-	@Override
-	public int subscriptionIcon(Subscription subscription) {
-		return R.drawable.floor;
 	}
 }

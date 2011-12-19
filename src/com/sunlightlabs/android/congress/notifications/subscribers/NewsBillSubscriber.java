@@ -53,9 +53,4 @@ public class NewsBillSubscriber extends Subscriber {
 	public String subscriptionName(Subscription subscription) {
 		return "News: " + subscription.name;
 	}
-	
-	@Override
-	public int subscriptionIcon(Subscription subscription) {
-		return R.drawable.bill;
-	}
 }

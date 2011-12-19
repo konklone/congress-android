@@ -54,9 +54,4 @@ public class RollsRecentSubscriber extends Subscriber {
 	public String subscriptionName(Subscription subscription) {
 		return context.getResources().getString(R.string.menu_votes_latest);
 	}
-	
-	@Override
-	public int subscriptionIcon(Subscription subscription) {
-		return R.drawable.votes;
-	}
 }

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.BillList;
-import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -52,10 +51,5 @@ public class BillsLegislatorSubscriber extends Subscriber {
 	@Override
 	public String subscriptionName(Subscription subscription) {
 		return "Sponsored Bills: " + subscription.name;
-	}
-	
-	@Override
-	public int subscriptionIcon(Subscription subscription) {
-		return R.drawable.bills;
 	}
 }

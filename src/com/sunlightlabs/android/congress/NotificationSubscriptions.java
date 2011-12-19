@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -99,7 +98,6 @@ public class NotificationSubscriptions extends ListActivity {
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
 			TextView text = (TextView) view.findViewById(R.id.text);
-			ImageView icon = (ImageView) view.findViewById(R.id.icon);
 			
 			Subscription subscription = Database.loadSubscription(cursor);
 			Subscriber subscriber;
@@ -107,14 +105,12 @@ public class NotificationSubscriptions extends ListActivity {
 				subscriber = subscription.getSubscriber();
 				subscriber.context = context;
 				
-				icon.setImageResource(subscriber.subscriptionIcon(subscription));
 				text.setText(subscriber.subscriptionName(subscription));
 				view.setTag(subscriber.notificationIntent(subscription));
 				view.setEnabled(true);
 			} catch (Exception e) {
 				Log.e(Utils.TAG, "Could not instantiate a Subscriber of class " + subscription.notificationClass, e);
 				
-				icon.setImageResource(R.drawable.circle_off);
 				text.setText(R.string.notification_not_found);
 				view.setTag(null);
 				view.setEnabled(false);

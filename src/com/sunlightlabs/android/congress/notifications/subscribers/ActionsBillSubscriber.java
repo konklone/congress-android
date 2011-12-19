@@ -5,7 +5,6 @@ import java.util.List;
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -50,10 +49,5 @@ public class ActionsBillSubscriber extends Subscriber {
 	@Override
 	public String subscriptionName(Subscription subscription) {
 		return "Activity: " + subscription.name;
-	}
-	
-	@Override
-	public int subscriptionIcon(Subscription subscription) {
-		return R.drawable.bill;
 	}
 }

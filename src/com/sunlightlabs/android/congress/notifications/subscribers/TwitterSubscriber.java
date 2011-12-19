@@ -3,12 +3,11 @@ package com.sunlightlabs.android.congress.notifications.subscribers;
 import java.util.List;
 
 import winterwell.jtwitter.Twitter;
-import winterwell.jtwitter.TwitterException;
 import winterwell.jtwitter.Twitter.Status;
+import winterwell.jtwitter.TwitterException;
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -52,10 +51,5 @@ public class TwitterSubscriber extends Subscriber {
 	@Override
 	public String subscriptionName(Subscription subscription) {
 		return "Tweets: " + subscription.name;
-	}
-	
-	@Override
-	public int subscriptionIcon(Subscription subscription) {
-		return R.drawable.person;
 	}
 }

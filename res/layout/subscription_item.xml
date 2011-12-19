@@ -17,6 +17,9 @@
 		android:layout_width="40dp"
 		android:layout_height="40dp"
 		android:layout_marginRight="10dp"
+		
+		android:contentDescription="@string/image_star"
+		android:src="@drawable/star"
 		/>
 		
 	<TextView android:id="@+id/text"

@@ -53,9 +53,4 @@ public class BillsRecentSubscriber extends Subscriber {
 	public String subscriptionName(Subscription subscription) {
 		return context.getResources().getString(R.string.menu_bills_recent);
 	}
-	
-	@Override
-	public int subscriptionIcon(Subscription subscription) {
-		return R.drawable.bill;
-	}
 }

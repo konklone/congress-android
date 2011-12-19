@@ -165,7 +165,7 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 			public void onClick(View v) {votingRecord();}
 		});
 		
-		profileItem(R.id.profile_bills, R.drawable.bills, R.string.sponsored_bills, new View.OnClickListener() {
+		profileItem(R.id.profile_bills, R.drawable.bill, R.string.sponsored_bills, new View.OnClickListener() {
 			public void onClick(View v) {sponsoredBills();}
 		});
 		
