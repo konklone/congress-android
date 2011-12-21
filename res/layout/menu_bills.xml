@@ -3,58 +3,62 @@
 	android:layout_width="fill_parent" 
 	android:layout_height="fill_parent"
 	android:orientation="vertical"
-	
 	>
 	
-	<include layout="@layout/title_bar" />
-	
-	<RelativeLayout
+	<LinearLayout android:orientation="horizontal"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		>
 		
-		<LinearLayout android:orientation="horizontal"
+		android:padding="5dp"
+		>
+		<EditText android:id="@+id/bill_query"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			
-			android:layout_alignParentTop="true"
+			android:layout_weight="1"
 			
-			android:paddingTop="10dp"
-			android:paddingBottom="10dp"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			>
-			<EditText android:id="@+id/bill_query"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				
-				android:layout_weight="1"
-				
-				android:inputType="text"
-				android:hint="@string/menu_bills_search_hint"
-				
-				android:imeOptions="actionDone"
-				android:imeActionId="6"
-				android:imeActionLabel="@string/menu_bills_search_button"
-				/>
-				
-			<ImageButton android:id="@+id/bill_search"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_weight="0"
-				
-				android:src="@drawable/ic_btn_search"
-				/>
-		</LinearLayout>
-		
-	</RelativeLayout>
+			android:inputType="text"
+			android:hint="@string/menu_bills_search_hint"
+			
+			android:imeOptions="actionDone"
+			android:imeActionId="6"
+			android:imeActionLabel="@string/menu_bills_search_button"
+			/>
+			
+		<ImageButton android:id="@+id/bill_search"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="0"
+			
+			android:contentDescription="@string/image_search"
+			
+			android:src="@drawable/ic_btn_search"
+			/>
+	</LinearLayout>
 	
-	<include layout="@layout/line" />
 	
 	<ListView android:id="@id/android:list"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="fill_parent"
-	    android:layout_weight="1"
 	    />
+	
+	<TextView
+		android:id="@+id/menu_bills_no_favorites"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		
+		android:layout_gravity="center"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:paddingTop="10dp"
+		android:paddingBottom="15dp"
+		
+		android:lineSpacingExtra="2sp"
+		android:textSize="16sp"
+		
+		android:text="@string/menu_bills_no_favorites"
+		
+		android:visibility="gone"
+		/>
 	
 </LinearLayout>

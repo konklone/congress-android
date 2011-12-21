@@ -19,7 +19,7 @@
     <string name="empty_votes">This legislator has not cast any recent votes.</string>
     
     <string name="upcoming_header">COMING UP</string>
-    <string name="upcoming_loading">Finding out...</string>
+    <string name="upcoming_loading">Finding out…</string>
     <string name="upcoming_empty">No details on upcoming activity right now.</string>
     <string name="upcoming_error">Error loading upcoming activity.</string>
         
@@ -32,36 +32,36 @@
     <string name="error_loading_favorites">There was a problem loading your starred bills and legislators. If the problem persists, try un-starring and re-starring them.</string>
     
     <string name="google_news_branding">Powered by Google</string>
-    <string name="news_loading">Plucking news from the air...</string>
+    <string name="news_loading">Plucking news from the air…</string>
     <string name="error_fetching_news">There was an error while fetching news.</string>
     <string name="news_empty">No recent news found.</string>
-    <string name="twitter_loading">Plucking tweets from the air...</string>
+    <string name="twitter_loading">Plucking tweets from the air…</string>
     <string name="twitter_empty">No tweets found.</string>
-    <string name="youtube_loading">Plucking videos from the air...</string>
+    <string name="youtube_loading">Plucking videos from the air…</string>
     <string name="youtube_empty">No videos found.</string>
-    <string name="bills_loading">Plucking bills from the air...</string>
-    <string name="legislators_loading">Searching for lawmakers...</string>
-    <string name="legislators_loading_cosponsors">Loading cosponsors...</string>
-    <string name="votes_loading">Plucking votes from the air...</string>
-    <string name="bill_loading">Plucking bill from the air...</string>
-    <string name="bill_history_loading">Plucking the bill\'s history from the air...</string>
-    <string name="bill_votes_loading">Plucking the bill\'s votes from the air...</string>
-    <string name="legislator_loading">Plucking a person from the air...</string>
+    <string name="bills_loading">Plucking bills from the air…</string>
+    <string name="legislators_loading">Searching for lawmakers…</string>
+    <string name="legislators_loading_cosponsors">Loading cosponsors…</string>
+    <string name="votes_loading">Plucking votes from the air…</string>
+    <string name="bill_loading">Plucking bill from the air…</string>
+    <string name="bill_history_loading">Plucking the bill\'s history from the air…</string>
+    <string name="bill_votes_loading">Plucking the bill\'s votes from the air…</string>
+    <string name="legislator_loading">Plucking a person from the air…</string>
     
    	<string name="committees_title">Committees</string>
-    <string name="committees_loading">Plucking committees from the air...</string>
+    <string name="committees_loading">Plucking committees from the air…</string>
     <string name="committees_empty">No committees found.</string>
     <string name="committees_error">Error loading committees.</string>
     <string name="legislator_no_committees">Belongs to no committees.</string>
     
     <string name="floor_updates_title">The Floor</string>
-    <string name="floor_updates_loading">Loading latest from the floor...</string>
+    <string name="floor_updates_loading">Loading latest from the floor…</string>
     <string name="floor_updates_error">Error loading the latest from the floor.</string>
     <string name="floor_updates_related_roll">Related vote</string>
     <string name="floor_updates_related_bill">Related bill</string>
     
     <string name="hearings_title">Upcoming Senate Hearings</string>
-    <string name="hearings_loading">Loading upcoming hearings...</string>
+    <string name="hearings_loading">Loading upcoming hearings…</string>
     <string name="hearings_empty">No known upcoming hearings.</string>
     <string name="hearings_error">Error loading upcoming hearings.</string>
     <string name="hearings_no_calendar">Unable to find a standard Calendar app on this device.</string>
@@ -70,7 +70,7 @@
     <string name="voting_record">Voting Record</string>
     <string name="sponsored_bills">Sponsored Bills</string>
     <string name="committees">Committees</string>
-    <string name="loading_committees">Loading committees...</string>
+    <string name="loading_committees">Loading committees…</string>
     <string name="district_map">District Map</string>
     <string name="view_legislator_district">View Legislator District</string>
     
@@ -109,14 +109,15 @@
     <string name="menu_main_floor_updates">The Floor</string>
     <string name="menu_main_hearings">Senate Hearings</string>
     
-    <string name="menu_legislators_no_favorites">You can add senators and representatives to this menu for quick access. When viewing a person, tap the star in the upper left corner.</string>
-    <string name="menu_bills_no_favorites">You can add bills to this menu for quick access. When viewing a bill, tap the star in the upper left corner.</string>
+    <string name="menu_legislators_no_favorites">You can add senators and representatives to this menu for quick access. When viewing a person, tap the star in the upper right corner.</string>
+    <string name="menu_bills_no_favorites">You can add bills to this menu for quick access. When viewing a bill, tap the star in the upper right corner.</string>
     
     <string name="menu_bills_search_button">Search</string>
     <string name="menu_bills_search_hint">keywords or bill code</string>
     <string name="menu_bills_favorite">Starred</string>
-    <string name="menu_bills_law">New Laws</string>
-    <string name="menu_bills_recent">New Bills</string>
+    <string name="menu_bills_law">Laws</string>
+    <string name="menu_bills_recent">Recent</string>
+    <string name="menu_bills_menu">Following</string>
     <string name="menu_legislators_favorite">Starred</string>
     <string name="menu_legislators_location">My Location</string>
     <string name="menu_legislators_state">State</string>
@@ -125,14 +126,14 @@
     <string name="menu_votes_latest">Votes</string>
     <string name="menu_votes_nominations">Nominations</string>
     <string name="menu_location_no_location">Cannot update location</string>
-    <string name="menu_location_updating">Updating location...</string>
+    <string name="menu_location_updating">Updating location…</string>
     <string name="menu_favorite_bill_error">Error loading starred bills.</string>
     <string name="menu_favorite_legislator_error">Error loading starred legislators.</string>
     <string name="menu_committees">Committees</string>
     
     <string name="bill_not_found">No bill found by that code.</string>
-    <string name="bills_retry_note">Couldn\'t load bills.</string>
-    <string name="bills_retry_button">Retry</string>
+    <string name="bills_error">Couldn\'t load bills.</string>
+    <string name="bills_retry">Retry</string>
 
     <string name="bill_actions_empty">This bill has no activity at this time.</string>
     <string name="bill_votes_empty">No votes have taken place on this bill yet.</string>
@@ -144,7 +145,7 @@
     <string name="bill_sort_newest">Newest</string>
     <string name="bill_sort_best">Best</string>
     
-    <string name="vote_loading">Loading vote details...</string>
+    <string name="vote_loading">Loading vote details…</string>
     <string name="vote_related_to_bill">Related to</string>
     <string name="vote_related_to_bill_passage">On passage of</string>
     <string name="vote_related_to_bill_cloture">On cloture for</string>
@@ -199,7 +200,7 @@
     <string name="tab_tweets">Tweets</string>
     <string name="tab_videos">Videos</string>
     <string name="tab_news">News</string>
-    <string name="tab_details">Details</string>
+    <string name="tab_details">Bill</string>
     <string name="tab_history">Activity</string>
     <string name="tab_votes">Votes</string>
     <string name="tab_settings">Settings</string>
@@ -210,5 +211,6 @@
     
     <string name="image_star">Star</string>
     <string name="image_legislator_photo">Photo of lawmaker</string>
+    <string name="image_search">Search</string>
 
 </resources>

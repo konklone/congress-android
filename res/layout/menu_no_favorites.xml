@@ -5,14 +5,14 @@
 	android:layout_height="wrap_content"
 	
 	android:layout_gravity="center"
-	android:paddingLeft="20dp"
-	android:paddingRight="20dp"
-	android:paddingTop="15dp"
+	
+	android:paddingLeft="10dp"
+	android:paddingRight="10dp"
+	android:paddingTop="10dp"
 	android:paddingBottom="15dp"
 	
 	android:lineSpacingExtra="2sp"
-	android:textSize="14sp"
-	android:textColor="@color/text_grey"
+	android:textSize="16sp"
 	
-	android:text="No favorites"
+	android:text="@string/menu_legislators_no_favorites"
 	/>

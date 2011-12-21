@@ -49,7 +49,7 @@
 		<TextView android:id="@+id/loading_message"
 	  		android:layout_width="wrap_content"
 	  		android:layout_height="wrap_content"  		
-	  		android:text="@string/bills_retry_note"
+	  		android:text="@string/bills_retry"
 	  		android:layout_marginRight="10dp"
 	  		android:layout_marginLeft="15dp"
 	  		/>
@@ -62,7 +62,7 @@
 		  	android:paddingLeft="20dp"
 		  	android:paddingRight="20dp"
 		  	
-		  	android:text="@string/bills_retry_button"
+		  	android:text="@string/bills_error"
 		  	/>
 	</LinearLayout>
 </FrameLayout>
