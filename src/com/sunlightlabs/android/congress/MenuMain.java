@@ -205,7 +205,7 @@ public class MenuMain extends FragmentActivity {
 					new Intent(getActivity(), HearingList.class)
 						.putExtra("chamber", "senate"));
 			
-			menuItem(R.id.menu_committees, R.string.menu_main_committees, 14,
+			menuItem(R.id.menu_committees, R.string.menu_main_committees, 16,
 					new Intent(getActivity(), CommitteePager.class));
 		}
 		
