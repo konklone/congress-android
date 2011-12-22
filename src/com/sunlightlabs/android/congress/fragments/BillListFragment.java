@@ -141,19 +141,17 @@ public class BillListFragment extends ListFragment {
 		startActivity(Utils.billIntent(getActivity(), (Bill) parent.getItemAtPosition(position)));
 	}
 	
-//	public String url() {
+//	@Override
+//	public void onSelectedOnce() {
+//		String url = null;
+//		
 //		if (type == BILLS_RECENT)
-//			return "/bills/introduced";
-//		else if (type == BILLS_SPONSOR)
-//			return "/legislator/bills";
+//			url = "/bills/introduced";
 //		else if (type == BILLS_LAW)
-//			return "/bills/laws";
-//		else if (type == BILLS_SEARCH)
-//			return "/bills/search/newest";
-//		else if (type == BILLS_CODE)
-//			return "/bills/search/code";
-//		else
-//			return "/bills";
+//			url = "/bills/laws";
+//		
+//		if (url != null)
+//			Analytics.track(this, url);
 //	}
 	
 	private void refresh() {

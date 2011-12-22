@@ -20,8 +20,6 @@ public class BillSearch extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pager_titled);
 		
-		Analytics.track(this, "/bills/search");
-		
 		query = getIntent().getStringExtra(SearchManager.QUERY).trim();
 	    
 		setupPager();
@@ -33,10 +31,14 @@ public class BillSearch extends FragmentActivity {
 		
 		String code = Bill.normalizeCode(query);
 		if (Bill.isCode(code)) {
+			Analytics.track(this, "/bills/code");
+			
 			Utils.setTitle(this, Bill.formatCode(code));
 			adapter.add("bills_code", "Not seen", BillListFragment.forCode(code));
 			findViewById(R.id.pager_titles).setVisibility(View.GONE);
 		} else {
+			Analytics.track(this, "/bills/search");
+			
 			Utils.setTitle(this, "Bills matching \"" + query + "\"");
 			Utils.setTitleSize(this, 16);
 			adapter.add("bills_recent", R.string.search_bills_recent, BillListFragment.forSearch(query, BillListFragment.BILLS_SEARCH_NEWEST));

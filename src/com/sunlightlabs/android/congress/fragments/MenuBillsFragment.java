@@ -12,7 +12,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Database;
+import com.sunlightlabs.android.congress.utils.TitlePageAdapter.SelectedOnce;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 

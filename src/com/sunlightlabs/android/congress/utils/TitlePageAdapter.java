@@ -98,13 +98,15 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
     public void pageSelected(int position) {
     	String newHandle = handles.get(position);
     	
-    	if (!selectedYet.get(newHandle)) {
-    		selectedYet.put(newHandle, true);
-    		if (activity instanceof PageSelectedOnce)
-    			((PageSelectedOnce) activity).onPageSelectedOnce(position, newHandle);
-    		Log.d(Utils.TAG, "First selection of page with handle " + newHandle);
-    	} else
-    		Log.d(Utils.TAG, "Selected page with handle " + newHandle);
+//    	if (!selectedYet.get(newHandle)) {
+//    		selectedYet.put(newHandle, true);
+//    		Fragment fragment = fragments.get(position);
+//    		if (fragment instanceof SelectedOnce) {
+//    			((SelectedOnce) fragment).onSelectedOnce();
+//    			Log.d(Utils.TAG, "Let fragment by handle " + newHandle + " know about first selection");
+//    		}
+//    	}
+    	Log.d(Utils.TAG, "Selected page with handle " + newHandle);
     	
     	markOff(currentHandle);
     	markOn(newHandle);
@@ -128,8 +130,8 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
     	titleViews.get(handle).findViewById(R.id.tab_line).setVisibility(View.VISIBLE);
     }
     
-    public static interface PageSelectedOnce {
-    	public void onPageSelectedOnce(int position, String handle);
+    public static interface SelectedOnce {
+    	public void onSelectedOnce();
     }
     
     private static class TitlePageListener extends ViewPager.SimpleOnPageChangeListener {
