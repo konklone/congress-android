@@ -78,7 +78,7 @@
         </activity>
         
         <activity android:name=".BillPager" />
-        <activity android:name=".BillList" />
+        <activity android:name=".BillSponsor" />
         <activity android:name=".BillLoader">
         	<intent-filter>
         		<action android:name="android.intent.action.MAIN" />

@@ -1,8 +1,5 @@
 package com.sunlightlabs.android.congress.fragments;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -14,11 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.commonsware.cwac.merge.MergeAdapter;
-import com.sunlightlabs.android.congress.BillList;
+import com.sunlightlabs.android.congress.BillSponsor;
 import com.sunlightlabs.android.congress.CommitteeList;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.RollList;
@@ -27,7 +22,6 @@ import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask.LoadsPhoto {
@@ -120,8 +114,7 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
     }
     
     public void sponsoredBills() {
-    	startActivity(new Intent(getActivity(), BillList.class)
-			.putExtra("type", BillList.BILLS_SPONSOR)
+    	startActivity(new Intent(getActivity(), BillSponsor.class)
 			.putExtra("legislator", legislator));
     }
     

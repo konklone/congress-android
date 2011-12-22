@@ -5,7 +5,7 @@ import java.util.List;
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.BillList;
+import com.sunlightlabs.android.congress.fragments.BillListFragment;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -24,7 +24,7 @@ public class BillsLegislatorSubscriber extends Subscriber {
 	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupRTC(context);
 		try {
-			return BillService.recentlySponsored(subscription.id, 1, BillList.PER_PAGE);
+			return BillService.recentlySponsored(subscription.id, 1, BillListFragment.PER_PAGE);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest sponsored bills for " + subscription, e);
 			return null;
@@ -33,7 +33,7 @@ public class BillsLegislatorSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results == BillList.PER_PAGE)
+		if (results == BillListFragment.PER_PAGE)
 			return results + " or more new bills sponsored.";
 		else if (results > 1)
 			return results + " new bills sponsored.";
@@ -44,8 +44,7 @@ public class BillsLegislatorSubscriber extends Subscriber {
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
 		return Utils.legislatorLoadIntent(subscription.id, 
-			new Intent().setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.BillList")
-				.putExtra("type", BillList.BILLS_SPONSOR));
+			new Intent().setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.BillSponsor"));
 	}
 	
 	@Override

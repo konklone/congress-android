@@ -7,7 +7,7 @@ import java.util.Map;
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.BillList;
+import com.sunlightlabs.android.congress.fragments.BillListFragment;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -29,7 +29,7 @@ public class BillsSearchSubscriber extends Subscriber {
 		try {
 			Map<String,String> params = new HashMap<String,String>();
 			params.put("order", "introduced_at");
-			return BillService.search(subscription.data, params, 1, BillList.PER_PAGE);
+			return BillService.search(subscription.data, params, 1, BillListFragment.PER_PAGE);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest bill search results for " + subscription, e);
 			return null;
@@ -38,7 +38,7 @@ public class BillsSearchSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results == BillList.PER_PAGE)
+		if (results == BillListFragment.PER_PAGE)
 			return results + " or more new bills for search \"" + subscription.data + "\".";
 		else if (results > 1)
 			return results + " new bills for search \"" + subscription.data + "\".";
