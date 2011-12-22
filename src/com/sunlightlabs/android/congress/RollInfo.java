@@ -196,7 +196,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			
 			View loadingView = findViewById(R.id.loading_votes);
 			loadingView.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
-			((TextView) loadingView.findViewById(R.id.loading_message)).setText(R.string.vote_error_loading);
+			((TextView) loadingView.findViewById(R.id.loading_message)).setText(R.string.votes_error);
 		}
 	}
 	

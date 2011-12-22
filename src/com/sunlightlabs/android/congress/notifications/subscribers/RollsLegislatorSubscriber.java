@@ -5,7 +5,7 @@ import java.util.List;
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.RollList;
+import com.sunlightlabs.android.congress.fragments.RollListFragment;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -26,7 +26,7 @@ public class RollsLegislatorSubscriber extends Subscriber {
 		String chamber = subscription.data;
 		
 		try {
-			return RollService.latestVotes(subscription.id, chamber, 1, RollList.PER_PAGE);
+			return RollService.latestVotes(subscription.id, chamber, 1, RollListFragment.PER_PAGE);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest votes for " + subscription, e);
 			return null;
@@ -35,7 +35,7 @@ public class RollsLegislatorSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results == RollList.PER_PAGE)
+		if (results == RollListFragment.PER_PAGE)
 			return results + " or more new votes cast.";
 		else if (results > 1)
 			return results + " new votes cast.";
@@ -46,9 +46,7 @@ public class RollsLegislatorSubscriber extends Subscriber {
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
 		return Utils.legislatorLoadIntent(subscription.id, 
-			new Intent()
-				.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.RollList")
-				.putExtra("type", RollList.ROLLS_VOTER));
+			new Intent().setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.VoteVoter"));
 	}
 	
 	@Override

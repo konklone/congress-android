@@ -28,7 +28,7 @@
     <string name="bill_no_sponsor">This bill does not have a sponsor.</string>
     <string name="bill_no_sponsor_yet">Bill\'s sponsor not yet known.</string>
     <string name="vote_no_voters_yet">Vote details not yet known.</string>
-    <string name="vote_error_loading">Error loading votes.</string>
+    <string name="votes_error">Error loading votes.</string>
     <string name="error_loading_favorites">There was a problem loading your starred bills and legislators. If the problem persists, try un-starring and re-starring them.</string>
     
     <string name="google_news_branding">Powered by Google</string>
@@ -49,8 +49,13 @@
     <string name="legislator_loading">Plucking a person from the air…</string>
     
     <string name="bills_empty_code">No bills found by that bill code.</string>
+    <string name="bills_empty_sponsor">No bills found by this person.</string>
     <string name="bills_empty_search_newest">No bills found by that search.\n\nYou can still tap the bar below to be notified when a match comes up.</string>
     <string name="bills_empty_search_relevant">No bills found by that search.\n\nWhen searching by relevance, searching is limited to the current session of Congress.\n\nBills from previous sessions of Congress will not appear.</string>
+    
+    <string name="votes_empty_voter">No votes found by this person.</string>
+    <string name="votes_empty_search_newest">No votes found by that search.\n\nYou can still tap the bar below to be notified when a match comes up.</string>
+    <string name="votes_empty_search_relevant">No votes found by that search.\n\nWhen searching by relevance, searching is limited to the current session of Congress.\n\Votes from previous sessions of Congress will not appear.</string>
     
    	<string name="committees_title">Committees</string>
     <string name="committees_loading">Plucking committees from the air…</string>
@@ -129,7 +134,7 @@
     <string name="menu_legislators_state">State</string>
     <string name="menu_legislators_lastname">Last Name</string>
     <string name="menu_legislators_zip">Zip Code</string>
-    <string name="menu_votes_latest">Votes</string>
+    <string name="menu_votes_recent">Votes</string>
     <string name="menu_location_no_location">Cannot update location</string>
     <string name="menu_location_updating">Updating location…</string>
     <string name="menu_favorite_bill_error">Error loading starred bills.</string>

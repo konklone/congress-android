@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.RollList;
+import com.sunlightlabs.android.congress.fragments.RollListFragment;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -26,7 +26,7 @@ public class RollsRecentSubscriber extends Subscriber {
 		Utils.setupRTC(context);
 		
 		try {
-			return RollService.latestVotes(1, RollList.PER_PAGE);
+			return RollService.latestVotes(1, RollListFragment.PER_PAGE);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest votes for " + subscription, e);
 			return null;
@@ -35,7 +35,7 @@ public class RollsRecentSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results == RollList.PER_PAGE)
+		if (results == RollListFragment.PER_PAGE)
 			return results + " or more new votes.";
 		else if (results > 1)
 			return results + " new votes.";
@@ -46,12 +46,11 @@ public class RollsRecentSubscriber extends Subscriber {
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
 		return new Intent()
-			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.RollList")
-			.putExtra("type", RollList.ROLLS_LATEST);
+			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.MenuVotes");
 	}
 	
 	@Override
 	public String subscriptionName(Subscription subscription) {
-		return context.getResources().getString(R.string.menu_votes_latest);
+		return context.getResources().getString(R.string.menu_votes_recent);
 	}
 }

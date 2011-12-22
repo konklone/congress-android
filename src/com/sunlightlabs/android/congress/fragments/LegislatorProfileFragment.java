@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.sunlightlabs.android.congress.BillSponsor;
 import com.sunlightlabs.android.congress.CommitteeList;
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.RollList;
+import com.sunlightlabs.android.congress.VoteVoter;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
@@ -108,8 +108,7 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
     }
     
     public void votingRecord() {
-    	startActivity(new Intent(getActivity(), RollList.class)
-			.putExtra("type", RollList.ROLLS_VOTER)
+    	startActivity(new Intent(getActivity(), VoteVoter.class)
 			.putExtra("legislator", legislator));
     }
     

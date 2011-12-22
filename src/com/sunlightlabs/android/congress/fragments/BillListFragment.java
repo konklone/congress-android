@@ -177,6 +177,9 @@ public class BillListFragment extends ListFragment {
 			} else if (type == BILLS_CODE) {
 				FragmentUtils.showEmpty(this, R.string.bills_empty_code);
 				setupSubscription();
+			} else if (type == BILLS_SPONSOR) {
+				FragmentUtils.showEmpty(this, R.string.bills_empty_sponsor);
+				setupSubscription();
 			} else
 				FragmentUtils.showRefresh(this, R.string.bills_error); // should not happen
 		}

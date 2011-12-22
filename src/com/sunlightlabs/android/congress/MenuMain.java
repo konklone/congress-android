@@ -201,8 +201,7 @@ public class MenuMain extends FragmentActivity {
 					new Intent(getActivity(), MenuBills.class));
 			
 			menuItem(R.id.menu_votes, R.string.menu_main_votes, 16,
-					new Intent(getActivity(), RollList.class)
-						.putExtra("type", RollList.ROLLS_LATEST));
+					new Intent(getActivity(), MenuVotes.class));
 			
 			menuItem(R.id.menu_floor, R.string.menu_main_floor_updates, 16,
 					new Intent(getActivity(), FloorUpdatePager.class));

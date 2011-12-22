@@ -86,9 +86,8 @@
         	</intent-filter>
         </activity>
         
-        <activity android:name=".RollList" 
-            android:theme="@style/MainTheme"
-        	/>
+        <activity android:name=".MenuVotes" />
+        <activity android:name=".VoteVoter" /> 
         
         <activity android:name=".RollInfo">
         	<intent-filter>
