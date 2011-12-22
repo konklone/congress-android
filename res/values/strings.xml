@@ -48,6 +48,10 @@
     <string name="bill_votes_loading">Plucking the bill\'s votes from the air…</string>
     <string name="legislator_loading">Plucking a person from the air…</string>
     
+    <string name="bills_empty_code">No bills found by that bill code.</string>
+    <string name="bills_empty_search_newest">No bills found by that search.\n\nYou can still tap the bar below to be notified when a match comes up.</string>
+    <string name="bills_empty_search_relevant">No bills found by that search.\n\nWhen searching by relevance, searching is limited to the current session of Congress.\n\nBills from previous sessions of Congress will not appear.</string>
+    
    	<string name="committees_title">Committees</string>
     <string name="committees_loading">Plucking committees from the air…</string>
     <string name="committees_empty">No committees found.</string>

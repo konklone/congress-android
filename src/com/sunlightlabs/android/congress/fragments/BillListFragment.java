@@ -182,8 +182,19 @@ public class BillListFragment extends ListFragment {
 		if (bills.size() > 0) {
 			setListAdapter(new BillAdapter(this, bills));
 			setupSubscription();
-		} else
-			FragmentUtils.showRefresh(this, R.string.bills_error); // should not happen
+		} else {
+			if (type == BILLS_SEARCH_NEWEST) {
+				FragmentUtils.showEmpty(this, R.string.bills_empty_search_newest);
+				setupSubscription();
+			} else if (type == BILLS_SEARCH_RELEVANT) {
+				FragmentUtils.showEmpty(this, R.string.bills_empty_search_relevant);
+				setupSubscription();
+			} else if (type == BILLS_CODE) {
+				FragmentUtils.showEmpty(this, R.string.bills_empty_code);
+				setupSubscription();
+			} else
+				FragmentUtils.showRefresh(this, R.string.bills_error); // should not happen
+		}
 	}
 	
 	private void setupSubscription() {
