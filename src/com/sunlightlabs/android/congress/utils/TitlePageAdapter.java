@@ -25,6 +25,10 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
 	
 	private ViewGroup mainView;
 	private Map<String,View> titleViews = new HashMap<String,View>();
+	
+	// track whether each page has been seen yet, to support the onPageSelectedOnce callback on an activity
+	private Map<String,Boolean> selectedYet = new HashMap<String,Boolean>();
+	
 	String currentHandle;
 	
 	private ViewPager pager;
@@ -57,6 +61,7 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
 		final int position = fragments.size() - 1;
 		
 		positionsByHandle.put(handle, position);
+		selectedYet.put(handle, false);
 		
 		View titleView = LayoutInflater.from(activity).inflate(R.layout.pager_tab, null);
 		((TextView) titleView.findViewById(R.id.tab_name)).setText(title);
@@ -92,7 +97,14 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
     
     public void pageSelected(int position) {
     	String newHandle = handles.get(position);
-    	Log.d(Utils.TAG, "Selected page with handle " + newHandle);
+    	
+    	if (!selectedYet.get(newHandle)) {
+    		selectedYet.put(newHandle, true);
+    		if (activity instanceof PageSelectedOnce)
+    			((PageSelectedOnce) activity).onPageSelectedOnce(position, newHandle);
+    		Log.d(Utils.TAG, "First selection of page with handle " + newHandle);
+    	} else
+    		Log.d(Utils.TAG, "Selected page with handle " + newHandle);
     	
     	markOff(currentHandle);
     	markOn(newHandle);
@@ -114,6 +126,10 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
     
     private void markOn(String handle) {
     	titleViews.get(handle).findViewById(R.id.tab_line).setVisibility(View.VISIBLE);
+    }
+    
+    public static interface PageSelectedOnce {
+    	public void onPageSelectedOnce(int position, String handle);
     }
     
     private static class TitlePageListener extends ViewPager.SimpleOnPageChangeListener {
