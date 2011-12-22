@@ -37,11 +37,9 @@ public class BillListFragment extends ListFragment {
 	public static final int BILLS_LAW = 0;
 	public static final int BILLS_RECENT = 1;
 	public static final int BILLS_SPONSOR = 2;
-	public static final int BILLS_SEARCH = 3;
-	public static final int BILLS_CODE = 4;
-	
-	public static final int ORDER_NEWEST = 0;
-	public static final int ORDER_RELEVANT = 1;
+	public static final int BILLS_SEARCH_NEWEST = 3;
+	public static final int BILLS_SEARCH_RELEVANT = 4;
+	public static final int BILLS_CODE = 5;
 	
 	List<Bill> bills;
 	
@@ -49,7 +47,6 @@ public class BillListFragment extends ListFragment {
 	Legislator sponsor;
 	String code;
 	String query;
-	int order;
 	
 	public static BillListFragment forRecent() {
 		BillListFragment frag = new BillListFragment();
@@ -89,12 +86,11 @@ public class BillListFragment extends ListFragment {
 		return frag;
 	}
 	
-	public static BillListFragment forSearch(String query, int order) {
+	public static BillListFragment forSearch(String query, int type) {
 		BillListFragment frag = new BillListFragment();
 		Bundle args = new Bundle();
-		args.putInt("type", BILLS_SEARCH);
+		args.putInt("type", type);
 		args.putString("query", query);
-		args.putInt("order", ORDER_NEWEST);
 		frag.setArguments(args);
 		frag.setRetainInstance(true);
 		return frag;
@@ -108,6 +104,9 @@ public class BillListFragment extends ListFragment {
 		
 		Bundle args = getArguments();
 		type = args.getInt("type");
+		query = args.getString("query");
+		code = args.getString("code");
+		sponsor = (Legislator) args.getSerializable("sponsor");
 		
 		loadBills();
 	}
@@ -142,20 +141,20 @@ public class BillListFragment extends ListFragment {
 		startActivity(Utils.billIntent(getActivity(), (Bill) parent.getItemAtPosition(position)));
 	}
 	
-	public String url() {
-		if (type == BILLS_RECENT)
-			return "/bills/introduced";
-		else if (type == BILLS_SPONSOR)
-			return "/legislator/bills";
-		else if (type == BILLS_LAW)
-			return "/bills/laws";
-		else if (type == BILLS_SEARCH)
-			return "/bills/search/newest";
-		else if (type == BILLS_CODE)
-			return "/bills/search/code";
-		else
-			return "/bills";
-	}
+//	public String url() {
+//		if (type == BILLS_RECENT)
+//			return "/bills/introduced";
+//		else if (type == BILLS_SPONSOR)
+//			return "/legislator/bills";
+//		else if (type == BILLS_LAW)
+//			return "/bills/laws";
+//		else if (type == BILLS_SEARCH)
+//			return "/bills/search/newest";
+//		else if (type == BILLS_CODE)
+//			return "/bills/search/code";
+//		else
+//			return "/bills";
+//	}
 	
 	private void refresh() {
 		bills = null;
@@ -195,13 +194,14 @@ public class BillListFragment extends ListFragment {
 			subscription = new Subscription(sponsor.id, Subscriber.notificationName(sponsor), "BillsLegislatorSubscriber", null);
 		else if (type == BILLS_LAW)
 			subscription = new Subscription("RecentLaws", "New Laws", "BillsLawsSubscriber", null);
-		else if (type == BILLS_SEARCH)
+		else if (type == BILLS_SEARCH_NEWEST)
 			subscription = new Subscription(query, query, "BillsSearchSubscriber", query);
 		
 		// no subscription offered for a bill code search
 		// no subscription offered for "best match" searches
 		
-		Footer.setup(this, subscription, bills);
+		if (subscription != null)
+			Footer.setup(this, subscription, bills);
 	}
 
 	
@@ -286,8 +286,15 @@ public class BillListFragment extends ListFragment {
 				case BILLS_CODE:
 					params.put("code", context.code);
 					return BillService.where(params, page, PER_PAGE);
-				case BILLS_SEARCH:
+				case BILLS_SEARCH_NEWEST:
 					params.put("order", "introduced_at");
+					return BillService.search(context.query, params, page, PER_PAGE);
+				case BILLS_SEARCH_RELEVANT:
+					params.put("order", "_score");
+					
+					// scope to current session only
+					params.put("session", Bill.currentSession());
+					
 					return BillService.search(context.query, params, page, PER_PAGE);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
@@ -346,9 +353,13 @@ public class BillListFragment extends ListFragment {
 				date = shortDate(bill.enacted_at);
 				action = "became law:";
 				break;
+			case BILLS_SEARCH_RELEVANT:
+				date = longDate(bill.last_action_at);
+				action = "was last active:";
+				break;
+			case BILLS_SEARCH_NEWEST:
 			case BILLS_RECENT:
 			case BILLS_SPONSOR:
-			case BILLS_SEARCH:
 			case BILLS_CODE:
 			default:
 				date = shortDate(bill.introduced_at);
@@ -392,6 +403,10 @@ public class BillListFragment extends ListFragment {
 			else
 				format = new SimpleDateFormat("MMM d, yyyy");
 			return format.format(date);
+		}
+		
+		private String longDate(Date date) {
+			return new SimpleDateFormat("MMM d, yyyy").format(date);
 		}
 	}
 	

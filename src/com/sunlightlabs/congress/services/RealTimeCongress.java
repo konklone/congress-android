@@ -103,9 +103,11 @@ public class RealTimeCongress {
 		Iterator<String> iterator = params.keySet().iterator();
 		while (iterator.hasNext()) {
 			String key = iterator.next();
+			String value = params.get(key);
+			
 			query.append(URLEncoder.encode(key));
 			query.append("=");
-			query.append(URLEncoder.encode(params.get(key)));
+			query.append(URLEncoder.encode(value));
 			if (iterator.hasNext())
 				query.append("&");
 		}

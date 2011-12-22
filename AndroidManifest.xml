@@ -40,7 +40,21 @@
             </intent-filter>
         </activity>
         
-        <activity android:name=".MenuBills" />
+        <activity android:name=".MenuBills">
+            <meta-data android:name="android.app.default_searchable"
+				android:value=".BillSearch"
+				/>
+        </activity>
+        
+        <activity android:name=".BillSearch">
+            <intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+	        </intent-filter>
+	        <meta-data android:name="android.app.searchable"
+				android:resource="@xml/searchable_bills"
+				/>
+        </activity>
+        
         <activity android:name=".MenuLegislators" />
         
         <activity android:name=".GetText"

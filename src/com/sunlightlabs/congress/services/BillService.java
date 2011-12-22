@@ -53,9 +53,6 @@ public class BillService {
 	}
 	
 	public static List<Bill> search(String query, Map<String,String> params, int page, int per_page) throws CongressException {
-		if (!params.containsKey("order"))
-			params.put("order", "introduced_at");
-		
 		return billsFor(RealTimeCongress.searchUrl("bills", query, true, null, params, page, per_page));
 	}
 	
