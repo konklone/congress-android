@@ -33,7 +33,6 @@ public class RollList extends ListActivity {
 	
 	public static final int ROLLS_VOTER = 0;
 	public static final int ROLLS_LATEST = 1;
-	public static final int ROLLS_NOMINATIONS = 2;
 	
 	private List<Roll> rolls;
 	private LoadRollsTask loadRollsTask;
@@ -121,9 +120,6 @@ public class RollList extends ListActivity {
 			Utils.setTitle(this, "Latest Votes By\n" + voter.titledName());
 			Utils.setTitleSize(this, 18);
 			break;
-		case ROLLS_NOMINATIONS:
-			Utils.setTitle(this, R.string.menu_votes_nominations);
-			break;
 		case ROLLS_LATEST:
 		default:
 			Utils.setTitle(this, R.string.menu_main_votes);
@@ -138,8 +134,6 @@ public class RollList extends ListActivity {
 			subscription = new Subscription(voter.id, Subscriber.notificationName(voter), "RollsLegislatorSubscriber", voter.chamber);
 		else if (type == ROLLS_LATEST)
 			subscription = new Subscription("RecentVotes", "Recent Votes", "RollsRecentSubscriber", null);
-		else if (type == ROLLS_NOMINATIONS)
-			subscription = new Subscription("Nominations", "Recent Nominations", "RollsNominationsSubscriber", null);
 		
 		footer.init(subscription, rolls.subList(0, Math.min(rolls.size(), PER_PAGE)));
 	}
@@ -149,8 +143,6 @@ public class RollList extends ListActivity {
 			return "/legislator/" + voter.id + "/votes";
 		else if (type == ROLLS_LATEST)
 			return "/votes/latest";
-		else if (type == ROLLS_NOMINATIONS)
-			return "/votes/nominations";
 		else
 			return "/votes";
 	}
@@ -361,8 +353,6 @@ public class RollList extends ListActivity {
 					return RollService.latestVotes(context.voter.id, context.voter.chamber, page, PER_PAGE);
 				case ROLLS_LATEST:
 					return RollService.latestVotes(page, PER_PAGE);
-				case ROLLS_NOMINATIONS:
-					return RollService.latestNominations(page, PER_PAGE);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
 				}

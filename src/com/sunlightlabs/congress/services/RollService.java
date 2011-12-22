@@ -49,18 +49,6 @@ public class RollService {
 		return rollsFor(RealTimeCongress.url("votes", sections, params, page, per_page));
 	}
 	
-	public static List<Roll> latestNominations(int page, int per_page) throws CongressException {
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("order", "voted_at");
-		params.put("chamber", "senate");
-		params.put("vote_type", "nomination");
-		params.put("how", "roll");
-		
-		String[] sections = new String[] {"basic"};
-		
-		return rollsFor(RealTimeCongress.url("votes", sections, params, page, per_page));
-	}
-	
 	/* JSON parsers, also useful for other service endpoints within this package */
 	
 	protected static Roll fromRTC(JSONObject json) throws JSONException, ParseException {
