@@ -146,27 +146,27 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		((TextView) mainView.findViewById(R.id.profile_domain)).setText(domainName(legislator.getDomain()));
 		((TextView) mainView.findViewById(R.id.profile_office)).setText(officeName(legislator.congress_office));
 	
-		profileItem(R.id.profile_phone, R.drawable.phone, "Call " + pronoun(legislator.gender) + " office", new View.OnClickListener() {
+		profileItem(R.id.profile_phone, "Call " + pronoun(legislator.gender) + " office", new View.OnClickListener() {
 			public void onClick(View v) {callOffice();}
 		});
 		
-		profileItem(R.id.profile_website, R.drawable.web, "Website", new View.OnClickListener() {
+		profileItem(R.id.profile_website, "Website", new View.OnClickListener() {
 			public void onClick(View v) {visitWebsite();}
 		});
 		
-		profileItem(R.id.profile_voting, R.drawable.votes, R.string.voting_record, new View.OnClickListener() {
+		profileItem(R.id.profile_voting, R.string.voting_record, new View.OnClickListener() {
 			public void onClick(View v) {votingRecord();}
 		});
 		
-		profileItem(R.id.profile_bills, R.drawable.bill, R.string.sponsored_bills, new View.OnClickListener() {
+		profileItem(R.id.profile_bills, R.string.sponsored_bills, new View.OnClickListener() {
 			public void onClick(View v) {sponsoredBills();}
 		});
 		
-		profileItem(R.id.profile_committees, R.drawable.committees, R.string.committees, new View.OnClickListener() {
+		profileItem(R.id.profile_committees, R.string.committees, new View.OnClickListener() {
 			public void onClick(View v) {viewCommittees();}
 		});
 		
-		profileItem(R.id.profile_district, R.drawable.globe, "District Map", new View.OnClickListener() {
+		profileItem(R.id.profile_district, "District Map", new View.OnClickListener() {
 			public void onClick(View v) {districtMap();}
 		});
 		
@@ -174,13 +174,12 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 			mainView.findViewById(R.id.profile_website).setVisibility(View.GONE);
 	}
 	
-	private View profileItem(int id, int icon, int text, View.OnClickListener listener) {
-		return profileItem(id, icon, getActivity().getResources().getString(text), listener);
+	private View profileItem(int id, int text, View.OnClickListener listener) {
+		return profileItem(id, getActivity().getResources().getString(text), listener);
 	}
 	
-	private View profileItem(int id, int icon, String text, View.OnClickListener listener) {
+	private View profileItem(int id, String text, View.OnClickListener listener) {
 		ViewGroup item = (ViewGroup) getView().findViewById(id);
-		((ImageView) item.findViewById(R.id.icon)).setImageResource(icon);
 		TextView textView = (TextView) item.findViewById(R.id.text);
 		textView.setText(text);
 		
