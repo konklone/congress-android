@@ -59,9 +59,15 @@ public class MenuMain extends FragmentActivity {
 		
 		Utils.setTitle(this, R.string.app_name, false);
 		
-		Utils.setActionButton(this, R.id.action_1, R.drawable.notifications, new View.OnClickListener() {
+		Utils.setActionButton(this, R.id.action_2, R.drawable.notifications, new View.OnClickListener() {
 			public void onClick(View v) { 
 				startActivity(new Intent(MenuMain.this, NotificationTabs.class)); 
+			}
+		});
+		
+		Utils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
+			public void onClick(View v) { 
+				onSearchRequested();
 			}
 		});
 	}

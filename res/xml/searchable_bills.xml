@@ -2,5 +2,6 @@
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
 	android:label="@string/search_bills_label"
 	android:hint="@string/search_bills_hint" 
+	android:includeInGlobalSearch="true"
 	>
 </searchable>
