@@ -140,20 +140,7 @@ public class BillListFragment extends ListFragment {
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		startActivity(Utils.billIntent(getActivity(), (Bill) parent.getItemAtPosition(position)));
 	}
-	
-//	@Override
-//	public void onSelectedOnce() {
-//		String url = null;
-//		
-//		if (type == BILLS_RECENT)
-//			url = "/bills/introduced";
-//		else if (type == BILLS_LAW)
-//			url = "/bills/laws";
-//		
-//		if (url != null)
-//			Analytics.track(this, url);
-//	}
-	
+
 	private void refresh() {
 		bills = null;
 		FragmentUtils.setLoading(this, R.string.bills_loading);
@@ -198,11 +185,11 @@ public class BillListFragment extends ListFragment {
 	private void setupSubscription() {
 		Subscription subscription = null;
 		if (type == BILLS_RECENT)
-			subscription = new Subscription("RecentBills", "Introduced Bills", "BillsRecentSubscriber", null);
+			subscription = new Subscription("RecentBills", getResources().getString(R.string.subscriber_bills_new), "BillsRecentSubscriber", null);
 		else if (type == BILLS_SPONSOR)
 			subscription = new Subscription(sponsor.id, Subscriber.notificationName(sponsor), "BillsLegislatorSubscriber", null);
 		else if (type == BILLS_LAW)
-			subscription = new Subscription("RecentLaws", "New Laws", "BillsLawsSubscriber", null);
+			subscription = new Subscription("RecentLaws", getResources().getString(R.string.subscriber_bills_law), "BillsLawsSubscriber", null);
 		else if (type == BILLS_SEARCH_NEWEST)
 			subscription = new Subscription(query, query, "BillsSearchSubscriber", query);
 		
