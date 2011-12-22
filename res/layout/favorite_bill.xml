@@ -11,13 +11,14 @@
 	>
 
 	<ImageView android:id="@+id/icon"
-		android:layout_width="48dp"
-		android:layout_height="48dp"
+		android:layout_width="32dp"
+		android:layout_height="32dp"
 		
 		android:layout_weight="0"
-		android:layout_marginRight="5dp"
+		android:layout_marginRight="10dp"
+		android:layout_marginLeft="8dp"
 		
-		android:src="@drawable/bill"
+		android:src="@drawable/star_on"
 		/>
 		
 	<LinearLayout 
