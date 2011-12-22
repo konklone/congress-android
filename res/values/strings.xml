@@ -110,7 +110,7 @@
     <string name="menu_main_hearings">Senate Hearings</string>
     
     <string name="menu_legislators_no_favorites">You can add senators and representatives to this menu for quick access. When viewing a person, tap the star in the upper right corner.</string>
-    <string name="menu_bills_no_favorites">You can add bills to this menu for quick access. When viewing a bill, tap the star in the upper right corner.</string>
+    <string name="menu_bills_no_favorites">Any bills you follow will be added here.\n\nTo find bills, use the search button up top, or slide over to the right to see what bills just got introduced, or signed into law.\n\nWhile viewing a bill, follow it by tapping the star in the top right corner.</string>
     
     <string name="menu_bills_search_button">Search</string>
     <string name="menu_bills_search_hint">keywords or bill code</string>

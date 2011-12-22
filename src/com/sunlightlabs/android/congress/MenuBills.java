@@ -1,13 +1,20 @@
 package com.sunlightlabs.android.congress;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.fragments.BillListFragment;
 import com.sunlightlabs.android.congress.fragments.MenuBillsFragment;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.Bill;
 
 public class MenuBills extends FragmentActivity {
 	
@@ -40,6 +47,39 @@ public class MenuBills extends FragmentActivity {
 	
 	public void setupControls() {
 		Utils.setTitle(this, R.string.menu_main_bills);
+		
+		Utils.setActionButton(this, R.id.action_1, R.drawable.ic_btn_search, new View.OnClickListener() {
+			public void onClick(View v) { 
+
+			}
+		});
 	}
+	
+//	private void search() {
+//		String query = searchField.getText().toString().trim();
+//		
+//		if (!query.equals(""))
+//			searchFor(query);
+//	}
+
+//	// query guaranteed to be non-null and blank
+//	public void searchFor(String query) {
+//		// if it's a bill code, do code search
+//		String code = Bill.normalizeCode(query);
+//		if (Bill.isCode(code)) {
+//			startActivity(new Intent(this, BillList.class)
+//				.putExtra("type", BillList.BILLS_CODE)
+//				.putExtra("code", code)
+//			);
+//		}
+//		
+//		// else, do generic search
+//		else {
+//			startActivity(new Intent(this, BillList.class)
+//				.putExtra("type", BillList.BILLS_SEARCH)
+//				.putExtra("query", query)
+//			);
+//		}
+//	}
 	
 }
