@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.congress;
+package com.sunlightlabs.android.congress.fragments;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.sunlightlabs.android.congress.R;
 
 public class AlertFragment extends DialogFragment {
 
