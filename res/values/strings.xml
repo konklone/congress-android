@@ -47,7 +47,7 @@
     <string name="bill_history_loading">Plucking the bill\'s history from the air…</string>
     <string name="bill_votes_loading">Plucking the bill\'s votes from the air…</string>
     <string name="legislator_loading">Plucking a person from the air…</string>
-    
+    <string name="loading">Loading…</string>
     <string name="bills_empty_code">No bills found by that bill code.</string>
     <string name="bills_empty_sponsor">No bills found by this person.</string>
     <string name="bills_empty_search_newest">No bills found by that search.\n\nYou can still tap the bar below to be notified when a match comes up.</string>

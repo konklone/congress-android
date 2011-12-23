@@ -14,12 +14,5 @@
 	    android:fastScrollEnabled="true"
 		/>
 	
-	<LinearLayout android:orientation="vertical"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:gravity="center"
-		>
-		<include layout="@layout/list_empty" />
-	</LinearLayout>
-	
+	<include layout="@layout/list_empty" />
 </LinearLayout>
