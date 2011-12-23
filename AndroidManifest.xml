@@ -86,8 +86,19 @@
         	</intent-filter>
         </activity>
         
-        <activity android:name=".MenuVotes" />
-        <activity android:name=".VoteVoter" /> 
+        <activity android:name=".MenuVotes">
+            
+        </activity>
+        <activity android:name=".VoteVoter" />
+        
+        <activity android:name=".VoteSearch">
+            <intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+	        </intent-filter>
+	        <meta-data android:name="android.app.searchable"
+				android:resource="@xml/searchable_votes"
+				/>
+        </activity>
         
         <activity android:name=".RollInfo">
         	<intent-filter>

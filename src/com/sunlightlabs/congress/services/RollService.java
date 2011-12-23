@@ -49,6 +49,10 @@ public class RollService {
 		return rollsFor(RealTimeCongress.url("votes", sections, params, page, per_page));
 	}
 	
+	public static List<Roll> search(String query, Map<String,String> params, int page, int per_page) throws CongressException {
+		return rollsFor(RealTimeCongress.searchUrl("votes", query, true, null, params, page, per_page));
+	}
+	
 	/* JSON parsers, also useful for other service endpoints within this package */
 	
 	protected static Roll fromRTC(JSONObject json) throws JSONException, ParseException {
@@ -141,6 +145,10 @@ public class RollService {
 					roll.amendmentPurpose = amendment.getString("purpose"); 
 			}
 		}
+		
+		// coming from a search endpoint, generate a search object
+		if (!json.isNull("search"))
+			roll.search = RealTimeCongress.SearchResult.from(json.getJSONObject("search"));
 
 		return roll;
 	}

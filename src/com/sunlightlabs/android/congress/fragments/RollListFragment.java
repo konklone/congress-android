@@ -1,8 +1,10 @@
 package com.sunlightlabs.android.congress.fragments;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -40,6 +42,7 @@ public class RollListFragment extends ListFragment {
 	
 	private Legislator voter;
 	private int type;
+	String query;
 	
 	public static RollListFragment forRecent() {
 		RollListFragment frag = new RollListFragment();
@@ -79,6 +82,7 @@ public class RollListFragment extends ListFragment {
 		Bundle args = getArguments();
 		type = args.getInt("type", ROLLS_VOTER);
 		voter = (Legislator) args.getSerializable("legislator");
+		query = args.getString("query");
 		
 		loadRolls();
 	}
@@ -162,8 +166,7 @@ public class RollListFragment extends ListFragment {
 			} else if (type == ROLLS_VOTER) {
 				FragmentUtils.showEmpty(this, R.string.votes_empty_voter);
 				setupSubscription();
-			}
-			else // ROLLS_RECENT
+			} else // ROLLS_RECENT
 				FragmentUtils.showRefresh(this, R.string.votes_error); // should not happen
 		}
 	}
@@ -230,11 +233,19 @@ public class RollListFragment extends ListFragment {
 			try {
 				int page = 1;
 
+				Map<String,String> params = new HashMap<String,String>();
+				
 				switch (context.type) {
 				case ROLLS_VOTER:
 					return RollService.latestVotes(context.voter.id, context.voter.chamber, page, PER_PAGE);
 				case ROLLS_RECENT:
 					return RollService.latestVotes(page, PER_PAGE);
+				case ROLLS_SEARCH_NEWEST:
+					params.put("order", "voted_at");
+					return RollService.search(context.query, params, page, PER_PAGE);
+				case ROLLS_SEARCH_RELEVANT:
+					params.put("order", "_score");
+					return RollService.search(context.query, params, page, PER_PAGE);
 				default:
 					throw new CongressException("Not sure what type of votes to find.");
 				}

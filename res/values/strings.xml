@@ -122,6 +122,10 @@
     <string name="search_bills_label">Bills</string>
     <string name="search_bills_recent">Most Recent</string>
     <string name="search_bills_relevant">Most Relevant</string>
+    <string name="search_votes_hint">Search votes</string>
+    <string name="search_votes_label">Votes</string>
+    <string name="search_votes_recent">Most Recent</string>
+    <string name="search_votes_relevant">Most Relevant</string>
     
     <string name="menu_legislators_no_favorites">You can add senators and representatives to this menu for quick access. When viewing a person, tap the star in the upper right corner.</string>
     <string name="menu_bills_no_favorites">Any bills you follow will be added here.\n\nTo find bills, use the search button up top, or slide over to the right to see what bills just got introduced, or signed into law.\n\nWhile viewing a bill, follow it by tapping the star in the top right corner.</string>
