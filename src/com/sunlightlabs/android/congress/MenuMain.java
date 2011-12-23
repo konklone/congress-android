@@ -16,6 +16,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
+import com.sunlightlabs.android.congress.fragments.AlertFragment;
 import com.sunlightlabs.android.congress.fragments.UpcomingFragment;
 import com.sunlightlabs.android.congress.notifications.NotificationService;
 import com.sunlightlabs.android.congress.utils.Analytics;

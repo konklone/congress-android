@@ -44,8 +44,7 @@ import com.sunlightlabs.congress.services.BillService;
 import com.sunlightlabs.congress.services.CommitteeService;
 import com.sunlightlabs.congress.services.LegislatorService;
 
-public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsPhoto,
-		LocationListenerTimeout {
+public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsPhoto, LocationListenerTimeout {
 	public final static int SEARCH_ZIP = 0;
 	public final static int SEARCH_LOCATION = 1;
 	public final static int SEARCH_STATE = 2;

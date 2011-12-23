@@ -5,8 +5,8 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.sunlightlabs.android.congress.AlertFragment;
 import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.android.congress.fragments.AlertFragment;
 
 public class FragmentUtils {
 	
