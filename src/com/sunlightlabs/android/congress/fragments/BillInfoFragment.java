@@ -200,7 +200,7 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		ViewGroup view = (ViewGroup) inflater.inflate(R.layout.bill_upcoming_item, null);
 		
-		((TextView) view.findViewById(R.id.date)).setText(Utils.upcomingDate(upcoming.legislativeDay));
+		((TextView) view.findViewById(R.id.date)).setText(Utils.nearbyOrFullDate(upcoming.legislativeDay));
 		((TextView) view.findViewById(R.id.where)).setText(upcomingSource(upcoming.sourceType, upcoming.chamber));
 		
 		View moreView = view.findViewById(R.id.more);

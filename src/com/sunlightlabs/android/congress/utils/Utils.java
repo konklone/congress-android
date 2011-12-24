@@ -362,23 +362,39 @@ public class Utils {
 		context.sendBroadcast(new Intent(STOP_NOTIFICATION_SERVICE));
 	}
 	
-	public static String upcomingDate(Date subject) {
+	public static String nearbyDate(Date subject) {
 		SimpleDateFormat testFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String today = testFormat.format(Calendar.getInstance().getTime());
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, 1);
 		String tomorrow = testFormat.format(cal.getTime());
+		cal.add(Calendar.DAY_OF_MONTH, -2);
+		String yesterday = testFormat.format(cal.getTime());
 		
 		String subjectDate = testFormat.format(subject);
 		
-		SimpleDateFormat dateNameFormat = new SimpleDateFormat("EEEE");
-		SimpleDateFormat dateFullFormat = new SimpleDateFormat("MMM d");
+		// SimpleDateFormat dateNameFormat = new SimpleDateFormat("EEEE");
 		
 		if (today.equals(subjectDate))
 			return "TODAY";
 		else if (tomorrow.equals(subjectDate))
-			return "TOMORROW";
+			return "TOMORROW"; 
+		else if (yesterday.equals(subjectDate))
+			return "YESTERDAY";
 		else
-			return dateFullFormat.format(subject).toUpperCase();
+			return null;
 	}
+	
+	public static String fullDate(Date subject) {
+		return new SimpleDateFormat("MMM d").format(subject).toUpperCase();
+	}
+	
+	public static String nearbyOrFullDate(Date subject) {
+		String result = nearbyDate(subject);
+		if (result != null)
+			return result;
+		else
+			return fullDate(subject);
+	}
+		
 }

@@ -2,53 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	
 	android:orientation="vertical"
-	
-	android:paddingTop="5dp"
-	android:paddingBottom="5dp"
-	
-	android:paddingLeft="15dp"
-	android:paddingRight="15dp"
 	>
 	
-    <LinearLayout android:id="@+id/date_line"
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        
-        android:gravity="center_vertical"
-        >
-        
-	    <TextView android:id="@+id/datestamp"
-	        android:layout_weight="0"
-	       	android:layout_width="wrap_content"
-	       	android:layout_height="wrap_content"
-	       	
-	       	android:textSize="20sp"
-	       	
-	       	android:text="Today, Oct 20"
-	       	/>
-	    
-	    <View
-	        android:layout_weight="1"
-	        android:layout_width="fill_parent"
-	        android:layout_height="1dp"
-	        
-	        android:layout_marginLeft="10dp"
-	        
-	        android:background="@color/text_grey"
-	        />
-	    
-    </LinearLayout>
+    <include layout="@layout/list_item_date"
+        android:id="@+id/date_line"
+        />
     
     <LinearLayout android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
+        android:paddingTop="5dp"
+		android:paddingBottom="5dp"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
         >
 	    <LinearLayout android:orientation="vertical"
 	        android:layout_width="wrap_content"
@@ -62,7 +29,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				
-				android:textSize="18sp"
+				android:textSize="16sp"
 				android:textColor="@color/text_grey"
 				
 				android:text="12:34 PM"
@@ -75,7 +42,8 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			
-			android:textSize="16sp"
+			android:textSize="14sp"
+			android:lineSpacingExtra="3dp"
 			
 			android:text="Motion to Invoke Cloture on Inouye amend #738 (In the nature of a substitute). Yeas and nays ordered. The Motion was agreed to by a vote of 83-16. Under a previous agreement, the substitute amendment is agreed to."
 			/>

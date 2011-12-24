@@ -2,8 +2,6 @@ package com.sunlightlabs.android.congress.fragments;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.content.res.Resources;
@@ -57,7 +55,9 @@ public class FloorUpdateFragment extends ListFragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.list_footer, container, false);
+		View main = inflater.inflate(R.layout.list_footer, container, false);
+		
+		return main;
 	}
 	
 	@Override
@@ -153,13 +153,17 @@ public class FloorUpdateFragment extends ListFragment {
 			ViewGroup dateView = (ViewGroup) view.findViewById(R.id.date_line);
 			TextView timeView = (TextView) view.findViewById(R.id.timestamp);
 			
-			Calendar calendar = GregorianCalendar.getInstance();
-			String today = dateFormat.format(calendar.getTime());
-			String date = dateFormat.format(update.timestamp);
-			if (today.equals(date))
-				date = "Today, " + date;
-			
-			((TextView) view.findViewById(R.id.datestamp)).setText(date);
+			String nearbyDate = Utils.nearbyDate(update.timestamp);
+			String fullDate = Utils.fullDate(update.timestamp);
+			TextView nearby = (TextView) view.findViewById(R.id.date_name);
+			TextView full = (TextView) view.findViewById(R.id.date_full);
+			if (nearbyDate != null) {
+				nearby.setText(nearbyDate);
+				full.setText(fullDate);
+			} else {
+				nearby.setText(fullDate);
+				full.setVisibility(View.GONE);
+			}
 			
 			timeView.setText(timeFormat.format(update.timestamp));
 			if (update.events.size() > 0)
