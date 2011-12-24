@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress.utils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import android.app.Activity;
 import android.content.Context;
@@ -395,6 +396,35 @@ public class Utils {
 			return result;
 		else
 			return fullDate(subject);
+	}
+	
+	public static String shortDateThisYear(Date subject) {
+		SimpleDateFormat otherYearFormat = new SimpleDateFormat("MMM d, yyyy");
+		SimpleDateFormat thisYearFormat = new SimpleDateFormat("MMM d");
+		int thisYear = new GregorianCalendar().get(Calendar.YEAR);
+		
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTime(subject);
+		int year = calendar.get(Calendar.YEAR);
+		
+		return ((year == thisYear) ? thisYearFormat : otherYearFormat).format(subject).toUpperCase();
+	}
+	
+	public static View dateView(Context context, Date subject, String fullDate) {
+		View view = LayoutInflater.from(context).inflate(R.layout.list_item_date, null);
+		
+		String nearbyDate = Utils.nearbyDate(subject);
+		TextView nearby = (TextView) view.findViewById(R.id.date_name);
+		TextView full = (TextView) view.findViewById(R.id.date_full);
+		if (nearbyDate != null) {
+			nearby.setText(nearbyDate);
+			full.setText(fullDate);
+		} else {
+			nearby.setText(fullDate);
+			full.setVisibility(View.GONE);
+		}
+		
+		return view;
 	}
 		
 }

@@ -1,8 +1,8 @@
 package com.sunlightlabs.android.congress.fragments;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -23,6 +23,7 @@ import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 
@@ -95,7 +96,7 @@ public class BillActionFragment extends ListFragment implements LoadBillTask.Loa
 		setupSubscription();
 	}
 	
-	static class BillActionAdapter extends ArrayAdapter<BillActionAdapter.Item> {
+	static class BillActionAdapter extends ArrayAdapter<BillActionAdapter.ItemWrapper> {
     	LayoutInflater inflater;
     	Resources resources;
     	
@@ -120,8 +121,8 @@ public class BillActionFragment extends ListFragment implements LoadBillTask.Loa
         
         @Override
         public int getItemViewType(int position) {
-        	Item item = getItem(position);
-        	if (item instanceof BillActionAdapter.Date)
+        	ItemWrapper item = getItem(position);
+        	if (item instanceof BillActionAdapter.DateWrapper)
         		return BillActionAdapter.TYPE_DATE;
         	else
         		return BillActionAdapter.TYPE_ACTION;
@@ -134,79 +135,82 @@ public class BillActionFragment extends ListFragment implements LoadBillTask.Loa
 
 		@Override
 		public View getView(int position, View view, ViewGroup parent) {
-			Item item = getItem(position);
-			if (item instanceof Date) {
-				if (view == null)
-					view = inflater.inflate(R.layout.bill_action_date, null);
-				
-				((TextView) view.findViewById(R.id.day)).setText(((Date) item).timestamp);				
-				
-			} else { // instanceof Action
-				if (view == null)
-					view = inflater.inflate(R.layout.bill_action, null);
-				
-				((TextView) view).setText(Html.fromHtml(((Action) item).text));
-			}
-
+			ItemWrapper item = getItem(position);
+			if (item instanceof DateWrapper)
+				return dateView((DateWrapper) item);
+			else 
+				return contentView((ContentWrapper) item);
+		}
+		
+		public View contentView(ContentWrapper wrapper) {
+			View view = inflater.inflate(R.layout.bill_action, null);
+			Bill.Action action = ((ContentWrapper) wrapper).content;
+			
+			String text = action.text;
+			if (!text.endsWith("."))
+				text += ".";
+			
+			String type = action.type;
+			if (type.equals("vote") || type.equals("vote2") || type.equals("vote-aux") || type.equals("vetoed") || type.equals("enacted"))
+				text = "<b>" + text + "</b>";
+			
+			((TextView) view).setText(Html.fromHtml(text));
 			return view;
 		}
 		
-		static class Item {}
+		public View dateView(DateWrapper wrapper) {
+			return Utils.dateView(getContext(), wrapper.date, Utils.shortDateThisYear(wrapper.date));
+		}
 		
-		static class Date extends Item {
-			String timestamp;
+		static class ItemWrapper {}
+		
+		static class DateWrapper extends ItemWrapper {
+			Date date;
 			
-			public Date(String timestamp) {
-				this.timestamp = timestamp;
+			public DateWrapper(Date date) {
+				this.date = date;
 			}
 		}
 		
-		static class Action extends Item {
-			String text;
+		static class ContentWrapper extends ItemWrapper {
+			Bill.Action content;
 			
-			public Action(String text) {
-				this.text = text;
+			public ContentWrapper(Bill.Action content) {
+				this.content = content;
 			}
 		}
 		
-		static List<Item> transformActions(List<Bill.Action> actions) {
-			List<Item> items = new ArrayList<Item>();
-			
-			SimpleDateFormat otherYearFormat = new SimpleDateFormat("MMM dd, yyyy");
-			SimpleDateFormat thisYearFormat = new SimpleDateFormat("MMM dd");
-			
-			int thisYear = new GregorianCalendar().get(Calendar.YEAR); 
+		static Date dateFor(Bill.Action action) {
+			return action.acted_at;
+		}
+		
+		static List<ItemWrapper> transformActions(List<Bill.Action> contents) {
+			List<ItemWrapper> items = new ArrayList<ItemWrapper>();
 			
 			int currentMonth = -1;
 			int currentDay = -1;
 			int currentYear = -1;
 			
-			for (int i=0; i<actions.size(); i++) {
-				Bill.Action action = actions.get(i);
+			for (int i=0; i<contents.size(); i++) {
+				Bill.Action content = contents.get(i);
 				
+				Date contentDate = dateFor(content);
 				GregorianCalendar calendar = new GregorianCalendar();
-				calendar.setTime(action.acted_at);
+				calendar.setTime(contentDate);
 				int month = calendar.get(Calendar.MONTH);
 				int day = calendar.get(Calendar.DAY_OF_MONTH);
 				int year = calendar.get(Calendar.YEAR);
 				
 				if (currentMonth != month || currentDay != day || currentYear != year) {
-					String timestamp = ((year == thisYear) ? thisYearFormat : otherYearFormat).format(action.acted_at);
-					items.add(new Date(timestamp));
+					
+					items.add(new DateWrapper(contentDate));
 					
 					currentMonth = month;
 					currentDay = day;
 					currentYear = year;
 				}
 				
-				String text = action.text;
-				if (!text.endsWith("."))
-					text += ".";
-				
-				String type = action.type;
-				if (type.equals("vote") || type.equals("vote2") || type.equals("vote-aux") || type.equals("vetoed") || type.equals("enacted"))
-					text = "<b>" + text + "</b>";
-				items.add(new Action(text));
+				items.add(new ContentWrapper(content));
 			}
 			
 			return items;

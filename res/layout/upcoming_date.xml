@@ -4,7 +4,7 @@
 	android:layout_height="wrap_content"
 	android:orientation="horizontal"
 	
-	android:background="@color/background_dark"	
+	android:background="@color/background_date"	
 	
 	android:paddingLeft="7dp"
 	android:paddingRight="7dp"

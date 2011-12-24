@@ -2,6 +2,7 @@
 <resources>
 	<color name="background">#2D4B6E</color>
 	<color name="background_dark">#141414</color>
+	<color name="background_date">#343434</color>
 	<color name="background_light">#4470A3</color>
 	<color name="background_grey">#5f5f5f</color>
 	
