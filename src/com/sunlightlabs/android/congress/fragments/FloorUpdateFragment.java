@@ -2,9 +2,9 @@ package com.sunlightlabs.android.congress.fragments;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,13 +13,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscription;
+import com.sunlightlabs.android.congress.utils.DateAdapterHelper;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
@@ -104,7 +104,7 @@ public class FloorUpdateFragment extends ListFragment {
 	
 	public void displayUpdates() {
 		if (updates.size() > 0) {
-			setListAdapter(new FloorUpdateAdapter(this, updates));
+			setListAdapter(new FloorUpdateAdapter(this).adapterFor(updates));
 			setupSubscription();
 		} else
 			FragmentUtils.showRefresh(this, R.string.floor_updates_error); // should not happen
@@ -114,111 +114,37 @@ public class FloorUpdateFragment extends ListFragment {
 		Footer.setup(this, new Subscription(chamber, chamber, "FloorUpdatesSubscriber", chamber), updates);
 	}
 	
-	static class FloorUpdateAdapter extends ArrayAdapter<FloorUpdateAdapter.UpdateWrapper> {
-    	LayoutInflater inflater;
-    	Resources resources;
-    	
-    	static SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd");
-    	static SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm aa");
-
-        public FloorUpdateAdapter(Fragment context, List<FloorUpdate> updates) {
-            super(context.getActivity(), 0, FloorUpdateAdapter.wrapUpdates(updates));
-            inflater = LayoutInflater.from(context.getActivity());
-            resources = context.getResources();
+	static class FloorUpdateAdapter extends DateAdapterHelper<FloorUpdate> {
+		static SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm aa");
+		
+        public FloorUpdateAdapter(Fragment context) {
+            super(context);
         }
         
         @Override
-        public boolean isEnabled(int position) {
-        	return false;
+        public Date dateFor(FloorUpdate update) {
+        	return update.timestamp;
         }
         
         @Override
-        public boolean areAllItemsEnabled() {
-        	return false;
-        }
-        
-        @Override
-        public int getViewTypeCount() {
-        	return 1;
-        }
-
-		@Override
-		public View getView(int position, View view, ViewGroup parent) {
-			UpdateWrapper item = getItem(position);
-			FloorUpdate update = item.update;
+		public View contentView(ContentWrapper wrapper) {
+			FloorUpdate update = wrapper.content;
 			
-			view = inflater.inflate(R.layout.floor_update, null);
+			View view = inflater.inflate(R.layout.floor_update, null);
 			view.setEnabled(false);
 			
-			ViewGroup dateView = (ViewGroup) view.findViewById(R.id.date_line);
 			TextView timeView = (TextView) view.findViewById(R.id.timestamp);
-			
-			String nearbyDate = Utils.nearbyDate(update.timestamp);
-			String fullDate = Utils.fullDate(update.timestamp);
-			TextView nearby = (TextView) view.findViewById(R.id.date_name);
-			TextView full = (TextView) view.findViewById(R.id.date_full);
-			if (nearbyDate != null) {
-				nearby.setText(nearbyDate);
-				full.setText(fullDate);
-			} else {
-				nearby.setText(fullDate);
-				full.setVisibility(View.GONE);
-			}
 			
 			timeView.setText(timeFormat.format(update.timestamp));
 			if (update.events.size() > 0)
 				((TextView) view.findViewById(R.id.text)).setText(update.events.get(0));
-
-			if (item.showDate)
-				dateView.setVisibility(View.VISIBLE);
-			else
-				dateView.setVisibility(View.GONE);
 			
-			if (item.showTime)
-				timeView.setVisibility(View.VISIBLE);
-			else
-				timeView.setVisibility(View.INVISIBLE);
+//			if (item.showTime)
+//				timeView.setVisibility(View.VISIBLE);
+//			else
+//				timeView.setVisibility(View.INVISIBLE);
 			
 			return view;
-		}
-		
-		static class UpdateWrapper {
-			FloorUpdate update;
-			boolean showDate, showTime;
-			
-			public UpdateWrapper(FloorUpdate update) {
-				this.update = update;
-				this.showDate = false;
-				this.showTime = false;
-			}
-		}
-		
-		static List<UpdateWrapper> wrapUpdates(List<FloorUpdate> updates) {
-			List<UpdateWrapper> wrappers = new ArrayList<UpdateWrapper>();
-			
-			String currentDate = "";
-			String currentTime = "";
-			
-			for (int i=0; i<updates.size(); i++) {
-				FloorUpdate update = updates.get(i);
-				UpdateWrapper wrapper = new UpdateWrapper(update);
-				
-				String date = dateFormat.format(update.timestamp);
-				String time = timeFormat.format(update.timestamp);
-				
-				if (!currentDate.equals(date))
-					wrapper.showDate = true;
-				
-				if (!currentTime.equals(time))
-					wrapper.showTime = true;
-				
-				currentDate = date;
-				currentTime = time;
-				
-				wrappers.add(wrapper);
-			}
-			
-			return wrappers;
 		}
 
     }
