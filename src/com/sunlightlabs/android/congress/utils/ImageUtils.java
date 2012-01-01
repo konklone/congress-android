@@ -1,13 +1,9 @@
 package com.sunlightlabs.android.congress.utils;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -26,6 +22,9 @@ public class ImageUtils {
 	// should be called from within a background task, as this performs a
 	// network call
 	public static BitmapDrawable getImage(String size, String url, Context context) {
+		if (context == null) // rare race condition
+			return null;
+		
 		int hash = url.hashCode();
 		BitmapDrawable drawable = quickGetImage(size, hash, context);
 		if (drawable == null) {
