@@ -29,6 +29,7 @@
     <string name="bill_no_sponsor_yet">Bill\'s sponsor not yet known.</string>
     <string name="vote_no_voters_yet">Vote details not yet known.</string>
     <string name="votes_error">Error loading votes.</string>
+    <string name="vote_results_header">RESULTS</string>
     <string name="error_loading_favorites">There was a problem loading your starred bills and legislators. If the problem persists, try un-starring and re-starring them.</string>
     
     <string name="google_news_branding">Powered by Google</string>
