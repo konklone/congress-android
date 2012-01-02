@@ -50,8 +50,18 @@ public class RollService {
 	}
 	
 	public static List<Roll> search(String query, Map<String,String> params, int page, int per_page) throws CongressException {
-		return rollsFor(RealTimeCongress.searchUrl("votes", query, true, null, params, page, per_page));
+
+		// on the search endpoint, we need to spell out all sections explicitly if we are to ask for any that aren't default
+		String[] sections = new String[] {
+			"how", "roll_id", "number", "year", "chamber", "session", 
+		    "result", "bill_id", "voted_at", "last_updated", "roll_type", "question", 
+		    "required", "vote_type", "passage_type", "amendment_id", "vote_breakdown"
+		};
+		
+		// disable highlighting for now
+		return rollsFor(RealTimeCongress.searchUrl("votes", query, false, sections, params, page, per_page));
 	}
+	
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
 	
@@ -135,6 +145,24 @@ public class RollService {
 				roll.voter_ids.put(voter_id, voteFromRTC(voter_id, vote_name));
 			}
 		}
+		
+		// reads in the voter ids from the alternate flat structure that the search endpoint uses
+		// should produce an identical hashmap to the parser for the regular 'voter_ids' field
+//		if (!json.isNull("voter_ids_flat")) {
+//			roll.voter_ids = new HashMap<String, Vote>();
+//			JSONObject voterIdsObject = json.getJSONObject("voter_ids_flat");
+//			Iterator<?> iter = voterIdsObject.keys();
+//			while (iter.hasNext()) {
+//				String vote_name = (String) iter.next();
+//				JSONArray ids = voterIdsObject.getJSONArray(vote_name);
+//				
+//				int length = ids.length();
+//				for (int i=0; i<length; i++) {
+//					String voter_id = ids.getString(i);
+//					roll.voter_ids.put(voter_id, voteFromRTC(voter_id, vote_name));
+//				}
+//			}
+//		}
 		
 		// placeholder until we load in all of amendments
 		if (!json.isNull("amendment_id") && !json.isNull("amendment")) {

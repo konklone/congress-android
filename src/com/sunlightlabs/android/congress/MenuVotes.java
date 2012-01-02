@@ -31,10 +31,10 @@ public class MenuVotes extends FragmentActivity {
 	public void setupControls() {
 		Utils.setTitle(this, R.string.menu_votes_recent);
 		
-//		Utils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
-//			public void onClick(View v) { 
-//				onSearchRequested();
-//			}
-//		});
+		Utils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
+			public void onClick(View v) { 
+				onSearchRequested();
+			}
+		});
 	}
 }
