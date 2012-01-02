@@ -46,6 +46,7 @@
     <string name="bill_loading">Plucking bill from the air…</string>
     <string name="bill_cosponsor_other_singular">more</string>
     <string name="bill_cosponsor_other_plural">more</string>
+    <string name="bill_summary_header">SUMMARY</string>
     <string name="bill_history_loading">Plucking the bill\'s history from the air…</string>
     <string name="bill_votes_loading">Plucking the bill\'s votes from the air…</string>
     <string name="legislator_loading">Plucking a person from the air…</string>
@@ -231,5 +232,7 @@
     <string name="image_star">Star</string>
     <string name="image_legislator_photo">Photo of lawmaker</string>
     <string name="image_search">Search</string>
+    
+    <string name="demo_header_text">Header Text</string>
 
 </resources>

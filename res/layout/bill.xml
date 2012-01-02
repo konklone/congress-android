@@ -96,10 +96,7 @@
 		<TextView android:id="@+id/bill_summary"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="15dp"
-			android:paddingBottom="10dp"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
+			android:padding="10dp"
 			
 			android:textSize="16sp"
 			

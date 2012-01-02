@@ -7,10 +7,10 @@
 	android:textSize="16sp"
 	
 	android:paddingLeft="10dp"
-	android:paddingTop="5dp"
-	android:paddingBottom="5dp"
+	android:paddingTop="4dp"
+	android:paddingBottom="4dp"
 	
 	android:background="@color/background_dark"
 	
-	android:text="Header Text"
+	android:text="@string/demo_header_text"
 	/>

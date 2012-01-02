@@ -193,7 +193,7 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 			upcomingContainer.setVisibility(View.VISIBLE);
 		}
 		
-		((TextView) getView().findViewById(R.id.summary_header)).setText("Summary");
+		((TextView) getView().findViewById(R.id.summary_header)).setText(R.string.bill_summary_header);
 		
 		View summaryLoading = getView().findViewById(R.id.summary_loading);
 		((TextView) summaryLoading.findViewById(R.id.loading_message)).setText("Loading summary...");
