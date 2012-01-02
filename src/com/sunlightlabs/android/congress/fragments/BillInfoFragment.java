@@ -95,7 +95,7 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 			String field = Bill.matchField(bill.search.highlight);
 			
 			// don't bother showing the short title, or the official title if it's the official title being shown
-			if (!field.equals("short_title") && !(field.equals("official_title") && bill.short_title == null)) {
+			if (!field.equals("keywords") && !field.equals("short_title") && !(field.equals("official_title") && bill.short_title == null)) {
 				View searchView = getView().findViewById(R.id.bill_search_data);
 				
 				String matchText = "\"" + bill.search.query + "\" matched the bill's " + Bill.matchText(field) + ":";
