@@ -44,6 +44,8 @@
     <string name="legislators_loading_cosponsors">Loading cosponsors…</string>
     <string name="votes_loading">Plucking votes from the air…</string>
     <string name="bill_loading">Plucking bill from the air…</string>
+    <string name="bill_cosponsor_other_singular">more</string>
+    <string name="bill_cosponsor_other_plural">more</string>
     <string name="bill_history_loading">Plucking the bill\'s history from the air…</string>
     <string name="bill_votes_loading">Plucking the bill\'s votes from the air…</string>
     <string name="legislator_loading">Plucking a person from the air…</string>

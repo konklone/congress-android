@@ -137,7 +137,7 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 			String name = sponsor.title + ". " + sponsor.firstName() + " " + sponsor.last_name;
 			((TextView) sponsorView.findViewById(R.id.name)).setText(name);
 			
-			String description = Legislator.partyName(sponsor.party) + " from " + Utils.stateCodeToName(getActivity(), sponsor.state);
+			String description = "[" + sponsor.party + "-" + sponsor.state + "]";
 			((TextView) sponsorView.findViewById(R.id.description)).setText(description);
 			
 			sponsorView.setOnClickListener(new View.OnClickListener() {
@@ -147,35 +147,39 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 				}
 			});
 			
-			sponsorView.setVisibility(View.VISIBLE);
+			// make container of sponsor and cosponsors visible
+			getView().findViewById(R.id.bill_all_sponsors).setVisibility(View.VISIBLE);
+			
+			if (bill.cosponsors_count > 0) {
+				View cosponsorView = getView().findViewById(R.id.bill_cosponsors);
+				
+				((TextView) cosponsorView.findViewById(R.id.bill_cosponsor_number)).setText("+ " + bill.cosponsors_count);
+				
+				int otherName = (bill.cosponsors_count == 1) ? R.string.bill_cosponsor_other_singular : R.string.bill_cosponsor_other_plural;
+				((TextView) cosponsorView.findViewById(R.id.bill_cosponsor_others)).setText(otherName);
+				
+				cosponsorView.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(getActivity(), LegislatorList.class)
+							.putExtra("type", LegislatorList.SEARCH_COSPONSORS)
+							.putExtra("bill_id", bill.id);
+						startActivity(intent);	
+					}
+				});
+				
+				cosponsorView.setVisibility(View.VISIBLE);
+				getView().findViewById(R.id.bill_sponsor_line).setVisibility(View.VISIBLE);
+			}
 			
 			// kick off the photo loading task after the new bill data is all displayed
 			loadPhoto();
+			
 		} else {
-			View noSponsor = getView().findViewById(R.id.bill_no_sponsor);
-			((TextView) noSponsor.findViewById(R.id.text)).setText(bill.abbreviated ? R.string.bill_no_sponsor_yet : R.string.bill_no_sponsor);
+			TextView noSponsor = (TextView) getView().findViewById(R.id.bill_no_sponsor);
+			noSponsor.setText(bill.abbreviated ? R.string.bill_no_sponsor_yet : R.string.bill_no_sponsor);
 			noSponsor.setVisibility(View.VISIBLE);
 		}
-		
-		if (bill.cosponsors_count > 0) {
-			View cosponsorView = getView().findViewById(R.id.bill_cosponsors);
-			String cosponsorText = bill.cosponsors_count + (bill.cosponsors_count == 1 ? " Cosponsor" : " Cosponsors");
-			((ImageView) cosponsorView.findViewById(R.id.icon)).setImageResource(R.drawable.people);
-			((TextView) cosponsorView.findViewById(R.id.text)).setText(cosponsorText);
-			
-			cosponsorView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(getActivity(), LegislatorList.class)
-						.putExtra("type", LegislatorList.SEARCH_COSPONSORS)
-						.putExtra("bill_id", bill.id);
-					startActivity(intent);	
-				}
-			});
-			
-			cosponsorView.setVisibility(View.VISIBLE);
-		}
-		
 		
 		// prepare the upcoming container if one is necessary
 		if (latestUpcoming != null && latestUpcoming.size() > 0) {

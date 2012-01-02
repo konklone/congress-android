@@ -4,6 +4,8 @@
 	android:layout_height="wrap_content"
 	android:orientation="horizontal"
 	
+	android:layout_weight="1"
+	
 	android:background="@drawable/selector_clear"
 	
 	>
@@ -24,8 +26,8 @@
 		android:orientation="vertical"
 		android:paddingLeft="10dp"
 		android:paddingRight="10dp"
-		android:paddingTop="3dp"
-		android:paddingBottom="3dp"
+		android:paddingTop="1dp"
+		android:paddingBottom="1dp"
 		
 		android:layout_gravity="center_vertical"
 		>

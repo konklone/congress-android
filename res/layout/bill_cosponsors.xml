@@ -1,40 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
     
-    android:background="@drawable/selector_clear"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    
+    android:background="@drawable/selector_grey"
+    
+    android:gravity="center_vertical"
     >
     
-    <include layout="@layout/line" />
-    
-	<LinearLayout 
-		android:orientation="horizontal"
-		
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:paddingLeft="15dp"
-		android:paddingTop="2dp"
-		android:paddingBottom="2dp"
-		>
+	<TextView android:id="@+id/bill_cosponsor_number"
 	
-		<ImageView android:id="@+id/icon"
-			android:layout_width="48dp"
-			android:layout_height="48dp"
-			android:layout_marginRight="20dp"
-			/>
-			
-		<TextView android:id="@+id/text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center_horizontal"
 		
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="10dp"
-			
-			android:textSize="19sp"
-			
-			android:text="Text"
-			/>
-			
-	</LinearLayout>
+		android:textSize="16sp"
+		
+		android:text="+ 49"
+		/>
+	
+	<TextView android:id="@+id/bill_cosponsor_others"
+	
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center_horizontal"
+		
+		android:layout_marginTop="3dp"
+		
+		android:textSize="14sp"
+		android:text="@string/bill_cosponsor_other_plural"
+		/>
+	
 </LinearLayout>

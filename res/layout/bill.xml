@@ -35,20 +35,33 @@
 		
 		<include layout="@layout/line" />
 		
-		<include layout="@layout/bill_sponsor"
-		    android:id="@+id/bill_sponsor"
-		    android:visibility="gone"
-		    />
-		
 		<include layout="@layout/bill_no_sponsor"
 		    android:id="@+id/bill_no_sponsor"
 		    android:visibility="gone"
 		    />
 		
-		<include layout="@layout/bill_cosponsors"
-		    android:id="@+id/bill_cosponsors"
+		<LinearLayout android:orientation="horizontal"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
 		    android:visibility="gone"
-		    />
+		    android:id="@+id/bill_all_sponsors"
+		    >
+		
+			<include layout="@layout/bill_sponsor"
+			    android:id="@+id/bill_sponsor"
+			    />
+			
+			<include layout="@layout/line_vertical"
+			    android:id="@+id/bill_sponsor_line"
+			    android:visibility="gone" 
+			    />
+			
+			<include layout="@layout/bill_cosponsors"
+			    android:id="@+id/bill_cosponsors"
+			    android:visibility="gone"
+			    />
+		
+		</LinearLayout>
 		
 		<include layout="@layout/header"
 		    android:id="@+id/upcoming_header"
