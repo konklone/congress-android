@@ -1,1 +1,0 @@
-*_pressed icons have had their lightness reduced by -60.
