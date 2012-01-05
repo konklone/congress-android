@@ -14,8 +14,6 @@ import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -23,6 +21,7 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.notifications.Footer;
+import com.sunlightlabs.android.congress.notifications.PaginationAdapter;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
@@ -32,7 +31,7 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.BillService;
 
-public class BillListFragment extends ListFragment implements OnScrollListener {
+public class BillListFragment extends ListFragment implements PaginationAdapter.Paginates {
 	
 	public static final int PER_PAGE = 20;
 	
@@ -51,7 +50,7 @@ public class BillListFragment extends ListFragment implements OnScrollListener {
 	String query;
 	
 	// set to false to disable scroll listener, if pages are done, if there's an error, or if the page is currently being fetched
-	boolean loadPageWhenAtBottom = true;
+	PaginationAdapter pager;
 	int page;
 	View loadingView;
 	
@@ -143,6 +142,8 @@ public class BillListFragment extends ListFragment implements OnScrollListener {
 				refresh();
 			}
 		});
+		
+		pager = new PaginationAdapter(this);
 
 		FragmentUtils.setLoading(this, R.string.bills_loading);
 	}
@@ -164,7 +165,7 @@ public class BillListFragment extends ListFragment implements OnScrollListener {
 	}
 	
 	public void loadNextPage() {
-		loadPageWhenAtBottom = false;
+		getListView().setOnScrollListener(null);
 		loadingView.setVisibility(View.VISIBLE);
 		new LoadBillsTask(this, page + 1).execute();
 	}
@@ -187,7 +188,7 @@ public class BillListFragment extends ListFragment implements OnScrollListener {
 		
 		// only re-enable the pagination if we got a full page back
 		if (bills.size() == PER_PAGE)
-			loadPageWhenAtBottom = true;
+			getListView().setOnScrollListener(pager);
 	}
 	
 	public void onLoadBills(CongressException exception) {
@@ -199,7 +200,7 @@ public class BillListFragment extends ListFragment implements OnScrollListener {
 	public void displayBills() {
 		if (bills.size() > 0) {
 			getListView().addFooterView(loadingView);
-			getListView().setOnScrollListener(this);
+			getListView().setOnScrollListener(pager);
 			setListAdapter(new BillAdapter(this, bills));
 			setupSubscription();
 		} else {
@@ -238,19 +239,6 @@ public class BillListFragment extends ListFragment implements OnScrollListener {
 			Footer.setup(this, subscription, bills);
 	}
 
-	@Override
-	public void onScroll(AbsListView view, int firstVisible, int visibleCount, int totalCount) {
-		if (!loadPageWhenAtBottom)
-			return;
-		
-		int padding = 5; // padding from bottom
-		if (visibleCount > 0 && (firstVisible + visibleCount + padding >= totalCount))
-			loadNextPage();
-    }
-	
-	@Override
-    public void onScrollStateChanged(AbsListView v, int s) { }  
-	
 	
 	private static class LoadBillsTask extends AsyncTask<Void,Void,List<Bill>> {
 		private BillListFragment context;
