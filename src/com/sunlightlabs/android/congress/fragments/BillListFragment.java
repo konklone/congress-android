@@ -180,7 +180,7 @@ public class BillListFragment extends ListFragment {
 			} else if (type == BILLS_SPONSOR) {
 				FragmentUtils.showEmpty(this, R.string.bills_empty_sponsor);
 				setupSubscription();
-			} else
+			} else // recent bills, recent laws
 				FragmentUtils.showRefresh(this, R.string.bills_error); // should not happen
 		}
 	}
