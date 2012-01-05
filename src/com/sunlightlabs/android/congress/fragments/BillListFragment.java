@@ -14,6 +14,8 @@ import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -30,7 +32,7 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.BillService;
 
-public class BillListFragment extends ListFragment {
+public class BillListFragment extends ListFragment implements OnScrollListener {
 	
 	public static final int PER_PAGE = 20;
 	
@@ -47,6 +49,11 @@ public class BillListFragment extends ListFragment {
 	Legislator sponsor;
 	String code;
 	String query;
+	
+	// set to false to disable scroll listener, if pages are done, if there's an error, or if the page is currently being fetched
+	boolean loadPageWhenAtBottom = true;
+	int page;
+	View loadingView;
 	
 	public static BillListFragment forRecent() {
 		BillListFragment frag = new BillListFragment();
@@ -113,6 +120,10 @@ public class BillListFragment extends ListFragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		// re/inflate and cache the view used while loading
+		loadingView = inflater.inflate(R.layout.loading, null);
+		loadingView.setVisibility(View.GONE);
+		
 		return inflater.inflate(R.layout.list_footer, container, false);
 	}
 	
@@ -147,15 +158,36 @@ public class BillListFragment extends ListFragment {
 		FragmentUtils.showLoading(this);
 		loadBills();
 	}
-	
+
 	public void loadBills() {
-		new LoadBillsTask(this).execute();
+		new LoadBillsTask(this, 1).execute();
 	}
 	
-	public void onLoadBills(List<Bill> bills) {
-		this.bills = bills;
-		if (isAdded())
-			displayBills();
+	public void loadNextPage() {
+		loadPageWhenAtBottom = false;
+		loadingView.setVisibility(View.VISIBLE);
+		new LoadBillsTask(this, page + 1).execute();
+	}
+	
+	// handles coming in with any page of bills, even the first one
+	public void onLoadBills(List<Bill> bills, int page) {
+		this.page = page;
+		
+		if (this.page == 1) {
+			this.bills = bills;
+			if (isAdded())
+				displayBills();
+		} else {
+			this.bills.addAll(bills);
+			if (isAdded()) {
+				loadingView.setVisibility(View.GONE);
+				((BillAdapter) getListAdapter()).notifyDataSetChanged();
+			}
+		}
+		
+		// only re-enable the pagination if we got a full page back
+		if (bills.size() == PER_PAGE)
+			loadPageWhenAtBottom = true;
 	}
 	
 	public void onLoadBills(CongressException exception) {
@@ -163,8 +195,11 @@ public class BillListFragment extends ListFragment {
 			FragmentUtils.showRefresh(this, R.string.bills_error);
 	}
 	
+	// only run for the first page of bill results
 	public void displayBills() {
 		if (bills.size() > 0) {
+			getListView().addFooterView(loadingView);
+			getListView().setOnScrollListener(this);
 			setListAdapter(new BillAdapter(this, bills));
 			setupSubscription();
 		} else {
@@ -203,75 +238,34 @@ public class BillListFragment extends ListFragment {
 			Footer.setup(this, subscription, bills);
 	}
 
+	@Override
+	public void onScroll(AbsListView view, int firstVisible, int visibleCount, int totalCount) {
+		if (!loadPageWhenAtBottom)
+			return;
+		
+		int padding = 5; // padding from bottom
+		if (visibleCount > 0 && (firstVisible + visibleCount + padding >= totalCount))
+			loadNextPage();
+    }
 	
-
-//	public void onLoadBills(List<Bill> newBills) {
-//		// if this is the first page of rolls, set up the subscription
-//		if (bills.size() == 0) {
-//			if (newBills.size() == 0) {
-//				if (type == BILLS_SPONSOR)
-//					Utils.showBack(this, R.string.empty_bills_sponsored);
-//				else
-//					Utils.showBack(this, R.string.empty_bills);
-//				return;
-//			} 
-//			else if ((type == BILLS_CODE || type == BILLS_SEARCH) && newBills.size() == 1) {
-//				startActivity(Utils.billIntent(this, newBills.get(0)));
-//				finish();
-//				return;
-//			}
-//		}
-//		
-//		// remove the placeholder and add the new bills in the array
-//		if (bills.size() > 0) {
-//			int lastIndex = bills.size() - 1;
-//			if (bills.get(lastIndex) == null)
-//				bills.remove(lastIndex);
-//		}
-//
-//		bills.addAll(newBills);
-//
-//		// if we got back a full page of bills, there may be more yet to come
-//		if (newBills.size() == PER_PAGE)
-//			bills.add(null);
-//
-//		((BillAdapter) getListAdapter()).notifyDataSetChanged();
-//		
-//		setupSubscription();
-//	}
-//
-//	public void onLoadBills(CongressException exception) {
-//		if (bills.size() > 0) {
-//			
-//			lw.getLoading().setVisibility(View.GONE);
-//			lw.getRetryContainer().setVisibility(View.VISIBLE);
-//			
-//			Button retry = lw.getRetry();
-//			retry.setOnClickListener(new View.OnClickListener() {
-//				public void onClick(View v) {
-//					lw.getRetryContainer().setVisibility(View.GONE);
-//					lw.getLoading().setVisibility(View.VISIBLE);
-//					loadBills();
-//				}
-//			});
-//
-//		} else
-//			Utils.showBack(this, R.string.error_connection);
-//	}
+	@Override
+    public void onScrollStateChanged(AbsListView v, int s) { }  
+	
 	
 	private static class LoadBillsTask extends AsyncTask<Void,Void,List<Bill>> {
 		private BillListFragment context;
 		private CongressException exception;
+		private int page;
 
-		public LoadBillsTask(BillListFragment context) {
+		public LoadBillsTask(BillListFragment context, int page) {
 			this.context = context;
+			this.page = page;
 			FragmentUtils.setupRTC(context);
 		}
 
 		@Override
 		public List<Bill> doInBackground(Void... nothing) {
 			try {
-				int page = 1;
 				
 				Map<String,String> params = new HashMap<String,String>();
 				
@@ -309,7 +303,7 @@ public class BillListFragment extends ListFragment {
 			if (exception != null)
 				context.onLoadBills(exception);
 			else
-				context.onLoadBills(bills);
+				context.onLoadBills(bills, page);
 		}
 	}
 
