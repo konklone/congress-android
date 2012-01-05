@@ -1,4 +1,4 @@
-package com.sunlightlabs.android.congress.notifications;
+package com.sunlightlabs.android.congress.utils;
 
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;

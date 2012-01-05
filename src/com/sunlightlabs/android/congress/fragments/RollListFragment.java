@@ -20,10 +20,10 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.notifications.Footer;
-import com.sunlightlabs.android.congress.notifications.PaginationListener;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
+import com.sunlightlabs.android.congress.utils.PaginationListener;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -148,6 +148,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		loadRolls();
 	}
 	
+	@Override
 	public void loadNextPage(int page) {
 		getListView().setOnScrollListener(null);
 		loadingView.setVisibility(View.VISIBLE);

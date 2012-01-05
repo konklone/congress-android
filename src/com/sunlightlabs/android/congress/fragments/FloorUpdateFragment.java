@@ -21,17 +21,22 @@ import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.DateAdapterHelper;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
+import com.sunlightlabs.android.congress.utils.PaginationListener;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.FloorUpdate;
 import com.sunlightlabs.congress.services.FloorUpdateService;
 
-public class FloorUpdateFragment extends ListFragment {
+public class FloorUpdateFragment extends ListFragment implements PaginationListener.Paginates {
 	
 	public static final int PER_PAGE = 40;
 	private String chamber;
 	
 	private List<FloorUpdate> updates;
+	
+	FloorUpdateAdapter adapterHelper;
+	PaginationListener pager;
+	View loadingView;
 	
 	public static FloorUpdateFragment forChamber(String chamber) {
 		FloorUpdateFragment frag = new FloorUpdateFragment();
@@ -76,6 +81,13 @@ public class FloorUpdateFragment extends ListFragment {
 				refresh();
 			}
 		});
+		
+		loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_page, null);
+		loadingView.setVisibility(View.GONE);
+		getListView().addFooterView(loadingView);
+		
+		pager = new PaginationListener(this);
+		getListView().setOnScrollListener(pager);
 
 		FragmentUtils.setLoading(this, R.string.floor_updates_loading);
 	}
@@ -88,13 +100,32 @@ public class FloorUpdateFragment extends ListFragment {
 	}
 	
 	public void loadUpdates() {
-		new LoadUpdatesTask(this).execute(chamber);
+		new LoadUpdatesTask(this, chamber, 1).execute();
 	}
 	
-	public void onLoadUpdates(List<FloorUpdate> updates) {
-		this.updates = updates;
-		if (isAdded())
+	@Override
+	public void loadNextPage(int page) {
+		getListView().setOnScrollListener(null);
+		loadingView.setVisibility(View.VISIBLE);
+		new LoadUpdatesTask(this, chamber, page).execute();
+	}
+	
+	public void onLoadUpdates(List<FloorUpdate> updates, int page) {
+		if (!isAdded())
+			return;
+		
+		if (page == 1) {
+			this.updates = updates;
 			displayUpdates();
+		} else {
+			this.updates.addAll(updates);
+			adapterHelper.notifyDataSetChanged();
+			loadingView.setVisibility(View.GONE);
+		}
+		
+		// only re-enable the pagination if we got a full page back
+		if (updates.size() == PER_PAGE)
+			getListView().setOnScrollListener(pager);
 	}
 	
 	public void onLoadUpdates(CongressException exception) {
@@ -104,7 +135,8 @@ public class FloorUpdateFragment extends ListFragment {
 	
 	public void displayUpdates() {
 		if (updates.size() > 0) {
-			setListAdapter(new FloorUpdateAdapter(this).adapterFor(updates));
+			adapterHelper = new FloorUpdateAdapter(this);
+			setListAdapter(adapterHelper.adapterFor(updates));
 			setupSubscription();
 		} else
 			FragmentUtils.showRefresh(this, R.string.floor_updates_error); // should not happen
@@ -149,23 +181,25 @@ public class FloorUpdateFragment extends ListFragment {
 
     }
 	
-	private class LoadUpdatesTask extends AsyncTask<String, Void, List<FloorUpdate>> {
+	private static class LoadUpdatesTask extends AsyncTask<Void, Void, List<FloorUpdate>> {
 		private FloorUpdateFragment context;
-		
 		private CongressException exception;
+		int page;
+		String chamber;
 
-		public LoadUpdatesTask(FloorUpdateFragment context) {
+		public LoadUpdatesTask(FloorUpdateFragment context, String chamber, int page) {
 			FragmentUtils.setupRTC(context);
 			this.context = context;
+			this.page = page;
+			this.chamber = chamber;
 		}
 
 		@Override
-		protected List<FloorUpdate> doInBackground(String... params) {
+		protected List<FloorUpdate> doInBackground(Void... nothing) {
 			List<FloorUpdate> updates = new ArrayList<FloorUpdate>();
-			String chamber = params[0];
 			
 			try {
-				updates = FloorUpdateService.latest(chamber, 1, PER_PAGE);
+				updates = FloorUpdateService.latest(chamber, page, PER_PAGE);
 			} catch (CongressException e) {
 				Log.e(Utils.TAG, "Error while loading floor updates for " + chamber + ": " + e.getMessage());
 				this.exception = e;
@@ -180,7 +214,7 @@ public class FloorUpdateFragment extends ListFragment {
 			if (updates == null && exception != null)
 				context.onLoadUpdates(exception);
 			else
-				context.onLoadUpdates(updates);
+				context.onLoadUpdates(updates, page);
 		}
 
 	}

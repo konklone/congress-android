@@ -21,10 +21,10 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.notifications.Footer;
-import com.sunlightlabs.android.congress.notifications.PaginationListener;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
+import com.sunlightlabs.android.congress.utils.PaginationListener;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
@@ -163,6 +163,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		new LoadBillsTask(this, 1).execute();
 	}
 	
+	@Override
 	public void loadNextPage(int page) {
 		getListView().setOnScrollListener(null);
 		loadingView.setVisibility(View.VISIBLE);

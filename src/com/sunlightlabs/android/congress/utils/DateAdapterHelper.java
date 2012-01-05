@@ -19,6 +19,10 @@ public abstract class DateAdapterHelper<Content> {
 	public Resources resources;
 	public LayoutInflater inflater;
 	
+	public DateAdapter adapter;
+	public List<Content> contents;
+	public List<ItemWrapper> items;
+	
 	public DateAdapterHelper(Fragment context) {
 		this.context = context;
 		this.inflater = LayoutInflater.from(context.getActivity());
@@ -26,7 +30,19 @@ public abstract class DateAdapterHelper<Content> {
 	}
 	
 	public DateAdapter adapterFor(List<Content> contents) {
-		return new DateAdapter(this, context, processContents(contents));
+		this.contents = contents;
+		this.items = processContents(contents);
+		this.adapter = new DateAdapter(this, context, items);
+		return adapter;
+	}
+	
+	public void notifyDataSetChanged() {
+		// this.contents should have been updated in the context
+		// this.items is cleared and added to so that the memory reference stays the same,
+		// and the adapter's notifyDataSetChanged method can be used (will keep the list in-place when it's updated)
+		this.items.clear(); 
+		this.items.addAll(processContents(contents));
+		this.adapter.notifyDataSetChanged();
 	}
 	
 	abstract public Date dateFor(Content action);
@@ -70,7 +86,7 @@ public abstract class DateAdapterHelper<Content> {
 		return items;
 	}
 	
-	class DateAdapter extends ArrayAdapter<DateAdapterHelper<Content>.ItemWrapper> {
+	public class DateAdapter extends ArrayAdapter<DateAdapterHelper<Content>.ItemWrapper> {
     	DateAdapterHelper<Content> helper;
     	
     	private static final int TYPE_DATE = 0;
