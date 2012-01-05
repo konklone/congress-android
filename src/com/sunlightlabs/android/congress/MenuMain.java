@@ -50,8 +50,8 @@ public class MenuMain extends FragmentActivity {
 			public void onClick(View v) { showAbout(); }
 		});
 		
-		findViewById(R.id.donate).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) { goDonate(); }
+		findViewById(R.id.review).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) { goReview(); }
 		});
 		
 		findViewById(R.id.feedback).setOnClickListener(new View.OnClickListener() {
@@ -134,11 +134,18 @@ public class MenuMain extends FragmentActivity {
 		return true;
 	}
 	
-	public void goDonate() {
-		Analytics.page(this, "/donate", false);
-		String packageName = getResources().getString(R.string.app_donation_package_name);
+	public void goReview() {
+		Analytics.page(this, "/review", false);
+		String packageName = getResources().getString(R.string.app_package_name);
+		String channel = getResources().getString(R.string.market_channel); 
 		try {
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
+			String uri;
+			if (channel.equals("amazon"))
+				uri = "http://www.amazon.com/gp/mas/dl/android?p=" + packageName;
+			else
+				uri = "market://details?id=" + packageName;
+			
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uri)));
 		} catch(ActivityNotFoundException e) {
 			Utils.alert(this, R.string.no_market_installed);
 		}

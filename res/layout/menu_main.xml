@@ -140,7 +140,7 @@
 			
 		</LinearLayout>
 		
-		<LinearLayout android:id="@+id/donate"
+		<LinearLayout android:id="@+id/review"
 			android:orientation="horizontal"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
@@ -161,7 +161,7 @@
 				android:layout_width="32dp"
 				android:layout_height="32dp"
 				
-				android:src="@drawable/donate"
+				android:src="@drawable/review"
 				
 				android:layout_marginTop="5dp"
 				android:layout_marginBottom="5dp"
@@ -177,7 +177,7 @@
 				android:layout_marginBottom="5dp"
 				
 				android:textSize="14sp"
-				android:text="@string/menu_donate"
+				android:text="@string/menu_review"
 				/>
 			
 		</LinearLayout>

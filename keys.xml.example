@@ -9,6 +9,9 @@
     <string name="sunlight_api_key"></string>
     <string name="rtc_user_agent"></string>
     
+    <!-- must be either "google" or "amazon" -->
+    <string name="market_channel"></string>
+    
     <string name="google_analytics_tracking_code"></string>
     
     <string name="debug_disable_analytics">false</string>
