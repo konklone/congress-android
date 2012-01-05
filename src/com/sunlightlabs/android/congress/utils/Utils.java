@@ -41,6 +41,7 @@ public class Utils {
 		RealTimeCongress.apiKey = resources.getString(R.string.sunlight_api_key);
 		RealTimeCongress.appVersion = resources.getString(R.string.app_version);
 		RealTimeCongress.osVersion = "Android " + Build.VERSION.SDK_INT;
+		RealTimeCongress.appChannel = resources.getString(R.string.market_channel);
 	}
 
 	public static void setupSunlight(Context context) {

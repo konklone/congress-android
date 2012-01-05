@@ -46,6 +46,7 @@ public class RealTimeCongress {
 	public static String userAgent = "com.sunlightlabs.congress.services.RealTimeCongress";
 	public static String appVersion = null;
 	public static String osVersion = null;
+	public static String appChannel = null;
 	public static String apiKey = "";
 	
 	public static final int MAX_PER_PAGE = 500;
@@ -171,6 +172,9 @@ public class RealTimeCongress {
         
         if (appVersion != null)
         	request.addHeader("x-app-version", appVersion);
+        
+        if (appChannel != null)
+        	request.addHeader("x-app-channel", appChannel);
 		
         DefaultHttpClient client = new DefaultHttpClient();
         
