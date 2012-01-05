@@ -49,8 +49,10 @@ public class Footer {
 	
 	GoogleAnalyticsTracker tracker;
 	
-	public Footer(Activity context, GoogleAnalyticsTracker tracker) {
-		onScreenLoad(context, tracker);
+	// initialize the footer to a fragment, obtain a tracker from its activity's fragment pool
+	// set it up with a subscription and a list of seen items
+	public static void setup(Fragment fragment, Subscription subscription, List<?> objects) {
+		new Footer(fragment).init(subscription, objects);
 	}
 	
 	public Footer(Fragment fragment) {
@@ -63,28 +65,6 @@ public class Footer {
 		this.text = (TextView) footerView.findViewById(R.id.text);
 		this.image = (ImageView) footerView.findViewById(R.id.image);
 		this.working = (ProgressBar) footerView.findViewById(R.id.working);
-	}
-	
-	public void onScreenLoad(Activity context, GoogleAnalyticsTracker tracker) {
-		this.context = context;
-		this.resources = context.getResources();
-		
-		this.footerView = (ViewGroup) context.findViewById(R.id.footer);
-		this.text = (TextView) footerView.findViewById(R.id.text);
-		this.image = (ImageView) footerView.findViewById(R.id.image);
-		this.working = (ProgressBar) footerView.findViewById(R.id.working);
-		
-		this.tracker = tracker;
-	}
-	
-	public static Footer from(Activity activity, GoogleAnalyticsTracker tracker) {
-		return new Footer(activity, tracker);
-	}
-	
-	// initialize the footer to a fragment, obtain a tracker from its activity's fragment pool
-	// set it up with a subscription and a list of seen items
-	public static void setup(Fragment fragment, Subscription subscription, List<?> objects) {
-		new Footer(fragment).init(subscription, objects);
 	}
 	
 	public void init(Subscription subscription, List<?> objects) {
