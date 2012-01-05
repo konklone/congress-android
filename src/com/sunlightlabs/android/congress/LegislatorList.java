@@ -342,23 +342,8 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		}
 
 		public String positionFor(Legislator legislator) {
-			String district = legislator.district;
 			String stateName = Utils.stateCodeToName(context, legislator.state);			
-			String position = "";
-
-			if (district.equals("Senior Seat"))
-				position = "Senior Senator from " + stateName;
-			else if (district.equals("Junior Seat"))
-				position = "Junior Senator from " + stateName;
-			else if (district.equals("0")) {
-				if (legislator.title.equals("Rep"))
-					position = "Representative for " + stateName + " At-Large";
-				else
-					position = legislator.fullTitle() + " for " + stateName;
-			} else
-				position = "Representative for " + stateName + "-" + district;
-			
-			return "(" + legislator.party + ") " + position; 
+			return legislator.party + " - " + stateName; 
 		}
 		
 		static class ViewHolder {

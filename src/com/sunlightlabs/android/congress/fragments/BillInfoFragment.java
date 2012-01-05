@@ -137,7 +137,8 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 			String name = sponsor.title + ". " + sponsor.firstName() + " " + sponsor.last_name;
 			((TextView) sponsorView.findViewById(R.id.name)).setText(name);
 			
-			String description = "[" + sponsor.party + "-" + sponsor.state + "]";
+			String stateName = Utils.stateCodeToName(getContext(), sponsor.state);
+			String description = sponsor.party + " - " + stateName;
 			((TextView) sponsorView.findViewById(R.id.description)).setText(description);
 			
 			sponsorView.setOnClickListener(new View.OnClickListener() {
