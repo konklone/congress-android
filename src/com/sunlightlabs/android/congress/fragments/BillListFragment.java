@@ -49,9 +49,7 @@ public class BillListFragment extends ListFragment implements PaginationAdapter.
 	String code;
 	String query;
 	
-	// set to false to disable scroll listener, if pages are done, if there's an error, or if the page is currently being fetched
 	PaginationAdapter pager;
-	int page;
 	View loadingView;
 	
 	public static BillListFragment forRecent() {
@@ -119,10 +117,6 @@ public class BillListFragment extends ListFragment implements PaginationAdapter.
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		// re/inflate and cache the view used while loading
-		loadingView = inflater.inflate(R.layout.loading, null);
-		loadingView.setVisibility(View.GONE);
-		
 		return inflater.inflate(R.layout.list_footer, container, false);
 	}
 	
@@ -143,6 +137,8 @@ public class BillListFragment extends ListFragment implements PaginationAdapter.
 			}
 		});
 		
+		loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading, null);
+		loadingView.setVisibility(View.GONE);
 		pager = new PaginationAdapter(this);
 
 		FragmentUtils.setLoading(this, R.string.bills_loading);
@@ -164,17 +160,15 @@ public class BillListFragment extends ListFragment implements PaginationAdapter.
 		new LoadBillsTask(this, 1).execute();
 	}
 	
-	public void loadNextPage() {
+	public void loadNextPage(int page) {
 		getListView().setOnScrollListener(null);
 		loadingView.setVisibility(View.VISIBLE);
-		new LoadBillsTask(this, page + 1).execute();
+		new LoadBillsTask(this, page).execute();
 	}
 	
 	// handles coming in with any page of bills, even the first one
 	public void onLoadBills(List<Bill> bills, int page) {
-		this.page = page;
-		
-		if (this.page == 1) {
+		if (page == 1) {
 			this.bills = bills;
 			if (isAdded())
 				displayBills();

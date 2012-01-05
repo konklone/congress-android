@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.notifications.Footer;
+import com.sunlightlabs.android.congress.notifications.PaginationAdapter;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
@@ -29,7 +30,7 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.RollService;
 
-public class RollListFragment extends ListFragment {
+public class RollListFragment extends ListFragment { //implements PaginationAdapter.Paginates {
 	
 	public static final int PER_PAGE = 20;
 	
@@ -43,6 +44,9 @@ public class RollListFragment extends ListFragment {
 	private Legislator voter;
 	private int type;
 	String query;
+	
+	PaginationAdapter pager;
+	View loadingView;
 	
 	public static RollListFragment forRecent() {
 		RollListFragment frag = new RollListFragment();
@@ -170,53 +174,6 @@ public class RollListFragment extends ListFragment {
 				FragmentUtils.showRefresh(this, R.string.votes_error); // should not happen
 		}
 	}
-
-	
-	
-//	public void onLoadRolls(List<Roll> newRolls) {
-//		// if this is the first page of rolls, set up the subscription
-//		if (rolls.size() == 0) {
-//			if (newRolls.size() == 0) {
-//				Utils.showBack(this, R.string.empty_votes);
-//				setupSubscription(); // this extra call should get removed when we refactor pagination
-//				return;
-//			}
-//		}
-//		
-//		if (rolls.size() > 0) {
-//			int lastIndex = rolls.size() - 1;
-//			if (rolls.get(lastIndex) == null)
-//				rolls.remove(lastIndex);
-//		}
-//
-//		rolls.addAll(newRolls);
-//		
-//		if (newRolls.size() == PER_PAGE)
-//			rolls.add(null);
-//
-//		((RollAdapter) getListAdapter()).notifyDataSetChanged();
-//		
-//		setupSubscription();
-//	}
-//
-//	public void onLoadRolls(CongressException exception) {
-//		if (rolls.size() > 0) {
-//			
-//			loading.getLoading().setVisibility(View.GONE);
-//			loading.getRetryContainer().setVisibility(View.VISIBLE);
-//			
-//			Button retry = loading.getRetry();
-//			retry.setOnClickListener(new View.OnClickListener() {
-//				public void onClick(View v) {
-//					loading.getRetryContainer().setVisibility(View.GONE);
-//					loading.getLoading().setVisibility(View.VISIBLE);
-//					loadRolls();
-//				}
-//			});
-//
-//		} else
-//			Utils.showBack(this, R.string.error_connection);
-//	}
 
 
 	private class LoadRollsTask extends AsyncTask<Void,Void,List<Roll>> {
