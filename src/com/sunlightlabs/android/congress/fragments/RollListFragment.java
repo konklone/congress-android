@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.notifications.Footer;
-import com.sunlightlabs.android.congress.notifications.PaginationAdapter;
+import com.sunlightlabs.android.congress.notifications.PaginationListener;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
@@ -30,7 +30,7 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.RollService;
 
-public class RollListFragment extends ListFragment { //implements PaginationAdapter.Paginates {
+public class RollListFragment extends ListFragment implements PaginationListener.Paginates {
 	
 	public static final int PER_PAGE = 20;
 	
@@ -45,7 +45,7 @@ public class RollListFragment extends ListFragment { //implements PaginationAdap
 	private int type;
 	String query;
 	
-	PaginationAdapter pager;
+	PaginationListener pager;
 	View loadingView;
 	
 	public static RollListFragment forRecent() {
@@ -112,6 +112,13 @@ public class RollListFragment extends ListFragment { //implements PaginationAdap
 				refresh();
 			}
 		});
+		
+		loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_page, null);
+		loadingView.setVisibility(View.GONE);
+		getListView().addFooterView(loadingView);
+		
+		pager = new PaginationListener(this);
+		getListView().setOnScrollListener(pager);
 
 		FragmentUtils.setLoading(this, R.string.votes_loading);
 	}
@@ -140,15 +147,33 @@ public class RollListFragment extends ListFragment { //implements PaginationAdap
 		FragmentUtils.showLoading(this);
 		loadRolls();
 	}
+	
+	public void loadNextPage(int page) {
+		getListView().setOnScrollListener(null);
+		loadingView.setVisibility(View.VISIBLE);
+		new LoadRollsTask(this, page).execute();
+	}
 
 	public void loadRolls() {
-		new LoadRollsTask(this).execute();
+		new LoadRollsTask(this, 1).execute();
 	}
 	
-	public void onLoadRolls(List<Roll> rolls) {
-		this.rolls = rolls;
-		if (isAdded())
-			displayRolls();
+	public void onLoadRolls(List<Roll> rolls, int page) {
+		if (page == 1) {
+			this.rolls= rolls;
+			if (isAdded())
+				displayRolls();
+		} else {
+			this.rolls.addAll(rolls);
+			if (isAdded()) {
+				loadingView.setVisibility(View.GONE);
+				((RollAdapter) getListAdapter()).notifyDataSetChanged();
+			}
+		}
+		
+		// only re-enable the pagination if we got a full page back
+		if (rolls.size() == PER_PAGE)
+			getListView().setOnScrollListener(pager);
 	}
 	
 	public void onLoadRolls(CongressException exception) {
@@ -179,16 +204,17 @@ public class RollListFragment extends ListFragment { //implements PaginationAdap
 	private class LoadRollsTask extends AsyncTask<Void,Void,List<Roll>> {
 		private RollListFragment context;
 		private CongressException exception;
+		int page;
 
-		public LoadRollsTask(RollListFragment context) {
+		public LoadRollsTask(RollListFragment context, int page) {
 			this.context = context;
+			this.page = page;
 			FragmentUtils.setupRTC(context);
 		}
 
 		@Override
 		public List<Roll> doInBackground(Void... nothing) {
 			try {
-				int page = 1;
 
 				Map<String,String> params = new HashMap<String,String>();
 				
@@ -217,7 +243,7 @@ public class RollListFragment extends ListFragment { //implements PaginationAdap
 			if (exception != null)
 				context.onLoadRolls(exception);
 			else
-				context.onLoadRolls(rolls);
+				context.onLoadRolls(rolls, page);
 		}
 	}
 	

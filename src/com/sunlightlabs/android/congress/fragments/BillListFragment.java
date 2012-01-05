@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.notifications.Footer;
-import com.sunlightlabs.android.congress.notifications.PaginationAdapter;
+import com.sunlightlabs.android.congress.notifications.PaginationListener;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
@@ -31,7 +31,7 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.BillService;
 
-public class BillListFragment extends ListFragment implements PaginationAdapter.Paginates {
+public class BillListFragment extends ListFragment implements PaginationListener.Paginates {
 	
 	public static final int PER_PAGE = 20;
 	
@@ -49,7 +49,7 @@ public class BillListFragment extends ListFragment implements PaginationAdapter.
 	String code;
 	String query;
 	
-	PaginationAdapter pager;
+	PaginationListener pager;
 	View loadingView;
 	
 	public static BillListFragment forRecent() {
@@ -137,9 +137,12 @@ public class BillListFragment extends ListFragment implements PaginationAdapter.
 			}
 		});
 		
-		loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading, null);
+		loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_page, null);
 		loadingView.setVisibility(View.GONE);
-		pager = new PaginationAdapter(this);
+		getListView().addFooterView(loadingView);
+		
+		pager = new PaginationListener(this);
+		getListView().setOnScrollListener(pager);
 
 		FragmentUtils.setLoading(this, R.string.bills_loading);
 	}
@@ -193,8 +196,6 @@ public class BillListFragment extends ListFragment implements PaginationAdapter.
 	// only run for the first page of bill results
 	public void displayBills() {
 		if (bills.size() > 0) {
-			getListView().addFooterView(loadingView);
-			getListView().setOnScrollListener(pager);
 			setListAdapter(new BillAdapter(this, bills));
 			setupSubscription();
 		} else {

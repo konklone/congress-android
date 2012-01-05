@@ -3,7 +3,7 @@ package com.sunlightlabs.android.congress.notifications;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 
-public class PaginationAdapter implements OnScrollListener {
+public class PaginationListener implements OnScrollListener {
 	
 	public interface Paginates {
 		public void loadNextPage(int page);
@@ -12,7 +12,7 @@ public class PaginationAdapter implements OnScrollListener {
 	private Paginates context;
 	private int page;
 
-	public PaginationAdapter(Paginates context) {
+	public PaginationListener(Paginates context) {
 		this.context = context;
 		this.page = 1;
 	}
