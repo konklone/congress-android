@@ -151,8 +151,8 @@ public class UpcomingFragment extends ListFragment {
 				
 				Date date = (Date) item;
 				
-				((TextView) view.findViewById(R.id.date_name)).setText(date.dateName);
-				((TextView) view.findViewById(R.id.date_full)).setText(date.dateFull);
+				((TextView) view.findViewById(R.id.date_left)).setText(date.dateName);
+				((TextView) view.findViewById(R.id.date_right)).setText(date.dateFull);
 			} else { // instanceof Action
 				if (view == null)
 					view = inflater.inflate(R.layout.upcoming_bill, null);

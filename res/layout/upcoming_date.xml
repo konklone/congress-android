@@ -12,7 +12,7 @@
 	android:paddingBottom="1dp"
 	>
 	
-	<TextView android:id="@+id/date_name"
+	<TextView android:id="@+id/date_left"
 		android:layout_width="wrap_content"
 		android:layout_height="fill_parent"
 		android:layout_weight="1"
@@ -23,7 +23,7 @@
 		android:text="TODAY"
 		/>
 	
-	<TextView android:id="@+id/date_full"
+	<TextView android:id="@+id/date_right"
 		android:layout_width="wrap_content"
 		android:layout_height="fill_parent"
 		android:layout_weight="0"

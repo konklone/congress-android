@@ -7,7 +7,6 @@ import java.util.List;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,9 +26,9 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.FloorUpdate;
 import com.sunlightlabs.congress.services.FloorUpdateService;
 
-public class FloorUpdateFragment extends ListFragment implements PaginationListener.Paginates {
+public class FloorUpdateFragment extends ListFragment implements PaginationListener.Paginates, DateAdapterHelper.StickyHeader {
 	
-	public static final int PER_PAGE = 40;
+	public static final int PER_PAGE = 20;
 	private String chamber;
 	
 	private List<FloorUpdate> updates;
@@ -82,13 +81,17 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 			}
 		});
 		
-		loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_page, null);
+		adapterHelper = new FloorUpdateAdapter(this);
+		
+		LayoutInflater inflater = LayoutInflater.from(getActivity());
+		
+		loadingView = inflater.inflate(R.layout.loading_page, null);
 		loadingView.setVisibility(View.GONE);
 		getListView().addFooterView(loadingView);
 		
 		pager = new PaginationListener(this);
-		getListView().setOnScrollListener(pager);
-
+		adapterHelper.setOnScrollListener(pager);
+		
 		FragmentUtils.setLoading(this, R.string.floor_updates_loading);
 	}
 	
@@ -105,7 +108,7 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 	
 	@Override
 	public void loadNextPage(int page) {
-		getListView().setOnScrollListener(null);
+		adapterHelper.setOnScrollListener(null);
 		loadingView.setVisibility(View.VISIBLE);
 		new LoadUpdatesTask(this, chamber, page).execute();
 	}
@@ -125,7 +128,7 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 		
 		// only re-enable the pagination if we got a full page back
 		if (updates.size() == PER_PAGE)
-			getListView().setOnScrollListener(pager);
+			adapterHelper.setOnScrollListener(pager);
 	}
 	
 	public void onLoadUpdates(CongressException exception) {
@@ -135,7 +138,6 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 	
 	public void displayUpdates() {
 		if (updates.size() > 0) {
-			adapterHelper = new FloorUpdateAdapter(this);
 			setListAdapter(adapterHelper.adapterFor(updates));
 			setupSubscription();
 		} else
@@ -149,7 +151,7 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 	static class FloorUpdateAdapter extends DateAdapterHelper<FloorUpdate> {
 		static SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm aa");
 		
-        public FloorUpdateAdapter(Fragment context) {
+        public FloorUpdateAdapter(ListFragment context) {
             super(context);
         }
         
@@ -159,8 +161,14 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
         }
         
         @Override
-		public View contentView(ContentWrapper wrapper) {
-			FloorUpdate update = wrapper.content;
+        public void updateStickyHeader(Date date, View view, TextView left, TextView right) {
+        	String time = timeFormat.format(date);
+        	left.setText(Utils.nearbyOrFullDate(date));
+    		right.setText(time);
+        }
+        
+        @Override
+		public View contentView(FloorUpdate update, boolean showTime) {
 			
 			View view = inflater.inflate(R.layout.floor_update, null);
 			view.setEnabled(false);
@@ -171,10 +179,10 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 			if (update.events.size() > 0)
 				((TextView) view.findViewById(R.id.text)).setText(update.events.get(0));
 			
-//			if (item.showTime)
-//				timeView.setVisibility(View.VISIBLE);
-//			else
-//				timeView.setVisibility(View.INVISIBLE);
+			if (showTime)
+				timeView.setVisibility(View.VISIBLE);
+			else
+				timeView.setVisibility(View.INVISIBLE);
 			
 			return view;
 		}

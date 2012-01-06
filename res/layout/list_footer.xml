@@ -1,28 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" 
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" 
 	android:layout_height="fill_parent"
-	android:orientation="vertical"
 	>
 	
-    <include layout="@layout/list_header_simple"
+	<LinearLayout 
+	    
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent"
+		android:orientation="vertical"
+		>
+		
+	    <include layout="@layout/list_header_simple"
+	        android:visibility="gone"
+	        />
+		
+		<ListView android:id="@id/android:list"
+		    android:layout_width="fill_parent" 
+		    android:layout_height="fill_parent"
+		    android:layout_weight="1"
+			/>
+		
+		<include layout="@layout/list_empty"
+			 android:layout_width="fill_parent" 
+		     android:layout_height="fill_parent"
+			 android:layout_weight="1" 
+			 />
+		
+		<include layout="@layout/footer" 
+			android:layout_weight="0"
+			/>
+		
+	</LinearLayout>
+	
+	<FrameLayout android:id="@+id/header_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:visibility="gone" 
         />
-	
-	<ListView android:id="@id/android:list"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="fill_parent"
-	    android:layout_weight="1"
-		/>
-	
-	<include layout="@layout/list_empty"
-		 android:layout_width="fill_parent" 
-	     android:layout_height="fill_parent"
-		 android:layout_weight="1" 
-		 />
-	
-	<include layout="@layout/footer" 
-		android:layout_weight="0"
-		/>
-	
-</LinearLayout>
+</FrameLayout>

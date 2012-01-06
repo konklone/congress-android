@@ -1,20 +1,25 @@
 package com.sunlightlabs.android.congress.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.content.res.Resources;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
+
+import com.sunlightlabs.android.congress.R;
 
 public abstract class DateAdapterHelper<Content> {
-	Fragment context;
+	protected ListFragment context;
 	
 	public Resources resources;
 	public LayoutInflater inflater;
@@ -23,16 +28,40 @@ public abstract class DateAdapterHelper<Content> {
 	public List<Content> contents;
 	public List<ItemWrapper> items;
 	
-	public DateAdapterHelper(Fragment context) {
+	// manage sticky header
+	private ViewGroup stickyHeader;
+	private TextView stickyHeaderLeft;
+	private TextView stickyHeaderRight;
+	private OnScrollListener auxScrollListener;  
+	
+	public interface StickyHeader {}
+	
+	public DateAdapterHelper(ListFragment context) {
 		this.context = context;
 		this.inflater = LayoutInflater.from(context.getActivity());
 		this.resources = context.getResources();
+		
+		if (context instanceof StickyHeader) {
+			stickyHeader = (ViewGroup) context.getView().findViewById(R.id.header_container);
+			stickyHeader.addView(stickyDateView(inflater), 0);
+		}
 	}
 	
 	public DateAdapter adapterFor(List<Content> contents) {
 		this.contents = contents;
 		this.items = processContents(contents);
 		this.adapter = new DateAdapter(this, context, items);
+		
+		if (context instanceof StickyHeader) {
+			context.getListView().setOnScrollListener(adapter);
+			// trigger it once
+			if (contents.size() > 0) { 
+				// updateStickyHeader(dateFor(contents.get(0)));
+				stickyHeader.setVisibility(View.VISIBLE);
+			}
+		} else
+			context.getListView().setOnScrollListener(auxScrollListener);
+		
 		return adapter;
 	}
 	
@@ -45,48 +74,77 @@ public abstract class DateAdapterHelper<Content> {
 		this.adapter.notifyDataSetChanged();
 	}
 	
-	abstract public Date dateFor(Content action);
+	public void setOnScrollListener(OnScrollListener listener) {
+		auxScrollListener = listener;
+	}
 	
-	abstract public View contentView(ContentWrapper wrapper);
+	abstract public Date dateFor(Content content);
+	
+	// must override
+	public View contentView(Content content) { return null; }
+	
+	// override if you want to make use of this aspect of the adapter
+	public View contentView(Content content, boolean showTime) {
+		return contentView(content); // ignored by default
+	}
 	
 	// Optionally override this
-	public View dateView(DateWrapper wrapper) {
-		return Utils.dateView(context.getActivity(), wrapper.date, Utils.shortDateThisYear(wrapper.date));
+	public View dateView(Date date) {
+		return Utils.dateView(context.getActivity(), date, Utils.fullDateThisYear(date));
+	}
+	
+	// override this to control how the date view gets populated
+	public void updateStickyHeader(Date date, View view, TextView left, TextView right) {}
+	
+	// called from the internal adapter
+	private void updateStickyHeader(Date date) {
+		updateStickyHeader(date, this.stickyHeader.getChildAt(0), stickyHeaderLeft, stickyHeaderRight);
+	}
+	
+	public View stickyDateView(LayoutInflater inflater) {
+		View view = inflater.inflate(R.layout.list_item_date, null);
+		stickyHeaderLeft = (TextView) view.findViewById(R.id.date_left);
+		stickyHeaderRight = (TextView) view.findViewById(R.id.date_right);
+		return view;
 	}
 	
 	private List<ItemWrapper> processContents(List<Content> contents) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy");
+    	SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm aa");
+    	
 		List<ItemWrapper> items = new ArrayList<ItemWrapper>();
 		
-		int currentMonth = -1;
-		int currentDay = -1;
-		int currentYear = -1;
+		String currentDate = "";
+		String currentTime = "";
 		
 		for (int i=0; i<contents.size(); i++) {
 			Content content = contents.get(i);
+			ContentWrapper wrapper = new ContentWrapper(content);
+			
+			// figure out whether we need to insert a date header first,
+			// and whether the showTime flag should be marked
 			
 			Date contentDate = dateFor(content);
-			GregorianCalendar calendar = new GregorianCalendar();
-			calendar.setTime(contentDate);
-			int month = calendar.get(Calendar.MONTH);
-			int day = calendar.get(Calendar.DAY_OF_MONTH);
-			int year = calendar.get(Calendar.YEAR);
 			
-			if (currentMonth != month || currentDay != day || currentYear != year) {
-				
+			String date = dateFormat.format(contentDate);
+			String time = timeFormat.format(contentDate);
+			
+			if (!currentDate.equals(date))
 				items.add(new DateWrapper(contentDate));
-				
-				currentMonth = month;
-				currentDay = day;
-				currentYear = year;
-			}
 			
-			items.add(new ContentWrapper(content));
+			if (!currentTime.equals(time))
+				wrapper.showTime = true;
+				
+			currentDate = date;
+			currentTime = time;
+			
+			items.add(wrapper);
 		}
 		
 		return items;
 	}
 	
-	public class DateAdapter extends ArrayAdapter<DateAdapterHelper<Content>.ItemWrapper> {
+	public class DateAdapter extends ArrayAdapter<DateAdapterHelper<Content>.ItemWrapper> implements OnScrollListener {
     	DateAdapterHelper<Content> helper;
     	
     	private static final int TYPE_DATE = 0;
@@ -126,11 +184,37 @@ public abstract class DateAdapterHelper<Content> {
 		public View getView(int position, View view, ViewGroup parent) {
 			DateAdapterHelper<Content>.ItemWrapper item = getItem(position);
 			if (item instanceof DateAdapterHelper.DateWrapper)
-				return dateView((DateWrapper) item);
-			else 
-				return contentView((ContentWrapper) item);
+				return dateView(((DateWrapper) item).date);
+			else { 
+				ContentWrapper wrapper = (ContentWrapper) item;
+				return contentView(wrapper.content, wrapper.showTime);
+			}
 		}
-		
+
+		// this will only run (the OnScrollListener will only be set) if the helper is attached to a fragment implementing StickyHeader
+		@Override
+		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+			int position = firstVisibleItem;
+			
+			// guaranteed to be at least one item after a date wrapper, and it will be a content item, 
+			// because of how the adapter builds itself
+			if (getItemViewType(position) == TYPE_DATE)
+				position += 1;
+			
+			Content content = ((ContentWrapper) getItem(position)).content;
+			
+			helper.updateStickyHeader(dateFor(content));
+			
+			if (helper.auxScrollListener != null)
+				helper.auxScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+		}
+
+		@Override
+		public void onScrollStateChanged(AbsListView view, int scrollState) {
+			// pass on the scroll event if an auxiliary scroll listener is registered
+			if (helper.auxScrollListener != null)
+				helper.auxScrollListener.onScrollStateChanged(view, scrollState);
+		}
     }
 	
 	public class ItemWrapper {}
@@ -142,6 +226,10 @@ public abstract class DateAdapterHelper<Content> {
 	
 	public class ContentWrapper extends ItemWrapper {
 		public Content content;
-		public ContentWrapper(Content content) { this.content = content; }
+		public boolean showTime;
+		public ContentWrapper(Content content) { 
+			this.content = content;
+			this.showTime = false;
+		}
 	}
 }

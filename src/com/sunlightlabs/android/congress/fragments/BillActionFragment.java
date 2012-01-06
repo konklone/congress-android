@@ -3,7 +3,6 @@ package com.sunlightlabs.android.congress.fragments;
 import java.util.Date;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -18,10 +17,11 @@ import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.DateAdapterHelper;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 
-public class BillActionFragment extends ListFragment implements LoadBillTask.LoadsBill {
+public class BillActionFragment extends ListFragment implements LoadBillTask.LoadsBill, DateAdapterHelper.StickyHeader {
 	private Bill bill;
 	
 	public static BillActionFragment create(Bill bill) {
@@ -91,7 +91,7 @@ public class BillActionFragment extends ListFragment implements LoadBillTask.Loa
 	}
 	
 	static class BillActionAdapter extends DateAdapterHelper<Bill.Action> {
-		public BillActionAdapter(Fragment context) {
+		public BillActionAdapter(ListFragment context) {
 			super(context);
 		}
 
@@ -101,9 +101,8 @@ public class BillActionFragment extends ListFragment implements LoadBillTask.Loa
 		}
 		
 		@Override
-		public View contentView(ContentWrapper wrapper) {
+		public View contentView(Bill.Action action) {
 			View view = inflater.inflate(R.layout.bill_action, null);
-			Bill.Action action = wrapper.content;
 			
 			String text = action.text;
 			if (!text.endsWith("."))
@@ -116,6 +115,20 @@ public class BillActionFragment extends ListFragment implements LoadBillTask.Loa
 			((TextView) view).setText(Html.fromHtml(text));
 			return view;
 		}
+		
+		@Override
+        public void updateStickyHeader(Date date, View view, TextView left, TextView right) {
+        	String nearbyDate = Utils.nearbyDate(date);
+    		String fullDate = Utils.fullDateThisYear(date);
+    		
+    		if (nearbyDate != null) {
+    			left.setText(nearbyDate);
+    			right.setText(fullDate);
+    		} else {
+    			left.setText(fullDate);
+    			right.setText("");
+    		}
+        }
 	}
 	
 	

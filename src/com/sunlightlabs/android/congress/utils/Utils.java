@@ -34,6 +34,8 @@ import com.sunlightlabs.congress.services.Sunlight;
 public class Utils {
 	public static final String TAG = "Congress";
 	
+	public static SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm aa");
+	
 	public static void setupRTC(Context context) {
 		Resources resources = context.getResources();
 		
@@ -396,10 +398,10 @@ public class Utils {
 		if (result != null)
 			return result;
 		else
-			return fullDate(subject);
+			return fullDateThisYear(subject);
 	}
 	
-	public static String shortDateThisYear(Date subject) {
+	public static String fullDateThisYear(Date subject) {
 		SimpleDateFormat otherYearFormat = new SimpleDateFormat("MMM d, yyyy");
 		SimpleDateFormat thisYearFormat = new SimpleDateFormat("MMM d");
 		int thisYear = new GregorianCalendar().get(Calendar.YEAR);
@@ -415,8 +417,9 @@ public class Utils {
 		View view = LayoutInflater.from(context).inflate(R.layout.list_item_date, null);
 		
 		String nearbyDate = Utils.nearbyDate(subject);
-		TextView nearby = (TextView) view.findViewById(R.id.date_name);
-		TextView full = (TextView) view.findViewById(R.id.date_full);
+		
+		TextView nearby = (TextView) view.findViewById(R.id.date_left);
+		TextView full = (TextView) view.findViewById(R.id.date_right);
 		if (nearbyDate != null) {
 			nearby.setText(nearbyDate);
 			full.setText(fullDate);
@@ -424,6 +427,15 @@ public class Utils {
 			nearby.setText(fullDate);
 			full.setVisibility(View.GONE);
 		}
+		
+		return view;
+	}
+	
+	public static View dateTimeView(Context context, Date subject) {
+		View view = LayoutInflater.from(context).inflate(R.layout.list_item_date, null);
+		
+		((TextView) view.findViewById(R.id.date_left)).setText(Utils.nearbyOrFullDate(subject));
+		((TextView) view.findViewById(R.id.date_right)).setText(timeFormat.format(subject));
 		
 		return view;
 	}
