@@ -61,7 +61,14 @@ public class BillActionFragment extends ListFragment implements LoadBillTask.Loa
 		if (bill.actions != null)
 			displayBill();
 	}
-
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (bill.actions != null)
+			setupSubscription();
+	}
+	
 	private void setupSubscription() {
 		Footer.setup(this, new Subscription(bill.id,  Subscriber.notificationName(bill), "ActionsBillSubscriber", bill.id), bill.actions);
 	}

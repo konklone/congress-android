@@ -81,6 +81,13 @@ public class YouTubeFragment extends ListFragment implements LoadsThumb, LoadsYo
 			displayVideos();
 	}
 	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (videos != null)
+			setupSubscription();
+	}
+	
 	private void setupControls() {
 		FragmentUtils.setLoading(this, R.string.youtube_loading);
 		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {

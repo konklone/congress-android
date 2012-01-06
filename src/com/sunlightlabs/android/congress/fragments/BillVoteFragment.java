@@ -66,6 +66,13 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 			displayBill();
 	}
 	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (bill.passage_votes != null)
+			setupSubscription();
+	}
+	
 	private void setupSubscription() {
 		Footer.setup(this, new Subscription(bill.id, Subscriber.notificationName(bill), "VotesBillSubscriber", bill.id), bill.passage_votes);
 	}

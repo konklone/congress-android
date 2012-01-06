@@ -65,6 +65,13 @@ public class TweetsFragment extends ListFragment implements LoadsTweets {
 			displayTweets();
 	}
 	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (tweets != null)
+			setupSubscription();
+	}
+	
 	private void setupControls() {
 		FragmentUtils.setLoading(this, R.string.twitter_loading);
 		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {

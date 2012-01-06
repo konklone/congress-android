@@ -95,6 +95,13 @@ public class NewsListFragment extends ListFragment implements LoadsNews {
 			displayNews();
 	}
 	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (items != null)
+			setupSubscription();
+	}
+	
 	private void setupControls() {
 		FragmentUtils.setLoading(this, R.string.news_loading);
 		
