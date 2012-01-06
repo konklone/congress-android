@@ -139,13 +139,18 @@
 	</string-array>
     
     <string-array name="changelog">
-        <item>Showing what bills are coming up on the House and Senate floor</item>
-    	<item>New visual theme</item>
-    	<item>Ordering news results correctly by date</item>
+        <item>Search through both votes and bills</item>
+		<item>Order search results by either relevance or date</item>
+		<item>Reorganized bill menu</item>
+		<item>More redesign work, looking a lot sleeker (especially House and Senate floor)</item>
+		<item>Higher-res icons for the Galaxy Nexus</item>
+		<item>Replaced Donate button with button to review app in Market</item>
+		<item>Fixed a crashing bug affecting some users</item>
     </string-array>
     
     <string-array name="changelogLast">
-        <item>Limited hearings page to Senate</item>
-    	<item>Tapping a hearing adds it to your calendar</item>
+        <item>Showing what bills are coming up on the House and Senate floor</item>
+    	<item>New visual theme</item>
+    	<item>Ordering news results correctly by date</item>
 	</string-array>
 </resources>
