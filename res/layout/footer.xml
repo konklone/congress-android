@@ -7,14 +7,10 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	
+	android:paddingTop="3dp"
+	
 	android:visibility="gone"
 	>
-	
-	<include layout="@layout/line"
-		android:id="@+id/footer_line" 
-		android:layout_alignParentTop="true"
-		android:layout_marginBottom="3dp"
-		/>
 	
 	<TextView android:id="@+id/text"
 		
@@ -53,9 +49,6 @@
    		android:layout_toLeftOf="@id/text"
 		android:layout_centerVertical="true"
 		
-		android:paddingTop="6dp"
-		android:paddingBottom="6dp"
-   		
    		android:visibility="gone"
    		/>
 	
