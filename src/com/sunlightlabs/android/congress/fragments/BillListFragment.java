@@ -179,16 +179,16 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	
 	// handles coming in with any page of bills, even the first one
 	public void onLoadBills(List<Bill> bills, int page) {
+		if (!isAdded())
+			return;
+		
 		if (page == 1) {
 			this.bills = bills;
-			if (isAdded())
-				displayBills();
+			displayBills();
 		} else {
 			this.bills.addAll(bills);
-			if (isAdded()) {
-				loadingView.setVisibility(View.GONE);
-				((BillAdapter) getListAdapter()).notifyDataSetChanged();
-			}
+			loadingView.setVisibility(View.GONE);
+			((BillAdapter) getListAdapter()).notifyDataSetChanged();
 		}
 		
 		// only re-enable the pagination if we got a full page back

@@ -167,16 +167,16 @@ public class RollListFragment extends ListFragment implements PaginationListener
 	}
 	
 	public void onLoadRolls(List<Roll> rolls, int page) {
+		if (!isAdded())
+			return;
+		
 		if (page == 1) {
 			this.rolls= rolls;
-			if (isAdded())
-				displayRolls();
+			displayRolls();
 		} else {
 			this.rolls.addAll(rolls);
-			if (isAdded()) {
-				loadingView.setVisibility(View.GONE);
-				((RollAdapter) getListAdapter()).notifyDataSetChanged();
-			}
+			loadingView.setVisibility(View.GONE);
+			((RollAdapter) getListAdapter()).notifyDataSetChanged();
 		}
 		
 		// only re-enable the pagination if we got a full page back
