@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Window;
 
 import com.sunlightlabs.android.congress.tasks.LoadLegislatorTask;
 import com.sunlightlabs.android.congress.tasks.LoadLegislatorTask.LoadsLegislator;
@@ -18,6 +19,7 @@ public class LegislatorLoader extends Activity implements LoadsLegislator {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.loading_fullscreen);
 		
 		Intent i = getIntent();

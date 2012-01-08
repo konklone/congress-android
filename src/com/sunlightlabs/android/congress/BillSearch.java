@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.view.Window;
 
 import com.sunlightlabs.android.congress.fragments.BillListFragment;
 import com.sunlightlabs.android.congress.utils.Analytics;
@@ -18,6 +19,7 @@ public class BillSearch extends FragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.pager_titled);
 		
 		query = getIntent().getStringExtra(SearchManager.QUERY).trim();
