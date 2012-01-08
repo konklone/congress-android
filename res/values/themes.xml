@@ -7,7 +7,7 @@
 	    <item name="android:cacheColorHint">@color/background</item>
     </style>
     
-    <style name="MainTheme" parent="android:Theme.NoTitleBar">
+    <style name="MainTheme" parent="RootTheme">
         <item name="android:listViewStyle">@style/MainList</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="android:colorBackground">@color/background</item>
