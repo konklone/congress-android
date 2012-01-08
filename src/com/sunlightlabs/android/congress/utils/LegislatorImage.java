@@ -34,7 +34,9 @@ public class LegislatorImage {
 		BitmapDrawable drawable = quickGetImage(size, bioguideId, context);
 		if (drawable == null) {
 			cacheImage(size, bioguideId, context);
-			drawable = quickGetImage(size, bioguideId, context);
+			
+			if (context != null) // activity may have disappeared while the image was being downloaded
+				drawable = quickGetImage(size, bioguideId, context);
 		}
 		return drawable;
 	}
