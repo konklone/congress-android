@@ -29,7 +29,8 @@ public class ImageUtils {
 		BitmapDrawable drawable = quickGetImage(size, hash, context);
 		if (drawable == null) {
 			cacheImage(size, hash, url, context);
-			drawable = quickGetImage(size, hash, context);
+			if (context != null) // in case activity disappeared while loading
+				drawable = quickGetImage(size, hash, context);
 		}
 		return drawable;
 	}
