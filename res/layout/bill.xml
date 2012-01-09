@@ -44,6 +44,7 @@
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:visibility="gone"
+		    
 		    android:id="@+id/bill_all_sponsors"
 		    >
 		
@@ -56,10 +57,17 @@
 			    android:visibility="gone" 
 			    />
 			
+			<FrameLayout android:id="@+id/bill_cosponsors_container" 
+			    android:layout_width="wrap_content"
+    			android:layout_height="fill_parent"
+    			android:background="@color/background_grey"
+    			
+    			android:visibility="gone"
+    			>
 			<include layout="@layout/bill_cosponsors"
 			    android:id="@+id/bill_cosponsors"
-			    android:visibility="gone"
 			    />
+			</FrameLayout>
 		
 		</LinearLayout>
 		

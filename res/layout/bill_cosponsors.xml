@@ -8,7 +8,7 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     
-    android:background="@drawable/selector_grey"
+    style="@style/Pressable"
     
     android:gravity="center_vertical"
     >

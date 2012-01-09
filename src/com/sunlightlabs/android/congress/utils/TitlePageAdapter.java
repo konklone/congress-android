@@ -66,7 +66,7 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
 		View titleView = LayoutInflater.from(activity).inflate(R.layout.pager_tab, null);
 		((TextView) titleView.findViewById(R.id.tab_name)).setText(title);
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
-		titleView.setOnClickListener(new View.OnClickListener() {
+		titleView.findViewById(R.id.inner_tab).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				pager.setCurrentItem(position);

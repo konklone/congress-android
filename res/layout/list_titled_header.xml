@@ -1,38 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="wrap_content" 
-	android:layout_height="wrap_content"
-	android:orientation="vertical"
-	>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent"
+    >
     
-    <LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content" 
-		android:orientation="vertical"
-		android:id="@+id/header_container"
-		>
-		
-    	<include layout="@layout/title_bar" />	   
-			
-		<include layout="@layout/list_header" 
-			android:id="@+id/list_header" 
-			android:visibility="gone" 
-			/>
-		
-	</LinearLayout>
+    <include layout="@layout/title_bar" />
+    
+    <include layout="@layout/list_header" 
+		android:id="@+id/list_header" 
+		android:visibility="gone" 
+		/>
  
     <ListView android:id="@id/android:list"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="fill_parent"
-	    android:layout_below="@id/header_container"
 		/>
 	
-	<LinearLayout android:orientation="vertical"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:gravity="center"
-		android:layout_below="@id/header_container"
-		>
-		<include layout="@layout/list_empty" />
-	</LinearLayout>
+	<include layout="@layout/list_empty"
+		android:layout_width="fill_parent" 
+	    android:layout_height="fill_parent" />
 	
-</RelativeLayout>
+</LinearLayout>

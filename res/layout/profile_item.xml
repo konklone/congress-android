@@ -6,8 +6,7 @@
 	android:layout_height="fill_parent"
 	android:layout_weight="1"
 	
-	android:focusable="true"
-	android:background="@drawable/selector_clear"
+	style="@style/Pressable"
 	>
 
 	<FrameLayout

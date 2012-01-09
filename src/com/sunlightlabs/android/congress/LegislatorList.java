@@ -492,6 +492,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	private void toggleRelocating() {
 		Log.d(Utils.TAG, "LegislatorList - toggleRelocating(): relocating is " + relocating);
 		headerWrapper.getBase().setEnabled(relocating ? false : true);
+		headerWrapper.getTxt().setText(relocating ? R.string.menu_location_updating : R.string.location_update);
 		headerWrapper.getLoading().setVisibility(relocating ? View.VISIBLE : View.GONE);
 	}
 

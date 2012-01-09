@@ -169,7 +169,7 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 					}
 				});
 				
-				cosponsorView.setVisibility(View.VISIBLE);
+				getView().findViewById(R.id.bill_cosponsors_container).setVisibility(View.VISIBLE);
 				getView().findViewById(R.id.bill_sponsor_line).setVisibility(View.VISIBLE);
 			}
 			

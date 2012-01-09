@@ -16,7 +16,7 @@
 		android:layout_marginRight="12dp"
 		android:layout_weight="0"
 		
-		android:background="@drawable/selector_clear"
+		style="@style/Pressable"
         >
 		<ImageView android:id="@+id/title_icon"
 			android:layout_width="44dp"

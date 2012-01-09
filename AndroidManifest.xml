@@ -63,10 +63,10 @@
         <activity android:name=".MenuLegislators" />
         
         <activity android:name=".GetText"
-        	android:theme="@android:style/Theme.Dialog" 
+        	android:theme="@android:style/Theme.Holo.Dialog" 
         	/>
         <activity android:name=".GetState"
-        	android:theme="@android:style/Theme.Dialog" 
+        	android:theme="@android:style/Theme.Holo.Dialog" 
         	/>
         	
         <activity android:name=".LegislatorPager" />

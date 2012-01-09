@@ -6,8 +6,7 @@
 	
 	android:layout_weight="1"
 	
-	android:background="@drawable/selector_clear"
-	
+	style="@style/Pressable"
 	>
 	 	
 	<ImageView android:id="@+id/picture"

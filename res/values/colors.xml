@@ -6,8 +6,7 @@
 	<color name="background_light">#4470A3</color>
 	<color name="background_grey">#5f5f5f</color>
 	
-	<color name="selector_focused">#f58525</color>
-	<color name="selector_pressed">#f58525</color>
+	<color name="selector">#f58525</color>
 	
 	<color name="text">@android:color/white</color>
 	<color name="text_grey">#c5c5c5</color>
