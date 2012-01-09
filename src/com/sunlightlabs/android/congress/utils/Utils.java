@@ -274,10 +274,12 @@ public class Utils {
 	
 	public static void setTitleButton(final Activity activity) {
 		View button = activity.findViewById(R.id.title_button);
+		
+		button.findViewById(R.id.title_up_icon).setVisibility(View.VISIBLE);
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				activity.startActivity(new Intent(activity, MenuMain.class));
+				activity.startActivity(new Intent(activity, MenuMain.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 			}
 		});
 		button.setFocusable(true);

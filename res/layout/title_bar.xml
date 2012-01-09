@@ -10,20 +10,37 @@
 	android:id="@+id/bar"
 	>
 	
-    <FrameLayout android:id="@+id/title_button"
-        android:layout_width="44dp"
+    <LinearLayout android:id="@+id/title_button"
+        android:orientation="horizontal"
+        
+        android:layout_width="wrap_content"
 		android:layout_height="44dp"
-		android:layout_marginRight="12dp"
+		
+		android:paddingLeft="3dp"
+		android:layout_marginRight="10dp"
 		android:layout_weight="0"
 		
 		style="@style/Pressable"
-        >
+		>
+        
+        <ImageView android:id="@+id/title_up_icon"
+            android:layout_width="8dp"
+            android:layout_height="16dp"
+            
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/action_bar_up"
+            
+            android:visibility="gone"
+            />
+        
 		<ImageView android:id="@+id/title_icon"
 			android:layout_width="44dp"
 			android:layout_height="44dp"
 			android:src="@drawable/title_icon"
 			/>
-	</FrameLayout>
+		
+		
+	</LinearLayout>
 	
 	<TextView android:id="@+id/title_text"
 		android:layout_width="fill_parent"
