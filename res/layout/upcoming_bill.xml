@@ -8,7 +8,9 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
-		android:background="@drawable/selector_legacy"
+		
+		style="@style/Pressable"
+		android:focusable="false"
 		>
 		
 		<TextView android:id="@+id/code"
