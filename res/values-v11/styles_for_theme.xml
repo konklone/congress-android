@@ -3,6 +3,5 @@
     <style name="Pressable">
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:focusable">true</item>
-        
     </style>
 </resources>
