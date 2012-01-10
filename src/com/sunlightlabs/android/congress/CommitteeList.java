@@ -14,7 +14,6 @@ public class CommitteeList extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.frame_titled);
 		
 		Legislator legislator = (Legislator) getIntent().getExtras().getSerializable("legislator");

@@ -17,7 +17,6 @@ public class VoteSearch extends FragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.pager_titled);
 		
 		query = getIntent().getStringExtra(SearchManager.QUERY).trim();

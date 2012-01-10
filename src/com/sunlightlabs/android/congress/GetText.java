@@ -21,7 +21,6 @@ public class GetText extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.get_text);
         
         Bundle extras = getIntent().getExtras();
