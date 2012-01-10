@@ -9,8 +9,6 @@ import java.util.Map;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -330,15 +328,12 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			} else
 				holder = (ViewHolder) view.getTag();
 			
-			String action;
 			switch (context.type) {
 			case BILLS_LAW:
 				shortDate(holder.date, bill.enacted_at);
-				action = "became law:";
 				break;
 			case BILLS_SEARCH_RELEVANT:
 				longDate(holder.date, bill.last_action_at);
-				action = "was last active:";
 				break;
 			case BILLS_SEARCH_NEWEST:
 			case BILLS_RECENT:
@@ -346,7 +341,6 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			case BILLS_CODE:
 			default:
 				shortDate(holder.date, bill.introduced_at);
-				action = "was introduced:";
 				break;
 			}
 			
