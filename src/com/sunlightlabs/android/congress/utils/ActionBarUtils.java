@@ -6,7 +6,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.MenuMain;
@@ -83,7 +82,7 @@ public class ActionBarUtils {
 			final PopupMenuWrapper menu = new PopupMenuWrapper(activity, menuView);
 			
 			menu.inflate(menuId);
-			menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+			menu.setOnMenuItemClickListener(new PopupMenuWrapper.OnMenuItemClickListener() {
 				@Override
 				public boolean onMenuItemClick(MenuItem item) {
 					((HasActionMenu) activity).menuSelected(item);
