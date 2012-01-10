@@ -3,12 +3,11 @@ package com.sunlightlabs.android.congress;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.view.Window;
 
 import com.sunlightlabs.android.congress.fragments.BillListFragment;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
-import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class BillSponsor extends FragmentActivity {
@@ -37,8 +36,8 @@ public class BillSponsor extends FragmentActivity {
 	}
 	
 	public void setupControls() {
-		Utils.setTitle(this, "Latest Bills by\n" + sponsor.titledName());
-		Utils.setTitleSize(this, 16);
+		ActionBarUtils.setTitle(this, "Latest Bills by\n" + sponsor.titledName());
+		ActionBarUtils.setTitleSize(this, 16);
 	}
 	
 }

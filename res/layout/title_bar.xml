@@ -66,4 +66,8 @@
 		android:id="@+id/action_1"
 		/>
 	
+	<include layout="@layout/action_button_menu"
+	    android:id="@+id/action_menu"
+	    />
+	
 </LinearLayout>

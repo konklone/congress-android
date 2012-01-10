@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.LocationUtils;
@@ -224,32 +225,32 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 		});
 
 		Utils.setLoading(this, R.string.legislators_loading);
-		Utils.setTitleSize(this, 16);
+		ActionBarUtils.setTitleSize(this, 16);
 		
 		switch (type) {
 		case SEARCH_ZIP:
-			Utils.setTitle(this, "Legislators For " + zipCode);
+			ActionBarUtils.setTitle(this, "Legislators For " + zipCode);
 			break;
 		case SEARCH_LOCATION:
 			showHeader(); // make the location update header visible
-			Utils.setTitle(this, "Your Legislators");
+			ActionBarUtils.setTitle(this, "Your Legislators");
 			break;
 		case SEARCH_LASTNAME:
-			Utils.setTitle(this, "Legislators Named \"" + lastName + "\"");
+			ActionBarUtils.setTitle(this, "Legislators Named \"" + lastName + "\"");
 			break;
 		case SEARCH_COMMITTEE:
-			Utils.setTitle(this, committeeName);
+			ActionBarUtils.setTitle(this, committeeName);
 			break;
 		case SEARCH_STATE:
-			Utils.setTitle(this, "Legislators from " + Utils.stateCodeToName(this, state));
+			ActionBarUtils.setTitle(this, "Legislators from " + Utils.stateCodeToName(this, state));
 			break;
 		case SEARCH_COSPONSORS:
-			Utils.setTitle(this, "Cosponsors for " + Bill.formatId(bill_id));
-			Utils.setTitleSize(this, 16);
+			ActionBarUtils.setTitle(this, "Cosponsors for " + Bill.formatId(bill_id));
+			ActionBarUtils.setTitleSize(this, 16);
 			Utils.setLoading(this, R.string.legislators_loading_cosponsors);
 			break;
 		default:
-			Utils.setTitle(this, "Legislator Search");
+			ActionBarUtils.setTitle(this, "Legislator Search");
 		}
 	}
 	

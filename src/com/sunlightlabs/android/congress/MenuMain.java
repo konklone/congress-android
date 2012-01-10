@@ -12,18 +12,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.TextView;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.sunlightlabs.android.congress.fragments.AlertFragment;
 import com.sunlightlabs.android.congress.fragments.UpcomingFragment;
 import com.sunlightlabs.android.congress.notifications.NotificationService;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils.HasActionMenu;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 
-public class MenuMain extends FragmentActivity {
+public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActionMenu {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,19 +58,21 @@ public class MenuMain extends FragmentActivity {
 			public void onClick(View v) { doFeedback(); }
 		});
 		
-		Utils.setTitle(this, R.string.app_name, false);
+		ActionBarUtils.setTitle(this, R.string.app_name, false);
 		
-		Utils.setActionButton(this, R.id.action_2, R.drawable.notifications, new View.OnClickListener() {
+		ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.notifications, new View.OnClickListener() {
 			public void onClick(View v) { 
 				startActivity(new Intent(MenuMain.this, NotificationTabs.class)); 
 			}
 		});
 		
-		Utils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
+		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
 			public void onClick(View v) { 
 				onSearchRequested();
 			}
 		});
+		
+		ActionBarUtils.setActionMenu(this, R.menu.main);
 	}
 	
 	private void setupFragments() {
@@ -168,6 +171,12 @@ public class MenuMain extends FragmentActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		menuSelected(item);
+		return true;
+	}
+	
+	@Override
+	public void menuSelected(MenuItem item) {
 		switch(item.getItemId()) { 
 		case R.id.settings:
 			startActivity(new Intent(this, Settings.class));
@@ -176,7 +185,6 @@ public class MenuMain extends FragmentActivity {
 			showChangelog();
 			break;
 		}
-		return true;
 	}
 	
 	public static class MainMenuFragment extends Fragment {

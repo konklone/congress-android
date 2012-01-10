@@ -6,9 +6,9 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 
 import com.sunlightlabs.android.congress.fragments.RollListFragment;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
-import com.sunlightlabs.android.congress.utils.Utils;
 
 public class VoteSearch extends FragmentActivity {
 	
@@ -35,8 +35,8 @@ public class VoteSearch extends FragmentActivity {
 	}
 
 	public void setupControls() {
-		Utils.setTitle(this, "Votes matching \"" + query + "\"");
-		Utils.setTitleSize(this, 16);
+		ActionBarUtils.setTitle(this, "Votes matching \"" + query + "\"");
+		ActionBarUtils.setTitleSize(this, 16);
 	}
 	
 }

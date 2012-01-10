@@ -8,19 +8,20 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 
 import com.sunlightlabs.android.congress.fragments.BillActionFragment;
 import com.sunlightlabs.android.congress.fragments.BillInfoFragment;
 import com.sunlightlabs.android.congress.fragments.BillVoteFragment;
 import com.sunlightlabs.android.congress.fragments.NewsListFragment;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils.HasActionMenu;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Database;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 
-public class BillPager extends FragmentActivity {
+public class BillPager extends FragmentActivity implements HasActionMenu {
 	private Bill bill;
 	private String tab;
 	private Database database;
@@ -68,9 +69,9 @@ public class BillPager extends FragmentActivity {
 	}
 	
 	public void setupControls() {
-		Utils.setTitle(this, Bill.formatCode(bill.code));
+		ActionBarUtils.setTitle(this, Bill.formatCode(bill.code));
 		
-		Utils.setActionButton(this, R.id.action_1, R.drawable.star_off, new View.OnClickListener() {
+		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.star_off, new View.OnClickListener() {
 			public void onClick(View v) { 
 				toggleDatabaseFavorite(); 
 			}
@@ -78,13 +79,15 @@ public class BillPager extends FragmentActivity {
 		
 		toggleFavoriteStar(cursor.getCount() == 1);
 		
-		Utils.setActionButton(this, R.id.action_2, R.drawable.share, new View.OnClickListener() {
+		ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.share, new View.OnClickListener() {
 			public void onClick(View v) {
 				Analytics.billShare(BillPager.this, bill.id);
 	    		Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, shareText());
 	    		startActivity(Intent.createChooser(intent, "Share bill via:"));
 			}
 		});
+		
+		ActionBarUtils.setActionMenu(this, R.menu.legislator);
 	}
 	
 	public String shareText() {
@@ -93,9 +96,9 @@ public class BillPager extends FragmentActivity {
 
 	private void toggleFavoriteStar(boolean enabled) {
 		if (enabled)
-			Utils.setActionIcon(this, R.id.action_1, R.drawable.star_on);
+			ActionBarUtils.setActionIcon(this, R.id.action_1, R.drawable.star_on);
 		else
-			Utils.setActionIcon(this, R.id.action_1, R.drawable.star_off);
+			ActionBarUtils.setActionIcon(this, R.id.action_1, R.drawable.star_off);
 	}
 
 	private void toggleDatabaseFavorite() {
@@ -125,7 +128,13 @@ public class BillPager extends FragmentActivity {
 	
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	switch(item.getItemId()) {
+    	menuSelected(item);
+    	return true;
+    }
+	
+	@Override
+	public void menuSelected(MenuItem item) {
+		switch(item.getItemId()) {
     	case R.id.thomas:
     		Analytics.billThomas(this, bill.id);
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.thomasUrl(bill.bill_type, bill.number, bill.session))));
@@ -139,6 +148,5 @@ public class BillPager extends FragmentActivity {
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.openCongressUrl(bill.bill_type, bill.number, bill.session))));
     		break;
     	}
-    	return true;
-    }
+	}
 }

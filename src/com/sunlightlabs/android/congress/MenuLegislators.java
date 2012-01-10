@@ -28,6 +28,7 @@ import com.commonsware.cwac.merge.MergeAdapter;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.MenuLegislators.FavoriteLegislatorsAdapter.FavoriteLegislatorWrapper;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Database;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
@@ -106,7 +107,7 @@ public class MenuLegislators extends ListActivity implements LoadPhotoTask.Loads
 	}
 	
 	private void setupControls() {
-		Utils.setTitle(this, R.string.menu_main_legislators);
+		ActionBarUtils.setTitle(this, R.string.menu_main_legislators);
 		
 		LayoutInflater inflater = LayoutInflater.from(this);
 		adapter = new MergeAdapter();

@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Window;
 
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
@@ -44,7 +44,7 @@ public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 	
 	public void setupControls() {
 		if (code != null && !code.equals(""))
-			Utils.setTitle(this, Bill.formatCode(code));
+			ActionBarUtils.setTitle(this, Bill.formatCode(code));
 		Utils.setLoading(this, R.string.bill_loading);
 	}
 	

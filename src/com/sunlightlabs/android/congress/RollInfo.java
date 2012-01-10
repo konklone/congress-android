@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Database;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
@@ -134,7 +135,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	}
 	
 	public void setupControls() {
-		Utils.setTitle(this, Utils.formatRollId(id));
+		ActionBarUtils.setTitle(this, Utils.formatRollId(id));
 		Utils.setLoading(this, R.string.vote_loading);
 	}
 	

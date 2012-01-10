@@ -5,9 +5,9 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 
 import com.sunlightlabs.android.congress.fragments.CommitteeListFragment;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
-import com.sunlightlabs.android.congress.utils.Utils;
 
 public class CommitteePager extends FragmentActivity {
 	@Override
@@ -17,7 +17,7 @@ public class CommitteePager extends FragmentActivity {
 		
 		Analytics.track(this, "/committees");
 		
-		Utils.setTitle(this, "Committees");
+		ActionBarUtils.setTitle(this, "Committees");
 		
 		setupPager();
 	}

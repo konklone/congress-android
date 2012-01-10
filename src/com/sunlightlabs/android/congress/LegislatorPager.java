@@ -8,19 +8,20 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 
 import com.sunlightlabs.android.congress.fragments.LegislatorProfileFragment;
 import com.sunlightlabs.android.congress.fragments.NewsListFragment;
 import com.sunlightlabs.android.congress.fragments.TweetsFragment;
 import com.sunlightlabs.android.congress.fragments.YouTubeFragment;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils.HasActionMenu;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Database;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class LegislatorPager extends FragmentActivity {
+public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 	private Legislator legislator;
 	private String tab;
 	private Database database;
@@ -72,24 +73,26 @@ public class LegislatorPager extends FragmentActivity {
 	
 	public void setupControls() {
 		String titledName = legislator.titledName();
-		Utils.setTitle(this, titledName);
+		ActionBarUtils.setTitle(this, titledName);
 		if (titledName.length() >= 23)
-			Utils.setTitleSize(this, 16);
+			ActionBarUtils.setTitleSize(this, 16);
 		
-		Utils.setActionButton(this, R.id.action_1, R.drawable.star_off, new View.OnClickListener() {
+		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.star_off, new View.OnClickListener() {
 			public void onClick(View v) { 
 				toggleDatabaseFavorite(); 
 			}
 		});
 		
 		toggleFavoriteStar(cursor.getCount() == 1);
+		
+		ActionBarUtils.setActionMenu(this, R.menu.legislator);
 	}
 
 	private void toggleFavoriteStar(boolean enabled) {
 		if (enabled)
-			Utils.setActionIcon(this, R.id.action_1, R.drawable.star_on);
+			ActionBarUtils.setActionIcon(this, R.id.action_1, R.drawable.star_on);
 		else
-			Utils.setActionIcon(this, R.id.action_1, R.drawable.star_off);
+			ActionBarUtils.setActionIcon(this, R.id.action_1, R.drawable.star_off);
 	}
 
 	private void toggleDatabaseFavorite() {
@@ -119,7 +122,13 @@ public class LegislatorPager extends FragmentActivity {
 	
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	switch(item.getItemId()) {
+    	menuSelected(item);
+    	return true;
+    }
+	
+	@Override
+	public void menuSelected(MenuItem item) {
+		switch(item.getItemId()) {
     	case R.id.govtrack:
     		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.govTrackUrl(legislator.govtrack_id))));
     		break;
@@ -130,6 +139,5 @@ public class LegislatorPager extends FragmentActivity {
     		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.bioguideUrl(legislator.bioguide_id))));
     		break;
     	}
-    	return true;
-    }
+	}
 }

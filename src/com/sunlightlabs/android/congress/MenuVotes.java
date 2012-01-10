@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.Window;
 
 import com.sunlightlabs.android.congress.fragments.RollListFragment;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
-import com.sunlightlabs.android.congress.utils.Utils;
 
 public class MenuVotes extends FragmentActivity {
 	
@@ -30,9 +30,9 @@ public class MenuVotes extends FragmentActivity {
 	}
 	
 	public void setupControls() {
-		Utils.setTitle(this, R.string.menu_votes_recent);
+		ActionBarUtils.setTitle(this, R.string.menu_votes_recent);
 		
-		Utils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
+		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
 			public void onClick(View v) { 
 				onSearchRequested();
 			}

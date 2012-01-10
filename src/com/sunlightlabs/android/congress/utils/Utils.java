@@ -13,15 +13,12 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sunlightlabs.android.congress.BillPager;
 import com.sunlightlabs.android.congress.LegislatorPager;
-import com.sunlightlabs.android.congress.MenuMain;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.RollInfo;
 import com.sunlightlabs.congress.models.Bill;
@@ -250,57 +247,6 @@ public class Utils {
 		messageView.setVisibility(View.VISIBLE);
 	}
 	
-	/** End list of methods marked for death */
-	
-
-	public static void setTitle(Activity activity, String title) {
-		setTitle(activity, title, true);
-	}
-
-	public static void setTitle(Activity activity, int title) {
-		setTitle(activity, activity.getResources().getString(title));
-	}
-	
-	public static void setTitle(Activity activity, int title, boolean enableButton) {
-		setTitle(activity, activity.getResources().getString(title), enableButton);
-	}
-	
-	public static void setTitle(Activity activity, String title, boolean enableButton) {
-		((TextView) activity.findViewById(R.id.title_text)).setText(title);
-		
-		if (enableButton)
-			setTitleButton(activity);
-	}
-	
-	public static void setTitleButton(final Activity activity) {
-		View button = activity.findViewById(R.id.title_button);
-		
-		button.findViewById(R.id.title_up_icon).setVisibility(View.VISIBLE);
-		button.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				activity.startActivity(new Intent(activity, MenuMain.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-			}
-		});
-		button.setFocusable(true);
-	}
-
-	public static void setTitleSize(Activity activity, float size) {
-		((TextView) activity.findViewById(R.id.title_text)).setTextSize(size);
-	}
-	
-	public static void setActionButton(Activity activity, int id, int icon, View.OnClickListener listener) {
-		ViewGroup button = (ViewGroup) activity.findViewById(id);
-		button.setOnClickListener(listener);
-		((ImageView) button.findViewById(R.id.icon)).setImageResource(icon);
-		button.setVisibility(View.VISIBLE);
-	}
-	
-	public static void setActionIcon(Activity activity, int id, int icon) {
-		ViewGroup button = (ViewGroup) activity.findViewById(id);
-		((ImageView) button.findViewById(R.id.icon)).setImageResource(icon);
-	}
-
 	public static String capitalize(String text) {
 		if(text == null) 
 			return "";

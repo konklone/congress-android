@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.Window;
 
 import com.sunlightlabs.android.congress.fragments.RollListFragment;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
-import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class VoteVoter extends FragmentActivity {
@@ -37,8 +37,8 @@ public class VoteVoter extends FragmentActivity {
 	}
 	
 	public void setupControls() {
-		Utils.setTitle(this, "Latest Votes By\n" + legislator.titledName());
-		Utils.setTitleSize(this, 18);
+		ActionBarUtils.setTitle(this, "Latest Votes By\n" + legislator.titledName());
+		ActionBarUtils.setTitleSize(this, 18);
 	}
 	
 }

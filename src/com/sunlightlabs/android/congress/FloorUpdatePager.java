@@ -5,9 +5,9 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 
 import com.sunlightlabs.android.congress.fragments.FloorUpdateFragment;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
-import com.sunlightlabs.android.congress.utils.Utils;
 
 public class FloorUpdatePager extends FragmentActivity {
 
@@ -18,7 +18,7 @@ public class FloorUpdatePager extends FragmentActivity {
 			
 		Analytics.track(this, "/floor_updates");
 		
-		Utils.setTitle(this, R.string.floor_updates_title);
+		ActionBarUtils.setTitle(this, R.string.floor_updates_title);
 		setupPager();
 	}
 

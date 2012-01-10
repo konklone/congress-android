@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
@@ -90,8 +91,8 @@ public class HearingList extends ListActivity {
 			}
 		});
 
-		Utils.setTitle(this, R.string.hearings_title);
-		Utils.setTitleSize(this, 18);
+		ActionBarUtils.setTitle(this, R.string.hearings_title);
+		ActionBarUtils.setTitleSize(this, 18);
 		Utils.setLoading(this, R.string.hearings_loading);
 	}
 	

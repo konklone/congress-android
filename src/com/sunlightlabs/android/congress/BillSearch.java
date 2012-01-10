@@ -4,12 +4,11 @@ import android.app.SearchManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.view.Window;
 
 import com.sunlightlabs.android.congress.fragments.BillListFragment;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
-import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 
 public class BillSearch extends FragmentActivity {
@@ -34,14 +33,14 @@ public class BillSearch extends FragmentActivity {
 		if (Bill.isCode(code)) {
 			Analytics.track(this, "/bills/code");
 			
-			Utils.setTitle(this, Bill.formatCode(code));
+			ActionBarUtils.setTitle(this, Bill.formatCode(code));
 			adapter.add("bills_code", "Not seen", BillListFragment.forCode(code));
 			findViewById(R.id.pager_titles).setVisibility(View.GONE);
 		} else {
 			Analytics.track(this, "/bills/search");
 			
-			Utils.setTitle(this, "Bills matching \"" + query + "\"");
-			Utils.setTitleSize(this, 16);
+			ActionBarUtils.setTitle(this, "Bills matching \"" + query + "\"");
+			ActionBarUtils.setTitleSize(this, 16);
 			adapter.add("bills_recent", R.string.search_bills_recent, BillListFragment.forSearch(query, BillListFragment.BILLS_SEARCH_NEWEST));
 			adapter.add("bills_relevant", R.string.search_bills_relevant, BillListFragment.forSearch(query, BillListFragment.BILLS_SEARCH_RELEVANT));
 		}

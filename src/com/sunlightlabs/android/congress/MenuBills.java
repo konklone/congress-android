@@ -7,9 +7,9 @@ import android.view.Window;
 
 import com.sunlightlabs.android.congress.fragments.BillListFragment;
 import com.sunlightlabs.android.congress.fragments.MenuBillsFragment;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
-import com.sunlightlabs.android.congress.utils.Utils;
 
 public class MenuBills extends FragmentActivity {
 	
@@ -40,9 +40,9 @@ public class MenuBills extends FragmentActivity {
 	}
 	
 	public void setupControls() {
-		Utils.setTitle(this, R.string.menu_main_bills);
+		ActionBarUtils.setTitle(this, R.string.menu_main_bills);
 		
-		Utils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
+		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
 			public void onClick(View v) { 
 				onSearchRequested();
 			}

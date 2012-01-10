@@ -7,8 +7,8 @@ import android.preference.PreferenceManager;
 import android.view.Window;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
-import com.sunlightlabs.android.congress.utils.Utils;
 
 public class Settings extends PreferenceActivity {
 	
@@ -23,7 +23,7 @@ public class Settings extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_titled);
 		
-		Utils.setTitle(this, R.string.menu_settings);
+		ActionBarUtils.setTitle(this, R.string.menu_settings);
 		
 		addPreferencesFromResource(R.xml.settings);
 		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
