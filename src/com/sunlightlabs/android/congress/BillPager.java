@@ -87,7 +87,7 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 			}
 		});
 		
-		ActionBarUtils.setActionMenu(this, R.menu.legislator);
+		ActionBarUtils.setActionMenu(this, R.menu.bill);
 	}
 	
 	public String shareText() {

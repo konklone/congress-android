@@ -78,30 +78,30 @@ public class ActionBarUtils {
 	}
 
 	public static void setActionMenu(final Activity activity, int menuId) {
-		if (!popupMenu)
-			return;
-		
-		View menuView = activity.findViewById(R.id.action_menu);
-		
-		final PopupMenuWrapper menu = new PopupMenuWrapper(activity, menuView);
-		
-		menu.inflate(menuId);
-		menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				((HasActionMenu) activity).menuSelected(item);
-				return false;
-			}
-		});
-		
-		menuView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				menu.show();
-			}
-		});
-		
-		menuView.setVisibility(View.VISIBLE);
+		if (popupMenu) {
+			View menuView = activity.findViewById(R.id.action_menu);
+			final PopupMenuWrapper menu = new PopupMenuWrapper(activity, menuView);
+			
+			menu.inflate(menuId);
+			menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+				@Override
+				public boolean onMenuItemClick(MenuItem item) {
+					((HasActionMenu) activity).menuSelected(item);
+					return false;
+				}
+			});
+			
+			menuView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					menu.show();
+				}
+			});
+			
+			menuView.setVisibility(View.VISIBLE);
+		} else {
+			// ignore
+		}
 	}
 
 }
