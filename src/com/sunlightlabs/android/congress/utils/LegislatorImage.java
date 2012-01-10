@@ -31,6 +31,9 @@ public class LegislatorImage {
 	
 	// should be called from within a background task, as this performs a network call
 	public static BitmapDrawable getImage(String size, String bioguideId, Context context) {
+		if (context == null) // if we've lost the activity, abandon it
+			return null;
+		
 		BitmapDrawable drawable = quickGetImage(size, bioguideId, context);
 		if (drawable == null) {
 			cacheImage(size, bioguideId, context);
