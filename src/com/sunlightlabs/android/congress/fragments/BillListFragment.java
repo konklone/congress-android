@@ -322,7 +322,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				view = inflater.inflate(R.layout.bill_item, null);
 				
 				holder = new ViewHolder();
-				holder.byline = (TextView) view.findViewById(R.id.byline);
+				holder.code = (TextView) view.findViewById(R.id.code);
 				holder.date = (TextView) view.findViewById(R.id.date);
 				holder.title = (TextView) view.findViewById(R.id.title);
 				
@@ -330,15 +330,14 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			} else
 				holder = (ViewHolder) view.getTag();
 			
-			String date = "";
-			String action = "";
+			String action;
 			switch (context.type) {
 			case BILLS_LAW:
-				date = shortDate(bill.enacted_at);
+				shortDate(holder.date, bill.enacted_at);
 				action = "became law:";
 				break;
 			case BILLS_SEARCH_RELEVANT:
-				date = longDate(bill.last_action_at);
+				longDate(holder.date, bill.last_action_at);
 				action = "was last active:";
 				break;
 			case BILLS_SEARCH_NEWEST:
@@ -346,23 +345,19 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			case BILLS_SPONSOR:
 			case BILLS_CODE:
 			default:
-				date = shortDate(bill.introduced_at);
+				shortDate(holder.date, bill.introduced_at);
 				action = "was introduced:";
 				break;
 			}
 			
-			String code = Bill.formatCodeShort(bill.code);
-			
-			Spanned byline = Html.fromHtml("<b>" + code + "</b> " + action);
-			holder.byline.setText(byline);
-			holder.date.setText(date);
+			holder.code.setText(Bill.formatCodeShort(bill.code));
 
 			if (bill.short_title != null) {
-				String title = Utils.truncate(bill.short_title, 300);
-				holder.title.setTextSize(19);
+				String title = Utils.truncate(bill.short_title, 250);
+				holder.title.setTextSize(18);
 				holder.title.setText(title);
 			} else if (bill.official_title != null) {
-				String title = Utils.truncate(bill.official_title, 300);
+				String title = Utils.truncate(bill.official_title, 250);
 				holder.title.setTextSize(16);
 				holder.title.setText(title);
 			} else {
@@ -377,20 +372,20 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		}
 		
 		static class ViewHolder {
-			TextView byline, date, title;
+			TextView code, date, title;
 		}
 		
-		private String shortDate(Date date) {
-			SimpleDateFormat format = null;
-			if (date.getYear() == new Date().getYear()) 
-				format = new SimpleDateFormat("MMM d");
-			else
-				format = new SimpleDateFormat("MMM d, yyyy");
-			return format.format(date);
+		private void shortDate(TextView view, Date date) {
+			if (date.getYear() == new Date().getYear()) { 
+				view.setTextSize(18);
+				view.setText(new SimpleDateFormat("MMM d").format(date).toUpperCase());
+			} else
+				longDate(view, date);
 		}
 		
-		private String longDate(Date date) {
-			return new SimpleDateFormat("MMM d, yyyy").format(date);
+		private void longDate(TextView view, Date date) {
+			view.setTextSize(14);
+			view.setText(new SimpleDateFormat("MMM d, ''yy").format(date).toUpperCase());
 		}
 	}
 	
