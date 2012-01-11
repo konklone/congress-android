@@ -1,63 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	android:padding="10dp"
-	>
-
-	<TextView android:id="@+id/roll"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		
-		android:layout_gravity="left"
-		
-		android:layout_marginTop="3dp"
-		android:layout_marginRight="5dp"
-		
-		android:textSize="16sp"
-		
-		android:text="Voted Aye"
-		/>
-		
-	<TextView android:id="@+id/date"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		
-		android:layout_alignParentRight="true"
-		android:layout_alignTop="@id/roll"
-		
-		android:textSize="16sp"
-		android:textColor="@color/text_grey"
-		
-		android:text="Feb 22, 2010"
-		/>
-		
-	<TextView android:id="@+id/question"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		
-		android:layout_below="@id/roll"
-		
-		android:layout_marginTop="7dp"
-		
-		android:textSize="14sp"
-		android:textColor="@color/text_grey"
-		
-		android:text="On Passage: H R 5114 Flood Insurance Reform Priorities Act"
-		/>
 	
-	<TextView android:id="@+id/result"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+	android:orientation="vertical"
+	>
+	
+    <LinearLayout android:orientation="horizontal" 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"        
+        >
+	
+	    <RelativeLayout 
+	        android:layout_width="90dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0"
+	        >
+	        
+		    <TextView android:id="@+id/date"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				
+				android:layout_alignParentLeft="true"
+				android:layout_alignParentTop="true"
+				
+				android:textSize="14sp"
+				
+				android:text="FEB 22, '11"
+				/>
 		
-		android:layout_below="@id/question"
-		android:layout_alignLeft="@id/question"
+			<TextView android:id="@+id/chamber_number"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				
+				android:layout_alignLeft="@id/date"
+				android:layout_below="@id/date"
+				
+				android:layout_marginTop="3dp"
+				android:layout_marginRight="5dp"
+				
+				android:textSize="14sp"
+				android:textColor="@color/text_grey"
+				
+				android:text="House, #49"
+				/>
+			
+		</RelativeLayout>
+			
+		<LinearLayout android:orientation="vertical"
+	        android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:layout_marginLeft="5dp"
+	        >
+	    
+			<TextView android:id="@+id/question"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				
+				android:lineSpacingExtra="2sp"
+				
+				android:textSize="14sp"
+				android:text="On the Nomination (Confirmation Benita Y. Pearson, of Ohio to be U.S. District Judge)"
+				/>
+			
+			<TextView android:id="@+id/result"
+			    android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				
+				android:layout_marginTop="3dp"
+				
+				android:textSize="14sp"
+				android:textColor="@color/text_grey"
+				android:text="Passed, 226-185"
+				/>
+			
+		</LinearLayout>
 		
-		android:layout_marginTop="7dp"
+	</LinearLayout>
 		
-		android:textSize="16sp"
-		
-		android:text="Amendment Agreed To, 60-39"
-		/>
-		/>
-</RelativeLayout>
+</LinearLayout>

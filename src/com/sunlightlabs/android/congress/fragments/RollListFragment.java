@@ -1,12 +1,12 @@
 package com.sunlightlabs.android.congress.fragments;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -279,7 +279,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 				view = inflater.inflate(R.layout.roll_item, null);
 				
 				holder = new ViewHolder();
-				holder.roll = (TextView) view.findViewById(R.id.roll);
+				holder.roll = (TextView) view.findViewById(R.id.chamber_number);
 				holder.date = (TextView) view.findViewById(R.id.date);
 				holder.question = (TextView) view.findViewById(R.id.question);
 				holder.result = (TextView) view.findViewById(R.id.result);
@@ -291,30 +291,19 @@ public class RollListFragment extends ListFragment implements PaginationListener
 			TextView msgView = holder.roll;
 			if (context.type == RollListFragment.ROLLS_VOTER) {
 				Roll.Vote vote = roll.voter_ids.get(context.voter.bioguide_id);
-				if (vote == null || vote.vote.equals(Roll.NOT_VOTING)) {
+				if (vote == null || vote.vote.equals(Roll.NOT_VOTING))
 					msgView.setText("Did Not Vote");
-					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-				} else if (vote.vote.equals(Roll.YEA)) {
+				else
 					msgView.setText(vote.vote);
-					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-				} else if (vote.vote.equals(Roll.NAY)) {
-					msgView.setText(vote.vote);
-					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-				} else if (vote.vote.equals(Roll.PRESENT)) {
-					msgView.setText(vote.vote);
-					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-				} else {
-					msgView.setText(vote.vote);
-					msgView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-				} 
 				
 			} else
-				msgView.setText(Utils.capitalize(roll.chamber) + " Roll No. " + roll.number);
+				msgView.setText(Utils.capitalize(roll.chamber) + " #" + roll.number);
 			
 			holder.roll = msgView;
 			
-			holder.date.setText(new SimpleDateFormat("MMM dd, yyyy").format(roll.voted_at));
-			holder.question.setText(roll.question);
+			shortDate(holder.date, roll.voted_at);
+			
+			holder.question.setText(Utils.truncate(roll.question, 200));
 			holder.result.setText(resultFor(roll));
 				
 			return view;
@@ -341,6 +330,19 @@ public class RollListFragment extends ListFragment implements PaginationListener
 			}
 			
 			return roll.result + ", " + breakdown.toString();
+		}
+		
+		private void shortDate(TextView view, Date date) {
+			if (date.getYear() == new Date().getYear()) { 
+				view.setTextSize(18);
+				view.setText(new SimpleDateFormat("MMM d").format(date).toUpperCase());
+			} else
+				longDate(view, date);
+		}
+		
+		private void longDate(TextView view, Date date) {
+			view.setTextSize(14);
+			view.setText(new SimpleDateFormat("MMM d, ''yy").format(date).toUpperCase());
 		}
 	}
 	
