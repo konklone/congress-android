@@ -23,6 +23,7 @@ public class BillSearch extends FragmentActivity {
 		query = getIntent().getStringExtra(SearchManager.QUERY).trim();
 	    
 		setupPager();
+		setupControls();
 	}
 	
 	
@@ -44,6 +45,14 @@ public class BillSearch extends FragmentActivity {
 			adapter.add("bills_recent", R.string.search_bills_recent, BillListFragment.forSearch(query, BillListFragment.BILLS_SEARCH_NEWEST));
 			adapter.add("bills_relevant", R.string.search_bills_relevant, BillListFragment.forSearch(query, BillListFragment.BILLS_SEARCH_RELEVANT));
 		}
+	}
+	
+	public void setupControls() {
+		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
+			public void onClick(View v) { 
+				onSearchRequested();
+			}
+		});
 	}
 	
 }

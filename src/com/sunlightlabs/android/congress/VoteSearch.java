@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import android.app.SearchManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 import android.view.Window;
 
 import com.sunlightlabs.android.congress.fragments.RollListFragment;
@@ -37,6 +38,12 @@ public class VoteSearch extends FragmentActivity {
 	public void setupControls() {
 		ActionBarUtils.setTitle(this, "Votes matching \"" + query + "\"");
 		ActionBarUtils.setTitleSize(this, 16);
+		
+		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
+			public void onClick(View v) { 
+				onSearchRequested();
+			}
+		});
 	}
 	
 }
