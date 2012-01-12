@@ -84,4 +84,20 @@ public class Roll implements Serializable {
 		
 		return roll;
 	}
+	
+	// formattedNumber can be anything that ends with a number - the number will be extracted,
+	// the chamber's first letter will be used, and combined into a roll ID
+	public static String normalizeRollId(String chamber, String year, String formattedNumber) {
+		String shortChamber;
+		if (chamber.equals("house"))
+			shortChamber = "h";
+		else if (chamber.equals("senate"))
+			shortChamber = "s";
+		else
+			return null;
+		
+		String number = formattedNumber.replaceAll("[^\\d]", "");
+		
+		return shortChamber + number + "-" + year;
+	}
 }

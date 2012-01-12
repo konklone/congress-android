@@ -12,10 +12,12 @@ import java.util.concurrent.RejectedExecutionException;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -91,6 +93,18 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		Bundle extras = getIntent().getExtras();
 		id = extras.getString("id");
 		roll = (Roll) extras.getSerializable("roll");
+		
+		Intent intent = getIntent();
+		if (intent != null) {
+			Uri uri = intent.getData();
+			if (uri != null) {
+				List<String> segments = uri.getPathSegments();
+				String chamber = segments.get(1);
+				String year = segments.get(2);
+				String formattedNumber = segments.get(3);
+				id = Roll.normalizeRollId(chamber, year, formattedNumber);
+			}
+		}
 		
 		setupControls();
 		

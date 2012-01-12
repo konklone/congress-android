@@ -91,7 +91,10 @@
         	<intent-filter>
         	    <action android:name="android.intent.action.VIEW" />
         	    <category android:name="android.intent.category.DEFAULT" />
-        	    <data android:scheme="congress" android:host="com.sunlightlabs.android.congress" />
+        	    <data android:scheme="congress" 
+        	        android:host="com.sunlightlabs.android.congress"
+        	        android:pathPrefix="/bill" 
+        	        />
         	</intent-filter>
         </activity>
         
@@ -123,6 +126,14 @@
         	<intent-filter>
         		<action android:name="android.intent.action.MAIN" />
         		<category android:name="android.intent.category.DEFAULT" />
+        	</intent-filter>
+        	<intent-filter>
+        	    <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+        	    <data android:scheme="congress" 
+        	        android:host="com.sunlightlabs.android.congress"
+        	        android:pathPrefix="/roll" 
+        	        />
         	</intent-filter>
         </activity>
         

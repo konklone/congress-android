@@ -2,7 +2,9 @@ package com.sunlightlabs.android.congress.fragments;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -189,9 +191,18 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 			if (update.events.size() > 0) {
 				TextView text = (TextView) view.findViewById(R.id.text);
 				text.setText(update.events.get(0));
+				
+				GregorianCalendar calendar = new GregorianCalendar();
+				calendar.setTime(update.timestamp);
+				int year = calendar.get(Calendar.YEAR);
+				
 				Linkify.addLinks(text, 
 						Pattern.compile("(S\\.|H\\.)(\\s?J\\.|\\s?R\\.|\\s?Con\\.| ?)(\\s?Res\\.)*\\s?\\d+", Pattern.CASE_INSENSITIVE), 
 						"congress://com.sunlightlabs.android.congress/bill/" + update.session + "/");
+				
+				Linkify.addLinks(text,
+						Pattern.compile("Roll (?:no.|Call) (\\d+)"),
+						"congress://com.sunlightlabs.android.congress/roll/" + update.chamber + "/" + year + "/");
 			}
 			
 			if (showTime)
