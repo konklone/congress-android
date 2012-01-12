@@ -37,7 +37,7 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 		legislator = (Legislator) extras.getSerializable("legislator");
 		tab = extras.getString("tab");
 		
-		Analytics.track(this, "/legislator?bioguide_id=" + legislator.id);
+		Analytics.track(this, "/legislator");
 		
 		setupDatabase();
 		setupControls();

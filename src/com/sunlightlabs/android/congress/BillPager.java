@@ -37,7 +37,7 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 		bill = (Bill) extras.getSerializable("bill");
 		tab = extras.getString("tab");
 		
-		Analytics.track(this, "/bill?bill_id=" + bill.id);
+		Analytics.track(this, "/bill");
 		
 		setupDatabase();
 		setupControls();

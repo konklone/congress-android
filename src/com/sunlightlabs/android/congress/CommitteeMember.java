@@ -10,7 +10,7 @@ import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class CommitteeList extends FragmentActivity {
+public class CommitteeMember extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -18,7 +18,7 @@ public class CommitteeList extends FragmentActivity {
 		
 		Legislator legislator = (Legislator) getIntent().getExtras().getSerializable("legislator");
 		
-		Analytics.track(this, "/legislator/committees?bioguide_id=" + legislator.id);
+		Analytics.track(this, "/legislator/committees");
 		
 		ActionBarUtils.setTitle(this, "Committees for " + legislator.titledName());
 		ActionBarUtils.setTitleSize(this, 16);

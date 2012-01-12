@@ -19,7 +19,6 @@ import com.sunlightlabs.android.congress.fragments.AlertFragment;
 import com.sunlightlabs.android.congress.fragments.UpcomingFragment;
 import com.sunlightlabs.android.congress.notifications.NotificationService;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
-import com.sunlightlabs.android.congress.utils.ActionBarUtils.HasActionMenu;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.Utils;

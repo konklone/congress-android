@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.BillSponsor;
-import com.sunlightlabs.android.congress.CommitteeList;
+import com.sunlightlabs.android.congress.CommitteeMember;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.VoteVoter;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
@@ -118,7 +118,7 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
     }
     
     public void viewCommittees() {
-    	startActivity(new Intent(getActivity(), CommitteeList.class)
+    	startActivity(new Intent(getActivity(), CommitteeMember.class)
 			.putExtra("legislator", legislator));
     }
     
