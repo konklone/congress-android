@@ -33,6 +33,9 @@ public class FloorUpdateService {
 		if (!json.isNull("chamber"))
 			update.chamber = json.getString("chamber");
 		
+		if (!json.isNull("session"))
+			update.session = json.getInt("session");
+		
 		if (!json.isNull("legislative_day"))
 			update.legislativeDay = RealTimeCongress.parseDateOnly(json.getString("legislative_day"));
 		

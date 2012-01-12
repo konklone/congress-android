@@ -12,4 +12,5 @@ public class FloorUpdate implements Serializable {
 	public Date legislativeDay;
 	public List<String> events;
 	public String chamber;
+	public int session;
 }

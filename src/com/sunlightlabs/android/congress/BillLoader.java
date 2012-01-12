@@ -1,8 +1,11 @@
 package com.sunlightlabs.android.congress;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
@@ -31,6 +34,16 @@ public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 		// and the intent will be null
 		if (intent == null)
 			intent = Utils.billPagerIntent();
+		
+		// if coming in from a link (in form /bill/:session/:formatted_code, e.g. "/bill/112/H.R. 2345")
+		Uri uri = i.getData();
+		if (uri != null) {
+			List<String> segments = uri.getPathSegments();
+			String session = segments.get(1);
+			String formattedCode = segments.get(2);
+			code = Bill.normalizeCode(formattedCode);
+			id = code + "-" + session;
+		}
 		
 		loadBillTask = (LoadBillTask) getLastNonConfigurationInstance();
 		if (loadBillTask != null)

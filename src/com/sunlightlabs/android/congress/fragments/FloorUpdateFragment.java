@@ -4,10 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -183,8 +185,14 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 			TextView timeView = (TextView) view.findViewById(R.id.timestamp);
 			
 			timeView.setText(timeFormat.format(update.timestamp));
-			if (update.events.size() > 0)
-				((TextView) view.findViewById(R.id.text)).setText(update.events.get(0));
+			
+			if (update.events.size() > 0) {
+				TextView text = (TextView) view.findViewById(R.id.text);
+				text.setText(update.events.get(0));
+				Linkify.addLinks(text, 
+						Pattern.compile("(S\\.|H\\.)(\\s?J\\.|\\s?R\\.|\\s?Con\\.| ?)(\\s?Res\\.)*\\s?\\d+", Pattern.CASE_INSENSITIVE), 
+						"congress://com.sunlightlabs.android.congress/bill/" + update.session + "/");
+			}
 			
 			if (showTime)
 				timeView.setVisibility(View.VISIBLE);
