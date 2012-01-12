@@ -17,4 +17,7 @@
         <item name="android:textColorTertiary">@color/text</item>
     </style>
     
+    <style name="MainDialog" parent="RootDialog">
+    </style>
+    
 </resources>

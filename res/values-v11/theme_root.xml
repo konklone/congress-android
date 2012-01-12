@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="RootTheme" parent="android:Theme.Holo.NoActionBar"></style>
+    <style name="RootDialog" parent="android:Theme.Holo.Dialog.NoActionBar"></style>
     <style name="RootList" parent="@android:style/Widget.Holo.ListView"></style>
 </resources>
