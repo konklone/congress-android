@@ -33,7 +33,7 @@
 			android:layout_marginTop="3dp"
 			android:layout_marginRight="5dp"
 			
-			android:textSize="16sp"
+			android:textSize="14sp"
 			android:textColor="@color/text_grey"
 			
 			android:text="H.Res. 3222"

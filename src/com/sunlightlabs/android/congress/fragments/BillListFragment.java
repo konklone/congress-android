@@ -352,10 +352,10 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				holder.title.setText(title);
 			} else if (bill.official_title != null) {
 				String title = Utils.truncate(bill.official_title, 250);
-				holder.title.setTextSize(16);
+				holder.title.setTextSize(14);
 				holder.title.setText(title);
 			} else {
-				holder.title.setTextSize(16);
+				holder.title.setTextSize(14);
 				if (bill.abbreviated)
 					holder.title.setText(R.string.bill_no_title_yet);
 				else
@@ -371,7 +371,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		
 		private void shortDate(TextView view, Date date) {
 			if (date.getYear() == new Date().getYear()) { 
-				view.setTextSize(18);
+				view.setTextSize(16);
 				view.setText(new SimpleDateFormat("MMM d").format(date).toUpperCase());
 			} else
 				longDate(view, date);
