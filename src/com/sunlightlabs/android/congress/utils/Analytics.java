@@ -26,10 +26,6 @@ public class Analytics {
 	public static final int SCOPE_SESSION = 2;
 	public static final int SCOPE_PAGE = 3;
 	
-	// custom variable slot info for entry tracking
-	public static final int CUSTOM_ENTRY_SLOT = 1;
-	public static final String CUSTOM_ENTRY_NAME = "Entry";
-	
 	// custom variable slot info for app version
 	public static final int CUSTOM_VERSION_SLOT = 2;
 	public static final String CUSTOM_VERSION_NAME = "Version";
@@ -48,6 +44,7 @@ public class Analytics {
 	public static final String EVENT_LEGISLATOR = "legislator";
 	public static final String EVENT_BILL = "bill";
 	public static final String EVENT_ANALYTICS = "analytics";
+	public static final String EVENT_ENTRY = "entry";
 	
 	// event values
 	public static final String FAVORITE_ADD_LEGISLATOR = "add_legislator";
@@ -170,7 +167,9 @@ public class Analytics {
 				String source = entrySource(activity);
 				if (source != null) {
 					Log.i(Utils.TAG, "[Analytics] Marking next page view as an entry to the app of type: " + source);
-					tracker.setCustomVar(CUSTOM_ENTRY_SLOT, CUSTOM_ENTRY_NAME, source, SCOPE_SESSION);
+					
+					markEntry(activity, tracker, source);
+					//tracker.setCustomVar(CUSTOM_ENTRY_SLOT, CUSTOM_ENTRY_NAME, source, SCOPE_SESSION);
 				}
 			}
 			
@@ -272,6 +271,10 @@ public class Analytics {
 	
 	public static void billUpcoming(FragmentActivity activity, String billId) {
 		event(activity, trackerFor(activity), EVENT_BILL, BILL_UPCOMING, billId);
+	}
+	
+	public static void markEntry(Activity activity, GoogleAnalyticsTracker tracker, String source) {
+		event(activity, tracker, EVENT_ENTRY, source, source);
 	}
 	
 	public static void analyticsDisable(Activity activity, GoogleAnalyticsTracker tracker) {
