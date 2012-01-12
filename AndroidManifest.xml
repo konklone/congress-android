@@ -95,7 +95,12 @@
 				android:value=".VoteSearch"
 				/>
         </activity>
-        <activity android:name=".VoteVoter" />
+        
+        <activity android:name=".VoteVoter">
+            <meta-data android:name="android.app.default_searchable"
+				android:value=".VoteSearch"
+				/>
+        </activity>
         
         <activity android:name=".VoteSearch">
             <intent-filter>

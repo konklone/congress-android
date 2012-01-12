@@ -49,8 +49,21 @@ public class RollService {
 		return rollsFor(RealTimeCongress.url("votes", sections, params, page, per_page));
 	}
 	
-	public static List<Roll> search(String query, Map<String,String> params, int page, int per_page) throws CongressException {
+	public static List<Roll> search(String bioguideId, String query, Map<String,String> params, int page, int per_page) throws CongressException {
 
+		// on the search endpoint, we need to spell out all sections explicitly if we are to ask for any that aren't default
+		String[] sections = new String[] {
+			"how", "roll_id", "number", "year", "chamber", "session", 
+		    "result", "bill_id", "voted_at", "last_updated", "roll_type", "question", 
+		    "required", "vote_type", "passage_type", "amendment_id", "vote_breakdown",
+		    "voter_ids." + bioguideId
+		};
+		
+		// disable highlighting for now
+		return rollsFor(RealTimeCongress.searchUrl("votes", query, false, sections, params, page, per_page));
+	}
+	
+	public static List<Roll> search(String query, Map<String,String> params, int page, int per_page) throws CongressException {
 		// on the search endpoint, we need to spell out all sections explicitly if we are to ask for any that aren't default
 		String[] sections = new String[] {
 			"how", "roll_id", "number", "year", "chamber", "session", 

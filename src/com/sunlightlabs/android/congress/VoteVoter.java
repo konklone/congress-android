@@ -38,7 +38,20 @@ public class VoteVoter extends FragmentActivity {
 	
 	public void setupControls() {
 		ActionBarUtils.setTitle(this, "Latest Votes By\n" + legislator.titledName());
-		ActionBarUtils.setTitleSize(this, 18);
+		ActionBarUtils.setTitleSize(this, 16);
+		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
+			public void onClick(View v) { 
+				onSearchRequested();
+			}
+		});
+	}
+	
+	@Override
+	public boolean onSearchRequested() {
+		Bundle args = new Bundle();
+		args.putSerializable("legislator", legislator);
+		startSearch(null, false, args, false);
+		return true;
 	}
 	
 }
