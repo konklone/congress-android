@@ -13,8 +13,8 @@
 		
 		android:paddingLeft="10dp"
 		android:paddingRight="10dp"
-		android:paddingTop="3dp"
-		android:paddingBottom="3dp"
+		android:paddingTop="8dp"
+		android:paddingBottom="8dp"
 		
 		android:layout_gravity="center"
 		
