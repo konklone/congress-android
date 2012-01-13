@@ -51,6 +51,6 @@ public class RollsLegislatorSubscriber extends Subscriber {
 	
 	@Override
 	public String subscriptionName(Subscription subscription) {
-		return "Votes: " + subscription.name;
+		return "Votes by " + subscription.name;
 	}
 }

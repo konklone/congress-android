@@ -136,7 +136,9 @@
     <string name="menu_bills_no_favorites">Any bills you follow will be added here.\n\nTo find bills, use the search button up top, or slide over to the right to see what bills just got introduced, or signed into law.\n\nWhile viewing a bill, follow it by tapping the star in the top right corner.</string>
     <string name="menu_bills_favorite">Starred</string>
     <string name="menu_bills_law">Laws</string>
+    <string name="menu_bills_law_subscription">Recent Laws</string>
     <string name="menu_bills_recent">Recent</string>
+    <string name="menu_bills_recent_subscription">Recent Bills</string>
     <string name="menu_bills_menu">Following</string>
     <string name="menu_legislators_favorite">Starred</string>
     <string name="menu_legislators_location">My Location</string>

@@ -51,6 +51,6 @@ public class BillsLawsSubscriber extends Subscriber {
 	
 	@Override
 	public String subscriptionName(Subscription subscription) {
-		return context.getResources().getString(R.string.menu_bills_law);
+		return context.getResources().getString(R.string.menu_bills_law_subscription);
 	}
 }

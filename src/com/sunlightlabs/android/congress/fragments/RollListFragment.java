@@ -138,6 +138,8 @@ public class RollListFragment extends ListFragment implements PaginationListener
 			subscription = new Subscription(voter.id, Subscriber.notificationName(voter), "RollsLegislatorSubscriber", voter.chamber);
 		else if (type == ROLLS_RECENT)
 			subscription = new Subscription("RecentVotes", "Recent Votes", "RollsRecentSubscriber", null);
+		else if (type == ROLLS_SEARCH_NEWEST)
+			subscription = new Subscription(query, query, "RollsSearchSubscriber", query);
 		
 		if (subscription != null)
 			Footer.setup(this, subscription, rolls);
@@ -234,6 +236,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 					return RollService.latestVotes(page, PER_PAGE);
 				case ROLLS_SEARCH_NEWEST:
 					params.put("order", "voted_at");
+					params.put("how", "roll");
 					if (voter != null) {
 						params.put("chamber", voter.chamber);
 						return RollService.search(voter.bioguide_id, context.query, params, page, PER_PAGE);
@@ -241,6 +244,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 						return RollService.search(context.query, params, page, PER_PAGE);
 				case ROLLS_SEARCH_RELEVANT:
 					params.put("order", "_score");
+					params.put("how", "roll");
 					if (voter != null) {
 						params.put("chamber", voter.chamber);
 						return RollService.search(voter.bioguide_id, context.query, params, page, PER_PAGE);

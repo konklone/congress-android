@@ -51,6 +51,6 @@ public class BillsRecentSubscriber extends Subscriber {
 	
 	@Override
 	public String subscriptionName(Subscription subscription) {
-		return context.getResources().getString(R.string.menu_bills_recent);
+		return context.getResources().getString(R.string.menu_bills_recent_subscription);
 	}
 }

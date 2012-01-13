@@ -3,7 +3,6 @@ package com.sunlightlabs.android.congress;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Window;
 import android.widget.TabHost;
 
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
