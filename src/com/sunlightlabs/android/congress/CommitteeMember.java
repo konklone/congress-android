@@ -3,7 +3,6 @@ package com.sunlightlabs.android.congress;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.view.Window;
 
 import com.sunlightlabs.android.congress.fragments.CommitteeListFragment;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;

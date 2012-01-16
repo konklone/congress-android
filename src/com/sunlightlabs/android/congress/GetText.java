@@ -1,13 +1,10 @@
 package com.sunlightlabs.android.congress;
 
-import com.sunlightlabs.android.congress.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;

@@ -9,11 +9,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import com.sunlightlabs.congress.models.CongressException;
+import android.util.Log;
 
-/**
- * Package of helper classes and server-wide info.
- */
+import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.CongressException;
 
 public class Sunlight {
 	public static final String BASE_URL = "http://services.sunlightlabs.com/api/";
@@ -32,6 +31,8 @@ public class Sunlight {
 	}
 	
 	public static String fetchJSON(String url) throws CongressException {
+		Log.d(Utils.TAG, "Sunlight: " + url);
+		
 		HttpGet request = new HttpGet(url);
         request.addHeader("User-Agent", USER_AGENT + "-" + appVersion);
 		

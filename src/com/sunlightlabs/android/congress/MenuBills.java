@@ -3,7 +3,6 @@ package com.sunlightlabs.android.congress;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.view.Window;
 
 import com.sunlightlabs.android.congress.fragments.BillListFragment;
 import com.sunlightlabs.android.congress.fragments.MenuBillsFragment;

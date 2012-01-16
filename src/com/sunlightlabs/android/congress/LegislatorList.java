@@ -22,7 +22,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -192,7 +191,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 			try {
 				loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
 			} catch (RejectedExecutionException e) {
-				Log.e(Utils.TAG, "[LegislatorList] RejectedExecutionException occurred while loading photo.", e);
+				Log.e(Utils.TAG, "[LegislatorListFragment] RejectedExecutionException occurred while loading photo.", e);
 				onLoadPhoto(null, bioguide_id); // if we can't run it, then just show the no photo image and move on
 			}
 		}
@@ -495,7 +494,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	}
 
 	private void toggleRelocating() {
-		Log.d(Utils.TAG, "LegislatorList - toggleRelocating(): relocating is " + relocating);
+		Log.d(Utils.TAG, "LegislatorListFragment - toggleRelocating(): relocating is " + relocating);
 		headerWrapper.getBase().setEnabled(relocating ? false : true);
 		headerWrapper.getTxt().setText(relocating ? R.string.menu_location_updating : R.string.location_update);
 		headerWrapper.getLoading().setVisibility(relocating ? View.VISIBLE : View.GONE);
@@ -504,7 +503,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	private void cancelTimer() {
 		if (timer != null) {
 			timer.cancel();
-			Log.d(Utils.TAG, "LegislatorList - cancelTimer(): end updating timer");
+			Log.d(Utils.TAG, "LegislatorListFragment - cancelTimer(): end updating timer");
 		}
 	}
 
@@ -521,7 +520,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	
 	public void onLocationUpdateError() {
 		if (relocating) {
-			Log.d(Utils.TAG, "LegislatorList - onLocationUpdateError(): cannot update location");
+			Log.d(Utils.TAG, "LegislatorListFragment - onLocationUpdateError(): cannot update location");
 			relocating = false;
 			toggleRelocating();
 
@@ -547,11 +546,11 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	public void onStatusChanged(String provider, int status, Bundle extras) {}
 
 	public void onTimeout(String provider) {
-		Log.d(Utils.TAG, "LegislatorList - onTimeout(): timeout for provider " + provider);
+		Log.d(Utils.TAG, "LegislatorListFragment - onTimeout(): timeout for provider " + provider);
 		if (provider.equals(LocationManager.GPS_PROVIDER)) {
 			timer = LocationUtils.requestLocationUpdate(this, handler,
 					LocationManager.NETWORK_PROVIDER);
-			Log.d(Utils.TAG, "LegislatorList - onTimeout(): requesting update from network");
+			Log.d(Utils.TAG, "LegislatorListFragment - onTimeout(): requesting update from network");
 		} else
 			onLocationUpdateError();
 	}

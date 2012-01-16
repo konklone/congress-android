@@ -28,6 +28,15 @@ public class LegislatorService {
 		return legislatorsFor(Sunlight.url("legislators.allForLatLong", "latitude=" + latitude
 				+ "&longitude=" + longitude));
 	}
+	
+	public static List<Legislator> allForChamber(String chamber) throws CongressException {
+		String queryString;
+		if (chamber.equals("house"))
+			queryString = "title=Del&title=Com&title=Rep";
+		else // if (chamber.equals("senate"))
+			queryString = "title=Sen";
+		return legislatorsFor(Sunlight.url("legislators.getList", queryString));
+	}
 
 	public static Legislator find(String bioguideId) throws CongressException {
 		return legislatorFor(Sunlight.url("legislators.get", "bioguide_id=" + bioguideId + "&all_legislators=true"));
