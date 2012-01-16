@@ -3,5 +3,6 @@
 	android:label="@string/search_bills_label"
 	android:hint="@string/search_bills_hint" 
 	android:includeInGlobalSearch="true"
-	>
-</searchable>
+	android:searchSuggestAuthority="com.sunlightlabs.android.congress.providers.SuggestionsProvider"
+    android:searchSuggestSelection=" ?"
+	/>

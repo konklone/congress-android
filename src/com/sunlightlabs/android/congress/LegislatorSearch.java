@@ -15,7 +15,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.sunlightlabs.android.congress.fragments.LegislatorListFragment;
-import com.sunlightlabs.android.congress.providers.LegislatorSuggestionsProvider;
+import com.sunlightlabs.android.congress.providers.SuggestionsProvider;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.LocationUtils;
@@ -77,7 +77,7 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 			ActionBarUtils.setTitleSize(this, 16);
 			
 			SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
-					this,LegislatorSuggestionsProvider.AUTHORITY, LegislatorSuggestionsProvider.MODE);
+					this, SuggestionsProvider.AUTHORITY, SuggestionsProvider.MODE);
 	        suggestions.saveRecentQuery(query, null);
 			
 			adapter.add("legislators_zip", "Not seen", LegislatorListFragment.forZip(query));
@@ -90,7 +90,7 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 			ActionBarUtils.setTitleSize(this, 16);
 			
 			SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
-					this,LegislatorSuggestionsProvider.AUTHORITY, LegislatorSuggestionsProvider.MODE);
+					this, SuggestionsProvider.AUTHORITY, SuggestionsProvider.MODE);
 	        suggestions.saveRecentQuery(query, null);
 			
 			adapter.add("legislators_lastname", "Not seen", LegislatorListFragment.forLastName(query));

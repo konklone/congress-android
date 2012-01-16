@@ -2,10 +2,12 @@ package com.sunlightlabs.android.congress;
 
 import android.app.SearchManager;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 import com.sunlightlabs.android.congress.fragments.BillListFragment;
+import com.sunlightlabs.android.congress.providers.SuggestionsProvider;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
@@ -34,11 +36,20 @@ public class BillSearch extends FragmentActivity {
 		if (Bill.isCode(code)) {
 			Analytics.track(this, "/bills/code");
 			
+			// store the formatted code as the search suggestion
+			SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
+					this, SuggestionsProvider.AUTHORITY, SuggestionsProvider.MODE);
+	        suggestions.saveRecentQuery(Bill.formatCodeShort(code), null);
+			
 			ActionBarUtils.setTitle(this, Bill.formatCode(code));
 			adapter.add("bills_code", "Not seen", BillListFragment.forCode(code));
 			findViewById(R.id.pager_titles).setVisibility(View.GONE);
 		} else {
 			Analytics.track(this, "/bills/search");
+			
+			SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
+					this, SuggestionsProvider.AUTHORITY, SuggestionsProvider.MODE);
+	        suggestions.saveRecentQuery(query, null);
 			
 			ActionBarUtils.setTitle(this, "Bills matching \"" + query + "\"");
 			ActionBarUtils.setTitleSize(this, 16);

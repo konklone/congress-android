@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
 	android:label="@string/search_votes_label"
-	android:hint="@string/search_votes_hint" 
-	>
-</searchable>
+	android:hint="@string/search_votes_hint"
+	android:includeInGlobalSearch="true"
+	android:searchSuggestAuthority="com.sunlightlabs.android.congress.providers.SuggestionsProvider"
+    android:searchSuggestSelection=" ?" 
+	/>
