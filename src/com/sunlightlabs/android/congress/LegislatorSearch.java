@@ -9,11 +9,13 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 
 import com.sunlightlabs.android.congress.fragments.LegislatorListFragment;
+import com.sunlightlabs.android.congress.providers.LegislatorSuggestionsProvider;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.LocationUtils;
@@ -73,6 +75,11 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 			Analytics.track(this, "/legislators/zip");
 			ActionBarUtils.setTitle(this, "Legislators For " + query);
 			ActionBarUtils.setTitleSize(this, 16);
+			
+			SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
+					this,LegislatorSuggestionsProvider.AUTHORITY, LegislatorSuggestionsProvider.MODE);
+	        suggestions.saveRecentQuery(query, null);
+			
 			adapter.add("legislators_zip", "Not seen", LegislatorListFragment.forZip(query));
 		}
 		
@@ -81,6 +88,11 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 			Analytics.track(this, "/legislators/lastname");
 			ActionBarUtils.setTitle(this, "Legislators Named \"" + query + "\"");
 			ActionBarUtils.setTitleSize(this, 16);
+			
+			SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
+					this,LegislatorSuggestionsProvider.AUTHORITY, LegislatorSuggestionsProvider.MODE);
+	        suggestions.saveRecentQuery(query, null);
+			
 			adapter.add("legislators_lastname", "Not seen", LegislatorListFragment.forLastName(query));
 		}
 	}
@@ -201,6 +213,5 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 		} else
 			onLocationUpdateError();
 	}
-	
 	
 }

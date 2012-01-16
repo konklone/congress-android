@@ -93,6 +93,10 @@
 				/>
         </activity>
         
+        <provider android:name=".providers.LegislatorSuggestionsProvider"
+              android:authorities="com.sunlightlabs.android.congress.providers.LegislatorSuggestionsProvider" 
+              />
+        
         <activity android:name=".BillPager" />
         <activity android:name=".BillSponsor" />
         <activity android:name=".BillLoader">
