@@ -30,20 +30,11 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 	
 	TitlePageAdapter adapter;
 	
-	// slightly janky, keeping the fragment with the user's location around for savedInstanceState
-	double latitude, longitude;
-	boolean located = false;
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pager_titled);
 		
-		if (savedInstanceState != null) {
-			located = savedInstanceState.getBoolean("located", false);
-			latitude = savedInstanceState.getDouble("latitude", -1);
-			longitude = savedInstanceState.getDouble("longitude", -1);
-		}
 		
 		Intent intent = getIntent();
 		query = intent.getStringExtra(SearchManager.QUERY);
@@ -66,11 +57,7 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 		if (location) {
 			Analytics.track(this, "/legislators/location");
 			ActionBarUtils.setTitle(this, "Your Legislators");
-			
-			if (located)
-				displayLocated();
-			else
-				locate();
+			locate();
 		} 
 		
 		// state search
@@ -99,14 +86,20 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 		refresh = findViewById(R.id.action_2);
 		spinner = findViewById(R.id.action_spinner);
 		
-		ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.location, new View.OnClickListener() {
-			public void onClick(View v) {
-				if (location)
+		if (location) {
+			ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.refresh, new View.OnClickListener() {
+				public void onClick(View v) {
 					locate();
-				else
+						
+				}
+			});
+		} else {
+			ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.location, new View.OnClickListener() {
+				public void onClick(View v) {
 					startActivity(new Intent(LegislatorSearch.this, LegislatorSearch.class).putExtra("location", true));
-			}
-		});
+				}
+			});
+		}
 		
 		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
 			public void onClick(View v) { 
@@ -125,27 +118,12 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 	public void onLocated(double latitude, double longitude) {
 		findViewById(android.R.id.empty).setVisibility(View.GONE);
 		findViewById(R.id.pager).setVisibility(View.VISIBLE);
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.located = true;
-		displayLocated();
-	}
-	
-	public void displayLocated() {
 		adapter.add("legislators_location", "Not seen", LegislatorListFragment.forLocation(latitude, longitude));
 	}
 	
 	public void onNotLocated() {
 		Utils.showEmpty(this, R.string.menu_location_no_location);
 	}
-	
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		outState.putDouble("latitude", latitude);
-		outState.putDouble("longitude", longitude);
-		outState.putBoolean("located", located);
-	}
-	
 	
 	// Location finding code
 	

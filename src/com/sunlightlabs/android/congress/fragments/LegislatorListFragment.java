@@ -188,13 +188,14 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 	}
 	
 	public void onLoadLegislators(List<Legislator> legislators) {
-		// if there's only one result, don't even make them click it
-//		if (legislators.size() == 1 && (context.type != SEARCH_LOCATION && context.type != SEARCH_COSPONSORS)) {
-//			context.selectLegislator(legislators.get(0));
-//			context.finish();
-//		}
+		if (!isAdded())
+			return;
 		
-		if (isAdded())
+		// if there's only one result, don't even make them click it
+		if (legislators.size() == 1 && (type != SEARCH_LOCATION && type != SEARCH_COSPONSORS)) {
+			selectLegislator(legislators.get(0));
+			getActivity().finish();
+		} else 
 			displayLegislators();
 	}
 	
