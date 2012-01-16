@@ -142,12 +142,14 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			}
 		});
 		
-		loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_page, null);
-		loadingView.setVisibility(View.GONE);
-		getListView().addFooterView(loadingView);
-		
-		pager = new PaginationListener(this);
-		getListView().setOnScrollListener(pager);
+		if (type != BILLS_CODE) {
+			loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_page, null);
+			loadingView.setVisibility(View.GONE);
+			getListView().addFooterView(loadingView);
+			
+			pager = new PaginationListener(this);
+			getListView().setOnScrollListener(pager);
+		}
 
 		FragmentUtils.setLoading(this, R.string.bills_loading);
 	}
