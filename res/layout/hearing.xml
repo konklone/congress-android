@@ -26,7 +26,7 @@
 			android:layout_height="wrap_content"
 			android:textSize="18sp"
 			
-			android:text="Oct 18"
+			android:text="OCT 18"
 			/>
 		
 		<TextView android:id="@+id/time"

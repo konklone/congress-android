@@ -58,7 +58,7 @@ public class HearingList extends ListActivity {
 		
 		tracker = Analytics.start(this);
 		if (!tracked) {
-			Analytics.page(this, tracker, "/hearings/senate");
+			Analytics.page(this, tracker, "/hearings");
 			tracked = true;
 		}
 		
@@ -185,7 +185,7 @@ public class HearingList extends ListActivity {
 				view = inflater.inflate(R.layout.hearing, null);
 			
 			Date date = hearing.occursAt;
-			String month = new SimpleDateFormat("MMM d").format(date);
+			String month = new SimpleDateFormat("MMM d").format(date).toUpperCase();
 			String time = new SimpleDateFormat("h:mm aa").format(date);
 			
 			((TextView) view.findViewById(R.id.month)).setText(month);
