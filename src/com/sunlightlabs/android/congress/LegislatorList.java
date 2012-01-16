@@ -84,7 +84,7 @@ public class LegislatorList extends ListActivity implements LoadPhotoTask.LoadsP
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list_titled_header);
+		setContentView(R.layout.list_with_header);
 
 		Utils.setupSunlight(this);
 

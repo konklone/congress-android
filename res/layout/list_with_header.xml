@@ -5,8 +5,6 @@
     android:layout_height="fill_parent"
     >
     
-    <include layout="@layout/title_bar" />
-    
     <include layout="@layout/list_header" 
 		android:id="@+id/list_header" 
 		android:visibility="gone" 

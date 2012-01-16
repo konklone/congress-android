@@ -40,6 +40,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            
             <meta-data android:name="android.app.default_searchable"
 				android:value=".BillSearch"
 				/>
@@ -55,6 +56,7 @@
             <intent-filter>
 				<action android:name="android.intent.action.SEARCH" />
 	        </intent-filter>
+	        
 	        <meta-data android:name="android.app.searchable"
 				android:resource="@xml/searchable_bills"
 				/>
@@ -63,15 +65,11 @@
 				/>
         </activity>
         
-        <activity android:name=".MenuLegislators" />
-        
-        <activity android:name=".GetText"
-        	android:theme="@style/MainDialog" 
-        	/>
-        <activity android:name=".GetState"
-        	android:theme="@style/MainDialog"
-        	/>
-        	
+        <activity android:name=".MenuLegislators">
+            <meta-data android:name="android.app.default_searchable"
+				android:value=".LegislatorSearch"
+				/>
+        </activity>
         <activity android:name=".LegislatorPager" />
         <activity android:name=".LegislatorList" />
         <activity android:name=".LegislatorLoader">
@@ -79,6 +77,19 @@
         		<action android:name="android.intent.action.MAIN" />
         		<category android:name="android.intent.category.DEFAULT" />
         	</intent-filter>
+        </activity>
+        
+        <activity android:name=".LegislatorSearch">
+            <intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+	        </intent-filter>
+	        
+            <meta-data android:name="android.app.searchable"
+				android:resource="@xml/searchable_legislators"
+				/>
+            <meta-data android:name="android.app.default_searchable"
+				android:value=".LegislatorSearch"
+				/>
         </activity>
         
         <activity android:name=".BillPager" />
