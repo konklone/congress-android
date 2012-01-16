@@ -64,6 +64,7 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 		else if (state != null) {
 			Analytics.track(this, "/legislators/state");
 			ActionBarUtils.setTitle(this, "Legislators from " + Utils.stateCodeToName(this, state));
+			ActionBarUtils.setTitleSize(this, 16);
 			adapter.add("legislators_state", "Not seen", LegislatorListFragment.forState(state));
 		}
 		
@@ -71,6 +72,7 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 		else if (Pattern.compile("^\\d+$").matcher(query).matches()) {
 			Analytics.track(this, "/legislators/zip");
 			ActionBarUtils.setTitle(this, "Legislators For " + query);
+			ActionBarUtils.setTitleSize(this, 16);
 			adapter.add("legislators_zip", "Not seen", LegislatorListFragment.forZip(query));
 		}
 		
@@ -78,6 +80,7 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 		else {
 			Analytics.track(this, "/legislators/lastname");
 			ActionBarUtils.setTitle(this, "Legislators Named \"" + query + "\"");
+			ActionBarUtils.setTitleSize(this, 16);
 			adapter.add("legislators_lastname", "Not seen", LegislatorListFragment.forLastName(query));
 		}
 	}
