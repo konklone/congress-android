@@ -17,7 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.sunlightlabs.android.congress.LegislatorList;
+import com.sunlightlabs.android.congress.LegislatorCommittee;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -93,8 +93,7 @@ public class CommitteeListFragment extends ListFragment {
 	}
 
 	private void selectCommittee(Committee committee) {
-		startActivity(new Intent(getActivity(), LegislatorList.class)
-			.putExtra("type", LegislatorList.SEARCH_COMMITTEE)
+		startActivity(new Intent(getActivity(), LegislatorCommittee.class)
 			.putExtra("committeeId", committee.id)
 			.putExtra("committeeName", committee.name));
 	}

@@ -83,13 +83,5 @@ public class MenuLegislators extends FragmentActivity {
 		public void onListItemClick(ListView parent, View view, int position, long id) {
 			startActivity(new Intent(getActivity(), LegislatorSearch.class).putExtra("state", stateCodes[position]));
 		}
-		
-		static class StatesAdapter extends ArrayAdapter<String> {
-			public StatesAdapter(StatesFragment fragment, String[] stateNames) {
-				super(fragment.getActivity(), 0, stateNames);
-			}
-			
-			
-		}
 	}
 }

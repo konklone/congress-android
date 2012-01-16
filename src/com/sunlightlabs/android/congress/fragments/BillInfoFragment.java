@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sunlightlabs.android.congress.LegislatorList;
+import com.sunlightlabs.android.congress.LegislatorCosponsors;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
@@ -162,9 +162,8 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 				cosponsorView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent intent = new Intent(getActivity(), LegislatorList.class)
-							.putExtra("type", LegislatorList.SEARCH_COSPONSORS)
-							.putExtra("bill_id", bill.id);
+						Intent intent = new Intent(getActivity(), LegislatorCosponsors.class)
+							.putExtra("billId", bill.id);
 						startActivity(intent);	
 					}
 				});

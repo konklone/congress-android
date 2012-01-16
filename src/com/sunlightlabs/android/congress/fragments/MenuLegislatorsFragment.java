@@ -90,56 +90,11 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 		}
 	}
 	
-//	private void searchByZip(String zipCode) {
-//		startActivity(new Intent(this, LegislatorListFragment.class)
-//			.putExtra("type", LegislatorListFragment.SEARCH_ZIP)
-//			.putExtra("zip_code", zipCode));
-//	}
-//
-//	private void searchByLocation() {
-//		startActivity(new Intent(this, LegislatorListFragment.class)
-//			.putExtra("type", LegislatorListFragment.SEARCH_LOCATION));
-//	}
-//
-//	private void searchByLastName(String lastName) {
-//		startActivity(new Intent(this, LegislatorListFragment.class)
-//			.putExtra("type", LegislatorListFragment.SEARCH_LASTNAME)
-//			.putExtra("last_name", lastName));
-//	}
-//
-//	private void searchByState(String state) {
-//		startActivity(new Intent(this, LegislatorListFragment.class)
-//			.putExtra("type", LegislatorListFragment.SEARCH_STATE)
-//			.putExtra("state", state));
-//	}
-	
 	@Override
 	public void onListItemClick(ListView l, View view, int position, long id) {
 		startActivity(Utils.legislatorLoadIntent(((Legislator) view.getTag()).id));
 	}
-	
-	
-//				String zipCode = data.getExtras().getString("response").trim();
-//				if (!zipCode.equals("")) {
-//					Utils.setStringPreference(this, "search_zip", zipCode);
-//					searchByZip(zipCode);
-//				}
-			
-//				String lastName = data.getExtras().getString("response").trim();
-//				if (!lastName.equals("")) {
-//					Utils.setStringPreference(this, "search_lastname", lastName);
-//					searchByLastName(lastName);
-//				}
-//			
-//				String state = data.getExtras().getString("response").trim();
-//				if (!state.equals("")) {
-//					String code = Utils.stateNameToCode(this, state);
-//					if (code != null) {
-//						Utils.setStringPreference(this, "search_state", state); // store the name, not the code
-//						searchByState(code);
-//					}
-//				}
-			
+
 	public void loadPhoto(String bioguide_id) {
 		if (!loadPhotoTasks.containsKey(bioguide_id))
 			loadPhotoTasks.put(bioguide_id, 
@@ -169,10 +124,12 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 	
 	public class FavoriteLegislatorsAdapter extends CursorAdapter {
 		MenuLegislatorsFragment fragment;
+		LayoutInflater inflater;
 		
 		public FavoriteLegislatorsAdapter(MenuLegislatorsFragment fragment, Cursor cursor) {
 			super(fragment.getActivity(), cursor);
 			this.fragment = fragment;
+			this.inflater = LayoutInflater.from(fragment.getActivity());
 		}
 
 		@Override
@@ -180,7 +137,9 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 			Legislator legislator = Database.loadLegislator(cursor);
 			
 			TextView name = (TextView) view.findViewById(R.id.name);
-			name.setText(legislator.titledName());
+			name.setText(nameFor(legislator));
+			TextView position = (TextView) view.findViewById(R.id.position);
+			position.setText(positionFor(legislator));
 			
 			BitmapDrawable picture = LegislatorImage.quickGetImage(LegislatorImage.PIC_MEDIUM, legislator.bioguide_id, context);
 			
@@ -199,9 +158,23 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 		
 		@Override
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
-			View view = LayoutInflater.from(context).inflate(R.layout.favorite_legislator, null);
+			View view = inflater.inflate(R.layout.legislator_item, null);
 			bindView(view, context, cursor);
 			return view;
+		}
+		
+		public String nameFor(Legislator legislator) {
+			return legislator.last_name + ", " + legislator.firstName();
+		}
+
+		public String positionFor(Legislator legislator) {
+			String stateName = Utils.stateCodeToName(fragment.getActivity(), legislator.state);
+			String district;
+			if (legislator.title.equals("Sen"))
+				district = legislator.district;
+			else
+				district = "District " + legislator.district;
+			return legislator.party + " - " + stateName + " - " + district; 
 		}
 	}
 }

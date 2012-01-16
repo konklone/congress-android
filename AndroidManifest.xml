@@ -71,7 +71,8 @@
 				/>
         </activity>
         <activity android:name=".LegislatorPager" />
-        <activity android:name=".LegislatorList" />
+        <activity android:name=".LegislatorCosponsors" />
+        <activity android:name=".LegislatorCommittee" />
         <activity android:name=".LegislatorLoader">
         	<intent-filter>
         		<action android:name="android.intent.action.MAIN" />

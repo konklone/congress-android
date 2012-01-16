@@ -30,6 +30,8 @@ import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
+import com.sunlightlabs.congress.services.BillService;
+import com.sunlightlabs.congress.services.CommitteeService;
 import com.sunlightlabs.congress.services.LegislatorService;
 
 public class LegislatorListFragment extends ListFragment implements LoadPhotoTask.LoadsPhoto { //, LocationListenerTimeout {
@@ -37,16 +39,16 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 //	public static final int SEARCH_LOCATION = 1;
 	public static final int SEARCH_STATE = 2;
 	public static final int SEARCH_LASTNAME = 3;
-//	public static final int SEARCH_COMMITTEE = 4;
-//	public static final int SEARCH_COSPONSORS = 5;
+	public static final int SEARCH_COMMITTEE = 4;
+	public static final int SEARCH_COSPONSORS = 5;
 	public static final int SEARCH_CHAMBER = 6; 
 	
 	List<Legislator> legislators;
 	Map<String,LoadPhotoTask> loadPhotoTasks = new HashMap<String,LoadPhotoTask>();
 	int type;
 	String chamber;
-	//String bill_id;
-	String zipCode, lastName, state; // committeeId, committeeName;
+	String billId;
+	String zipCode, lastName, state, committeeId, committeeName;
 	
 	//double latitude = -1;
 	//double longitude = -1;
@@ -83,11 +85,32 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		return frag;
 	}
 	
+	public static LegislatorListFragment forCommittee(String committeeId, String committeeName) {
+		LegislatorListFragment frag = new LegislatorListFragment();
+		Bundle args = new Bundle();
+		args.putInt("type", SEARCH_COMMITTEE);
+		args.putString("committeeId", committeeId);
+		args.putString("committeeName", committeeName);
+		frag.setArguments(args);
+		frag.setRetainInstance(true);
+		return frag;
+	}
+	
 	public static LegislatorListFragment forZip(String zip) {
 		LegislatorListFragment frag = new LegislatorListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", SEARCH_ZIP);
 		args.putString("zip", zip);
+		frag.setArguments(args);
+		frag.setRetainInstance(true);
+		return frag;
+	}
+	
+	public static LegislatorListFragment forBill(String billId) {
+		LegislatorListFragment frag = new LegislatorListFragment();
+		Bundle args = new Bundle();
+		args.putInt("type", SEARCH_COSPONSORS);
+		args.putString("billId", billId);
 		frag.setArguments(args);
 		frag.setRetainInstance(true);
 		return frag;
@@ -115,7 +138,9 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		zipCode = args.getString("zip");
 		lastName = args.getString("last_name");
 		state = args.getString("state");
-		
+		committeeId = args.getString("committeeId");
+		committeeName = args.getString("committeeName");
+		billId = args.getString("billId");
 		
 		loadLegislators();
 	}
@@ -152,14 +177,6 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 //		case SEARCH_LOCATION:
 //			showHeader(); // make the location update header visible
 //			ActionBarUtils.setTitle(this, "Your Legislators");
-//			break;
-//		case SEARCH_COMMITTEE:
-//			ActionBarUtils.setTitle(this, committeeName);
-//			break;
-//		case SEARCH_COSPONSORS:
-//			ActionBarUtils.setTitle(this, "Cosponsors for " + Bill.formatId(bill_id));
-//			ActionBarUtils.setTitleSize(this, 16);
-//			Utils.setLoading(this, R.string.legislators_loading_cosponsors);
 //			break;
 	}
 
@@ -268,11 +285,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 //		
 //		else if (type == SEARCH_LOCATION)
 //			return "/legislators/location";
-//		else if (type == SEARCH_COMMITTEE)
-//			return "/committee/" + committeeId + "/legislators";
-//		else if (type == SEARCH_COSPONSORS)
-//			return "/bill/" + bill_id + "/cosponsors";
-//	}
+
 
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
@@ -280,9 +293,9 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 	}
 
 	public void selectLegislator(Legislator legislator) {
-//		if (type == SEARCH_COSPONSORS) // cosponsors from RTC don't have enough info to go direct
-//			startActivity(Utils.legislatorLoadIntent(legislator.id));
-//		else
+		if (type == SEARCH_COSPONSORS) // cosponsors from RTC don't have enough info to go direct
+			startActivity(Utils.legislatorLoadIntent(legislator.id));
+		else
 			startActivity(Utils.legislatorIntent(getActivity(), legislator));
 	}
 	
@@ -349,7 +362,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		public String positionFor(Legislator legislator) {
 			String stateName = Utils.stateCodeToName(context.getActivity(), legislator.state);
 			String district;
-			if (legislator.chamber.equals("senate"))
+			if (legislator.title.equals("Sen"))
 				district = legislator.district;
 			else
 				district = "District " + legislator.district;
@@ -398,15 +411,15 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 				case SEARCH_LASTNAME:
 					temp = LegislatorService.allWhere("lastname__istartswith", context.lastName);
 					break;
-//				case SEARCH_COMMITTEE:
-//					temp = CommitteeService.find(context.committeeId).members;
-//					break;
+				case SEARCH_COMMITTEE:
+					temp = CommitteeService.find(context.committeeId).members;
+					break;
 				case SEARCH_STATE:
 					temp = LegislatorService.allWhere("state", context.state);
 					break;
-//				case SEARCH_COSPONSORS:
-//					temp = BillService.find(context.bill_id, new String[] {"cosponsors"}).cosponsors;
-//					break;
+				case SEARCH_COSPONSORS:
+					temp = BillService.find(context.billId, new String[] {"cosponsors"}).cosponsors;
+					break;
 				case SEARCH_CHAMBER:
 					return LegislatorService.allForChamber(context.chamber);
 				default:
