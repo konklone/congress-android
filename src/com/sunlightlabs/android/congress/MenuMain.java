@@ -158,7 +158,6 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 	}
 	
 	public void showChangelog() {
-		Analytics.page(this, "/changelog", false);
 		FragmentUtils.alertDialog(this, AlertFragment.CHANGELOG);
 	}
 	
@@ -181,6 +180,8 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 			startActivity(new Intent(this, Settings.class));
 			break;
 		case R.id.changelog:
+			// here so that we don't record hits when people automatically view the changelog on update
+			Analytics.page(this, "/changelog", false);
 			showChangelog();
 			break;
 		}
