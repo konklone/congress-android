@@ -5,7 +5,6 @@
     <string name="app_version_older">Version 3.8</string>
     <string name="app_package_name">com.sunlightlabs.android.congress</string>
     
-    <string name="create_shortcuts">Legislator</string>
     <string name="first_time_twitter">Tap to the right of a tweet to reply using a Twitter app.</string>
     <string name="no_market_installed">You need to have the Android Market in order to donate.</string>
     
@@ -95,8 +94,6 @@
     
     <string name="vote_not_found">Vote details not yet available.</string>
     
-    <string name="state_prompt">Choose a state:</string>
-    
     <string name="about_button">Cool</string>
     <string name="first_button">Awesome</string>
     <string name="explanation_button">Wow</string>
@@ -149,11 +146,6 @@
     <string name="menu_legislators_house">House</string>
     <string name="menu_legislators_senate">Senate</string>
     
-    <string name="menu_legislators_favorite">Starred</string>
-    <string name="menu_legislators_location">My Location</string>
-    <string name="menu_legislators_lastname">Last Name</string>
-    <string name="menu_legislators_zip">Zip Code</string>
-    
     <string name="menu_votes_recent">Votes</string>
     <string name="menu_location_no_location">Couldn\'t locate you. Tap the refresh icon above to try again.\n\nYou may need to update your device\'s location settings to allow this app to find you.</string>
     <string name="menu_location_updating">Finding your location…</string>
@@ -167,13 +159,10 @@
     <string name="bill_not_found">No bill found by that code.</string>
     <string name="bills_error">Couldn\'t load bills.</string>
     <string name="bills_retry">Retry</string>
-
     <string name="bill_actions_empty">This bill has no activity at this time.</string>
     <string name="bill_votes_empty">No votes have taken place on this bill yet.</string>
-    
     <string name="bill_vote_roll">Tap to see how each legislator voted.</string>
     <string name="bill_vote_not_roll">No roll call was taken for this vote.</string>
-    
     <string name="bill_sort">Sort by</string>
     <string name="bill_sort_newest">Newest</string>
     <string name="bill_sort_best">Best</string>
