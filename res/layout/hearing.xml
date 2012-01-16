@@ -12,7 +12,7 @@
 	>
 	
 	<LinearLayout android:orientation="vertical"
-		android:layout_width="wrap_content"
+		android:layout_width="100dp"
 		android:layout_height="wrap_content"
 		android:layout_weight="0"
 		
@@ -24,7 +24,7 @@
 		<TextView android:id="@+id/month"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textSize="26sp"
+			android:textSize="18sp"
 			
 			android:text="Oct 18"
 			/>
@@ -34,7 +34,8 @@
 			android:layout_height="wrap_content"
 			android:layout_marginTop="5dp"
 			
-			android:textSize="16sp"
+			android:textSize="14sp"
+			android:textColor="@color/text_grey"
 			
 			android:text="10:00AM"
 			/>
@@ -44,7 +45,8 @@
 			android:layout_height="wrap_content"
 			
 			android:layout_marginTop="5dp"
-			android:textSize="16sp"
+			android:textSize="14sp"
+			android:textColor="@color/text_grey"
 			
 			android:text="SD-234"
 			/>
@@ -62,7 +64,7 @@
 			android:layout_height="wrap_content"
 			android:paddingTop="2dp"
 			
-			android:textSize="18sp"
+			android:textSize="16sp"
 			
 			android:text="Homeland Security and Governmental Affairs"
 			/>
@@ -73,7 +75,8 @@
 			
 			android:layout_marginTop="5dp"
 			
-			android:textSize="16sp"
+			android:textSize="14sp"
+			android:textColor="@color/text_grey"
 			
 			android:text="Hearings to examine ten years after 9/11 and the anthrax attacks, focusing on protecting against biological threats."
 			/>
