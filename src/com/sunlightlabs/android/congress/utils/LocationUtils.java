@@ -31,8 +31,7 @@ public class LocationUtils {
 		private String provider;
 		private Handler handler;
 
-		public LocationTimer(LocationListenerTimeout listener, LocationManager manager,
-				String provider, Handler handler) {
+		public LocationTimer(LocationListenerTimeout listener, LocationManager manager, String provider, Handler handler) {
 			this.listener = listener;
 			this.manager = manager;
 			this.provider = provider;
@@ -69,8 +68,7 @@ public class LocationUtils {
 			this.listener = listener;
 		}
 
-		public Timeout(LocationListenerTimeout listener, LocationManager manager, String provider,
-				Handler handler) {
+		public Timeout(LocationListenerTimeout listener, LocationManager manager, String provider, Handler handler) {
 			this.listener = listener;
 			this.manager = manager;
 			this.provider = provider;
@@ -86,8 +84,7 @@ public class LocationUtils {
 	}
 
 	public static Location getLastKnownLocation(Context context) {
-		LocationManager manager = (LocationManager) context
-				.getSystemService(Context.LOCATION_SERVICE);
+		LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
 		Location location = null;
 		String provider = LocationManager.GPS_PROVIDER;
@@ -102,13 +99,11 @@ public class LocationUtils {
 		return location;
 	}
 
-	public static LocationTimer requestLocationUpdate(Context context, Handler handler,
-			String provider) {
+	public static LocationTimer requestLocationUpdate(Context context, Handler handler, String provider) {
 		//Log.d(Utils.TAG, "LocationUtils - requestLocationUpdate(): from provider " + provider);
 
 		if (!(context instanceof LocationListener))
-			throw new IllegalArgumentException(
-					"context must implement LocationListener to receive updates!");
+			throw new IllegalArgumentException("context must implement LocationListener to receive updates!");
 
 		LocationListenerTimeout listener = (LocationListenerTimeout) context;
 		LocationManager manager = (LocationManager) context

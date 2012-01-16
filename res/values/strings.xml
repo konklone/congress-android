@@ -43,6 +43,7 @@
     <string name="youtube_empty">No videos found.</string>
     <string name="bills_loading">Plucking bills from the air…</string>
     <string name="legislators_loading">Searching for lawmakers…</string>
+    <string name="legislators_loading_location">Found your location, searching…</string>
     <string name="legislators_error">Error loading lawmakers.</string>
     <string name="legislators_loading_cosponsors">Loading cosponsors…</string>
     <string name="votes_loading">Plucking votes from the air…</string>
@@ -154,8 +155,8 @@
     <string name="menu_legislators_zip">Zip Code</string>
     
     <string name="menu_votes_recent">Votes</string>
-    <string name="menu_location_no_location">Cannot update location</string>
-    <string name="menu_location_updating">Updating location…</string>
+    <string name="menu_location_no_location">Couldn\'t locate you. Tap the refresh icon above to try again.\n\nYou may need to update your device\'s location settings to allow this app to find you.</string>
+    <string name="menu_location_updating">Finding your location…</string>
     <string name="menu_favorite_bill_error">Error loading starred bills.</string>
     <string name="menu_favorite_legislator_error">Error loading starred legislators.</string>
     <string name="menu_committees">Committees</string>

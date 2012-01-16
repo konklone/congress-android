@@ -34,9 +34,9 @@ import com.sunlightlabs.congress.services.BillService;
 import com.sunlightlabs.congress.services.CommitteeService;
 import com.sunlightlabs.congress.services.LegislatorService;
 
-public class LegislatorListFragment extends ListFragment implements LoadPhotoTask.LoadsPhoto { //, LocationListenerTimeout {
+public class LegislatorListFragment extends ListFragment implements LoadPhotoTask.LoadsPhoto {
 	public static final int SEARCH_ZIP = 0;
-//	public static final int SEARCH_LOCATION = 1;
+	public static final int SEARCH_LOCATION = 1;
 	public static final int SEARCH_STATE = 2;
 	public static final int SEARCH_LASTNAME = 3;
 	public static final int SEARCH_COMMITTEE = 4;
@@ -45,25 +45,13 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 	
 	List<Legislator> legislators;
 	Map<String,LoadPhotoTask> loadPhotoTasks = new HashMap<String,LoadPhotoTask>();
+	
 	int type;
 	String chamber;
 	String billId;
 	String zipCode, lastName, state, committeeId, committeeName;
-	
-	//double latitude = -1;
-	//double longitude = -1;
-
-//	private LocationTimer timer;
-//	private boolean relocating = false;
-//
-//	private HeaderViewWrapper headerWrapper;
-	
-//	private Handler handler = new Handler() {
-//		@Override
-//		public void handleMessage(Message msg) {
-//			onTimeout((String) msg.obj);
-//		}
-//	};
+	double latitude = -1;
+	double longitude = -1;
 	
 	public static LegislatorListFragment forChamber(String chamber) {
 		LegislatorListFragment frag = new LegislatorListFragment();
@@ -126,6 +114,17 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		return frag;
 	}
 	
+	public static LegislatorListFragment forLocation(double latitude, double longitude) {
+		LegislatorListFragment frag = new LegislatorListFragment();
+		Bundle args = new Bundle();
+		args.putInt("type", SEARCH_LOCATION);
+		args.putDouble("latitude", latitude);
+		args.putDouble("longitude", longitude);
+		frag.setArguments(args);
+		frag.setRetainInstance(true);
+		return frag;
+	}
+	
 	public LegislatorListFragment() {}
 	
 	@Override
@@ -141,6 +140,8 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		committeeId = args.getString("committeeId");
 		committeeName = args.getString("committeeName");
 		billId = args.getString("billId");
+		latitude = args.getDouble("latitude", -1);
+		longitude = args.getDouble("longitude", -1);
 		
 		loadLegislators();
 	}
@@ -148,10 +149,12 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		ViewGroup view = (ViewGroup) inflater.inflate(R.layout.list, container, false);
+		
 		if (type == SEARCH_CHAMBER) {
 			ListView list = (ListView) view.findViewById(android.R.id.list);
 			list.setFastScrollEnabled(true);
 		}
+		
 		return view;
 	}
 	
@@ -172,31 +175,13 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 			}
 		});
 
-		FragmentUtils.setLoading(this, R.string.legislators_loading);
-		
-//		case SEARCH_LOCATION:
-//			showHeader(); // make the location update header visible
-//			ActionBarUtils.setTitle(this, "Your Legislators");
-//			break;
+		if (type == SEARCH_COSPONSORS)
+			FragmentUtils.setLoading(this, R.string.legislators_loading_cosponsors);
+		else if (type == SEARCH_LOCATION)
+			FragmentUtils.setLoading(this, R.string.legislators_loading_location);
+		else
+			FragmentUtils.setLoading(this, R.string.legislators_loading);
 	}
-
-
-//			if (legislators == null && type == SEARCH_LOCATION) {
-//				if (!relocating)
-//					updateLocation();
-				// if currently relocating, do nothing and just wait for it to complete
-	
-
-	@Override
-	public void onStop() {
-		super.onStop();
-//		if (type == SEARCH_LOCATION) {
-//			cancelTimer();
-//			relocating = false;
-//			toggleRelocating();
-//		}
-	}
-	
 	
 	public void loadLegislators() {
 		new LoadLegislatorsTask(this).execute();
@@ -207,7 +192,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 //		if (legislators.size() == 1 && (context.type != SEARCH_LOCATION && context.type != SEARCH_COSPONSORS)) {
 //			context.selectLegislator(legislators.get(0));
 //			context.finish();
-//		} 
+//		}
 		
 		if (isAdded())
 			displayLegislators();
@@ -219,9 +204,6 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 	}
 
 	public void displayLegislators() {
-//		if (type == SEARCH_LOCATION)
-//			headerWrapper.getBase().setVisibility(View.VISIBLE);
-		
 		if (legislators.size() > 0)
 			setListAdapter(new LegislatorAdapter(this, legislators));
 		else {
@@ -229,9 +211,9 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 			case SEARCH_ZIP:
 				FragmentUtils.showEmpty(this, R.string.empty_zipcode);
 				break;
-//			case SEARCH_LOCATION:
-//				FragmentUtils.showEmpty(this, R.string.empty_location);
-//				break;
+			case SEARCH_LOCATION:
+				FragmentUtils.showEmpty(this, R.string.empty_location);
+				break;
 			case SEARCH_LASTNAME:
 				FragmentUtils.showEmpty(this, R.string.empty_last_name);
 				break;
@@ -280,12 +262,6 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		FragmentUtils.showLoading(this);
 		loadLegislators();
 	}
-
-//	public String url() {
-//		
-//		else if (type == SEARCH_LOCATION)
-//			return "/legislators/location";
-
 
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
@@ -405,9 +381,9 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 				case SEARCH_ZIP:
 					temp = LegislatorService.allForZipCode(context.zipCode);
 					break;
-//				case SEARCH_LOCATION:
-//					temp = LegislatorService.allForLatLong(context.latitude, context.longitude);
-//					break;
+				case SEARCH_LOCATION:
+					temp = LegislatorService.allForLatLong(context.latitude, context.longitude);
+					break;
 				case SEARCH_LASTNAME:
 					temp = LegislatorService.allWhere("lastname__istartswith", context.lastName);
 					break;
@@ -456,98 +432,4 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		}
 	}
 
-//	private class HeaderViewWrapper {
-//		private TextView txt;
-//		private View base;
-//		private View loading;
-//
-//		public HeaderViewWrapper(View base) {
-//			this.base = base;
-//		}
-//		
-//		public View getBase() {
-//			return base;
-//		}
-//		
-//		public TextView getTxt() {
-//			return (txt == null ? txt = (TextView) base.findViewById(R.id.text_1) : txt);
-//		}
-//
-//		public View getLoading() {
-//			return (loading == null ? loading = base.findViewById(R.id.updating_spinner) : loading);
-//		}
-//	}
-//
-//	private void showHeader() {
-//		headerWrapper = new HeaderViewWrapper(findViewById(R.id.list_header));
-//		headerWrapper.getTxt().setText(R.string.location_update);
-//		headerWrapper.getBase().setOnClickListener(new View.OnClickListener() {
-//			public void onClick(View v) {
-//				if (!relocating)
-//					updateLocation();
-//			}
-//		});
-//	}
-//
-//	private void toggleRelocating() {
-//		Log.d(Utils.TAG, "LegislatorListFragment - toggleRelocating(): relocating is " + relocating);
-//		headerWrapper.getBase().setEnabled(relocating ? false : true);
-//		headerWrapper.getTxt().setText(relocating ? R.string.menu_location_updating : R.string.location_update);
-//		headerWrapper.getLoading().setVisibility(relocating ? View.VISIBLE : View.GONE);
-//	}
-//
-//	private void cancelTimer() {
-//		if (timer != null) {
-//			timer.cancel();
-//			Log.d(Utils.TAG, "LegislatorListFragment - cancelTimer(): end updating timer");
-//		}
-//	}
-//
-//	private void updateLocation() {
-//		relocating = true;
-//		toggleRelocating();
-//		timer = LocationUtils.requestLocationUpdate(this, handler, LocationManager.GPS_PROVIDER);
-//	}
-//
-//	private void reloadLegislators() {
-//		legislators = null;
-//		loadLegislators();
-//	}
-//	
-//	public void onLocationUpdateError() {
-//		if (relocating) {
-//			Log.d(Utils.TAG, "LegislatorListFragment - onLocationUpdateError(): cannot update location");
-//			relocating = false;
-//			toggleRelocating();
-//
-//			Toast.makeText(this, R.string.location_update_fail, Toast.LENGTH_SHORT).show();
-//		}
-//	}
-//	
-//	public void onLocationChanged(Location location) {
-//		latitude = location.getLatitude();
-//		longitude = location.getLongitude();
-//		cancelTimer();
-//		
-//		relocating = false;
-//		toggleRelocating();
-//		
-//		reloadLegislators();
-//	}
-//
-//	public void onProviderDisabled(String provider) {}
-//
-//	public void onProviderEnabled(String provider) {}
-//
-//	public void onStatusChanged(String provider, int status, Bundle extras) {}
-//
-//	public void onTimeout(String provider) {
-//		Log.d(Utils.TAG, "LegislatorListFragment - onTimeout(): timeout for provider " + provider);
-//		if (provider.equals(LocationManager.GPS_PROVIDER)) {
-//			timer = LocationUtils.requestLocationUpdate(this, handler,
-//					LocationManager.NETWORK_PROVIDER);
-//			Log.d(Utils.TAG, "LegislatorListFragment - onTimeout(): requesting update from network");
-//		} else
-//			onLocationUpdateError();
-//	}
 }

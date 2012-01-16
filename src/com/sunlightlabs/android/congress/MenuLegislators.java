@@ -41,6 +41,12 @@ public class MenuLegislators extends FragmentActivity {
 	public void setupControls() {
 		ActionBarUtils.setTitle(this, R.string.menu_main_legislators);
 		
+		ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.location, new View.OnClickListener() {
+			public void onClick(View v) { 
+				startActivity(new Intent(MenuLegislators.this, LegislatorSearch.class).putExtra("location", true));
+			}
+		});
+		
 		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
 			public void onClick(View v) { 
 				onSearchRequested();
@@ -48,7 +54,7 @@ public class MenuLegislators extends FragmentActivity {
 		});
 	}
 	
-	static class StatesFragment extends ListFragment {
+	public static class StatesFragment extends ListFragment {
 		private String[] stateCodes;
 		
 		public static StatesFragment newInstance() {

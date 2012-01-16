@@ -8,5 +8,11 @@
     <include layout="@layout/title_bar" />
     
     <include layout="@layout/pager" />
+    
+    <include layout="@layout/list_empty"
+		android:layout_width="fill_parent" 
+	    android:layout_height="fill_parent"
+	    android:visibility="gone" 
+	    />
 	
 </LinearLayout>
