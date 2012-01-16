@@ -3,10 +3,10 @@ package com.sunlightlabs.android.congress;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Window;
 
 import com.sunlightlabs.android.congress.tasks.LoadLegislatorTask;
 import com.sunlightlabs.android.congress.tasks.LoadLegislatorTask.LoadsLegislator;
+import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
@@ -46,6 +46,7 @@ public class LegislatorLoader extends Activity implements LoadsLegislator {
 	
 	public void setupControls() {
 		Utils.setLoading(this, R.string.legislator_loading);
+		ActionBarUtils.setTitle(this, R.string.app_name);
 	}
 	
 	public void onLoadLegislator(Legislator legislator) {

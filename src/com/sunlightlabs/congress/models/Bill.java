@@ -53,6 +53,10 @@ public class Bill implements Serializable {
 	
 	// latest upcoming bill data
 	public List<UpcomingBill> latestUpcoming;
+	
+	// full text URLs (to GPO)
+	// valid keys: "html", "xml", "pdf"
+	public Map<String,String> urls;
 
 	public static class Action implements Serializable {
 		private static final long serialVersionUID = 1L;
@@ -194,6 +198,17 @@ public class Bill implements Serializable {
 			return "sc";
 		else
 			return type;
+	}
+	
+	// prioritizes GPO "html" version (really text),
+	// then GPO PDF, then finally the THOMAS landing page
+	public String bestFullTextUrl() {
+		if (this.urls != null && this.urls.containsKey("html"))
+			return urls.get("html");
+		else if (this.urls != null && this.urls.containsKey("pdf"))
+			return urls.get("pdf");
+		else
+			return thomasUrl(bill_type, number, session);
 	}
 	
 	// in accordance with the syntax described here:

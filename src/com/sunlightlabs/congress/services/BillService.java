@@ -27,7 +27,7 @@ public class BillService {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("order", "introduced_at");
 		
-		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming"};
+		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming", "last_version.urls"};
 		
 		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page)); 
 	}
@@ -37,7 +37,7 @@ public class BillService {
 		params.put("order", "enacted_at");
 		params.put("enacted", "true");
 		
-		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming"};
+		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming", "last_version.urls"};
 		
 		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
 	}
@@ -47,7 +47,7 @@ public class BillService {
 		params.put("order", "introduced_at");
 		params.put("sponsor_id", sponsorId);
 		
-		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming"};
+		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming", "last_version.urls"};
 		
 		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
 	}
@@ -60,7 +60,7 @@ public class BillService {
 		if (!params.containsKey("order"))
 			params.put("order", "introduced_at");
 		
-		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming"};
+		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming", "last_version.urls"};
 		
 		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
 	}
@@ -204,6 +204,20 @@ public class BillService {
 			});
 			
 			bill.latestUpcoming = latestUpcoming;
+		}
+		
+		if (!json.isNull("last_version")) {
+			JSONObject version = json.getJSONObject("last_version");
+			if (!version.isNull("urls")) {
+				bill.urls = new HashMap<String,String>();
+				JSONObject urls = version.getJSONObject("urls");
+				if (!urls.isNull("html"))
+					bill.urls.put("html", urls.getString("html"));
+				if (!urls.isNull("xml"))
+					bill.urls.put("xml", urls.getString("xml"));
+				if (!urls.isNull("pdf"))
+					bill.urls.put("pdf", urls.getString("pdf"));
+			}
 		}
 		
 		// coming from a search endpoint, generate a search object

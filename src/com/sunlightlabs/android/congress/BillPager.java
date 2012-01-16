@@ -137,7 +137,7 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 		switch(item.getItemId()) {
     	case R.id.thomas:
     		Analytics.billThomas(this, bill.id);
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.thomasUrl(bill.bill_type, bill.number, bill.session))));
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.bestFullTextUrl())));
     		break;
     	case R.id.govtrack:
     		Analytics.billGovTrack(this, bill.id);

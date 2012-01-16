@@ -49,7 +49,7 @@ public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 		if (loadBillTask != null)
 			loadBillTask.onScreenLoad(this);
 		else
-			loadBillTask = (LoadBillTask) new LoadBillTask(this, id).execute("basic", "sponsor", "latest_upcoming");
+			loadBillTask = (LoadBillTask) new LoadBillTask(this, id).execute("basic", "sponsor", "latest_upcoming", "last_version.urls");
 		
 		setupControls();
 	}
