@@ -7,8 +7,9 @@ import winterwell.jtwitter.TwitterException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.text.Html;
 import android.text.format.Time;
-import android.util.Log;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,6 @@ import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask.LoadsTweets;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
-import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class TweetsFragment extends ListFragment implements LoadsTweets {
@@ -142,9 +142,10 @@ public class TweetsFragment extends ListFragment implements LoadsTweets {
 				view = inflater.inflate(R.layout.tweet, null); 
 			
 			Status tweet = getItem(position);
-			((TextView) view.findViewById(R.id.tweet_text)).setText(tweet.text);;
-			((TextView) view.findViewById(R.id.tweet_byline))
-				.setText("posted " + timeAgoInWords(tweet.createdAt.getTime()) + " by @" + tweet.user.screenName);
+			((TextView) view.findViewById(R.id.tweet_text)).setText(tweet.text);
+			TextView byline = (TextView) view.findViewById(R.id.tweet_byline);
+			byline.setText(Html.fromHtml("posted " + timeAgoInWords(tweet.createdAt.getTime()) + " by <a href=\"http://twitter.com/" + tweet.user.screenName + "\">@" + tweet.user.screenName + "</a>"));
+			byline.setMovementMethod(LinkMovementMethod.getInstance());
 			
 			view.setEnabled(false);
 			
