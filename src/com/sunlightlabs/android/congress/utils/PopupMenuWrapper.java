@@ -1,6 +1,8 @@
 package com.sunlightlabs.android.congress.utils;
 
 import android.app.Activity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
@@ -27,7 +29,11 @@ public class PopupMenuWrapper {
 	}
 	
 	public void inflate(int menuId) {
-		menu.inflate(menuId);			
+		// done without using the PopupMenu.inflate() method, which isn't available on Honeycomb.
+		// this method works on both Honeycomb and Ice Cream Sandwich.
+		MenuInflater inflater = menu.getMenuInflater();
+		Menu baseMenu = menu.getMenu();
+		inflater.inflate(menuId, baseMenu);
 	}
 	
 	public void show() {
