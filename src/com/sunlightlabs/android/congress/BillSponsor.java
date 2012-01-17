@@ -8,6 +8,7 @@ import com.sunlightlabs.android.congress.fragments.BillListFragment;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class BillSponsor extends FragmentActivity {
@@ -36,7 +37,7 @@ public class BillSponsor extends FragmentActivity {
 	}
 	
 	public void setupControls() {
-		ActionBarUtils.setTitle(this, "Latest Bills by\n" + sponsor.titledName());
+		ActionBarUtils.setTitle(this, "Latest Bills by\n" + sponsor.titledName(), Utils.legislatorIntent(this, sponsor));
 		ActionBarUtils.setTitleSize(this, 16);
 	}
 	

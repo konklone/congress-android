@@ -73,7 +73,7 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 	
 	public void setupControls() {
 		String titledName = legislator.titledName();
-		ActionBarUtils.setTitle(this, titledName);
+		ActionBarUtils.setTitle(this, titledName, new Intent(this, MenuLegislators.class));
 		if (titledName.length() >= 23)
 			ActionBarUtils.setTitleSize(this, 16);
 		

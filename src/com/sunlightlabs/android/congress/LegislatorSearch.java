@@ -95,6 +95,8 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 			
 			adapter.add("legislators_lastname", "Not seen", LegislatorListFragment.forLastName(query));
 		}
+		
+		ActionBarUtils.setTitleButton(this, new Intent(this, MenuLegislators.class));
 	}
 	
 	public void setupControls() {

@@ -27,34 +27,34 @@ public class ActionBarUtils {
 	public interface HasActionMenu {
 		public void menuSelected(MenuItem item);
 	}
-
+	
 	public static void setTitle(Activity activity, String title) {
-		setTitle(activity, title, true);
+		setTitle(activity, title, new Intent(activity, MenuMain.class)); // default intent is home
 	}
 
 	public static void setTitle(Activity activity, int title) {
 		setTitle(activity, activity.getResources().getString(title));
 	}
 
-	public static void setTitle(Activity activity, int title, boolean enableButton) {
-		setTitle(activity, activity.getResources().getString(title), enableButton);
+	public static void setTitle(Activity activity, int title, Intent up) {
+		setTitle(activity, activity.getResources().getString(title), up);
 	}
-
-	public static void setTitle(Activity activity, String title, boolean enableButton) {
+	
+	public static void setTitle(Activity activity, String title, Intent up) {
 		((TextView) activity.findViewById(R.id.title_text)).setText(title);
 		
-		if (enableButton)
-			setTitleButton(activity);
+		if (up != null) // send a null up intent to disable up button
+			setTitleButton(activity, up); 
 	}
 
-	public static void setTitleButton(final Activity activity) {
+	public static void setTitleButton(final Activity activity, final Intent up) {
 		View button = activity.findViewById(R.id.title_button);
 		
 		button.findViewById(R.id.title_up_icon).setVisibility(View.VISIBLE);
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				activity.startActivity(new Intent(activity, MenuMain.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+				activity.startActivity(up.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 			}
 		});
 		button.setFocusable(true);

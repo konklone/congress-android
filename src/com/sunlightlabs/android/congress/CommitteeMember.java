@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import com.sunlightlabs.android.congress.fragments.CommitteeListFragment;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class CommitteeMember extends FragmentActivity {
@@ -19,7 +20,7 @@ public class CommitteeMember extends FragmentActivity {
 		
 		Analytics.track(this, "/legislator/committees");
 		
-		ActionBarUtils.setTitle(this, "Committees for " + legislator.titledName());
+		ActionBarUtils.setTitle(this, "Committees for " + legislator.titledName(), Utils.legislatorIntent(this, legislator));
 		ActionBarUtils.setTitleSize(this, 16);
 		
 		FragmentManager manager = getSupportFragmentManager();

@@ -46,7 +46,7 @@ public class LegislatorLoader extends Activity implements LoadsLegislator {
 	
 	public void setupControls() {
 		Utils.setLoading(this, R.string.legislator_loading);
-		ActionBarUtils.setTitle(this, R.string.app_name);
+		ActionBarUtils.setTitle(this, R.string.app_name, new Intent(this, MenuLegislators.class));
 	}
 	
 	public void onLoadLegislator(Legislator legislator) {

@@ -9,11 +9,13 @@ import com.sunlightlabs.android.congress.fragments.LegislatorListFragment;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 
 public class LegislatorCosponsors extends FragmentActivity {
 	
 	String billId;
+	Bill bill;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,7 @@ public class LegislatorCosponsors extends FragmentActivity {
 		
 		Intent intent = getIntent();
 		billId = intent.getStringExtra("billId");
+		bill = (Bill) intent.getSerializableExtra("bill");
 		
 		setupControls();
 		setupPager();
@@ -38,7 +41,7 @@ public class LegislatorCosponsors extends FragmentActivity {
 	}
 	
 	public void setupControls() {
-		ActionBarUtils.setTitle(this, "Cosponsors for " + Bill.formatId(billId));
+		ActionBarUtils.setTitle(this, "Cosponsors for " + Bill.formatId(billId), Utils.billIntent(this, bill));
 		ActionBarUtils.setTitleSize(this, 16);
 	}
 }

@@ -8,6 +8,7 @@ import com.sunlightlabs.android.congress.fragments.RollListFragment;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class VoteVoter extends FragmentActivity {
@@ -36,7 +37,7 @@ public class VoteVoter extends FragmentActivity {
 	}
 	
 	public void setupControls() {
-		ActionBarUtils.setTitle(this, "Latest Votes By\n" + legislator.titledName());
+		ActionBarUtils.setTitle(this, "Latest Votes By\n" + legislator.titledName(), Utils.legislatorIntent(this, legislator));
 		ActionBarUtils.setTitleSize(this, 16);
 		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
 			public void onClick(View v) { 

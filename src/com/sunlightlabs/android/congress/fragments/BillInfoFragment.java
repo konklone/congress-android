@@ -163,7 +163,8 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent(getActivity(), LegislatorCosponsors.class)
-							.putExtra("billId", bill.id);
+							.putExtra("billId", bill.id)
+							.putExtra("bill", bill);
 						startActivity(intent);	
 					}
 				});

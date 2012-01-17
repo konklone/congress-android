@@ -148,7 +148,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	}
 	
 	public void setupControls() {
-		ActionBarUtils.setTitle(this, Utils.formatRollId(id));
+		ActionBarUtils.setTitle(this, Utils.formatRollId(id), new Intent(this, MenuVotes.class));
 		Utils.setLoading(this, R.string.vote_loading);
 	}
 	

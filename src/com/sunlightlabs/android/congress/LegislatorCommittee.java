@@ -38,7 +38,7 @@ public class LegislatorCommittee extends FragmentActivity {
 	}
 	
 	public void setupControls() {
-		ActionBarUtils.setTitle(this, committeeName);
+		ActionBarUtils.setTitle(this, committeeName, new Intent(this, CommitteePager.class));
 		ActionBarUtils.setTitleSize(this, 16);
 	}
 }

@@ -1,6 +1,7 @@
 package com.sunlightlabs.android.congress;
 
 import android.app.SearchManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.FragmentActivity;
@@ -51,7 +52,7 @@ public class BillSearch extends FragmentActivity {
 					this, SuggestionsProvider.AUTHORITY, SuggestionsProvider.MODE);
 	        suggestions.saveRecentQuery(query, null);
 			
-			ActionBarUtils.setTitle(this, "Bills matching \"" + query + "\"");
+			ActionBarUtils.setTitle(this, "Bills matching \"" + query + "\"", new Intent(this, MenuBills.class));
 			ActionBarUtils.setTitleSize(this, 16);
 			adapter.add("bills_recent", R.string.search_bills_recent, BillListFragment.forSearch(query, BillListFragment.BILLS_SEARCH_NEWEST));
 			adapter.add("bills_relevant", R.string.search_bills_relevant, BillListFragment.forSearch(query, BillListFragment.BILLS_SEARCH_RELEVANT));

@@ -57,7 +57,7 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 			public void onClick(View v) { doFeedback(); }
 		});
 		
-		ActionBarUtils.setTitle(this, R.string.app_name, false);
+		ActionBarUtils.setTitle(this, R.string.app_name, null);
 		
 		ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.notifications, new View.OnClickListener() {
 			public void onClick(View v) { 

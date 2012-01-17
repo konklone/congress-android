@@ -12,6 +12,7 @@ import com.sunlightlabs.android.congress.providers.SuggestionsProvider;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class VoteSearch extends FragmentActivity {
@@ -50,10 +51,10 @@ public class VoteSearch extends FragmentActivity {
 
 	public void setupControls() {
 		if (voter != null) {
-			ActionBarUtils.setTitle(this, "Votes by " + voter.titledName() + " matching \"" + query + "\"");
+			ActionBarUtils.setTitle(this, "Votes by " + voter.titledName() + " matching \"" + query + "\"", Utils.legislatorIntent(this, voter));
 			ActionBarUtils.setTitleSize(this, 14);
 		} else {
-			ActionBarUtils.setTitle(this, "Votes matching \"" + query + "\"");
+			ActionBarUtils.setTitle(this, "Votes matching \"" + query + "\"", new Intent(this, MenuVotes.class));
 			ActionBarUtils.setTitleSize(this, 16);
 		}
 		
