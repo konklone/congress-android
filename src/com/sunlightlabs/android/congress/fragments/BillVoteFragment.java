@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -119,13 +118,8 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
         }
         
         @Override
-        public boolean isEnabled(int position) {
-        	return (getItem(position)).roll_id != null;
-        }
-        
-        @Override
         public boolean areAllItemsEnabled() {
-        	return false;
+        	return true;
         }
         
         @Override
@@ -140,29 +134,26 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 			
 			Bill.Vote vote = getItem(position);
 			
-			String timestamp = new SimpleDateFormat("MMM dd, yyyy").format(vote.voted_at);
-			((TextView) view.findViewById(R.id.voted_at)).setText(timestamp);
-			((TextView) view.findViewById(R.id.chamber)).setText("the " + Utils.capitalize(vote.chamber));
+			String timestamp = new SimpleDateFormat("MMM dd, yyyy").format(vote.voted_at).toUpperCase();
+			((TextView) view.findViewById(R.id.date)).setText(timestamp);
 			
 			TextView resultView = (TextView) view.findViewById(R.id.result);
 			String result = vote.result;
-			if (result.equals("pass")) {
-				resultView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-				resultView.setText("Passed");
-			} else if (result.equals("fail")) {
-				resultView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-				resultView.setText("Failed");
-			}
+			String resultDisplay;
+			if (result.equals("pass"))
+				resultDisplay = "Passed";
+			else // if (result.equals("fail"))
+				resultDisplay = "Failed";
+				
+			resultView.setText(resultDisplay + " the " + Utils.capitalize(vote.chamber));
 			
 			String roll_id = vote.roll_id;
 			TextView typeMessage = (TextView) view.findViewById(R.id.type_message);
 			if (roll_id != null) {
-				typeMessage.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 				typeMessage.setTextColor(resources.getColor(R.color.text));
 				typeMessage.setText(R.string.bill_vote_roll);
 				view.setTag(vote.roll_id);
 			} else {
-				typeMessage.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
 				typeMessage.setTextColor(resources.getColor(R.color.text_grey));
 				typeMessage.setText(R.string.bill_vote_not_roll);
 				view.setTag(null);
