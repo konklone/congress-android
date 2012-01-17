@@ -3,10 +3,12 @@ package com.sunlightlabs.android.congress.fragments;
 import java.util.List;
 
 import winterwell.jtwitter.Twitter.Status;
+import winterwell.jtwitter.TwitterException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask;
 import com.sunlightlabs.android.congress.tasks.LoadTweetsTask.LoadsTweets;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
+import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class TweetsFragment extends ListFragment implements LoadsTweets {
@@ -95,6 +98,15 @@ public class TweetsFragment extends ListFragment implements LoadsTweets {
 		this.tweets = tweets;
 		if (isAdded())
 			displayTweets();
+	}
+	
+	public void onLoadTweets(TwitterException e) {
+		//Log.w(Utils.TAG, "Couldn't get twitter timeline for " + legislator.twitter_id + ", " + );
+		String error = e.getMessage();
+		if (error.equals("401 Unauthorized http://twitter.com/account/rate_limit_status.json"))
+			FragmentUtils.showRefresh(this, R.string.twitter_rate_limit);
+		else
+			FragmentUtils.showRefresh(this, R.string.twitter_error);
 	}
 	
 	public void displayTweets() {

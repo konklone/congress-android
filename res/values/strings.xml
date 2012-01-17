@@ -38,6 +38,8 @@
     <string name="news_empty">No recent news found.</string>
     <string name="twitter_loading">Plucking tweets from the air…</string>
     <string name="twitter_empty">No tweets found.</string>
+    <string name="twitter_error">Error loading tweets.</string>
+    <string name="twitter_rate_limit">You\'ve been reading too many tweets! Twitter\'s called a timeout for a little bit, check back later.</string>
     <string name="youtube_loading">Plucking videos from the air…</string>
     <string name="youtube_empty">No videos found.</string>
     <string name="bills_loading">Plucking bills from the air…</string>
