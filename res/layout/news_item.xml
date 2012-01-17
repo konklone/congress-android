@@ -5,18 +5,8 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	>
-
-	<TextView
-		android:id="@+id/news_item_title"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		
-		android:textSize="16sp" 
-		
-		android:text="Title of the News Story"
-		/>
-		
-	<TextView android:id="@+id/news_item_when_where"
+	
+    <TextView android:id="@+id/news_item_when_where"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		
@@ -24,6 +14,17 @@
 		android:textColor="@color/text_grey"
 		
 		android:text="Sep 22, Example Source"
+		/>
+
+	<TextView
+		android:id="@+id/news_item_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="5dp"
+		
+		android:textSize="16sp" 
+		
+		android:text="Title of the News Story"
 		/>
 		
 	<TextView android:id="@+id/news_item_summary"

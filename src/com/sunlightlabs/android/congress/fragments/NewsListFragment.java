@@ -184,13 +184,13 @@ public class NewsListFragment extends ListFragment implements LoadsNews {
 
 			NewsItem item = getItem(position);
 
-			SimpleDateFormat format = new SimpleDateFormat("MMM dd");
+			SimpleDateFormat format = new SimpleDateFormat("MMM d");
 			
 			((TextView) view.findViewById(R.id.news_item_title)).setText(item.title);
 			((TextView) view.findViewById(R.id.news_item_summary))
 				.setText(Html.fromHtml(Utils.truncate(item.summary, 140)));
 			((TextView) view.findViewById(R.id.news_item_when_where))
-				.setText(format.format(item.timestamp.getTime()) + ", " + item.source);
+				.setText(format.format(item.timestamp.getTime()).toUpperCase() + ", " + item.source);
 
 			return view;
 		}
