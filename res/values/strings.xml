@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Congress</string>
-    <string name="app_version">3.9.5</string>
+    <string name="app_version">3.9.5.1</string>
     <string name="app_version_older">Version 3.9</string>
     <string name="app_package_name">com.sunlightlabs.android.congress</string>
     
