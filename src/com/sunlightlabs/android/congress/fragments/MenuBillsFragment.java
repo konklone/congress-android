@@ -106,14 +106,18 @@ public class MenuBillsFragment extends ListFragment {
 			TextView titleView = (TextView) view.findViewById(R.id.title);
 			
 			String title;
-			if (bill.short_title != null && !bill.short_title.equals(""))
+			if (bill.short_title != null && !bill.short_title.equals("")) {
 				title = bill.short_title;
-			else if (bill.official_title != null && !bill.official_title.equals(""))
+				titleView.setTextSize(16);
+			} else if (bill.official_title != null && !bill.official_title.equals("")) {
 				title = bill.official_title;
-			else
+				titleView.setTextSize(14);
+			} else {
 				title = getResources().getString(R.string.bill_no_title);
+				titleView.setTextSize(16);
+			}
 			
-			titleView.setText(Utils.truncate(title, 80));
+			titleView.setText(Utils.truncate(title, 140));
 			
 			view.setTag(bill);
 		}

@@ -1,56 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
-	android:orientation="horizontal"
-	
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:paddingLeft="2dp"
-	android:paddingRight="5dp"
-	android:paddingTop="3dp"
-	android:paddingBottom="3dp"
+	android:padding="10dp"
+	
+	android:orientation="horizontal"
 	>
-
-	<ImageView android:id="@+id/icon"
-		android:layout_width="32dp"
-		android:layout_height="32dp"
-		
-		android:layout_weight="0"
-		android:layout_marginRight="10dp"
-		android:layout_marginLeft="8dp"
-		
-		android:src="@drawable/star_on"
-		/>
-		
-	<LinearLayout 
-		android:orientation="vertical"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		
-		android:layout_weight="1"
-		android:paddingRight="10dp"
-		>
-		
-		<TextView android:id="@+id/code"
-		
+	
+    <LinearLayout android:orientation="vertical"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        >
+        
+	   	<TextView android:id="@+id/code"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			
+			android:layout_gravity="left"
+			
+			android:layout_marginTop="3dp"
+			android:layout_marginRight="5dp"
 			
 			android:textSize="14sp"
 			android:textColor="@color/text_grey"
 			
-			android:text="Text"
+			android:text="H.Res. 3222"
 			/>
-		
-		<TextView android:id="@+id/title"
+	   	
+	   	 <ImageView android:id="@+id/icon"
+			android:layout_width="24dp"
+			android:layout_height="24dp"
 			
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
+			android:layout_weight="0"
+			android:layout_marginRight="10dp"
+			android:layout_marginLeft="8dp"
 			
-			android:textSize="16sp"
-			
-			android:text="Subtext"
+			android:src="@drawable/star_on"
 			/>
-		
+	
 	</LinearLayout>
+		
+	<TextView android:id="@+id/title"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		
+		android:layout_marginLeft="5dp"
+		android:lineSpacingExtra="2sp"
+		
+		android:layout_weight="1"
+		
+		android:textSize="16sp"
+		android:text="Title Of The Bill And Such"
+		/>
 		
 </LinearLayout>
