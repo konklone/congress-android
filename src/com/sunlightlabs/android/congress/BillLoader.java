@@ -39,10 +39,12 @@ public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 		Uri uri = i.getData();
 		if (uri != null) {
 			List<String> segments = uri.getPathSegments();
-			String session = segments.get(1);
-			String formattedCode = segments.get(2);
-			code = Bill.normalizeCode(formattedCode);
-			id = code + "-" + session;
+			if (segments.size() == 3) { // coming in from floor
+				String session = segments.get(1);
+				String formattedCode = segments.get(2);
+				code = Bill.normalizeCode(formattedCode);
+				id = code + "-" + session;
+			}
 		}
 		
 		loadBillTask = (LoadBillTask) getLastNonConfigurationInstance();

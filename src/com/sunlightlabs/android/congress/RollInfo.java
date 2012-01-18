@@ -99,10 +99,12 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			Uri uri = intent.getData();
 			if (uri != null) {
 				List<String> segments = uri.getPathSegments();
-				String chamber = segments.get(1);
-				String year = segments.get(2);
-				String formattedNumber = segments.get(3);
-				id = Roll.normalizeRollId(chamber, year, formattedNumber);
+				if (segments.size() == 4) { // coming in from floor
+					String chamber = segments.get(1);
+					String year = segments.get(2);
+					String formattedNumber = segments.get(3);
+					id = Roll.normalizeRollId(chamber, year, formattedNumber);
+				}
 			}
 		}
 		
