@@ -5,4 +5,5 @@
 	android:includeInGlobalSearch="true"
 	android:searchSuggestAuthority="com.sunlightlabs.android.congress.providers.SuggestionsProvider"
     android:searchSuggestSelection=" ?"
+    android:imeOptions="actionSearch"
 	/>
