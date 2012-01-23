@@ -90,6 +90,14 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 					WakefulIntentService.sendWakefulWork(MenuMain.this, NotificationService.class);
 				}
 			});
+			View video = findViewById(R.id.house_video);
+			video.setVisibility(View.VISIBLE);
+			video.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
+					startActivity(new Intent(MenuMain.this, VideoPager.class));
+				}
+			});
 		}
 	}
 

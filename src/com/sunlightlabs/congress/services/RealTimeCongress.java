@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -193,5 +194,15 @@ public class RealTimeCongress {
 	    } catch (IOException e) {
 	    	throw new CongressException(e, "Problem fetching JSON from " + url);
 	    }
+	}
+
+	public static List<String> listFrom(JSONArray array) throws JSONException {
+		int length = array.length();
+		List<String> list = new ArrayList<String>(length);
+		
+		for (int i=0; i<length; i++)
+			list.add(array.getString(i));
+		
+		return list;
 	}
 }
