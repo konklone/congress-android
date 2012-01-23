@@ -3,6 +3,7 @@
 	android:label="@string/search_bills_label"
 	android:hint="@string/search_bills_hint" 
 	android:includeInGlobalSearch="true"
+	android:searchSettingsDescription="@string/search_bills_settings"
 	android:searchSuggestAuthority="com.sunlightlabs.android.congress.providers.SuggestionsProvider"
     android:searchSuggestSelection=" ?"
     android:imeOptions="actionSearch"

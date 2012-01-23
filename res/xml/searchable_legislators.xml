@@ -3,6 +3,7 @@
 	android:label="@string/search_legislators_label"
 	android:hint="@string/search_legislators_hint" 
 	android:includeInGlobalSearch="true"
+	android:searchSettingsDescription="@string/search_people_settings"
 	android:searchSuggestAuthority="com.sunlightlabs.android.congress.providers.SuggestionsProvider"
     android:searchSuggestSelection=" ?"
     android:imeOptions="actionSearch"
