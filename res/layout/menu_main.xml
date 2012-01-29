@@ -37,6 +37,17 @@
 			android:layout_height="fill_parent"
 			>
 			
+		    <TextView android:id="@+id/house_video"
+		        android:layout_width="fill_parent"
+		        android:layout_height="50dp"
+		        
+		        android:text="House Floor Video"
+		        android:textSize="16sp"
+		        
+		        style="@style/Pressable"
+		        android:visibility="gone"
+		        />
+			
 		    <include layout="@layout/upcoming_header" />
 		
 			<FrameLayout android:id="@+id/upcoming_list"
