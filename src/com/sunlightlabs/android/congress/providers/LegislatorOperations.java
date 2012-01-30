@@ -60,9 +60,6 @@ public class LegislatorOperations {
         this.backReference = this.batchOperation.size();
         this.isNewContact = true;
 
-//        this.values.put(RawContacts.ACCOUNT_TYPE, "test");
-  //      this.values.put(RawContacts.ACCOUNT_NAME, "test");
-
         ContentProviderOperation.Builder builder = newInsertOperation(RawContacts.CONTENT_URI, this.isSyncOperation, true)
             .withValues(this.values);
 
