@@ -13,6 +13,7 @@ import com.sunlightlabs.android.congress.fragments.LegislatorProfileFragment;
 import com.sunlightlabs.android.congress.fragments.NewsListFragment;
 import com.sunlightlabs.android.congress.fragments.TweetsFragment;
 import com.sunlightlabs.android.congress.fragments.YouTubeFragment;
+import com.sunlightlabs.android.congress.tasks.AddContactTask;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils.HasActionMenu;
 import com.sunlightlabs.android.congress.utils.Analytics;
@@ -129,6 +130,9 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 	@Override
 	public void menuSelected(MenuItem item) {
 		switch(item.getItemId()) {
+                    case R.id.addcontact:
+                        new AddContactTask(this, this.legislator).execute();
+                        break;
     	case R.id.govtrack:
     		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.govTrackUrl(legislator.govtrack_id))));
     		break;
