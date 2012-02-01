@@ -12,7 +12,6 @@ import android.widget.MediaController;
 import android.widget.VideoView;
 
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Video;
