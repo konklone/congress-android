@@ -8,12 +8,13 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.provider.ContactsContract;
+import android.text.TextUtils;
 
 import com.sunlightlabs.android.congress.fragments.LegislatorProfileFragment;
 import com.sunlightlabs.android.congress.fragments.NewsListFragment;
 import com.sunlightlabs.android.congress.fragments.TweetsFragment;
 import com.sunlightlabs.android.congress.fragments.YouTubeFragment;
-import com.sunlightlabs.android.congress.tasks.AddContactTask;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils.HasActionMenu;
 import com.sunlightlabs.android.congress.utils.Analytics;
@@ -127,21 +128,32 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
     	return true;
     }
 	
-	@Override
-	public void menuSelected(MenuItem item) {
-		switch(item.getItemId()) {
-                    case R.id.addcontact:
-                        new AddContactTask(this, this.legislator).execute();
-                        break;
-    	case R.id.govtrack:
-    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.govTrackUrl(legislator.govtrack_id))));
+    @Override
+    public void menuSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.addcontact:
+                this.openContactAdd();
+                break;
+            case R.id.govtrack:
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.govTrackUrl(legislator.govtrack_id))));
     		break;
-    	case R.id.opencongress:
-    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.openCongressUrl(legislator.govtrack_id))));
+            case R.id.opencongress:
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.openCongressUrl(legislator.govtrack_id))));
     		break;
-    	case R.id.bioguide:
-    		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.bioguideUrl(legislator.bioguide_id))));
+            case R.id.bioguide:
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.bioguideUrl(legislator.bioguide_id))));
     		break;
-    	}
-	}
+        }
+    }
+
+    private void openContactAdd() {
+        Intent i = new Intent(Intent.ACTION_INSERT, ContactsContract.Contacts.CONTENT_URI);
+        i.putExtra(ContactsContract.Intents.Insert.NAME,  this.legislator.getName());
+        if (!TextUtils.isEmpty(this.legislator.phone)) {
+            i.putExtra(ContactsContract.Intents.Insert.PHONE, this.legislator.phone);
+            i.putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_WORK);
+        }
+        i.putExtra(ContactsContract.Intents.Insert.JOB_TITLE, this.legislator.fullTitle());
+        startActivity(i);
+    }
 }
