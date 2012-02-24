@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.youtube.Video;
 import com.sunlightlabs.android.congress.fragments.YouTubeFragment.VideoAdapter.VideoHolder;
 import com.sunlightlabs.android.congress.notifications.Footer;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
@@ -33,7 +34,6 @@ import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.ImageUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
-import com.sunlightlabs.youtube.Video;
 
 public class YouTubeFragment extends ListFragment implements LoadsThumb, LoadsYoutubeVideos {
 	private List<Video> videos;
