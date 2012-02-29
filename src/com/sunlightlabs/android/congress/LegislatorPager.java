@@ -4,12 +4,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.provider.ContactsContract;
-import android.text.TextUtils;
 
 import com.sunlightlabs.android.congress.fragments.LegislatorProfileFragment;
 import com.sunlightlabs.android.congress.fragments.NewsListFragment;
