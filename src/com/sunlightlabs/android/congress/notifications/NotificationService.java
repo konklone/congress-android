@@ -46,6 +46,7 @@ public class NotificationService extends WakefulIntentService {
 		database.close();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void doWakefulWork(Intent intent) {
 		// only proceed if background data is enabled
@@ -121,8 +122,7 @@ public class NotificationService extends WakefulIntentService {
 						subscriber.notificationMessage(subscription, results), 
 						subscriber.notificationIntent(subscription),
 						
-						notificationUri(subscription),
-						results
+						notificationUri(subscription)
 					)
 				);
 				
@@ -137,7 +137,8 @@ public class NotificationService extends WakefulIntentService {
 		cursor.close();
 	}
 
-	private Notification getNotification(String ticker, String title, String message, Intent intent, Uri uri, int results) {
+	@SuppressWarnings("deprecation")
+	private Notification getNotification(String ticker, String title, String message, Intent intent, Uri uri) {
 		int icon = R.drawable.notification_icon;
 		long when = System.currentTimeMillis();
 		
@@ -167,9 +168,6 @@ public class NotificationService extends WakefulIntentService {
 		notification.flags |= Notification.FLAG_SHOW_LIGHTS;
 
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		
-		if (results > 1)
-			notification.number = results;
 		
 		return notification;
 	}
