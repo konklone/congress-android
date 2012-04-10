@@ -101,12 +101,13 @@ public class TweetsFragment extends ListFragment implements LoadsTweets {
 	}
 	
 	public void onLoadTweets(TwitterException e) {
-		//Log.w(Utils.TAG, "Couldn't get twitter timeline for " + legislator.twitter_id + ", " + );
-		String error = e.getMessage();
-		if (error.equals("401 Unauthorized http://twitter.com/account/rate_limit_status.json"))
-			FragmentUtils.showRefresh(this, R.string.twitter_rate_limit);
-		else
-			FragmentUtils.showRefresh(this, R.string.twitter_error);
+		if (isAdded()) {
+			String error = e.getMessage();
+			if (error.equals("401 Unauthorized http://twitter.com/account/rate_limit_status.json"))
+				FragmentUtils.showRefresh(this, R.string.twitter_rate_limit);
+			else
+				FragmentUtils.showRefresh(this, R.string.twitter_error);
+		}
 	}
 	
 	public void displayTweets() {
