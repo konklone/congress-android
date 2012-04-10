@@ -55,6 +55,7 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 		if (tab != null) adapter.selectPage(tab);
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void setupDatabase() {
 		database = new Database(this);
 		database.open();
