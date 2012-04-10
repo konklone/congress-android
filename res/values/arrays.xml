@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <string-array name="changelog">
+        <item>Add your representative to your contacts</item>
+        <item>Better notification icon for Gingerbread users</item>
+        <item>Several bugfixes</item>
+    </string-array>
+    
+    <string-array name="changelogLast">
+        <item>New legislator menu and search interface, also lists members by chamber</item>
+        <item>Many visual improvements for Ice Cream Sandwich users</item>
+        <item>App icon in title bar will take you back/up when pressed</item>
+        <item>Auto-link bills and votes in floor activity</item>
+        <item>Search history for bills, votes, and people</item>
+        <item>Link directly to bill text where possible, instead of THOMAS landing page</item>
+        <item>Vote search results can be subscribed to for updates</item>
+        <item>Many, many visual tweaks to how lists are formatted</item>
+	</string-array>
+    
 	<string-array name="state_codes">
 		<item>AL</item>
         <item>AK</item>
@@ -137,25 +155,5 @@
 		<item>240</item>
 		<item>1440</item>
 	</string-array>
-    
-    <string-array name="changelog">
-        <item>New legislator menu and search interface, also lists members by chamber</item>
-        <item>Many visual improvements for Ice Cream Sandwich users</item>
-        <item>App icon in title bar will take you back/up when pressed</item>
-        <item>Auto-link bills and votes in floor activity</item>
-        <item>Search history for bills, votes, and people</item>
-        <item>Link directly to bill text where possible, instead of THOMAS landing page</item>
-        <item>Vote search results can be subscribed to for updates</item>
-        <item>Many, many visual tweaks to how lists are formatted</item>
-    </string-array>
-    
-    <string-array name="changelogLast">
-        <item>Search through both votes and bills</item>
-		<item>Order search results by either relevance or date</item>
-		<item>Reorganized bill menu</item>
-		<item>More redesign work, looking a lot sleeker (especially House and Senate floor)</item>
-		<item>Higher-res icons for the Galaxy Nexus</item>
-		<item>Replaced Donate button with button to review app in Market</item>
-		<item>Fixed a crashing bug affecting some users</item>
-	</string-array>
+	
 </resources>
