@@ -274,11 +274,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 					params.put("order", "introduced_at");
 					return BillService.search(context.query, params, page, PER_PAGE);
 				case BILLS_SEARCH_RELEVANT:
-					params.put("order", "_score");
-					
-					// scope to current session only
-					params.put("session", Bill.currentSession());
-					
+					params.put("order", "_score");					
 					return BillService.search(context.query, params, page, PER_PAGE);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
