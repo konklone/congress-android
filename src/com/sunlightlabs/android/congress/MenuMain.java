@@ -54,7 +54,7 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 		});
 		
 		findViewById(R.id.review).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) { goReview(); }
+			public void onClick(View v) { showThomas(); }
 		});
 		
 		findViewById(R.id.feedback).setOnClickListener(new View.OnClickListener() {
