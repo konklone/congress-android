@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Congress</string>
-    <string name="app_version">3.9.6</string>
+    <string name="app_version">3.9.7</string>
     <string name="app_version_older">Version 3.9.5</string>
     <string name="app_package_name">com.sunlightlabs.android.congress</string>
     
@@ -242,5 +242,11 @@
     <string name="image_search">Search</string>
     
     <string name="demo_header_text">Header Text</string>
-
+    
+    <!-- resources for current one pager -->
+    <string name="one_pager_title">Protect Public Data Access</string>
+    <string name="one_pager_1">This app depends on access to &lt;b&gt;bulk data&lt;/b&gt; about Congress.</string>
+    <string name="one_pager_2">H.R. 5882 would, in its current form, stop Congress from publishing more public data about its activity, indefinitely.</string>
+    <string name="one_pager_3">Public access to government data is a universal right, and a &lt;b&gt;non-partisan&lt;/b&gt; issue.</string>
+    <string name="one_pager_4">If you find this app useful, call your Representative to tell them that restricting access to public data on the work of Congress is unacceptable.</string>
 </resources>

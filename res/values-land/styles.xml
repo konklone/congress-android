@@ -12,4 +12,8 @@
     <style name="ProfileItemText">
     	<item name="android:textSize">14sp</item>
     </style>
+    
+    <style name="OnePagerContainer">
+        <item name="android:paddingTop">5dp</item>
+    </style>
 </resources>

@@ -46,6 +46,8 @@ public class Analytics {
 	public static final String EVENT_ANALYTICS = "analytics";
 	public static final String EVENT_ENTRY = "entry";
 	
+	public static final String EVENT_THOMAS = "thomas-campaign";
+	
 	// event values
 	public static final String FAVORITE_ADD_LEGISLATOR = "add_legislator";
 	public static final String FAVORITE_REMOVE_LEGISLATOR = "remove_legislator";
@@ -63,6 +65,9 @@ public class Analytics {
 	public static final String BILL_UPCOMING = "upcoming";
 	public static final String BILL_UPCOMING_MORE = "upcoming_more";
 	public static final String ANALYTICS_DISABLE = "disable";
+	
+	public static final String THOMAS_CALL = "call";
+	public static final String THOMAS_LEARN = "learn";
 	
 	private static final String FRAGMENT_TAG = "com.sunlightlabs.android.congress.utils.Analytics.analytics";
 	
@@ -211,6 +216,14 @@ public class Analytics {
 		boolean debugDisabled = activity.getResources().getString(R.string.debug_disable_analytics).equals("true");
 		boolean userEnabled = Utils.getBooleanPreference(activity, Settings.ANALYTICS_ENABLED_KEY, Settings.ANALYTICS_ENABLED_DEFAULT);
 		return (!debugDisabled && userEnabled);
+	}
+	
+	public static void callOnThomas(FragmentActivity activity) {
+		event(activity, trackerFor(activity), EVENT_THOMAS, THOMAS_CALL, "unused");
+	}
+	
+	public static void learnMoreThomas(FragmentActivity activity) {
+		event(activity, trackerFor(activity), EVENT_THOMAS, THOMAS_LEARN, "unused");
 	}
 	
 	public static void addFavoriteLegislator(FragmentActivity activity, String bioguideId) {

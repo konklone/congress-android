@@ -38,8 +38,12 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 			newVersion(); // don't need to see the changelog on first install
 			FragmentUtils.alertDialog(this, AlertFragment.FIRST);
 			setNotificationState(); // initially, all notifications are stopped
-		} else if (newVersion())
-			showChangelog();
+		} else if (newVersion()) {
+			if (shownThomas())
+				showChangelog();
+			else
+				showThomas();
+		}
 	}
 
 	public void setupControls() {
@@ -90,14 +94,6 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 					WakefulIntentService.sendWakefulWork(MenuMain.this, NotificationService.class);
 				}
 			});
-//			View video = findViewById(R.id.house_video);
-//			video.setVisibility(View.VISIBLE);
-//			video.setOnClickListener(new View.OnClickListener() {
-//				@Override
-//				public void onClick(View arg0) {
-//					startActivity(new Intent(MenuMain.this, VideoPager.class));
-//				}
-//			});
 		}
 	}
 
@@ -109,6 +105,18 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 		}
 		return false;
 	}
+	
+	 public boolean shownThomas() {
+		 if (Utils.getBooleanPreference(this, "shownThomas", false) == false) {	
+			 Utils.setBooleanPreference(this, "shownThomas", true);
+			 return false;	
+		 }
+		 return true;	
+	}
+	 
+	 public void showThomas() {
+		 startActivity(new Intent(this, OnePager.class));
+	 }
 	
 	public boolean newVersion() {
 		String lastVersionSeen = getVersionSeen();

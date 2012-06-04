@@ -7,4 +7,8 @@
     <style name="ProfileHead">
         <item name="android:layout_height">250px</item>
     </style>
+    
+    <style name="OnePagerText">
+        <item name="android:textSize">16sp</item>
+    </style>
 </resources>
