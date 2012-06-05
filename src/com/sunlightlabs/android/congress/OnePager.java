@@ -66,9 +66,8 @@ public class OnePager extends FragmentActivity {
 	}
 	
 	public void callOffice() {
-//    	Analytics.callOnThomas(this);
-//    	startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel://202-224-3121")));
-    	startActivity(new Intent(this, LegislatorSearch.class).putExtra("location", true));
+    	Analytics.callOnThomas(this);
+    	startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel://202-224-3121")));
     }
 	
 	public void learnMore() {
