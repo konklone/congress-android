@@ -248,5 +248,7 @@
     <string name="one_pager_1">This app depends on access to &lt;b&gt;bulk data&lt;/b&gt; about Congress.</string>
     <string name="one_pager_2">H.R. 5882 would, in its current form, stop Congress from publishing more public data about its activity, indefinitely.</string>
     <string name="one_pager_3">Public access to government data is a universal right, and a &lt;b&gt;non-partisan&lt;/b&gt; issue.</string>
-    <string name="one_pager_4">If you find this app useful, call your Representative to tell them that restricting access to public data on the work of Congress is unacceptable.</string>
+    <string name="one_pager_4">If you find this app useful, consider calling your Representative to tell them that restricting access to public data on the work of Congress is unacceptable.</string>
+    <string name="one_pager_button_1">Call Congress</string>
+    <string name="one_pager_button_2">Learn More</string>
 </resources>
