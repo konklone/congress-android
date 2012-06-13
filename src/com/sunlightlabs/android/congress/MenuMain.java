@@ -39,10 +39,7 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 			FragmentUtils.alertDialog(this, AlertFragment.FIRST);
 			setNotificationState(); // initially, all notifications are stopped
 		} else if (newVersion()) {
-			if (shownThomas())
-				showChangelog();
-			else
-				showThomas();
+			showChangelog();
 		}
 	}
 
@@ -54,7 +51,7 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 		});
 		
 		findViewById(R.id.review).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) { showThomas(); }
+			public void onClick(View v) { goReview(); }
 		});
 		
 		findViewById(R.id.feedback).setOnClickListener(new View.OnClickListener() {
@@ -106,7 +103,9 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 		return false;
 	}
 	
-	 public boolean shownThomas() {
+	// used for one-pager
+	// change name of preference variable for a new one-pager
+	 public boolean shownOnePager() {
 		 if (Utils.getBooleanPreference(this, "shownThomas", false) == false) {	
 			 Utils.setBooleanPreference(this, "shownThomas", true);
 			 return false;	
@@ -114,7 +113,8 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 		 return true;	
 	}
 	 
-	 public void showThomas() {
+	 // used for one-pager
+	 public void showOnePager() {
 		 startActivity(new Intent(this, OnePager.class));
 	 }
 	
