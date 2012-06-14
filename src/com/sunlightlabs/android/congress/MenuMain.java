@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,7 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 		
 		if (firstTime()) {
 			newVersion(); // don't need to see the changelog on first install
+			storeOriginalChannel();
 			FragmentUtils.alertDialog(this, AlertFragment.FIRST);
 			setNotificationState(); // initially, all notifications are stopped
 		} else if (newVersion()) {
@@ -101,6 +103,14 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 			return true;
 		}
 		return false;
+	}
+	
+	// store the value that was originally in keys.xml as the distribution channel
+	// this is essentially to track non-Market original installs, even if the user 
+	// eventually updates to a version of the app from the Market.
+	public void storeOriginalChannel() {
+		String channel = getResources().getString(R.string.distribution_channel);
+		Utils.setStringPreference(this, "original_distribution_channel", channel);
 	}
 	
 	// used for one-pager

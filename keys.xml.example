@@ -9,6 +9,9 @@
     <string name="sunlight_api_key"></string>
     <string name="rtc_user_agent"></string>
     
+    <!-- usually "market", can be changed for non-market distributions -->
+    <string name="distribution_channel"></string>
+    
     <!-- must be either "google" or "amazon" -->
     <string name="market_channel"></string>
     
