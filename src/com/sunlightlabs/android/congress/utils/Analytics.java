@@ -2,6 +2,7 @@ package com.sunlightlabs.android.congress.utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -26,13 +27,16 @@ public class Analytics {
 	public static final int SCOPE_SESSION = 2;
 	public static final int SCOPE_PAGE = 3;
 	
-	// custom variable slot info for app version
+	// custom variable slots (can range from 1-5)
 	public static final int CUSTOM_VERSION_SLOT = 2;
 	public static final String CUSTOM_VERSION_NAME = "Version";
 	
 	public static final int CUSTOM_ORIGINAL_CHANNEL = 3;
 	public static final String CUSTOM_ORIGINAL_CHANNEL_NAME = "Original Channel";
 	public static final String ORIGINAL_CHANNEL_PREFERENCE = "original_distribution_channel";
+	
+	public static final int CUSTOM_MARKET_CHANNEL = 4;
+	public static final String CUSTOM_MARKET_CHANNEL_NAME = "Market Channel";
 	
 	// for use in investigating intents for entry sources
 	public static final String EXTRA_ENTRY_FROM = "com.sunlightlabs.android.congress.utils.ENTRY_FROM";
@@ -178,15 +182,10 @@ public class Analytics {
 					Log.i(Utils.TAG, "[Analytics] Marking next page view as an entry to the app of type: " + source);
 					
 					markEntry(activity, tracker, source);
-					//tracker.setCustomVar(CUSTOM_ENTRY_SLOT, CUSTOM_ENTRY_NAME, source, SCOPE_SESSION);
 				}
 			}
 			
-			// attach custom variable with app version and original distribution channel
-			String appVersion = activity.getResources().getString(R.string.app_version);
-			tracker.setCustomVar(CUSTOM_VERSION_SLOT, CUSTOM_VERSION_NAME, appVersion, SCOPE_SESSION);
-			String originalChannel = Utils.getStringPreference(activity, ORIGINAL_CHANNEL_PREFERENCE);
-			tracker.setCustomVar(CUSTOM_ORIGINAL_CHANNEL, CUSTOM_ORIGINAL_CHANNEL_NAME, originalChannel, SCOPE_SESSION);
+			tracker = attachCustomVars(activity, tracker);
 			
 			Log.i(Utils.TAG, "[Analytics] Tracking page - " + page);
 			tracker.trackPageView(page);
@@ -200,18 +199,22 @@ public class Analytics {
 	
 	public static void event(Activity activity, GoogleAnalyticsTracker tracker, String category, String action, String label) {
 		if (tracker != null && analyticsEnabled(activity)) {
-			
-			// attach custom variable with app version and original distribution channel
-			String appVersion = activity.getResources().getString(R.string.app_version);
-			tracker.setCustomVar(CUSTOM_VERSION_SLOT, CUSTOM_VERSION_NAME, appVersion, SCOPE_SESSION);
-			String originalChannel = Utils.getStringPreference(activity, ORIGINAL_CHANNEL_PREFERENCE);
-			tracker.setCustomVar(CUSTOM_ORIGINAL_CHANNEL, CUSTOM_ORIGINAL_CHANNEL_NAME, originalChannel, SCOPE_SESSION);
-			Log.i(Utils.TAG, "Logging channel as " + originalChannel);
-			
+			tracker = attachCustomVars(activity, tracker);			
 			Log.i(Utils.TAG, "[Analytics] Tracking event - category: " + category + ", action: " + action + ", label: " + label);
 			tracker.trackEvent(category, action, label, -1);
 			tracker.dispatch();
 		}
+	}
+	
+	public static GoogleAnalyticsTracker attachCustomVars(Activity activity, GoogleAnalyticsTracker tracker) {
+		Resources res = activity.getResources();
+		String appVersion = res.getString(R.string.app_version);
+		tracker.setCustomVar(CUSTOM_VERSION_SLOT, CUSTOM_VERSION_NAME, appVersion, SCOPE_PAGE);
+		String originalChannel = Utils.getStringPreference(activity, ORIGINAL_CHANNEL_PREFERENCE);
+		tracker.setCustomVar(CUSTOM_ORIGINAL_CHANNEL, CUSTOM_ORIGINAL_CHANNEL_NAME, originalChannel, SCOPE_PAGE);
+		String marketChannel = res.getString(R.string.market_channel);
+		tracker.setCustomVar(CUSTOM_MARKET_CHANNEL, CUSTOM_MARKET_CHANNEL_NAME, marketChannel, SCOPE_PAGE);
+		return tracker;
 	}
 	
 	public static void stop(GoogleAnalyticsTracker tracker) {
