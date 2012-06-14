@@ -30,6 +30,10 @@ public class Analytics {
 	public static final int CUSTOM_VERSION_SLOT = 2;
 	public static final String CUSTOM_VERSION_NAME = "Version";
 	
+	public static final int CUSTOM_ORIGINAL_CHANNEL = 3;
+	public static final String CUSTOM_ORIGINAL_CHANNEL_NAME = "Original Channel";
+	public static final String ORIGINAL_CHANNEL_PREFERENCE = "original_distribution_channel";
+	
 	// for use in investigating intents for entry sources
 	public static final String EXTRA_ENTRY_FROM = "com.sunlightlabs.android.congress.utils.ENTRY_FROM";
 	
@@ -178,9 +182,11 @@ public class Analytics {
 				}
 			}
 			
-			// attach custom variable with app version
+			// attach custom variable with app version and original distribution channel
 			String appVersion = activity.getResources().getString(R.string.app_version);
 			tracker.setCustomVar(CUSTOM_VERSION_SLOT, CUSTOM_VERSION_NAME, appVersion, SCOPE_SESSION);
+			String originalChannel = Utils.getStringPreference(activity, ORIGINAL_CHANNEL_PREFERENCE);
+			tracker.setCustomVar(CUSTOM_ORIGINAL_CHANNEL, CUSTOM_ORIGINAL_CHANNEL_NAME, originalChannel, SCOPE_SESSION);
 			
 			Log.i(Utils.TAG, "[Analytics] Tracking page - " + page);
 			tracker.trackPageView(page);
@@ -195,9 +201,12 @@ public class Analytics {
 	public static void event(Activity activity, GoogleAnalyticsTracker tracker, String category, String action, String label) {
 		if (tracker != null && analyticsEnabled(activity)) {
 			
-			// attach custom variable with app version
+			// attach custom variable with app version and original distribution channel
 			String appVersion = activity.getResources().getString(R.string.app_version);
 			tracker.setCustomVar(CUSTOM_VERSION_SLOT, CUSTOM_VERSION_NAME, appVersion, SCOPE_SESSION);
+			String originalChannel = Utils.getStringPreference(activity, ORIGINAL_CHANNEL_PREFERENCE);
+			tracker.setCustomVar(CUSTOM_ORIGINAL_CHANNEL, CUSTOM_ORIGINAL_CHANNEL_NAME, originalChannel, SCOPE_SESSION);
+			Log.i(Utils.TAG, "Logging channel as " + originalChannel);
 			
 			Log.i(Utils.TAG, "[Analytics] Tracking event - category: " + category + ", action: " + action + ", label: " + label);
 			tracker.trackEvent(category, action, label, -1);

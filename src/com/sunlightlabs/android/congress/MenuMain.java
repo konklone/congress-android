@@ -110,7 +110,7 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 	// eventually updates to a version of the app from the Market.
 	public void storeOriginalChannel() {
 		String channel = getResources().getString(R.string.distribution_channel);
-		Utils.setStringPreference(this, "original_distribution_channel", channel);
+		Utils.setStringPreference(this, Analytics.ORIGINAL_CHANNEL_PREFERENCE, channel);
 	}
 	
 	// used for one-pager
