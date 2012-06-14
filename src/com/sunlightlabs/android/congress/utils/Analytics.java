@@ -154,7 +154,7 @@ public class Analytics {
 			Log.i(Utils.TAG, "[Analytics] Tracker starting");
 			GoogleAnalyticsTracker tracker = GoogleAnalyticsTracker.getInstance();
 			String code = activity.getResources().getString(R.string.google_analytics_tracking_code);
-			tracker.start(code, activity);
+			tracker.startNewSession(code, activity);
 			return tracker;
 		} else
 			return null;
@@ -188,6 +188,8 @@ public class Analytics {
 			tracker = attachCustomVars(activity, tracker);
 			
 			Log.i(Utils.TAG, "[Analytics] Tracking page - " + page);
+			//tracker.setDebug(true);
+			tracker.setAnonymizeIp(true);
 			tracker.trackPageView(page);
 			tracker.dispatch();
 		}
@@ -201,6 +203,8 @@ public class Analytics {
 		if (tracker != null && analyticsEnabled(activity)) {
 			tracker = attachCustomVars(activity, tracker);			
 			Log.i(Utils.TAG, "[Analytics] Tracking event - category: " + category + ", action: " + action + ", label: " + label);
+			//tracker.setDebug(true);
+			tracker.setAnonymizeIp(true);
 			tracker.trackEvent(category, action, label, -1);
 			tracker.dispatch();
 		}
@@ -220,7 +224,7 @@ public class Analytics {
 	public static void stop(GoogleAnalyticsTracker tracker) {
 		if (tracker != null) {
 			Log.i(Utils.TAG, "[Analytics] Tracker stopping");
-			tracker.stop();
+			tracker.stopSession();
 		}
 	}
 	
