@@ -2,6 +2,7 @@
 <resources>
     
     <string-array name="changelog">
+        <item>3.9.7.1 - Removed bill campaign (it went very well! the bill was improved.)</item>
         <item>Add your representative to your contacts</item>
         <item>Better notification icon for Gingerbread users</item>
         <item>Several bugfixes</item>
