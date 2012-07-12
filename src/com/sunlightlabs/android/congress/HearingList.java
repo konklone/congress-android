@@ -188,10 +188,18 @@ public class HearingList extends ListActivity {
 			String month = new SimpleDateFormat("MMM d").format(date).toUpperCase();
 			String time = new SimpleDateFormat("h:mm aa").format(date);
 			
+			String name = hearing.committee.name;
+			String chamberCap = hearing.chamber.substring(0, 1).toUpperCase() + hearing.chamber.substring(1);
+			name = name.replaceFirst("^" + chamberCap + " ", "");
+			
+			String room = hearing.room;
+			if (room.equals("TBA"))
+				room = "Room TBA";
+			
 			((TextView) view.findViewById(R.id.month)).setText(month);
 			((TextView) view.findViewById(R.id.time)).setText(time);
-			((TextView) view.findViewById(R.id.name)).setText(hearing.committee.name);
-			((TextView) view.findViewById(R.id.room)).setText(hearing.room);
+			((TextView) view.findViewById(R.id.name)).setText(name);
+			((TextView) view.findViewById(R.id.room)).setText(room);
 			((TextView) view.findViewById(R.id.description)).setText(Utils.truncate(hearing.description, 200));
 			
 			return view;

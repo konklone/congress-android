@@ -39,17 +39,6 @@
 			
 			android:text="10:00AM"
 			/>
-		
-		<TextView android:id="@+id/room"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			
-			android:layout_marginTop="5dp"
-			android:textSize="14sp"
-			android:textColor="@color/text_grey"
-			
-			android:text="SD-234"
-			/>
 	
 	</LinearLayout>
 	
@@ -78,6 +67,16 @@
 			android:textColor="@color/text_grey"
 			
 			android:text="Hearings to examine ten years after 9/11 and the anthrax attacks, focusing on protecting against biological threats."
+			/>
+		
+		<TextView android:id="@+id/room"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			
+			android:layout_marginTop="5dp"
+			android:textSize="14sp"
+			
+			android:text="1324 Longworth HOB"
 			/>
 	
 	</LinearLayout>
