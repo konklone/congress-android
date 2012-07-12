@@ -27,8 +27,7 @@ public class HearingService {
 		params.put("committee__exists", "true");
 		params.put("sort", "asc"); // start with the hearings closest to now
 		
-		if (chamber.equals("house"))
-			params.put("dc", "true");
+		params.put("dc", "true"); // some House hearings are in the field
 		
 		return hearingsFor(RealTimeCongress.url("committee_hearings", null, params, page, per_page));
 	}
