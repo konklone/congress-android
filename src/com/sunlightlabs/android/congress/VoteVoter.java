@@ -39,11 +39,14 @@ public class VoteVoter extends FragmentActivity {
 	public void setupControls() {
 		ActionBarUtils.setTitle(this, "Latest Votes By\n" + legislator.titledName(), Utils.legislatorIntent(this, legislator));
 		ActionBarUtils.setTitleSize(this, 16);
-		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
-			public void onClick(View v) { 
-				onSearchRequested();
-			}
-		});
+		
+		// needs to be adapted to some other schema, ES does not like schemas with hundreds of dynamic keys
+//		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
+//			public void onClick(View v) { 
+//				onSearchRequested();
+//			}
+//		});
+		
 	}
 	
 	@Override

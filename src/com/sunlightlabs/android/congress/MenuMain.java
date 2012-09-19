@@ -249,7 +249,7 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 			
 			menuItem(R.id.menu_hearings, R.string.menu_main_hearings, 16,
 					new Intent(getActivity(), HearingList.class)
-						.putExtra("chamber", "senate"));
+						.putExtra("chamber", "house"));
 			
 			menuItem(R.id.menu_committees, R.string.menu_main_committees, 16,
 					new Intent(getActivity(), CommitteePager.class));

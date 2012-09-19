@@ -18,7 +18,6 @@ import com.sunlightlabs.congress.models.Legislator;
 public class VoteSearch extends FragmentActivity {
 	
 	String query;
-	Legislator voter;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -27,10 +26,6 @@ public class VoteSearch extends FragmentActivity {
 		
 		Intent intent = getIntent();
 		query = intent.getStringExtra(SearchManager.QUERY).trim();
-		
-		Bundle searchData = intent.getBundleExtra(SearchManager.APP_DATA);
-		if (searchData != null)
-			voter = (Legislator) searchData.getSerializable("legislator");
 		
 		Analytics.track(this, "/votes/search");
 	    
@@ -45,18 +40,13 @@ public class VoteSearch extends FragmentActivity {
 	
 	public void setupPager() {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
-		adapter.add("votes_recent", R.string.search_votes_recent, RollListFragment.forSearch(query, voter, RollListFragment.ROLLS_SEARCH_NEWEST));
-		adapter.add("votes_relevant", R.string.search_votes_relevant, RollListFragment.forSearch(query, voter, RollListFragment.ROLLS_SEARCH_RELEVANT));
+		adapter.add("votes_recent", R.string.search_votes_recent, RollListFragment.forSearch(query, RollListFragment.ROLLS_SEARCH_NEWEST));
+		adapter.add("votes_relevant", R.string.search_votes_relevant, RollListFragment.forSearch(query, RollListFragment.ROLLS_SEARCH_RELEVANT));
 	}
 
 	public void setupControls() {
-		if (voter != null) {
-			ActionBarUtils.setTitle(this, "Votes by " + voter.titledName() + " matching \"" + query + "\"", Utils.legislatorIntent(this, voter));
-			ActionBarUtils.setTitleSize(this, 14);
-		} else {
-			ActionBarUtils.setTitle(this, "Votes matching \"" + query + "\"", new Intent(this, MenuVotes.class));
-			ActionBarUtils.setTitleSize(this, 16);
-		}
+		ActionBarUtils.setTitle(this, "Votes matching \"" + query + "\"", new Intent(this, MenuVotes.class));
+		ActionBarUtils.setTitleSize(this, 16);
 		
 		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
 			public void onClick(View v) { 
@@ -65,12 +55,12 @@ public class VoteSearch extends FragmentActivity {
 		});
 	}
 	
-	@Override
-	public boolean onSearchRequested() {
-		Bundle args = new Bundle();
-		args.putSerializable("legislator", voter);
-		startSearch(null, false, args, false);
-		return true;
-	}
-	
+//	@Override
+//	public boolean onSearchRequested() {
+//		Bundle args = new Bundle();
+//		args.putSerializable("legislator", voter);
+//		startSearch(null, false, args, false);
+//		return true;
+//	}
+//	
 }

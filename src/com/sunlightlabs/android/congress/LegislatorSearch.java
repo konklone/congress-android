@@ -197,16 +197,23 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 		}
 	}
 	
+	@Override
 	public void onLocationChanged(Location location) {
 		cancelTimer();
 		stopRelocating();
 		onLocated(location.getLatitude(), location.getLongitude());
 	}
 	
+	@Override
 	public void onProviderDisabled(String provider) {}
+	
+	@Override
 	public void onProviderEnabled(String provider) {}
+	
+	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {}
 	
+	@Override
 	public void onTimeout(String provider) {
 		Log.d(Utils.TAG, "LegislatorSearch - onTimeout(): timeout for provider " + provider);
 		if (provider.equals(LocationManager.GPS_PROVIDER)) {

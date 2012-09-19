@@ -67,12 +67,11 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		return frag;
 	}
 	
-	public static RollListFragment forSearch(String query, Legislator legislator, int type) {
+	public static RollListFragment forSearch(String query, int type) {
 		RollListFragment frag = new RollListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", type);
 		args.putString("query", query);
-		args.putSerializable("legislator", legislator); // may be null
 		frag.setArguments(args);
 		frag.setRetainInstance(true);
 		return frag;
@@ -237,19 +236,11 @@ public class RollListFragment extends ListFragment implements PaginationListener
 				case ROLLS_SEARCH_NEWEST:
 					params.put("order", "voted_at");
 					params.put("how", "roll");
-					if (voter != null) {
-						params.put("chamber", voter.chamber);
-						return RollService.search(voter.bioguide_id, context.query, params, page, PER_PAGE);
-					} else
-						return RollService.search(context.query, params, page, PER_PAGE);
+					return RollService.search(context.query, params, page, PER_PAGE);
 				case ROLLS_SEARCH_RELEVANT:
 					params.put("order", "_score");
 					params.put("how", "roll");
-					if (voter != null) {
-						params.put("chamber", voter.chamber);
-						return RollService.search(voter.bioguide_id, context.query, params, page, PER_PAGE);
-					} else 
-						return RollService.search(context.query, params, page, PER_PAGE);
+					return RollService.search(context.query, params, page, PER_PAGE);
 				default:
 					throw new CongressException("Not sure what type of votes to find.");
 				}
@@ -302,7 +293,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 				holder = (ViewHolder) view.getTag();
 			
 			TextView msgView = holder.roll;
-			if (context.voter != null) {
+			if (context.voter != null && (context.type == ROLLS_VOTER || context.type == ROLLS_RECENT)) {
 				Roll.Vote vote = roll.voter_ids.get(context.voter.bioguide_id);
 				if (vote == null || vote.vote.equals(Roll.NOT_VOTING))
 					msgView.setText("Did Not Vote");
