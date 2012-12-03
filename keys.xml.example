@@ -3,11 +3,11 @@
     <string name="contact_email"></string>
     <string name="contact_subject"></string>
     
-    <string name="google_news_key"></string>
-    <string name="google_news_referer"></string>
+    <string name="google_news_key">example</string>
+    <string name="google_news_referer">example</string>
     
-    <string name="sunlight_api_key"></string>
-    <string name="rtc_user_agent"></string>
+    <string name="sunlight_api_key">example</string>
+    <string name="rtc_user_agent">example</string>
     
     <!-- usually "market", can be changed for non-market distributions -->
     <string name="distribution_channel"></string>
