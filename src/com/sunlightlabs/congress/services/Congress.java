@@ -40,7 +40,6 @@ public class Congress {
 	public static final String dateOnlyFormat = "yyyy-MM-dd";
 	
 	public static final String baseUrl = "http://congress.api.sunlightfoundation.com";
-	public static final String format = "json";
 	
 	public static final String highlightTags = "<b>,</b>"; // default highlight tags
 	
@@ -92,10 +91,11 @@ public class Congress {
 	}
 	
 	public static String url(String method, String[] fields, Map<String,String> params, int page, int per_page) throws CongressException {
-		params.put("apikey", apiKey);
+		if (fields == null || fields.length == 0)
+			throw new CongressException("App policy to explicitly spell out all fields.");
 		
-		if (fields != null && fields.length > 0)
-			params.put("fields", TextUtils.join(",", fields));
+		params.put("apikey", apiKey);
+		params.put("fields", TextUtils.join(",", fields));
 		
 		if (page > 0 && per_page > 0) {
 			params.put("page", String.valueOf(page));
@@ -120,7 +120,7 @@ public class Congress {
 			throw new CongressException(e, "Unicode not supported on this phone somehow.");
 		}
 		
-		return baseUrl + method + "." + format + "?" + query.toString();
+		return baseUrl + "/" + method + "?" + query.toString();
 	}
 	
 	public static String searchUrl(String method, String query, 

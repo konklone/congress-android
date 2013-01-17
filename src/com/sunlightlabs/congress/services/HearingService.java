@@ -24,15 +24,20 @@ public class HearingService {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("chamber", chamber);
 		params.put("occurs_at__gte", Congress.formatDate(now));
-		params.put("committee__exists", "true");
-		params.put("order.asc", "occurs_at"); // start with the hearings closest to now
+		params.put("committee__exists", "true"); // the new API should require this, but just in case
+		params.put("order", "occurs_at__asc"); // start with the hearings closest to now
 		
-		params.put("dc", "true"); // some House hearings are in the field
+		params.put("dc", "true"); // some House hearings can take place in the field
 		
-		return hearingsFor(Congress.url("committee_hearings", null, params, page, per_page));
+		String[] fields = new String[] { 
+			"chamber", "occurs_at", "committee", "committee_id", "congress", "url", 
+			"room", "hearing_type", "description", "dc" 
+		};
+		
+		return hearingsFor(Congress.url("hearings", fields, params, page, per_page));
 	}
 	
-	private static Hearing fromAPI(JSONObject json) throws JSONException, ParseException {
+	private static Hearing fromJSON(JSONObject json) throws JSONException, ParseException {
 		Hearing hearing = new Hearing();
 		
 		if (!json.isNull("congress"))
@@ -45,9 +50,17 @@ public class HearingService {
 			hearing.room = json.getString("room");
 		if (!json.isNull("occurs_at"))
 			hearing.occursAt = Congress.parseDate(json.getString("occurs_at"));
+		if (!json.isNull("dc"))
+			hearing.dc = json.getBoolean("dc");
 		
-//		if (!json.isNull("committee"))
-//			hearing.committee = CommitteeService.fromRTC(json.getJSONObject("committee"));
+		// House only
+		if (!json.isNull("url"))
+			hearing.url = json.getString("url");
+		if (!json.isNull("hearing_type"))
+			hearing.hearingType = json.getString("hearing_type");
+		
+		if (!json.isNull("committee"))
+			hearing.committee = CommitteeService.fromJSON(json.getJSONObject("committee"));
 		
 		return hearing;
 	}
@@ -59,7 +72,7 @@ public class HearingService {
 
 			int length = results.length();
 			for (int i = 0; i < length; i++)
-				hearings.add(fromAPI(results.getJSONObject(i)));
+				hearings.add(fromJSON(results.getJSONObject(i)));
 		} catch(JSONException e) {
 			throw new CongressException(e, "Problem parsing the hearings at " + url);
 		} catch (ParseException e) {

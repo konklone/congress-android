@@ -8,5 +8,10 @@ public class Hearing {
 	public Date occursAt;
 	public Committee committee;
 	public String description;
-	public String room;	
+	public String room;
+	public boolean dc;
+	
+	// House only
+	public String url;
+	public String hearingType;
 }

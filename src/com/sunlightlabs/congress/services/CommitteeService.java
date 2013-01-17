@@ -48,7 +48,7 @@ public class CommitteeService {
 		return committee;
 	}
 	
-	protected static Committee fromRTC(JSONObject json) throws JSONException {
+	protected static Committee fromJSON(JSONObject json) throws JSONException {
 		Committee committee = new Committee();
 		committee.id = json.getString("committee_id");
 		committee.name = json.getString("name");

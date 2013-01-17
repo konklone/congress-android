@@ -18,6 +18,10 @@ public class FragmentUtils {
 		Utils.setupRTC(fragment.getActivity());
 	}
 	
+	public static void setupCongress(Fragment fragment) {
+		Utils.setupCongress(fragment.getActivity());
+	}
+	
 	public static void alertDialog(FragmentActivity activity, int type) {
 		AlertFragment.create(type).show(activity.getSupportFragmentManager(), "dialog");
 	}

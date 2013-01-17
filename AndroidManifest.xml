@@ -152,16 +152,13 @@
         <activity android:name=".CommitteeMember" />
         
         <activity android:name=".FloorUpdatePager" />
-        <activity android:name=".HearingList" />
-        <activity android:name=".VideoPager" />
+        <activity android:name=".HearingPager" />
         	
         <activity android:name=".NotificationTabs" />
         <activity android:name=".NotificationSettings" />
         <activity android:name=".NotificationSubscriptions" />
         	
         <activity android:name=".Settings" />
-        
-        <activity android:name=".OnePager" />
         
         <provider android:name=".providers.SuggestionsProvider"
               android:authorities="com.sunlightlabs.android.congress.providers.SuggestionsProvider" 
