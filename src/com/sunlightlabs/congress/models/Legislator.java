@@ -1,8 +1,6 @@
 package com.sunlightlabs.congress.models;
 
 import java.io.Serializable;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Legislator implements Comparable<Legislator>, Serializable {
 	private static final long serialVersionUID = 1L;
@@ -10,8 +8,8 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	public String id, bioguide_id, govtrack_id, thomas_id;
 	public String first_name, last_name, nickname, name_suffix;
 	public String title, party, state, district, chamber;
-	public String gender, congress_office, website, phone, twitter_id, youtube_id; 
-	public String youtube_url;
+	public String gender, office, website, phone, twitter_id, youtube_id; 
+	public String term_start, term_end;
 	public boolean in_office;
 
 		
@@ -51,25 +49,12 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	
 	public String getDomain() {
 		String district = this.district;
-		if (district.equals("Senior Seat") || district.equals("Junior Seat"))
-			return district;
+		if (district == null)
+			return "Senator";
 		else if (district.equals("0"))
 			return "At-Large";
 		else
 			return "District " + district;
-	}
-	
-	public String youtubeUsername() {
-		if (this.youtube_url == null)
-			return null;
-		
-		Pattern p = Pattern.compile("http://(?:www\\.)?youtube\\.com/(?:user/)?(.*?)/?$", Pattern.CASE_INSENSITIVE);
-		Matcher m = p.matcher(this.youtube_url);
-		boolean found = m.find();
-		if (found)
-			return m.group(1);
-		else
-			return "";
 	}
 	
 	public static String partyName(String party) {
@@ -88,10 +73,8 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 
 		String position = "";
 
-		if (district.equals("Senior Seat"))
-			position = "Senior Senator from " + stateName;
-		else if (district.equals("Junior Seat"))
-			position = "Junior Senator from " + stateName;
+		if (district == null)
+			position = "Senator from " + stateName;
 		else if (district.equals("0")) {
 			if (title.equals("Rep"))
 				position = "Representative for " + stateName + " At-Large";

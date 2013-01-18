@@ -17,7 +17,7 @@ public class LoadLegislatorTask extends AsyncTask<String, Void, Legislator> {
 
 	public LoadLegislatorTask(Context context) {
 		this.context = context;
-		Utils.setupSunlight(context);
+		Utils.setupAPI(context);
 	}
 
 	public void onScreenLoad(Context context) {
@@ -26,7 +26,7 @@ public class LoadLegislatorTask extends AsyncTask<String, Void, Legislator> {
 	
 	public LoadLegislatorTask(Fragment fragment) {
 		this.fragment = fragment;
-		FragmentUtils.setupSunlight(fragment);
+		FragmentUtils.setupAPI(fragment);
 	}
 
 	@Override

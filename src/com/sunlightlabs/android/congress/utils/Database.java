@@ -120,11 +120,10 @@ public class Database {
 		legislator.state = c.getString(c.getColumnIndex("state"));
 		legislator.district = c.getString(c.getColumnIndex("district"));
 		legislator.gender = c.getString(c.getColumnIndex("gender"));
-		legislator.congress_office = c.getString(c.getColumnIndex("congress_office"));
+		legislator.office = c.getString(c.getColumnIndex("congress_office"));
 		legislator.website = c.getString(c.getColumnIndex("website"));
 		legislator.phone = c.getString(c.getColumnIndex("phone"));
 		legislator.twitter_id = c.getString(c.getColumnIndex("twitter_id"));
-		legislator.youtube_url = c.getString(c.getColumnIndex("youtube_url"));
 		
 		return legislator;
 	}

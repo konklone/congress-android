@@ -54,7 +54,7 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 		if (legislator.twitter_id != null && !legislator.twitter_id.equals(""))
 			adapter.add("tweets", R.string.tab_tweets, TweetsFragment.create(legislator));
 		
-		if (legislator.youtube_url != null && !legislator.youtube_url.equals(""))
+		if (legislator.youtube_id!= null && !legislator.youtube_id.equals(""))
 			adapter.add("videos", R.string.tab_videos, YouTubeFragment.create(legislator));
 		
 		if (tab != null) adapter.selectPage(tab);

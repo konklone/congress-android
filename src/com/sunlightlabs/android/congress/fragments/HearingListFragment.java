@@ -200,7 +200,7 @@ public class HearingListFragment extends ListFragment {
 		private CongressException exception;
 
 		public LoadHearingsTask(HearingListFragment context) {
-			FragmentUtils.setupCongress(context);
+			FragmentUtils.setupAPI(context);
 			this.context = context;
 		}
 

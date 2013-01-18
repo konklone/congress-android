@@ -10,16 +10,12 @@ import com.sunlightlabs.android.congress.fragments.AlertFragment;
 
 public class FragmentUtils {
 	
-	public static void setupSunlight(Fragment fragment) {
-		Utils.setupSunlight(fragment.getActivity());
-	}
-	
 	public static void setupRTC(Fragment fragment) {
 		Utils.setupRTC(fragment.getActivity());
 	}
 	
-	public static void setupCongress(Fragment fragment) {
-		Utils.setupCongress(fragment.getActivity());
+	public static void setupAPI(Fragment fragment) {
+		Utils.setupAPI(fragment.getActivity());
 	}
 	
 	public static void alertDialog(FragmentActivity activity, int type) {

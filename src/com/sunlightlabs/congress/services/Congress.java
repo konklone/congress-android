@@ -205,6 +205,18 @@ public class Congress {
 	    }
 	}
 	
+	public static JSONObject firstResult(String url) throws CongressException {
+		JSONArray results = resultsFor(url);
+		if (results.length() > 0) {
+			try {
+				return (JSONObject) results.get(0);
+			} catch(JSONException e) {
+				throw new CongressException(e, "Error getting first result from " + url);
+			}
+		} else
+			return null;
+	}
+	
 	public static JSONArray resultsFor(String url) throws CongressException {
 		String rawJSON = fetchJSON(url);
 		JSONArray results = null;

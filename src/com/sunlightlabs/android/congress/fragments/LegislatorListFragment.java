@@ -339,8 +339,8 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		public String positionFor(Legislator legislator) {
 			String stateName = Utils.stateCodeToName(context.getActivity(), legislator.state);
 			String district;
-			if (legislator.title.equals("Sen"))
-				district = legislator.district;
+			if (legislator.chamber.equals("senate"))
+				district = "Senator";
 			else
 				district = "District " + legislator.district;
 			return legislator.party + " - " + stateName + " - " + district; 
@@ -368,8 +368,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		public LoadLegislatorsTask(LegislatorListFragment context) {
 			super();
 			this.context = context;
-			FragmentUtils.setupSunlight(context);
-			FragmentUtils.setupCongress(context);
+			FragmentUtils.setupAPI(context);
 		}
 
 		@Override
@@ -387,7 +386,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 					temp = LegislatorService.allForLatLong(context.latitude, context.longitude);
 					break;
 				case SEARCH_LASTNAME:
-					temp = LegislatorService.allWhere("lastname__istartswith", context.lastName);
+					temp = LegislatorService.allWhere("query", context.lastName);
 					break;
 				case SEARCH_COMMITTEE:
 					temp = CommitteeService.find(context.committeeId).members;
@@ -399,14 +398,14 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 					temp = BillService.find(context.billId, new String[] {"cosponsors"}).cosponsors;
 					break;
 				case SEARCH_CHAMBER:
-					return LegislatorService.allForChamber(context.chamber);
+					return LegislatorService.allWhere("chamber", context.chamber);
 				default:
 					return legislators;
 				}
 
 				// sort legislators Senators-first
 				for (int i = 0; i < temp.size(); i++) {
-					if (temp.get(i).title.equals("Sen"))
+					if (temp.get(i).chamber.equals("senate"))
 						legislators.add(temp.get(i));
 					else
 						lower.add(temp.get(i));

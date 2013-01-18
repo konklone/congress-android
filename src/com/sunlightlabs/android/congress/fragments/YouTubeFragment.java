@@ -40,12 +40,13 @@ public class YouTubeFragment extends ListFragment implements LoadsThumb, LoadsYo
 	private Map<Integer, LoadYoutubeThumbTask> loadThumbTasks = new HashMap<Integer, LoadYoutubeThumbTask>();
 	
 	private Legislator legislator;
-	private String youtubeUsername;
+
+	// it is assumed this fragment will not be instantiated if the legislator does not have a youtube ID
 	
 	public static YouTubeFragment create(Legislator legislator) {
 		YouTubeFragment frag = new YouTubeFragment();
 		Bundle args = new Bundle();
-		
+ 
 		args.putSerializable("legislator", legislator);
 		
 		frag.setArguments(args);
@@ -61,7 +62,6 @@ public class YouTubeFragment extends ListFragment implements LoadsThumb, LoadsYo
 		
 		Bundle args = getArguments();
 		legislator = (Legislator) args.getSerializable("legislator");
-		youtubeUsername = legislator.youtubeUsername();
 		
 		loadVideos();
 	}
@@ -100,11 +100,11 @@ public class YouTubeFragment extends ListFragment implements LoadsThumb, LoadsYo
 	}
 
 	private void setupSubscription() {
-		Footer.setup(this, new Subscription(legislator.id, Subscriber.notificationName(legislator), "YoutubeSubscriber", youtubeUsername), videos);
+		Footer.setup(this, new Subscription(legislator.id, Subscriber.notificationName(legislator), "YoutubeSubscriber", legislator.youtube_id), videos);
 	}
     
 	protected void loadVideos() {
-		new LoadYoutubeVideosTask(this).execute(youtubeUsername);
+		new LoadYoutubeVideosTask(this).execute(legislator.youtube_id);
 	}
 	
 	public void onLoadVideos(List<Video> videos) {

@@ -1,45 +1,56 @@
 package com.sunlightlabs.congress.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.net.Uri;
 
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class LegislatorService {
 	
+	private static String[] basicFields = new String[] {
+		"bioguide_id", "thomas_id", "govtrack_id",
+		"in_office", "party", "gender", "state", "state_name",
+		"district", "title", "chamber", "senate_class", "birthday",
+		"term_start", "term_end",
+		"first_name", "nickname", "middle_name", "last_name", "name_suffix",
+		"phone", "website", "office",
+		"twitter_id", "youtube_id", "facebook_id"
+	};
+	
 	/* Main methods */
 	
 	public static List<Legislator> allWhere(String key, String value) throws CongressException {
-		return legislatorsFor(Sunlight.url("legislators.getList", key + "=" + Uri.encode(value))); // encode user entered data
+		Map<String,String> params = new HashMap<String,String>();
+		params.put(key, value);
+		params.put("order", "last_name__asc");
+		return legislatorsFor(Congress.url("legislators", basicFields, params));
 	}
 
 	public static List<Legislator> allForZipCode(String zip) throws CongressException {
-		return legislatorsFor(Sunlight.url("legislators.allForZip", "zip=" + Uri.encode(zip))); // encode user entered data
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("zip", zip);
+		return legislatorsFor(Congress.url("legislators/locate", basicFields, params));
 	}
 
 	public static List<Legislator> allForLatLong(double latitude, double longitude) throws CongressException {
-		return legislatorsFor(Sunlight.url("legislators.allForLatLong", "latitude=" + latitude
-				+ "&longitude=" + longitude));
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("latitude", String.valueOf(latitude));
+		params.put("longitude", String.valueOf(longitude));
+		return legislatorsFor(Congress.url("legislators/locate", basicFields, params));
 	}
 	
-	public static List<Legislator> allForChamber(String chamber) throws CongressException {
-		String queryString;
-		if (chamber.equals("house"))
-			queryString = "title=Del&title=Com&title=Rep";
-		else // if (chamber.equals("senate"))
-			queryString = "title=Sen";
-		return legislatorsFor(Sunlight.url("legislators.getList", queryString));
-	}
-
 	public static Legislator find(String bioguideId) throws CongressException {
-		return legislatorFor(Sunlight.url("legislators.get", "bioguide_id=" + bioguideId + "&all_legislators=true"));
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("bioguide_id", bioguideId);
+		params.put("all_legislators", "true");
+		return legislatorFor(Congress.url("legislators", basicFields, params));
 	}
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
@@ -77,11 +88,15 @@ public class LegislatorService {
 			legislator.district = json.getString("district");
 		if (!json.isNull("chamber"))
 			legislator.chamber = json.getString("chamber");
+		if (!json.isNull("term_start"))
+			legislator.term_start = json.getString("term_start");
+		if (!json.isNull("term_end"))
+			legislator.term_end = json.getString("term_end");
 
 		if (!json.isNull("gender"))
 			legislator.gender = json.getString("gender");
 		if (!json.isNull("office"))
-			legislator.congress_office = json.getString("congress_office");
+			legislator.office = json.getString("office");
 		if (!json.isNull("website"))
 			legislator.website = json.getString("website");
 		if (!json.isNull("phone"))
@@ -128,90 +143,34 @@ public class LegislatorService {
 		if (!json.isNull("gender"))
 			legislator.gender = json.getString("gender");
 		if (!json.isNull("congress_office"))
-			legislator.congress_office = json.getString("congress_office");
+			legislator.office = json.getString("congress_office");
 		if (!json.isNull("website"))
 			legislator.website = json.getString("website");
 		if (!json.isNull("phone"))
 			legislator.phone = json.getString("phone");
-		if (!json.isNull("youtube_url"))
-			legislator.youtube_url = json.getString("youtube_url");
 		if (!json.isNull("twitter_id"))
 			legislator.twitter_id = json.getString("twitter_id");
 		return legislator;
 	}
 
-	protected static Legislator fromSunlight(JSONObject json) throws JSONException {
-		Legislator legislator = new Legislator();
-
-		if (!json.isNull("bioguide_id"))
-			legislator.bioguide_id = json.getString("bioguide_id");
-		if (!json.isNull("govtrack_id"))
-			legislator.govtrack_id = json.getString("govtrack_id");
-		
-		legislator.id = legislator.bioguide_id;
-
-		if (!json.isNull("in_office"))
-			legislator.in_office = json.getBoolean("in_office");
-		
-		if (!json.isNull("firstname"))
-			legislator.first_name = json.getString("firstname");
-		if (!json.isNull("lastname"))
-			legislator.last_name = json.getString("lastname");
-		if (!json.isNull("nickname"))
-			legislator.nickname = json.getString("nickname");
-		if (!json.isNull("name_suffix"))
-			legislator.name_suffix = json.getString("name_suffix");
-		if (!json.isNull("party"))
-			legislator.party = json.getString("party");
-		if (!json.isNull("state"))
-			legislator.state = json.getString("state");
-		if (!json.isNull("district"))
-			legislator.district = json.getString("district");
-		if (!json.isNull("title"))
-			legislator.title = json.getString("title");
-		
-		legislator.chamber = legislator.title.equals("Sen") ? "senate" : "house";
-
-		if (!json.isNull("gender"))
-			legislator.gender = json.getString("gender");
-		if (!json.isNull("congress_office"))
-			legislator.congress_office = json.getString("congress_office");
-		if (!json.isNull("website"))
-			legislator.website = json.getString("website");
-		if (!json.isNull("phone"))
-			legislator.phone = json.getString("phone");
-		if (!json.isNull("youtube_url"))
-			legislator.youtube_url = json.getString("youtube_url");
-		if (!json.isNull("twitter_id"))
-			legislator.twitter_id = json.getString("twitter_id");
-		
-		return legislator;
-	}
-	
-	
 	/* Private helpers for loading single or plural bill objects */
 
 	private static Legislator legislatorFor(String url) throws CongressException {
-		String rawJSON = Sunlight.fetchJSON(url);
 		try {
-			return fromSunlight(new JSONObject(rawJSON).getJSONObject("response")
-					.getJSONObject("legislator"));
+			return fromAPI(Congress.firstResult(url));
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);
 		}
 	}
 
 	private static List<Legislator> legislatorsFor(String url) throws CongressException {
-		String rawJSON = Sunlight.fetchJSON(url);
 		List<Legislator> legislators = new ArrayList<Legislator>();
 		try {
-			JSONArray results = new JSONObject(rawJSON).getJSONObject("response").getJSONArray(
-					"legislators");
+			JSONArray results = Congress.resultsFor(url);
 
 			int length = results.length();
 			for (int i = 0; i < length; i++)
-				legislators.add(fromSunlight(results.getJSONObject(i).getJSONObject(
-						"legislator")));
+				legislators.add(fromAPI(results.getJSONObject(i)));
 
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);

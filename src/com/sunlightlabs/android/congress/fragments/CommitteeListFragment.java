@@ -170,7 +170,7 @@ public class CommitteeListFragment extends ListFragment {
 		private CongressException exception;
 
 		public LoadCommitteesTask(CommitteeListFragment context) {
-			FragmentUtils.setupCongress(context);
+			FragmentUtils.setupAPI(context);
 			this.context = context;
 		}
 

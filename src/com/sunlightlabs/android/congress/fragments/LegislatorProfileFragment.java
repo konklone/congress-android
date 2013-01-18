@@ -44,10 +44,9 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        FragmentUtils.setupSunlight(this);
+        FragmentUtils.setupAPI(this);
         
         legislator = (Legislator) getArguments().getSerializable("legislator");
-        
         loadPhoto();
 	}
 	
@@ -143,7 +142,7 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		((TextView) mainView.findViewById(R.id.profile_party)).setText(partyName(legislator.party));
 		((TextView) mainView.findViewById(R.id.profile_state)).setText(Utils.stateCodeToName(getActivity(), legislator.state));
 		((TextView) mainView.findViewById(R.id.profile_domain)).setText(domainName(legislator.getDomain()));
-		((TextView) mainView.findViewById(R.id.profile_office)).setText(officeName(legislator.congress_office));
+		((TextView) mainView.findViewById(R.id.profile_office)).setText(officeName(legislator.office));
 	
 		profileItem(R.id.profile_phone, "Call " + pronoun(legislator.gender) + " office", new View.OnClickListener() {
 			public void onClick(View v) {callOffice();}

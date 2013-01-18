@@ -27,6 +27,7 @@ public class CommitteeService {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("member_ids", bioguideId);
 		params.put("subcommittee", "false");
+		params.put("order", "name__asc");
 		return committeesFor(Congress.url("committees", fields, params, 1, Congress.MAX_PER_PAGE));
 	}
 	
@@ -35,6 +36,7 @@ public class CommitteeService {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("chamber", chamber);
 		params.put("subcommittee", "false");
+		params.put("order", "name__asc");
 		return committeesFor(Congress.url("committees", fields, params, 1, Congress.MAX_PER_PAGE));
 	}
 	
