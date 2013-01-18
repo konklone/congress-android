@@ -67,7 +67,7 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 	}
 
 	public void loadPhoto() {
-		new LoadPhotoTask(this, LegislatorImage.PIC_LARGE).execute(legislator.getId());
+		new LoadPhotoTask(this, LegislatorImage.PIC_LARGE).execute(legislator.id);
 	}
 
 	public void onLoadPhoto(Drawable avatar, Object tag) {

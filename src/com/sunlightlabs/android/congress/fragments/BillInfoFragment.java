@@ -144,7 +144,7 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 			sponsorView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					startActivity(Utils.legislatorLoadIntent(sponsor.getId()));
+					startActivity(Utils.legislatorLoadIntent(sponsor.id));
 				}
 			});
 			
@@ -277,7 +277,7 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 	}
 	
 	public void loadPhoto() {
-		new LoadPhotoTask(this, LegislatorImage.PIC_LARGE).execute(sponsor.getId());
+		new LoadPhotoTask(this, LegislatorImage.PIC_LARGE).execute(sponsor.id);
 	}
 	
 	public void onLoadBill(Bill bill) {

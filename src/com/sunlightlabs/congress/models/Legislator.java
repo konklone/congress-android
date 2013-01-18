@@ -7,10 +7,11 @@ import java.util.regex.Pattern;
 public class Legislator implements Comparable<Legislator>, Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	public String id, bioguide_id, govtrack_id;
+	public String id, bioguide_id, govtrack_id, thomas_id;
 	public String first_name, last_name, nickname, name_suffix;
 	public String title, party, state, district, chamber;
-	public String gender, congress_office, website, phone, twitter_id, youtube_url;
+	public String gender, congress_office, website, phone, twitter_id, youtube_id; 
+	public String youtube_url;
 	public boolean in_office;
 
 		
@@ -112,14 +113,6 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	
 	public static String govTrackUrl(String govtrack_id) {
 		return "http://www.govtrack.us/congress/person.xpd?id=" + govtrack_id;
-	}
-	
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getId() {
-		return id;
 	}
 	
 	public String toString() {

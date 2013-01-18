@@ -60,7 +60,7 @@ public class HearingService {
 			hearing.hearingType = json.getString("hearing_type");
 		
 		if (!json.isNull("committee"))
-			hearing.committee = CommitteeService.fromJSON(json.getJSONObject("committee"));
+			hearing.committee = CommitteeService.fromAPI(json.getJSONObject("committee"));
 		
 		return hearing;
 	}

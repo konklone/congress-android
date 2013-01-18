@@ -63,7 +63,7 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 	private void setupDatabase() {
 		database = new Database(this);
 		database.open();
-		cursor = database.getLegislator(legislator.getId());
+		cursor = database.getLegislator(legislator.id);
 		startManagingCursor(cursor);
 	}
 	
@@ -98,7 +98,7 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 	}
 
 	private void toggleDatabaseFavorite() {
-		String id = legislator.getId();
+		String id = legislator.id;
 		cursor.requery();
 		if (cursor.getCount() == 1) {
 			if (database.removeLegislator(id) != 0) {

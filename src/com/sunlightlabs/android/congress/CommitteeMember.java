@@ -26,6 +26,5 @@ public class CommitteeMember extends FragmentActivity {
 		FragmentManager manager = getSupportFragmentManager();
 		if (manager.findFragmentById(R.id.frame) == null)
 			manager.beginTransaction().add(R.id.frame, CommitteeListFragment.forLegislator(legislator)).commit();
-		
 	}
 }

@@ -369,6 +369,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 			super();
 			this.context = context;
 			FragmentUtils.setupSunlight(context);
+			FragmentUtils.setupCongress(context);
 		}
 
 		@Override
