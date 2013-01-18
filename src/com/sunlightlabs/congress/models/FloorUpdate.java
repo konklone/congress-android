@@ -10,7 +10,7 @@ public class FloorUpdate implements Serializable {
 	public List<String> billIds, rollIds, legislatorIds;
 	public Date timestamp;
 	public Date legislativeDay;
-	public List<String> events;
+	public String update;
 	public String chamber;
-	public int session;
+	public int congress;
 }

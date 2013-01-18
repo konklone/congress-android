@@ -15,64 +15,53 @@ import com.sunlightlabs.congress.models.FloorUpdate;
 
 public class FloorUpdateService {
 	
+	private static String[] fields = new String[] {
+		"update", "chamber", "congress",
+		"legislative_day", "timestamp",
+		"legislator_ids", "bill_ids", "roll_ids"
+	};
+	
 	public static List<FloorUpdate> latest(String chamber, int page, int per_page) throws CongressException {
-		String[] sections = new String[] {"basic"};
-		
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("chamber", chamber);
 		
-		return updatesFor(RealTimeCongress.url("floor_updates", sections, params, page, per_page));
+		return updatesFor(Congress.url("floor_updates", fields, params, page, per_page));
 	}
 	
-	protected static FloorUpdate fromRTC(JSONObject json) throws JSONException, ParseException {
+	protected static FloorUpdate fromAPI(JSONObject json) throws JSONException, ParseException {
 		FloorUpdate update = new FloorUpdate();
 		
-		if (!json.isNull("events"))
-			update.events = listFrom(json.getJSONArray("events"));
+		if (!json.isNull("update"))
+			update.update = json.getString("update");
 		
 		if (!json.isNull("chamber"))
 			update.chamber = json.getString("chamber");
-		
-		if (!json.isNull("session"))
-			update.session = json.getInt("session");
+		if (!json.isNull("congress"))
+			update.congress = json.getInt("congress");
 		
 		if (!json.isNull("legislative_day"))
-			update.legislativeDay = RealTimeCongress.parseDateOnly(json.getString("legislative_day"));
-		
+			update.legislativeDay = Congress.parseDateOnly(json.getString("legislative_day"));
 		if (!json.isNull("timestamp"))
-			update.timestamp = RealTimeCongress.parseDate(json.getString("timestamp"));
+			update.timestamp = Congress.parseDate(json.getString("timestamp"));
 		
 		if (!json.isNull("legislator_ids"))
-			update.legislatorIds = listFrom(json.getJSONArray("legislator_ids"));
-		
+			update.legislatorIds = Congress.listFrom(json.getJSONArray("legislator_ids"));
 		if (!json.isNull("bill_ids"))
-			update.billIds = listFrom(json.getJSONArray("bill_ids"));
-		
+			update.billIds = Congress.listFrom(json.getJSONArray("bill_ids"));
 		if (!json.isNull("roll_ids"))
-			update.rollIds = listFrom(json.getJSONArray("roll_ids"));
+			update.rollIds = Congress.listFrom(json.getJSONArray("roll_ids"));
 		
 		return update;
 	}
 	
-	private static List<String> listFrom(JSONArray array) throws JSONException {
-		int length = array.length();
-		List<String> list = new ArrayList<String>(length);
-		
-		for (int i=0; i<length; i++)
-			list.add(array.getString(i));
-		
-		return list;
-	}
-	
 	private static List<FloorUpdate> updatesFor(String url) throws CongressException {
-		String rawJSON = RealTimeCongress.fetchJSON(url);
 		List<FloorUpdate> updates = new ArrayList<FloorUpdate>();
 		try {
-			JSONArray results = new JSONObject(rawJSON).getJSONArray("floor_updates");
+			JSONArray results = Congress.resultsFor(url);
 
 			int length = results.length();
 			for (int i = 0; i < length; i++)
-				updates.add(fromRTC(results.getJSONObject(i)));
+				updates.add(fromAPI(results.getJSONObject(i)));
 
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);

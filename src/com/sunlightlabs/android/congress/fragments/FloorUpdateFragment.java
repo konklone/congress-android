@@ -188,9 +188,9 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 			
 			timeView.setText(timeFormat.format(update.timestamp));
 			
-			if (update.events.size() > 0) {
+			if (update.update != null) {
 				TextView text = (TextView) view.findViewById(R.id.text);
-				text.setText(update.events.get(0));
+				text.setText(update.update);
 				
 				GregorianCalendar calendar = new GregorianCalendar();
 				calendar.setTime(update.timestamp);
@@ -198,7 +198,7 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 				
 				Linkify.addLinks(text, 
 						Pattern.compile("(S\\.|H\\.)(\\s?J\\.|\\s?R\\.|\\s?Con\\.| ?)(\\s?Res\\.)*\\s?\\d+", Pattern.CASE_INSENSITIVE), 
-						"congress://com.sunlightlabs.android.congress/bill/" + update.session + "/");
+						"congress://com.sunlightlabs.android.congress/bill/" + update.congress+ "/");
 				
 				Linkify.addLinks(text,
 						Pattern.compile("Roll (?:no.|Call) (\\d+)"),
@@ -222,7 +222,7 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 		String chamber;
 
 		public LoadUpdatesTask(FloorUpdateFragment context, String chamber, int page) {
-			FragmentUtils.setupRTC(context);
+			FragmentUtils.setupAPI(context);
 			this.context = context;
 			this.page = page;
 			this.chamber = chamber;

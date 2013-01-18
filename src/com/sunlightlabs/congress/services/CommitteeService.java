@@ -74,11 +74,7 @@ public class CommitteeService {
 	
 	private static Committee committeeFor(String url) throws CongressException {
 		try {
-			JSONArray committees = Congress.resultsFor(url);
-			if (committees.length() > 0)
-				return fromAPI((JSONObject) committees.get(0));
-			else
-				return null;
+			return fromAPI(Congress.firstResult(url));
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);
 		}
