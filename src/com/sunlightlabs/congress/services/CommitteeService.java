@@ -15,8 +15,6 @@ import com.sunlightlabs.congress.models.Legislator;
 
 public class CommitteeService {
 	
-	/* Main methods */
-	
 	public static Committee find(String id) throws CongressException {
 		String[] fields = new String[] {"committee_id", "chamber", "name", "members"};
 		Map<String,String> params = new HashMap<String,String>();
@@ -39,8 +37,6 @@ public class CommitteeService {
 		params.put("subcommittee", "false");
 		return committeesFor(Congress.url("committees", fields, params, 1, Congress.MAX_PER_PAGE));
 	}
-	
-	/* JSON parsers, also useful for other service endpoints within this package */
 	
 	protected static Committee fromAPI(JSONObject json) throws JSONException {
 		Committee committee = new Committee();
@@ -74,12 +70,9 @@ public class CommitteeService {
 	}
 	
 	
-	/* Private helpers for loading single or plural bill objects */
-
 	private static Committee committeeFor(String url) throws CongressException {
-		String rawJSON = Congress.fetchJSON(url);
 		try {
-			JSONArray committees = new JSONObject(rawJSON).getJSONArray("results");
+			JSONArray committees = Congress.resultsFor(url);
 			if (committees.length() > 0)
 				return fromAPI((JSONObject) committees.get(0));
 			else
@@ -90,10 +83,9 @@ public class CommitteeService {
 	}
 
 	private static List<Committee> committeesFor(String url) throws CongressException {
-		String rawJSON = Congress.fetchJSON(url);
 		List<Committee> committees = new ArrayList<Committee>();
 		try {
-			JSONArray results = new JSONObject(rawJSON).getJSONArray("results");
+			JSONArray results = Congress.resultsFor(url);
 
 			int length = results.length();
 			for (int i = 0; i < length; i++)
