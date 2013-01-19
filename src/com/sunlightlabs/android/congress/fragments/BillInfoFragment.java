@@ -120,16 +120,12 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 			title = bill.official_title;
 			titleView.setTextSize(16);
 		} else {
-			if (bill.abbreviated)
-				title = getResources().getString(R.string.bill_no_title_yet);
-			else
-				title = getResources().getString(R.string.bill_no_title);
+			title = getResources().getString(R.string.bill_no_title);
 			titleView.setTextSize(18);
 		}
 		titleView.setText(title);
 		
-		if (!bill.abbreviated)
-			addBillTimeline();
+		addBillTimeline();
 		
 		if (sponsor != null) {
 			View sponsorView = getView().findViewById(R.id.bill_sponsor);
@@ -178,7 +174,7 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 			
 		} else {
 			TextView noSponsor = (TextView) getView().findViewById(R.id.bill_no_sponsor);
-			noSponsor.setText(bill.abbreviated ? R.string.bill_no_sponsor_yet : R.string.bill_no_sponsor);
+			noSponsor.setText(R.string.bill_no_sponsor);
 			noSponsor.setVisibility(View.VISIBLE);
 		}
 		
@@ -264,7 +260,7 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 					+ "\">Read the full text (PDF).</a>"));
 			} else {
 				noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\""
-						+ Bill.thomasUrl(bill.bill_type, bill.number, bill.session)
+						+ Bill.thomasUrl(bill.bill_type, bill.number, bill.congress)
 						+ "\">Read the text of this bill on THOMAS.</a>"));
 			}
         	noSummary.setMovementMethod(LinkMovementMethod.getInstance());
@@ -306,8 +302,8 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 	public void addBillTimeline() {
 		ViewGroup inner = (ViewGroup) getView().findViewById(R.id.header_inner);
 		
-		if (bill.introduced_at != null)
-			addTimelinePiece(inner, "Introduced on", bill.introduced_at.getTime());
+		if (bill.introduced_on != null)
+			addTimelinePiece(inner, "Introduced on", bill.introduced_on.getTime());
 		
 		String house_passage_result = bill.house_passage_result;
 		long house_passage_result_at = bill.house_passage_result_at == null ? 0 : bill.house_passage_result_at.getTime();

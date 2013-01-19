@@ -275,7 +275,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 					params.put("number", String.valueOf(context.number));
 					return BillService.where(params, page, PER_PAGE);
 				case BILLS_SEARCH_NEWEST:
-					params.put("order", "introduced_at");
+					params.put("order", "introduced_on");
 					return BillService.search(context.query, params, page, PER_PAGE);
 				case BILLS_SEARCH_RELEVANT:
 					params.put("order", "_score");					
@@ -342,7 +342,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			case BILLS_SPONSOR:
 			case BILLS_CODE:
 			default:
-				shortDate(holder.date, bill.introduced_at);
+				shortDate(holder.date, bill.introduced_on);
 				break;
 			}
 			
@@ -358,10 +358,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				holder.title.setText(title);
 			} else {
 				holder.title.setTextSize(14);
-				if (bill.abbreviated)
-					holder.title.setText(R.string.bill_no_title_yet);
-				else
-					holder.title.setText(R.string.bill_no_title);
+				holder.title.setText(R.string.bill_no_title);
 			}
 
 			return view;

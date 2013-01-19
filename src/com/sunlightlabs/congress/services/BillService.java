@@ -57,7 +57,7 @@ public class BillService {
 	
 	public static List<Bill> where(Map<String,String> params, int page, int per_page) throws CongressException {
 		if (!params.containsKey("order"))
-			params.put("order", "introduced_at");
+			params.put("order", "introduced_on");
 		
 		return billsFor(Congress.url("bills", basicFields, params, page, per_page));
 	}
@@ -82,7 +82,7 @@ public class BillService {
 		
 		// todo: rename field
 		if (!json.isNull("congress"))
-			bill.session = json.getInt("congress");
+			bill.congress = json.getInt("congress");
 		
 		if (!json.isNull("number"))
 			bill.number = json.getInt("number");
@@ -97,7 +97,7 @@ public class BillService {
 			bill.last_passage_vote_at = Congress.parseDateEither(json.getString("last_vote_at"));
 		
 		if (!json.isNull("introduced_on"))
-			bill.introduced_at = Congress.parseDateOnly(json.getString("introduced_on"));
+			bill.introduced_on = Congress.parseDateOnly(json.getString("introduced_on"));
 		
 		// timeline dates
 		if (!json.isNull("history")) {
@@ -227,12 +227,9 @@ public class BillService {
 		if (!json.isNull("chamber"))
 			bill.chamber = json.getString("chamber");
 		if (!json.isNull("session"))
-			bill.session = json.getInt("session");
+			bill.congress = json.getInt("session");
 		if (!json.isNull("number"))
 			bill.number = json.getInt("number");
-		
-		if (!json.isNull("abbreviated"))
-			bill.abbreviated = json.getBoolean("abbreviated");
 
 		if (!json.isNull("short_title"))
 			bill.short_title = json.getString("short_title");
@@ -247,7 +244,7 @@ public class BillService {
 
 		// timeline dates
 		if (!json.isNull("introduced_at"))
-			bill.introduced_at = RealTimeCongress.parseDate(json.getString("introduced_at"));
+			bill.introduced_on = RealTimeCongress.parseDate(json.getString("introduced_at"));
 		if (!json.isNull("senate_cloture_result_at"))
 			bill.senate_cloture_result_at = RealTimeCongress.parseDate(json.getString("senate_cloture_result_at"));
 		if (!json.isNull("house_passage_result_at"))

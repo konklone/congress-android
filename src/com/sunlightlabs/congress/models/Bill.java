@@ -15,13 +15,13 @@ public class Bill implements Serializable {
 
 	// basic
 	public String id, bill_type, chamber;
-	public int session, number;
+	public int congress, number;
 	
 	public String short_title, official_title;
 	public Date last_action_at, last_passage_vote_at;
 	public int cosponsors_count;
 	
-	public Date introduced_at, house_passage_result_at, senate_passage_result_at;
+	public Date introduced_on, house_passage_result_at, senate_passage_result_at;
 	public Date vetoed_at, house_override_result_at, senate_override_result_at;
 	public Date senate_cloture_result_at;
 	public Date awaiting_signature_since, enacted_at;
@@ -29,9 +29,6 @@ public class Bill implements Serializable {
 	public boolean vetoed, awaiting_signature, enacted;
 	public String house_passage_result, senate_passage_result, house_override_result, senate_override_result;
 	public String senate_cloture_result;
-	
-	// TODO: marked for death:
-	public boolean abbreviated;
 	
 	// sponsor
 	public Legislator sponsor;
@@ -180,7 +177,7 @@ public class Bill implements Serializable {
 		else if (this.urls != null && this.urls.containsKey("pdf"))
 			return urls.get("pdf");
 		else
-			return thomasUrl(bill_type, number, session);
+			return thomasUrl(bill_type, number, congress);
 	}
 	
 	// in accordance with the syntax described here:

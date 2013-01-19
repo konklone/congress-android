@@ -92,7 +92,7 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 	}
 	
 	public String shareText() {
-		return Bill.govTrackUrl(bill.bill_type, bill.number, bill.session);
+		return Bill.govTrackUrl(bill.bill_type, bill.number, bill.congress);
 	}
 
 	private void toggleFavoriteStar(boolean enabled) {
@@ -142,11 +142,11 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
     		break;
     	case R.id.govtrack:
     		Analytics.billGovTrack(this, bill.id);
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.govTrackUrl(bill.bill_type, bill.number, bill.session))));
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.govTrackUrl(bill.bill_type, bill.number, bill.congress))));
     		break;
     	case R.id.opencongress:
     		Analytics.billOpenCongress(this, bill.id);
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.openCongressUrl(bill.bill_type, bill.number, bill.session))));
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.openCongressUrl(bill.bill_type, bill.number, bill.congress))));
     		break;
     	}
 	}
