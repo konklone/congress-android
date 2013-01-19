@@ -44,7 +44,8 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	
 	int type;
 	Legislator sponsor;
-	String code;
+	String bill_type;
+	int number;
 	String query;
 	
 	PaginationListener pager;
@@ -78,11 +79,12 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		return frag;
 	}
 	
-	public static BillListFragment forCode(String code) {
+	public static BillListFragment forCode(String bill_type, int number) {
 		BillListFragment frag = new BillListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", BILLS_CODE);
-		args.putString("code", code);
+		args.putString("bill_type", bill_type);
+		args.putInt("number", number);
 		frag.setArguments(args);
 		frag.setRetainInstance(true);
 		return frag;
@@ -107,7 +109,8 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		Bundle args = getArguments();
 		type = args.getInt("type");
 		query = args.getString("query");
-		code = args.getString("code");
+		bill_type = args.getString("bill_type");
+		number = args.getInt("number");
 		sponsor = (Legislator) args.getSerializable("sponsor");
 		
 		loadBills();
@@ -268,7 +271,8 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				case BILLS_SPONSOR:
 					return BillService.recentlySponsored(context.sponsor.id, page, PER_PAGE);
 				case BILLS_CODE:
-					params.put("code", context.code);
+					params.put("bill_type", context.bill_type);
+					params.put("number", String.valueOf(context.number));
 					return BillService.where(params, page, PER_PAGE);
 				case BILLS_SEARCH_NEWEST:
 					params.put("order", "introduced_at");

@@ -44,16 +44,20 @@ public class BillSearch extends FragmentActivity {
 			SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
 					this, SuggestionsProvider.AUTHORITY, SuggestionsProvider.MODE);
 			
+			String bill_type;
+			int number;
+			
 			Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");
 			Matcher matcher = pattern.matcher(code);
-			String bill_type = matcher.group(1);
-			int number = Integer.valueOf(matcher.group(2));
+			matcher.find(); // isCode should guarantee this
+			bill_type = matcher.group(1);
+			number = Integer.valueOf(matcher.group(2));
 			
 			String formattedCode = Bill.formatCode(bill_type, number);
 	        suggestions.saveRecentQuery(formattedCode, null);
 			
 			ActionBarUtils.setTitle(this, formattedCode);
-			adapter.add("bills_code", "Not seen", BillListFragment.forCode(code));
+			adapter.add("bills_code", "Not seen", BillListFragment.forCode(bill_type, number));
 			findViewById(R.id.pager_titles).setVisibility(View.GONE);
 		} else {
 			Analytics.track(this, "/bills/search");

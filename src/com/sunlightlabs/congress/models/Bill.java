@@ -43,7 +43,7 @@ public class Bill implements Serializable {
 	public String summary;
 	
 	// votes
-	public List<Bill.Vote> passage_votes;
+	public List<Bill.Vote> votes;
 	
 	// actions
 	public List<Bill.Action> actions;
@@ -54,11 +54,12 @@ public class Bill implements Serializable {
 	// latest upcoming bill data
 	public List<UpcomingBill> upcoming;
 	
-	// full text URLs (to GPO)
-	// valid keys: "html", "xml", "pdf"
+	// homepage URLs on services
 	public Map<String,String> urls;
 	
-	public Map<String,String> homepages;
+	// full text URLs (to GPO)
+	// valid keys: "html", "xml", "pdf"
+	public Map<String,String> versionUrls;
 
 	public static class Action implements Serializable {
 		private static final long serialVersionUID = 1L;
@@ -78,7 +79,7 @@ public class Bill implements Serializable {
 	}
 	
 	public static boolean isCode(String code) {
-		return Pattern.compile("^(hr|hres|hjres|hcres|s|sres|sjres|scres)(\\d+)$").matcher(code).matches();
+		return Pattern.compile("^(hr|hres|hjres|hconres|s|sres|sjres|sconres)(\\d+)$").matcher(code).matches();
 	}
 	
 	public static String currentSession() {
@@ -136,7 +137,7 @@ public class Bill implements Serializable {
 			return "H. Res. " + number;
 		else if (bill_type.equals("hjres"))
 			return "H.J. Res. " + number;
-		else if (bill_type.equals("hcres"))
+		else if (bill_type.equals("hconres"))
 			return "H.Con. Res. " + number;
 		else if (bill_type.equals("s"))
 			return "S. " + number;
@@ -144,7 +145,7 @@ public class Bill implements Serializable {
 			return "S. Res. " + number;
 		else if (bill_type.equals("sjres"))
 			return "S.J. Res. " + number;
-		else if (bill_type.equals("scres"))
+		else if (bill_type.equals("sconres"))
 			return "S.Con. Res. " + number;
 		else
 			return bill_type + number;

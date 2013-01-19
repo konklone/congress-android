@@ -123,9 +123,7 @@ public class Congress {
 		return baseUrl + "/" + method + "?" + query.toString();
 	}
 	
-	public static String searchUrl(String method, String query, 
-			boolean highlight, String[] sections, Map<String,String> params, 
-			int page, int per_page) throws CongressException {
+	public static String searchUrl(String method, String query, boolean highlight, String[] fields, Map<String,String> params, int page, int per_page) throws CongressException {
 		if (highlight) {
 			params.put("highlight", "true");
 			if (!params.containsKey("highlight.tags"))
@@ -134,7 +132,7 @@ public class Congress {
 		
 		params.put("query", query);
 		
-		return url(method + "/search", sections, params, page, per_page);
+		return url(method + "/search", fields, params, page, per_page);
 	}
 	
 	public static Date parseDateEither(String date) throws ParseException {

@@ -49,7 +49,7 @@ public class LegislatorService {
 	public static Legislator find(String bioguideId) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("bioguide_id", bioguideId);
-		params.put("all_legislators", "true");
+//		params.put("all_legislators", "true");
 		return legislatorFor(Congress.url("legislators", basicFields, params));
 	}
 	

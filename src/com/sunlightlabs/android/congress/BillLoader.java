@@ -14,6 +14,7 @@ import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.services.BillService;
 
 public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 	private LoadBillTask loadBillTask;
@@ -50,7 +51,7 @@ public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 		if (loadBillTask != null)
 			loadBillTask.onScreenLoad(this);
 		else
-			loadBillTask = (LoadBillTask) new LoadBillTask(this, bill_id).execute("basic", "sponsor", "latest_upcoming", "last_version.urls");
+			loadBillTask = (LoadBillTask) new LoadBillTask(this, bill_id).execute(BillService.basicFields);
 		
 		setupControls();
 	}

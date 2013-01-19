@@ -21,73 +21,62 @@ import com.sunlightlabs.congress.models.UpcomingBill;
 
 public class BillService {
 	
-	/* Main methods */
+	public static String[] basicFields = {
+		"bill_id", "bill_type", "chamber", "number", "congress",
+		"introduced_on", "last_action_at", "last_vote_at",
+		"official_title", "short_title", 
+		"urls", "last_version.urls",
+		"history", 
+		"sponsor",
+		"upcoming"
+	};
 	
 	public static List<Bill> recentlyIntroduced(int page, int per_page) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("order", "introduced_at");
-		
-		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming", "last_version.urls"};
-		
-		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page)); 
+		params.put("order", "introduced_on");
+		return billsFor(Congress.url("bills", basicFields, params, page, per_page)); 
 	}
 
 	public static List<Bill> recentLaws(int page, int per_page) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("order", "enacted_at");
-		params.put("enacted", "true");
-		
-		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming", "last_version.urls"};
-		
-		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
+		params.put("order", "history.enacted_at");
+		params.put("history.enacted", "true");
+		return billsFor(Congress.url("bills", basicFields, params, page, per_page));
 	}
 
 	public static List<Bill> recentlySponsored(String sponsorId, int page, int per_page) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("order", "introduced_at");
+		params.put("order", "introduced_on");
 		params.put("sponsor_id", sponsorId);
-		
-		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming", "last_version.urls"};
-		
-		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
+		return billsFor(Congress.url("bills", basicFields, params, page, per_page));
 	}
 	
 	public static List<Bill> search(String query, Map<String,String> params, int page, int per_page) throws CongressException {
-		return billsFor(RealTimeCongress.searchUrl("bills", query, true, null, params, page, per_page));
+		return billsFor(Congress.searchUrl("bills", query, true, basicFields, params, page, per_page));
 	}
 	
 	public static List<Bill> where(Map<String,String> params, int page, int per_page) throws CongressException {
 		if (!params.containsKey("order"))
 			params.put("order", "introduced_at");
 		
-		String[] sections = new String[] {"basic", "sponsor", "latest_upcoming", "last_version.urls"};
-		
-		return billsFor(RealTimeCongress.url("bills", sections, params, page, per_page));
+		return billsFor(Congress.url("bills", basicFields, params, page, per_page));
 	}
 
-	public static Bill find(String id, String[] sections) throws CongressException {
+	public static Bill find(String id, String[] fields) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("bill_id", id);
-				
-		return billFor(RealTimeCongress.url("bills", sections, params));
+		return billFor(Congress.url("bills", fields, params));
 	}
 	
 	protected static Bill fromAPI(JSONObject json) throws JSONException, ParseException {
 		Bill bill = new Bill();
 
-		if (!json.isNull("bill_id")) {
+		if (!json.isNull("bill_id"))
 			bill.id = json.getString("bill_id");
-			
-			//todo: kill this
-			bill.id = bill.id.replace("conres", "cres");
-		}
 		
-		if (!json.isNull("bill_type")) {
+		if (!json.isNull("bill_type"))
 			bill.bill_type = json.getString("bill_type");
-			
-			//todo: kill this
-			bill.bill_type = bill.bill_type.replace("conres", "cres");
-		}
+		
 		if (!json.isNull("chamber"))
 			bill.chamber = json.getString("chamber");
 		
@@ -169,11 +158,11 @@ public class BillService {
 			JSONArray voteObjects = json.getJSONArray("votes");
 			int length = voteObjects.length();
 			
-			bill.passage_votes = new ArrayList<Bill.Vote>();
+			bill.votes = new ArrayList<Bill.Vote>();
 
 			// load in descending order
 			for (int i = 0; i < length; i++)
-				bill.passage_votes.add(0, voteFromAPI(voteObjects.getJSONObject(i)));
+				bill.votes.add(0, voteFromAPI(voteObjects.getJSONObject(i)));
 		}
 
 		if (!json.isNull("actions")) {
@@ -314,11 +303,11 @@ public class BillService {
 			JSONArray voteObjects = json.getJSONArray("passage_votes");
 			int length = voteObjects.length();
 			
-			bill.passage_votes = new ArrayList<Bill.Vote>();
+			bill.votes = new ArrayList<Bill.Vote>();
 
 			// load in descending order
 			for (int i = 0; i < length; i++)
-				bill.passage_votes.add(0, voteFromRTC(voteObjects.getJSONObject(i)));
+				bill.votes.add(0, voteFromRTC(voteObjects.getJSONObject(i)));
 		}
 
 		if (!json.isNull("actions")) {
@@ -355,14 +344,14 @@ public class BillService {
 		if (!json.isNull("last_version")) {
 			JSONObject version = json.getJSONObject("last_version");
 			if (!version.isNull("urls")) {
-				bill.urls = new HashMap<String,String>();
+				bill.versionUrls = new HashMap<String,String>();
 				JSONObject urls = version.getJSONObject("urls");
 				if (!urls.isNull("html"))
-					bill.urls.put("html", urls.getString("html"));
+					bill.versionUrls.put("html", urls.getString("html"));
 				if (!urls.isNull("xml"))
-					bill.urls.put("xml", urls.getString("xml"));
+					bill.versionUrls.put("xml", urls.getString("xml"));
 				if (!urls.isNull("pdf"))
-					bill.urls.put("pdf", urls.getString("pdf"));
+					bill.versionUrls.put("pdf", urls.getString("pdf"));
 			}
 		}
 		
@@ -423,13 +412,8 @@ public class BillService {
 	/* Private helpers for loading single or plural bill objects */
 
 	private static Bill billFor(String url) throws CongressException {
-		String rawJSON = RealTimeCongress.fetchJSON(url);
 		try {
-			JSONArray results = new JSONObject(rawJSON).getJSONArray("bills");
-			if (results.length() == 0)
-				throw new CongressException.NotFound("Bill not found.");
-			else
-				return fromRTC(results.getJSONObject(0));
+			return fromAPI(Congress.firstResult(url));
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);
 		} catch (ParseException e) {
@@ -438,14 +422,13 @@ public class BillService {
 	}
 
 	private static List<Bill> billsFor(String url) throws CongressException {
-		String rawJSON = RealTimeCongress.fetchJSON(url);
 		List<Bill> bills = new ArrayList<Bill>();
 		try {
-			JSONArray results = new JSONObject(rawJSON).getJSONArray("bills");
+			JSONArray results = Congress.resultsFor(url);
 
 			int length = results.length();
 			for (int i = 0; i < length; i++)
-				bills.add(fromRTC(results.getJSONObject(i)));
+				bills.add(fromAPI(results.getJSONObject(i)));
 
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);

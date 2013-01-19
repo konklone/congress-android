@@ -61,27 +61,27 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 		
 		FragmentUtils.setLoading(this, R.string.bill_votes_loading);
 		
-		if (bill.passage_votes != null)
+		if (bill.votes != null)
 			displayBill();
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (bill.passage_votes != null)
+		if (bill.votes != null)
 			setupSubscription();
 	}
 	
 	private void setupSubscription() {
-		Footer.setup(this, new Subscription(bill.id, Subscriber.notificationName(bill), "VotesBillSubscriber", bill.id), bill.passage_votes);
+		Footer.setup(this, new Subscription(bill.id, Subscriber.notificationName(bill), "VotesBillSubscriber", bill.id), bill.votes);
 	}
 
 	public void loadBill() {
-		new LoadBillTask(this, bill.id).execute("passage_votes");
+		new LoadBillTask(this, bill.id).execute("votes");
 	}
 	
 	public void onLoadBill(Bill bill) {
-		this.bill.passage_votes = bill.passage_votes;
+		this.bill.votes = bill.votes;
 		if (isAdded())
 			displayBill();
 	}
@@ -92,8 +92,8 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 	}
 	
 	public void displayBill() {
-		if (bill.passage_votes.size() > 0)
-			setListAdapter(new BillVoteAdapter(this, bill.passage_votes));
+		if (bill.votes.size() > 0)
+			setListAdapter(new BillVoteAdapter(this, bill.votes));
 		else
 			FragmentUtils.showEmpty(this, R.string.bill_votes_empty);
 		
