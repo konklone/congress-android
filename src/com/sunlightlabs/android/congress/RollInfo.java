@@ -240,7 +240,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			adapter.addView(inflater.inflate(R.layout.line, null));
 			
 			View bill = inflater.inflate(R.layout.roll_bill, null);
-			((TextView) bill.findViewById(R.id.code)).setText(Bill.formatId(roll.bill_id));
+			((TextView) bill.findViewById(R.id.code)).setText(Bill.formatCode(roll.bill_id));
 			if (roll.vote_type != null) {
 				TextView related = (TextView) bill.findViewById(R.id.related_message);
 				if (roll.vote_type.equals("passage"))

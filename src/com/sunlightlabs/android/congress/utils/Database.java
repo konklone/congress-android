@@ -29,7 +29,7 @@ public class Database {
 			"govtrack_id", "first_name", "last_name", "nickname", "name_suffix", "title", "party",
 			"state", "district", "gender", "congress_office", "website", "phone", "twitter_id",
 			"youtube_url" };
-	private static final String[] BILL_COLUMNS = new String[] { "id", "code", "short_title", "official_title" };
+	private static final String[] BILL_COLUMNS = new String[] { "id", "short_title", "official_title" };
 
 	private static final String[] SUBSCRIPTION_COLUMNS = new String[] { "id", "name", "data", "notification_class", "unseen_count" };
 	
@@ -177,7 +177,6 @@ public class Database {
 		Bill bill = new Bill();
 
 		bill.id = c.getString(c.getColumnIndex("id"));
-		bill.code = c.getString(c.getColumnIndex("code"));
 		bill.short_title = c.getString(c.getColumnIndex("short_title"));
 		bill.official_title = c.getString(c.getColumnIndex("official_title"));
 		

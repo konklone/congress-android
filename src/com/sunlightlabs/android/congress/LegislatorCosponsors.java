@@ -41,7 +41,7 @@ public class LegislatorCosponsors extends FragmentActivity {
 	}
 	
 	public void setupControls() {
-		ActionBarUtils.setTitle(this, "Cosponsors for " + Bill.formatId(billId), Utils.billIntent(this, bill));
+		ActionBarUtils.setTitle(this, "Cosponsors for " + Bill.formatCode(billId), Utils.billIntent(this, bill));
 		ActionBarUtils.setTitleSize(this, 16);
 	}
 }

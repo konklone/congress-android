@@ -98,9 +98,6 @@ public class BillService {
 		if (!json.isNull("number"))
 			bill.number = json.getInt("number");
 		
-		if (bill.number > 0 && bill.bill_type != null)
-			bill.code = bill.bill_type + bill.number; 
-		
 		if (!json.isNull("short_title"))
 			bill.short_title = json.getString("short_title");
 		if (!json.isNull("official_title"))
@@ -236,8 +233,6 @@ public class BillService {
 
 		if (!json.isNull("bill_id"))
 			bill.id = json.getString("bill_id");
-		if (!json.isNull("code"))
-			bill.code = json.getString("code");
 		if (!json.isNull("bill_type"))
 			bill.bill_type = json.getString("bill_type");
 		if (!json.isNull("chamber"))

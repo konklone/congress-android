@@ -89,7 +89,7 @@ public class MenuBillsFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView lv, View view, int position, long id) {
 		Bill bill = (Bill) view.getTag();
-		startActivity(Utils.billLoadIntent(bill.id, bill.code));
+		startActivity(Utils.billLoadIntent(bill.id));
 	}
 	
 	class FavoriteBillsAdapter extends CursorAdapter {
@@ -102,7 +102,7 @@ public class MenuBillsFragment extends ListFragment {
 		public void bindView(View view, Context context, Cursor cursor) {
 			Bill bill = Database.loadBill(cursor);
 			
-			((TextView) view.findViewById(R.id.code)).setText(Bill.formatCode(bill.code));
+			((TextView) view.findViewById(R.id.code)).setText(Bill.formatCode(bill.id));
 			TextView titleView = (TextView) view.findViewById(R.id.title);
 			
 			String title;

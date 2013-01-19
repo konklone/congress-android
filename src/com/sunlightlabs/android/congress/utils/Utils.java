@@ -67,10 +67,6 @@ public class Utils {
 		return Utils.capitalize(tempRoll.chamber) + " Roll No. " + tempRoll.number;
 	}
 	
-	public static String formatBillId(String id) {
-		return Bill.formatId(id);
-	}
-
 	// Suitable for a legislator desktop shortcut, load a legislator by ID only
 	public static Intent legislatorLoadIntent(String id) {
 		return new Intent().setClassName(
@@ -121,19 +117,14 @@ public class Utils {
 		return new Intent(context, RollInfo.class)
 			.putExtra("id", rollId);
 	}
-
-	public static Intent billLoadIntent(String billId, String code) {
+	
+	public static Intent billLoadIntent(String billId) {
 		Intent intent = billPagerIntent();
 		return new Intent().setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.BillLoader")
 			.putExtra("id", billId)
-			.putExtra("code", code)
 			.putExtra("intent", intent);
-	}
-	
-	public static Intent billLoadIntent(String billId) {
-		return billLoadIntent(billId, (String) null);
 	}
 
 	public static Intent billLoadIntent(String billId, Intent intent) {

@@ -17,7 +17,7 @@ import com.sunlightlabs.congress.models.CongressException;
 
 public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 	private LoadBillTask loadBillTask;
-	private String id, code;
+	private String bill_id;
 	private Intent intent;
 	
 	@Override
@@ -26,8 +26,7 @@ public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 		setContentView(R.layout.loading_fullscreen);
 		
 		Intent i = getIntent();
-		id = i.getStringExtra("id");
-		code = i.getStringExtra("code");
+		bill_id = i.getStringExtra("id");
 		intent = (Intent) i.getParcelableExtra("intent");
 		
 		// if coming from a shortcut intent, there appears to be a bug with packaging sub-intents
@@ -42,8 +41,8 @@ public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 			if (segments.size() == 3) { // coming in from floor
 				String session = segments.get(1);
 				String formattedCode = segments.get(2);
-				code = Bill.normalizeCode(formattedCode);
-				id = code + "-" + session;
+				String code = Bill.normalizeCode(formattedCode);
+				bill_id = code + "-" + session;
 			}
 		}
 		
@@ -51,15 +50,14 @@ public class BillLoader extends Activity implements LoadBillTask.LoadsBill {
 		if (loadBillTask != null)
 			loadBillTask.onScreenLoad(this);
 		else
-			loadBillTask = (LoadBillTask) new LoadBillTask(this, id).execute("basic", "sponsor", "latest_upcoming", "last_version.urls");
+			loadBillTask = (LoadBillTask) new LoadBillTask(this, bill_id).execute("basic", "sponsor", "latest_upcoming", "last_version.urls");
 		
 		setupControls();
 	}
 	
 	
 	public void setupControls() {
-		if (code != null && !code.equals(""))
-			ActionBarUtils.setTitle(this, Bill.formatCode(code));
+		ActionBarUtils.setTitle(this, Bill.formatCode(bill_id));
 		Utils.setLoading(this, R.string.bill_loading);
 	}
 	

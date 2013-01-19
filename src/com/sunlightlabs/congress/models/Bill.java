@@ -31,7 +31,6 @@ public class Bill implements Serializable {
 	public String senate_cloture_result;
 	
 	// TODO: marked for death:
-	public String code;
 	public boolean abbreviated;
 	
 	// sponsor
@@ -87,11 +86,6 @@ public class Bill implements Serializable {
 		return "" + (((year + 1901) / 2) - 894);
 	}
 	
-	public static String formatId(String id) {
-		String code = id.replaceAll("-\\d+$", "");
-		return formatCode(code);
-	}
-	
 	public static String matchText(String field) {
 		if (field.equals("versions"))
 			return "text";
@@ -124,93 +118,36 @@ public class Bill implements Serializable {
 		return field;
 	}
 	
-	public static String formatCode(String code) {
-		code = code.toLowerCase().replace(" ", "").replace(".", "");
-		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");
-		Matcher matcher = pattern.matcher(code);
-		if (!matcher.matches())
-			return code;
+	public static String formatCode(String bill_id) {
+		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)-\\d+$");
+		Matcher matcher = pattern.matcher(bill_id);
+		if (!matcher.find())
+			return bill_id;
 		
-		String match = matcher.group(1);
-		String number = matcher.group(2);
-		if (match.equals("hr"))
-			return "H.R. " + number;
-		else if (match.equals("hres"))
-			return "H. Res. " + number;
-		else if (match.equals("hjres"))
-			return "H. Joint Res. " + number;
-		else if (match.equals("hcres"))
-			return "H. Con. Res. " + number;
-		else if (match.equals("s"))
-			return "S. " + number;
-		else if (match.equals("sres"))
-			return "S. Res. " + number;
-		else if (match.equals("sjres"))
-			return "S. Joint Res. " + number;
-		else if (match.equals("scres"))
-			return "S. Con. Res. " + number;
-		else
-			return code;
+		String bill_type = matcher.group(1);
+		int number = Integer.valueOf(matcher.group(2));
+		return formatCode(bill_type, number);
 	}
 	
-	// for when you need that extra space
-//	public static String formatCodeShort(String code) {
-//		code = code.toLowerCase().replace(" ", "").replace(".", "");
-//		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");
-//		Matcher matcher = pattern.matcher(code);
-//		if (!matcher.matches())
-//			return code;
-//		
-//		String match = matcher.group(1);
-//		String number = matcher.group(2);
-//		if (match.equals("hr"))
-//			return "H.R. " + number;
-//		else if (match.equals("hres"))
-//			return "H. Res. " + number;
-//		else if (match.equals("hjres"))
-//			return "H.J. Res. " + number;
-//		else if (match.equals("hcres"))
-//			return "H.C. Res. " + number;
-//		else if (match.equals("s"))
-//			return "S. " + number;
-//		else if (match.equals("sres"))
-//			return "S. Res. " + number;
-//		else if (match.equals("sjres"))
-//			return "S.J. Res. " + number;
-//		else if (match.equals("scres"))
-//			return "S.C. Res. " + number;
-//		else
-//			return code;
-//	}
-	
-	// for when you need that extra space
-	public static String formatCodeFrom(String bill_type, int num) {
-		String code = bill_type + num;
-		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");
-		Matcher matcher = pattern.matcher(code);
-		if (!matcher.matches())
-			return code;
-		
-		String match = matcher.group(1);
-		String number = matcher.group(2);
-		if (match.equals("hr"))
+	public static String formatCode(String bill_type, int number) {
+		if (bill_type.equals("hr"))
 			return "H.R. " + number;
-		else if (match.equals("hres"))
+		else if (bill_type.equals("hres"))
 			return "H. Res. " + number;
-		else if (match.equals("hjres"))
+		else if (bill_type.equals("hjres"))
 			return "H.J. Res. " + number;
-		else if (match.equals("hcres"))
-			return "H.C. Res. " + number;
-		else if (match.equals("s"))
+		else if (bill_type.equals("hcres"))
+			return "H.Con. Res. " + number;
+		else if (bill_type.equals("s"))
 			return "S. " + number;
-		else if (match.equals("sres"))
+		else if (bill_type.equals("sres"))
 			return "S. Res. " + number;
-		else if (match.equals("sjres"))
+		else if (bill_type.equals("sjres"))
 			return "S.J. Res. " + number;
-		else if (match.equals("scres"))
-			return "S.C. Res. " + number;
+		else if (bill_type.equals("scres"))
+			return "S.Con. Res. " + number;
 		else
-			return code;
+			return bill_type + number;
 	}
 	
 	public static String govTrackType(String type) {
@@ -300,9 +237,9 @@ public class Bill implements Serializable {
 	// for news searching, don't use legislator.titledName() because we don't want to use the name_suffix
 	public static String searchTermFor(Bill bill) {
     	if (bill.short_title != null && !bill.short_title.equals(""))
-    		return "\"" + NEWS_SEARCH_REGEX.matcher(bill.short_title).replaceFirst("") + "\" OR \"" + Bill.formatCodeFrom(bill.bill_type, bill.number) + "\"";
+    		return "\"" + NEWS_SEARCH_REGEX.matcher(bill.short_title).replaceFirst("") + "\" OR \"" + Bill.formatCode(bill.bill_type, bill.number) + "\"";
     	else
-    		return "\"" + Bill.formatCodeFrom(bill.bill_type, bill.number) + "\"";
+    		return "\"" + Bill.formatCode(bill.bill_type, bill.number) + "\"";
     }
 	
 	

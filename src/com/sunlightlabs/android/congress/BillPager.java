@@ -70,7 +70,7 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 	}
 	
 	public void setupControls() {
-		ActionBarUtils.setTitle(this, Bill.formatCode(bill.code));
+		ActionBarUtils.setTitle(this, Bill.formatCode(bill.id));
 		
 		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.star_off, new View.OnClickListener() {
 			public void onClick(View v) { 

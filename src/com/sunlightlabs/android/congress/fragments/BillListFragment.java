@@ -342,7 +342,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				break;
 			}
 			
-			holder.code.setText(Bill.formatCodeFrom(bill.bill_type, bill.number));
+			holder.code.setText(Bill.formatCode(bill.bill_type, bill.number));
 
 			if (bill.short_title != null) {
 				String title = Utils.truncate(bill.short_title, 250);

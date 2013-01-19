@@ -84,7 +84,7 @@ public class UpcomingFragment extends ListFragment {
 		if (isAdded()) {
 			Bill bill = ((UpcomingAdapter.Bill) parent.getItemAtPosition(position)).bill;
 			Analytics.billUpcoming(getActivity(), bill.id);
-			startActivity(Utils.billLoadIntent(bill.id, bill.code));
+			startActivity(Utils.billLoadIntent(bill.id));
 		}
 	}
 	
@@ -159,7 +159,7 @@ public class UpcomingFragment extends ListFragment {
 				
 				Bill bill = (Bill) item;
 				
-				((TextView) view.findViewById(R.id.code)).setText(com.sunlightlabs.congress.models.Bill.formatCodeFrom(bill.bill_type, bill.number));
+				((TextView) view.findViewById(R.id.code)).setText(com.sunlightlabs.congress.models.Bill.formatCode(bill.bill_type, bill.number));
 				((TextView) view.findViewById(R.id.title)).setText(bill.title);
 			}
 

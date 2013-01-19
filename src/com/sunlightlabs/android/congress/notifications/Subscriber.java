@@ -39,9 +39,9 @@ public abstract class Subscriber {
 	
 	public static String notificationName(Bill bill) {
 		if (bill.short_title != null && !(bill.short_title.equals("")))
-			return Bill.formatCode(bill.code) + " - " + bill.short_title;
+			return Bill.formatCode(bill.id) + " - " + bill.short_title;
 		else
-			return Bill.formatCode(bill.code);
+			return Bill.formatCode(bill.id);
 	}
 	
 	public static String notificationName(Legislator legislator) {

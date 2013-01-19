@@ -46,13 +46,13 @@ public class BillSearch extends FragmentActivity {
 			
 			Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");
 			Matcher matcher = pattern.matcher(code);
-			
 			String bill_type = matcher.group(1);
 			int number = Integer.valueOf(matcher.group(2));
 			
-	        suggestions.saveRecentQuery(Bill.formatCodeFrom(bill_type, number), null);
+			String formattedCode = Bill.formatCode(bill_type, number);
+	        suggestions.saveRecentQuery(formattedCode, null);
 			
-			ActionBarUtils.setTitle(this, Bill.formatCode(code));
+			ActionBarUtils.setTitle(this, formattedCode);
 			adapter.add("bills_code", "Not seen", BillListFragment.forCode(code));
 			findViewById(R.id.pager_titles).setVisibility(View.GONE);
 		} else {
