@@ -44,7 +44,7 @@ public class UpcomingBillService {
 			upcoming.chamber = json.getString("chamber");
 		
 		if (!json.isNull("legislative_day"))
-			upcoming.legislativeDay = RealTimeCongress.parseDateOnly(json.getString("legislative_day"));
+			upcoming.legislativeDay = Congress.parseDateOnly(json.getString("legislative_day"));
 		
 		if (!json.isNull("bill_id"))
 			upcoming.billId = json.getString("bill_id");
@@ -60,39 +60,6 @@ public class UpcomingBillService {
 		
 		if (!json.isNull("bill"))
 			upcoming.bill = BillService.fromAPI(json.getJSONObject("bill"));
-		
-		return upcoming;
-	}
-	
-	protected static UpcomingBill fromRTC(JSONObject json) throws JSONException, ParseException {
-		UpcomingBill upcoming = new UpcomingBill();
-		
-		if (!json.isNull("context"))
-			upcoming.context = json.getJSONArray("context").getString(0);
-		
-		if (!json.isNull("chamber"))
-			upcoming.chamber = json.getString("chamber");
-		
-		if (!json.isNull("legislative_day"))
-			upcoming.legislativeDay = RealTimeCongress.parseDateOnly(json.getString("legislative_day"));
-		
-		if (!json.isNull("bill_id"))
-			upcoming.billId = json.getString("bill_id");
-		
-		if (!json.isNull("source_type"))
-			upcoming.sourceType = json.getString("source_type");
-		
-		if (!json.isNull("source_url"))
-			upcoming.sourceUrl = json.getString("source_url");
-		
-		if (!json.isNull("session"))
-			upcoming.congress = json.getInt("session");
-		
-		if (!json.isNull("permalink"))
-			upcoming.permalink = json.getString("permalink");
-		
-		if (!json.isNull("bill"))
-			upcoming.bill = BillService.fromRTC(json.getJSONObject("bill"));
 		
 		return upcoming;
 	}

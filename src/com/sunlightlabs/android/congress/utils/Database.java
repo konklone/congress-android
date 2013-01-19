@@ -16,7 +16,7 @@ import android.util.Log;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.Legislator;
-import com.sunlightlabs.congress.services.RealTimeCongress;
+import com.sunlightlabs.congress.services.Congress;
 
 public class Database {
 	private static final int DATABASE_VERSION = 6; // updated last for version 3.3
@@ -40,7 +40,7 @@ public class Database {
 	private Context context;
 	
 	// uses RTC date format
-	private static SimpleDateFormat format = new SimpleDateFormat(RealTimeCongress.dateFormat);
+	private static SimpleDateFormat format = new SimpleDateFormat(Congress.dateFormat);
 
 	public Database(Context context) {
 		this.context = context;

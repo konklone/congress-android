@@ -172,7 +172,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			if (roll != null)
 				displayRoll();
 			else
-				loadRollTask = (LoadRollTask) new LoadRollTask(this, id, "basic").execute("basic", "amendment.purpose");
+				loadRollTask = (LoadRollTask) new LoadRollTask(this, id, "basic").execute(RollService.basicFields);
 		}
 	}
 	
@@ -506,9 +506,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		}
 		
 		@Override
-		public Roll doInBackground(String... sections) {
+		public Roll doInBackground(String... fields) {
 			try {
-				return RollService.find(rollId, sections);
+				return RollService.find(rollId, fields);
 			} catch (CongressException exception) {
 				this.exception = exception;
 				return null;

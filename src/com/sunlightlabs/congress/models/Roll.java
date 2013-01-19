@@ -19,9 +19,9 @@ public class Roll implements Serializable {
 	public boolean otherVotes = false;
 	
 	// basic
-	public String id, how, chamber, vote_type, roll_type, passage_type;
+	public String id, chamber, vote_type, roll_type;
 	public String question, result, bill_id, required;
-	public int session, number, year;
+	public int congress, number, year;
 	public Date voted_at;
 	public Map<String,Integer> voteBreakdown = new HashMap<String,Integer>();
 	

@@ -48,10 +48,9 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	}
 	
 	public String getDomain() {
-		String district = this.district;
-		if (district == null)
+		if (this.chamber.equals("senate"))
 			return "Senator";
-		else if (district.equals("0"))
+		else if (district != null && district.equals("0"))
 			return "At-Large";
 		else
 			return "District " + district;
@@ -69,13 +68,11 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	}
 	
 	public String getPosition(String stateName) {
-		String district = this.district;
-
 		String position = "";
 
-		if (district == null)
+		if (this.chamber.equals("senate"))
 			position = "Senator from " + stateName;
-		else if (district.equals("0")) {
+		else if (district != null && district.equals("0")) {
 			if (title.equals("Rep"))
 				position = "Representative for " + stateName + " At-Large";
 			else

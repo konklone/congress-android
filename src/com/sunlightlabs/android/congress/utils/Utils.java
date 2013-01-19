@@ -26,7 +26,6 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.Congress;
-import com.sunlightlabs.congress.services.RealTimeCongress;
 
 public class Utils {
 	public static final String TAG = "Congress";
@@ -35,12 +34,6 @@ public class Utils {
 	
 	public static void setupAPI(Context context) {
 		Resources resources = context.getResources();
-		
-		RealTimeCongress.userAgent = resources.getString(R.string.rtc_user_agent);
-		RealTimeCongress.apiKey = resources.getString(R.string.sunlight_api_key);
-		RealTimeCongress.appVersion = resources.getString(R.string.app_version);
-		RealTimeCongress.osVersion = "Android " + Build.VERSION.SDK_INT;
-		RealTimeCongress.appChannel = resources.getString(R.string.market_channel);
 		
 		Congress.userAgent = resources.getString(R.string.rtc_user_agent);
 		Congress.apiKey = resources.getString(R.string.sunlight_api_key);
