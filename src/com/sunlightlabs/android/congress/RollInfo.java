@@ -498,7 +498,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			this.context = context;
 			this.rollId = rollId;
 			this.tag = tag;
-			Utils.setupRTC(context);
+			Utils.setupAPI(context);
 		}
 		
 		public void onScreenLoad(RollInfo context) {

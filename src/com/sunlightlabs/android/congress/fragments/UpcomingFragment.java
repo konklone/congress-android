@@ -159,7 +159,7 @@ public class UpcomingFragment extends ListFragment {
 				
 				Bill bill = (Bill) item;
 				
-				((TextView) view.findViewById(R.id.code)).setText(bill.code);
+				((TextView) view.findViewById(R.id.code)).setText(com.sunlightlabs.congress.models.Bill.formatCodeFrom(bill.bill_type, bill.number));
 				((TextView) view.findViewById(R.id.title)).setText(bill.title);
 			}
 
@@ -171,7 +171,8 @@ public class UpcomingFragment extends ListFragment {
 			String dateName, dateFull;
 		}
 		static class Bill extends Item {
-			String code, title;
+			String bill_type, title;
+			int number;
 			com.sunlightlabs.congress.models.Bill bill;
 			String context;
 		}
@@ -220,7 +221,8 @@ public class UpcomingFragment extends ListFragment {
 				
 				Bill bill = new Bill();
 				
-				bill.code = com.sunlightlabs.congress.models.Bill.formatCodeShort(rootBill.code);
+				bill.bill_type = rootBill.bill_type;
+				bill.number = rootBill.number;
 				
 				String title;
 				if (rootBill.short_title != null && !rootBill.short_title.equals(""))
@@ -243,7 +245,7 @@ public class UpcomingFragment extends ListFragment {
 		private CongressException exception;
 
 		public UpcomingBillsTask(UpcomingFragment context) {
-			FragmentUtils.setupRTC(context);
+			FragmentUtils.setupAPI(context);
 			this.context = context;
 		}
 

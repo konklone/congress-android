@@ -16,28 +16,59 @@ import com.sunlightlabs.congress.models.UpcomingBill;
 
 public class UpcomingBillService {
 	
+	private static String[] fields = {
+		"context", "chamber", "legislative_day", "timestamp", "congress", "source_type",
+		"bill_id", "bill"
+	};
+	
 	public static List<UpcomingBill> comingUp(Date day) throws CongressException {
-		String[] sections = new String[] {"basic", "bill"};
-		
 		Map<String,String> params = new HashMap<String,String>();
 		
 		// only today and in the future
-		params.put("legislative_day__gte", RealTimeCongress.formatDateOnly(day));
-		
+		params.put("legislative_day__gte", Congress.formatDateOnly(day));
 		// require an attached bill
 		params.put("bill__exists", "true");
-		
 		// soonest first, since this is the future
-		params.put("sort", "asc");
+		params.put("order", "timestamp__asc");
 		
-		return upcomingBillsFor(RealTimeCongress.url("upcoming_bills", sections, params, 1, 5000));
+		return upcomingBillsFor(Congress.url("upcoming_bills", fields, params, 1, Congress.MAX_PER_PAGE));
+	}
+	
+	protected static UpcomingBill fromAPI(JSONObject json) throws JSONException, ParseException {
+		UpcomingBill upcoming = new UpcomingBill();
+		
+		if (!json.isNull("context"))
+			upcoming.context = json.getString("context");
+		
+		if (!json.isNull("chamber"))
+			upcoming.chamber = json.getString("chamber");
+		
+		if (!json.isNull("legislative_day"))
+			upcoming.legislativeDay = RealTimeCongress.parseDateOnly(json.getString("legislative_day"));
+		
+		if (!json.isNull("bill_id"))
+			upcoming.billId = json.getString("bill_id");
+		
+		if (!json.isNull("source_type"))
+			upcoming.sourceType = json.getString("source_type");
+		
+		if (!json.isNull("url"))
+			upcoming.sourceUrl = json.getString("url");
+		
+		if (!json.isNull("congress"))
+			upcoming.congress = json.getInt("congress");
+		
+		if (!json.isNull("bill"))
+			upcoming.bill = BillService.fromAPI(json.getJSONObject("bill"));
+		
+		return upcoming;
 	}
 	
 	protected static UpcomingBill fromRTC(JSONObject json) throws JSONException, ParseException {
 		UpcomingBill upcoming = new UpcomingBill();
 		
 		if (!json.isNull("context"))
-			upcoming.context = listFrom(json.getJSONArray("context"));
+			upcoming.context = json.getJSONArray("context").getString(0);
 		
 		if (!json.isNull("chamber"))
 			upcoming.chamber = json.getString("chamber");
@@ -55,7 +86,7 @@ public class UpcomingBillService {
 			upcoming.sourceUrl = json.getString("source_url");
 		
 		if (!json.isNull("session"))
-			upcoming.session = json.getInt("session");
+			upcoming.congress = json.getInt("session");
 		
 		if (!json.isNull("permalink"))
 			upcoming.permalink = json.getString("permalink");
@@ -77,14 +108,13 @@ public class UpcomingBillService {
 	}
 	
 	private static List<UpcomingBill> upcomingBillsFor(String url) throws CongressException {
-		String rawJSON = RealTimeCongress.fetchJSON(url);
 		List<UpcomingBill> upcomings = new ArrayList<UpcomingBill>();
 		try {
-			JSONArray results = new JSONObject(rawJSON).getJSONArray("upcoming_bills");
+			JSONArray results = Congress.resultsFor(url);
 
 			int length = results.length();
 			for (int i = 0; i < length; i++)
-				upcomings.add(fromRTC(results.getJSONObject(i)));
+				upcomings.add(fromAPI(results.getJSONObject(i)));
 
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);

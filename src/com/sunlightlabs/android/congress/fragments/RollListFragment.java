@@ -219,7 +219,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		public LoadRollsTask(RollListFragment context, int page) {
 			this.context = context;
 			this.page = page;
-			FragmentUtils.setupRTC(context);
+			FragmentUtils.setupAPI(context);
 		}
 
 		@Override

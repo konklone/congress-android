@@ -137,6 +137,14 @@ public class Congress {
 		return url(method + "/search", sections, params, page, per_page);
 	}
 	
+	public static Date parseDateEither(String date) throws ParseException {
+		try {
+			return parseDate(date);
+		} catch(ParseException e) {
+			return parseDateOnly(date);
+		}
+	}
+	
 	// assumes timestamps are in UTC
 	public static Date parseDate(String date) throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.US);

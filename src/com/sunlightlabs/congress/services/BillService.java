@@ -72,7 +72,164 @@ public class BillService {
 		return billFor(RealTimeCongress.url("bills", sections, params));
 	}
 	
-	/* JSON parsers, also useful for other service endpoints within this package */
+	protected static Bill fromAPI(JSONObject json) throws JSONException, ParseException {
+		Bill bill = new Bill();
+
+		if (!json.isNull("bill_id")) {
+			bill.id = json.getString("bill_id");
+			
+			//todo: kill this
+			bill.id = bill.id.replace("conres", "cres");
+		}
+		
+		if (!json.isNull("bill_type")) {
+			bill.bill_type = json.getString("bill_type");
+			
+			//todo: kill this
+			bill.bill_type = bill.bill_type.replace("conres", "cres");
+		}
+		if (!json.isNull("chamber"))
+			bill.chamber = json.getString("chamber");
+		
+		// todo: rename field
+		if (!json.isNull("congress"))
+			bill.session = json.getInt("congress");
+		
+		if (!json.isNull("number"))
+			bill.number = json.getInt("number");
+		
+		if (bill.number > 0 && bill.bill_type != null)
+			bill.code = bill.bill_type + bill.number; 
+		
+		if (!json.isNull("short_title"))
+			bill.short_title = json.getString("short_title");
+		if (!json.isNull("official_title"))
+			bill.official_title = json.getString("official_title");
+		if (!json.isNull("last_action_at"))
+			bill.last_action_at = Congress.parseDateEither(json.getString("last_action_at"));
+		if (!json.isNull("last_vote_at"))
+			bill.last_passage_vote_at = Congress.parseDateEither(json.getString("last_vote_at"));
+		
+		if (!json.isNull("introduced_on"))
+			bill.introduced_at = Congress.parseDateOnly(json.getString("introduced_on"));
+		
+		// timeline dates
+		if (!json.isNull("history")) {
+			JSONObject history = json.getJSONObject("history");
+			if (!history.isNull("senate_cloture_result_at"))
+				bill.senate_cloture_result_at = Congress.parseDateEither(history.getString("senate_cloture_result_at"));
+			if (!history.isNull("house_passage_result_at"))
+				bill.house_passage_result_at = Congress.parseDateEither(history.getString("house_passage_result_at"));
+			if (!history.isNull("senate_passage_result_at"))
+				bill.senate_passage_result_at = Congress.parseDateEither(history.getString("senate_passage_result_at"));
+			if (!history.isNull("vetoed_at"))
+				bill.vetoed_at = Congress.parseDateEither(history.getString("vetoed_at"));
+			if (!history.isNull("house_override_result_at"))
+				bill.house_override_result_at = Congress.parseDateEither(history.getString("house_override_result_at"));
+			if (!history.isNull("senate_override_result_at"))
+				bill.senate_override_result_at = Congress.parseDateEither(history.getString("senate_override_result_at"));
+			if (!history.isNull("awaiting_signature_since"))
+				bill.awaiting_signature_since = Congress.parseDateEither(history.getString("awaiting_signature_since"));
+			if (!history.isNull("enacted_at"))
+				bill.enacted_at = Congress.parseDateEither(history.getString("enacted_at"));
+	
+			// timeline flags and values
+			if (!history.isNull("senate_cloture_result"))
+				bill.senate_cloture_result = history.getString("senate_cloture_result");
+			if (!history.isNull("house_passage_result"))
+				bill.house_passage_result = history.getString("house_passage_result");
+			if (!history.isNull("senate_passage_result"))
+				bill.senate_passage_result = history.getString("senate_passage_result");
+			if (!history.isNull("vetoed"))
+				bill.vetoed = history.getBoolean("vetoed");
+			if (!history.isNull("house_override_result"))
+				bill.house_override_result = history.getString("house_override_result");
+			if (!history.isNull("senate_override_result"))
+				bill.senate_override_result = history.getString("senate_override_result");
+			if (!history.isNull("awaiting_signature"))
+				bill.awaiting_signature = history.getBoolean("awaiting_signature");
+			if (!history.isNull("enacted"))
+				bill.enacted = history.getBoolean("enacted");
+		}
+
+		if (!json.isNull("sponsor"))
+			bill.sponsor = LegislatorService.fromAPI(json.getJSONObject("sponsor"));
+
+		if (!json.isNull("summary"))
+			bill.summary = json.getString("summary");
+
+		if (!json.isNull("cosponsors")) {
+			JSONArray cosponsorObjects = json.getJSONArray("cosponsors");
+			int length = cosponsorObjects.length();
+			
+			bill.cosponsors = new ArrayList<Legislator>();
+			
+			for (int i=0; i<length; i++)
+				bill.cosponsors.add(LegislatorService.fromAPI(cosponsorObjects.getJSONObject(i).getJSONObject("legislator")));
+		}
+		
+		if (!json.isNull("votes")) {
+			JSONArray voteObjects = json.getJSONArray("votes");
+			int length = voteObjects.length();
+			
+			bill.passage_votes = new ArrayList<Bill.Vote>();
+
+			// load in descending order
+			for (int i = 0; i < length; i++)
+				bill.passage_votes.add(0, voteFromAPI(voteObjects.getJSONObject(i)));
+		}
+
+		if (!json.isNull("actions")) {
+			JSONArray actionObjects = json.getJSONArray("actions");
+			int length = actionObjects.length();
+
+			bill.actions = new ArrayList<Bill.Action>();
+			
+			// load in descending order
+			for (int i = 0; i < length; i++)
+				bill.actions.add(0, actionFromAPI(actionObjects.getJSONObject(i)));
+		}
+		
+		if (!json.isNull("upcoming")) {
+			JSONArray upcomingObjects = json.getJSONArray("upcoming");
+			int length = upcomingObjects.length();
+			
+			List<UpcomingBill> upcoming = new ArrayList<UpcomingBill>();
+			
+			for (int i = 0; i < length; i++)
+				upcoming.add(UpcomingBillService.fromAPI(upcomingObjects.getJSONObject(i)));
+			
+			// sort in order of legislative day
+			Collections.sort(upcoming, new Comparator<UpcomingBill>() {
+				@Override
+				public int compare(UpcomingBill a, UpcomingBill b) {
+					return a.legislativeDay.compareTo(b.legislativeDay);
+				}
+			});
+			
+			bill.upcoming = upcoming;
+		}
+		
+		if (!json.isNull("last_version")) {
+			JSONObject version = json.getJSONObject("last_version");
+			if (!version.isNull("urls")) {
+				bill.urls = new HashMap<String,String>();
+				JSONObject urls = version.getJSONObject("urls");
+				if (!urls.isNull("html"))
+					bill.urls.put("html", urls.getString("html"));
+				if (!urls.isNull("xml"))
+					bill.urls.put("xml", urls.getString("xml"));
+				if (!urls.isNull("pdf"))
+					bill.urls.put("pdf", urls.getString("pdf"));
+			}
+		}
+		
+		// coming from a search endpoint, generate a search object
+		if (!json.isNull("search"))
+			bill.search = Congress.SearchResult.from(json.getJSONObject("search"));
+		
+		return bill;
+	}
 
 	protected static Bill fromRTC(JSONObject json) throws JSONException, ParseException {
 		Bill bill = new Bill();
@@ -167,12 +324,6 @@ public class BillService {
 			// load in descending order
 			for (int i = 0; i < length; i++)
 				bill.passage_votes.add(0, voteFromRTC(voteObjects.getJSONObject(i)));
-
-			if (!bill.passage_votes.isEmpty()) {
-				Bill.Vote vote = bill.passage_votes.get(bill.passage_votes.size() - 1);
-				bill.last_vote_result = vote.result;
-				bill.last_vote_chamber = vote.chamber;
-			}
 		}
 
 		if (!json.isNull("actions")) {
@@ -203,7 +354,7 @@ public class BillService {
 				}
 			});
 			
-			bill.latestUpcoming = latestUpcoming;
+			bill.upcoming = latestUpcoming;
 		}
 		
 		if (!json.isNull("last_version")) {
@@ -227,6 +378,21 @@ public class BillService {
 		return bill;
 	}
 	
+	protected static Vote voteFromAPI(JSONObject json) throws JSONException, ParseException {
+		Vote vote = new Vote();
+		
+		vote.result = json.getString("result");
+		vote.text = json.getString("text");
+		vote.how = json.getString("how");
+		vote.passage_type = json.getString("vote_type");
+		vote.chamber = json.getString("chamber");
+		vote.voted_at = Congress.parseDateEither(json.getString("acted_at"));
+
+		if (!json.isNull("roll_id"))
+			vote.roll_id = json.getString("roll_id");
+		return vote;
+	}
+	
 	protected static Vote voteFromRTC(JSONObject json) throws JSONException, ParseException {
 		Vote vote = new Vote();
 		
@@ -247,6 +413,14 @@ public class BillService {
 		action.text = json.getString("text");
 		action.type = json.getString("type");
 		action.acted_at = RealTimeCongress.parseDate(json.getString("acted_at"));
+		return action;
+	}
+	
+	protected static Action actionFromAPI(JSONObject json) throws JSONException, ParseException {
+		Action action = new Action();
+		action.text = json.getString("text");
+		action.type = json.getString("type");
+		action.acted_at = Congress.parseDateEither(json.getString("acted_at"));
 		return action;
 	}
 	

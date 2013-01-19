@@ -14,9 +14,8 @@ public class Bill implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// basic
-	public String id, code, bill_type, chamber;
+	public String id, bill_type, chamber;
 	public int session, number;
-	public boolean abbreviated;
 	
 	public String short_title, official_title;
 	public Date last_action_at, last_passage_vote_at;
@@ -31,6 +30,10 @@ public class Bill implements Serializable {
 	public String house_passage_result, senate_passage_result, house_override_result, senate_override_result;
 	public String senate_cloture_result;
 	
+	// TODO: marked for death:
+	public String code;
+	public boolean abbreviated;
+	
 	// sponsor
 	public Legislator sponsor;
 	
@@ -41,8 +44,6 @@ public class Bill implements Serializable {
 	public String summary;
 	
 	// votes
-	public String last_vote_result;
-	public String last_vote_chamber;
 	public List<Bill.Vote> passage_votes;
 	
 	// actions
@@ -52,11 +53,13 @@ public class Bill implements Serializable {
 	public SearchResult search;
 	
 	// latest upcoming bill data
-	public List<UpcomingBill> latestUpcoming;
+	public List<UpcomingBill> upcoming;
 	
 	// full text URLs (to GPO)
 	// valid keys: "html", "xml", "pdf"
 	public Map<String,String> urls;
+	
+	public Map<String,String> homepages;
 
 	public static class Action implements Serializable {
 		private static final long serialVersionUID = 1L;
@@ -66,6 +69,7 @@ public class Bill implements Serializable {
 	
 	public static class Vote implements Serializable {
 		private static final long serialVersionUID = 1L;
+		//todo: rename passage_type->vote_type
 		public String result, text, how, passage_type, chamber, roll_id;
 		public Date voted_at;
 	}
@@ -150,8 +154,38 @@ public class Bill implements Serializable {
 	}
 	
 	// for when you need that extra space
-	public static String formatCodeShort(String code) {
-		code = code.toLowerCase().replace(" ", "").replace(".", "");
+//	public static String formatCodeShort(String code) {
+//		code = code.toLowerCase().replace(" ", "").replace(".", "");
+//		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");
+//		Matcher matcher = pattern.matcher(code);
+//		if (!matcher.matches())
+//			return code;
+//		
+//		String match = matcher.group(1);
+//		String number = matcher.group(2);
+//		if (match.equals("hr"))
+//			return "H.R. " + number;
+//		else if (match.equals("hres"))
+//			return "H. Res. " + number;
+//		else if (match.equals("hjres"))
+//			return "H.J. Res. " + number;
+//		else if (match.equals("hcres"))
+//			return "H.C. Res. " + number;
+//		else if (match.equals("s"))
+//			return "S. " + number;
+//		else if (match.equals("sres"))
+//			return "S. Res. " + number;
+//		else if (match.equals("sjres"))
+//			return "S.J. Res. " + number;
+//		else if (match.equals("scres"))
+//			return "S.C. Res. " + number;
+//		else
+//			return code;
+//	}
+	
+	// for when you need that extra space
+	public static String formatCodeFrom(String bill_type, int num) {
+		String code = bill_type + num;
 		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");
 		Matcher matcher = pattern.matcher(code);
 		if (!matcher.matches())
@@ -266,9 +300,9 @@ public class Bill implements Serializable {
 	// for news searching, don't use legislator.titledName() because we don't want to use the name_suffix
 	public static String searchTermFor(Bill bill) {
     	if (bill.short_title != null && !bill.short_title.equals(""))
-    		return "\"" + NEWS_SEARCH_REGEX.matcher(bill.short_title).replaceFirst("") + "\" OR \"" + Bill.formatCodeShort(bill.code) + "\"";
+    		return "\"" + NEWS_SEARCH_REGEX.matcher(bill.short_title).replaceFirst("") + "\" OR \"" + Bill.formatCodeFrom(bill.bill_type, bill.number) + "\"";
     	else
-    		return "\"" + Bill.formatCodeShort(bill.code) + "\"";
+    		return "\"" + Bill.formatCodeFrom(bill.bill_type, bill.number) + "\"";
     }
 	
 	
@@ -276,14 +310,14 @@ public class Bill implements Serializable {
 	public List<UpcomingBill> upcomingSince(Date since) {
 		List<UpcomingBill> results = new ArrayList<UpcomingBill>();
 		
-		if (latestUpcoming == null || latestUpcoming.size() == 0)
+		if (upcoming == null || upcoming.size() == 0)
 			return null;
 		
 		SimpleDateFormat testFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String testSince = testFormat.format(since);
 		
-		for (int i=0; i<latestUpcoming.size(); i++) {
-			UpcomingBill current = latestUpcoming.get(i);
+		for (int i=0; i<upcoming.size(); i++) {
+			UpcomingBill current = upcoming.get(i);
 			
 			// to make sure this comparison goes well and ignores time zones, we'll
 			// convert both comparison dates to a YYYY-MM-DD timestamp, and then re-parse them

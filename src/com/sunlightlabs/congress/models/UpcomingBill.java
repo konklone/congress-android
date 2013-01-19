@@ -7,11 +7,10 @@ import java.util.List;
 public class UpcomingBill implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	public int session;
+	public int congress;
 	public Date legislativeDay;
 	public String sourceUrl, sourceType, permalink;
-	public String billId;
+	public String billId, chamber;
 	public Bill bill;
-	public String chamber;
-	public List<String> context;
+	public String context;
 }

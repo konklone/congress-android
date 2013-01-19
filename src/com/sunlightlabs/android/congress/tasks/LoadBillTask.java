@@ -18,13 +18,13 @@ public class LoadBillTask extends AsyncTask<String,Void,Bill> {
 	public LoadBillTask(Context context, String billId) {
 		this.context = context;
 		this.billId = billId;
-		Utils.setupRTC(context);
+		Utils.setupAPI(context);
 	}
 	
 	public LoadBillTask(Fragment fragment, String billId) {
 		this.fragment = fragment;
 		this.billId = billId;
-		Utils.setupRTC(fragment.getActivity());
+		Utils.setupAPI(fragment.getActivity());
 	}
 
 	public void onScreenLoad(Context context) {

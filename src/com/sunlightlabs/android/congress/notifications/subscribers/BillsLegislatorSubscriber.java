@@ -22,7 +22,7 @@ public class BillsLegislatorSubscriber extends Subscriber {
 
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
-		Utils.setupRTC(context);
+		Utils.setupAPI(context);
 		try {
 			return BillService.recentlySponsored(subscription.id, 1, BillListFragment.PER_PAGE);
 		} catch (CongressException e) {

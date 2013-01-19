@@ -1,5 +1,8 @@
 package com.sunlightlabs.android.congress;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,7 +43,14 @@ public class BillSearch extends FragmentActivity {
 			// store the formatted code as the search suggestion
 			SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
 					this, SuggestionsProvider.AUTHORITY, SuggestionsProvider.MODE);
-	        suggestions.saveRecentQuery(Bill.formatCodeShort(code), null);
+			
+			Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)$");
+			Matcher matcher = pattern.matcher(code);
+			
+			String bill_type = matcher.group(1);
+			int number = Integer.valueOf(matcher.group(2));
+			
+	        suggestions.saveRecentQuery(Bill.formatCodeFrom(bill_type, number), null);
 			
 			ActionBarUtils.setTitle(this, Bill.formatCode(code));
 			adapter.add("bills_code", "Not seen", BillListFragment.forCode(code));

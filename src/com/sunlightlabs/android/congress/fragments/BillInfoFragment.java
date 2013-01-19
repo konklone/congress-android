@@ -59,7 +59,7 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        FragmentUtils.setupRTC(this);
+        FragmentUtils.setupAPI(this);
         
         bill = (Bill) getArguments().getSerializable("bill");
         sponsor = bill.sponsor;

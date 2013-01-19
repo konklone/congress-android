@@ -23,7 +23,7 @@ public class BillsLawsSubscriber extends Subscriber {
 
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
-		Utils.setupRTC(context);
+		Utils.setupAPI(context);
 		
 		try {
 			return BillService.recentLaws(1, BillListFragment.PER_PAGE);

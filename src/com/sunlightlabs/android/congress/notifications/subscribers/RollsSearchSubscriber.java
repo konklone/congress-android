@@ -24,7 +24,7 @@ public class RollsSearchSubscriber extends Subscriber {
 
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
-		Utils.setupRTC(context);
+		Utils.setupAPI(context);
 		String query = subscription.data;
 		
 		try {

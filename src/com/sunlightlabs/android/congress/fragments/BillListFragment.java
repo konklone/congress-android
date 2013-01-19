@@ -251,7 +251,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		public LoadBillsTask(BillListFragment context, int page) {
 			this.context = context;
 			this.page = page;
-			FragmentUtils.setupRTC(context);
+			FragmentUtils.setupAPI(context);
 		}
 
 		@Override
@@ -342,7 +342,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				break;
 			}
 			
-			holder.code.setText(Bill.formatCodeShort(bill.code));
+			holder.code.setText(Bill.formatCodeFrom(bill.bill_type, bill.number));
 
 			if (bill.short_title != null) {
 				String title = Utils.truncate(bill.short_title, 250);
