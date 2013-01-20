@@ -39,16 +39,17 @@ public class Congress {
 	public static final String dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 	public static final String dateOnlyFormat = "yyyy-MM-dd";
 	
-	public static final String baseUrl = "http://congress.api.sunlightfoundation.com";
-	
 	public static final String highlightTags = "<b>,</b>"; // default highlight tags
 	
-	// filled in by the client
-	public static String userAgent = "com.sunlightlabs.congress.services.Congress";
+	// filled in by the client in keys.xml
+	public static String baseUrl = null;
+	public static String userAgent = null;
 	public static String appVersion = null;
-	public static String osVersion = null;
 	public static String appChannel = null;
-	public static String apiKey = "";
+	public static String apiKey = null;
+	
+	// filled in by the client from Android system reflection
+	public static String osVersion = null;
 	
 	public static final int MAX_PER_PAGE = 50;
 	

@@ -35,11 +35,13 @@ public class Utils {
 	public static void setupAPI(Context context) {
 		Resources resources = context.getResources();
 		
-		Congress.userAgent = resources.getString(R.string.rtc_user_agent);
+		Congress.baseUrl = resources.getString(R.string.api_endpoint);
+		Congress.userAgent = resources.getString(R.string.api_user_agent);
 		Congress.apiKey = resources.getString(R.string.sunlight_api_key);
 		Congress.appVersion = resources.getString(R.string.app_version);
-		Congress.osVersion = "Android " + Build.VERSION.SDK_INT;
 		Congress.appChannel = resources.getString(R.string.market_channel);
+		
+		Congress.osVersion = "Android " + Build.VERSION.SDK_INT;
 	}
 
 	public static void alert(Context context, String msg) {
