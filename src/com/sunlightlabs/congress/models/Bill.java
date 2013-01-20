@@ -239,37 +239,4 @@ public class Bill implements Serializable {
     	else
     		return "\"" + Bill.formatCode(bill.bill_type, bill.number) + "\"";
     }
-	
-	
-	// filters down any upcoming bill data, if any, to ones that happen either today or in the future 
-	public List<UpcomingBill> upcomingSince(Date since) {
-		List<UpcomingBill> results = new ArrayList<UpcomingBill>();
-		
-		if (upcoming == null || upcoming.size() == 0)
-			return null;
-		
-		SimpleDateFormat testFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String testSince = testFormat.format(since);
-		
-		for (int i=0; i<upcoming.size(); i++) {
-			UpcomingBill current = upcoming.get(i);
-			
-			// to make sure this comparison goes well and ignores time zones, we'll
-			// convert both comparison dates to a YYYY-MM-DD timestamp, and then re-parse them
-			// to be the same time zone at the same time of day, then compare.
-			// Yes, I am aware that this is ridiculous, and betrays a willful ignorance of Java timezone utilities.
-			String testCurrent = testFormat.format(current.legislativeDay);
-			
-			try {
-				Date midnightSince = testFormat.parse(testSince);
-				Date midnightCurrent = testFormat.parse(testCurrent);
-				if (midnightSince.compareTo(midnightCurrent) <= 0)
-					results.add(current);
-			} catch (ParseException ex) {
-				return null;
-			}
-		}
-		
-		return results;
-	}
 }

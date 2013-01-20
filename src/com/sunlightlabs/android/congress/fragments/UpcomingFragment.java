@@ -82,9 +82,9 @@ public class UpcomingFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		if (isAdded()) {
-			Bill bill = ((UpcomingAdapter.Bill) parent.getItemAtPosition(position)).bill;
-			Analytics.billUpcoming(getActivity(), bill.id);
-			startActivity(Utils.billLoadIntent(bill.id));
+			String bill_id = ((UpcomingAdapter.Bill) parent.getItemAtPosition(position)).id;
+			Analytics.billUpcoming(getActivity(), bill_id);
+			startActivity(Utils.billLoadIntent(bill_id));
 		}
 	}
 	
@@ -171,9 +171,8 @@ public class UpcomingFragment extends ListFragment {
 			String dateName, dateFull;
 		}
 		static class Bill extends Item {
-			String bill_type, title;
+			String id, bill_type, title;
 			int number;
-			com.sunlightlabs.congress.models.Bill bill;
 			String context;
 		}
 		
@@ -190,29 +189,53 @@ public class UpcomingFragment extends ListFragment {
 			String tomorrow = testFormat.format(cal.getTime());
 			
 			
-			String currentDay = "";
+			String currentDayRange = "";
 			
 			for (int i=0; i<upcomingBills.size(); i++) {
 				UpcomingBill upcomingBill = upcomingBills.get(i);
 				
-				GregorianCalendar calendar = new GregorianCalendar();
-				calendar.setTime(upcomingBill.legislativeDay);
+				String range = (upcomingBill.range == null) ? "none" : upcomingBill.range;
+				String testDay = (upcomingBill.legislativeDay == null) ? "future" : testFormat.format(upcomingBill.legislativeDay);
+				String testDayRange = testDay + "-" + range; 
 				
-				String testDay = testFormat.format(upcomingBill.legislativeDay);
-				
-				if (!currentDay.equals(testDay)) {
+				// a new header is needed
+				if (!currentDayRange.equals(testDayRange)) {
 					Date date = new Date();
-					if (today.equals(testDay))
-						date.dateName = "TODAY";
-					else if (tomorrow.equals(testDay))
-						date.dateName = "TOMORROW";
-					else
-						date.dateName = dateNameFormat.format(upcomingBill.legislativeDay).toUpperCase();
 					
-					date.dateFull = dateFullFormat.format(upcomingBill.legislativeDay).toUpperCase();
+					// if no legislative_day, just call it the future
+					if (testDay.equals("future")) {
+						date.dateName = "SOMETIME";
+					} else {
+					
+						// specific day
+						if (range.equals("day")) {
+							if (today.equals(testDay))
+								date.dateName = "TODAY";
+							else if (tomorrow.equals(testDay))
+								date.dateName = "TOMORROW";
+							else
+								date.dateName = dateNameFormat.format(upcomingBill.legislativeDay).toUpperCase();
+							
+							date.dateFull = dateFullFormat.format(upcomingBill.legislativeDay).toUpperCase();
+						} 
+						
+						// week of this day
+						else if (range.equals("week")) {
+							date.dateName = "WEEK OF";
+							date.dateFull = dateFullFormat.format(upcomingBill.legislativeDay).toUpperCase();
+						} 
+						
+						// indefinite range, null or any other value (future-proof)
+						else {
+							// we're only here if range is indefinite, but legislative_day has a value
+							// still, make no promises, this is an unexpected case
+							date.dateName = "SOMETIME";
+						}
+					}
+					
 					items.add(date);
 					
-					currentDay = testDay;
+					currentDayRange = testDayRange;
 				}
 				
 				com.sunlightlabs.congress.models.Bill rootBill = upcomingBill.bill;
@@ -231,7 +254,7 @@ public class UpcomingFragment extends ListFragment {
 					title = Utils.truncate(rootBill.official_title, 55);
 				
 				bill.title = title;
-				bill.bill = rootBill;
+				bill.id = rootBill.id;
 				
 				items.add(bill);
 			}
@@ -260,6 +283,11 @@ public class UpcomingFragment extends ListFragment {
 				Collections.sort(upcoming, new Comparator<UpcomingBill>() {
 					@Override
 					public int compare(UpcomingBill a, UpcomingBill b) {
+						if (a.legislativeDay == null)
+							return 1;
+						if (b.legislativeDay == null)
+							return -1;
+
 						int day = a.legislativeDay.compareTo(b.legislativeDay);
 						if (day != 0)
 							return day;

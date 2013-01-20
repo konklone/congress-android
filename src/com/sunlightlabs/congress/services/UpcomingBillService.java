@@ -17,19 +17,17 @@ import com.sunlightlabs.congress.models.UpcomingBill;
 public class UpcomingBillService {
 	
 	private static String[] fields = {
-		"context", "chamber", "legislative_day", "timestamp", "congress", "source_type",
-		"bill_id", "bill"
+		"context", "chamber", "legislative_day", "congress", "source_type",
+		"bill_id", "bill", "range"
 	};
 	
 	public static List<UpcomingBill> comingUp(Date day) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
 		
-		// only today and in the future
-		params.put("legislative_day__gte", Congress.formatDateOnly(day));
 		// require an attached bill
 		params.put("bill__exists", "true");
 		// soonest first, since this is the future
-		params.put("order", "timestamp__asc");
+		params.put("order", "legislative_day__asc");
 		
 		return upcomingBillsFor(Congress.url("upcoming_bills", fields, params, 1, Congress.MAX_PER_PAGE));
 	}
@@ -43,8 +41,12 @@ public class UpcomingBillService {
 		if (!json.isNull("chamber"))
 			upcoming.chamber = json.getString("chamber");
 		
+		// field can be present but actually null 
 		if (!json.isNull("legislative_day"))
 			upcoming.legislativeDay = Congress.parseDateOnly(json.getString("legislative_day"));
+		
+		if (!json.isNull("range"))
+			upcoming.range = json.getString("range");
 		
 		if (!json.isNull("bill_id"))
 			upcoming.billId = json.getString("bill_id");

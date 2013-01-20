@@ -2,7 +2,6 @@ package com.sunlightlabs.android.congress.fragments;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.content.Context;
@@ -63,9 +62,7 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
         
         bill = (Bill) getArguments().getSerializable("bill");
         sponsor = bill.sponsor;
-        
-        // filter out old upcoming activity (don't depend on server to flush it out)
-        latestUpcoming = bill.upcomingSince(GregorianCalendar.getInstance().getTime());
+        latestUpcoming = bill.upcoming;
         
         loadSummary();
 	}
@@ -201,7 +198,17 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		ViewGroup view = (ViewGroup) inflater.inflate(R.layout.bill_upcoming_item, null);
 		
-		((TextView) view.findViewById(R.id.date)).setText(Utils.nearbyOrFullDate(upcoming.legislativeDay));
+		String text;
+		if (upcoming.range == null || upcoming.legislativeDay == null)
+			text = "SOMETIME";
+		else if (upcoming.range.equals("day"))
+			text = Utils.nearbyOrFullDate(upcoming.legislativeDay);
+		else if (upcoming.range.equals("week"))
+			text = "WEEK OF " + Utils.fullDate(upcoming.legislativeDay);
+		else
+			text = "SOMETIME";
+		
+		((TextView) view.findViewById(R.id.date)).setText(text);
 		((TextView) view.findViewById(R.id.where)).setText(upcomingSource(upcoming.sourceType, upcoming.chamber));
 		
 		View moreView = view.findViewById(R.id.more);
@@ -222,7 +229,7 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 	public String upcomingSource(String type, String chamber) {
 		if (type.equals("senate_daily"))
 			return "On the Senate Floor";
-		else if (type.equals("house_daily"))
+		else if (type.equals("house_daily") || type.equals("house_weekly") || type.equals("house_floor"))
 			return "On the House Floor";
 		
 		// fallbacks, if we add more upcoming source types
