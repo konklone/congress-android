@@ -257,13 +257,13 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 			summaryView.setVisibility(View.VISIBLE);
 		} else {
 			TextView noSummary = (TextView) getView().findViewById(R.id.bill_no_summary);
-			if (bill.urls != null && bill.urls.containsKey("html")) {
+			if (bill.versionUrls != null && bill.versionUrls.containsKey("html")) {
 				noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\""
-					+ bill.urls.get("html")
+					+ bill.versionUrls.get("html")
 					+ "\">Read the official text.</a>"));
-			} else if (bill.urls != null && bill.urls.containsKey("pdf")) {
+			} else if (bill.versionUrls != null && bill.versionUrls.containsKey("pdf")) {
 				noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\""
-					+ bill.urls.get("pdf")
+					+ bill.versionUrls.get("pdf")
 					+ "\">Read the official text (PDF).</a>"));
 			} else {
 				noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\""
