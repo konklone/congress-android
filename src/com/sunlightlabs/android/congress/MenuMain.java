@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -122,11 +121,6 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 		 }
 		 return true;	
 	}
-	 
-	 // used for one-pager
-	 public void showOnePager() {
-		 startActivity(new Intent(this, OnePager.class));
-	 }
 	
 	public boolean newVersion() {
 		String lastVersionSeen = getVersionSeen();

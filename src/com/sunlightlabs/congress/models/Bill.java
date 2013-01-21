@@ -148,61 +148,22 @@ public class Bill implements Serializable {
 			return bill_type + number;
 	}
 	
-	public static String govTrackType(String type) {
-		if (type.equals("hr"))
-			return "h";
-		else if (type.equals("hres"))
-			return "hr";
-		else if (type.equals("hjres"))
-			return "hj";
-		else if (type.equals("hcres"))
-			return "hc";
-		else if (type.equals("s"))
-			return "s";
-		else if (type.equals("sres"))
-			return "sr";
-		else if (type.equals("sjres"))
-			return "sj";
-		else if (type.equals("scres"))
-			return "sc";
-		else
-			return type;
-	}
-	
 	// prioritizes GPO "html" version (really text),
 	// then GPO PDF, then finally the THOMAS landing page
 	public String bestFullTextUrl() {
-		if (this.urls != null && this.urls.containsKey("html"))
-			return urls.get("html");
-		else if (this.urls != null && this.urls.containsKey("pdf"))
-			return urls.get("pdf");
+		if (this.versionUrls != null && this.versionUrls.containsKey("html"))
+			return versionUrls.get("html");
+		else if (this.versionUrls != null && this.versionUrls.containsKey("pdf"))
+			return versionUrls.get("pdf");
+		else if (this.urls != null && this.urls.containsKey("congress"))
+			return this.urls.get("congress");
 		else
-			return thomasUrl(bill_type, number, congress);
+			return fallbackTextUrl();
 	}
 	
-	// in accordance with the syntax described here:
-	// http://thomas.loc.gov/home/handles/help.html
-	public static String thomasType(String type) {
-		if (type.equals("hcres"))
-			return "hconres";
-		else if (type.equals("scres"))
-			return "sconres";
-		else
-			return type;
-	}
-	
-	// in accordance with the syntax described here:
-	// http://thomas.loc.gov/home/handles/help.html
-	public static String thomasUrl(String type, int number, int session) {
-		return "http://hdl.loc.gov/loc.uscongress/legislation." + session + thomasType(type) + number;
-	}
-	
-	public static String openCongressUrl(String type, int number, int session) {
-		return "http://www.opencongress.org/bill/" + session + "-" + govTrackType(type) + number + "/show";
-	}
-	
-	public static String govTrackUrl(String type, int number, int session) {
-		return "http://www.govtrack.us/congress/bill.xpd?bill=" + govTrackType(type) + session + "-" + number;
+	// next best thing to official, easily calculable from bill fields
+	public String fallbackTextUrl() {
+		return "http://www.govtrack.us/congress/bills/" + congress + "/" + bill_type + number + "/text";
 	}
 	
 	public static String formatSummary(String summary, String short_title) {

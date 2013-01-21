@@ -54,8 +54,6 @@ public class Analytics {
 	public static final String EVENT_ANALYTICS = "analytics";
 	public static final String EVENT_ENTRY = "entry";
 	
-	public static final String EVENT_THOMAS = "thomas-campaign";
-	
 	// event values
 	public static final String FAVORITE_ADD_LEGISLATOR = "add_legislator";
 	public static final String FAVORITE_REMOVE_LEGISLATOR = "remove_legislator";
@@ -67,15 +65,12 @@ public class Analytics {
 	public static final String LEGISLATOR_WEBSITE = "website";
 	public static final String LEGISLATOR_DISTRICT = "district";
 	public static final String BILL_SHARE = "share";
-	public static final String BILL_THOMAS = "thomas";
+	public static final String BILL_TEXT = "text";
 	public static final String BILL_OPENCONGRESS = "opencongress";
 	public static final String BILL_GOVTRACK = "govtrack";
 	public static final String BILL_UPCOMING = "upcoming";
 	public static final String BILL_UPCOMING_MORE = "upcoming_more";
 	public static final String ANALYTICS_DISABLE = "disable";
-	
-	public static final String THOMAS_CALL = "call";
-	public static final String THOMAS_LEARN = "learn";
 	
 	private static final String FRAGMENT_TAG = "com.sunlightlabs.android.congress.utils.Analytics.analytics";
 	
@@ -234,14 +229,6 @@ public class Analytics {
 		return (!debugDisabled && userEnabled);
 	}
 	
-	public static void callOnThomas(FragmentActivity activity) {
-		event(activity, trackerFor(activity), EVENT_THOMAS, THOMAS_CALL, "unused");
-	}
-	
-	public static void learnMoreThomas(FragmentActivity activity) {
-		event(activity, trackerFor(activity), EVENT_THOMAS, THOMAS_LEARN, "unused");
-	}
-	
 	public static void addFavoriteLegislator(FragmentActivity activity, String bioguideId) {
 		event(activity, trackerFor(activity), EVENT_FAVORITE, FAVORITE_ADD_LEGISLATOR, bioguideId);
 	}
@@ -282,8 +269,8 @@ public class Analytics {
 		event(activity, trackerFor(activity), EVENT_BILL, BILL_SHARE, billId);
 	}
 	
-	public static void billThomas(FragmentActivity activity, String billId) {
-		event(activity, trackerFor(activity), EVENT_BILL, BILL_THOMAS, billId);
+	public static void billText(FragmentActivity activity, String billId) {
+		event(activity, trackerFor(activity), EVENT_BILL, BILL_TEXT, billId);
 	}
 	
 	public static void billOpenCongress(FragmentActivity activity, String billId) {

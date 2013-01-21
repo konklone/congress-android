@@ -92,7 +92,10 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 	}
 	
 	public String shareText() {
-		return Bill.govTrackUrl(bill.bill_type, bill.number, bill.congress);
+		if (bill.urls != null && bill.urls.containsKey("govtrack"))
+			return bill.urls.get("govtrack");
+		else
+			return bill.fallbackTextUrl();
 	}
 
 	private void toggleFavoriteStar(boolean enabled) {
@@ -136,17 +139,19 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 	@Override
 	public void menuSelected(MenuItem item) {
 		switch(item.getItemId()) {
-    	case R.id.thomas:
-    		Analytics.billThomas(this, bill.id);
+    	case R.id.text:
+    		Analytics.billText(this, bill.id);
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.bestFullTextUrl())));
     		break;
     	case R.id.govtrack:
     		Analytics.billGovTrack(this, bill.id);
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.govTrackUrl(bill.bill_type, bill.number, bill.congress))));
+    		if (bill.urls != null && bill.urls.containsKey("govtrack"))
+    			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.urls.get("govtrack"))));
     		break;
     	case R.id.opencongress:
     		Analytics.billOpenCongress(this, bill.id);
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Bill.openCongressUrl(bill.bill_type, bill.number, bill.congress))));
+    		if (bill.urls != null && bill.urls.containsKey("govtrack"))
+    			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.urls.get("opencongress"))));
     		break;
     	}
 	}

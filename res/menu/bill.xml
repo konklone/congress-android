@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:id="@+id/thomas"
+	<item android:id="@+id/text"
 		android:title="Full text"
 		android:alphabeticShortcut="t"
 		android:icon="@android:drawable/ic_menu_info_details"

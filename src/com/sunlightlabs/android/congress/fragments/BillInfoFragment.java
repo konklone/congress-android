@@ -267,7 +267,7 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 					+ "\">Read the full text (PDF).</a>"));
 			} else {
 				noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\""
-						+ Bill.thomasUrl(bill.bill_type, bill.number, bill.congress)
+						+ bill.bestFullTextUrl()
 						+ "\">Read the text of this bill on THOMAS.</a>"));
 			}
         	noSummary.setMovementMethod(LinkMovementMethod.getInstance());

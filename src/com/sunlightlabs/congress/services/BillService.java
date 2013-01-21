@@ -199,15 +199,26 @@ public class BillService {
 		if (!json.isNull("last_version")) {
 			JSONObject version = json.getJSONObject("last_version");
 			if (!version.isNull("urls")) {
-				bill.urls = new HashMap<String,String>();
+				bill.versionUrls = new HashMap<String,String>();
 				JSONObject urls = version.getJSONObject("urls");
 				if (!urls.isNull("html"))
-					bill.urls.put("html", urls.getString("html"));
+					bill.versionUrls.put("html", urls.getString("html"));
 				if (!urls.isNull("xml"))
-					bill.urls.put("xml", urls.getString("xml"));
+					bill.versionUrls.put("xml", urls.getString("xml"));
 				if (!urls.isNull("pdf"))
-					bill.urls.put("pdf", urls.getString("pdf"));
+					bill.versionUrls.put("pdf", urls.getString("pdf"));
 			}
+		}
+		
+		if (!json.isNull("urls")) {
+			bill.urls = new HashMap<String,String>();
+			JSONObject urls = json.getJSONObject("urls");
+			if (!urls.isNull("congress"))
+				bill.urls.put("congress", urls.getString("congress"));
+			if (!urls.isNull("govtrack"))
+				bill.urls.put("govtrack", urls.getString("govtrack"));
+			if (!urls.isNull("opencongress"))
+				bill.urls.put("opencongress", urls.getString("opencongress"));
 		}
 		
 		// coming from a search endpoint, generate a search object
