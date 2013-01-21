@@ -277,14 +277,19 @@ public class Utils {
 
 	public static String districtMapUrl(String title, String state, String district) {
 		String url = "http://assets.sunlightfoundation.com/kml/";
-		String session = "110";
+		String congress = "113"; // whatever
 		
 		if (title.equals("Sen"))
 			url += "states/" + state;
 		else
-			url += "cds/" + session + "/" + state + "-" + district;
+			url += "cds/" + state + "-" + district;
 		
 		url += ".kml";
+		
+		// cache-bust - every day a new URL
+		Date today = new GregorianCalendar().getTime();
+		String todayStamp = new SimpleDateFormat("yyyy-MM-dd").format(today);
+		url += "?_=" + todayStamp;
 		
 		return url;
 	}
