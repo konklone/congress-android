@@ -260,15 +260,15 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 			if (bill.urls != null && bill.urls.containsKey("html")) {
 				noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\""
 					+ bill.urls.get("html")
-					+ "\">Read the full text.</a>"));
+					+ "\">Read the official text.</a>"));
 			} else if (bill.urls != null && bill.urls.containsKey("pdf")) {
 				noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\""
 					+ bill.urls.get("pdf")
-					+ "\">Read the full text (PDF).</a>"));
+					+ "\">Read the official text (PDF).</a>"));
 			} else {
 				noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\""
-						+ bill.bestFullTextUrl()
-						+ "\">Read the text of this bill on THOMAS.</a>"));
+						+ bill.fallbackTextUrl()
+						+ "\">Read the text of this bill on GovTrack.us.</a>"));
 			}
         	noSummary.setMovementMethod(LinkMovementMethod.getInstance());
         	noSummary.setVisibility(View.VISIBLE);
