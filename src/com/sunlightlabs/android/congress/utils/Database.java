@@ -19,16 +19,15 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.Congress;
 
 public class Database {
-	private static final int DATABASE_VERSION = 6; // updated last for version 3.3
+	private static final int DATABASE_VERSION = 7; // updated last for version 3.3
 
 	public boolean closed = true;
 
 	private static final String DATABASE_NAME = "congress.db";
 
-	private static final String[] LEGISLATOR_COLUMNS = new String[] { "id", "bioguide_id",
-			"govtrack_id", "first_name", "last_name", "nickname", "name_suffix", "title", "party",
-			"state", "district", "gender", "congress_office", "website", "phone", "twitter_id",
-			"youtube_url" };
+	private static final String[] LEGISLATOR_COLUMNS = new String[] { "bioguide_id",
+			"first_name", "last_name", "nickname", "name_suffix", "title", "party",
+			"state", "district", "gender" };
 	private static final String[] BILL_COLUMNS = new String[] { "id", "short_title", "official_title" };
 
 	private static final String[] SUBSCRIPTION_COLUMNS = new String[] { "id", "name", "data", "notification_class", "unseen_count" };
@@ -90,11 +89,11 @@ public class Database {
 	}
 
 	public int removeLegislator(String id) {
-		return database.delete("legislators", "id=?", new String[] { id });
+		return database.delete("legislators", "bioguide_id=?", new String[] { id });
 	}
 
 	public Cursor getLegislator(String id) {
-		Cursor cursor = database.query("legislators", LEGISLATOR_COLUMNS, "id=?",
+		Cursor cursor = database.query("legislators", LEGISLATOR_COLUMNS, "bioguide_id=?",
 				new String[] { id }, null, null, null);
 
 		cursor.moveToFirst();
@@ -108,9 +107,7 @@ public class Database {
 	public static Legislator loadLegislator(Cursor c) {
 		Legislator legislator = new Legislator();
 
-		legislator.id = c.getString(c.getColumnIndex("id"));
 		legislator.bioguide_id = c.getString(c.getColumnIndex("bioguide_id"));
-		legislator.govtrack_id = c.getString(c.getColumnIndex("govtrack_id"));
 		legislator.first_name = c.getString(c.getColumnIndex("first_name"));
 		legislator.last_name = c.getString(c.getColumnIndex("last_name"));
 		legislator.nickname = c.getString(c.getColumnIndex("nickname"));
@@ -120,10 +117,6 @@ public class Database {
 		legislator.state = c.getString(c.getColumnIndex("state"));
 		legislator.district = c.getString(c.getColumnIndex("district"));
 		legislator.gender = c.getString(c.getColumnIndex("gender"));
-		legislator.office = c.getString(c.getColumnIndex("congress_office"));
-		legislator.website = c.getString(c.getColumnIndex("website"));
-		legislator.phone = c.getString(c.getColumnIndex("phone"));
-		legislator.twitter_id = c.getString(c.getColumnIndex("twitter_id"));
 		
 		return legislator;
 	}
@@ -276,7 +269,7 @@ public class Database {
 		private void addColumn(SQLiteDatabase db, String table, String newColumn) {
 			db.execSQL("ALTER TABLE " + table + " ADD COLUMN " + newColumn + " TEXT;");
 		}
-
+		
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			createTable(db, "bills", BILL_COLUMNS);
@@ -411,6 +404,120 @@ public class Database {
 				addColumn(db, "subscriptions", "unseen_count");
 				
 				Log.i(Utils.TAG, "Migration to level 6 complete");
+			}
+			
+			// Version 7 - 
+			//   * Remove RollsSearchSubscriber subscriptions
+			//   * Remove TwitterSubscriber subscriptions
+			//   * Abandon unnecessary fields from starred legislators
+			//   * Rename bill IDs from hcres/scres -> hconres/sconres in:
+			//     - bills table
+			//     - subscriptions table
+			//     - seen_items table
+			// released in version 4.0
+
+			if (oldVersion < 7) {
+				// Not actually removing columns, but am documenting which ones remain on the table,
+				// but are not supported.
+				
+				// Abandoning fields on `legislators`:
+				//	"id", "govtrack_id", "congress_office", "website", "phone", "twitter_id", "youtube_url"
+				
+				// Abandoning fields on `bills`: "code"
+				
+				Log.i(Utils.TAG, "Renaming bill IDs from hcres/scres to hconres/sconres...");
+				
+				long rows = 0;
+				Cursor cursor;
+				try {
+					Log.i(Utils.TAG, "- In starred bills table (bills)...");
+					cursor = db.rawQuery("SELECT * FROM bills WHERE id LIKE \"%cres%\"", null);
+					if (cursor.moveToFirst()) {
+						do {
+							String billId = cursor.getString(cursor.getColumnIndexOrThrow("id"));
+							if (billId.contains("cres")) {
+								String newId = billId.replace("cres", "conres");
+								
+								Log.i(Utils.TAG, "    [" + billId + "] -> [" + newId + "]");
+								db.execSQL("UPDATE bills SET id=? WHERE id=?", new String[] {newId, billId});
+								rows += 1;
+							}
+						} while (cursor.moveToNext());
+					}
+					Log.i(Utils.TAG, "Updated " + rows + " bills in bills table.");
+					
+					
+					String[] subscriptions = new String[] {"ActionsBillSubscriber", "VotesBillSubscriber", "NewsBillSubscriber"};
+					for (int i=0; i<subscriptions.length; i++) {
+						String subscription = subscriptions[i];
+						rows = 0;
+						
+						Log.i(Utils.TAG, "- In subscriptions table (" + subscription + ")...");
+						cursor = db.rawQuery("SELECT * FROM subscriptions WHERE notification_class = ? AND id LIKE \"%cres%\"", new String[] { subscription });
+						if (cursor.moveToFirst()) {
+							do {
+								String billId = cursor.getString(cursor.getColumnIndexOrThrow("id"));
+								if (billId.contains("cres")) {
+									
+									String newId = billId.replace("cres", "conres");
+									String newData = newId;
+									
+									// bill news subscriptions use the formatted code as the data
+									if (subscription.equals("NewsBillSubscriber")) {
+										String billCode = cursor.getString(cursor.getColumnIndexOrThrow("data"));
+										newData = billCode.replace("C. Res.", "Con. Res.");
+									}
+									
+									Log.i(Utils.TAG, "    [" + billId + "] -> [" + newId + "]");
+									db.execSQL("UPDATE subscriptions SET id=?, data=? WHERE id=? AND notification_class=?", new String[] {newId, newData, billId, subscription});
+									rows += 1;
+								}
+							} while (cursor.moveToNext());
+						}
+						
+						Log.i(Utils.TAG, "Updated " + rows + " subscriptions rows with new ids (" + subscription + ")");
+					}
+					
+					String[] seenTypes = new String[] { "BillsLawsSubscriber", "BillsLegislatorSubscriber", "BillsRecentSubscriber", "BillsSearchSubscriber" };
+					for (int i=0; i<seenTypes.length; i++) {
+						String seenType = seenTypes[i];
+						rows = 0;
+						
+						Log.i(Utils.TAG, "- In seen_items table (" + seenType + ")...");
+						cursor = db.rawQuery("SELECT * FROM seen_items WHERE subscription_class = ? AND seen_id LIKE \"%cres%\"", new String[] { seenType});
+						if (cursor.moveToFirst()) {
+							do {
+								String billId = cursor.getString(cursor.getColumnIndexOrThrow("seen_id"));
+								if (billId.contains("cres")) {
+									String newId = billId.replace("cres", "conres");
+									
+									Log.i(Utils.TAG, "    [" + billId + "] -> [" + newId + "]");
+									db.execSQL("UPDATE seen_items SET seen_id=? WHERE seen_id=? and subscription_class=?", new String[] {newId, billId, seenType});
+									rows += 1;
+								}
+							} while (cursor.moveToNext());
+						}
+						
+						Log.i(Utils.TAG, "Updated " + rows + " seen_items rows with new ids (" + seenType + ")");
+					}
+					
+					cursor.close();
+					
+				} catch (SQLiteException e) {
+					Log.e(Utils.TAG, "Error while renaming bill IDs:", e);
+				}
+				
+				Log.i(Utils.TAG, "Removing RollsSearchSubscriber subscriptions and seen items...");
+				rows = db.delete("subscriptions", "notification_class=?", new String[] {"RollsSearchSubscriber"});
+				Log.i(Utils.TAG, "Removed " + rows + " RollsSearchSubscriber entries from subscriptions");
+				rows = db.delete("seen_items", "subscription_class=?", new String[] {"RollsSearchSubscriber"});
+				Log.i(Utils.TAG, "Removed " + rows + " RollsSearchSubscriber entries from seen_items");
+				
+				Log.i(Utils.TAG, "Removing TwitterSubscriber subscriptions and seen items...");
+				rows = db.delete("subscriptions", "notification_class=?", new String[] {"TwitterSubscriber"});
+				Log.i(Utils.TAG, "Removed " + rows + " TwitterSubscriber entries from subscriptions");
+				rows = db.delete("seen_items", "subscription_class=?", new String[] {"TwitterSubscriber"});
+				Log.i(Utils.TAG, "Removed " + rows + " TwitterSubscriber entries from seen_items");
 			}
 		}
 	}
