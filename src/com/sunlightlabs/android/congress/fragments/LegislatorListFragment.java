@@ -271,7 +271,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 
 	public void selectLegislator(Legislator legislator) {
 		if (type == SEARCH_COSPONSORS) // cosponsors from RTC don't have enough info to go direct
-			startActivity(Utils.legislatorLoadIntent(legislator.id));
+			startActivity(Utils.legislatorLoadIntent(legislator.bioguide_id));
 		else
 			startActivity(Utils.legislatorIntent(getActivity(), legislator));
 	}

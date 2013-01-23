@@ -232,7 +232,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		if (type == BILLS_RECENT)
 			subscription = new Subscription("RecentBills", getResources().getString(R.string.subscriber_bills_new), "BillsRecentSubscriber", null);
 		else if (type == BILLS_SPONSOR)
-			subscription = new Subscription(sponsor.id, Subscriber.notificationName(sponsor), "BillsLegislatorSubscriber", null);
+			subscription = new Subscription(sponsor.bioguide_id, Subscriber.notificationName(sponsor), "BillsLegislatorSubscriber", null);
 		else if (type == BILLS_LAW)
 			subscription = new Subscription("RecentLaws", getResources().getString(R.string.subscriber_bills_law), "BillsLawsSubscriber", null);
 		else if (type == BILLS_SEARCH_NEWEST)
@@ -269,7 +269,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				case BILLS_LAW:
 					return BillService.recentLaws(page, PER_PAGE);
 				case BILLS_SPONSOR:
-					return BillService.recentlySponsored(context.sponsor.id, page, PER_PAGE);
+					return BillService.recentlySponsored(context.sponsor.bioguide_id, page, PER_PAGE);
 				case BILLS_CODE:
 					params.put("bill_type", context.bill_type);
 					params.put("number", String.valueOf(context.number));

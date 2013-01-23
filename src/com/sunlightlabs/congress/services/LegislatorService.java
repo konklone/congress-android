@@ -65,8 +65,6 @@ public class LegislatorService {
 		if (!json.isNull("thomas_id"))
 			legislator.thomas_id = json.getString("thomas_id");
 		
-		legislator.id = legislator.bioguide_id;
-		
 		if (!json.isNull("in_office"))
 			legislator.in_office = json.getBoolean("in_office");
 
@@ -108,53 +106,7 @@ public class LegislatorService {
 		return legislator;
 	}
 	
-	protected static Legislator fromRTC(JSONObject json) throws JSONException {
-		Legislator legislator = new Legislator();
-
-		if (!json.isNull("bioguide_id"))
-			legislator.bioguide_id = json.getString("bioguide_id");
-		if (!json.isNull("govtrack_id"))
-			legislator.govtrack_id = json.getString("govtrack_id");
-		
-		legislator.id = legislator.bioguide_id;
-		
-		if (!json.isNull("in_office"))
-			legislator.in_office = json.getBoolean("in_office");
-
-		if (!json.isNull("first_name"))
-			legislator.first_name = json.getString("first_name");
-		if (!json.isNull("last_name"))
-			legislator.last_name = json.getString("last_name");
-		if (!json.isNull("nickname"))
-			legislator.nickname = json.getString("nickname");
-		if (!json.isNull("name_suffix"))
-			legislator.name_suffix = json.getString("name_suffix");
-		if (!json.isNull("title"))
-			legislator.title = json.getString("title");
-		if (!json.isNull("party"))
-			legislator.party = json.getString("party");
-		if (!json.isNull("state"))
-			legislator.state = json.getString("state");
-		if (!json.isNull("district"))
-			legislator.district = json.getString("district");
-		if (!json.isNull("chamber"))
-			legislator.chamber = json.getString("chamber");
-
-		if (!json.isNull("gender"))
-			legislator.gender = json.getString("gender");
-		if (!json.isNull("congress_office"))
-			legislator.office = json.getString("congress_office");
-		if (!json.isNull("website"))
-			legislator.website = json.getString("website");
-		if (!json.isNull("phone"))
-			legislator.phone = json.getString("phone");
-		if (!json.isNull("twitter_id"))
-			legislator.twitter_id = json.getString("twitter_id");
-		return legislator;
-	}
-
-	/* Private helpers for loading single or plural bill objects */
-
+	
 	private static Legislator legislatorFor(String url) throws CongressException {
 		try {
 			return fromAPI(Congress.firstResult(url));

@@ -92,7 +92,7 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 	
 	@Override
 	public void onListItemClick(ListView l, View view, int position, long id) {
-		startActivity(Utils.legislatorLoadIntent(((Legislator) view.getTag()).id));
+		startActivity(Utils.legislatorLoadIntent(((Legislator) view.getTag()).bioguide_id));
 	}
 
 	public void loadPhoto(String bioguide_id) {

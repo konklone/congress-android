@@ -100,7 +100,7 @@ public class YouTubeFragment extends ListFragment implements LoadsThumb, LoadsYo
 	}
 
 	private void setupSubscription() {
-		Footer.setup(this, new Subscription(legislator.id, Subscriber.notificationName(legislator), "YoutubeSubscriber", legislator.youtube_id), videos);
+		Footer.setup(this, new Subscription(legislator.bioguide_id, Subscriber.notificationName(legislator), "YoutubeSubscriber", legislator.youtube_id), videos);
 	}
     
 	protected void loadVideos() {

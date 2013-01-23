@@ -18,9 +18,8 @@ import com.sunlightlabs.congress.models.Roll.Vote;
 public class RollService {
 	
 	public static String[] basicFields = {
-		"roll_id", "chamber", "number", "year", "congress",
+		"roll_id", "chamber", "number", "year", "congress", "bill_id", 
 		"voted_at", "vote_type", "roll_type", "question", "required", "result",
-		"bill_id", 
 		"breakdown"
 	};
 	
@@ -153,7 +152,7 @@ public class RollService {
 		Vote vote = new Vote();
 		vote.vote = json.getString("vote");
 		vote.voter_id = voter_id;
-		vote.voter = LegislatorService.fromRTC(json.getJSONObject("voter"));
+		vote.voter = LegislatorService.fromAPI(json.getJSONObject("voter"));
 		return vote;
 	}
 	

@@ -134,7 +134,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		Subscription subscription = null;
 		
 		if (type == ROLLS_VOTER)
-			subscription = new Subscription(voter.id, Subscriber.notificationName(voter), "RollsLegislatorSubscriber", voter.chamber);
+			subscription = new Subscription(voter.bioguide_id, Subscriber.notificationName(voter), "RollsLegislatorSubscriber", voter.chamber);
 		else if (type == ROLLS_RECENT)
 			subscription = new Subscription("RecentVotes", "Recent Votes", "RollsRecentSubscriber", null);
 		else if (type == ROLLS_SEARCH_NEWEST)
@@ -230,7 +230,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 				
 				switch (context.type) {
 				case ROLLS_VOTER:
-					return RollService.latestVotes(context.voter.id, context.voter.chamber, page, PER_PAGE);
+					return RollService.latestVotes(context.voter.bioguide_id, context.voter.chamber, page, PER_PAGE);
 				case ROLLS_RECENT:
 					return RollService.latestVotes(page, PER_PAGE);
 				case ROLLS_SEARCH_NEWEST:

@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Legislator implements Comparable<Legislator>, Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	public String id, bioguide_id, govtrack_id, thomas_id;
+	public String bioguide_id, govtrack_id, thomas_id;
 	public String first_name, last_name, nickname, name_suffix;
 	public String title, party, state, district, chamber;
 	public String gender, office, website, phone, twitter_id, youtube_id; 

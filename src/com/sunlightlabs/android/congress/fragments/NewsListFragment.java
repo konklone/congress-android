@@ -55,7 +55,7 @@ public class NewsListFragment extends ListFragment implements LoadsNews {
 		Bundle args = new Bundle();
 		
 		args.putString("searchTerm", Legislator.searchTermFor(legislator));
-		args.putString("subscriptionId", legislator.id);
+		args.putString("subscriptionId", legislator.bioguide_id);
 		args.putString("subscriptionName", Subscriber.notificationName(legislator));
 		args.putString("subscriptionClass", "NewsLegislatorSubscriber");
 		

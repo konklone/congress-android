@@ -66,7 +66,7 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 	}
 
 	public void loadPhoto() {
-		new LoadPhotoTask(this, LegislatorImage.PIC_LARGE).execute(legislator.id);
+		new LoadPhotoTask(this, LegislatorImage.PIC_LARGE).execute(legislator.bioguide_id);
 	}
 
 	public void onLoadPhoto(Drawable avatar, Object tag) {
@@ -97,12 +97,12 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
     }
     
     public void callOffice() {
-    	Analytics.legislatorCall(getActivity(), legislator.id);
+    	Analytics.legislatorCall(getActivity(), legislator.bioguide_id);
     	startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel://" + legislator.phone)));
     }
     
     public void visitWebsite() {
-    	Analytics.legislatorWebsite(getActivity(), legislator.id);
+    	Analytics.legislatorWebsite(getActivity(), legislator.bioguide_id);
     	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(legislator.website)));
     }
     
@@ -127,7 +127,7 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		Intent mapIntent = new Intent(Intent.ACTION_VIEW, uri); 
 		mapIntent.setData(uri);
 		
-		Analytics.legislatorDistrict(getActivity(), legislator.id);
+		Analytics.legislatorDistrict(getActivity(), legislator.bioguide_id);
 		
 		startActivity(Intent.createChooser(mapIntent, getString(R.string.view_legislator_district)));
 	}

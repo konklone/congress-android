@@ -87,7 +87,7 @@ public class TweetsFragment extends ListFragment implements LoadsTweets {
 	}
 
 	private void setupSubscription() {
-		Footer.setup(this, new Subscription(legislator.id, Subscriber.notificationName(legislator), "TwitterSubscriber", legislator.twitter_id), tweets);
+		Footer.setup(this, new Subscription(legislator.bioguide_id, Subscriber.notificationName(legislator), "TwitterSubscriber", legislator.twitter_id), tweets);
 	}
 
 	protected void loadTweets() {	    
