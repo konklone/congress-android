@@ -56,6 +56,9 @@ public class LegislatorService {
 	/* JSON parsers, also useful for other service endpoints within this package */
 
 	protected static Legislator fromAPI(JSONObject json) throws JSONException {
+		if (json == null)
+			return null;
+		
 		Legislator legislator = new Legislator();
 
 		if (!json.isNull("bioguide_id"))

@@ -38,7 +38,7 @@ public class Database {
 	private SQLiteDatabase database;
 	private Context context;
 	
-	// uses RTC date format
+	// standard date format across the API
 	private static SimpleDateFormat format = new SimpleDateFormat(Congress.dateFormat);
 
 	public Database(Context context) {
