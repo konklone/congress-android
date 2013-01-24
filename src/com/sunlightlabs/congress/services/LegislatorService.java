@@ -28,6 +28,8 @@ public class LegislatorService {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put(key, value);
 		params.put("order", "last_name__asc");
+		params.put("per_page", "all");
+		
 		return legislatorsFor(Congress.url("legislators", basicFields, params));
 	}
 
@@ -53,7 +55,7 @@ public class LegislatorService {
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
 
-	protected static Legislator fromAPI(JSONObject json) throws JSONException {
+	protected static Legislator fromAPI(JSONObject json) throws JSONException, CongressException {
 		if (json == null)
 			return null;
 		
@@ -70,13 +72,14 @@ public class LegislatorService {
 			legislator.in_office = json.getBoolean("in_office");
 
 		if (!json.isNull("first_name"))
-			legislator.first_name = json.getString("first_name");
+			legislator.first_name = Congress.unicode(json.getString("first_name"));
 		if (!json.isNull("last_name"))
-			legislator.last_name = json.getString("last_name");
+			legislator.last_name = Congress.unicode(json.getString("last_name"));
 		if (!json.isNull("nickname"))
-			legislator.nickname = json.getString("nickname");
+			legislator.nickname = Congress.unicode(json.getString("nickname"));
 		if (!json.isNull("name_suffix"))
-			legislator.name_suffix = json.getString("name_suffix");
+			legislator.name_suffix = Congress.unicode(json.getString("name_suffix"));
+		
 		if (!json.isNull("title"))
 			legislator.title = json.getString("title");
 		if (!json.isNull("party"))

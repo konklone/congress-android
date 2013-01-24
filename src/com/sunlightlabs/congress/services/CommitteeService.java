@@ -40,10 +40,10 @@ public class CommitteeService {
 		return committeesFor(Congress.url("committees", fields, params, 1, Congress.MAX_PER_PAGE));
 	}
 	
-	protected static Committee fromAPI(JSONObject json) throws JSONException {
+	protected static Committee fromAPI(JSONObject json) throws JSONException, CongressException {
 		Committee committee = new Committee();
 		committee.id = json.getString("committee_id");
-		committee.name = json.getString("name");
+		committee.name = Congress.unicode(json.getString("name"));
 		committee.chamber = json.getString("chamber");
 
 		if (!json.isNull("members")) {

@@ -28,11 +28,11 @@ public class FloorUpdateService {
 		return updatesFor(Congress.url("floor_updates", fields, params, page, per_page));
 	}
 	
-	protected static FloorUpdate fromAPI(JSONObject json) throws JSONException, ParseException {
+	protected static FloorUpdate fromAPI(JSONObject json) throws JSONException, ParseException, CongressException {
 		FloorUpdate update = new FloorUpdate();
 		
 		if (!json.isNull("update"))
-			update.update = json.getString("update");
+			update.update = Congress.unicode(json.getString("update"));
 		
 		if (!json.isNull("chamber"))
 			update.chamber = json.getString("chamber");

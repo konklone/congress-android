@@ -58,7 +58,7 @@ public class RollService {
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
 	
-	protected static Roll fromAPI(JSONObject json) throws JSONException, ParseException {
+	protected static Roll fromAPI(JSONObject json) throws JSONException, ParseException, CongressException {
 		Roll roll = new Roll();
 		
 		if (!json.isNull("chamber"))
@@ -66,7 +66,7 @@ public class RollService {
 		if (!json.isNull("vote_type"))
 			roll.vote_type = json.getString("vote_type");
 		if (!json.isNull("question"))
-			roll.question = json.getString("question");
+			roll.question = Congress.unicode(json.getString("question"));
 		if (!json.isNull("result"))
 			roll.result = json.getString("result");
 		if (!json.isNull("congress"))
@@ -84,7 +84,7 @@ public class RollService {
 		if (!json.isNull("roll_id"))
 			roll.id = json.getString("roll_id");
 		if (!json.isNull("roll_type"))
-			roll.roll_type = json.getString("roll_type");
+			roll.roll_type = Congress.unicode(json.getString("roll_type"));
 		
 		
 		if (!json.isNull("bill_id"))
@@ -136,7 +136,7 @@ public class RollService {
 			Iterator<?> iter = voterIdsObject.keys();
 			while (iter.hasNext()) {
 				String voter_id = (String) iter.next();
-				String vote_name = voterIdsObject.getString(voter_id);
+				String vote_name = Congress.unicode(voterIdsObject.getString(voter_id));
 				
 				roll.voter_ids.put(voter_id, voteFromAPI(voter_id, vote_name));
 			}
@@ -148,15 +148,15 @@ public class RollService {
 		return roll;
 	}
 
-	protected static Vote voteFromAPI(String voter_id, JSONObject json) throws JSONException {
+	protected static Vote voteFromAPI(String voter_id, JSONObject json) throws JSONException, CongressException {
 		Vote vote = new Vote();
-		vote.vote = json.getString("vote");
+		vote.vote = Congress.unicode(json.getString("vote"));
 		vote.voter_id = voter_id;
 		vote.voter = LegislatorService.fromAPI(json.getJSONObject("voter"));
 		return vote;
 	}
 	
-	protected static Vote voteFromAPI(String voter_id, String vote_name) throws JSONException {
+	protected static Vote voteFromAPI(String voter_id, String vote_name) throws JSONException, CongressException {
 		Vote vote = new Vote();
 		vote.vote = vote_name;
 		vote.voter_id = voter_id;

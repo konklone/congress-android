@@ -32,11 +32,11 @@ public class UpcomingBillService {
 		return upcomingBillsFor(Congress.url("upcoming_bills", fields, params, 1, Congress.MAX_PER_PAGE));
 	}
 	
-	protected static UpcomingBill fromAPI(JSONObject json) throws JSONException, ParseException {
+	protected static UpcomingBill fromAPI(JSONObject json) throws JSONException, ParseException, CongressException {
 		UpcomingBill upcoming = new UpcomingBill();
 		
 		if (!json.isNull("context"))
-			upcoming.context = json.getString("context");
+			upcoming.context = Congress.unicode(json.getString("context"));
 		
 		if (!json.isNull("chamber"))
 			upcoming.chamber = json.getString("chamber");
@@ -64,16 +64,6 @@ public class UpcomingBillService {
 			upcoming.bill = BillService.fromAPI(json.getJSONObject("bill"));
 		
 		return upcoming;
-	}
-	
-	private static List<String> listFrom(JSONArray array) throws JSONException {
-		int length = array.length();
-		List<String> list = new ArrayList<String>(length);
-		
-		for (int i=0; i<length; i++)
-			list.add(array.getString(i));
-		
-		return list;
 	}
 	
 	private static List<UpcomingBill> upcomingBillsFor(String url) throws CongressException {

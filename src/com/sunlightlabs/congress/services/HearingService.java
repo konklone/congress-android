@@ -37,13 +37,13 @@ public class HearingService {
 		return hearingsFor(Congress.url("hearings", fields, params, page, per_page));
 	}
 	
-	private static Hearing fromJSON(JSONObject json) throws JSONException, ParseException {
+	private static Hearing fromJSON(JSONObject json) throws JSONException, ParseException, CongressException {
 		Hearing hearing = new Hearing();
 		
 		if (!json.isNull("congress"))
 			hearing.congress = json.getInt("congress");
 		if (!json.isNull("description"))
-			hearing.description = json.getString("description");
+			hearing.description = Congress.unicode(json.getString("description"));
 		if (!json.isNull("chamber"))
 			hearing.chamber = json.getString("chamber");
 		if (!json.isNull("room"))

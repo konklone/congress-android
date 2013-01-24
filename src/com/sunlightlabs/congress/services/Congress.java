@@ -136,6 +136,16 @@ public class Congress {
 		return url(method + "/search", fields, params, page, per_page);
 	}
 	
+	/* API-wide utility methods */
+	
+	public static String unicode(String string) throws CongressException {
+		try {
+			return new String(string.getBytes("ISO-8859-1"), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new CongressException(e, "Error parsing Unicode string from: " + string);
+		}
+	}
+	
 	public static Date parseDateEither(String date) throws ParseException {
 		try {
 			return parseDate(date);

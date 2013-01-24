@@ -2,7 +2,6 @@ package com.sunlightlabs.congress.models;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 public class UpcomingBill implements Serializable {
 	private static final long serialVersionUID = 1L;
