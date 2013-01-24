@@ -33,7 +33,7 @@ public class BillService {
 	
 	public static List<Bill> recentlyIntroduced(int page, int per_page) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("order", "introduced_on");
+		params.put("order", "introduced_on,bill_type,number");
 		return billsFor(Congress.url("bills", basicFields, params, page, per_page)); 
 	}
 
@@ -46,7 +46,7 @@ public class BillService {
 
 	public static List<Bill> recentlySponsored(String sponsorId, int page, int per_page) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("order", "introduced_on");
+		params.put("order", "introduced_on,bill_type,number");
 		params.put("sponsor_id", sponsorId);
 		return billsFor(Congress.url("bills", basicFields, params, page, per_page));
 	}
@@ -57,7 +57,7 @@ public class BillService {
 	
 	public static List<Bill> where(Map<String,String> params, int page, int per_page) throws CongressException {
 		if (!params.containsKey("order"))
-			params.put("order", "introduced_on");
+			params.put("order", "introduced_on,bill_type,number");
 		
 		return billsFor(Congress.url("bills", basicFields, params, page, per_page));
 	}

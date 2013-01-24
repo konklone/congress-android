@@ -64,6 +64,7 @@ public class Analytics {
 	public static final String LEGISLATOR_CALL = "call";
 	public static final String LEGISLATOR_WEBSITE = "website";
 	public static final String LEGISLATOR_DISTRICT = "district";
+	public static final String LEGISLATOR_CONTACTS = "contacts";
 	public static final String BILL_SHARE = "share";
 	public static final String BILL_TEXT = "text";
 	public static final String BILL_OPENCONGRESS = "opencongress";
@@ -263,6 +264,10 @@ public class Analytics {
 	
 	public static void legislatorDistrict(FragmentActivity activity, String bioguideId) {
 		event(activity, EVENT_LEGISLATOR, LEGISLATOR_DISTRICT, bioguideId);
+	}
+	
+	public static void legislatorContacts(FragmentActivity activity, String bioguideId) {
+		event(activity, EVENT_LEGISLATOR, LEGISLATOR_CONTACTS, bioguideId);
 	}
 	
 	public static void billShare(FragmentActivity activity, String billId) {

@@ -128,7 +128,8 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
     public void menuSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.addcontact:
-                this.openContactAdd();
+            	Analytics.legislatorContacts(this, legislator.bioguide_id);
+                openContactAdd();
                 break;
             case R.id.govtrack:
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.govTrackUrl(legislator.govtrack_id))));
