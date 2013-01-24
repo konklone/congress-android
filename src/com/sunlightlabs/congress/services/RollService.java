@@ -126,7 +126,11 @@ public class RollService {
 				String voter_id = (String) iter.next();
 				JSONObject voterObject = votersObject.getJSONObject(voter_id);
 				
-				roll.voters.put(voter_id, voteFromAPI(voter_id, voterObject));
+				Roll.Vote vote = voteFromAPI(voter_id, voterObject);
+				
+				// if there was no voter info for some reason, don't add the vote
+				if (vote != null)
+					roll.voters.put(voter_id, vote);
 			}
 		}
 
@@ -153,7 +157,10 @@ public class RollService {
 		vote.vote = Congress.unicode(json.getString("vote"));
 		vote.voter_id = voter_id;
 		vote.voter = LegislatorService.fromAPI(json.getJSONObject("voter"));
-		return vote;
+		if (vote.voter == null)
+			return null;
+		else
+			return vote;
 	}
 	
 	protected static Vote voteFromAPI(String voter_id, String vote_name) throws JSONException, CongressException {
