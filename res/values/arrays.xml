@@ -2,6 +2,7 @@
 <resources>
     
     <string-array name="changelog">
+        <item>4.0.2 - Fix a couple of crashes</item>
         <item>Added House hearings</item>
         <item>Invisible but important: switched to a new data source for just about everything</item>
         <item>Updated district maps</item>
