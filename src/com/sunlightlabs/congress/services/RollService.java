@@ -55,6 +55,9 @@ public class RollService {
 	/* JSON parsers, also useful for other service endpoints within this package */
 	
 	protected static Roll fromAPI(JSONObject json) throws JSONException, ParseException, CongressException {
+		if (json == null)
+			throw new CongressException("Error loading votes.");
+		
 		Roll roll = new Roll();
 		
 		if (!json.isNull("chamber"))
