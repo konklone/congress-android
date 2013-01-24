@@ -75,12 +75,8 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 			if (getActivity() != null)
 				resources = getActivity().getResources();
 			
-			if (resources != null) {
-				if (legislator.gender.equals("M"))
-					avatar = resources.getDrawable(R.drawable.no_photo_male);
-				else // "F"
-					avatar = resources.getDrawable(R.drawable.no_photo_female);
-			}
+			if (resources != null)
+				avatar = resources.getDrawable(R.drawable.person);
 		}
 		this.avatar = avatar;
 		

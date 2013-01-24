@@ -467,8 +467,8 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		if (result != null) {
 			if (photo != null)
 				((ImageView) result.findViewById(R.id.photo)).setImageDrawable(photo);
-			else // don't know the gender from here, default to female (to balance out how the shortcut image defaults to male)
-				((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.no_photo_female);
+			else 
+				((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.person);
 		}
 		
 		// if there's any in the queue, send the next one
@@ -482,7 +482,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		View result = getListView().findViewWithTag(holder);
 		if (result != null)
-			((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.no_photo_female);
+			((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.person);
 	}
 	
 	public Context getContext() {

@@ -243,13 +243,13 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		
 		LegislatorAdapter.ViewHolder holder = new LegislatorAdapter.ViewHolder();
 		holder.bioguide_id = (String) tag;
-
+		
 		View result = getListView().findViewWithTag(holder);
 		if (result != null) {
 			if (photo != null)
 				((ImageView) result.findViewById(R.id.photo)).setImageDrawable(photo);
-			else // don't know the gender from here, default to female (to balance out how the shortcut image defaults to male)
-				((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.no_photo_female);
+			else 
+				((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.person);
 		}
 	}
 
@@ -270,10 +270,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 	}
 
 	public void selectLegislator(Legislator legislator) {
-		if (type == SEARCH_COSPONSORS) // cosponsors from RTC don't have enough info to go direct
-			startActivity(Utils.legislatorLoadIntent(legislator.bioguide_id));
-		else
-			startActivity(Utils.legislatorIntent(getActivity(), legislator));
+		startActivity(Utils.legislatorIntent(getActivity(), legislator));
 	}
 	
 	private static class LegislatorAdapter extends ArrayAdapter<Legislator> {

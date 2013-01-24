@@ -118,7 +118,7 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 			if (photo != null)
 				photoView.setImageDrawable(photo);
 			else
-				photoView.setImageResource(R.drawable.no_photo_female);
+				photoView.setImageResource(R.drawable.person);
 		}
 	}
 	
