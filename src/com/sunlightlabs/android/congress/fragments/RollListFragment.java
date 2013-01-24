@@ -146,7 +146,9 @@ public class RollListFragment extends ListFragment implements PaginationListener
 	
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
-		startActivity(Utils.rollIntent(getActivity(), (Roll) parent.getItemAtPosition(position)));
+		Roll roll = (Roll) parent.getItemAtPosition(position);
+		if (roll != null) // happened once somehow
+			startActivity(Utils.rollIntent(getActivity(), roll));
 	}
 	
 
