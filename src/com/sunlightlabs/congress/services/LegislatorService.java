@@ -24,8 +24,6 @@ public class LegislatorService {
 		"twitter_id", "youtube_id", "facebook_id"
 	};
 	
-	/* Main methods */
-	
 	public static List<Legislator> allWhere(String key, String value) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put(key, value);
