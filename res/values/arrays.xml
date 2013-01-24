@@ -2,21 +2,17 @@
 <resources>
     
     <string-array name="changelog">
-        <item>3.9.7.1 - Removed bill campaign (it went very well! the bill was improved.)</item>
-        <item>Add your representative to your contacts</item>
-        <item>Better notification icon for Gingerbread users</item>
-        <item>Several bugfixes</item>
+        <item>Added House hearings</item>
+        <item>Invisible but important: switched to a new data source for just about everything</item>
+        <item>Updated district maps</item>
+        <item>Removed tweets (Twitter\'s API changes had left it broken for some time)</item>
+        <item>Removed vote searching (it was rarely used)</item>
+        <item>Dropped support for Android 1.6</item>
+        <item>Numerous bugfixes</item>
     </string-array>
     
     <string-array name="changelogLast">
-        <item>New legislator menu and search interface, also lists members by chamber</item>
-        <item>Many visual improvements for Ice Cream Sandwich users</item>
-        <item>App icon in title bar will take you back/up when pressed</item>
-        <item>Auto-link bills and votes in floor activity</item>
-        <item>Search history for bills, votes, and people</item>
-        <item>Link directly to bill text where possible, instead of THOMAS landing page</item>
-        <item>Vote search results can be subscribed to for updates</item>
-        <item>Many, many visual tweaks to how lists are formatted</item>
+        <item>Add your representative to your contacts</item>
 	</string-array>
     
 	<string-array name="state_codes">
