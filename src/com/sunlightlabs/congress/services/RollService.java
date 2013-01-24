@@ -49,12 +49,6 @@ public class RollService {
 		return rollsFor(Congress.url("votes", basicFields, params, page, per_page));
 	}
 	
-	public static List<Roll> search(String query, Map<String,String> params, int page, int per_page) throws CongressException {
-		if (!params.containsKey("order"))
-			params.put("order", "voted_at");
-		return rollsFor(Congress.searchUrl("votes", query, false, basicFields, params, page, per_page));
-	}
-	
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
 	
@@ -145,9 +139,6 @@ public class RollService {
 				roll.voter_ids.put(voter_id, voteFromAPI(voter_id, vote_name));
 			}
 		}
-		
-		if (!json.isNull("search"))
-			roll.search = Congress.SearchResult.from(json.getJSONObject("search"));
 
 		return roll;
 	}

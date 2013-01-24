@@ -109,26 +109,10 @@
         	</intent-filter>
         </activity>
         
-        <activity android:name=".MenuVotes">
-            <meta-data android:name="android.app.default_searchable"
-				android:value=".VoteSearch"
-				/>
-        </activity>
+        <activity android:name=".MenuVotes" />
         
         <activity android:name=".VoteVoter">
             <meta-data android:name="android.app.default_searchable"
-				android:value=".VoteSearch"
-				/>
-        </activity>
-        
-        <activity android:name=".VoteSearch">
-            <intent-filter>
-				<action android:name="android.intent.action.SEARCH" />
-	        </intent-filter>
-	        <meta-data android:name="android.app.searchable"
-				android:resource="@xml/searchable_votes"
-				/>
-	        <meta-data android:name="android.app.default_searchable"
 				android:value=".VoteSearch"
 				/>
         </activity>

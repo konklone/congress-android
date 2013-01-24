@@ -36,8 +36,6 @@ public class RollListFragment extends ListFragment implements PaginationListener
 	
 	public static final int ROLLS_VOTER = 0;
 	public static final int ROLLS_RECENT = 1;
-	public static final int ROLLS_SEARCH_NEWEST = 2;
-	public static final int ROLLS_SEARCH_RELEVANT = 3;
 	
 	private List<Roll> rolls;
 	
@@ -62,16 +60,6 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		Bundle args = new Bundle();
 		args.putInt("type", ROLLS_VOTER);
 		args.putSerializable("legislator", legislator);
-		frag.setArguments(args);
-		frag.setRetainInstance(true);
-		return frag;
-	}
-	
-	public static RollListFragment forSearch(String query, int type) {
-		RollListFragment frag = new RollListFragment();
-		Bundle args = new Bundle();
-		args.putInt("type", type);
-		args.putString("query", query);
 		frag.setArguments(args);
 		frag.setRetainInstance(true);
 		return frag;
@@ -137,8 +125,6 @@ public class RollListFragment extends ListFragment implements PaginationListener
 			subscription = new Subscription(voter.bioguide_id, Subscriber.notificationName(voter), "RollsLegislatorSubscriber", voter.chamber);
 		else if (type == ROLLS_RECENT)
 			subscription = new Subscription("RecentVotes", "Recent Votes", "RollsRecentSubscriber", null);
-		else if (type == ROLLS_SEARCH_NEWEST)
-			subscription = new Subscription(query, query, "RollsSearchSubscriber", query);
 		
 		if (subscription != null)
 			Footer.setup(this, subscription, rolls);
@@ -198,13 +184,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 			setListAdapter(new RollAdapter(this, rolls));
 			setupSubscription();
 		} else {
-			if (type == ROLLS_SEARCH_NEWEST) {
-				FragmentUtils.showEmpty(this, R.string.votes_empty_search_newest);
-				setupSubscription();
-			} else if (type == ROLLS_SEARCH_RELEVANT) {
-				FragmentUtils.showEmpty(this, R.string.votes_empty_search_relevant);
-				setupSubscription();
-			} else if (type == ROLLS_VOTER) {
+			if (type == ROLLS_VOTER) {
 				FragmentUtils.showEmpty(this, R.string.votes_empty_voter);
 				setupSubscription();
 			} else // ROLLS_RECENT
@@ -235,14 +215,6 @@ public class RollListFragment extends ListFragment implements PaginationListener
 					return RollService.latestVotes(context.voter.bioguide_id, context.voter.chamber, page, PER_PAGE);
 				case ROLLS_RECENT:
 					return RollService.latestVotes(page, PER_PAGE);
-				case ROLLS_SEARCH_NEWEST:
-					params.put("order", "voted_at");
-					params.put("how", "roll");
-					return RollService.search(context.query, params, page, PER_PAGE);
-				case ROLLS_SEARCH_RELEVANT:
-					params.put("order", "_score");
-					params.put("how", "roll");
-					return RollService.search(context.query, params, page, PER_PAGE);
 				default:
 					throw new CongressException("Not sure what type of votes to find.");
 				}
