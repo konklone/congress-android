@@ -9,8 +9,7 @@
     <string name="search_people_settings">People</string>
     <string name="search_votes_settings">Votes</string>
     
-    <string name="first_time_twitter">Tap to the right of a tweet to reply using a Twitter app.</string>
-    <string name="no_market_installed">You need to have the Android Market in order to donate.</string>
+    <string name="no_market_installed">You need to have the Android Market in order to review the app.</string>
     
     <string name="empty_zipcode">No legislators found for your zipcode.</string>
     <string name="empty_location">No legislators found for your location.</string>
@@ -40,10 +39,6 @@
     <string name="news_loading">Plucking news from the air…</string>
     <string name="error_fetching_news">There was an error while fetching news.</string>
     <string name="news_empty">No recent news found.</string>
-    <string name="twitter_loading">Plucking tweets from the air…</string>
-    <string name="twitter_empty">No tweets found.</string>
-    <string name="twitter_error">Error loading tweets.</string>
-    <string name="twitter_rate_limit">You\'ve been reading too many tweets! Twitter\'s called a timeout for a little bit, check back later.</string>
     <string name="youtube_loading">Plucking videos from the air…</string>
     <string name="youtube_empty">No videos found.</string>
     <string name="bills_loading">Plucking bills from the air…</string>
@@ -66,8 +61,6 @@
     <string name="bills_empty_search_relevant">No bills found by that search.\n\nWhen searching by relevance, searching is limited to the current session of Congress.\n\nBills from previous sessions of Congress will not appear.</string>
     
     <string name="votes_empty_voter">No votes found by this person.</string>
-    <string name="votes_empty_search_newest">No votes found by that search.\n\nYou can still tap the bar below to be notified when a match comes up.</string>
-    <string name="votes_empty_search_relevant">No votes found by that search.\n\nWhen searching by relevance, searching is limited to the current session of Congress.\n\Votes from previous sessions of Congress will not appear.</string>
     
    	<string name="committees_title">Committees</string>
     <string name="committees_loading">Plucking committees from the air…</string>
@@ -242,13 +235,4 @@
     <string name="image_search">Search</string>
     
     <string name="demo_header_text">Header Text</string>
-    
-    <!-- resources for current one pager -->
-    <string name="one_pager_title">Protect Public Data Access</string>
-    <string name="one_pager_1">This app depends on access to &lt;b&gt;bulk data&lt;/b&gt; about Congress.</string>
-    <string name="one_pager_2">H.R. 5882 would, in its current form, stop Congress from publishing more public data about its activity, indefinitely.</string>
-    <string name="one_pager_3">Public access to government data is a universal right, and a &lt;b&gt;non-partisan&lt;/b&gt; issue.</string>
-    <string name="one_pager_4">If you find this app useful, consider calling your Representative to tell them that restricting access to public data on the work of Congress is unacceptable.</string>
-    <string name="one_pager_button_1">Call Congress</string>
-    <string name="one_pager_button_2">Learn More</string>
 </resources>
