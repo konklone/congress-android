@@ -92,25 +92,25 @@ public class RollService {
 		roll.voteBreakdown.put(Roll.PRESENT, 0);
 		roll.voteBreakdown.put(Roll.NOT_VOTING, 0);
 		
-//		if (!json.isNull("vote_breakdown")) {
-//			JSONObject vote_breakdown = json.getJSONObject("vote_breakdown");
-//			
-//			JSONObject total = vote_breakdown.getJSONObject("total");
-//			Iterator<?> iter = total.keys();
-//			while (iter.hasNext()) {
-//				String key = (String) iter.next();
-//				roll.voteBreakdown.put(key, total.getInt(key));
-//				if (!key.equals(Roll.YEA) && !key.equals(Roll.NAY) && !key.equals(Roll.PRESENT) && !key.equals(Roll.NOT_VOTING))
-//					roll.otherVotes = true;
-//			}
-//			
-//			//todo: what does this mean 
-//			// until this is fixed on the server
-//			if (roll.otherVotes) {
-//				roll.voteBreakdown.remove(Roll.YEA);
-//				roll.voteBreakdown.remove(Roll.NAY);
-//			}
-//		}
+		if (!json.isNull("breakdown")) {
+			JSONObject vote_breakdown = json.getJSONObject("breakdown");
+			
+			JSONObject total = vote_breakdown.getJSONObject("total");
+			Iterator<?> iter = total.keys();
+			while (iter.hasNext()) {
+				String key = (String) iter.next();
+				roll.voteBreakdown.put(key, total.getInt(key));
+				if (!key.equals(Roll.YEA) && !key.equals(Roll.NAY) && !key.equals(Roll.PRESENT) && !key.equals(Roll.NOT_VOTING))
+					roll.otherVotes = true;
+			}
+			
+			//todo: what does this mean 
+			// until this is fixed on the server
+			if (roll.otherVotes) {
+				roll.voteBreakdown.remove(Roll.YEA);
+				roll.voteBreakdown.remove(Roll.NAY);
+			}
+		}
 
 		if (!json.isNull("voters")) {
 			roll.voters = new HashMap<String, Vote>();
