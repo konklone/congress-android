@@ -24,6 +24,7 @@ public class FloorUpdateService {
 	public static List<FloorUpdate> latest(String chamber, int page, int per_page) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("chamber", chamber);
+		params.put("order", "timestamp");
 		
 		return updatesFor(Congress.url("floor_updates", fields, params, page, per_page));
 	}
