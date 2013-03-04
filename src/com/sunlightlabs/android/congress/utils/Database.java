@@ -19,7 +19,7 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.Congress;
 
 public class Database {
-	private static final int DATABASE_VERSION = 7; // updated last for version 3.3
+	private static final int DATABASE_VERSION = 8; // updated last for version 4.1
 
 	public boolean closed = true;
 
@@ -518,6 +518,28 @@ public class Database {
 				Log.i(Utils.TAG, "Removed " + rows + " TwitterSubscriber entries from subscriptions");
 				rows = db.delete("seen_items", "subscription_class=?", new String[] {"TwitterSubscriber"});
 				Log.i(Utils.TAG, "Removed " + rows + " TwitterSubscriber entries from seen_items");
+			}
+			
+			// Version 8 - 
+			//   * Remove YouTubeSubscriber subscriptions (we'll now link to YouTube profiles)
+			//	 * Remove BillsLaws subscriptions (was not heavily used)
+			// released in version 4.1
+			
+			Log.i(Utils.TAG, "oldVersion: " + oldVersion);
+			if (oldVersion < 8) {
+				long rows = 0;
+				
+				Log.i(Utils.TAG, "Removing YoutubeSubscriber subscriptions and seen items...");
+				rows = db.delete("subscriptions", "notification_class=?", new String[] {"YoutubeSubscriber"});
+				Log.i(Utils.TAG, "Removed " + rows + " YoutubeSubscriber entries from subscriptions");
+				rows = db.delete("seen_items", "subscription_class=?", new String[] {"YoutubeSubscriber"});
+				Log.i(Utils.TAG, "Removed " + rows + " YoutubeSubscriber entries from seen_items");
+				
+				Log.i(Utils.TAG, "Removing BillsLawsSubscriber subscriptions and seen items...");
+				rows = db.delete("subscriptions", "notification_class=?", new String[] {"BillsLawsSubscriber"});
+				Log.i(Utils.TAG, "Removed " + rows + " BillsLawsSubscriber entries from subscriptions");
+				rows = db.delete("seen_items", "subscription_class=?", new String[] {"BillsLawsSubscriber"});
+				Log.i(Utils.TAG, "Removed " + rows + " BillsLawsSubscriber entries from seen_items");
 			}
 		}
 	}
