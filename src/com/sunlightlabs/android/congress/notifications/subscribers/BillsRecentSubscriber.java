@@ -38,9 +38,9 @@ public class BillsRecentSubscriber extends Subscriber {
 		if (results == BillListFragment.PER_PAGE)
 			return results + " or more new bills.";
 		else if (results > 1)
-			return results + " new bills.";
+			return results + " newly introduced bills.";
 		else
-			return results + " new bill.";
+			return results + " newly introduced bill.";
 	}
 
 	@Override
