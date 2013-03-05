@@ -132,10 +132,10 @@
     <string name="menu_legislators_no_favorites">Any senators and representatives you follow will be added here.\n\nTo find people, tap the compass button above to use your location, or the search button to search by zip code or last name.\n\nYou can also slide over to the right to find people by state, or by the chamber they\'re a part of.\n\nWhile viewing a person, follow them by tapping the star in the top right corner.</string>
     <string name="menu_bills_no_favorites">Any bills you follow will be added here.\n\nTo find bills, use the search button up top, or slide over to the right to see what bills just got introduced, or signed into law.\n\nWhile viewing a bill, follow it by tapping the star in the top right corner.</string>
     <string name="menu_bills_favorite">Starred</string>
-    <string name="menu_bills_law">Laws</string>
-    <string name="menu_bills_law_subscription">Recent Laws</string>
-    <string name="menu_bills_recent">Recent</string>
-    <string name="menu_bills_recent_subscription">Recent Bills</string>
+    <string name="menu_bills_active">Active</string>
+    <string name="menu_bills_active_subscription">Active Bills</string>
+    <string name="menu_bills_recent">New</string>
+    <string name="menu_bills_recent_subscription">New Bills</string>
     <string name="menu_bills_menu">Following</string>
     <string name="menu_legislators_following">Following</string>
     <string name="menu_legislators_state">States</string>
@@ -149,8 +149,8 @@
     <string name="menu_favorite_legislator_error">Error loading starred legislators.</string>
     <string name="menu_committees">Committees</string>
     
-    <string name="subscriber_bills_new">Recent Bills</string>
-    <string name="subscriber_bills_law">Recent Laws</string>
+    <string name="subscriber_bills_all">New Bills</string>
+    <string name="subscriber_bills_active">Active Bills</string>
     
     <string name="bill_not_found">No bill found by that code.</string>
     <string name="bills_error">Couldn\'t load bills.</string>

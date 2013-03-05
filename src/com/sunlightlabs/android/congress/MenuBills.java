@@ -27,15 +27,15 @@ public class MenuBills extends FragmentActivity {
 	public void setupPager() {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
 		adapter.add("bills_menu", R.string.menu_bills_menu, MenuBillsFragment.newInstance());
-		adapter.add("bills_new", R.string.menu_bills_recent, BillListFragment.forRecent());
-		adapter.add("bills_law", R.string.menu_bills_law, BillListFragment.forLaws());
+		adapter.add("bills_active", R.string.menu_bills_active, BillListFragment.forActive());
+		adapter.add("bills_new", R.string.menu_bills_recent, BillListFragment.forAll());
 		
 		String tab = getIntent().getStringExtra("tab");
 		
 		if (tab != null && tab.equals("bills_new"))
-			adapter.selectPage(1);
-		else if (tab != null && tab.equals("bills_law"))
 			adapter.selectPage(2);
+		else if (tab != null && tab.equals("bills_active"))
+			adapter.selectPage(1);
 	}
 	
 	public void setupControls() {

@@ -33,8 +33,8 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	
 	public static final int PER_PAGE = 20;
 	
-	public static final int BILLS_LAW = 0;
-	public static final int BILLS_RECENT = 1;
+	public static final int BILLS_ACTIVE = 0;
+	public static final int BILLS_ALL = 1;
 	public static final int BILLS_SPONSOR = 2;
 	public static final int BILLS_SEARCH_NEWEST = 3;
 	public static final int BILLS_SEARCH_RELEVANT = 4;
@@ -51,19 +51,19 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	PaginationListener pager;
 	View loadingView;
 	
-	public static BillListFragment forRecent() {
+	public static BillListFragment forAll() {
 		BillListFragment frag = new BillListFragment();
 		Bundle args = new Bundle();
-		args.putInt("type", BILLS_RECENT);
+		args.putInt("type", BILLS_ALL);
 		frag.setArguments(args);
 		frag.setRetainInstance(true);
 		return frag;
 	}
 	
-	public static BillListFragment forLaws() {
+	public static BillListFragment forActive() {
 		BillListFragment frag = new BillListFragment();
 		Bundle args = new Bundle();
-		args.putInt("type", BILLS_LAW);
+		args.putInt("type", BILLS_ACTIVE);
 		frag.setArguments(args);
 		frag.setRetainInstance(true);
 		return frag;
@@ -222,19 +222,19 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			} else if (type == BILLS_SPONSOR) {
 				FragmentUtils.showEmpty(this, R.string.bills_empty_sponsor);
 				setupSubscription();
-			} else // recent bills, recent laws
+			} else // active bills, all bills
 				FragmentUtils.showRefresh(this, R.string.bills_error); // should not happen
 		}
 	}
 	
 	private void setupSubscription() {
 		Subscription subscription = null;
-		if (type == BILLS_RECENT)
-			subscription = new Subscription("RecentBills", getResources().getString(R.string.subscriber_bills_new), "BillsRecentSubscriber", null);
+		if (type == BILLS_ALL)
+			subscription = new Subscription("RecentBills", getResources().getString(R.string.subscriber_bills_all), "BillsRecentSubscriber", null);
 		else if (type == BILLS_SPONSOR)
 			subscription = new Subscription(sponsor.bioguide_id, Subscriber.notificationName(sponsor), "BillsLegislatorSubscriber", null);
-		else if (type == BILLS_LAW)
-			subscription = new Subscription("RecentLaws", getResources().getString(R.string.subscriber_bills_law), "BillsLawsSubscriber", null);
+		else if (type == BILLS_ACTIVE)
+			subscription = new Subscription("ActiveBills", getResources().getString(R.string.subscriber_bills_active), "BillsActiveSubscriber", null);
 		else if (type == BILLS_SEARCH_NEWEST)
 			subscription = new Subscription(query, query, "BillsSearchSubscriber", query);
 		
@@ -264,10 +264,10 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				Map<String,String> params = new HashMap<String,String>();
 				
 				switch (context.type) {
-				case BILLS_RECENT:
+				case BILLS_ALL:
 					return BillService.recentlyIntroduced(page, PER_PAGE);
-				case BILLS_LAW:
-					return BillService.recentLaws(page, PER_PAGE);
+				case BILLS_ACTIVE:
+					return BillService.recentlyActive(page, PER_PAGE);
 				case BILLS_SPONSOR:
 					return BillService.recentlySponsored(context.sponsor.bioguide_id, page, PER_PAGE);
 				case BILLS_CODE:
@@ -331,14 +331,14 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				holder = (ViewHolder) view.getTag();
 			
 			switch (context.type) {
-			case BILLS_LAW:
-				shortDate(holder.date, bill.enacted_at);
+			case BILLS_ACTIVE:
+				shortDate(holder.date, bill.last_action_at);
 				break;
 			case BILLS_SEARCH_RELEVANT:
 				longDate(holder.date, bill.last_action_at);
 				break;
 			case BILLS_SEARCH_NEWEST:
-			case BILLS_RECENT:
+			case BILLS_ALL:
 			case BILLS_SPONSOR:
 			case BILLS_CODE:
 			default:

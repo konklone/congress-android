@@ -42,6 +42,7 @@ public class Bill implements Serializable {
 	
 	// actions
 	public List<Bill.Action> actions;
+	public Bill.Action lastAction;
 	
 	// search result metadata (if coming from a search)
 	public SearchResult search;

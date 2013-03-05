@@ -14,7 +14,7 @@ import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.BillService;
 
-public class BillsLawsSubscriber extends Subscriber {
+public class BillsActiveSubscriber extends Subscriber {
 	
 	@Override
 	public String decodeId(Object result) {
@@ -26,9 +26,9 @@ public class BillsLawsSubscriber extends Subscriber {
 		Utils.setupAPI(context);
 		
 		try {
-			return BillService.recentLaws(1, BillListFragment.PER_PAGE);
+			return BillService.recentlyActive(1, BillListFragment.PER_PAGE);
 		} catch (CongressException e) {
-			Log.w(Utils.TAG, "Could not fetch the latest bills for " + subscription, e);
+			Log.w(Utils.TAG, "Could not fetch the latest active bills for " + subscription, e);
 			return null;
 		}
 	}
@@ -36,21 +36,21 @@ public class BillsLawsSubscriber extends Subscriber {
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
 		if (results == BillListFragment.PER_PAGE)
-			return results + " or more new bills signed into law.";
+			return results + " or more new active bills .";
 		else if (results > 1)
-			return results + " new bills signed into law.";
+			return results + " new active bills.";
 		else
-			return results + " new bill signed into law.";
+			return results + " new active bills.";
 	}
 
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
 		return new Intent().setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.MenuBills")
-			.putExtra("tab", "bills_law");
+			.putExtra("tab", "bills_active");
 	}
 	
 	@Override
 	public String subscriptionName(Subscription subscription) {
-		return context.getResources().getString(R.string.menu_bills_law_subscription);
+		return context.getResources().getString(R.string.menu_bills_active_subscription);
 	}
 }

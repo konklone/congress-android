@@ -2,6 +2,7 @@ package com.sunlightlabs.congress.services;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -37,10 +38,8 @@ public class RollService {
 		params.put("voter_ids." + bioguideId + "__exists", "true");
 		
 		String[] fields = new String[basicFields.length + 1];
-		for (int i=0; i<basicFields.length; i++)
-			fields[i] = basicFields[i];
-		fields[fields.length - 1] = "voter_ids." + bioguideId;
-		
+		System.arraycopy(basicFields, 0, fields, 0, basicFields.length);
+		fields[basicFields.length + 0] = "voter_ids." + bioguideId;
 		
 		return rollsFor(Congress.url("votes", fields, params, page, per_page)); 
 	}

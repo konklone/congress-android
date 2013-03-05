@@ -36,12 +36,17 @@ public class BillService {
 		params.put("order", "introduced_on,bill_type,number");
 		return billsFor(Congress.url("bills", basicFields, params, page, per_page)); 
 	}
-
-	public static List<Bill> recentLaws(int page, int per_page) throws CongressException {
+	
+	public static List<Bill> recentlyActive(int page, int per_page) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("order", "history.enacted_at");
-		params.put("history.enacted", "true");
-		return billsFor(Congress.url("bills", basicFields, params, page, per_page));
+		params.put("order", "last_action_at");
+//		params.put("history.active", "true");
+		
+		String[] fields = new String[basicFields.length + 1];
+		System.arraycopy(basicFields, 0, fields, 0, basicFields.length);
+		fields[basicFields.length + 0] = "last_action";
+		
+		return billsFor(Congress.url("bills", basicFields, params, page, per_page)); 
 	}
 
 	public static List<Bill> recentlySponsored(String sponsorId, int page, int per_page) throws CongressException {
@@ -175,6 +180,9 @@ public class BillService {
 			for (int i = 0; i < length; i++)
 				bill.actions.add(0, actionFromAPI(actionObjects.getJSONObject(i)));
 		}
+		
+		if (!json.isNull("last_action"))
+			bill.lastAction = actionFromAPI(json.getJSONObject("last_action"));
 		
 		if (!json.isNull("upcoming")) {
 			JSONArray upcomingObjects = json.getJSONArray("upcoming");
