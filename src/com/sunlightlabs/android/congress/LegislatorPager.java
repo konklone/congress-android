@@ -13,7 +13,6 @@ import android.view.View;
 
 import com.sunlightlabs.android.congress.fragments.LegislatorProfileFragment;
 import com.sunlightlabs.android.congress.fragments.NewsListFragment;
-import com.sunlightlabs.android.congress.fragments.YouTubeFragment;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils.HasActionMenu;
 import com.sunlightlabs.android.congress.utils.Analytics;
@@ -49,9 +48,6 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
 		adapter.add("info", R.string.tab_profile, LegislatorProfileFragment.create(legislator));
 		adapter.add("news", R.string.tab_news, NewsListFragment.forLegislator(legislator));
-		
-		if (legislator.youtube_id!= null && !legislator.youtube_id.equals(""))
-			adapter.add("videos", R.string.tab_videos, YouTubeFragment.create(legislator));
 		
 		if (tab != null) adapter.selectPage(tab);
 	}

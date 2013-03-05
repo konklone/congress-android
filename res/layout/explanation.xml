@@ -70,17 +70,5 @@
 			
 			android:text="Bullet 2"
 			/>
-		
-		<TextView android:id="@+id/explanation_3c"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			
-			android:layout_marginTop="10dp"
-			
-			android:textSize="16sp"
-			
-			android:text="Bullet 3"
-			/>
-		
 	</LinearLayout>
 </ScrollView>

@@ -168,8 +168,6 @@ public class NotificationSettings extends PreferenceActivity {
 			((TextView) explanation.findViewById(R.id.explanation_3a)).setText(Html.fromHtml(explanation3a));
 			String explanation3b = "<b>&#183;</b> " + getString(R.string.explanation_3b); 
 			((TextView) explanation.findViewById(R.id.explanation_3b)).setText(Html.fromHtml(explanation3b));
-			String explanation3c = "<b>&#183;</b> " + getString(R.string.explanation_3c); 
-			((TextView) explanation.findViewById(R.id.explanation_3c)).setText(Html.fromHtml(explanation3c));
 			
 			builder.setIcon(R.drawable.icon)
 				.setCustomTitle(title)
