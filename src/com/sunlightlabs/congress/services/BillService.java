@@ -24,11 +24,12 @@ public class BillService {
 	public static String[] basicFields = {
 		"bill_id", "bill_type", "chamber", "number", "congress",
 		"introduced_on", "last_action_at", "last_vote_at",
-		"official_title", "short_title", 
+		"official_title", "short_title", "cosponsors_count",
 		"urls", "last_version.urls",
 		"history", 
 		"sponsor",
-		"upcoming"
+		"upcoming",
+		"last_action"
 	};
 	
 	public static List<Bill> recentlyIntroduced(int page, int per_page) throws CongressException {
@@ -42,11 +43,7 @@ public class BillService {
 		params.put("order", "last_action_at");
 		params.put("history.active", "true");
 		
-		String[] fields = new String[basicFields.length + 1];
-		System.arraycopy(basicFields, 0, fields, 0, basicFields.length);
-		fields[basicFields.length + 0] = "last_action";
-		
-		return billsFor(Congress.url("bills", fields, params, page, per_page)); 
+		return billsFor(Congress.url("bills", basicFields, params, page, per_page)); 
 	}
 
 	public static List<Bill> recentlySponsored(String sponsorId, int page, int per_page) throws CongressException {
@@ -103,6 +100,9 @@ public class BillService {
 		
 		if (!json.isNull("introduced_on"))
 			bill.introduced_on = Congress.parseDateOnly(json.getString("introduced_on"));
+		
+		if (!json.isNull("cosponsors_count"))
+			bill.cosponsors_count = json.getInt("cosponsors_count");
 		
 		// timeline dates
 		if (!json.isNull("history")) {
