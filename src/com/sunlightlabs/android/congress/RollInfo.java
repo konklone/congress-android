@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -221,7 +222,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		View headerTop = inflater.inflate(R.layout.roll_basic_1, null);
 		
-		((TextView) headerTop.findViewById(R.id.question)).setText(roll.question);
+		((TextView) headerTop.findViewById(R.id.question)).setText(simpleQuestion(roll));
 		((TextView) headerTop.findViewById(R.id.voted_at)).setText(new SimpleDateFormat("MMM dd, yyyy").format(roll.voted_at).toUpperCase());
 		
 		adapter.addView(headerTop);
@@ -243,7 +244,10 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 					related.setText(R.string.vote_related_to_bill_passage);
 				else if (roll.vote_type.equals("cloture"))
 					related.setText(R.string.vote_related_to_bill_cloture);
-			}
+				else
+					related.setText(R.string.vote_related_to_bill);
+			} else
+				related.setText(R.string.vote_related_to_bill);
 			adapter.addView(header);
 			
 			
@@ -297,6 +301,14 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		// kick off vote loading
 		loadVotes();
+	}
+	
+	// if the roll's about a bill, strip out the bill information from the question
+	public String simpleQuestion(Roll roll) {
+		if (roll.bill != null)
+			return TextUtils.split(roll.question, " -- ")[0];
+		else
+			return roll.question;
 	}
 	
 	// depends on the "header" member variable having been initialized and inflated
