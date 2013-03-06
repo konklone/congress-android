@@ -40,7 +40,7 @@ public class BillsActiveSubscriber extends Subscriber {
 		else if (results > 1)
 			return results + " new active bills.";
 		else
-			return results + " new active bills.";
+			return results + " new active bill.";
 	}
 
 	@Override
