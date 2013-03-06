@@ -14,11 +14,12 @@
 	>
 	
 	<TextView android:id="@+id/date_left"
-	    android:layout_width="wrap_content"
+	    android:layout_width="150dp"
 		android:layout_height="wrap_content"
 		
 		android:layout_alignParentLeft="true"
 		android:layout_centerVertical="true"
+		android:gravity="left"
 		
 		android:textSize="16sp"
 		android:textColor="@color/text"
@@ -27,11 +28,12 @@
 		/>
 	
 	<TextView android:id="@+id/date_right"
-		android:layout_width="wrap_content"
+		android:layout_width="150dp"
 		android:layout_height="wrap_content"
 		
 		android:layout_alignParentRight="true"
 		android:layout_centerVertical="true"
+		android:gravity="right"
 		
 		android:textSize="16sp"
 		android:textColor="@color/text_grey"
