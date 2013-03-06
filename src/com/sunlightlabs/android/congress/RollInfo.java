@@ -160,8 +160,6 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		if (tag != null) {
 			if (tag instanceof VoterAdapter.ViewHolder)
 				startActivity(Utils.legislatorLoadIntent(((VoterAdapter.ViewHolder) tag).bioguide_id));
-			else if (tag instanceof String && ((String) tag).equals("bill_id"))
-				startActivity(Utils.billLoadIntent(roll.bill_id));
 		}
 	}
 	
@@ -237,26 +235,47 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		}
 		
 		if (roll.bill_id != null && !roll.bill_id.equals("")) {
-			adapter.addView(inflater.inflate(R.layout.line, null));
+			View header = inflater.inflate(R.layout.header, null);
+			TextView related = (TextView) header.findViewById(R.id.header_text);
 			
-			View bill = inflater.inflate(R.layout.roll_bill, null);
-			((TextView) bill.findViewById(R.id.code)).setText(Bill.formatCode(roll.bill_id));
 			if (roll.vote_type != null) {
-				TextView related = (TextView) bill.findViewById(R.id.related_message);
 				if (roll.vote_type.equals("passage"))
 					related.setText(R.string.vote_related_to_bill_passage);
 				else if (roll.vote_type.equals("cloture"))
 					related.setText(R.string.vote_related_to_bill_cloture);
 			}
-			bill.setTag("bill_id");
+			adapter.addView(header);
 			
-			List<View> billArray = new ArrayList<View>(1);
-			billArray.add(bill);
-			adapter.addAdapter(new ViewArrayAdapter(this, billArray));
+			
+			View bill = inflater.inflate(R.layout.roll_bill, null);
+			((TextView) bill.findViewById(R.id.code)).setText(Bill.formatCode(roll.bill_id));
+			
+			TextView titleView = (TextView) bill.findViewById(R.id.bill_title);
+			if (roll.bill != null) {
+				if (roll.bill.short_title != null) {
+					titleView.setTextSize(16);
+					titleView.setText(Utils.truncate(roll.bill.short_title, 200));
+				} else if (roll.bill.official_title != null) {
+					titleView.setTextSize(14);
+					titleView.setText(Utils.truncate(roll.bill.official_title, 200));
+				} else {
+					titleView.setTextSize(16);
+					titleView.setText(R.string.bill_no_title);
+				}
+			} else {
+				titleView.setTextSize(16);
+				titleView.setText(R.string.bill_no_title_yet);
+			}
+			
+			bill.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					startActivity(Utils.billLoadIntent(roll.bill_id));
+				}
+			});
+			
+			adapter.addView(bill);
 		}
-		
-		
-		
 		
 		header = inflater.inflate(R.layout.roll_basic_2, null);
 		

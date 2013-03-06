@@ -19,7 +19,8 @@ import com.sunlightlabs.congress.models.Roll.Vote;
 public class RollService {
 	
 	public static String[] basicFields = {
-		"roll_id", "chamber", "number", "year", "congress", "bill_id", 
+		"roll_id", "chamber", "number", "year", "congress", "bill_id",
+		"bill.official_title", "bill.short_title",
 		"voted_at", "vote_type", "roll_type", "question", "required", "result",
 		"breakdown"
 	};
