@@ -325,6 +325,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				holder.code = (TextView) view.findViewById(R.id.code);
 				holder.date = (TextView) view.findViewById(R.id.date);
 				holder.title = (TextView) view.findViewById(R.id.title);
+				holder.last_action = (TextView) view.findViewById(R.id.last_action);
 				
 				view.setTag(holder);
 			} else
@@ -360,12 +361,18 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				holder.title.setTextSize(14);
 				holder.title.setText(R.string.bill_no_title);
 			}
+			
+			if (context.type == BILLS_ACTIVE) {
+				holder.last_action.setText(actionText(bill.lastAction));
+				holder.last_action.setVisibility(View.VISIBLE);
+			} else
+				holder.last_action.setVisibility(View.GONE);
 
 			return view;
 		}
 		
 		static class ViewHolder {
-			TextView code, date, title;
+			TextView code, date, title, last_action;
 		}
 		
 		private void shortDate(TextView view, Date date) {
@@ -379,6 +386,10 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		private void longDate(TextView view, Date date) {
 			view.setTextSize(14);
 			view.setText(new SimpleDateFormat("MMM d, ''yy").format(date).toUpperCase());
+		}
+		
+		private String actionText(Bill.Action action) {
+			return Utils.truncate(action.text, 80);
 		}
 	}
 	

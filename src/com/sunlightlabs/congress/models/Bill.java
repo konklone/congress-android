@@ -28,6 +28,10 @@ public class Bill implements Serializable {
 	public String house_passage_result, senate_passage_result, house_override_result, senate_override_result;
 	public String senate_cloture_result;
 	
+	// new history field: whether and when a bill became unusually active
+	public boolean active;
+	public Date active_at;
+	
 	// sponsor
 	public Legislator sponsor;
 	
@@ -59,8 +63,13 @@ public class Bill implements Serializable {
 
 	public static class Action implements Serializable {
 		private static final long serialVersionUID = 1L;
+
+		// required
 		public String type, text;
 		public Date acted_at;
+		
+		// optional
+		public String chamber, result;
 	}
 	
 	public static class Vote implements Serializable {

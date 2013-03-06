@@ -41,17 +41,36 @@
 	
 	</LinearLayout>
 		
-	<TextView android:id="@+id/title"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
+    <LinearLayout android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="5dp"
+        android:baselineAligned="false"
+        >
 		
-		android:layout_marginLeft="5dp"
-		android:lineSpacingExtra="2sp"
+		<TextView android:id="@+id/title"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			
+			android:lineSpacingExtra="2sp"
+			
+			android:textSize="18sp"
+			
+			android:text="Title Of The Bill And Such"
+			/>
 		
-		android:layout_weight="1"
+		<TextView android:id="@+id/last_action"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    
+		    android:textSize="14sp"
+		    android:textColor="@color/text_grey"
+		    
+		    android:text="On motion that the House agree to the Senate..."
+		    />
+		    
 		
-		android:textSize="18sp"
-		android:text="Title Of The Bill And Such"
-		/>
+	</LinearLayout>
 		
 </LinearLayout>

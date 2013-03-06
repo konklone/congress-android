@@ -40,13 +40,13 @@ public class BillService {
 	public static List<Bill> recentlyActive(int page, int per_page) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("order", "last_action_at");
-//		params.put("history.active", "true");
+		params.put("history.active", "true");
 		
 		String[] fields = new String[basicFields.length + 1];
 		System.arraycopy(basicFields, 0, fields, 0, basicFields.length);
 		fields[basicFields.length + 0] = "last_action";
 		
-		return billsFor(Congress.url("bills", basicFields, params, page, per_page)); 
+		return billsFor(Congress.url("bills", fields, params, page, per_page)); 
 	}
 
 	public static List<Bill> recentlySponsored(String sponsorId, int page, int per_page) throws CongressException {
@@ -107,6 +107,8 @@ public class BillService {
 		// timeline dates
 		if (!json.isNull("history")) {
 			JSONObject history = json.getJSONObject("history");
+			if (!history.isNull("active_at"))
+				bill.active_at = Congress.parseDateEither(history.getString("active_at"));
 			if (!history.isNull("senate_cloture_result_at"))
 				bill.senate_cloture_result_at = Congress.parseDateEither(history.getString("senate_cloture_result_at"));
 			if (!history.isNull("house_passage_result_at"))
@@ -125,6 +127,8 @@ public class BillService {
 				bill.enacted_at = Congress.parseDateEither(history.getString("enacted_at"));
 	
 			// timeline flags and values
+			if (!history.isNull("active"))
+				bill.active = history.getBoolean("active");
 			if (!history.isNull("senate_cloture_result"))
 				bill.senate_cloture_result = history.getString("senate_cloture_result");
 			if (!history.isNull("house_passage_result"))
@@ -256,6 +260,12 @@ public class BillService {
 		action.text = Congress.unicode(json.getString("text"));
 		action.type = json.getString("type");
 		action.acted_at = Congress.parseDateEither(json.getString("acted_at"));
+		
+		if (!json.isNull("chamber"))
+			action.chamber = json.getString("chamber");
+		if (!json.isNull("result"))
+			action.result = json.getString("result");
+		
 		return action;
 	}
 	
