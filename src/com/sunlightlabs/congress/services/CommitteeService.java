@@ -48,7 +48,6 @@ public class CommitteeService {
 
 		if (!json.isNull("members")) {
 			committee.members = new ArrayList<Legislator>();
-			committee.memberships = new ArrayList<Committee.Membership>();
 			
 			JSONArray memberList = json.getJSONArray("members");
 			for (int i = 0; i < memberList.length(); i++) {
@@ -59,12 +58,13 @@ public class CommitteeService {
 				if (!memberJson.isNull("side"))
 					membership.side = memberJson.getString("side");
 				if (!memberJson.isNull("rank"))
-					membership.rank = memberJson.getString("rank");
+					membership.rank = memberJson.getInt("rank");
 				if (!memberJson.isNull("title"))
 					membership.title = memberJson.getString("title");
+				
+				legislator.membership = membership;
 						
 				committee.members.add(legislator);
-				committee.memberships.add(membership);
 			}
 		}
 		

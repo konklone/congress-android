@@ -11,6 +11,10 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	public String gender, office, website, phone, twitter_id, youtube_id; 
 	public String term_start, term_end;
 	public boolean in_office;
+	
+	// this gets assigned onto the legislator, even though it's not set this way in the API,
+	// so that we can reuse legislator listing code to list committee memberships
+	public Committee.Membership membership;
 
 		
 	public String getName() {

@@ -6,7 +6,6 @@ public class Committee implements Comparable<Committee> {
 
 	public String id, name, chamber;
 	public List<Legislator> members;
-	public List<Membership> memberships;
 	
 	public int compareTo(Committee another) {
 		String mine = name.replace("the ", "");
@@ -20,7 +19,8 @@ public class Committee implements Comparable<Committee> {
 	
 	public static class Membership {
 		public Legislator member;
-		public String rank, side, title;
+		public String side, title;
+		public int rank;
 		
 		public Membership() {};
 	}

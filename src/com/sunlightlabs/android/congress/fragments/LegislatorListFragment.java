@@ -2,6 +2,7 @@ package com.sunlightlabs.android.congress.fragments;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.Committee.Membership;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.BillService;
@@ -300,6 +302,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 				view = inflater.inflate(R.layout.legislator_item, null);
 				
 				holder = new ViewHolder();
+				holder.title = (TextView) view.findViewById(R.id.committee_title);
 				holder.name = (TextView) view.findViewById(R.id.name);
 				holder.position = (TextView) view.findViewById(R.id.position);
 				holder.photo = (ImageView) view.findViewById(R.id.photo);
@@ -317,6 +320,14 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 
 			holder.name.setText(nameFor(legislator));
 			holder.position.setText(positionFor(legislator));
+			
+//			if (context.type == SEARCH_COMMITTEE) {
+//				if (legislator.membership != null && legislator.membership.title != null) {
+//					holder.title.setText(legislator.membership.title);
+//					holder.title.setVisibility(View.VISIBLE);
+//				} else
+//					holder.title.setVisibility(View.GONE);
+//			}
 
 			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_MEDIUM, legislator.bioguide_id, context.getActivity());
 			if (photo != null)
@@ -330,21 +341,34 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		}
 
 		public String nameFor(Legislator legislator) {
-			return legislator.last_name + ", " + legislator.firstName();
+			if (context.type == SEARCH_COMMITTEE) {
+				return legislator.title + ". " + legislator.firstName() + " " + legislator.last_name;
+			} else
+				return legislator.last_name + ", " + legislator.firstName();
 		}
 
 		public String positionFor(Legislator legislator) {
 			String stateName = Utils.stateCodeToName(context.getActivity(), legislator.state);
-			String district;
-			if (legislator.chamber.equals("senate"))
-				district = "Senator";
-			else
-				district = "District " + legislator.district;
-			return legislator.party + " - " + stateName + " - " + district; 
+			
+			if (context.type == SEARCH_COMMITTEE) {
+				String position = legislator.party + " - " + stateName;
+				if (legislator.membership != null && legislator.membership.title != null)
+					return legislator.membership.title + " - " + position;
+				else
+					return position;
+			} else {
+				String district;
+				if (legislator.chamber.equals("senate"))
+					district = "Senator";
+				else
+					district = "District " + legislator.district;
+				
+				return legislator.party + " - " + stateName + " - " + district;
+			}
 		}
 		
 		static class ViewHolder {
-			TextView name, position;
+			TextView title, name, position;
 			ImageView photo;
 			String bioguide_id;
 			
@@ -371,8 +395,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		@Override
 		protected List<Legislator> doInBackground(Void... nothing) {
 			List<Legislator> legislators = new ArrayList<Legislator>();
-			List<Legislator> lower = new ArrayList<Legislator>();
-
+			
 			List<Legislator> temp;
 			try {
 				switch (context.type) {
@@ -399,17 +422,58 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 				default:
 					return legislators;
 				}
-
-				// sort legislators Senators-first
-				for (int i = 0; i < temp.size(); i++) {
-					if (temp.get(i).chamber.equals("senate"))
-						legislators.add(temp.get(i));
-					else
-						lower.add(temp.get(i));
+				
+				if (context.type == SEARCH_COMMITTEE) {
+					// put Chair and Ranking Member first, then
+					// put majority in order of rank, then minority in order of rank
+					List<Legislator> leaders = new ArrayList<Legislator>();
+					List<Legislator> rankAndFile = new ArrayList<Legislator>();
+					
+					for (int i=0; i< temp.size(); i++) {
+						Legislator legislator = temp.get(i);
+						Membership membership = legislator.membership;
+						if (membership.title != null && (membership.title.contains("Chair") || membership.title.contains("Ranking")))
+							leaders.add(legislator);
+						else
+							rankAndFile.add(legislator);
+					}
+					
+					Collections.sort(leaders, new Comparator<Legislator>() {
+						@Override
+						public int compare(Legislator a, Legislator b) {
+							return a.membership.title.compareTo(b.membership.title);
+						}
+					});
+					
+					Collections.sort(rankAndFile, new Comparator<Legislator>() {
+						@Override
+						public int compare(Legislator a, Legislator b) {
+							if (a.membership.side.equals(b.membership.side))
+								return a.membership.rank - b.membership.rank;
+							else
+								return a.membership.side.compareTo(b.membership.side);
+						}
+					});
+					
+					legislators.addAll(leaders);
+					legislators.addAll(rankAndFile);
+					
+				} else {
+					// sort legislators Senators-first
+					List<Legislator> upper = new ArrayList<Legislator>();
+					List<Legislator> lower = new ArrayList<Legislator>();
+					
+					for (int i = 0; i < temp.size(); i++) {
+						if (temp.get(i).chamber.equals("senate"))
+							upper.add(temp.get(i));
+						else
+							lower.add(temp.get(i));
+					}
+					Collections.sort(upper);
+					Collections.sort(lower);
+					legislators.addAll(upper);
+					legislators.addAll(lower);
 				}
-				Collections.sort(legislators);
-				Collections.sort(lower);
-				legislators.addAll(lower);
 
 				return legislators;
 
