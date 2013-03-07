@@ -51,7 +51,7 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 		bill = (Bill) extras.getSerializable("bill");
 		tab = extras.getString("tab");
 		
-		// if coming in from a link (in form /bill/:session/:formatted_code, e.g. "/bill/112/H.R. 2345")
+		// if coming in from a link (in form /bill/:congress/:formatted_code, e.g. "/bill/112/H.R. 2345")
 		Uri uri = intent.getData();
 		if (uri != null) {
 			List<String> segments = uri.getPathSegments();

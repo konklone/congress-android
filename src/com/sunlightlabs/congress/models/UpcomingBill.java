@@ -9,7 +9,7 @@ public class UpcomingBill implements Serializable {
 	public int congress;
 	public Date legislativeDay;
 	public String range;
-	public String sourceUrl, sourceType, permalink;
+	public String sourceUrl, sourceType;
 	public String billId, chamber;
 	public Bill bill;
 	public String context;

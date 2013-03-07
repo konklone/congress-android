@@ -212,12 +212,12 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 		((TextView) view.findViewById(R.id.where)).setText(upcomingSource(upcoming.sourceType, upcoming.chamber));
 		
 		View moreView = view.findViewById(R.id.more);
-		if (upcoming.permalink != null) {
+		if (upcoming.sourceUrl != null) {
 			moreView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					Analytics.billUpcomingMore(getActivity(), upcoming.sourceType);
-					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(upcoming.permalink)));
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(upcoming.sourceUrl)));
 				}
 			});
 		} else
