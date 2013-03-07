@@ -37,6 +37,13 @@ public class CommitteeService {
 		return committeesFor(Congress.url("committees", basicFields, params, 1, Congress.MAX_PER_PAGE));
 	}
 	
+	public static List<Committee> getSubcommitteesFor(String committeeId) throws CongressException {
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("subcommittee", "true");
+		params.put("parent_committee_id", committeeId);
+		return committeesFor(Congress.url("committees", basicFields, params, 1, Congress.MAX_PER_PAGE));
+	}
+	
 	public static List<Committee> getAll(String chamber) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("chamber", chamber);

@@ -64,7 +64,10 @@
     <string name="committees_loading">Plucking committees from the air…</string>
     <string name="committees_empty">No committees found.</string>
     <string name="committees_error">Error loading committees.</string>
+    <string name="committees_no_subcommittees">No subcommittees.</string>
     <string name="legislator_no_committees">Belongs to no committees.</string>
+    <string name="tab_committees_members">Members</string>
+    <string name="tab_committees_sub">Subcommittees</string>
     
     <string name="floor_updates_title">The Floor</string>
     <string name="floor_updates_loading">Loading latest from the floor…</string>

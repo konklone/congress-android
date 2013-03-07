@@ -5,13 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
+import com.sunlightlabs.android.congress.fragments.CommitteeListFragment;
 import com.sunlightlabs.android.congress.fragments.LegislatorListFragment;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
 import com.sunlightlabs.congress.models.Committee;
 
-public class LegislatorCommittee extends FragmentActivity {
+public class CommitteePager extends FragmentActivity {
 	
 	Committee committee;
 	
@@ -31,9 +32,12 @@ public class LegislatorCommittee extends FragmentActivity {
 	
 	public void setupPager() {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
-		findViewById(R.id.pager_titles).setVisibility(View.GONE);
+		adapter.add("committee_members", R.string.tab_committees_members, LegislatorListFragment.forCommittee(committee));
 		
-		adapter.add("legislator_committee", "Not seen", LegislatorListFragment.forCommittee(committee));
+		if (committee.subcommittee)
+			findViewById(R.id.pager_titles).setVisibility(View.GONE);
+		else
+			adapter.add("committee_subcommittees", R.string.tab_committees_sub, CommitteeListFragment.forCommittee(committee));
 	}
 	
 	public void setupControls() {
