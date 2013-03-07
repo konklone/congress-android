@@ -25,7 +25,7 @@ public class VotesBillSubscriber extends Subscriber {
 		String billId = subscription.data;
 		
 		try {
-			return BillService.find(billId, new String[] {"passage_votes"}).votes;
+			return BillService.find(billId, new String[] {"votes"}).votes;
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest votes for " + subscription, e);
 			return null;
