@@ -1,18 +1,24 @@
 package com.sunlightlabs.android.congress;
 
+import java.util.List;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.sunlightlabs.android.congress.fragments.BillActionFragment;
 import com.sunlightlabs.android.congress.fragments.BillInfoFragment;
 import com.sunlightlabs.android.congress.fragments.BillVoteFragment;
 import com.sunlightlabs.android.congress.fragments.NewsListFragment;
+import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils.HasActionMenu;
 import com.sunlightlabs.android.congress.utils.Analytics;
@@ -20,12 +26,18 @@ import com.sunlightlabs.android.congress.utils.Database;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.services.BillService;
 
 public class BillPager extends FragmentActivity implements HasActionMenu {
+	private String bill_id;
 	private Bill bill;
+	
 	private String tab;
 	private Database database;
 	private Cursor cursor;
+	
+	private static String FRAGMENT_TAG = "BillLoaderFragment";
 	
 	
 	@Override
@@ -33,15 +45,71 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pager_titled);
 		
-		Bundle extras = getIntent().getExtras();
+		Intent intent = getIntent();
+		Bundle extras = intent.getExtras();
+		bill_id = extras.getString("bill_id");
 		bill = (Bill) extras.getSerializable("bill");
 		tab = extras.getString("tab");
 		
+		// if coming in from a link (in form /bill/:session/:formatted_code, e.g. "/bill/112/H.R. 2345")
+		Uri uri = intent.getData();
+		if (uri != null) {
+			List<String> segments = uri.getPathSegments();
+			if (segments.size() == 3) { // coming in from floor
+				String congress = segments.get(1);
+				String formattedCode = segments.get(2);
+				String code = Bill.normalizeCode(formattedCode);
+				bill_id = code + "-" + congress;
+			}
+		}
+		
 		Analytics.track(this, "/bill");
 		
-		setupDatabase();
 		setupControls();
-		setupPager();	
+		
+		if (bill == null)
+			BillLoaderFragment.start(this);
+		else
+			onLoadBill(bill);
+	}
+	
+	public void setupControls() {
+		ActionBarUtils.setTitle(this, Bill.formatCode(bill_id));
+		
+		findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
+		findViewById(R.id.pager_container).setVisibility(View.GONE);
+		Utils.setLoading(this, R.string.bill_loading);
+		
+		((Button) findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				refresh();
+			}
+		});
+	}
+	
+	private void refresh() {
+		this.bill = null;
+		Utils.setLoading(this, R.string.bill_loading);
+		Utils.showLoading(this);
+		BillLoaderFragment.start(this, true);
+	}
+	
+	public void onLoadBill(Bill bill) {
+		this.bill = bill;
+		
+		findViewById(R.id.pager_container).setVisibility(View.VISIBLE);
+		findViewById(android.R.id.empty).setVisibility(View.GONE);
+		
+		setupDatabase();
+		setupButtons();
+		setupPager();
+	}
+	
+	public void onLoadBill(CongressException exception) {
+		if (exception instanceof BillService.BillNotFoundException)
+			Utils.showEmpty(this, R.string.bill_not_known_yet);
+		else
+			Utils.showRefresh(this, R.string.bill_loading_error);
 	}
 	
 	private void setupPager() {
@@ -66,12 +134,11 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		database.close();
+		if (database != null && database.isOpen())
+			database.close();
 	}
 	
-	public void setupControls() {
-		ActionBarUtils.setTitle(this, Bill.formatCode(bill.id));
-		
+	public void setupButtons() {
 		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.star_off, new View.OnClickListener() {
 			public void onClick(View v) { 
 				toggleDatabaseFavorite(); 
@@ -154,5 +221,62 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
     			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.urls.get("opencongress"))));
     		break;
     	}
+	}
+	
+	public static class BillLoaderFragment extends Fragment implements LoadBillTask.LoadsBill {
+		public BillPager context;
+		public Bill bill;
+		public CongressException exception;
+		
+		public static void start(BillPager context) {
+			start(context, false);
+		}
+		
+		public static void start(BillPager context, boolean restart) {
+			FragmentManager manager = context.getSupportFragmentManager();
+			BillLoaderFragment fragment = (BillLoaderFragment) manager.findFragmentByTag(FRAGMENT_TAG);
+			if (fragment == null) {
+				fragment = new BillLoaderFragment();
+				fragment.setRetainInstance(true);
+				manager.beginTransaction().add(fragment, FRAGMENT_TAG).commit();
+			} else if (restart)
+				fragment.run();
+			
+			// update context no matter what
+			fragment.context = context;
+		}
+		
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			run();
+		}
+		
+		public void run() {
+			new LoadBillTask(this, context.bill_id).execute(BillService.basicFields);
+		}
+		
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+			
+			if (this.bill != null)
+				context.onLoadBill(bill);
+			else if (this.exception != null)
+				context.onLoadBill(this.exception);
+		}
+		
+		public BillLoaderFragment() {}
+		
+		// pass through
+		public void onLoadBill(Bill bill) {
+			this.bill = bill;
+			context.onLoadBill(bill);
+		}
+		
+		public void onLoadBill(CongressException exception) {
+			this.exception = exception;
+			context.onLoadBill(exception);
+		}
 	}
 }

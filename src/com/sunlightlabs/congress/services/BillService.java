@@ -274,7 +274,11 @@ public class BillService {
 
 	private static Bill billFor(String url) throws CongressException {
 		try {
-			return fromAPI(Congress.firstResult(url));
+			JSONObject json = Congress.firstResult(url);
+			if (json != null)
+				return fromAPI(json);
+			else
+				throw new BillNotFoundException();
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);
 		} catch (ParseException e) {
@@ -298,5 +302,13 @@ public class BillService {
 		}
 		
 		return bills;
+	}
+	
+	public static class BillNotFoundException extends CongressException {
+		private static final long serialVersionUID = 1L;
+
+		public BillNotFoundException() {
+			super("No bill found by that ID.");
+		}
 	}
 }

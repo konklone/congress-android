@@ -45,8 +45,7 @@ public class NewsBillSubscriber extends Subscriber {
 	
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
-		return Utils.billLoadIntent(subscription.id, 
-				Utils.billPagerIntent().putExtra("tab", "news"));
+		return Utils.billIntent(subscription.id).putExtra("tab", "news");
 	}
 	
 	@Override

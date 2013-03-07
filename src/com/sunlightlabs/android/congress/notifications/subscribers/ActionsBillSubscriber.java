@@ -42,8 +42,7 @@ public class ActionsBillSubscriber extends Subscriber {
 	
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
-		return Utils.billLoadIntent(subscription.id, Utils.billPagerIntent()
-				.putExtra("tab", "history"));
+		return Utils.billIntent(subscription.id).putExtra("tab", "history");
 	}
 	
 	@Override

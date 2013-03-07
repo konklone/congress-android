@@ -92,14 +92,8 @@
 				/>
         </activity>
         
-        <activity android:name=".BillPager" />
-        <activity android:name=".BillSponsor" />
-        <activity android:name=".BillLoader">
-        	<intent-filter>
-        		<action android:name="android.intent.action.MAIN" />
-        		<category android:name="android.intent.category.DEFAULT" />
-        	</intent-filter>
-        	<intent-filter>
+        <activity android:name=".BillPager">
+            <intent-filter>
         	    <action android:name="android.intent.action.VIEW" />
         	    <category android:name="android.intent.category.DEFAULT" />
         	    <data android:scheme="congress" 
@@ -108,6 +102,8 @@
         	        />
         	</intent-filter>
         </activity>
+        
+        <activity android:name=".BillSponsor" />
         
         <activity android:name=".MenuVotes" />
         

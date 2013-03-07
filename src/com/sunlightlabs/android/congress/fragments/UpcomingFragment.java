@@ -84,7 +84,7 @@ public class UpcomingFragment extends ListFragment {
 		if (isAdded()) {
 			String bill_id = ((UpcomingAdapter.Bill) parent.getItemAtPosition(position)).id;
 			Analytics.billUpcoming(getActivity(), bill_id);
-			startActivity(Utils.billLoadIntent(bill_id));
+			startActivity(Utils.billIntent(bill_id));
 		}
 	}
 	

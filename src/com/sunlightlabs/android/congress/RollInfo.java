@@ -39,7 +39,6 @@ import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Database;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.android.congress.utils.ViewArrayAdapter;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -274,7 +273,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			bill.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					startActivity(Utils.billLoadIntent(roll.bill_id));
+					startActivity(Utils.billIntent(roll.bill_id));
 				}
 			});
 			

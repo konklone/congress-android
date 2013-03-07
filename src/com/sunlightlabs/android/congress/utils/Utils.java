@@ -95,11 +95,16 @@ public class Utils {
 	}
 
 	public static Intent billIntent(Context context, Bill bill) {
-		return billIntent(context, BillPager.class, bill);
+		return new Intent(context, BillPager.class)
+			.putExtra("bill_id", bill.id)
+			.putExtra("bill", bill);
 	}
-
-	public static Intent billIntent(Context context, Class<?> cls, Bill bill) {
-		return new Intent(context, cls).putExtra("bill", bill);
+	
+	public static Intent billIntent(String billId) {
+		return new Intent().setClassName(
+				"com.sunlightlabs.android.congress",
+				"com.sunlightlabs.android.congress.BillPager")
+			.putExtra("bill_id", billId);
 	}
 	
 	public static Intent rollIntent(Context context, Roll roll) {
@@ -111,29 +116,6 @@ public class Utils {
 	public static Intent rollIntent(Context context, String rollId) {
 		return new Intent(context, RollInfo.class)
 			.putExtra("id", rollId);
-	}
-	
-	public static Intent billLoadIntent(String billId) {
-		Intent intent = billPagerIntent();
-		return new Intent().setClassName(
-				"com.sunlightlabs.android.congress",
-				"com.sunlightlabs.android.congress.BillLoader")
-			.putExtra("id", billId)
-			.putExtra("intent", intent);
-	}
-
-	public static Intent billLoadIntent(String billId, Intent intent) {
-		return new Intent().setClassName(
-				"com.sunlightlabs.android.congress",
-				"com.sunlightlabs.android.congress.BillLoader")
-			.putExtra("id", billId)
-			.putExtra("intent", intent);
-	}
-
-	public static Intent billPagerIntent() {
-		return new Intent().setClassName(
-				"com.sunlightlabs.android.congress",
-				"com.sunlightlabs.android.congress.BillPager");
 	}
 
 	public static String stateCodeToName(Context context, String code) {
@@ -191,6 +173,10 @@ public class Utils {
 		activity.findViewById(R.id.empty_message).setVisibility(View.GONE);
 		activity.findViewById(R.id.refresh).setVisibility(View.GONE);
 		activity.findViewById(R.id.loading).setVisibility(View.VISIBLE);
+	}
+	
+	public static void hideList(Activity activity) {
+		activity.findViewById(android.R.id.empty).setVisibility(View.GONE);
 	}
 
 	public static void setLoading(Activity activity, int message) {

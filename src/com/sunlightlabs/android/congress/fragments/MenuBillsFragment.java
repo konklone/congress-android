@@ -89,7 +89,7 @@ public class MenuBillsFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView lv, View view, int position, long id) {
 		Bill bill = (Bill) view.getTag();
-		startActivity(Utils.billLoadIntent(bill.id));
+		startActivity(Utils.billIntent(bill.id));
 	}
 	
 	class FavoriteBillsAdapter extends CursorAdapter {

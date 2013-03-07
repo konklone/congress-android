@@ -29,6 +29,7 @@
     <string name="bill_no_title_yet">(Bill information not yet available.)</string>
     <string name="bill_no_sponsor">This bill does not have a sponsor.</string>
     <string name="bill_no_sponsor_yet">Bill\'s sponsor not yet known.</string>
+    <string name="bill_not_known_yet">We don\'t have information for this bill yet.</string>
     <string name="vote_no_voters_yet">Vote details not yet known.</string>
     <string name="votes_error">Error loading votes.</string>
     <string name="vote_results_header">RESULTS</string>
@@ -156,6 +157,7 @@
     <string name="subscriber_bills_active">Active Bills</string>
     
     <string name="bill_not_found">No bill found by that code.</string>
+    <string name="bill_loading_error">Error while loading bill.</string>
     <string name="bills_error">Couldn\'t load bills.</string>
     <string name="bills_retry">Retry</string>
     <string name="bill_actions_empty">This bill has no activity at this time.</string>

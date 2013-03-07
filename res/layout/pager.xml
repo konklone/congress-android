@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"> 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:id="@+id/pager_container"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    > 
 	
     <LinearLayout android:id="@+id/pager_titles" 
         android:orientation="horizontal"
@@ -13,4 +18,4 @@
         android:layout_height="fill_parent"
         />
 	
-</merge>
+</LinearLayout>

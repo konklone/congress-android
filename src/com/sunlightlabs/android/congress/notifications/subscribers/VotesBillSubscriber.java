@@ -44,8 +44,7 @@ public class VotesBillSubscriber extends Subscriber {
 
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
-		return Utils.billLoadIntent(subscription.id, Utils.billPagerIntent()
-				.putExtra("tab", "votes"));
+		return Utils.billIntent(subscription.id).putExtra("tab", "votes");
 	}
 	
 	@Override
