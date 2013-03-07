@@ -9,10 +9,11 @@ import com.sunlightlabs.android.congress.fragments.LegislatorListFragment;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
+import com.sunlightlabs.congress.models.Committee;
 
 public class LegislatorCommittee extends FragmentActivity {
 	
-	String committeeId, committeeName;
+	Committee committee;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -21,9 +22,7 @@ public class LegislatorCommittee extends FragmentActivity {
 		
 		Analytics.track(this, "/committee/legislators");
 		
-		Intent intent = getIntent();
-		committeeId = intent.getStringExtra("committeeId");
-		committeeName = intent.getStringExtra("committeeName");
+		committee = (Committee) getIntent().getSerializableExtra("committee");
 		
 		setupControls();
 		setupPager();
@@ -34,11 +33,16 @@ public class LegislatorCommittee extends FragmentActivity {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
 		findViewById(R.id.pager_titles).setVisibility(View.GONE);
 		
-		adapter.add("legislator_committee", "Not seen", LegislatorListFragment.forCommittee(committeeId, committeeName));
+		adapter.add("legislator_committee", "Not seen", LegislatorListFragment.forCommittee(committee));
 	}
 	
 	public void setupControls() {
-		ActionBarUtils.setTitle(this, committeeName, new Intent(this, CommitteePager.class));
+		String name = committee.name;
+		
+		if (committee.subcommittee)
+			name = "Subcommittee on " + name;
+		
+		ActionBarUtils.setTitle(this, name, new Intent(this, CommitteeListPager.class));
 		ActionBarUtils.setTitleSize(this, 16);
 	}
 }

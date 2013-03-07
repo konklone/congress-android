@@ -132,7 +132,7 @@
         	</intent-filter>
         </activity>
         
-        <activity android:name=".CommitteePager" />
+        <activity android:name=".CommitteeListPager" />
         <activity android:name=".CommitteeMember" />
         
         <activity android:name=".FloorUpdatePager" />

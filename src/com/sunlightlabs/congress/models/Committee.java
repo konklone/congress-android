@@ -1,27 +1,35 @@
 package com.sunlightlabs.congress.models;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Committee implements Comparable<Committee> {
+public class Committee implements Comparable<Committee>, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	public String id, name, chamber;
-	public List<Legislator> members;
 	
-	public int compareTo(Committee another) {
-		String mine = name.replace("the ", "");
-		String other = another.name.replace("the ", "");
-		return mine.compareTo(other);
-	}
+	public boolean subcommittee;
+	public String parent_committee_id; 
+	
+	public List<Legislator> members;
 	
 	public String toString() {
 		return name;
 	}
 	
-	public static class Membership {
+	public static class Membership implements Serializable {
+		private static final long serialVersionUID = 1L;
+		
 		public Legislator member;
 		public String side, title;
 		public int rank;
 		
 		public Membership() {};
+	}
+	
+	public int compareTo(Committee another) {
+		String mine = name.replace("the ", "");
+		String other = another.name.replace("the ", "");
+		return mine.compareTo(other);
 	}
 }

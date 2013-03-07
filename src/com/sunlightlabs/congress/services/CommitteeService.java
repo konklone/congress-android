@@ -15,36 +15,47 @@ import com.sunlightlabs.congress.models.Legislator;
 
 public class CommitteeService {
 	
+	public static String[] basicFields = new String[] {
+		"committee_id", "chamber", "name",
+		"parent_committee_id", "subcommittee"
+	};
+	
 	public static Committee find(String id) throws CongressException {
-		String[] fields = new String[] {"committee_id", "chamber", "name", "members"};
+		String[] fields = new String[] {
+			"committee_id", "chamber", "name",
+			"parent_committee_id", "subcommittee",
+			"members"
+		};
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("committee_id", id);
 		return committeeFor(Congress.url("committees", fields, params));
 	}
 
 	public static List<Committee> forLegislator(String bioguideId) throws CongressException {
-		String[] fields = new String[] {"committee_id", "chamber", "name"};
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("member_ids", bioguideId);
-		params.put("subcommittee", "false");
-		params.put("order", "name__asc");
-		return committeesFor(Congress.url("committees", fields, params, 1, Congress.MAX_PER_PAGE));
+		return committeesFor(Congress.url("committees", basicFields, params, 1, Congress.MAX_PER_PAGE));
 	}
 	
 	public static List<Committee> getAll(String chamber) throws CongressException {
-		String[] fields = new String[] {"committee_id", "chamber", "name"};
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("chamber", chamber);
 		params.put("subcommittee", "false");
 		params.put("order", "name__asc");
-		return committeesFor(Congress.url("committees", fields, params, 1, Congress.MAX_PER_PAGE));
+		return committeesFor(Congress.url("committees", basicFields, params, 1, Congress.MAX_PER_PAGE));
 	}
 	
 	protected static Committee fromAPI(JSONObject json) throws JSONException, CongressException {
 		Committee committee = new Committee();
+		
 		committee.id = json.getString("committee_id");
 		committee.name = Congress.unicode(json.getString("name"));
 		committee.chamber = json.getString("chamber");
+		
+		if (!json.isNull("subcommittee"))
+			committee.subcommittee = json.getBoolean("subcommittee");
+		if (!json.isNull("parent_committee_id"))
+			committee.parent_committee_id = json.getString("parent_committee_id");
 
 		if (!json.isNull("members")) {
 			committee.members = new ArrayList<Legislator>();

@@ -2,6 +2,7 @@ package com.sunlightlabs.android.congress.fragments;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.content.Intent;
@@ -94,12 +95,10 @@ public class CommitteeListFragment extends ListFragment {
 
 	private void selectCommittee(Committee committee) {
 		startActivity(new Intent(getActivity(), LegislatorCommittee.class)
-			.putExtra("committeeId", committee.id)
-			.putExtra("committeeName", committee.name));
+			.putExtra("committee", committee));
 	}
 	
 	public void onLoadCommittees(List<Committee> committees) {
-		Collections.sort(committees);
 		this.committees = committees;
 		
 		if (isAdded()) 
@@ -133,35 +132,18 @@ public class CommitteeListFragment extends ListFragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			View view = null;
-			ViewHolder holder;
-			if (convertView == null) {
-				view = inflater.inflate(R.layout.committee_item, null);
-				holder = new ViewHolder();
-				holder.name = (TextView) view.findViewById(R.id.name);
-				view.setTag(holder);
-			}
-			else {
-				view = convertView;
-				holder = (ViewHolder) view.getTag();
-			}
-
 			Committee committee = getItem(position);
-			holder.committeeId = committee.id;
-			holder.name.setText(committee.name);
-
+			
+			View view;
+			if (committee.subcommittee)
+				view = inflater.inflate(R.layout.committee_item_sub, null);
+			else
+				view = inflater.inflate(R.layout.committee_item, null);
+			
+			TextView name = (TextView) view.findViewById(R.id.name);
+			name.setText(committee.name);
+			
 			return view;
-		}
-		
-		static class ViewHolder {
-			TextView name;
-			String committeeId;
-
-			@Override
-			public boolean equals(Object o) {
-				ViewHolder oh = (ViewHolder) o;
-				return oh != null && oh.committeeId.equals(this.committeeId);
-			}
 		}
 	}
 	
@@ -185,26 +167,51 @@ public class CommitteeListFragment extends ListFragment {
 		}
 		
 		private List<Committee> forLegislator(String bioguideId) {
-			List<Committee> committees = new ArrayList<Committee>();
-			List<Committee> joint = new ArrayList<Committee>();
-			List<Committee> temp;
-			
+			List<Committee> committees;
 			try {
-				temp = CommitteeService.forLegislator(bioguideId);
+				committees = CommitteeService.forLegislator(bioguideId);
 			} catch (CongressException e) {
 				this.exception = new CongressException(e, "Error loading committees.");
 				return null;
 			}
-			for (int i=0; i<temp.size(); i++) {
-				if (temp.get(i).chamber.equals("Joint"))
-					joint.add(temp.get(i));
+			
+			List<Committee> chamber = new ArrayList<Committee>();
+			List<Committee> joint = new ArrayList<Committee>();
+			
+			for (int i=0; i<committees.size(); i++) {
+				if (committees.get(i).chamber.equals("joint"))
+					joint.add(committees.get(i));
 				else
-					committees.add(temp.get(i));
+					chamber.add(committees.get(i));
 			}
-			Collections.sort(committees);
-			Collections.sort(joint);
-			committees.addAll(joint);
-			return committees;
+			
+			// sort by their committee ID, not the name
+			// but make an exception to put parent committees above their subcommittees
+			// (they'd naturally end up below)
+			Collections.sort(chamber, new Comparator<Committee>() {
+				@Override
+				public int compare(Committee a, Committee b) {
+					if (a.subcommittee && !b.subcommittee && a.parent_committee_id.equals(b.id))
+						return 1;
+					else if (b.subcommittee && !a.subcommittee && b.parent_committee_id.equals(a.id))
+						return -1;
+					else
+						return a.id.compareTo(b.id);
+				}
+			});
+			
+			Collections.sort(joint, new Comparator<Committee>() {
+				@Override
+				public int compare(Committee a, Committee b) {
+					return a.id.compareTo(b.id);
+				}
+			});
+			
+			List<Committee> result = new ArrayList<Committee>();
+			result.addAll(chamber);
+			result.addAll(joint);
+			
+			return result;
 		}
 		
 		private List<Committee> forChamber(String chamber) {
@@ -215,6 +222,8 @@ public class CommitteeListFragment extends ListFragment {
 				Log.e(Utils.TAG, "There has been an exception while getting the committees for chamber "
 						+ chamber + ": " + e.getMessage());
 			}
+			
+			Collections.sort(result);
 			return result;
 		}
 

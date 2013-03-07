@@ -246,7 +246,7 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 						.putExtra("chamber", "house"));
 			
 			menuItem(R.id.menu_committees, R.string.menu_main_committees, 16,
-					new Intent(getActivity(), CommitteePager.class));
+					new Intent(getActivity(), CommitteeListPager.class));
 		}
 		
 		private View menuItem(int id, int text, float size, final Intent intent) {

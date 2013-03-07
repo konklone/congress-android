@@ -29,6 +29,7 @@ import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.Committee;
 import com.sunlightlabs.congress.models.Committee.Membership;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -51,7 +52,8 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 	int type;
 	String chamber;
 	String billId;
-	String zipCode, lastName, state, committeeId, committeeName;
+	String zipCode, lastName, state;
+	Committee committee;
 	double latitude = -1;
 	double longitude = -1;
 	
@@ -75,12 +77,11 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		return frag;
 	}
 	
-	public static LegislatorListFragment forCommittee(String committeeId, String committeeName) {
+	public static LegislatorListFragment forCommittee(Committee committee) {
 		LegislatorListFragment frag = new LegislatorListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", SEARCH_COMMITTEE);
-		args.putString("committeeId", committeeId);
-		args.putString("committeeName", committeeName);
+		args.putSerializable("committee", committee);
 		frag.setArguments(args);
 		frag.setRetainInstance(true);
 		return frag;
@@ -139,8 +140,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		zipCode = args.getString("zip");
 		lastName = args.getString("last_name");
 		state = args.getString("state");
-		committeeId = args.getString("committeeId");
-		committeeName = args.getString("committeeName");
+		committee = (Committee) args.getSerializable("committee");
 		billId = args.getString("billId");
 		latitude = args.getDouble("latitude", -1);
 		longitude = args.getDouble("longitude", -1);
@@ -409,7 +409,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 					temp = LegislatorService.allWhere("query", context.lastName);
 					break;
 				case SEARCH_COMMITTEE:
-					temp = CommitteeService.find(context.committeeId).members;
+					temp = CommitteeService.find(context.committee.id).members;
 					break;
 				case SEARCH_STATE:
 					temp = LegislatorService.allWhere("state", context.state);
