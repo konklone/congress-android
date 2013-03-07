@@ -6,7 +6,7 @@
       >
       
     <uses-sdk 
-    	android:minSdkVersion="7"
+    	android:minSdkVersion="8"
     	android:targetSdkVersion="16"
     	/>
       
@@ -71,13 +71,7 @@
         </activity>
         <activity android:name=".LegislatorPager" />
         <activity android:name=".LegislatorCosponsors" />
-        <activity android:name="com.sunlightlabs.android.congress.CommitteePager" />
-        <activity android:name=".LegislatorLoader">
-        	<intent-filter>
-        		<action android:name="android.intent.action.MAIN" />
-        		<category android:name="android.intent.category.DEFAULT" />
-        	</intent-filter>
-        </activity>
+        <activity android:name=".CommitteePager" />
         
         <activity android:name=".LegislatorSearch">
             <intent-filter>
