@@ -61,6 +61,8 @@
     
     <string name="votes_empty_voter">No votes found by this person.</string>
     
+    <string name="new_result">NEW</string>
+    
    	<string name="committees_title">Committees</string>
     <string name="committees_loading">Plucking committees from the air…</string>
     <string name="committees_empty">No committees found.</string>

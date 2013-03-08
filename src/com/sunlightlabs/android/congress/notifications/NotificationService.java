@@ -23,7 +23,7 @@ import com.sunlightlabs.android.congress.utils.Utils;
 
 public class NotificationService extends WakefulIntentService {
 	public static final int NOTIFY_UPDATES = 0;
-	
+	public static final String EXTRA_NEW_IDS_PREFIX = "com.sunlightlabs.android.congress.notifications.new_ids.";
 	
 	private NotificationManager notifyManager;
 	private Database database;
@@ -97,10 +97,16 @@ public class NotificationService extends WakefulIntentService {
 			if (!database.isOpen())
 				database.open();
 			
+			// debug flags
+			boolean alwaysNotify = getResources().getString(R.string.debug_always_notify).equals("true");
+			boolean alwaysConsiderNew = getResources().getString(R.string.debug_always_consider_new).equals("true");
+			boolean sometimesConsiderNew = getResources().getString(R.string.debug_sometimes_consider_new).equals("true");
+			int sometimesOften = 10; // how often to flag something as artificially new
+			
 			int size = updates.size();
 			for (int i=0; i<size; i++) {
 				String itemId = subscriber.decodeId(updates.get(i));
-				if (!database.hasSubscriptionItem(subscription.id, subscription.notificationClass, itemId))
+				if (alwaysConsiderNew || (sometimesConsiderNew && (i % sometimesOften == 0)) || !database.hasSubscriptionItem(subscription.id, subscription.notificationClass, itemId))
 					unseenIds.add(itemId);
 			}
 			
@@ -108,19 +114,18 @@ public class NotificationService extends WakefulIntentService {
 			
 			int results = unseenIds.size();
 			
-			// debug flag
-			boolean alwaysNotify = getResources().getString(R.string.debug_always_notify).equals("true");
-			
 			// if there's at least one new item, notify the user
 			if (alwaysNotify || (results > 0)) {
 				
 				notifyManager.notify(
 					(subscription.id + subscription.notificationClass).hashCode(), 
 					getNotification(
+						subscription.notificationClass,
 						subscriber.notificationTicker(subscription),
 						subscriber.notificationTitle(subscription), 
 						subscriber.notificationMessage(subscription, results), 
 						subscriber.notificationIntent(subscription),
+						unseenIds,
 						
 						notificationUri(subscription)
 					)
@@ -138,15 +143,16 @@ public class NotificationService extends WakefulIntentService {
 	}
 
 	@SuppressWarnings("deprecation")
-	private Notification getNotification(String ticker, String title, String message, Intent intent, Uri uri) {
+	private Notification getNotification(String notificationClass, String ticker, String title, String message, Intent intent, List<String> unseenIds, Uri uri) {
 		int icon = R.drawable.notification_icon;
 		long when = System.currentTimeMillis();
 		
 		Notification notification = new Notification(icon, ticker, when);
-
+		
 		intent.setAction(Intent.ACTION_MAIN);
 		intent.setData(uri);
 		intent.putExtra(Analytics.EXTRA_ENTRY_FROM, Analytics.ENTRY_NOTIFICATION);
+		intent.putExtra(EXTRA_NEW_IDS_PREFIX + notificationClass, unseenIds.toArray(new String[0]));
 		
 		PendingIntent contentIntent = PendingIntent
 				.getActivity(this, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);

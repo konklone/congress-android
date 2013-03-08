@@ -1,6 +1,8 @@
 package com.sunlightlabs.android.congress.fragments;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +43,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	public static final int BILLS_CODE = 5;
 	
 	List<Bill> bills;
+	List<String> newIds;
 	
 	int type;
 	Legislator sponsor;
@@ -125,6 +128,8 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
+		newIds = FragmentUtils.newIds(this, subscriberClass());
+		
 		setupControls();
 		
 		if (bills != null)
@@ -186,6 +191,30 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			return;
 		
 		if (page == 1) {
+			// if new IDs, sort them to the top.
+			// (new IDs will only affect page 1)
+			if (newIds != null) {
+//				for (int i=0; i<bills.size(); i++) {
+//					Bill bill = bills.get(i);
+//					if (newIds.contains(bill.id))
+//						bills.get(i).extras.put("new", value)
+//				}
+				
+				Collections.sort(bills, new Comparator<Bill>() {
+					@Override
+					public int compare(Bill a, Bill b) {
+						boolean hasA = newIds.contains(a.id);
+						boolean hasB = newIds.contains(b.id);
+						if (hasA && !hasB)
+							return -1;
+						else if (!hasA && hasB)
+							return 1;
+						else
+							return 0;
+					}
+				});
+			}
+			
 			this.bills = bills;
 			displayBills();
 		} else {
@@ -225,6 +254,20 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			} else // active bills, all bills
 				FragmentUtils.showRefresh(this, R.string.bills_error); // should not happen
 		}
+	}
+	
+	private String subscriberClass() {
+		if (type == BILLS_ALL)
+			return "BillsRecentSubscriber";
+		// can't turn on until this is a tab, not a thing through LegislatorLoader
+//		else if (type == BILLS_SPONSOR)
+//			return "BillsLegislatorSubscriber";
+		else if (type == BILLS_ACTIVE)
+			return "BillsActiveSubscriber";
+		else if (type == BILLS_SEARCH_NEWEST)
+			return "BillsSearchSubscriber";
+		else
+			return null;
 	}
 	
 	private void setupSubscription() {
@@ -326,6 +369,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				holder.date = (TextView) view.findViewById(R.id.date);
 				holder.title = (TextView) view.findViewById(R.id.title);
 				holder.last_action = (TextView) view.findViewById(R.id.last_action);
+				holder.newResult = view.findViewById(R.id.new_result);
 				
 				view.setTag(holder);
 			} else
@@ -367,12 +411,18 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				holder.last_action.setVisibility(View.VISIBLE);
 			} else
 				holder.last_action.setVisibility(View.GONE);
+			
+			if (context.newIds != null && context.newIds.contains(bill.id))
+				holder.newResult.setVisibility(View.VISIBLE);
+			else
+				holder.newResult.setVisibility(View.GONE);
 
 			return view;
 		}
 		
 		static class ViewHolder {
 			TextView code, date, title, last_action;
+			View newResult;
 		}
 		
 		private void shortDate(TextView view, Date date) {

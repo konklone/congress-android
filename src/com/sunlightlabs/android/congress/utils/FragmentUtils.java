@@ -1,5 +1,9 @@
 package com.sunlightlabs.android.congress.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -7,6 +11,7 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.fragments.AlertFragment;
+import com.sunlightlabs.android.congress.notifications.NotificationService;
 
 public class FragmentUtils {
 	
@@ -18,6 +23,13 @@ public class FragmentUtils {
 		AlertFragment.create(type).show(activity.getSupportFragmentManager(), "dialog");
 	}
 	
+	public static List<String> newIds(Fragment fragment, String subscriberClass) {
+		Activity activity = fragment.getActivity();
+		if (activity == null) return null;
+		String[] ids = activity.getIntent().getStringArrayExtra(NotificationService.EXTRA_NEW_IDS_PREFIX + subscriberClass);
+		if (ids == null) return null;
+		return Arrays.asList(ids);
+	}
 
 	public static void showLoading(Fragment fragment) {
 		View view = fragment.getView();
