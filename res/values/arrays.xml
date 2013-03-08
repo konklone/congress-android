@@ -2,18 +2,26 @@
 <resources>
     
     <string-array name="changelog">
-        <item>4.0.2 - Fix a couple of crashes</item>
+        <item>Added "Active" bills tab, for bills getting action beyond introduction</item>
+        <item>Added titles for committee chairs and ranking members, sort members by party and rank</item>
+        <item>Added subcommittees</item>
+        <item>Improve links between votes and bills</item>
+        <item>When notified of new items, those items will always be marked as new, and at the top of the list</item>
+        <item>Restored cosponsors button, and source button for bill scheduling</item>
+        <item>Added Sunlight Foundation logo to About screen (it\'s beautiful)</item>
+        <item>Removed "Laws" tab, was not widely used</item>
+        <item>Removed YouTube videos (we\'ll be supporting Twitter and YouTube differently soon)</item>
+        <item>Dropped support for Android 2.1</item>
+        <item>Numerous bugfixes and ensmoothenments</item>
+    </string-array>
+    
+    <string-array name="changelogLast">
         <item>Added House hearings</item>
         <item>Invisible but important: switched to a new data source for just about everything</item>
         <item>Updated district maps</item>
         <item>Removed tweets (Twitter\'s API changes had left it broken for some time)</item>
         <item>Removed vote searching (it was rarely used)</item>
         <item>Dropped support for Android 1.6</item>
-        <item>Numerous bugfixes</item>
-    </string-array>
-    
-    <string-array name="changelogLast">
-        <item>Add your representative to your contacts</item>
 	</string-array>
     
 	<string-array name="state_codes">
