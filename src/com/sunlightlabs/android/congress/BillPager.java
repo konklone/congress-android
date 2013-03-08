@@ -37,7 +37,6 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 	private Database database;
 	private Cursor cursor;
 	
-	private static String FRAGMENT_TAG = "BillLoaderFragment";
 	
 	
 	@Override
@@ -205,6 +204,8 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 	
 	@Override
 	public void menuSelected(MenuItem item) {
+		if (bill == null) return; // safety valve (only matters on pre-4.0 devices)
+		
 		switch(item.getItemId()) {
     	case R.id.text:
     		Analytics.billText(this, bill.id);
@@ -224,6 +225,8 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 	}
 	
 	public static class BillLoaderFragment extends Fragment implements LoadBillTask.LoadsBill {
+		private static String FRAGMENT_TAG = "BillLoaderFragment";
+		
 		public BillPager context;
 		public Bill bill;
 		public CongressException exception;

@@ -62,37 +62,27 @@ public class Utils {
 		return Utils.capitalize(tempRoll.chamber) + " Roll No. " + tempRoll.number;
 	}
 	
-	// Suitable for a legislator desktop shortcut, load a legislator by ID only
-	public static Intent legislatorLoadIntent(String id) {
+	public static Intent legislatorIntent(String id) {
 		return new Intent().setClassName(
 				"com.sunlightlabs.android.congress",
-				"com.sunlightlabs.android.congress.LegislatorLoader")
-			.putExtra("id", id)
-			.putExtra("intent", legislatorPagerIntent());
+				"com.sunlightlabs.android.congress.LegislatorPager")
+			.putExtra("bioguide_id", id);
 	}
 
-	public static Intent legislatorLoadIntent(String id, Intent intent) {
-		return new Intent().setClassName(
-				"com.sunlightlabs.android.congress",
-				"com.sunlightlabs.android.congress.LegislatorLoader")
-			.putExtra("id", id)
-			.putExtra("intent", intent);
-	}
-	
-	public static Intent legislatorPagerIntent() {
-		return new Intent().setClassName(
-				"com.sunlightlabs.android.congress",
-				"com.sunlightlabs.android.congress.LegislatorPager");
-	}
-	
-	// Suitable for a direct link to a legislator, bypassing the LegislatorLoader entirely
 	public static Intent legislatorIntent(Context context, Legislator legislator) {
-		return new Intent(context, LegislatorPager.class).putExtra("legislator", legislator);
+		return new Intent(context, LegislatorPager.class)
+			.putExtra("bioguide_id", legislator.bioguide_id)
+			.putExtra("legislator", legislator);
 	}
 
-	public static Intent legislatorIntent(Context context, Class<?> activityClass, Legislator legislator) {
-		return new Intent(context, activityClass).putExtra("legislator", legislator);
-	}
+   public static Intent legislatorLoadIntent(String id, Intent intent) {
+	   return new Intent().setClassName(
+			   "com.sunlightlabs.android.congress",
+			   "com.sunlightlabs.android.congress.LegislatorLoader")
+		   .putExtra("id", id)
+		   .putExtra("intent", intent);
+}
+
 
 	public static Intent billIntent(Context context, Bill bill) {
 		return new Intent(context, BillPager.class)

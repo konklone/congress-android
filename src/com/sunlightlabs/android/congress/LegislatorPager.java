@@ -5,25 +5,32 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.sunlightlabs.android.congress.fragments.LegislatorProfileFragment;
 import com.sunlightlabs.android.congress.fragments.NewsListFragment;
+import com.sunlightlabs.android.congress.tasks.LoadLegislatorTask;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils.HasActionMenu;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Database;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class LegislatorPager extends FragmentActivity implements HasActionMenu {
+	private String bioguide_id;
 	private Legislator legislator;
 	private String tab;
+	
 	private Database database;
 	private Cursor cursor;
 	
@@ -34,14 +41,54 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 		setContentView(R.layout.pager_titled);
 		
 		Bundle extras = getIntent().getExtras();
+		bioguide_id = extras.getString("bioguide_id");
 		legislator = (Legislator) extras.getSerializable("legislator");
 		tab = extras.getString("tab");
 		
 		Analytics.track(this, "/legislator");
 		
-		setupDatabase();
 		setupControls();
+		
+		if (legislator == null)
+			LegislatorLoaderFragment.start(this);
+		else
+			onLoadLegislator(legislator);
+	}
+	
+	public void onLoadLegislator(Legislator legislator) {
+		this.legislator = legislator;
+		
+		findViewById(R.id.pager_container).setVisibility(View.VISIBLE);
+		findViewById(android.R.id.empty).setVisibility(View.GONE);
+		
+		setupDatabase();
+		setupButtons();
 		setupPager();	
+	}
+	
+	public void onLoadLegislator(CongressException exception) {
+		Utils.showRefresh(this, R.string.legislators_error);
+	}
+	
+	private void refresh() {
+		this.legislator = null;
+		Utils.setLoading(this, R.string.legislator_loading);
+		Utils.showLoading(this);
+		LegislatorLoaderFragment.start(this, true);
+	}
+	
+	public void setupControls() {
+		ActionBarUtils.setTitle(this, R.string.app_name);
+		
+		findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
+		findViewById(R.id.pager_container).setVisibility(View.GONE);
+		Utils.setLoading(this, R.string.legislator_loading);
+		
+		((Button) findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				refresh();
+			}
+		});
 	}
 	
 	private void setupPager() {
@@ -62,10 +109,11 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		database.close();
+		if (database != null && database.isOpen())
+			database.close();
 	}
 	
-	public void setupControls() {
+	public void setupButtons() {
 		String titledName = legislator.titledName();
 		ActionBarUtils.setTitle(this, titledName, new Intent(this, MenuLegislators.class));
 		if (titledName.length() >= 23)
@@ -122,6 +170,8 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 	
     @Override
     public void menuSelected(MenuItem item) {
+    	if (legislator == null) return; // safety valve (only matters on pre-4.0 devices)
+    	
         switch(item.getItemId()) {
             case R.id.addcontact:
             	Analytics.legislatorContacts(this, legislator.bioguide_id);
@@ -149,4 +199,63 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
         i.putExtra(ContactsContract.Intents.Insert.JOB_TITLE, this.legislator.fullTitle());
         startActivity(i);
     }
+    
+    public static class LegislatorLoaderFragment extends Fragment implements LoadLegislatorTask.LoadsLegislator {
+    	private static String FRAGMENT_TAG = "LegislatorLoaderFragment";
+    	
+		public LegislatorPager context;
+		public Legislator legislator;
+		public CongressException exception;
+		
+		public static void start(LegislatorPager context) {
+			start(context, false);
+		}
+		
+		public static void start(LegislatorPager context, boolean restart) {
+			FragmentManager manager = context.getSupportFragmentManager();
+			LegislatorLoaderFragment fragment = (LegislatorLoaderFragment) manager.findFragmentByTag(FRAGMENT_TAG);
+			if (fragment == null) {
+				fragment = new LegislatorLoaderFragment();
+				fragment.setRetainInstance(true);
+				manager.beginTransaction().add(fragment, FRAGMENT_TAG).commit();
+			} else if (restart)
+				fragment.run();
+			
+			// update context no matter what
+			fragment.context = context;
+		}
+		
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			run();
+		}
+		
+		public void run() {
+			new LoadLegislatorTask(this).execute(context.bioguide_id);
+		}
+		
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+			
+			if (this.legislator != null)
+				context.onLoadLegislator(legislator);
+			else if (this.exception != null)
+				context.onLoadLegislator(this.exception);
+		}
+		
+		public LegislatorLoaderFragment() {}
+		
+		// pass through
+		public void onLoadLegislator(Legislator legislator) {
+			this.legislator = legislator;
+			context.onLoadLegislator(legislator);
+		}
+		
+		public void onLoadLegislator(CongressException exception) {
+			this.exception = exception;
+			context.onLoadLegislator(exception);
+		}
+	}
 }

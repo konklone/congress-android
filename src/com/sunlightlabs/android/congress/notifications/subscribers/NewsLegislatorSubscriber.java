@@ -45,8 +45,7 @@ public class NewsLegislatorSubscriber extends Subscriber {
 
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
-		return Utils.legislatorLoadIntent(subscription.id, 
-				Utils.legislatorPagerIntent().putExtra("tab", "news"));
+		return Utils.legislatorIntent(subscription.id).putExtra("tab", "news");
 	}
 	
 	@Override

@@ -159,7 +159,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		Object tag = view.getTag();
 		if (tag != null) {
 			if (tag instanceof VoterAdapter.ViewHolder)
-				startActivity(Utils.legislatorLoadIntent(((VoterAdapter.ViewHolder) tag).bioguide_id));
+				startActivity(Utils.legislatorIntent(((VoterAdapter.ViewHolder) tag).bioguide_id));
 		}
 	}
 	

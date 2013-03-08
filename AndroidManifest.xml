@@ -69,9 +69,9 @@
 				android:value=".LegislatorSearch"
 				/>
         </activity>
+        <activity android:name=".LegislatorLoader" />
         <activity android:name=".LegislatorPager" />
         <activity android:name=".LegislatorCosponsors" />
-        <activity android:name=".CommitteePager" />
         
         <activity android:name=".LegislatorSearch">
             <intent-filter>
@@ -124,6 +124,7 @@
         
         <activity android:name=".CommitteeListPager" />
         <activity android:name=".CommitteeMember" />
+        <activity android:name=".CommitteePager" />
         
         <activity android:name=".FloorUpdatePager" />
         <activity android:name=".HearingPager" />
