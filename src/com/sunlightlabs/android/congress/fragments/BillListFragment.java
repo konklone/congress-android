@@ -194,12 +194,6 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			// if new IDs, sort them to the top.
 			// (new IDs will only affect page 1)
 			if (newIds != null) {
-//				for (int i=0; i<bills.size(); i++) {
-//					Bill bill = bills.get(i);
-//					if (newIds.contains(bill.id))
-//						bills.get(i).extras.put("new", value)
-//				}
-				
 				Collections.sort(bills, new Comparator<Bill>() {
 					@Override
 					public int compare(Bill a, Bill b) {

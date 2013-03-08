@@ -1,6 +1,9 @@
 package com.sunlightlabs.android.congress.fragments;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
@@ -32,7 +35,9 @@ import com.sunlightlabs.google.news.NewsItem;
 
 public class NewsListFragment extends ListFragment implements LoadsNews {
 	private String searchTerm;
+	
 	private List<NewsItem> items;
+	private List<String> newIds;
 	
 	private String subscriptionId, subscriptionName, subscriptionClass;
 
@@ -89,6 +94,8 @@ public class NewsListFragment extends ListFragment implements LoadsNews {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
+		newIds = FragmentUtils.newIds(this, subscriptionClass);
+		
 		setupControls();
 		
 		if (items != null)
@@ -139,6 +146,25 @@ public class NewsListFragment extends ListFragment implements LoadsNews {
 	
 	@Override
 	public void onLoadNews(List<NewsItem> items) {
+		if (newIds != null) {
+			Collections.sort(items, new Comparator<NewsItem>() {
+				@Override
+				public int compare(NewsItem a, NewsItem b) {
+					// identical to decodeId method in the subscriber classes
+					String aId = "" + a.timestamp.getTime();
+					String bId = "" + b.timestamp.getTime();
+					boolean hasA = newIds.contains(aId);
+					boolean hasB = newIds.contains(bId);
+					if (hasA && !hasB)
+						return -1;
+					else if (!hasA && hasB)
+						return 1;
+					else
+						return 0;
+				}
+			});
+		}
+		
 		this.items = items;
 		if (isAdded())
 			displayNews();
@@ -183,16 +209,34 @@ public class NewsListFragment extends ListFragment implements LoadsNews {
 				view = inflater.inflate(R.layout.news_item, null);
 
 			NewsItem item = getItem(position);
-
-			SimpleDateFormat format = new SimpleDateFormat("MMM d");
+			
+			TextView date = (TextView) view.findViewById(R.id.date);
+			shortDate(date, item.timestamp);
 			
 			((TextView) view.findViewById(R.id.news_item_title)).setText(item.title);
-			((TextView) view.findViewById(R.id.news_item_summary))
-				.setText(Html.fromHtml(Utils.truncate(item.summary, 140)));
-			((TextView) view.findViewById(R.id.news_item_when_where))
-				.setText(format.format(item.timestamp.getTime()).toUpperCase() + ", " + item.source);
-
+			((TextView) view.findViewById(R.id.news_item_summary)).setText(Html.fromHtml(Utils.truncate(item.summary, 140)));
+			((TextView) view.findViewById(R.id.news_where)).setText(item.source);
+			
+			String id = "" + item.timestamp.getTime();
+			if (newIds != null && newIds.contains(id))
+				view.findViewById(R.id.new_result).setVisibility(View.VISIBLE);
+			else
+				view.findViewById(R.id.new_result).setVisibility(View.GONE);
+			
 			return view;
+		}
+		
+		private void shortDate(TextView view, Date date) {
+			if (date.getYear() == new Date().getYear()) { 
+				view.setTextSize(16);
+				view.setText(new SimpleDateFormat("MMM d").format(date).toUpperCase());
+			} else
+				longDate(view, date);
+		}
+		
+		private void longDate(TextView view, Date date) {
+			view.setTextSize(14);
+			view.setText(new SimpleDateFormat("MMM d, ''yy").format(date).toUpperCase());
 		}
 
 	}
