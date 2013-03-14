@@ -45,6 +45,10 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 		legislator = (Legislator) extras.getSerializable("legislator");
 		tab = extras.getString("tab");
 		
+		// fail-safe - we seem to get in here without a bioguide ID sometimes, not sure how
+		if (legislator != null)
+			bioguide_id = legislator.bioguide_id;
+		
 		Analytics.track(this, "/legislator");
 		
 		setupControls();
