@@ -121,7 +121,9 @@ public class HearingListFragment extends ListFragment {
 	
 	public void onLoadHearings(List<Hearing> hearings) {
 		this.hearings = hearings;
-		displayHearings();
+		
+		if (isAdded())
+			displayHearings();
 	}
 	
 	public void onLoadHearings(CongressException exception) {
