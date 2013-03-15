@@ -215,14 +215,14 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 			FragmentManager manager = context.getSupportFragmentManager();
 			LegislatorLoaderFragment fragment = (LegislatorLoaderFragment) manager.findFragmentByTag(FRAGMENT_TAG);
 			if (fragment == null) {
-				fragment = new LegislatorLoaderFragment();
+				fragment = new LegislatorLoaderFragment(context);
 				fragment.setRetainInstance(true);
 				manager.beginTransaction().add(fragment, FRAGMENT_TAG).commit();
-			} else if (restart)
+			} else if (restart) {
+				fragment.context = context;
 				fragment.run();
-			
-			// update context no matter what
-			fragment.context = context;
+			} else
+				fragment.context = context; // still assign context
 		}
 		
 		@Override
@@ -246,6 +246,10 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 		}
 		
 		public LegislatorLoaderFragment() {}
+		
+		public LegislatorLoaderFragment(LegislatorPager context) {
+			this.context = context;
+		}
 		
 		// pass through
 		public void onLoadLegislator(Legislator legislator) {

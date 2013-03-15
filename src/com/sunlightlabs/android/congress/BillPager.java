@@ -239,14 +239,14 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 			FragmentManager manager = context.getSupportFragmentManager();
 			BillLoaderFragment fragment = (BillLoaderFragment) manager.findFragmentByTag(FRAGMENT_TAG);
 			if (fragment == null) {
-				fragment = new BillLoaderFragment();
+				fragment = new BillLoaderFragment(context);
 				fragment.setRetainInstance(true);
 				manager.beginTransaction().add(fragment, FRAGMENT_TAG).commit();
-			} else if (restart)
+			} else if (restart) {
+				fragment.context = context;
 				fragment.run();
-			
-			// update context no matter what
-			fragment.context = context;
+			} else
+				fragment.context = context; // still assign context
 		}
 		
 		@Override
@@ -270,6 +270,9 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 		}
 		
 		public BillLoaderFragment() {}
+		public BillLoaderFragment(BillPager context) {
+			this.context = context;
+		}
 		
 		// pass through
 		public void onLoadBill(Bill bill) {
