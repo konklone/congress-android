@@ -62,10 +62,6 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 			}
 		}
 		
-		// fail-safe - we seem to get in here without a bill ID sometimes, not sure how
-		if (bill != null)
-			bill_id = bill.id;
-		
 		Analytics.track(this, "/bill");
 		
 		setupControls();
