@@ -21,13 +21,14 @@ public class UpcomingBillService {
 		"bill_id", "bill", "range"
 	};
 	
-	public static List<UpcomingBill> comingUp(Date day) throws CongressException {
+	public static List<UpcomingBill> comingUp() throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
 		
 		// require an attached bill
 		params.put("bill__exists", "true");
 		// soonest first, since this is the future
-		params.put("order", "legislative_day__asc");
+		// within a day, list day-specific ones first, then week-specific 
+		params.put("order", "legislative_day__asc,range__asc");
 		
 		return upcomingBillsFor(Congress.url("upcoming_bills", fields, params, 1, Congress.MAX_PER_PAGE));
 	}

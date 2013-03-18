@@ -275,29 +275,7 @@ public class UpcomingFragment extends ListFragment {
 		@Override
 		protected List<UpcomingBill> doInBackground(String... params) {
 			try {
-				Date today = new GregorianCalendar().getTime();
-				List<UpcomingBill> upcoming = UpcomingBillService.comingUp(today);
-				
-				// put upcoming bills with nicknames at the top of that legislative day
-				// e.g. shove the post office bills to the bottom of the day
-				Collections.sort(upcoming, new Comparator<UpcomingBill>() {
-					@Override
-					public int compare(UpcomingBill a, UpcomingBill b) {
-						if (a.legislativeDay == null)
-							return 1;
-						if (b.legislativeDay == null)
-							return -1;
-
-						int day = a.legislativeDay.compareTo(b.legislativeDay);
-						if (day != 0)
-							return day;
-						else
-							return (a.bill.short_title != null ? -1 : 1);
-							
-					}
-				});
-				
-				return upcoming;
+				return UpcomingBillService.comingUp();
 			} catch (CongressException e) {
 				this.exception = new CongressException(e, "Error loading upcoming activity.");
 				return null;
