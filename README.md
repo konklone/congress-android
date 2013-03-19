@@ -31,7 +31,7 @@ Then, release work:
 * Produce unsigned APK version
 * Produce signed APK version
 * Take any screenshots needed to replace outdated ones
-  * Replace any new screenshots in Sunlight S3
-* Store APK, screenshots in Dropbox
+  * Replace any new screenshots in Sunlight S3, Dropbox
+* Store APKs in Dropbox
 
 Finally, publish.
