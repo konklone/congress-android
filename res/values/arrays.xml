@@ -2,7 +2,7 @@
 <resources>
     
     <string-array name="changelog">
-        <item>4.1.1 - Fix some crashes, display bugs</item>
+        <item>4.1.2 - Hopefully finally fix this crash bug people are getting</item>
         <item>Added "Active" bills tab, for bills getting action beyond introduction</item>
         <item>Added titles for committee chairs and ranking members, sort members by party and rank</item>
         <item>Added subcommittees</item>
