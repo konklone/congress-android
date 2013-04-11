@@ -14,6 +14,8 @@ import com.sunlightlabs.congress.services.LegislatorService;
 public class LoadLegislatorTask extends AsyncTask<String, Void, Legislator> {
 	private Context context;
 	private Fragment fragment;
+	
+	private CongressException exception;
 
 	public LoadLegislatorTask(Context context) {
 		this.context = context;
@@ -32,9 +34,14 @@ public class LoadLegislatorTask extends AsyncTask<String, Void, Legislator> {
 	@Override
 	protected Legislator doInBackground(String... params) {
 		try {
-			return LegislatorService.find(params[0]);
+			Legislator legislator = LegislatorService.find(params[0]);
+			if (legislator == null)
+				this.exception = new CongressException("Can't load legislator with this ID from Sunlight.");
+			
+			return legislator;
 		} catch (CongressException exception) {
 			Log.w(Utils.TAG, "Could not load the legislator with id " + params[0] + " from Sunlight");
+			this.exception = exception;
 			return null;
 		}
 	}
@@ -42,10 +49,15 @@ public class LoadLegislatorTask extends AsyncTask<String, Void, Legislator> {
 	@Override
 	protected void onPostExecute(Legislator legislator) {
 		LoadsLegislator loader = (LoadsLegislator) (context != null ? context : fragment);
-		loader.onLoadLegislator(legislator);
+		
+		if (legislator == null) // guaranteed to be an exception stored
+			loader.onLoadLegislator(this.exception);
+		else
+			loader.onLoadLegislator(legislator);
 	}
 
 	public interface LoadsLegislator {
 		void onLoadLegislator(Legislator legislator);
+		void onLoadLegislator(CongressException exception);
 	}
 }

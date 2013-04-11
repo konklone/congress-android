@@ -9,6 +9,7 @@ import com.sunlightlabs.android.congress.tasks.LoadLegislatorTask.LoadsLegislato
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class LegislatorLoader extends Activity implements LoadsLegislator {
@@ -59,5 +60,9 @@ public class LegislatorLoader extends Activity implements LoadsLegislator {
 		
 		loadLegislatorTask = null;
 		finish();
+	}
+	
+	public void onLoadLegislator(CongressException exception) {
+		onLoadLegislator((Legislator) null);
 	}
 }

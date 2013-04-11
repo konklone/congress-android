@@ -67,7 +67,7 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 	}
 	
 	public void onLoadLegislator(CongressException exception) {
-		Utils.showRefresh(this, R.string.legislators_error);
+		Utils.showRefresh(this, R.string.legislator_loading_error);
 	}
 	
 	private void refresh() {
@@ -215,8 +215,10 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 			FragmentManager manager = context.getSupportFragmentManager();
 			LegislatorLoaderFragment fragment = (LegislatorLoaderFragment) manager.findFragmentByTag(FRAGMENT_TAG);
 			if (fragment == null) {
-				fragment = new LegislatorLoaderFragment(context);
+				fragment = new LegislatorLoaderFragment();
 				fragment.setRetainInstance(true);
+				fragment.context = context;
+				
 				manager.beginTransaction().add(fragment, FRAGMENT_TAG).commit();
 			} else if (restart) {
 				fragment.context = context;
@@ -246,10 +248,6 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 		}
 		
 		public LegislatorLoaderFragment() {}
-		
-		public LegislatorLoaderFragment(LegislatorPager context) {
-			this.context = context;
-		}
 		
 		// pass through
 		public void onLoadLegislator(Legislator legislator) {

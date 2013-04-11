@@ -41,6 +41,7 @@
     <string name="error_fetching_news">There was an error while fetching news.</string>
     <string name="news_empty">No recent news found.</string>
     <string name="bills_loading">Plucking bills from the air…</string>
+    <string name="legislator_loading_error">Couldn\'t load information for this lawmaker.</string>
     <string name="legislators_loading">Searching for lawmakers…</string>
     <string name="legislators_loading_location">Found your location, searching…</string>
     <string name="legislators_error">Error loading lawmakers.</string>
