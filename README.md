@@ -13,6 +13,11 @@ Use the [Github Issues page](http://github.com/sunlightlabs/congress/issues) for
 Release Checklist
 -----------------
 
+Final dev check:
+
+* Tested on enough emulators to feel confident?
+* Leave any debug stuff commented out or in? (also avoid ever having to do this even temporarily)
+
 Code changes:
 
 * Bump the android:versionCode and android:versionName in AndroidManifest.xml
