@@ -20,6 +20,8 @@ Code changes:
 * Change the android:app_version_older in strings.xml to what's appropriate
 * Update the changelog data in arrays.xml to what's appropriate
 * Commit changes, add tag in git for version "vX.X.X" where X.X.X is the android:versionName
+  - `git tag -a -m "Tagging vX.X.X" vX.X.X`
+  - `git push --tags`
 
 Then, release work:
 
