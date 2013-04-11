@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,9 +14,9 @@ import android.widget.Button;
 
 import com.sunlightlabs.android.congress.fragments.BillActionFragment;
 import com.sunlightlabs.android.congress.fragments.BillInfoFragment;
+import com.sunlightlabs.android.congress.fragments.BillLoaderFragment;
 import com.sunlightlabs.android.congress.fragments.BillVoteFragment;
 import com.sunlightlabs.android.congress.fragments.NewsListFragment;
-import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils.HasActionMenu;
 import com.sunlightlabs.android.congress.utils.Analytics;
@@ -30,13 +28,12 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.BillService;
 
 public class BillPager extends FragmentActivity implements HasActionMenu {
-	private String bill_id;
-	private Bill bill;
+	public String bill_id;
+	public Bill bill;
 	
-	private String tab;
-	private Database database;
-	private Cursor cursor;
-	
+	public String tab;
+	public Database database;
+	public Cursor cursor;
 	
 	
 	@Override
@@ -222,65 +219,5 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
     			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.urls.get("opencongress"))));
     		break;
     	}
-	}
-	
-	public static class BillLoaderFragment extends Fragment implements LoadBillTask.LoadsBill {
-		private static String FRAGMENT_TAG = "BillLoaderFragment";
-		
-		public BillPager context;
-		public Bill bill;
-		public CongressException exception;
-		
-		public static void start(BillPager context) {
-			start(context, false);
-		}
-		
-		public static void start(BillPager context, boolean restart) {
-			FragmentManager manager = context.getSupportFragmentManager();
-			BillLoaderFragment fragment = (BillLoaderFragment) manager.findFragmentByTag(FRAGMENT_TAG);
-			if (fragment == null) {
-				fragment = new BillLoaderFragment();
-				fragment.context = context;
-				fragment.setRetainInstance(true);
-				manager.beginTransaction().add(fragment, FRAGMENT_TAG).commit();
-			} else if (restart) {
-				fragment.context = context;
-				fragment.run();
-			} else
-				fragment.context = context; // still assign context
-		}
-		
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			run();
-		}
-		
-		public void run() {
-			new LoadBillTask(this, context.bill_id).execute(BillService.basicFields);
-		}
-		
-		@Override
-		public void onActivityCreated(Bundle savedInstanceState) {
-			super.onActivityCreated(savedInstanceState);
-			
-			if (this.bill != null)
-				context.onLoadBill(bill);
-			else if (this.exception != null)
-				context.onLoadBill(this.exception);
-		}
-		
-		public BillLoaderFragment() {}
-		
-		// pass through
-		public void onLoadBill(Bill bill) {
-			this.bill = bill;
-			context.onLoadBill(bill);
-		}
-		
-		public void onLoadBill(CongressException exception) {
-			this.exception = exception;
-			context.onLoadBill(exception);
-		}
 	}
 }
