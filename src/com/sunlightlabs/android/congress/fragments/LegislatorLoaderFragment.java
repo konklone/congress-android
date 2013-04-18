@@ -43,7 +43,12 @@ public class LegislatorLoaderFragment extends Fragment implements LoadLegislator
 	}
 	
 	public void run() {
-		new LoadLegislatorTask(this).execute(context.bioguide_id);
+		// If this activity was killed and is being resumed, it's possible for this to get run at the start
+		// of the *activity's* onCreate method (in super.onCreate()), before any context has been assigned to this fragment.
+		// If this happens, context will be null, and it's okay to simply pass on this, because the run()
+		// call will get called again at the end of the activity's onCreate() method, at the call to start(). 
+		if (context != null)
+			new LoadLegislatorTask(this).execute(context.bioguide_id);
 	}
 	
 	@Override

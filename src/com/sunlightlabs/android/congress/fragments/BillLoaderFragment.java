@@ -43,7 +43,12 @@ public class BillLoaderFragment extends Fragment implements LoadBillTask.LoadsBi
 	}
 	
 	public void run() {
-		new LoadBillTask(this, context.bill_id).execute(BillService.basicFields);
+		// If this activity was killed and is being resumed, it's possible for this to get run at the start
+		// of the *activity's* onCreate method (in super.onCreate()), before any context has been assigned to this fragment.
+		// If this happens, context will be null, and it's okay to simply pass on this, because the run()
+		// call will get called again at the end of the activity's onCreate() method, at the call to start(). 
+		if (context != null)
+			new LoadBillTask(this, context.bill_id).execute(BillService.basicFields);
 	}
 	
 	@Override
