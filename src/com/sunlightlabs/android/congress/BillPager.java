@@ -215,7 +215,7 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
     		break;
     	case R.id.opencongress:
     		Analytics.billOpenCongress(this, bill.id);
-    		if (bill.urls != null && bill.urls.containsKey("govtrack"))
+    		if (bill.urls != null && bill.urls.containsKey("opencongress"))
     			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.urls.get("opencongress"))));
     		break;
     	}
