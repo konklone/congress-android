@@ -2,7 +2,12 @@
 <resources>
     
     <string-array name="changelog">
-        <item>4.1.3 - …Okay, we really think we fixed the crash this time. Email us directly at congress@sunlightfoundation.com if you experience any crashes.</item>
+        <item>Added link to details on our new iOS app</item>
+        <item>Changed feedback email to something Android-specific</item>
+        <item>Using new share URLs for bills</item>
+    </string-array>
+    
+    <string-array name="changelogLast">
         <item>Added "Active" bills tab, for bills getting action beyond introduction</item>
         <item>Added titles for committee chairs and ranking members, sort members by party and rank</item>
         <item>Added subcommittees</item>
@@ -14,15 +19,6 @@
         <item>Removed YouTube videos (we\'ll be supporting Twitter and YouTube differently soon)</item>
         <item>Dropped support for Android 2.1</item>
         <item>Numerous bugfixes and ensmoothenments</item>
-    </string-array>
-    
-    <string-array name="changelogLast">
-        <item>Added House hearings</item>
-        <item>Invisible but important: switched to a new data source for just about everything</item>
-        <item>Updated district maps</item>
-        <item>Removed tweets (Twitter\'s API changes had left it broken for some time)</item>
-        <item>Removed vote searching (it was rarely used)</item>
-        <item>Dropped support for Android 1.6</item>
 	</string-array>
     
 	<string-array name="state_codes">
