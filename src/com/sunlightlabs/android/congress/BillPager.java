@@ -146,7 +146,9 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 		ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.share, new View.OnClickListener() {
 			public void onClick(View v) {
 				Analytics.billShare(BillPager.this, bill.id);
-	    		Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, shareText());
+	    		Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain")
+	    				.putExtra(Intent.EXTRA_TEXT, shareText())
+	    				.putExtra(Intent.EXTRA_SUBJECT, shareSubject());
 	    		startActivity(Intent.createChooser(intent, "Share bill via:"));
 			}
 		});
@@ -156,6 +158,10 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 	
 	public String shareText() {
 		return bill.sunlightShortUrl();
+	}
+	
+	public String shareSubject() {
+		return bill.formatCode(bill.id);
 	}
 
 	private void toggleFavoriteStar(boolean enabled) {
