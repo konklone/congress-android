@@ -64,13 +64,14 @@ public class AlertFragment extends DialogFragment {
 		View aboutView = inflater.inflate(R.layout.about, null);
 
 		Spanned about1 = Html.fromHtml(
-				"Bill information provided by the <a href=\"http://beta.congress.gov\">Library of Congress</a>.  Bill summaries written by the Congressional Research Service.<br/><br/>" +
+				"<b>Have a friend with an iPhone?</b> Tell them to <a href=\"http://congress.sunlightfoundation.com/\">check out our iOS app</a>.<br/><br/>" +
+				"Bill information provided by the <a href=\"http://congress.gov\">Library of Congress</a>.  Bill summaries written by the Congressional Research Service.<br/><br/>" +
 				
 				"Votes, committee hearings, and floor updates come from official " +
 				"<a href=\"http://senate.gov/\">Senate</a> and <a href=\"http://clerk.house.gov/\">House</a> websites.<br/><br/>" +
 				
 				"People and committee information powered by the " + 
-				"<a href=\"http://github.com/unitedstates/congress-legislators\">github.com/unitedstates</a> project.<br/><br/>" + 
+				"<a href=\"https://github.com/unitedstates\">github.com/unitedstates</a> project.<br/><br/>" + 
 				
 				"News mentions provided by the <a href=\"http://code.google.com/apis/newssearch/v1/\">Google News Search API</a>."
 		);
