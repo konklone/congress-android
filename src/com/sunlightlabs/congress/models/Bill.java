@@ -175,6 +175,10 @@ public class Bill implements Serializable {
 		return "http://www.govtrack.us/congress/bills/" + congress + "/" + bill_type + number + "/text";
 	}
 	
+	public String sunlightShortUrl() {
+		return "http://cngr.es/b/" + this.id;
+	}
+	
 	public static String formatSummary(String summary, String short_title) {
 		String formatted = summary;
 		formatted = formatted.replaceFirst("^\\d+\\/\\d+\\/\\d+--.+?\\.\\s*", "");

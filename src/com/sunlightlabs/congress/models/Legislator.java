@@ -99,6 +99,10 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 		return "http://www.govtrack.us/congress/person.xpd?id=" + govtrack_id;
 	}
 	
+	public static String sunlightShortUrl(String bioguide_id) {
+		return "http://cngr.es/l/" + bioguide_id;
+	}
+	
 	public String toString() {
 		return titledName();
 	}

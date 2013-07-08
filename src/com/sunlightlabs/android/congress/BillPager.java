@@ -155,10 +155,7 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 	}
 	
 	public String shareText() {
-		if (bill.urls != null && bill.urls.containsKey("govtrack"))
-			return bill.urls.get("govtrack");
-		else
-			return bill.fallbackTextUrl();
+		return bill.sunlightShortUrl();
 	}
 
 	private void toggleFavoriteStar(boolean enabled) {
