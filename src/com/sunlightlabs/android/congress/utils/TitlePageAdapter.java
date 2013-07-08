@@ -57,6 +57,7 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
 	public int add(String handle, String title, Fragment fragment) {
 		handles.add(handle);
 		fragments.add(fragment);
+		notifyDataSetChanged();
 		
 		final int position = fragments.size() - 1;
 		
