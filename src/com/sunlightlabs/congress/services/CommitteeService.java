@@ -56,7 +56,7 @@ public class CommitteeService {
 		Committee committee = new Committee();
 		
 		committee.id = json.getString("committee_id");
-		committee.name = Congress.unicode(json.getString("name"));
+		committee.name = json.getString("name");
 		committee.chamber = json.getString("chamber");
 		
 		if (!json.isNull("subcommittee"))

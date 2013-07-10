@@ -37,7 +37,7 @@ public class UpcomingBillService {
 		UpcomingBill upcoming = new UpcomingBill();
 		
 		if (!json.isNull("context"))
-			upcoming.context = Congress.unicode(json.getString("context"));
+			upcoming.context = json.getString("context");
 		
 		if (!json.isNull("chamber"))
 			upcoming.chamber = json.getString("chamber");

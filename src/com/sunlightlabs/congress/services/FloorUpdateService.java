@@ -33,7 +33,7 @@ public class FloorUpdateService {
 		FloorUpdate update = new FloorUpdate();
 		
 		if (!json.isNull("update"))
-			update.update = Congress.unicode(json.getString("update"));
+			update.update = json.getString("update");
 		
 		if (!json.isNull("chamber"))
 			update.chamber = json.getString("chamber");

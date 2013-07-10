@@ -90,9 +90,9 @@ public class BillService {
 			bill.number = json.getInt("number");
 		
 		if (!json.isNull("short_title"))
-			bill.short_title = Congress.unicode(json.getString("short_title"));
+			bill.short_title = json.getString("short_title");
 		if (!json.isNull("official_title"))
-			bill.official_title = Congress.unicode(json.getString("official_title"));
+			bill.official_title = json.getString("official_title");
 		if (!json.isNull("last_action_at"))
 			bill.last_action_at = Congress.parseDateEither(json.getString("last_action_at"));
 		if (!json.isNull("last_vote_at"))
@@ -151,7 +151,7 @@ public class BillService {
 			bill.sponsor = LegislatorService.fromAPI(json.getJSONObject("sponsor"));
 
 		if (!json.isNull("summary"))
-			bill.summary = Congress.unicode(json.getString("summary"));
+			bill.summary = json.getString("summary");
 
 		if (!json.isNull("cosponsors")) {
 			JSONArray cosponsorObjects = json.getJSONArray("cosponsors");
@@ -244,7 +244,7 @@ public class BillService {
 		Vote vote = new Vote();
 		
 		vote.result = json.getString("result");
-		vote.text = Congress.unicode(json.getString("text"));
+		vote.text = json.getString("text");
 		vote.how = json.getString("how");
 		vote.passage_type = json.getString("vote_type");
 		vote.chamber = json.getString("chamber");
@@ -257,7 +257,7 @@ public class BillService {
 	
 	protected static Action actionFromAPI(JSONObject json) throws JSONException, ParseException, CongressException {
 		Action action = new Action();
-		action.text = Congress.unicode(json.getString("text"));
+		action.text = json.getString("text");
 		action.type = json.getString("type");
 		action.acted_at = Congress.parseDateEither(json.getString("acted_at"));
 		
