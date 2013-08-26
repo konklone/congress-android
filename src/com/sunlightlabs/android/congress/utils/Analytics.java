@@ -92,8 +92,8 @@ public class Analytics {
 			tracker.set(Fields.customDimension(DIMENSION_ENTRY), entrySource);
 		
 		// debug: output custom dimensions
-		String msg = "[" + marketChannel + "][" + originalChannel + "][" + (notificationsOn ? "on" : "off") + "][" + (entrySource != null ? entrySource : "nothing") + "]";
-		Log.i(Utils.TAG, msg);
+		// String msg = "[" + marketChannel + "][" + originalChannel + "][" + (notificationsOn ? "on" : "off") + "][" + (entrySource != null ? entrySource : "nothing") + "]";
+		// Log.i(Utils.TAG, msg);
 	}
 	
 	
