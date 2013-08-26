@@ -23,12 +23,9 @@ public class MenuLegislators extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pager_titled);
 		
-		Analytics.track(this, "/legislators");
-		
 		setupControls();
 		setupPager();
 	}
-	
 	
 	public void setupPager() {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
@@ -90,4 +87,16 @@ public class MenuLegislators extends FragmentActivity {
 			startActivity(new Intent(getActivity(), LegislatorSearch.class).putExtra("state", stateCodes[position]));
 		}
 	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		Analytics.start(this);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		Analytics.stop(this);
+	}	
 }

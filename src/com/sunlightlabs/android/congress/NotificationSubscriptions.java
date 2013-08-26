@@ -13,7 +13,6 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Analytics;
@@ -25,39 +24,19 @@ public class NotificationSubscriptions extends ListActivity {
 	private Database database;
 	private Cursor cursor;
 	
-	private GoogleAnalyticsTracker tracker;
-	private boolean tracked;
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list);
-		
-		Holder holder = (Holder) getLastNonConfigurationInstance();
-		if (holder != null) {
-			tracked = holder.tracked;
-		}
-		
-		tracker = Analytics.start(this);
-		if (!tracked) {
-			Analytics.page(this, tracker, "/notifications/subscriptions");
-			tracked = true;
-		}
 		
 		setupDatabase();
 		setupControls();
 	}
 	
 	@Override
-	public Object onRetainNonConfigurationInstance() {
-		return new Holder(tracked);
-	}
-	
-	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		database.close();
-		Analytics.stop(tracker);
 	}
 	
 	public void setupDatabase() {
@@ -124,12 +103,16 @@ public class NotificationSubscriptions extends ListActivity {
 			return view;
 		}
 	}
-
-	private static class Holder {
-		boolean tracked;
-		
-		Holder(boolean tracked) {
-			this.tracked = tracked;
-		}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		Analytics.start(this);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		Analytics.stop(this);
 	}
 }

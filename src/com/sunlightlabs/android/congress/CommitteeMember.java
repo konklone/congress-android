@@ -18,13 +18,23 @@ public class CommitteeMember extends FragmentActivity {
 		
 		Legislator legislator = (Legislator) getIntent().getExtras().getSerializable("legislator");
 		
-		Analytics.track(this, "/legislator/committees");
-		
 		ActionBarUtils.setTitle(this, "Committees for " + legislator.titledName(), Utils.legislatorIntent(this, legislator));
 		ActionBarUtils.setTitleSize(this, 16);
 		
 		FragmentManager manager = getSupportFragmentManager();
 		if (manager.findFragmentById(R.id.frame) == null)
 			manager.beginTransaction().add(R.id.frame, CommitteeListFragment.forLegislator(legislator)).commit();
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		Analytics.start(this);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		Analytics.stop(this);
 	}
 }

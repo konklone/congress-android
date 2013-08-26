@@ -2,22 +2,20 @@
 <resources>
     <string name="contact_email"></string>
     <string name="contact_subject"></string>
-    
+
     <string name="google_news_key">example</string>
     <string name="google_news_referer">example</string>
-    
+
     <string name="sunlight_api_key">example</string>
     <string name="api_user_agent">example</string>
     <string name="api_endpoint">example</string>
-    
+
     <!-- usually "market", can be changed for non-market distributions -->
     <string name="distribution_channel"></string>
-    
+
     <!-- must be either "google" or "amazon" -->
     <string name="market_channel"></string>
-    
-    <string name="google_analytics_tracking_code"></string>
-    
+
     <string name="debug_disable_analytics">false</string>
     <string name="debug_show_buttons">false</string>
     <string name="debug_always_notify">false</string>

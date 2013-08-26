@@ -16,8 +16,6 @@ public class MenuVotes extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pager_titled);
 		
-		Analytics.track(this, "/votes");
-		
 		setupControls();
 		setupPager();
 	}
@@ -30,5 +28,17 @@ public class MenuVotes extends FragmentActivity {
 	
 	public void setupControls() {
 		ActionBarUtils.setTitle(this, R.string.menu_votes_recent);
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		Analytics.start(this);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		Analytics.stop(this);
 	}
 }

@@ -20,14 +20,11 @@ public class BillSponsor extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pager_titled);
 		
-		Analytics.track(this, "/bills/sponsor");
-		
 		sponsor = (Legislator) getIntent().getSerializableExtra("legislator");
 		
 		setupControls();
 		setupPager();
 	}
-	
 	
 	public void setupPager() {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
@@ -39,6 +36,18 @@ public class BillSponsor extends FragmentActivity {
 	public void setupControls() {
 		ActionBarUtils.setTitle(this, "Latest Bills by\n" + sponsor.titledName(), Utils.legislatorIntent(this, sponsor));
 		ActionBarUtils.setTitleSize(this, 16);
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		Analytics.start(this);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		Analytics.stop(this);
 	}
 	
 }

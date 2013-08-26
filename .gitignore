@@ -2,4 +2,5 @@
 /bin
 /gen
 /res/values/keys.xml
+/res/values/analytics.xml
 /.idea

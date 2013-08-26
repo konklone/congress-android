@@ -15,8 +15,6 @@ public class HearingPager extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pager_titled);
 			
-		Analytics.track(this, "/hearings");
-		
 		setupControls();
 		setupPager();
 	}
@@ -34,5 +32,17 @@ public class HearingPager extends FragmentActivity {
 	private void setupControls() {
 		ActionBarUtils.setTitle(this, R.string.hearings_title);
 		ActionBarUtils.setTitleSize(this, 18);
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		Analytics.start(this);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		Analytics.stop(this);
 	}
 }

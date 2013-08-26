@@ -32,14 +32,11 @@ public class BillSearch extends FragmentActivity {
 		setupControls();
 	}
 	
-	
 	public void setupPager() {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
 		
 		String code = Bill.normalizeCode(query);
 		if (Bill.isCode(code)) {
-			Analytics.track(this, "/bills/code");
-			
 			// store the formatted code as the search suggestion
 			SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
 					this, SuggestionsProvider.AUTHORITY, SuggestionsProvider.MODE);
@@ -60,8 +57,6 @@ public class BillSearch extends FragmentActivity {
 			adapter.add("bills_code", "Not seen", BillListFragment.forCode(bill_type, number));
 			findViewById(R.id.pager_titles).setVisibility(View.GONE);
 		} else {
-			Analytics.track(this, "/bills/search");
-			
 			SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
 					this, SuggestionsProvider.AUTHORITY, SuggestionsProvider.MODE);
 	        suggestions.saveRecentQuery(query, null);
@@ -79,6 +74,18 @@ public class BillSearch extends FragmentActivity {
 				onSearchRequested();
 			}
 		});
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		Analytics.start(this);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		Analytics.stop(this);
 	}
 	
 }

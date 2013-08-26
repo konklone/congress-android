@@ -22,8 +22,6 @@ public class LegislatorCosponsors extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pager_titled);
 		
-		Analytics.track(this, "/bill/cosponsors");
-		
 		Intent intent = getIntent();
 		billId = intent.getStringExtra("billId");
 		bill = (Bill) intent.getSerializableExtra("bill");
@@ -32,6 +30,17 @@ public class LegislatorCosponsors extends FragmentActivity {
 		setupPager();
 	}
 	
+	@Override
+	public void onStart() {
+		super.onStart();
+		Analytics.start(this);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		Analytics.stop(this);
+	}
 	
 	public void setupPager() {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);

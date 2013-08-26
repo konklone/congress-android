@@ -57,14 +57,12 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 		
 		// location search
 		if (location) {
-			Analytics.track(this, "/legislators/location");
 			ActionBarUtils.setTitle(this, "Your Legislators");
 			locate();
 		} 
 		
 		// state search
 		else if (state != null) {
-			Analytics.track(this, "/legislators/state");
 			ActionBarUtils.setTitle(this, "Legislators from " + Utils.stateCodeToName(this, state));
 			ActionBarUtils.setTitleSize(this, 16);
 			adapter.add("legislators_state", "Not seen", LegislatorListFragment.forState(state));
@@ -72,7 +70,6 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 		
 		// zip code search
 		else if (Pattern.compile("^\\d+$").matcher(query).matches()) {
-			Analytics.track(this, "/legislators/zip");
 			ActionBarUtils.setTitle(this, "Legislators For " + query);
 			ActionBarUtils.setTitleSize(this, 16);
 			
@@ -85,7 +82,6 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 		
 		// last name search
 		else {
-			Analytics.track(this, "/legislators/lastname");
 			ActionBarUtils.setTitle(this, "Legislators Named \"" + query + "\"");
 			ActionBarUtils.setTitleSize(this, 16);
 			
@@ -151,8 +147,17 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 	private boolean relocating = false;
 	
 	@Override
+	public void onStart() {
+		super.onStart();
+		Analytics.start(this);
+	}
+	
+	@Override
 	public void onStop() {
 		super.onStop();
+		
+		Analytics.stop(this);
+		
 		cancelTimer();
 		stopRelocating();
 	}

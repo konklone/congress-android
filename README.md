@@ -1,17 +1,17 @@
-Setup
------
+### Setup
 
-When setting this up, make sure to copy keys.xml.example to res/values/keys.xml and fill in your [Sunlight API](http://services.sunlightlabs.com) key and [Google Search API key](http://code.google.com/apis/loader/signup.html) for use in the [Google Search News API](http://code.google.com/apis/newssearch/v1/jsondevguide.html).
+When setting this up:
 
-
-Issue Tracking
-------
-
-Use the [Github Issues page](http://github.com/sunlightlabs/congress/issues) for this project.
+* copy `keys.xml.example` to `res/values/keys.xml` and fill in your [Sunlight API](http://services.sunlightlabs.com) key and [Google Search API key](http://code.google.com/apis/loader/signup.html) for use in the [Google Search News API](http://code.google.com/apis/newssearch/v1/jsondevguide.html).
+* If using Google Analytics, copy `analytics.xml.example` to `res/values/analytics.xml` and fill in the `ga_trackingId` field with your Google Analytics profile tracking ID. (Make sure you've set up a profile in Google Analytics first.)
 
 
-Release Checklist
------------------
+### Issue Tracking
+
+Use the [Github Issues page](/sunlightlabs/congress-android/issues) for this project.
+
+
+### Release Checklist
 
 Final dev check:
 

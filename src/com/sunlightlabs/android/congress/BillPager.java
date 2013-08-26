@@ -59,8 +59,6 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 			}
 		}
 		
-		Analytics.track(this, "/bill");
-		
 		setupControls();
 		
 		if (bill == null)
@@ -222,5 +220,17 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
     			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.urls.get("opencongress"))));
     		break;
     	}
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		Analytics.start(this);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		Analytics.stop(this);
 	}
 }

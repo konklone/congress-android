@@ -17,12 +17,9 @@ public class MenuBills extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pager_titled);
 		
-		Analytics.track(this, "/bills");
-		
 		setupControls();
 		setupPager();
 	}
-	
 	
 	public void setupPager() {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
@@ -46,5 +43,17 @@ public class MenuBills extends FragmentActivity {
 				onSearchRequested();
 			}
 		});
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		Analytics.start(this);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		Analytics.stop(this);
 	}
 }

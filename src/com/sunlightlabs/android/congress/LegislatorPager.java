@@ -43,8 +43,6 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 		legislator = (Legislator) extras.getSerializable("legislator");
 		tab = extras.getString("tab");
 		
-		Analytics.track(this, "/legislator");
-		
 		setupControls();
 		
 		if (legislator == null)
@@ -197,4 +195,16 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
         i.putExtra(ContactsContract.Intents.Insert.JOB_TITLE, this.legislator.fullTitle());
         startActivity(i);
     }
+    
+    @Override
+	public void onStart() {
+		super.onStart();
+		Analytics.start(this);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		Analytics.stop(this);
+	}
 }

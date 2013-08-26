@@ -21,14 +21,11 @@ public class CommitteePager extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pager_titled);
 		
-		Analytics.track(this, "/committee/legislators");
-		
 		committee = (Committee) getIntent().getSerializableExtra("committee");
 		
 		setupControls();
 		setupPager();
 	}
-	
 	
 	public void setupPager() {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
@@ -48,5 +45,17 @@ public class CommitteePager extends FragmentActivity {
 		
 		ActionBarUtils.setTitle(this, name, new Intent(this, CommitteeListPager.class));
 		ActionBarUtils.setTitleSize(this, 16);
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		Analytics.start(this);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		Analytics.stop(this);
 	}
 }

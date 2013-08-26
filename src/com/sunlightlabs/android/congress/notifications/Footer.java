@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.sunlightlabs.android.congress.NotificationSettings;
 import com.sunlightlabs.android.congress.NotificationTabs;
 import com.sunlightlabs.android.congress.R;
@@ -47,8 +46,6 @@ public class Footer {
 	private Subscription subscription;
 	private List<String> latestIds;
 	
-	GoogleAnalyticsTracker tracker;
-	
 	// initialize the footer to a fragment, obtain a tracker from its activity's fragment pool
 	// set it up with a subscription and a list of seen items
 	public static void setup(Fragment fragment, Subscription subscription, List<?> objects) {
@@ -59,7 +56,6 @@ public class Footer {
 		FragmentActivity activity = fragment.getActivity();
 		this.context = activity;
 		this.resources = activity.getResources();
-		this.tracker = Analytics.trackerFor(activity);
 		
 		this.footerView = (ViewGroup) fragment.getView().findViewById(R.id.footer);
 		this.text = (TextView) footerView.findViewById(R.id.text);
@@ -140,13 +136,13 @@ public class Footer {
 	private void onTap() {
 		if (state == OFF) {
 			setWorking();
-			Analytics.subscribeNotification(context, tracker, subscription.notificationClass);
+			Analytics.subscribeNotification(context, subscription.notificationClass);
 			new SubscribeTask(this).execute();
 		}
 		
 		else if (state == ON) {
 			setWorking();
-			Analytics.unsubscribeNotification(context, tracker, subscription.notificationClass);
+			Analytics.unsubscribeNotification(context, subscription.notificationClass);
 			new UnsubscribeTask(this).execute();
 		}
 		
