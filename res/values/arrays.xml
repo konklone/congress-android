@@ -2,6 +2,7 @@
 <resources>
     
     <string-array name="changelog">
+        <item>4.1.6 - Upgraded our analytics collection, temporarily disabled district map feature (broken by Google in its new Maps app).</item>
         <item>Added link to details on our new iOS app</item>
         <item>Changed feedback email to something Android-specific</item>
         <item>Using new share URLs for bills</item>
