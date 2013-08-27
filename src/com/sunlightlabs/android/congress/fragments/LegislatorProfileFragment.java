@@ -161,7 +161,10 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		});
 		
 		profileItem(R.id.profile_district, "District Map", new View.OnClickListener() {
-			public void onClick(View v) {districtMap();}
+			public void onClick(View v) {
+//				districtMap();
+				Utils.alert(getContext(), "The district map function is temporarily out-of-order, and will be fixed in our next update.");
+			}
 		});
 		
 		if (legislator.website == null || legislator.website.equals(""))
