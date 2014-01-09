@@ -9,8 +9,7 @@
 	
 	<include layout="@layout/legislator_out_of_office" />
 	
-	<LinearLayout 
-		android:orientation="horizontal"
+	<LinearLayout android:orientation="horizontal"
 		style="@style/ProfileHead"
 		android:layout_width="wrap_content"
 		android:layout_weight="0"
@@ -53,63 +52,69 @@
 	 	
 	</LinearLayout>
  	
-	<include layout="@layout/line_divider" />
+	<FrameLayout android:id="@+id/map_container"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    />
+	
+<!-- 	<include layout="@layout/line_divider" /> -->
  	
- 	<LinearLayout android:orientation="horizontal"
- 	    android:layout_width="fill_parent"
- 	    android:layout_height="wrap_content"
- 	    android:layout_weight="1"
- 	    >
+<!--  	<LinearLayout android:orientation="horizontal" -->
+<!--  	    android:layout_width="fill_parent" -->
+<!--  	    android:layout_height="wrap_content" -->
+<!--  	    android:layout_weight="1" -->
+<!--  	    > -->
 	  	
- 	    <include layout="@layout/profile_item"
- 	        android:id="@+id/profile_phone"
- 	        />
+<!--  	    <include layout="@layout/profile_item" -->
+<!--  	        android:id="@+id/profile_phone" -->
+<!--  	        /> -->
  	    
- 	    <include layout="@layout/line_divider_vertical" />
+<!--  	    <include layout="@layout/line_divider_vertical" /> -->
  	    
- 	    <include layout="@layout/profile_item"
- 	        android:id="@+id/profile_website"
- 	        />
+<!--  	    <include layout="@layout/profile_item" -->
+<!--  	        android:id="@+id/profile_website" -->
+<!--  	        /> -->
  	    
-	</LinearLayout>
+<!-- 	</LinearLayout> -->
 	
- 	<include layout="@layout/line_divider" />
+<!--  	<include layout="@layout/line_divider" /> -->
 	
- 	<LinearLayout android:orientation="horizontal"
- 	    android:layout_width="fill_parent"
- 	    android:layout_height="wrap_content"
- 	    android:layout_weight="1"
- 	    >
+<!--  	<LinearLayout android:orientation="horizontal" -->
+<!--  	    android:layout_width="fill_parent" -->
+<!--  	    android:layout_height="wrap_content" -->
+<!--  	    android:layout_weight="1" -->
+<!--  	    > -->
 	  	
- 	    <include layout="@layout/profile_item"
- 	        android:id="@+id/profile_voting"
- 	        />
+<!--  	    <include layout="@layout/profile_item" -->
+<!--  	        android:id="@+id/profile_voting" -->
+<!--  	        /> -->
  	    
- 	    <include layout="@layout/line_divider_vertical" />
+<!--  	    <include layout="@layout/line_divider_vertical" /> -->
  	    
- 	    <include layout="@layout/profile_item"
- 	        android:id="@+id/profile_bills"
- 	        />
+<!--  	    <include layout="@layout/profile_item" -->
+<!--  	        android:id="@+id/profile_bills" -->
+<!--  	        /> -->
  	    
-	</LinearLayout>
+<!-- 	</LinearLayout> -->
 	
- 	<include layout="@layout/line_divider" />
+<!--  	<include layout="@layout/line_divider" /> -->
 	
- 	<LinearLayout android:orientation="horizontal"
- 	    android:layout_width="fill_parent"
- 	    android:layout_height="wrap_content"
- 	    android:layout_weight="1"
- 	    >
+<!--  	<LinearLayout android:orientation="horizontal" -->
+<!--  	    android:layout_width="fill_parent" -->
+<!--  	    android:layout_height="wrap_content" -->
+<!--  	    android:layout_weight="1" -->
+<!--  	    > -->
 	  	
- 	    <include layout="@layout/profile_item"
- 	        android:id="@+id/profile_committees"
- 	        />
+<!--  	    <include layout="@layout/profile_item" -->
+<!--  	        android:id="@+id/profile_committees" -->
+<!--  	        /> -->
  	    
- 	    <include layout="@layout/line_divider_vertical" />
+<!--  	    <include layout="@layout/line_divider_vertical" /> -->
  	    
- 	    <include layout="@layout/profile_item"
- 	        android:id="@+id/profile_district"
- 	        />
+<!--  	    <include layout="@layout/profile_item" -->
+<!--  	        android:id="@+id/profile_district" -->
+<!--  	        /> -->
  	    
-	</LinearLayout>
+<!-- 	</LinearLayout> -->
 </LinearLayout>

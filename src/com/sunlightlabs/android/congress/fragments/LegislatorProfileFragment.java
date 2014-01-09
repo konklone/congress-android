@@ -7,12 +7,19 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.sunlightlabs.android.congress.BillSponsor;
 import com.sunlightlabs.android.congress.CommitteeMember;
 import com.sunlightlabs.android.congress.R;
@@ -140,35 +147,57 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		((TextView) mainView.findViewById(R.id.profile_domain)).setText(domainName(legislator.getDomain()));
 		((TextView) mainView.findViewById(R.id.profile_office)).setText(officeName(legislator.office));
 	
-		profileItem(R.id.profile_phone, "Call " + pronoun(legislator.gender) + " office", new View.OnClickListener() {
-			public void onClick(View v) {callOffice();}
-		});
+		setupMap();
 		
-		profileItem(R.id.profile_website, "Website", new View.OnClickListener() {
-			public void onClick(View v) {visitWebsite();}
-		});
+//		profileItem(R.id.profile_phone, "Call " + pronoun(legislator.gender) + " office", new View.OnClickListener() {
+//			public void onClick(View v) {callOffice();}
+//		});
+//		
+//		profileItem(R.id.profile_website, "Website", new View.OnClickListener() {
+//			public void onClick(View v) {visitWebsite();}
+//		});
+//		
+//		profileItem(R.id.profile_voting, R.string.voting_record, new View.OnClickListener() {
+//			public void onClick(View v) {votingRecord();}
+//		});
+//		
+//		profileItem(R.id.profile_bills, R.string.sponsored_bills, new View.OnClickListener() {
+//			public void onClick(View v) {sponsoredBills();}
+//		});
+//		
+//		profileItem(R.id.profile_committees, R.string.committees, new View.OnClickListener() {
+//			public void onClick(View v) {viewCommittees();}
+//		});
+//		
+//		if (legislator.website == null || legislator.website.equals(""))
+//			mainView.findViewById(R.id.profile_website).setVisibility(View.GONE);
+	}
+	
+	public void setupMap() {
+		FragmentManager manager = getChildFragmentManager();
 		
-		profileItem(R.id.profile_voting, R.string.voting_record, new View.OnClickListener() {
-			public void onClick(View v) {votingRecord();}
-		});
+		SupportMapFragment fragment = (SupportMapFragment) manager.findFragmentById(R.id.map_container);
+		if (fragment == null) {
+			fragment= SupportMapFragment.newInstance();
+			manager.beginTransaction().add(R.id.map_container, fragment).commit();
+		}
 		
-		profileItem(R.id.profile_bills, R.string.sponsored_bills, new View.OnClickListener() {
-			public void onClick(View v) {sponsoredBills();}
-		});
-		
-		profileItem(R.id.profile_committees, R.string.committees, new View.OnClickListener() {
-			public void onClick(View v) {viewCommittees();}
-		});
-		
-		profileItem(R.id.profile_district, "District Map", new View.OnClickListener() {
-			public void onClick(View v) {
-//				districtMap();
-				Utils.alert(getContext(), "The district map function is temporarily out-of-order, and will be fixed in our next update.");
-			}
-		});
-		
-		if (legislator.website == null || legislator.website.equals(""))
-			mainView.findViewById(R.id.profile_website).setVisibility(View.GONE);
+        GoogleMap map = fragment.getMap();
+
+        if (map != null) {
+        	Log.i(Utils.TAG, "Loading map");
+        	LatLng sydney = new LatLng(-33.867, 151.206);
+
+	        map.setMyLocationEnabled(true);
+	        map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
+	
+	        map.addMarker(new MarkerOptions()
+		        .title("Sydney")
+		        .snippet("The most populous city in Australia.")
+		        .position(sydney));
+        } else
+        	Log.i(Utils.TAG, "No map.");
+        
 	}
 	
 	private View profileItem(int id, int text, View.OnClickListener listener) {
