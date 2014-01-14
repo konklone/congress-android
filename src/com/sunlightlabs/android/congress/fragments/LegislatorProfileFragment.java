@@ -20,19 +20,24 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mapbox.mapboxsdk.MapView;
 import com.sunlightlabs.android.congress.BillSponsor;
 import com.sunlightlabs.android.congress.CommitteeMember;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.VoteVoter;
+import com.sunlightlabs.android.congress.tasks.LoadDistrictTask;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.District;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask.LoadsPhoto {
+public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask.LoadsPhoto, LoadDistrictTask.LoadsDistrict {
 	private Legislator legislator;
+	private District district;
 	
 	private Drawable avatar;
 	
@@ -124,18 +129,6 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 			.putExtra("legislator", legislator));
     }
     
-    public void districtMap() {
-		String url = Utils.districtMapUrl(legislator.title, legislator.state, legislator.district);
-		Uri uri = Uri.parse("geo:0,0?q=" + url);
-		Intent mapIntent = new Intent(Intent.ACTION_VIEW, uri); 
-		mapIntent.setData(uri);
-		
-		Analytics.legislatorDistrict(getActivity(), legislator.bioguide_id);
-		
-		startActivity(Intent.createChooser(mapIntent, getString(R.string.view_legislator_district)));
-	}
-
-
 	public void setupControls() {
 		View mainView = getView();
 		
@@ -174,6 +167,43 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 	}
 	
 	public void setupMap() {
+		if (this.district != null)
+			displayDistrict();
+		else
+			loadDistrict();
+	}
+	
+	// can assume this.district is set
+	public void displayDistrict() {
+		Log.i(Utils.TAG, "Got district map fetched, loading Mapbox map...");
+		
+		Context context = this.getActivity();
+		MapView mapView = new MapView(context, context.getResources().getString(R.string.mapbox_id));
+		
+		ViewGroup container = (ViewGroup) getView().findViewById(R.id.map_container);
+		container.addView(mapView);
+		District.drawPolygon(district.polygon, mapView);
+		Log.i(Utils.TAG, "Pretend I just drew a map.");
+	}
+	
+	public void loadDistrict() {
+		Log.i(Utils.TAG, "Kicking off district map fetching...");
+		new LoadDistrictTask(this).execute(legislator);
+	}
+	
+	@Override
+	public void onLoadDistrict(District district) {
+		this.district = district;
+		displayDistrict();
+	}
+	
+	@Override
+	public void onLoadDistrict(CongressException exception) {
+		Log.e(Utils.TAG, "Error fetching map :(", exception);
+		Utils.alert(this.getContext(), "There was an error loading the district map.");
+	}
+	
+	public void setupGoogleMap() {
 		FragmentManager manager = getChildFragmentManager();
 		
 		SupportMapFragment fragment = (SupportMapFragment) manager.findFragmentById(R.id.map_container);
