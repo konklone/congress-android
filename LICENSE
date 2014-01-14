@@ -1,21 +1,46 @@
 This application makes use of various Commonsware libraries. These, along with their respective Apache licenses, are:
 
-  com.commonsware.cwac.wakeful: 
+  com.commonsware.cwac.wakeful:
   http://github.com/commonsguy/cwac-wakeful/blob/master/LICENSE
 
-  com.commonsware.cwac.merge: 
+  com.commonsware.cwac.merge:
   http://github.com/commonsguy/cwac-merge/blob/master/LICENSE
 
-  com.commonsware.cwac.sacklist: 
+  com.commonsware.cwac.sacklist:
   http://github.com/commonsguy/cwac-sacklist/blob/master/LICENSE
-
 
 ==================
 
+Files in /libs are compiled JARs, distributed under their own license terms.
+
+geojson-jackson-1.1.jar
+  Apache License 2.0
+  https://github.com/opendatalab-de/geojson-jackson/blob/master/LICENSE
+
+jackson-annotations-2.3.0.jar
+jackson-core-2.3.1.jar
+jackson-databind-2.3.1.jar
+  http://jackson.codehaus.org
+  Apache License 2.0
+  http://www.apache.org/licenses/LICENSE-2.0
+
+mapbox-android-sdk.jar
+  https://github.com/mapbox/mapbox-android-sdk
+  No license specified
+
+android-support-v4.jar
+  Apache License 2.0
+  Visible at top of source files
+
+libGoogleAnalyticsServices.jar
+  unknown, proprietary?
+  https://developers.google.com/analytics/devguides/collection/android/v3/
+
+==================
 
 The General Public License v3 covers all code in packages matched by:
 
-  com.sunlightlabs.android.* 
+  com.sunlightlabs.android.*
 
 This is all code found in the directory:
 
