@@ -22,11 +22,10 @@ jackson-core-2.3.1.jar
 jackson-databind-2.3.1.jar
   http://jackson.codehaus.org
   Apache License 2.0
-  http://www.apache.org/licenses/LICENSE-2.0
 
 mapbox-android-sdk.jar
-  https://github.com/mapbox/mapbox-android-sdk
-  No license specified
+  https://github.com/mapbox/mapbox-android-sdk/blob/master/LICENSE.md
+  Apache License 2.0
 
 android-support-v4.jar
   Apache License 2.0
