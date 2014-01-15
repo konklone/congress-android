@@ -28,6 +28,7 @@ import com.sunlightlabs.android.congress.VoteVoter;
 import com.sunlightlabs.android.congress.tasks.LoadDistrictTask;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.Analytics;
+import com.sunlightlabs.android.congress.utils.DistrictMapView;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -178,12 +179,13 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		Log.i(Utils.TAG, "Got district map fetched, loading Mapbox map...");
 		
 		Context context = this.getActivity();
-		MapView mapView = new MapView(context, context.getResources().getString(R.string.mapbox_id));
+		DistrictMapView mapView = new DistrictMapView(context, context.getResources().getString(R.string.mapbox_id));
+		
+		District.drawPolygon(district.polygon, mapView);
 		
 		ViewGroup container = (ViewGroup) getView().findViewById(R.id.map_container);
 		container.addView(mapView);
-		District.drawPolygon(district.polygon, mapView);
-		Log.i(Utils.TAG, "Pretend I just drew a map.");
+		Log.i(Utils.TAG, "Drew a map.");
 	}
 	
 	public void loadDistrict() {
