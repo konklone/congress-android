@@ -8,7 +8,8 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	public String bioguide_id, govtrack_id, thomas_id;
 	public String first_name, last_name, nickname, name_suffix;
 	public String title, party, state, district, chamber;
-	public String gender, office, website, phone, twitter_id, youtube_id; 
+	public String gender, office, website, phone;
+	public String twitter_id, youtube_id, facebook_id; 
 	public String term_start, term_end;
 	public boolean in_office;
 	
@@ -115,5 +116,23 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	public static String searchTermFor(Legislator legislator) {
     	return "\"" + legislator.title + ". " + legislator.firstName() + " " + legislator.last_name + "\"";
     }
+	
+	public String twitterUrl() {
+		if (this.twitter_id == null || this.twitter_id.equals(""))
+			return null;
+		return "https://twitter.com/" + this.twitter_id;
+	}
+	
+	public String youtubeUrl() {
+		if (this.youtube_id == null || this.youtube_id.equals(""))
+			return null;
+		return "https://www.youtube.com/" + this.youtube_id;
+	}
+	
+	public String facebookUrl() {
+		if (this.facebook_id == null || this.facebook_id.equals(""))
+			return null;
+		return "https://www.facebook.com/" + this.facebook_id;
+	}
 
 }

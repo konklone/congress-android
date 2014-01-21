@@ -469,7 +469,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			// if we have free space, fetch the photo
 			if (loadPhotoTasks.size() <= MAX_PHOTO_TASKS) {
 				try {
-					loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
+					loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_LARGE, bioguide_id).execute(bioguide_id));
 				} catch(RejectedExecutionException e) {
 					Log.e(Utils.TAG, "[RollInfo] RejectedExecutionException occurred while loading photo.", e);
 					loadNoPhoto(bioguide_id);
@@ -620,7 +620,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			
 			voteView.setText(vote.vote);
 			
-			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_MEDIUM, legislator.bioguide_id, context);
+			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_LARGE, legislator.bioguide_id, context);
 			if (photo != null)
 				holder.photo.setImageDrawable(photo);
 			else {

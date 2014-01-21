@@ -229,7 +229,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 	public void loadPhoto(String bioguide_id) {
 		if (!loadPhotoTasks.containsKey(bioguide_id)) {
 			try {
-				loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
+				loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_LARGE, bioguide_id).execute(bioguide_id));
 			} catch (RejectedExecutionException e) {
 				Log.e(Utils.TAG, "[LegislatorListFragment] RejectedExecutionException occurred while loading photo.", e);
 				onLoadPhoto(null, bioguide_id); // if we can't run it, then just show the no photo image and move on
@@ -329,7 +329,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 //					holder.title.setVisibility(View.GONE);
 //			}
 
-			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_MEDIUM, legislator.bioguide_id, context.getActivity());
+			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_LARGE, legislator.bioguide_id, context.getActivity());
 			if (photo != null)
 				holder.photo.setImageDrawable(photo);
 			else {

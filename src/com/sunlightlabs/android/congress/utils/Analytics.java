@@ -161,6 +161,9 @@ public class Analytics {
 		public static final String NOTIFICATION_REMOVE = "unsubscribe";
 		public static final String LEGISLATOR_CALL = "call";
 		public static final String LEGISLATOR_WEBSITE = "website";
+		public static final String LEGISLATOR_TWITTER = "twitter";
+		public static final String LEGISLATOR_YOUTUBE = "youtube";
+		public static final String LEGISLATOR_FACEBOOK = "facebook";
 		public static final String LEGISLATOR_DISTRICT = "district";
 		public static final String LEGISLATOR_CONTACTS = "contacts";
 		public static final String BILL_SHARE = "share";
@@ -213,8 +216,8 @@ public class Analytics {
 		event(activity, EVENT_LEGISLATOR, LEGISLATOR_CALL, bioguideId);
 	}
 	
-	public static void legislatorWebsite(Activity activity, String bioguideId) {
-		event(activity, EVENT_LEGISLATOR, LEGISLATOR_WEBSITE, bioguideId);
+	public static void legislatorWebsite(Activity activity, String bioguideId, String network) {
+		event(activity, EVENT_LEGISLATOR, network, bioguideId);
 	}
 	
 	public static void legislatorDistrict(Activity activity, String bioguideId) {

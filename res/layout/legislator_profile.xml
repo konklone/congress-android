@@ -1,120 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
-	android:orientation="vertical"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:clickable="false"
-	android:id="@+id/profile_container"
-	>
-	
-	<include layout="@layout/legislator_out_of_office" />
-	
-	<LinearLayout android:orientation="horizontal"
-		style="@style/ProfileHead"
-		android:layout_width="wrap_content"
-		android:layout_weight="0"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+	<LinearLayout  
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:clickable="false"
+		android:id="@+id/profile_container"
 		>
 		
-		<ImageView  
-		    android:id="@+id/profile_picture"
-			style="@style/ProfilePicture"
+		<include layout="@layout/legislator_out_of_office" />
+		
+		<LinearLayout android:orientation="horizontal"
+			android:layout_height="125dp"
+			android:layout_width="wrap_content"
+			android:layout_weight="0"
+			>
 			
-			android:src="@drawable/loading_photo"
-			/>
-	  	
-	  	<LinearLayout android:id="@+id/profile_basic"
-	  		style="@style/ProfileTextWidth"
-	  		android:layout_height="fill_parent"
-	  		android:orientation="vertical"
-	  		>
-	 		
-	  		<TextView android:id="@+id/profile_party"
-		  		style="@style/LegislatorProfileText"
-	  			android:text="Democrat"
-		  		/>
-	  		
-	  		<TextView android:id="@+id/profile_state"
-		  		style="@style/LegislatorProfileText"
-		  		android:text="District of Columbia"
-		  		/>
+			<ImageView android:id="@+id/profile_picture"
+			    android:layout_width="100dp"
+			    android:layout_height="125dp"
+	        	
+				android:src="@drawable/loading_photo"
+				/>
 		  	
-		  	<TextView android:id="@+id/profile_domain"
-		  		style="@style/LegislatorProfileText"
-	  			android:text="Senior Senator"
-		  		/>
+		  	<LinearLayout android:id="@+id/profile_basic"
+		  	    android:layout_width="fill_parent"
+		  		android:layout_height="fill_parent"
+		  		android:orientation="vertical"
+		  		android:paddingTop="10dp"
+		  		android:paddingLeft="10dp"
+		  		>
 		  		
-		  	<TextView android:id="@+id/profile_office"
-		  		style="@style/LegislatorProfileText"
-	  			android:text="3445 Rayburn"
-	  			/>
-		  
-	 	</LinearLayout>
+		  	    <TextView android:id="@+id/profile_office"
+			  		style="@style/LegislatorProfileText"
+		  			android:text="District 3"
+			  		/>
+		  	    
+		  		<TextView android:id="@+id/profile_state_party"
+			  		style="@style/LegislatorProfileText"
+			  		android:text="District of Columbia, Democrat"
+			  		/>
+		  		
+		  		<LinearLayout android:orientation="horizontal"
+		  		    android:layout_width="fill_parent"
+		  		   	android:layout_height="wrap_content"
+		  		   	android:layout_marginTop="10dp"
+		  		   	>
+		  		    
+		  		    <FrameLayout android:id="@+id/twitter" 
+		  		        android:layout_height="36dp"
+						android:layout_width="36dp"
+						android:layout_marginRight="10dp"
+						style="@style/Pressable"
+						>
+						<ImageView 
+							android:layout_width="32dp"
+							android:layout_height="32dp"
+							
+							android:layout_gravity="center"
+							
+							android:src="@drawable/twitter"
+							/>
+					</FrameLayout>
+					
+					<FrameLayout android:id="@+id/facebook" 
+		  		        android:layout_height="36dp"
+						android:layout_width="36dp"
+						android:layout_marginRight="10dp"
+						style="@style/Pressable"
+						>
+						
+						<ImageView 
+							android:layout_width="32dp"
+							android:layout_height="32dp"
+							
+							android:layout_gravity="center"
+							
+							android:src="@drawable/facebook"
+							/>
+					
+					</FrameLayout>
+					
+					<FrameLayout android:id="@+id/youtube" 
+		  		        android:layout_height="36dp"
+						android:layout_width="36dp"
+						android:layout_marginRight="10dp"
+						style="@style/Pressable"
+						>
+						
+						<ImageView 
+							android:layout_width="32dp"
+							android:layout_height="32dp"
+							
+							android:layout_gravity="center"
+							
+							android:src="@drawable/youtube"
+							/>
+							
+					</FrameLayout>
+						  		    
+		  		    
+		  		</LinearLayout>
+		  		
+		 	</LinearLayout>
+		 	
+		</LinearLayout>
+		
+		<LinearLayout android:orientation="horizontal"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:padding="10dp"
+		    
+		    android:background="@color/background_dark"
+		    >
+		    
+		    <TextView android:id="@+id/profile_office"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        
+		        android:text="3356 Rayburn"
+		        android:textSize="14sp"
+		        
+		        android:layout_gravity="center"
+		        
+		        android:layout_marginRight="20dp"
+		        />
+		    
+		    <FrameLayout  
+		        android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				
+				android:background="@color/text_grey"
+				android:padding="1dp"
+				
+				android:layout_marginRight="20dp"
+				>
+		  		<FrameLayout
+		  		    android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+		  		    android:background="@color/background_dark"
+		  		    >
+		  		    
+			  		<FrameLayout android:id="@+id/call_office"
+			  		    android:layout_height="wrap_content"
+						android:layout_width="wrap_content"
+						
+						android:layout_gravity="center"
+						
+						style="@style/Pressable"
+						
+						android:paddingLeft="10dp"
+			  		    android:paddingRight="10dp"
+			  		    android:paddingTop="2dp"
+			  		    android:paddingBottom="2dp"
+			  		    >
+			  		    <TextView 
+			  		        android:layout_height="wrap_content"
+							android:layout_width="wrap_content"
+			  		        android:layout_gravity="center"
+			  		        
+			  		        android:text="Call office"
+			  		        android:textSize="14sp"
+			  		        />
+			  		</FrameLayout>
+		  		</FrameLayout>
+		  	</FrameLayout>
+		  	
+		    <FrameLayout  
+		        android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				
+				android:background="@color/text_grey"
+				android:padding="1dp"
+				>
+		  		<FrameLayout
+		  		    android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+		  		    android:background="@color/background_dark"
+		  		    >
+		  		    
+			  		<FrameLayout android:id="@+id/visit_website"
+			  		    android:layout_height="wrap_content"
+						android:layout_width="wrap_content"
+						
+						android:layout_gravity="center"
+						style="@style/Pressable"
+						
+						android:paddingLeft="10dp"
+			  		    android:paddingRight="10dp"
+			  		    android:paddingTop="2dp"
+			  		    android:paddingBottom="2dp"
+			  		    >
+			  		    <TextView 
+			  		        android:layout_height="wrap_content"
+							android:layout_width="wrap_content"
+			  		        android:layout_gravity="center"
+			  		        
+			  		        android:text="Website"
+			  		        android:textSize="14sp"
+			  		        />
+			  		</FrameLayout>
+		  		</FrameLayout>
+		  	</FrameLayout>
+		    
+		</LinearLayout>
 	 	
+		<FrameLayout android:id="@+id/map_container"
+		    android:layout_width="fill_parent"
+		    android:layout_height="400dp"
+		    android:layout_weight="1"
+		    />
 	</LinearLayout>
- 	
-	<FrameLayout android:id="@+id/map_container"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_weight="1"
-	    />
-	
-<!-- 	<include layout="@layout/line_divider" /> -->
- 	
-<!--  	<LinearLayout android:orientation="horizontal" -->
-<!--  	    android:layout_width="fill_parent" -->
-<!--  	    android:layout_height="wrap_content" -->
-<!--  	    android:layout_weight="1" -->
-<!--  	    > -->
-	  	
-<!--  	    <include layout="@layout/profile_item" -->
-<!--  	        android:id="@+id/profile_phone" -->
-<!--  	        /> -->
- 	    
-<!--  	    <include layout="@layout/line_divider_vertical" /> -->
- 	    
-<!--  	    <include layout="@layout/profile_item" -->
-<!--  	        android:id="@+id/profile_website" -->
-<!--  	        /> -->
- 	    
-<!-- 	</LinearLayout> -->
-	
-<!--  	<include layout="@layout/line_divider" /> -->
-	
-<!--  	<LinearLayout android:orientation="horizontal" -->
-<!--  	    android:layout_width="fill_parent" -->
-<!--  	    android:layout_height="wrap_content" -->
-<!--  	    android:layout_weight="1" -->
-<!--  	    > -->
-	  	
-<!--  	    <include layout="@layout/profile_item" -->
-<!--  	        android:id="@+id/profile_voting" -->
-<!--  	        /> -->
- 	    
-<!--  	    <include layout="@layout/line_divider_vertical" /> -->
- 	    
-<!--  	    <include layout="@layout/profile_item" -->
-<!--  	        android:id="@+id/profile_bills" -->
-<!--  	        /> -->
- 	    
-<!-- 	</LinearLayout> -->
-	
-<!--  	<include layout="@layout/line_divider" /> -->
-	
-<!--  	<LinearLayout android:orientation="horizontal" -->
-<!--  	    android:layout_width="fill_parent" -->
-<!--  	    android:layout_height="wrap_content" -->
-<!--  	    android:layout_weight="1" -->
-<!--  	    > -->
-	  	
-<!--  	    <include layout="@layout/profile_item" -->
-<!--  	        android:id="@+id/profile_committees" -->
-<!--  	        /> -->
- 	    
-<!--  	    <include layout="@layout/line_divider_vertical" /> -->
- 	    
-<!--  	    <include layout="@layout/profile_item" -->
-<!--  	        android:id="@+id/profile_district" -->
-<!--  	        /> -->
- 	    
-<!-- 	</LinearLayout> -->
-</LinearLayout>
+</ScrollView>

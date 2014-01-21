@@ -20,7 +20,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.mapbox.mapboxsdk.MapView;
 import com.sunlightlabs.android.congress.BillSponsor;
 import com.sunlightlabs.android.congress.CommitteeMember;
 import com.sunlightlabs.android.congress.R;
@@ -110,9 +109,9 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
     	startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel://" + legislator.phone)));
     }
     
-    public void visitWebsite() {
-    	Analytics.legislatorWebsite(getActivity(), legislator.bioguide_id);
-    	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(legislator.website)));
+    public void visit(String url, String social) {
+    	Analytics.legislatorWebsite(getActivity(), legislator.bioguide_id, social);
+    	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
     
     public void votingRecord() {
@@ -136,35 +135,44 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		if (!legislator.in_office)
 			mainView.findViewById(R.id.out_of_office_text).setVisibility(View.VISIBLE);
 		
-		((TextView) mainView.findViewById(R.id.profile_party)).setText(partyName(legislator.party));
-		((TextView) mainView.findViewById(R.id.profile_state)).setText(Utils.stateCodeToName(getActivity(), legislator.state));
-		((TextView) mainView.findViewById(R.id.profile_domain)).setText(domainName(legislator.getDomain()));
-		((TextView) mainView.findViewById(R.id.profile_office)).setText(officeName(legislator.office));
-	
-		setupMap();
+		String party = partyName(legislator.party);
+		String state = Utils.stateCodeToName(getActivity(), legislator.state);
+		((TextView) mainView.findViewById(R.id.profile_state_party)).setText(party + " from " + state);
+		((TextView) mainView.findViewById(R.id.profile_office)).setText(domainName(legislator.getDomain()));
 		
-//		profileItem(R.id.profile_phone, "Call " + pronoun(legislator.gender) + " office", new View.OnClickListener() {
-//			public void onClick(View v) {callOffice();}
-//		});
-//		
-//		profileItem(R.id.profile_website, "Website", new View.OnClickListener() {
-//			public void onClick(View v) {visitWebsite();}
-//		});
-//		
-//		profileItem(R.id.profile_voting, R.string.voting_record, new View.OnClickListener() {
-//			public void onClick(View v) {votingRecord();}
-//		});
-//		
-//		profileItem(R.id.profile_bills, R.string.sponsored_bills, new View.OnClickListener() {
-//			public void onClick(View v) {sponsoredBills();}
-//		});
-//		
-//		profileItem(R.id.profile_committees, R.string.committees, new View.OnClickListener() {
-//			public void onClick(View v) {viewCommittees();}
-//		});
-//		
-//		if (legislator.website == null || legislator.website.equals(""))
-//			mainView.findViewById(R.id.profile_website).setVisibility(View.GONE);
+		socialButton(R.id.twitter, legislator.twitterUrl(), Analytics.LEGISLATOR_TWITTER);
+		socialButton(R.id.youtube, legislator.youtubeUrl(), Analytics.LEGISLATOR_YOUTUBE);
+		socialButton(R.id.facebook, legislator.facebookUrl(), Analytics.LEGISLATOR_FACEBOOK);
+		
+		TextView officeView = (TextView) mainView.findViewById(R.id.profile_office);
+		if (legislator.office != null && !legislator.office.equals(""))
+			officeView.setText(officeName(legislator.office));
+		else
+			officeView.setVisibility(View.GONE);
+		
+		View phoneView = mainView.findViewById(R.id.call_office);
+		if (legislator.phone != null && !legislator.phone.equals("")) {
+			phoneView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					callOffice();
+}
+			});
+		} else
+			phoneView.setVisibility(View.GONE);
+		
+		View webView = mainView.findViewById(R.id.visit_website);
+		if (legislator.website != null && !legislator.website.equals("")) {
+			webView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					visit(legislator.website, Analytics.LEGISLATOR_WEBSITE);
+}
+			});
+		} else
+			webView.setVisibility(View.GONE);
+		
+		setupMap();
 	}
 	
 	public void setupMap() {
@@ -232,18 +240,17 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
         
 	}
 	
-	private View profileItem(int id, int text, View.OnClickListener listener) {
-		return profileItem(id, getActivity().getResources().getString(text), listener);
-	}
-	
-	private View profileItem(int id, String text, View.OnClickListener listener) {
-		ViewGroup item = (ViewGroup) getView().findViewById(id);
-		TextView textView = (TextView) item.findViewById(R.id.text);
-		textView.setText(text);
-		
-		item.setOnClickListener(listener);
-		
-		return item;
+	private void socialButton(int id, final String url, final String network) {
+		View view = getView().findViewById(id);
+		if (url != null && !url.equals("")) {
+			view.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
+					visit(url, network);
+				}
+			});
+		} else
+			view.setVisibility(View.GONE);
 	}
 	
 	public static String partyName(String code) {

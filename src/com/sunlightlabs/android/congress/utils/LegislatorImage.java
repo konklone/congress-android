@@ -22,8 +22,6 @@ import android.util.Log;
  */
 
 public class LegislatorImage {
-	public static final String PIC_SMALL = "40x50";
-	public static final String PIC_MEDIUM = "100x125";
 	public static final String PIC_LARGE = "200x250";
 	
 	// 30 day expiration time on cached legislator avatars

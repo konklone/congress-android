@@ -107,6 +107,9 @@ public class LegislatorService {
 			legislator.youtube_id = json.getString("youtube_id");
 		if (!json.isNull("twitter_id"))
 			legislator.twitter_id = json.getString("twitter_id");
+		if (!json.isNull("facebook_id"))
+			legislator.facebook_id = json.getString("facebook_id");
+		
 		return legislator;
 	}
 	

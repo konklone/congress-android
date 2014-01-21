@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="ProfilePicture">
-        <item name="android:layout_width">200px</item>
-        <item name="android:layout_height">250px</item>
-    </style>
-    <style name="ProfileHead">
-        <item name="android:layout_height">250px</item>
-    </style>
-    
     <style name="OnePagerText">
         <item name="android:textSize">16sp</item>
     </style>

@@ -98,7 +98,7 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 	public void loadPhoto(String bioguide_id) {
 		if (!loadPhotoTasks.containsKey(bioguide_id))
 			loadPhotoTasks.put(bioguide_id, 
-					(LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_MEDIUM, bioguide_id).execute(bioguide_id));
+					(LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_LARGE, bioguide_id).execute(bioguide_id));
 	}
 
 	@Override
@@ -141,7 +141,7 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 			TextView position = (TextView) view.findViewById(R.id.position);
 			position.setText(positionFor(legislator));
 			
-			BitmapDrawable picture = LegislatorImage.quickGetImage(LegislatorImage.PIC_MEDIUM, legislator.bioguide_id, context);
+			BitmapDrawable picture = LegislatorImage.quickGetImage(LegislatorImage.PIC_LARGE, legislator.bioguide_id, context);
 			
 			ImageView photo = (ImageView) view.findViewById(R.id.photo);
 			
