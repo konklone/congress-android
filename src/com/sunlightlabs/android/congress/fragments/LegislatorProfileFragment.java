@@ -103,7 +103,7 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
     
     public void callOffice() {
     	Analytics.legislatorCall(getActivity(), legislator.bioguide_id);
-    	startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel://" + legislator.phone)));
+    	startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel://" + legislator.phone)));
     }
     
     public void visit(String url, String social) {
