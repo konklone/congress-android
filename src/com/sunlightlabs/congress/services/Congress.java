@@ -185,11 +185,19 @@ public class Congress {
 		
 		disableConnectionReuseIfNecessary();
 		
+		HttpURLConnection connection;
+		URL theUrl;
+		
 		try {
-			URL theUrl = new URL(url);
-			
-			HttpURLConnection connection = (HttpURLConnection) theUrl.openConnection();
-			
+			theUrl = new URL(url);
+			connection = (HttpURLConnection) theUrl.openConnection();
+		} catch(MalformedURLException e) {
+			throw new CongressException(e, "Bad URL: " + url);
+		} catch (IOException e) {
+	    	throw new CongressException(e, "Problem opening connection to " + url);
+	    } 
+		
+		try {
 			connection.setRequestProperty("User-Agent", userAgent);
 	        
 	        if (osVersion != null)
@@ -201,13 +209,12 @@ public class Congress {
 	        if (appChannel != null)
 	        	connection.setRequestProperty("x-app-channel", appChannel);
 	        
-	        // todo: fire request
-	        
 	        int status = connection.getResponseCode();
 	        if (status == HttpURLConnection.HTTP_OK) {
+	        	// read input stream first to fetch response headers
+	        	InputStream in = connection.getInputStream();
 	        	
 	        	// adapted from http://stackoverflow.com/a/2549222/16075
-	        	InputStream in = connection.getInputStream();
 	        	BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 	        	StringBuilder total = new StringBuilder();
 	        	String line;
@@ -220,27 +227,11 @@ public class Congress {
 	        else
 	        	throw new CongressException("Bad status code " + status+ " on fetching JSON from " + url);
 			
-		} catch(MalformedURLException e) {
-			throw new CongressException(e, "Bad URL: " + url);
 		} catch (IOException e) {
 	    	throw new CongressException(e, "Problem fetching JSON from " + url);
+	    } finally {
+	    	connection.disconnect();
 	    }
-		
-
-//        try {
-//	        HttpResponse response = client.execute(request);
-//	        int statusCode = response.getStatusLine().getStatusCode();
-//	        
-//	        if (statusCode == HttpStatus.SC_OK) {
-//	        	String body = EntityUtils.toString(response.getEntity());
-//	        	return body;
-//	        } else if (statusCode == HttpStatus.SC_NOT_FOUND)
-//	        	throw new CongressException.NotFound("404 Not Found from " + url);
-//	        else
-//	        	throw new CongressException("Bad status code " + statusCode + " on fetching JSON from " + url);
-//        } catch (ClientProtocolException e) {
-//	    	throw new CongressException(e, "Problem fetching JSON from " + url);
-//	    } 
 	}
 	
 	// as described in http://android-developers.blogspot.com/2011/09/androids-http-clients.html

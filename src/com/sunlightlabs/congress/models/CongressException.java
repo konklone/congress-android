@@ -25,4 +25,12 @@ public class CongressException extends Exception {
     	}
     	private static final long serialVersionUID = -2623309261327198188L;
     }
+    
+    public static class BehindFirewall extends CongressException {
+    	public BehindFirewall(String msg) {
+    		super(msg);
+    	}
+    	
+    	private static final long serialVersionUID = -2623309261327198189L;
+    }
 }
