@@ -41,8 +41,6 @@ public class District {
 			
 			int numRings = rings.size();
 			for (int j=0; j<numRings; j++) {
-			
-			// for now, just use the first (outer) ring
 				List<LngLatAlt> points = rings.get(0);
 				PathOverlay line = new PathOverlay(Color.BLUE, map.getContext());
 				
