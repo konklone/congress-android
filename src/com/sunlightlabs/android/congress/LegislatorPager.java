@@ -129,11 +129,6 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 		
 		ActionBarUtils.setActionMenu(this, R.menu.legislator);
 	}
-	
-//    public void viewCommittees() {
-//    	startActivity(new Intent(getActivity(), CommitteeMember.class)
-//			.putExtra("legislator", legislator));
-//    }
 
 	private void toggleFavoriteStar(boolean enabled) {
 		if (enabled)
