@@ -39,8 +39,8 @@ public class District {
 		for (int i=0; i<numPolygons; i++) {
 			List<List<LngLatAlt>> rings = polygons.get(i);
 			
-//			int numRings = rings.size();
-//			for (int j=0; j<numRings; j++) {
+			int numRings = rings.size();
+			for (int j=0; j<numRings; j++) {
 			
 			// for now, just use the first (outer) ring
 				List<LngLatAlt> points = rings.get(0);
@@ -61,7 +61,7 @@ public class District {
 				}
 				
 				map.getOverlays().add(line);
-//			}
+			}
 		}
 		
 		// send in a flip if the shape crosses the line opposing the prime meridian 
