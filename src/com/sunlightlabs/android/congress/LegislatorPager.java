@@ -12,9 +12,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.sunlightlabs.android.congress.fragments.BillListFragment;
 import com.sunlightlabs.android.congress.fragments.LegislatorLoaderFragment;
 import com.sunlightlabs.android.congress.fragments.LegislatorProfileFragment;
 import com.sunlightlabs.android.congress.fragments.NewsListFragment;
+import com.sunlightlabs.android.congress.fragments.RollListFragment;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils.HasActionMenu;
 import com.sunlightlabs.android.congress.utils.Analytics;
@@ -91,6 +93,8 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
 		adapter.add("info", R.string.tab_profile, LegislatorProfileFragment.create(legislator));
 		adapter.add("news", R.string.tab_news, NewsListFragment.forLegislator(legislator));
+		adapter.add("votes", R.string.tab_votes, RollListFragment.forLegislator(legislator));
+		adapter.add("bills", R.string.tab_bills, BillListFragment.forSponsor(legislator));
 		
 		if (tab != null) adapter.selectPage(tab);
 	}
@@ -125,6 +129,11 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 		
 		ActionBarUtils.setActionMenu(this, R.menu.legislator);
 	}
+	
+//    public void viewCommittees() {
+//    	startActivity(new Intent(getActivity(), CommitteeMember.class)
+//			.putExtra("legislator", legislator));
+//    }
 
 	private void toggleFavoriteStar(boolean enabled) {
 		if (enabled)

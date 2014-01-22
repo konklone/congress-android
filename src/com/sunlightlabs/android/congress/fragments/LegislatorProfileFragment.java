@@ -20,10 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.sunlightlabs.android.congress.BillSponsor;
-import com.sunlightlabs.android.congress.CommitteeMember;
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.VoteVoter;
 import com.sunlightlabs.android.congress.tasks.LoadDistrictTask;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.Analytics;
@@ -114,22 +111,7 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
     	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
     
-    public void votingRecord() {
-    	startActivity(new Intent(getActivity(), VoteVoter.class)
-			.putExtra("legislator", legislator));
-    }
-    
-    public void sponsoredBills() {
-    	startActivity(new Intent(getActivity(), BillSponsor.class)
-			.putExtra("legislator", legislator));
-    }
-    
-    public void viewCommittees() {
-    	startActivity(new Intent(getActivity(), CommitteeMember.class)
-			.putExtra("legislator", legislator));
-    }
-    
-	public void setupControls() {
+    public void setupControls() {
 		View mainView = getView();
 		
 		if (!legislator.in_office)

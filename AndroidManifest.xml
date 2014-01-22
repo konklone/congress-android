@@ -99,15 +99,7 @@
         	</intent-filter>
         </activity>
         
-        <activity android:name=".BillSponsor" />
-        
         <activity android:name=".MenuVotes" />
-        
-        <activity android:name=".VoteVoter">
-            <meta-data android:name="android.app.default_searchable"
-				android:value=".VoteSearch"
-				/>
-        </activity>
         
         <activity android:name=".RollInfo">
         	<intent-filter>
