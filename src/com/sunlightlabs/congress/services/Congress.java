@@ -1,8 +1,14 @@
 package com.sunlightlabs.congress.services;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,17 +23,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.cookie.DateUtils;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -182,36 +183,72 @@ public class Congress {
 	public static String fetchJSON(String url) throws CongressException {
 		Log.d(Utils.TAG, "Congress API: " + url);
 		
-		HttpGet request = new HttpGet(url);
-        request.addHeader("User-Agent", userAgent);
-        
-        if (osVersion != null)
-        	request.addHeader("x-os-version", osVersion);
-        
-        if (appVersion != null)
-        	request.addHeader("x-app-version", appVersion);
-        
-        if (appChannel != null)
-        	request.addHeader("x-app-channel", appChannel);
+		disableConnectionReuseIfNecessary();
 		
-        DefaultHttpClient client = new DefaultHttpClient();
-        
-        try {
-	        HttpResponse response = client.execute(request);
-	        int statusCode = response.getStatusLine().getStatusCode();
+		try {
+			URL theUrl = new URL(url);
+			
+			HttpURLConnection connection = (HttpURLConnection) theUrl.openConnection();
+			
+			connection.setRequestProperty("User-Agent", userAgent);
 	        
-	        if (statusCode == HttpStatus.SC_OK) {
-	        	String body = EntityUtils.toString(response.getEntity());
-	        	return body;
-	        } else if (statusCode == HttpStatus.SC_NOT_FOUND)
+	        if (osVersion != null)
+	        	connection.setRequestProperty("x-os-version", osVersion);
+	        
+	        if (appVersion != null)
+	        	connection.setRequestProperty("x-app-version", appVersion);
+	        
+	        if (appChannel != null)
+	        	connection.setRequestProperty("x-app-channel", appChannel);
+	        
+	        // todo: fire request
+	        
+	        int status = connection.getResponseCode();
+	        if (status == HttpURLConnection.HTTP_OK) {
+	        	
+	        	// adapted from http://stackoverflow.com/a/2549222/16075
+	        	InputStream in = connection.getInputStream();
+	        	BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+	        	StringBuilder total = new StringBuilder();
+	        	String line;
+	        	while ((line = reader.readLine()) != null) total.append(line);
+	        	
+	        	return total.toString();
+	        	
+	        } else if (status == HttpURLConnection.HTTP_NOT_FOUND)
 	        	throw new CongressException.NotFound("404 Not Found from " + url);
 	        else
-	        	throw new CongressException("Bad status code " + statusCode + " on fetching JSON from " + url);
-        } catch (ClientProtocolException e) {
-	    	throw new CongressException(e, "Problem fetching JSON from " + url);
-	    } catch (IOException e) {
+	        	throw new CongressException("Bad status code " + status+ " on fetching JSON from " + url);
+			
+		} catch(MalformedURLException e) {
+			throw new CongressException(e, "Bad URL: " + url);
+		} catch (IOException e) {
 	    	throw new CongressException(e, "Problem fetching JSON from " + url);
 	    }
+		
+
+//        try {
+//	        HttpResponse response = client.execute(request);
+//	        int statusCode = response.getStatusLine().getStatusCode();
+//	        
+//	        if (statusCode == HttpStatus.SC_OK) {
+//	        	String body = EntityUtils.toString(response.getEntity());
+//	        	return body;
+//	        } else if (statusCode == HttpStatus.SC_NOT_FOUND)
+//	        	throw new CongressException.NotFound("404 Not Found from " + url);
+//	        else
+//	        	throw new CongressException("Bad status code " + statusCode + " on fetching JSON from " + url);
+//        } catch (ClientProtocolException e) {
+//	    	throw new CongressException(e, "Problem fetching JSON from " + url);
+//	    } 
+	}
+	
+	// as described in http://android-developers.blogspot.com/2011/09/androids-http-clients.html
+	// can be removed if/when we drop support for 2.2 (API level 8)
+	private static void disableConnectionReuseIfNecessary() {
+	    // HTTP connection reuse which was buggy pre-froyo
+	    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO)
+	        System.setProperty("http.keepAlive", "false");
 	}
 	
 	public static JSONObject firstResult(String url) throws CongressException {
