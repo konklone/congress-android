@@ -163,7 +163,7 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		Context context = this.getActivity();
 		DistrictMapView mapView = new DistrictMapView(context, context.getResources().getString(R.string.mapbox_id));
 		
-		District.drawPolygon(district.polygon, mapView);
+		District.drawDistrict(district, mapView);
 		
 		ViewGroup container = (ViewGroup) getView().findViewById(R.id.map_container);
 		container.addView(mapView);

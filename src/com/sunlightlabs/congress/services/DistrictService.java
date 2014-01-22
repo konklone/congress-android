@@ -43,6 +43,8 @@ public class DistrictService {
 			if (geojson instanceof MultiPolygon) {
 				District district = new District();
 				district.polygon = (MultiPolygon) geojson;
+				district.state = legislator.state;
+				district.district = legislator.district;
 				return district;
 			}
 			

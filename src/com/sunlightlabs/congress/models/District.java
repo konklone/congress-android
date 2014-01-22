@@ -20,9 +20,13 @@ public class District {
 	// parent geoJSON type, for aid in drawing
 	public MultiPolygon polygon;
 	
+	// record the state and district value, same as legislator values
+	public String state, district;
+	
 	// helper function to draw a MultiPolygon onto a MapView
 	// this is tied to the MapBox Android SDK - this could be moved into a Utils package for better decoupling.
-	public static void drawPolygon(MultiPolygon multiPolygon, DistrictMapView map) {
+	public static void drawDistrict(District district, DistrictMapView map) {
+		MultiPolygon multiPolygon = district.polygon;
 		List<List<List<LngLatAlt>>> polygons = multiPolygon.getCoordinates();
 		int numPolygons = polygons.size();
 		
@@ -58,6 +62,15 @@ public class District {
 				
 				map.getOverlays().add(line);
 //			}
+		}
+		
+		// send in a flip if the shape crosses the line opposing the prime meridian 
+		// (in other words, only Alaska)
+		if (district.state.equals("AK")) {
+			double left = maxX;
+			double right = minX;
+			minX = left;
+			maxX = right;
 		}
 		
 		// north, east, south, west
