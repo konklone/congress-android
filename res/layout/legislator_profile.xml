@@ -34,7 +34,7 @@
 		  		android:paddingLeft="10dp"
 		  		>
 		  		
-		  	    <TextView android:id="@+id/profile_office"
+		  	    <TextView android:id="@+id/profile_domain"
 			  		style="@style/LegislatorProfileText"
 		  			android:text="District 3"
 			  		/>
@@ -129,7 +129,7 @@
 		        android:layout_marginRight="20dp"
 		        />
 		    
-		    <FrameLayout  
+		    <FrameLayout android:id="@+id/call_office_container"
 		        android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
 				
@@ -169,7 +169,7 @@
 		  		</FrameLayout>
 		  	</FrameLayout>
 		  	
-		    <FrameLayout  
+		    <FrameLayout android:id="@+id/visit_website_container"
 		        android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
 				
@@ -210,7 +210,7 @@
 	 	
 		<FrameLayout android:id="@+id/map_container"
 		    android:layout_width="fill_parent"
-		    android:layout_height="400dp"
+		    android:layout_height="350dp"
 		    android:layout_weight="1"
 		    />
 	</LinearLayout>

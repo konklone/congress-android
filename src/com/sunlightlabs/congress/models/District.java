@@ -61,7 +61,7 @@ public class District {
 		}
 		
 		// north, east, south, west
-		double s = 1; // space
+		double s = 0.5; // padding, in degrees
 		map.boundingBox = new BoundingBoxE6(maxY+s, maxX+s, minY-s, minX-s);
 		
     	Log.i(Utils.TAG, "Bounding box: " + map.boundingBox.getLatNorthE6() + "|" + map.boundingBox.getLonEastE6() + "|" + map.boundingBox.getLatSouthE6() + "|" + map.boundingBox.getLonWestE6());

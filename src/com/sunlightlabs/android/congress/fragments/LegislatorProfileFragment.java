@@ -138,7 +138,7 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		String party = partyName(legislator.party);
 		String state = Utils.stateCodeToName(getActivity(), legislator.state);
 		((TextView) mainView.findViewById(R.id.profile_state_party)).setText(party + " from " + state);
-		((TextView) mainView.findViewById(R.id.profile_office)).setText(domainName(legislator.getDomain()));
+		((TextView) mainView.findViewById(R.id.profile_domain)).setText(legislator.getDomain());
 		
 		socialButton(R.id.twitter, legislator.twitterUrl(), Analytics.LEGISLATOR_TWITTER);
 		socialButton(R.id.youtube, legislator.youtubeUrl(), Analytics.LEGISLATOR_YOUTUBE);
@@ -150,27 +150,25 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		else
 			officeView.setVisibility(View.GONE);
 		
-		View phoneView = mainView.findViewById(R.id.call_office);
 		if (legislator.phone != null && !legislator.phone.equals("")) {
-			phoneView.setOnClickListener(new View.OnClickListener() {
+			mainView.findViewById(R.id.call_office).setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					callOffice();
 }
 			});
 		} else
-			phoneView.setVisibility(View.GONE);
+			mainView.findViewById(R.id.call_office_container).setVisibility(View.GONE);
 		
-		View webView = mainView.findViewById(R.id.visit_website);
 		if (legislator.website != null && !legislator.website.equals("")) {
-			webView.setOnClickListener(new View.OnClickListener() {
+			mainView.findViewById(R.id.visit_website).setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					visit(legislator.website, Analytics.LEGISLATOR_WEBSITE);
 }
 			});
 		} else
-			webView.setVisibility(View.GONE);
+			mainView.findViewById(R.id.visit_website_container).setVisibility(View.GONE);
 		
 		setupMap();
 	}
@@ -262,15 +260,6 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 			return "Independent";
 		else
 			return "";
-	}
-	
-	public static String domainName(String domain) {
-		if (domain.equals("Upper Seat"))
-			return "Senior Senator";
-		if (domain.equals("Lower Seat"))
-			return "Junior Senator";
-		else
-			return domain;
 	}
 	
 	public static String pronoun(String gender) {
