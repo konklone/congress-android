@@ -3,9 +3,9 @@
     
     <string-array name="changelog">
         <item>Finally fixed our district maps: replaced with Mapbox, displayed in-app</item>
-        <item>The maps are a bit crude, but we'll be improving them over subsequent releases.</item>
+        <item>The maps are a bit crude, but we\'ll be improving them over subsequent releases.</item>
         <item>All web requests for Congressional information now use an encrypted connection (HTTPS)</item>
-        <item>Buttons to jump to legislators' Twitter, YouTube, and Facebook accounts</item>
+        <item>Buttons to jump to legislators\' Twitter, YouTube, and Facebook accounts</item>
     </string-array>
     
     <string-array name="changelogLast">

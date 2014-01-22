@@ -37,8 +37,12 @@ Then, release work:
   * are all debug flags set to false?
 * Produce unsigned APK version
 * Produce signed APK version
+  - if desired, produce separate APK version for Amazon
 * Take any screenshots needed to replace outdated ones
   * Replace any new screenshots in Sunlight S3, Dropbox
 * Store APKs in Dropbox
 
-Finally, publish.
+Finally, publish:
+
+* Google Play market
+* Amazon Appstore market
