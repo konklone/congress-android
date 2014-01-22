@@ -6,8 +6,6 @@
     <string name="google_news_key">example</string>
     <string name="google_news_referer">example</string>
 
-	<string name="google_maps_api_v2_key"></string>
-	
 	<string name="mapbox_id"></string>
 
     <string name="sunlight_api_key">example</string>

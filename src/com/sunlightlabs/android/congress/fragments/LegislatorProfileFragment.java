@@ -193,33 +193,6 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		Utils.alert(this.getContext(), "There was an error loading the district map.");
 	}
 	
-	public void setupGoogleMap() {
-		FragmentManager manager = getChildFragmentManager();
-		
-		SupportMapFragment fragment = (SupportMapFragment) manager.findFragmentById(R.id.map_container);
-		if (fragment == null) {
-			fragment= SupportMapFragment.newInstance();
-			manager.beginTransaction().add(R.id.map_container, fragment).commit();
-		}
-		
-        GoogleMap map = fragment.getMap();
-
-        if (map != null) {
-        	Log.i(Utils.TAG, "Loading map");
-        	LatLng sydney = new LatLng(-33.867, 151.206);
-
-	        map.setMyLocationEnabled(true);
-	        map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
-	
-	        map.addMarker(new MarkerOptions()
-		        .title("Sydney")
-		        .snippet("The most populous city in Australia.")
-		        .position(sydney));
-        } else
-        	Log.i(Utils.TAG, "No map.");
-        
-	}
-	
 	private void socialButton(int id, final String url, final String network) {
 		View view = getView().findViewById(id);
 		if (url != null && !url.equals("")) {
