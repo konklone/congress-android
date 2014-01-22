@@ -31,15 +31,16 @@ Code changes:
 Then, release work:
 
 * Check keys.xml:
-  * is api_endpoint pointing to production?
-  * is the distribution_channel correct? (market vs ____)
-  * is the market_channel correct? (google vs amazon)
-  * are all debug flags set to false?
+  - is api_endpoint pointing to production? https?
+  - is the distribution_channel correct? (market vs ____)
+  - is the market_channel correct? (google vs amazon)
+  - are all debug flags set to false?
 * Produce unsigned APK version
 * Produce signed APK version
   - if desired, produce separate APK version for Amazon
 * Take any screenshots needed to replace outdated ones
-  * Replace any new screenshots in Sunlight S3, Dropbox
+  - Replace any new screenshots in Dropbox
+
 * Store APKs in Dropbox
 
 Finally, publish:
