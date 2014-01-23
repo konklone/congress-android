@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.sunlightlabs.android.congress"
       android:versionCode="50"
-      android:versionName="4.5.2"
+      android:versionName="4.5.3"
       >
       
     <uses-sdk 
@@ -20,6 +20,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    
+    <!-- we can hide the call button if the device has no phone -->
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
     
     <supports-screens
     	android:smallScreens="true"

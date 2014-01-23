@@ -2,6 +2,7 @@ package com.sunlightlabs.android.congress.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -126,7 +127,9 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		else
 			officeView.setVisibility(View.GONE);
 		
-		if (legislator.phone != null && !legislator.phone.equals("")) {
+		// allow for devices without phones
+		boolean hasPhone = getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
+		if (hasPhone && legislator.phone != null && !legislator.phone.equals("")) {
 			mainView.findViewById(R.id.call_office).setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
