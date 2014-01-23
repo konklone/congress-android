@@ -18,7 +18,7 @@ public class NewsService {
 	public static final int RESULTS = 8;
 	
 	public static final String BASE_URL = "https://ajax.googleapis.com/ajax/services/search/news";
-	public static final String USER_AGENT = "Sunlight's Congress Android App (http://github.com/sunlightlabs/congress)";
+	public static final String USER_AGENT = "Sunlight's Congress Android App (https://github.com/sunlightlabs/congress-android)";
 	
 	public String apiKey;
 	// Google requires a valid referer, that is within the domain/path of the URL that the API key is registered under.
