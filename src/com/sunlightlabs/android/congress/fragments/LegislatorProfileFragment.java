@@ -181,7 +181,8 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 	@Override
 	public void onLoadDistrict(District district) {
 		this.district = district;
-		displayDistrict();
+		if (isAdded())
+			displayDistrict();
 	}
 	
 	@Override
