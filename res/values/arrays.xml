@@ -2,6 +2,7 @@
 <resources>
     
     <string-array name="changelog">
+        <item>4.5.4 - Fixed crashes on maps for Froyo, and notifications for members\' votes/bills.</item>
         <item>Finally fixed our district maps: replaced with Mapbox, displayed in-app</item>
         <item>The maps are a bit crude, but we\'ll be improving them over subsequent releases.</item>
         <item>Clicking on the Call button now immediately begins a call</item>
