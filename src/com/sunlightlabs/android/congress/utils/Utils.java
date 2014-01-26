@@ -250,26 +250,7 @@ public class Utils {
 		((TextView) tab.findViewById(R.id.tab_name)).setText(name);
 		return tab;
 	}
-
-	public static String districtMapUrl(String title, String state, String district) {
-		String url = "http://assets.sunlightfoundation.com/kml/";
-		String congress = "113"; // whatever
-		
-		if (title.equals("Sen"))
-			url += "states/" + state;
-		else
-			url += "cds/" + state + "-" + district;
-		
-		url += ".kml";
-		
-		// cache-bust - every day a new URL
-		Date today = new GregorianCalendar().getTime();
-		String todayStamp = new SimpleDateFormat("yyyy-MM-dd").format(today);
-		url += "?_=" + todayStamp;
-		
-		return url;
-	}
-
+	
 	public static final String START_NOTIFICATION_SERVICE = "com.sunlightlabs.android.congress.intent.action.START_NOTIFICATION_SERVICE";
 	public static final String STOP_NOTIFICATION_SERVICE = "com.sunlightlabs.android.congress.intent.action.STOP_NOTIFICATION_SERVICE";
 
