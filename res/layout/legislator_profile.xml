@@ -222,6 +222,7 @@
 		        android:layout_marginTop="100dp"
 		        android:paddingLeft="10dp"
 		        android:paddingRight="10dp"
+		        android:textColor="@color/text_grey"
 		        android:textSize="14sp"
 		        android:text="@string/map_loading"
 		        />
