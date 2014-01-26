@@ -43,8 +43,7 @@ public class BillsLegislatorSubscriber extends Subscriber {
 
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
-		return Utils.legislatorLoadIntent(subscription.id, 
-			new Intent().setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.BillSponsor"));
+		return Utils.legislatorIntent(subscription.id).putExtra("tab", "bills");
 	}
 	
 	@Override

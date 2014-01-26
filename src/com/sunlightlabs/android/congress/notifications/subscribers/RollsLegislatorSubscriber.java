@@ -45,8 +45,7 @@ public class RollsLegislatorSubscriber extends Subscriber {
 
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
-		return Utils.legislatorLoadIntent(subscription.id, 
-			new Intent().setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.VoteVoter"));
+		return Utils.legislatorIntent(subscription.id).putExtra("tab", "votes");
 	}
 	
 	@Override
