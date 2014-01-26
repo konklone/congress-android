@@ -93,6 +93,9 @@
     <string name="district_map">District Map</string>
     <string name="view_legislator_district">View Legislator District</string>
     
+    <string name="map_loading">Loading a district map...</string>
+    <string name="map_unsupported">Our apologies, but we\'re unable to support embedded district maps on Android 2.2 (Froyo) at this time.</string>
+    
     <string name="error_connection">Couldn\'t connect to the network. Please try again when you have a connection.</string>
     <string name="connection_failed">Connection failed. Press refresh to try again.</string>
     

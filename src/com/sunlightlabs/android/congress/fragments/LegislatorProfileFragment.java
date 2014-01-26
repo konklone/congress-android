@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -148,8 +149,13 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 			});
 		} else
 			mainView.findViewById(R.id.visit_website_container).setVisibility(View.GONE);
-		
-		setupMap();
+
+		// we support froyo for now, but maps use a jackson version not supported in the version of Java Froyo uses.
+		// so, for now, let's just not give the map.
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO)
+			setupMap();
+		else
+			((TextView) mainView.findViewById(R.id.map_text)).setText(R.string.map_unsupported);
 	}
 	
 	public void setupMap() {
