@@ -183,8 +183,6 @@ public class Congress {
 	public static String fetchJSON(String url) throws CongressException {
 		Log.d(Utils.TAG, "Congress API: " + url);
 		
-		disableConnectionReuseIfNecessary();
-		
 		HttpURLConnection connection;
 		URL theUrl;
 		
@@ -232,14 +230,6 @@ public class Congress {
 	    } finally {
 	    	connection.disconnect();
 	    }
-	}
-	
-	// as described in http://android-developers.blogspot.com/2011/09/androids-http-clients.html
-	// can be removed if/when we drop support for 2.2 (API level 8)
-	private static void disableConnectionReuseIfNecessary() {
-	    // HTTP connection reuse which was buggy pre-froyo
-	    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO)
-	        System.setProperty("http.keepAlive", "false");
 	}
 	
 	public static JSONObject firstResult(String url) throws CongressException {
