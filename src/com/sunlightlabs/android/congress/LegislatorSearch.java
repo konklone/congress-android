@@ -3,6 +3,7 @@ package com.sunlightlabs.android.congress;
 import java.util.regex.Pattern;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
@@ -122,15 +123,22 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 	}
 	
 	public void locate() {
-		findViewById(R.id.pager).setVisibility(View.GONE);
+		findViewById(R.id.pager_container).setVisibility(View.GONE);
 		findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
-		Utils.setLoading(this, R.string.menu_location_updating);
+		
+		LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		// if GPS is enabled, we'll be trying it first, so use a GPS-specific message 
+		if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+			Utils.setLoading(this, R.string.menu_location_updating_gps);
+		else
+			Utils.setLoading(this, R.string.menu_location_updating_network);
+		
 		updateLocation();
 	}
 	
 	public void onLocated(double latitude, double longitude) {
 		findViewById(android.R.id.empty).setVisibility(View.GONE);
-		findViewById(R.id.pager).setVisibility(View.VISIBLE);
+		findViewById(R.id.pager_container).setVisibility(View.VISIBLE);
 		adapter.add("legislators_location", "Not seen", LegislatorListFragment.forLocation(latitude, longitude));
 	}
 	
@@ -216,12 +224,15 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 	public void onProviderEnabled(String provider) {}
 	
 	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {}
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		Log.d(Utils.TAG, "Status changed: using " + provider);
+	}
 	
 	@Override
 	public void onTimeout(String provider) {
 		Log.d(Utils.TAG, "LegislatorSearch - onTimeout(): timeout for provider " + provider);
 		if (provider.equals(LocationManager.GPS_PROVIDER)) {
+			Utils.setLoading(this, R.string.menu_location_updating_network);
 			timer = LocationUtils.requestLocationUpdate(this, handler, LocationManager.NETWORK_PROVIDER);
 			Log.d(Utils.TAG, "LegislatorSearch - onTimeout(): requesting update from network");
 		} else

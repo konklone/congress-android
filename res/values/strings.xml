@@ -154,7 +154,8 @@
     
     <string name="menu_votes_recent">Votes</string>
     <string name="menu_location_no_location">Couldn\'t locate you. Tap the refresh icon above to try again.\n\nYou may need to update your device\'s location settings to allow this app to find you.</string>
-    <string name="menu_location_updating">Finding your location…</string>
+    <string name="menu_location_updating_gps">Finding your location, trying GPS first…</string>
+    <string name="menu_location_updating_network">Finding your location, using the network…</string>
     <string name="menu_favorite_bill_error">Error loading starred bills.</string>
     <string name="menu_favorite_legislator_error">Error loading starred legislators.</string>
     <string name="menu_committees">Committees</string>
