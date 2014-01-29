@@ -159,7 +159,7 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 	}
 	
 	public String shareSubject() {
-		return bill.formatCode(bill.id);
+		return Bill.formatCode(bill.id);
 	}
 
 	private void toggleFavoriteStar(boolean enabled) {
