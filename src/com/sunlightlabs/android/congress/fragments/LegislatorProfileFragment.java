@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.CommitteeMember;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.tasks.LoadDistrictTask;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
@@ -102,6 +103,11 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
     	startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel://" + legislator.phone)));
     }
     
+    public void seeCommittees() {
+    	startActivity(new Intent(getActivity(), CommitteeMember.class)
+    		.putExtra("legislator", legislator));
+    }
+    
     public void visit(String url, String social) {
     	Analytics.legislatorWebsite(getActivity(), legislator.bioguide_id, social);
     	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
@@ -135,7 +141,7 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 				@Override
 				public void onClick(View v) {
 					callOffice();
-}
+				}
 			});
 		} else
 			mainView.findViewById(R.id.call_office_container).setVisibility(View.GONE);
@@ -145,11 +151,19 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 				@Override
 				public void onClick(View v) {
 					visit(legislator.website, Analytics.LEGISLATOR_WEBSITE);
-}
+				}
 			});
 		} else
 			mainView.findViewById(R.id.visit_website_container).setVisibility(View.GONE);
 
+		// we should always be able to link to their committees
+		mainView.findViewById(R.id.committees).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				seeCommittees();
+			}
+		});
+				
 		// we support froyo for now, but maps use a jackson version not supported in the version of Java Froyo uses.
 		// so, for now, let's just not give the map.
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO)

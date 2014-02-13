@@ -136,7 +136,7 @@
 				android:background="@color/text_grey"
 				android:padding="1dp"
 				
-				android:layout_marginRight="20dp"
+				android:layout_marginRight="15dp"
 				>
 		  		<FrameLayout
 		  		    android:layout_height="wrap_content"
@@ -152,8 +152,8 @@
 						
 						style="@style/Pressable"
 						
-						android:paddingLeft="10dp"
-			  		    android:paddingRight="10dp"
+						android:paddingLeft="5dp"
+			  		    android:paddingRight="5dp"
 			  		    android:paddingTop="2dp"
 			  		    android:paddingBottom="2dp"
 			  		    >
@@ -162,7 +162,7 @@
 							android:layout_width="wrap_content"
 			  		        android:layout_gravity="center"
 			  		        
-			  		        android:text="Call office"
+			  		        android:text="@string/call_office"
 			  		        android:textSize="14sp"
 			  		        />
 			  		</FrameLayout>
@@ -175,6 +175,8 @@
 				
 				android:background="@color/text_grey"
 				android:padding="1dp"
+				
+				android:layout_marginRight="15dp"
 				>
 		  		<FrameLayout
 		  		    android:layout_height="wrap_content"
@@ -189,8 +191,8 @@
 						android:layout_gravity="center"
 						style="@style/Pressable"
 						
-						android:paddingLeft="10dp"
-			  		    android:paddingRight="10dp"
+						android:paddingLeft="5dp"
+			  		    android:paddingRight="5dp"
 			  		    android:paddingTop="2dp"
 			  		    android:paddingBottom="2dp"
 			  		    >
@@ -199,7 +201,44 @@
 							android:layout_width="wrap_content"
 			  		        android:layout_gravity="center"
 			  		        
-			  		        android:text="Website"
+			  		        android:text="@string/web_office"
+			  		        android:textSize="14sp"
+			  		        />
+			  		</FrameLayout>
+		  		</FrameLayout>
+		  	</FrameLayout>
+		  	
+		    <FrameLayout android:id="@+id/committees_container"
+		        android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				
+				android:background="@color/text_grey"
+				android:padding="1dp"
+				>
+		  		<FrameLayout
+		  		    android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+		  		    android:background="@color/background_dark"
+		  		    >
+		  		    
+			  		<FrameLayout android:id="@+id/committees"
+			  		    android:layout_height="wrap_content"
+						android:layout_width="wrap_content"
+						
+						android:layout_gravity="center"
+						style="@style/Pressable"
+						
+						android:paddingLeft="5dp"
+			  		    android:paddingRight="5dp"
+			  		    android:paddingTop="2dp"
+			  		    android:paddingBottom="2dp"
+			  		    >
+			  		    <TextView 
+			  		        android:layout_height="wrap_content"
+							android:layout_width="wrap_content"
+			  		        android:layout_gravity="center"
+			  		        
+			  		        android:text="@string/committees_title"
 			  		        android:textSize="14sp"
 			  		        />
 			  		</FrameLayout>
