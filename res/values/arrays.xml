@@ -2,7 +2,7 @@
 <resources>
     
     <string-array name="changelog">
-        <item>4.5.5 - Re-added a link to members' committees.</item>
+        <item>4.5.5 - Re-added a link to members\' committees.</item>
         <item>4.5.5 - Hearings now wait a few hours after starting to disappear from list.</item>
         <item>4.5.4 - Fixed crashes on maps for Froyo, and notifications for members\' votes/bills.</item>
         <item>Finally fixed our district maps: replaced with Mapbox, displayed in-app</item>
