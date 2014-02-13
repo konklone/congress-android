@@ -2,6 +2,7 @@ package com.sunlightlabs.congress.services;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -17,9 +18,13 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Hearing;
 
 public class HearingService {
-
+	
 	public static List<Hearing> upcoming(String chamber, int page, int per_page) throws CongressException {
-		Date now = new GregorianCalendar(DateUtils.GMT).getTime();
+		GregorianCalendar calendar = new GregorianCalendar(DateUtils.GMT);
+		
+		// add a 3 hour buffer so that hearings don't disappear as soon as they begin 
+		calendar.add(Calendar.HOUR_OF_DAY, -3);
+		Date now = calendar.getTime();
 		
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("chamber", chamber);
