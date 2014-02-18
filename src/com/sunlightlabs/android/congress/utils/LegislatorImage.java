@@ -22,7 +22,7 @@ import android.util.Log;
  */
 
 public class LegislatorImage {
-	public static final String PIC_LARGE = "200x250";
+	public static final String PIC_LARGE = "450x550";
 	
 	// 30 day expiration time on cached legislator avatars
 	public static final long CACHE_IMAGES = (long) 1000 * 60 * 60 * 24 * 30;
@@ -57,7 +57,7 @@ public class LegislatorImage {
 	}
 	
 	public static String picUrl(String size, String bioguideId) {
-		return "http://assets.sunlightfoundation.com/moc/" + size + "/" + bioguideId + ".jpg";
+		return "http://theunitedstates.io/images/congress/" + size + "/" + bioguideId + ".jpg";
 	}
 	
 	public static String picPath(String size, String bioguideId, Context context) {
