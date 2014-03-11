@@ -2,8 +2,10 @@ package com.sunlightlabs.congress.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,7 +82,7 @@ public class Bill implements Serializable {
 	}
 	
 	public static String normalizeCode(String code) {
-		return code.toLowerCase().replaceAll("[^\\w\\d]", "").replace("con", "c").replace("joint", "j").replace(" ", "").replace(".", "");
+		return code.toLowerCase(Locale.US).replaceAll("[^\\w\\d]", "").replace("con", "c").replace("joint", "j").replace(" ", "").replace(".", "");
 	}
 	
 	public static boolean isCode(String code) {
@@ -88,7 +90,7 @@ public class Bill implements Serializable {
 	}
 	
 	public static String currentSession() {
-		int year = new Date().getYear();
+		int year = Calendar.getInstance().get(Calendar.YEAR);
 		return "" + (((year + 1901) / 2) - 894);
 	}
 	
