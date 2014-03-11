@@ -3,10 +3,6 @@ package com.sunlightlabs.android.congress.fragments;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.os.AsyncTask;
@@ -25,7 +21,6 @@ import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.UpcomingBill;
 import com.sunlightlabs.congress.services.UpcomingBillService;
