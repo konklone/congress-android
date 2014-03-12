@@ -174,7 +174,7 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 		public String positionFor(Legislator legislator) {
 			String stateName = Utils.stateCodeToName(fragment.getActivity(), legislator.state);
 			String district;
-			if (legislator.title.equals("Sen")) {
+			if (legislator.isSenator()) {
 				district = "Senator";
 			} else {
 				district = "District " + legislator.district;
