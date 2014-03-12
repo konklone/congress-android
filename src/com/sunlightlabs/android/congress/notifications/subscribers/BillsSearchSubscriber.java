@@ -39,12 +39,13 @@ public class BillsSearchSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results == BillListFragment.PER_PAGE)
+		if (results == BillListFragment.PER_PAGE) {
 			return results + " or more new bills for search \"" + subscription.data + "\".";
-		else if (results > 1)
+		} else if (results > 1) {
 			return results + " new bills for search \"" + subscription.data + "\".";
-		else
+		} else {
 			return results + " new bill for search \"" + subscription.data + "\".";
+		}
 	}
 
 	@Override

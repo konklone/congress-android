@@ -22,8 +22,9 @@ public class CommitteeMember extends FragmentActivity {
 		ActionBarUtils.setTitleSize(this, 16);
 		
 		FragmentManager manager = getSupportFragmentManager();
-		if (manager.findFragmentById(R.id.frame) == null)
+		if (manager.findFragmentById(R.id.frame) == null) {
 			manager.beginTransaction().add(R.id.frame, CommitteeListFragment.forLegislator(legislator)).commit();
+		}
 	}
 	
 	@Override

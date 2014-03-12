@@ -17,9 +17,9 @@ public class OnBootReceiver extends BroadcastReceiver {
 			if (Utils.getBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, NotificationSettings.DEFAULT_NOTIFY_ENABLED)) {
 				Utils.startNotificationsBroadcast(context);
 				Log.d(Utils.TAG, "OnBootReceiver: boot completed, started notification service (prefs are ON).");
-			}
-			else
+			} else {
 				Log.d(Utils.TAG, "OnBootReceiver: boot completed, notification service not started (prefs are OFF)");
+			}
 		}
 	}
 }

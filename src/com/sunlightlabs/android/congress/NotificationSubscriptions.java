@@ -48,23 +48,26 @@ public class NotificationSubscriptions extends ListActivity {
 	}
 	
 	public void setupControls() {
-		if (cursor.getCount() == 0)
+		if (cursor.getCount() == 0) {
 			Utils.showEmpty(this, R.string.notifications_empty);
+		}
 		setListAdapter(new SubscriptionAdapter(this, cursor));
 	}
 	
 	@Override
 	protected void onListItemClick(ListView l, View view, int position, long id) {
 		Object tag = view.getTag();
-		if (tag != null)
+		if (tag != null) {
 			startActivity((Intent) tag);
+		}
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (cursor != null)
+		if (cursor != null) {
 			cursor.requery();
+		}
 		setupControls();
 	}
 	

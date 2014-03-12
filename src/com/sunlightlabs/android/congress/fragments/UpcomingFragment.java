@@ -54,14 +54,16 @@ public class UpcomingFragment extends ListFragment {
 		super.onActivityCreated(savedInstanceState);
 		setupControls();
 		
-		if (upcomingBills != null)
+		if (upcomingBills != null) {
 			displayUpcomingBills();
+		}
 	}
 	
 	private void setupControls() {
 		FragmentUtils.setLoading(this, R.string.upcoming_loading);
 		
 		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				upcomingBills = null;
 				FragmentUtils.showLoading(UpcomingFragment.this);
@@ -86,20 +88,23 @@ public class UpcomingFragment extends ListFragment {
 	private void onLoadUpcomingBills(List<UpcomingBill> upcomingBills) {
 		this.upcomingBills = upcomingBills;
 		
-		if (isAdded())
+		if (isAdded()) {
 			displayUpcomingBills();
+		}
 	}
 	
 	private void onLoadUpcomingBills(CongressException exception) {
-		if (isAdded())
+		if (isAdded()) {
 			FragmentUtils.showRefresh(this, R.string.upcoming_error);
+		}
 	}
 	
 	private void displayUpcomingBills() {
-		if (upcomingBills.size() > 0)
+		if (upcomingBills.size() > 0) {
 			setListAdapter(new UpcomingAdapter(this, UpcomingAdapter.wrapUpcoming(upcomingBills)));
-		else
+		} else {
 			FragmentUtils.showEmpty(this, R.string.upcoming_empty);
+		}
 	}
 	
 	static class UpcomingAdapter extends ArrayAdapter<UpcomingAdapter.Item> {
@@ -126,10 +131,11 @@ public class UpcomingFragment extends ListFragment {
         @Override
         public int getItemViewType(int position) {
         	Item item = getItem(position);
-        	if (item instanceof UpcomingAdapter.Date)
-        		return UpcomingAdapter.TYPE_DATE;
-        	else
-        		return UpcomingAdapter.TYPE_BILL;
+        	if (item instanceof UpcomingAdapter.Date) {
+				return UpcomingAdapter.TYPE_DATE;
+			} else {
+				return UpcomingAdapter.TYPE_BILL;
+			}
         }
         
         @Override
@@ -141,16 +147,18 @@ public class UpcomingFragment extends ListFragment {
 		public View getView(int position, View view, ViewGroup parent) {
 			Item item = getItem(position);
 			if (item instanceof Date) {
-				if (view == null)
+				if (view == null) {
 					view = inflater.inflate(R.layout.upcoming_date, null);
+				}
 				
 				Date date = (Date) item;
 				
 				((TextView) view.findViewById(R.id.date_left)).setText(date.dateName);
 				((TextView) view.findViewById(R.id.date_right)).setText(date.dateFull);
 			} else { // instanceof Action
-				if (view == null)
+				if (view == null) {
 					view = inflater.inflate(R.layout.upcoming_bill, null);
+				}
 				
 				Bill bill = (Bill) item;
 				
@@ -204,12 +212,13 @@ public class UpcomingFragment extends ListFragment {
 					
 						// specific day
 						if (range.equals("day")) {
-							if (today.equals(testDay))
+							if (today.equals(testDay)) {
 								date.dateName = "TODAY";
-							else if (tomorrow.equals(testDay))
+							} else if (tomorrow.equals(testDay)) {
 								date.dateName = "TOMORROW";
-							else
+							} else {
 								date.dateName = dateNameFormat.format(upcomingBill.legislativeDay).toUpperCase();
+							}
 							
 							date.dateFull = dateFullFormat.format(upcomingBill.legislativeDay).toUpperCase();
 						} 
@@ -234,8 +243,9 @@ public class UpcomingFragment extends ListFragment {
 				}
 				
 				com.sunlightlabs.congress.models.Bill rootBill = upcomingBill.bill;
-				if (rootBill == null)
+				if (rootBill == null) {
 					continue;
+				}
 				
 				Bill bill = new Bill();
 				
@@ -243,10 +253,11 @@ public class UpcomingFragment extends ListFragment {
 				bill.number = rootBill.number;
 				
 				String title;
-				if (rootBill.short_title != null && !rootBill.short_title.equals(""))
+				if (rootBill.short_title != null && !rootBill.short_title.equals("")) {
 					title = rootBill.short_title;
-				else
+				} else {
 					title = Utils.truncate(rootBill.official_title, 55);
+				}
 				
 				bill.title = title;
 				bill.id = rootBill.id;
@@ -279,10 +290,11 @@ public class UpcomingFragment extends ListFragment {
 		
 		@Override
 		protected void onPostExecute(List<UpcomingBill> result) {
-			if (result != null && exception == null)
+			if (result != null && exception == null) {
 				context.onLoadUpcomingBills(result);
-			else
+			} else {
 				context.onLoadUpcomingBills(exception);
+			}
 		}
 	}
 }

@@ -79,12 +79,13 @@ public class CommitteeListFragment extends ListFragment {
 		legislator = (Legislator) args.getSerializable("legislator");
 		committee = (Committee) args.getSerializable("committee");
 		
-		if (type == CHAMBER)
+		if (type == CHAMBER) {
 			new LoadCommitteesTask(this).execute(chamber);
-		else if (type == LEGISLATOR)
+		} else if (type == LEGISLATOR) {
 			new LoadCommitteesTask(this).execute(legislator.bioguide_id);
-		else if (type == COMMITTEE)
+		} else if (type == COMMITTEE) {
 			new LoadCommitteesTask(this).execute(committee.id);
+		}
 	}
 	
 	@Override
@@ -98,8 +99,9 @@ public class CommitteeListFragment extends ListFragment {
 		
 		FragmentUtils.setLoading(this, R.string.committees_loading);
 		
-		if (committees != null)
+		if (committees != null) {
 			displayCommittees();
+		}
 	}
 	
 	@Override
@@ -115,26 +117,29 @@ public class CommitteeListFragment extends ListFragment {
 	public void onLoadCommittees(List<Committee> committees) {
 		this.committees = committees;
 		
-		if (isAdded()) 
+		if (isAdded()) {
 			displayCommittees();
+		}
 	}
 	
 	public void onLoadCommittees(CongressException exception) {
-		if (isAdded())
+		if (isAdded()) {
 			FragmentUtils.showEmpty(this, exception.getMessage());
+		}
 	}
 
 	public void displayCommittees() {
-		if (committees.size() > 0)
+		if (committees.size() > 0) {
 			setListAdapter(new CommitteeAdapter(this, committees));
-		else {
+		} else {
 			int empty;
-			if (type == CHAMBER)
+			if (type == CHAMBER) {
 				empty = R.string.committees_empty;
-			else if (type == LEGISLATOR)
+			} else if (type == LEGISLATOR) {
 				empty = R.string.legislator_no_committees;
-			else // if (type == COMMITTEE)
+			} else {
 				empty = R.string.committees_no_subcommittees;
+			}
 			
 			FragmentUtils.showEmpty(this, empty);
 		}
@@ -160,10 +165,11 @@ public class CommitteeListFragment extends ListFragment {
 			Committee committee = getItem(position);
 			
 			View view;
-			if (committee.subcommittee && context.type != COMMITTEE)
+			if (committee.subcommittee && context.type != COMMITTEE) {
 				view = inflater.inflate(R.layout.committee_item_sub, null);
-			else
+			} else {
 				view = inflater.inflate(R.layout.committee_item, null);
+			}
 			
 			TextView name = (TextView) view.findViewById(R.id.name);
 			name.setText(committee.name);
@@ -183,14 +189,15 @@ public class CommitteeListFragment extends ListFragment {
 
 		@Override
 		protected List<Committee> doInBackground(String... params) {
-			if (context.type == CHAMBER)
+			if (context.type == CHAMBER) {
 				return forChamber(params[0]);
-			else if (context.type == LEGISLATOR)
+			} else if (context.type == LEGISLATOR) {
 				return forLegislator(params[0]);
-			else if (context.type == COMMITTEE)
+			} else if (context.type == COMMITTEE) {
 				return forCommittee(params[0]);
-			else
+			} else {
 				return null;
+			}
 		}
 		
 		private List<Committee> forLegislator(String bioguideId) {
@@ -206,10 +213,11 @@ public class CommitteeListFragment extends ListFragment {
 			List<Committee> joint = new ArrayList<Committee>();
 			
 			for (int i=0; i<committees.size(); i++) {
-				if (committees.get(i).chamber.equals("joint"))
+				if (committees.get(i).chamber.equals("joint")) {
 					joint.add(committees.get(i));
-				else
+				} else {
 					chamber.add(committees.get(i));
+				}
 			}
 			
 			// sort by their committee ID, not the name
@@ -218,12 +226,13 @@ public class CommitteeListFragment extends ListFragment {
 			Collections.sort(chamber, new Comparator<Committee>() {
 				@Override
 				public int compare(Committee a, Committee b) {
-					if (a.subcommittee && !b.subcommittee && a.parent_committee_id.equals(b.id))
+					if (a.subcommittee && !b.subcommittee && a.parent_committee_id.equals(b.id)) {
 						return 1;
-					else if (b.subcommittee && !a.subcommittee && b.parent_committee_id.equals(a.id))
+					} else if (b.subcommittee && !a.subcommittee && b.parent_committee_id.equals(a.id)) {
 						return -1;
-					else
+					} else {
 						return a.id.compareTo(b.id);
+					}
 				}
 			});
 			
@@ -269,10 +278,11 @@ public class CommitteeListFragment extends ListFragment {
 
 		@Override
 		protected void onPostExecute(List<Committee> result) {
-			if (result != null && exception == null)
+			if (result != null && exception == null) {
 				context.onLoadCommittees(result);
-			else
+			} else {
 				context.onLoadCommittees(exception);
+			}
 		}
 
 	}

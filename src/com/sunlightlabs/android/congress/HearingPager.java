@@ -25,8 +25,9 @@ public class HearingPager extends FragmentActivity {
 		adapter.add("senate", R.string.tab_senate, HearingListFragment.forChamber("senate"));
 		
 		String chamber = getIntent().getStringExtra("chamber");
-		if (chamber != null && chamber.equals("senate"))
+		if (chamber != null && chamber.equals("senate")) {
 			adapter.selectPage(1);
+		}
 	}
 	
 	private void setupControls() {

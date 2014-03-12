@@ -34,10 +34,11 @@ public class ActionsBillSubscriber extends Subscriber {
 
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results > 1)
+		if (results > 1) {
 			return results + " new action items.";
-		else
+		} else {
 			return results + " new action item.";
+		}
 	}
 	
 	@Override

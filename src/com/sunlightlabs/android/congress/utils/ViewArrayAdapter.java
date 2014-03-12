@@ -23,6 +23,7 @@ public class ViewArrayAdapter extends ArrayAdapter<View> {
 		super(context.getActivity(), 0, items);
 	}
 
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		return getItem(position);
 	}

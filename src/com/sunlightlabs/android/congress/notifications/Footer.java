@@ -77,8 +77,9 @@ public class Footer {
 				for (int i=0; i<size; i++) {
 					// TODO: can get rid of this null check when we switch to a pagination approach that doesn't use a null entry 
 					Object obj = objects.get(i);
-					if (obj != null)
+					if (obj != null) {
 						ids.add(subscriber.decodeId(obj));
+					}
 				}
 			}
 			
@@ -95,6 +96,7 @@ public class Footer {
 	public void setupControls() {
 		
 		footerView.setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				onTap();
 			}
@@ -104,29 +106,31 @@ public class Footer {
 		// if that were not the case, we would need to surround calls to the database with a synchronized(this) {} block
 		
 		if (Utils.getBooleanPreference(context, NotificationSettings.KEY_NOTIFY_ENABLED, NotificationSettings.DEFAULT_NOTIFY_ENABLED)) {
-			if (state == WORKING)
+			if (state == WORKING) {
 				setWorking();
-			else {
+			} else {
 				Database database = new Database(context);
 				try {
 					database.open();
 					boolean on = database.hasSubscription(subscription.id, subscription.notificationClass);
 					database.close();
 				
-					if (on)
+					if (on) {
 						setOn();
-					else
+					} else {
 						setOff();
+					}
 				} catch(SQLiteException e) {
 					Log.e(Utils.TAG, "Error on initializing footer, giving up and letting the user know.", e);
 					setError();
 				}
 			}
 		} else {
-			if (firstTime())
+			if (firstTime()) {
 				setFirstTime();
-			else
+			} else {
 				setDisabled();
+			}
 		}
 		
 		footerView.setVisibility(View.VISIBLE);
@@ -146,8 +150,9 @@ public class Footer {
 			new UnsubscribeTask(this).execute();
 		}
 		
-		else if (state == DISABLED)
+		else if (state == DISABLED) {
 			context.startActivity(new Intent(context, NotificationTabs.class));
+		}
 	}
 
 	private void setOn() { 

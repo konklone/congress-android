@@ -117,8 +117,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			
 			if (loadPhotoTasks != null) {
 				Iterator<LoadPhotoTask> iterator = loadPhotoTasks.values().iterator();
-				while (iterator.hasNext())
+				while (iterator.hasNext()) {
 					iterator.next().onScreenLoad(this);
+				}
 			}
 		}
 		
@@ -158,30 +159,33 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	public void onListItemClick(ListView parent, View view, int position, long id) {
 		Object tag = view.getTag();
 		if (tag != null) {
-			if (tag instanceof VoterAdapter.ViewHolder)
+			if (tag instanceof VoterAdapter.ViewHolder) {
 				startActivity(Utils.legislatorIntent(((VoterAdapter.ViewHolder) tag).bioguide_id));
+			}
 		}
 	}
 	
 	public void loadRoll() {
-		if (loadRollTask != null)
+		if (loadRollTask != null) {
 			loadRollTask.onScreenLoad(this);
-		else {
-			if (roll != null)
+		} else {
+			if (roll != null) {
 				displayRoll();
-			else
+			} else {
 				loadRollTask = (LoadRollTask) new LoadRollTask(this, id, "basic").execute(RollService.basicFields);
+			}
 		}
 	}
 	
 	public void loadVotes() {
-		if (loadVotersTask != null)
+		if (loadVotersTask != null) {
 			loadVotersTask.onScreenLoad(this);
-		else {
-			if (voters != null)
+		} else {
+			if (voters != null) {
 				displayVoters();
-			else
+			} else {
 				loadVotersTask = (LoadRollTask) new LoadRollTask(this, id, "voters").execute("voters");
+			}
 		}
 	}
 	
@@ -199,10 +203,11 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	
 	public void onLoadRoll(String tag, CongressException exception) {
 		if (tag.equals("basic")) {
-			if (exception instanceof CongressException.NotFound)
+			if (exception instanceof CongressException.NotFound) {
 				Utils.alert(this, R.string.vote_not_found);
-			else
+			} else {
 				Utils.alert(this, R.string.error_connection);
+			}
 			
 			this.loadRollTask = null;
 			finish();
@@ -239,14 +244,16 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			TextView related = (TextView) header.findViewById(R.id.header_text);
 			
 			if (roll.vote_type != null) {
-				if (roll.vote_type.equals("passage"))
+				if (roll.vote_type.equals("passage")) {
 					related.setText(R.string.vote_related_to_bill_passage);
-				else if (roll.vote_type.equals("cloture"))
+				} else if (roll.vote_type.equals("cloture")) {
 					related.setText(R.string.vote_related_to_bill_cloture);
-				else
+				} else {
 					related.setText(R.string.vote_related_to_bill);
-			} else
+				}
+			} else {
 				related.setText(R.string.vote_related_to_bill);
+			}
 			adapter.addView(header);
 			
 			
@@ -304,24 +311,27 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	
 	// if the roll's about a bill, strip out the bill information from the question
 	public String simpleQuestion(Roll roll) {
-		if (roll.bill != null)
+		if (roll.bill != null) {
 			return TextUtils.split(roll.question, " -- ")[0];
-		else
+		} else {
 			return roll.question;
+		}
 	}
 	
 	// depends on the "header" member variable having been initialized and inflated
 	public void setupTabs() {
 		View.OnClickListener tabListener = new View.OnClickListener() {
+			@Override
 			public void onClick(View view) {
 				String tag = (String) view.getTag();
 				Iterator<String> iter = voterBreakdown.keySet().iterator();
 				while (iter.hasNext()) {
 					String tabTag = iter.next();
-					if (tabTag.equals(tag))
+					if (tabTag.equals(tag)) {
 						header.findViewWithTag(tabTag).setSelected(true);
-					else
+					} else {
 						header.findViewWithTag(tabTag).setSelected(false);
+					}
 				}
 				
 				currentTab = tag;
@@ -334,41 +344,47 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		// yea and nay should always be first and second, if present
 		// present and not voting should always be second to last and last
 		Comparator<String> tabSorter = new Comparator<String>() {
+			@Override
 			public int compare(String one, String other) {
-				if (one.equals(Roll.NOT_VOTING))
+				if (one.equals(Roll.NOT_VOTING)) {
 					return 1;
-				else if (one.equals(Roll.PRESENT)) {
-					if (other.equals(Roll.NOT_VOTING))
+				} else if (one.equals(Roll.PRESENT)) {
+					if (other.equals(Roll.NOT_VOTING)) {
 						return -1;
-					else
+					} else {
 						return 1;
-				} else if (one.equals(Roll.YEA))
+					}
+				} else if (one.equals(Roll.YEA)) {
 					return -1;
-				else if (one.equals(Roll.NAY)) {
-					if (other.equals(Roll.YEA))
+				} else if (one.equals(Roll.NAY)) {
+					if (other.equals(Roll.YEA)) {
 						return 1;
-					else
+					} else {
 						return -1;
+					}
 				} else {
-					if (other.equals(Roll.NOT_VOTING) || other.equals(Roll.PRESENT))
+					if (other.equals(Roll.NOT_VOTING) || other.equals(Roll.PRESENT)) {
 						return -1;
-					else
+					} else {
 						return one.compareTo(other);
+					}
 				}
 			}
 		};
 		
 		Iterator<String> iter = roll.voteBreakdown.keySet().iterator();
 		List<String> names = new ArrayList<String>();
-		while (iter.hasNext())
+		while (iter.hasNext()) {
 			names.add(iter.next());
+		}
 		
 		Collections.sort(names, tabSorter);
 		
 		for (int i=0; i<names.size(); i++) {
 			String name = names.get(i);
-			if (i == 0 && currentTab == null)
+			if (i == 0 && currentTab == null) {
 				currentTab = name;
+			}
 			
 			addTab(name, tabContainer, tabListener);
 		}
@@ -378,10 +394,11 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		View tab = inflater.inflate(R.layout.tab_2, null);
 		
 		String displayName;
-		if (name.equals(Roll.NOT_VOTING))
+		if (name.equals(Roll.NOT_VOTING)) {
 			displayName = getResources().getString(R.string.not_voting_short);
-		else
+		} else {
 			displayName = name;
+		}
 		
 		((TextView) tab.findViewById(R.id.name)).setText(displayName);
 		((TextView) tab.findViewById(R.id.subname)).setText(roll.voteBreakdown.get(name) + "");
@@ -478,15 +495,18 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			
 			// otherwise, add it to the queue for later
 			else {
-				if (queuedPhotos.size() > MAX_QUEUE_TASKS)
+				if (queuedPhotos.size() > MAX_QUEUE_TASKS) {
 					queuedPhotos.clear();
+				}
 				
-				if (!queuedPhotos.contains(bioguide_id))
+				if (!queuedPhotos.contains(bioguide_id)) {
 					queuedPhotos.add(bioguide_id);
+				}
 			}
 		}
 	}
 	
+	@Override
 	public void onLoadPhoto(Drawable photo, Object tag) {
 		loadPhotoTasks.remove(tag);
 		
@@ -495,15 +515,17 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		View result = getListView().findViewWithTag(holder);
 		if (result != null) {
-			if (photo != null)
+			if (photo != null) {
 				((ImageView) result.findViewById(R.id.photo)).setImageDrawable(photo);
-			else 
+			} else {
 				((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.person);
+			}
 		}
 		
 		// if there's any in the queue, send the next one
-		if (!queuedPhotos.isEmpty())
+		if (!queuedPhotos.isEmpty()) {
 			loadPhoto(queuedPhotos.remove(0));
+		}
 	}
 	
 	public void loadNoPhoto(String bioguide_id) {
@@ -511,10 +533,12 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		holder.bioguide_id = bioguide_id;
 		
 		View result = getListView().findViewWithTag(holder);
-		if (result != null)
+		if (result != null) {
 			((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.person);
+		}
 	}
 	
+	@Override
 	public Context getContext() {
 		return this;
 	}
@@ -547,16 +571,21 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		@Override
 		public void onPostExecute(Roll roll) {
-			if (isCancelled()) return;
+			if (isCancelled()) {
+				return;
+			}
 			
 			// last check - if the database is closed, then onDestroy must have run, 
 			// even if the task didn't get marked as cancelled for some reason
-			if (context.database.closed) return;
+			if (context.database.closed) {
+				return;
+			}
 			
-			if (exception != null && roll == null)
+			if (exception != null && roll == null) {
 				context.onLoadRoll(tag, exception);
-			else
+			} else {
 				context.onLoadRoll(tag, roll);
+			}
 		}
 	}
 	
@@ -570,7 +599,8 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	        this.inflater = LayoutInflater.from(context);
 	    }
 	    
-	    public boolean areAllItemsEnabled() {
+	    @Override
+		public boolean areAllItemsEnabled() {
 	    	return true;
 	    }
         
@@ -579,6 +609,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
         	return 1;
         }
 
+		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view;
 			ViewHolder holder;
@@ -607,23 +638,24 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			
 			TextView voteView = holder.vote;
 			String value = vote.vote;
-			if (value.equals(Roll.YEA))
+			if (value.equals(Roll.YEA)) {
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-			else if (value.equals(Roll.NAY))
+			} else if (value.equals(Roll.NAY)) {
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-			else if (value.equals(Roll.PRESENT))
+			} else if (value.equals(Roll.PRESENT)) {
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-			else if (value.equals(Roll.NOT_VOTING))
+			} else if (value.equals(Roll.NOT_VOTING)) {
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-			else
+			} else {
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+			}
 			
 			voteView.setText(vote.vote);
 			
 			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_LARGE, legislator.bioguide_id, context);
-			if (photo != null)
+			if (photo != null) {
 				holder.photo.setImageDrawable(photo);
-			else {
+			} else {
 				holder.photo.setImageResource(R.drawable.loading_photo);
 				context.loadPhoto(legislator.bioguide_id);
 			}

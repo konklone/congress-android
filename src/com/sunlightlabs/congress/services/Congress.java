@@ -59,8 +59,9 @@ public class Congress {
 		static SearchResult from(JSONObject json) throws JSONException {
 			SearchResult search = new SearchResult();
 			
-			if (!json.isNull("score"))
+			if (!json.isNull("score")) {
 				search.score = json.getDouble("score");
+			}
 			
 			if (!json.isNull("highlight")) {
 				Map<String,ArrayList<String>> highlight = new HashMap<String,ArrayList<String>>();
@@ -71,16 +72,18 @@ public class Congress {
 					String key = (String) iter.next();
 					JSONArray highlighted = obj.getJSONArray(key);
 					ArrayList<String> temp = new ArrayList<String>(highlighted.length());
-					for (int i=0; i<highlighted.length(); i++)
+					for (int i=0; i<highlighted.length(); i++) {
 						temp.add(highlighted.getString(i));
+					}
 					highlight.put(key, temp);
 				}
 				
 				search.highlight = highlight;
 			}
 			
-			if (!json.isNull("query"))
+			if (!json.isNull("query")) {
 				search.query = json.getString("query");
+			}
 			
 			return search;
 		}
@@ -92,8 +95,9 @@ public class Congress {
 	}
 	
 	public static String url(String method, String[] fields, Map<String,String> params, int page, int per_page) throws CongressException {
-		if (fields == null || fields.length == 0)
+		if (fields == null || fields.length == 0) {
 			throw new CongressException("App policy to explicitly spell out all fields.");
+		}
 		
 		params.put("apikey", apiKey);
 		params.put("fields", TextUtils.join(",", fields));
@@ -114,8 +118,9 @@ public class Congress {
 				query.append(URLEncoder.encode(key, "UTF-8"));
 				query.append("=");
 				query.append(URLEncoder.encode(value, "UTF-8"));
-				if (iterator.hasNext())
+				if (iterator.hasNext()) {
 					query.append("&");
+				}
 			}
 		} catch(UnsupportedEncodingException e) {
 			throw new CongressException(e, "Unicode not supported on this phone somehow.");
@@ -127,8 +132,9 @@ public class Congress {
 	public static String searchUrl(String method, String query, boolean highlight, String[] fields, Map<String,String> params, int page, int per_page) throws CongressException {
 		if (highlight) {
 			params.put("highlight", "true");
-			if (!params.containsKey("highlight.tags"))
+			if (!params.containsKey("highlight.tags")) {
 				params.put("highlight.tags", Congress.highlightTags);
+			}
 		}
 		
 		params.put("query", query);
@@ -197,14 +203,17 @@ public class Congress {
 		try {
 			connection.setRequestProperty("User-Agent", userAgent);
 	        
-	        if (osVersion != null)
-	        	connection.setRequestProperty("x-os-version", osVersion);
+	        if (osVersion != null) {
+				connection.setRequestProperty("x-os-version", osVersion);
+			}
 	        
-	        if (appVersion != null)
-	        	connection.setRequestProperty("x-app-version", appVersion);
+	        if (appVersion != null) {
+				connection.setRequestProperty("x-app-version", appVersion);
+			}
 	        
-	        if (appChannel != null)
-	        	connection.setRequestProperty("x-app-channel", appChannel);
+	        if (appChannel != null) {
+				connection.setRequestProperty("x-app-channel", appChannel);
+			}
 	        
 	        int status = connection.getResponseCode();
 	        if (status == HttpURLConnection.HTTP_OK) {
@@ -215,14 +224,17 @@ public class Congress {
 	        	BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 	        	StringBuilder total = new StringBuilder();
 	        	String line;
-	        	while ((line = reader.readLine()) != null) total.append(line);
+	        	while ((line = reader.readLine()) != null) {
+					total.append(line);
+				}
 	        	
 	        	return total.toString();
 	        	
-	        } else if (status == HttpURLConnection.HTTP_NOT_FOUND)
-	        	throw new CongressException.NotFound("404 Not Found from " + url);
-	        else
-	        	throw new CongressException("Bad status code " + status+ " on fetching JSON from " + url);
+	        } else if (status == HttpURLConnection.HTTP_NOT_FOUND) {
+				throw new CongressException.NotFound("404 Not Found from " + url);
+			} else {
+				throw new CongressException("Bad status code " + status+ " on fetching JSON from " + url);
+			}
 			
 		} catch (IOException e) {
 	    	throw new CongressException(e, "Problem fetching JSON from " + url);
@@ -239,8 +251,9 @@ public class Congress {
 			} catch(JSONException e) {
 				throw new CongressException(e, "Error getting first result from " + url);
 			}
-		} else
+		} else {
 			return null;
+		}
 	}
 	
 	public static JSONArray resultsFor(String url) throws CongressException {
@@ -258,8 +271,9 @@ public class Congress {
 		int length = array.length();
 		List<String> list = new ArrayList<String>(length);
 		
-		for (int i=0; i<length; i++)
+		for (int i=0; i<length; i++) {
 			list.add(array.getString(i));
+		}
 		
 		return list;
 	}

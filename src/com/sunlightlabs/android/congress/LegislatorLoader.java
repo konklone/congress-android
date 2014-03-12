@@ -28,14 +28,16 @@ public class LegislatorLoader extends Activity implements LoadsLegislator {
 		
 		// if coming from a shortcut intent, there appears to be a bug with packaging sub-intents
 		// and the intent will be null
-		if (intent == null)
+		if (intent == null) {
 			intent = Utils.legislatorIntent(id);
+		}
 
         loadLegislatorTask = (LoadLegislatorTask) getLastNonConfigurationInstance();
-        if (loadLegislatorTask != null)
-        	loadLegislatorTask.onScreenLoad(this);
-        else
+        if (loadLegislatorTask != null) {
+			loadLegislatorTask.onScreenLoad(this);
+		} else {
 			loadLegislatorTask = (LoadLegislatorTask) new LoadLegislatorTask(this).execute(id);
+		}
         
         setupControls();
 	}
@@ -50,18 +52,21 @@ public class LegislatorLoader extends Activity implements LoadsLegislator {
 		ActionBarUtils.setTitle(this, R.string.app_name, new Intent(this, MenuLegislators.class));
 	}
 	
+	@Override
 	public void onLoadLegislator(Legislator legislator) {
 		if (legislator != null) {
 			intent.putExtra("legislator", legislator);
 			// pass entry info along, this loader class is an implementation detail
 			startActivity(Analytics.passEntry(this, intent));
-		} else
+		} else {
 			Utils.alert(this, R.string.error_connection);
+		}
 		
 		loadLegislatorTask = null;
 		finish();
 	}
 	
+	@Override
 	public void onLoadLegislator(CongressException exception) {
 		onLoadLegislator((Legislator) null);
 	}

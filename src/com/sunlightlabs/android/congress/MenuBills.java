@@ -29,16 +29,18 @@ public class MenuBills extends FragmentActivity {
 		
 		String tab = getIntent().getStringExtra("tab");
 		
-		if (tab != null && tab.equals("bills_new"))
+		if (tab != null && tab.equals("bills_new")) {
 			adapter.selectPage(2);
-		else if (tab != null && tab.equals("bills_active"))
+		} else if (tab != null && tab.equals("bills_active")) {
 			adapter.selectPage(1);
+		}
 	}
 	
 	public void setupControls() {
 		ActionBarUtils.setTitle(this, R.string.menu_main_bills);
 		
 		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
+			@Override
 			public void onClick(View v) { 
 				onSearchRequested();
 			}

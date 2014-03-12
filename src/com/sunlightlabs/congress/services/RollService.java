@@ -54,42 +54,56 @@ public class RollService {
 	/* JSON parsers, also useful for other service endpoints within this package */
 	
 	protected static Roll fromAPI(JSONObject json) throws JSONException, ParseException, CongressException {
-		if (json == null)
+		if (json == null) {
 			throw new CongressException("Error loading votes.");
+		}
 		
 		Roll roll = new Roll();
 		
-		if (!json.isNull("chamber"))
+		if (!json.isNull("chamber")) {
 			roll.chamber = json.getString("chamber");
-		if (!json.isNull("vote_type"))
+		}
+		if (!json.isNull("vote_type")) {
 			roll.vote_type = json.getString("vote_type");
-		if (!json.isNull("question"))
+		}
+		if (!json.isNull("question")) {
 			roll.question = json.getString("question");
-		if (!json.isNull("result"))
+		}
+		if (!json.isNull("result")) {
 			roll.result = json.getString("result");
-		if (!json.isNull("congress"))
+		}
+		if (!json.isNull("congress")) {
 			roll.congress = json.getInt("congress");
-		if (!json.isNull("year"))
+		}
+		if (!json.isNull("year")) {
 			roll.year = json.getInt("year");
-		if (!json.isNull("voted_at"))
+		}
+		if (!json.isNull("voted_at")) {
 			roll.voted_at = Congress.parseDate(json.getString("voted_at"));
+		}
 		
 		// guaranteed fields for roll call votes
-		if (!json.isNull("required"))
+		if (!json.isNull("required")) {
 			roll.required = json.getString("required");
-		if (!json.isNull("number"))
+		}
+		if (!json.isNull("number")) {
 			roll.number = json.getInt("number");
-		if (!json.isNull("roll_id"))
+		}
+		if (!json.isNull("roll_id")) {
 			roll.id = json.getString("roll_id");
-		if (!json.isNull("roll_type"))
+		}
+		if (!json.isNull("roll_type")) {
 			roll.roll_type = json.getString("roll_type");
+		}
 		
 		
-		if (!json.isNull("bill_id"))
+		if (!json.isNull("bill_id")) {
 			roll.bill_id = json.getString("bill_id");
+		}
 
-		if (!json.isNull("bill"))
+		if (!json.isNull("bill")) {
 			roll.bill = BillService.fromAPI(json.getJSONObject("bill"));
+		}
 
 		roll.voteBreakdown.put(Roll.YEA, 0);
 		roll.voteBreakdown.put(Roll.NAY, 0);
@@ -104,8 +118,9 @@ public class RollService {
 			while (iter.hasNext()) {
 				String key = (String) iter.next();
 				roll.voteBreakdown.put(key, total.getInt(key));
-				if (!key.equals(Roll.YEA) && !key.equals(Roll.NAY) && !key.equals(Roll.PRESENT) && !key.equals(Roll.NOT_VOTING))
+				if (!key.equals(Roll.YEA) && !key.equals(Roll.NAY) && !key.equals(Roll.PRESENT) && !key.equals(Roll.NOT_VOTING)) {
 					roll.otherVotes = true;
+				}
 			}
 			
 			//todo: what does this mean 
@@ -127,8 +142,9 @@ public class RollService {
 				Roll.Vote vote = voteFromAPI(voter_id, voterObject);
 				
 				// if there was no voter info for some reason, don't add the vote
-				if (vote != null)
+				if (vote != null) {
 					roll.voters.put(voter_id, vote);
+				}
 			}
 		}
 
@@ -152,10 +168,11 @@ public class RollService {
 		vote.vote = json.getString("vote");
 		vote.voter_id = voter_id;
 		vote.voter = LegislatorService.fromAPI(json.getJSONObject("voter"));
-		if (vote.voter == null)
+		if (vote.voter == null) {
 			return null;
-		else
+		} else {
 			return vote;
+		}
 	}
 	
 	protected static Vote voteFromAPI(String voter_id, String vote_name) throws JSONException, CongressException {
@@ -182,8 +199,9 @@ public class RollService {
 			JSONArray results = Congress.resultsFor(url);
 
 			int length = results.length();
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < length; i++) {
 				rolls.add(fromAPI(results.getJSONObject(i)));
+			}
 			
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);

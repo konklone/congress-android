@@ -166,23 +166,26 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		
 		setupControls();
 		
-		if (legislators != null)
+		if (legislators != null) {
 			displayLegislators();
+		}
 	}
 	
 	public void setupControls() {
 		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				refresh();
 			}
 		});
 
-		if (type == SEARCH_COSPONSORS)
+		if (type == SEARCH_COSPONSORS) {
 			FragmentUtils.setLoading(this, R.string.legislators_loading_cosponsors);
-		else if (type == SEARCH_LOCATION)
+		} else if (type == SEARCH_LOCATION) {
 			FragmentUtils.setLoading(this, R.string.legislators_loading_location);
-		else
+		} else {
 			FragmentUtils.setLoading(this, R.string.legislators_loading);
+		}
 	}
 	
 	public void loadLegislators() {
@@ -190,26 +193,29 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 	}
 	
 	public void onLoadLegislators(List<Legislator> legislators) {
-		if (!isAdded())
+		if (!isAdded()) {
 			return;
+		}
 		
 		// if there's only one result, don't even make them click it
 		if (legislators.size() == 1 && (type != SEARCH_LOCATION && type != SEARCH_COSPONSORS)) {
 			selectLegislator(legislators.get(0));
 			getActivity().finish();
-		} else 
+		} else {
 			displayLegislators();
+		}
 	}
 	
 	public void onLoadLegislators(CongressException exception) {
-		if (isAdded())
+		if (isAdded()) {
 			FragmentUtils.showRefresh(this, R.string.legislators_error);
+		}
 	}
 
 	public void displayLegislators() {
-		if (legislators.size() > 0)
+		if (legislators.size() > 0) {
 			setListAdapter(new LegislatorAdapter(this, legislators));
-		else {
+		} else {
 			switch (type) {
 			case SEARCH_ZIP:
 				FragmentUtils.showEmpty(this, R.string.empty_zipcode);
@@ -237,9 +243,11 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		}
 	}
 
+	@Override
 	public void onLoadPhoto(Drawable photo, Object tag) {
-		if (!isAdded())
+		if (!isAdded()) {
 			return;
+		}
 		
 		loadPhotoTasks.remove(tag);
 		
@@ -248,13 +256,15 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		
 		View result = getListView().findViewWithTag(holder);
 		if (result != null) {
-			if (photo != null)
+			if (photo != null) {
 				((ImageView) result.findViewById(R.id.photo)).setImageDrawable(photo);
-			else 
+			} else {
 				((ImageView) result.findViewById(R.id.photo)).setImageResource(R.drawable.person);
+			}
 		}
 	}
 
+	@Override
 	public Context getContext() {
 		return getActivity();
 	}
@@ -295,6 +305,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
         	return 1;
         }
 
+		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view;
 			ViewHolder holder;
@@ -330,9 +341,9 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 //			}
 
 			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_LARGE, legislator.bioguide_id, context.getActivity());
-			if (photo != null)
+			if (photo != null) {
 				holder.photo.setImageDrawable(photo);
-			else {
+			} else {
 				holder.photo.setImageResource(R.drawable.loading_photo);
 				context.loadPhoto(legislator.bioguide_id);
 			}
@@ -343,8 +354,9 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		public String nameFor(Legislator legislator) {
 			if (context.type == SEARCH_COMMITTEE) {
 				return legislator.title + ". " + legislator.firstName() + " " + legislator.last_name;
-			} else
+			} else {
 				return legislator.last_name + ", " + legislator.firstName();
+			}
 		}
 
 		public String positionFor(Legislator legislator) {
@@ -352,16 +364,18 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 			
 			if (context.type == SEARCH_COMMITTEE) {
 				String position = legislator.party + " - " + stateName;
-				if (legislator.membership != null && legislator.membership.title != null)
+				if (legislator.membership != null && legislator.membership.title != null) {
 					return legislator.membership.title + " - " + position;
-				else
+				} else {
 					return position;
+				}
 			} else {
 				String district;
-				if (legislator.chamber.equals("senate"))
+				if (legislator.chamber.equals("senate")) {
 					district = "Senator";
-				else
+				} else {
 					district = "District " + legislator.district;
+				}
 				
 				return legislator.party + " - " + stateName + " - " + district;
 			}
@@ -432,10 +446,11 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 					for (int i=0; i< temp.size(); i++) {
 						Legislator legislator = temp.get(i);
 						Membership membership = legislator.membership;
-						if (membership.title != null && (membership.title.contains("Chair") || membership.title.contains("Ranking")))
+						if (membership.title != null && (membership.title.contains("Chair") || membership.title.contains("Ranking"))) {
 							leaders.add(legislator);
-						else
+						} else {
 							rankAndFile.add(legislator);
+						}
 					}
 					
 					Collections.sort(leaders, new Comparator<Legislator>() {
@@ -448,10 +463,11 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 					Collections.sort(rankAndFile, new Comparator<Legislator>() {
 						@Override
 						public int compare(Legislator a, Legislator b) {
-							if (a.membership.side.equals(b.membership.side))
+							if (a.membership.side.equals(b.membership.side)) {
 								return a.membership.rank - b.membership.rank;
-							else
+							} else {
 								return a.membership.side.compareTo(b.membership.side);
+							}
 						}
 					});
 					
@@ -464,10 +480,11 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 					List<Legislator> lower = new ArrayList<Legislator>();
 					
 					for (int i = 0; i < temp.size(); i++) {
-						if (temp.get(i).chamber.equals("senate"))
+						if (temp.get(i).chamber.equals("senate")) {
 							upper.add(temp.get(i));
-						else
+						} else {
 							lower.add(temp.get(i));
+						}
 					}
 					Collections.sort(upper);
 					Collections.sort(lower);
@@ -487,10 +504,11 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		protected void onPostExecute(List<Legislator> legislators) {
 			context.legislators = legislators;
 			
-			if (exception == null)
+			if (exception == null) {
 				context.onLoadLegislators(legislators);
-			else
+			} else {
 				context.onLoadLegislators(exception);
+			}
 		}
 	}
 

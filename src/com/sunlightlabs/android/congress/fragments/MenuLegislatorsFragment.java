@@ -68,8 +68,9 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (cursor != null)
+		if (cursor != null) {
 			cursor.requery();
+		}
 		setupControls();
 	}
 	
@@ -96,9 +97,10 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 	}
 
 	public void loadPhoto(String bioguide_id) {
-		if (!loadPhotoTasks.containsKey(bioguide_id))
+		if (!loadPhotoTasks.containsKey(bioguide_id)) {
 			loadPhotoTasks.put(bioguide_id, 
 					(LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_LARGE, bioguide_id).execute(bioguide_id));
+		}
 	}
 
 	@Override
@@ -108,17 +110,19 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 
 	@Override
 	public void onLoadPhoto(Drawable photo, Object tag) {
-		if (!isAdded())
+		if (!isAdded()) {
 			return;
+		}
 		
 		String bioguide_id = (String) tag;
 		loadPhotoTasks.remove(bioguide_id);
 		ImageView photoView = photoViews.get(bioguide_id);
 		if (photoView != null) {
-			if (photo != null)
+			if (photo != null) {
 				photoView.setImageDrawable(photo);
-			else
+			} else {
 				photoView.setImageResource(R.drawable.person);
+			}
 		}
 	}
 	
@@ -145,9 +149,9 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 			
 			ImageView photo = (ImageView) view.findViewById(R.id.photo);
 			
-			if (picture != null)
+			if (picture != null) {
 				photo.setImageDrawable(picture);
-			else {
+			} else {
 				photo.setImageResource(R.drawable.loading_photo);
 				photoViews.put(legislator.bioguide_id, photo);
 				fragment.loadPhoto(legislator.bioguide_id);
@@ -170,10 +174,11 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 		public String positionFor(Legislator legislator) {
 			String stateName = Utils.stateCodeToName(fragment.getActivity(), legislator.state);
 			String district;
-			if (legislator.title.equals("Sen"))
+			if (legislator.title.equals("Sen")) {
 				district = "Senator";
-			else
+			} else {
 				district = "District " + legislator.district;
+			}
 			return legislator.party + " - " + stateName + " - " + district; 
 		}
 	}

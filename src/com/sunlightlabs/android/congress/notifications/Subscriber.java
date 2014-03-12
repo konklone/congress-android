@@ -38,10 +38,11 @@ public abstract class Subscriber {
 	// utility methods
 	
 	public static String notificationName(Bill bill) {
-		if (bill.short_title != null && !(bill.short_title.equals("")))
+		if (bill.short_title != null && !(bill.short_title.equals(""))) {
 			return Bill.formatCode(bill.id) + " - " + bill.short_title;
-		else
+		} else {
 			return Bill.formatCode(bill.id);
+		}
 	}
 	
 	public static String notificationName(Legislator legislator) {

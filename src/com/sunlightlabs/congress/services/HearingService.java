@@ -45,27 +45,36 @@ public class HearingService {
 	private static Hearing fromJSON(JSONObject json) throws JSONException, ParseException, CongressException {
 		Hearing hearing = new Hearing();
 		
-		if (!json.isNull("congress"))
+		if (!json.isNull("congress")) {
 			hearing.congress = json.getInt("congress");
-		if (!json.isNull("description"))
+		}
+		if (!json.isNull("description")) {
 			hearing.description = json.getString("description");
-		if (!json.isNull("chamber"))
+		}
+		if (!json.isNull("chamber")) {
 			hearing.chamber = json.getString("chamber");
-		if (!json.isNull("room"))
+		}
+		if (!json.isNull("room")) {
 			hearing.room = json.getString("room");
-		if (!json.isNull("occurs_at"))
+		}
+		if (!json.isNull("occurs_at")) {
 			hearing.occursAt = Congress.parseDate(json.getString("occurs_at"));
-		if (!json.isNull("dc"))
+		}
+		if (!json.isNull("dc")) {
 			hearing.dc = json.getBoolean("dc");
+		}
 		
 		// House only
-		if (!json.isNull("url"))
+		if (!json.isNull("url")) {
 			hearing.url = json.getString("url");
-		if (!json.isNull("hearing_type"))
+		}
+		if (!json.isNull("hearing_type")) {
 			hearing.hearingType = json.getString("hearing_type");
+		}
 		
-		if (!json.isNull("committee"))
+		if (!json.isNull("committee")) {
 			hearing.committee = CommitteeService.fromAPI(json.getJSONObject("committee"));
+		}
 		
 		return hearing;
 	}
@@ -76,8 +85,9 @@ public class HearingService {
 			JSONArray results = Congress.resultsFor(url);
 
 			int length = results.length();
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < length; i++) {
 				hearings.add(fromJSON(results.getJSONObject(i)));
+			}
 		} catch(JSONException e) {
 			throw new CongressException(e, "Problem parsing the hearings at " + url);
 		} catch (ParseException e) {

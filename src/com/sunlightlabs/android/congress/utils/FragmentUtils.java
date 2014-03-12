@@ -25,9 +25,13 @@ public class FragmentUtils {
 	
 	public static List<String> newIds(Fragment fragment, String subscriberClass) {
 		Activity activity = fragment.getActivity();
-		if (activity == null) return null;
+		if (activity == null) {
+			return null;
+		}
 		String[] ids = activity.getIntent().getStringArrayExtra(NotificationService.EXTRA_NEW_IDS_PREFIX + subscriberClass);
-		if (ids == null) return null;
+		if (ids == null) {
+			return null;
+		}
 		return Arrays.asList(ids);
 	}
 

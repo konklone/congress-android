@@ -70,6 +70,7 @@ public class BillSearch extends FragmentActivity {
 	
 	public void setupControls() {
 		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
+			@Override
 			public void onClick(View v) { 
 				onSearchRequested();
 			}

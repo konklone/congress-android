@@ -89,13 +89,15 @@ public class LocationUtils {
 
 		Location location = null;
 		String provider = LocationManager.GPS_PROVIDER;
-		if (manager.isProviderEnabled(provider))
+		if (manager.isProviderEnabled(provider)) {
 			location = manager.getLastKnownLocation(provider);
+		}
 
 		if (location == null) {
 			provider = LocationManager.NETWORK_PROVIDER;
-			if (manager.isProviderEnabled(provider))
+			if (manager.isProviderEnabled(provider)) {
 				location = manager.getLastKnownLocation(provider);
+			}
 		}
 		return location;
 	}
@@ -103,8 +105,9 @@ public class LocationUtils {
 	public static LocationTimer requestLocationUpdate(Context context, Handler handler, String provider) {
 		Log.d(Utils.TAG, "LocationUtils - requestLocationUpdate(): from provider " + provider);
 
-		if (!(context instanceof LocationListener))
+		if (!(context instanceof LocationListener)) {
 			throw new IllegalArgumentException("context must implement LocationListener to receive updates!");
+		}
 
 		LocationListenerTimeout listener = (LocationListenerTimeout) context;
 		LocationManager manager = (LocationManager) context

@@ -58,8 +58,9 @@ public class BillService {
 	}
 	
 	public static List<Bill> where(Map<String,String> params, int page, int per_page) throws CongressException {
-		if (!params.containsKey("order"))
+		if (!params.containsKey("order")) {
 			params.put("order", "introduced_on,bill_type,number");
+		}
 		
 		return billsFor(Congress.url("bills", basicFields, params, page, per_page));
 	}
@@ -73,85 +74,116 @@ public class BillService {
 	protected static Bill fromAPI(JSONObject json) throws JSONException, ParseException, CongressException {
 		Bill bill = new Bill();
 
-		if (!json.isNull("bill_id"))
+		if (!json.isNull("bill_id")) {
 			bill.id = json.getString("bill_id");
+		}
 		
-		if (!json.isNull("bill_type"))
+		if (!json.isNull("bill_type")) {
 			bill.bill_type = json.getString("bill_type");
+		}
 		
-		if (!json.isNull("chamber"))
+		if (!json.isNull("chamber")) {
 			bill.chamber = json.getString("chamber");
+		}
 		
 		// todo: rename field
-		if (!json.isNull("congress"))
+		if (!json.isNull("congress")) {
 			bill.congress = json.getInt("congress");
+		}
 		
-		if (!json.isNull("number"))
+		if (!json.isNull("number")) {
 			bill.number = json.getInt("number");
+		}
 		
-		if (!json.isNull("short_title"))
+		if (!json.isNull("short_title")) {
 			bill.short_title = json.getString("short_title");
-		if (!json.isNull("official_title"))
+		}
+		if (!json.isNull("official_title")) {
 			bill.official_title = json.getString("official_title");
-		if (!json.isNull("last_action_at"))
+		}
+		if (!json.isNull("last_action_at")) {
 			bill.last_action_at = Congress.parseDateEither(json.getString("last_action_at"));
-		if (!json.isNull("last_vote_at"))
+		}
+		if (!json.isNull("last_vote_at")) {
 			bill.last_passage_vote_at = Congress.parseDateEither(json.getString("last_vote_at"));
+		}
 		
-		if (!json.isNull("introduced_on"))
+		if (!json.isNull("introduced_on")) {
 			bill.introduced_on = Congress.parseDateOnly(json.getString("introduced_on"));
+		}
 		
-		if (!json.isNull("cosponsors_count"))
+		if (!json.isNull("cosponsors_count")) {
 			bill.cosponsors_count = json.getInt("cosponsors_count");
+		}
 		
 		// timeline dates
 		if (!json.isNull("history")) {
 			JSONObject history = json.getJSONObject("history");
-			if (!history.isNull("active_at"))
+			if (!history.isNull("active_at")) {
 				bill.active_at = Congress.parseDateEither(history.getString("active_at"));
-			if (!history.isNull("senate_cloture_result_at"))
+			}
+			if (!history.isNull("senate_cloture_result_at")) {
 				bill.senate_cloture_result_at = Congress.parseDateEither(history.getString("senate_cloture_result_at"));
-			if (!history.isNull("house_passage_result_at"))
+			}
+			if (!history.isNull("house_passage_result_at")) {
 				bill.house_passage_result_at = Congress.parseDateEither(history.getString("house_passage_result_at"));
-			if (!history.isNull("senate_passage_result_at"))
+			}
+			if (!history.isNull("senate_passage_result_at")) {
 				bill.senate_passage_result_at = Congress.parseDateEither(history.getString("senate_passage_result_at"));
-			if (!history.isNull("vetoed_at"))
+			}
+			if (!history.isNull("vetoed_at")) {
 				bill.vetoed_at = Congress.parseDateEither(history.getString("vetoed_at"));
-			if (!history.isNull("house_override_result_at"))
+			}
+			if (!history.isNull("house_override_result_at")) {
 				bill.house_override_result_at = Congress.parseDateEither(history.getString("house_override_result_at"));
-			if (!history.isNull("senate_override_result_at"))
+			}
+			if (!history.isNull("senate_override_result_at")) {
 				bill.senate_override_result_at = Congress.parseDateEither(history.getString("senate_override_result_at"));
-			if (!history.isNull("awaiting_signature_since"))
+			}
+			if (!history.isNull("awaiting_signature_since")) {
 				bill.awaiting_signature_since = Congress.parseDateEither(history.getString("awaiting_signature_since"));
-			if (!history.isNull("enacted_at"))
+			}
+			if (!history.isNull("enacted_at")) {
 				bill.enacted_at = Congress.parseDateEither(history.getString("enacted_at"));
+			}
 	
 			// timeline flags and values
-			if (!history.isNull("active"))
+			if (!history.isNull("active")) {
 				bill.active = history.getBoolean("active");
-			if (!history.isNull("senate_cloture_result"))
+			}
+			if (!history.isNull("senate_cloture_result")) {
 				bill.senate_cloture_result = history.getString("senate_cloture_result");
-			if (!history.isNull("house_passage_result"))
+			}
+			if (!history.isNull("house_passage_result")) {
 				bill.house_passage_result = history.getString("house_passage_result");
-			if (!history.isNull("senate_passage_result"))
+			}
+			if (!history.isNull("senate_passage_result")) {
 				bill.senate_passage_result = history.getString("senate_passage_result");
-			if (!history.isNull("vetoed"))
+			}
+			if (!history.isNull("vetoed")) {
 				bill.vetoed = history.getBoolean("vetoed");
-			if (!history.isNull("house_override_result"))
+			}
+			if (!history.isNull("house_override_result")) {
 				bill.house_override_result = history.getString("house_override_result");
-			if (!history.isNull("senate_override_result"))
+			}
+			if (!history.isNull("senate_override_result")) {
 				bill.senate_override_result = history.getString("senate_override_result");
-			if (!history.isNull("awaiting_signature"))
+			}
+			if (!history.isNull("awaiting_signature")) {
 				bill.awaiting_signature = history.getBoolean("awaiting_signature");
-			if (!history.isNull("enacted"))
+			}
+			if (!history.isNull("enacted")) {
 				bill.enacted = history.getBoolean("enacted");
+			}
 		}
 
-		if (!json.isNull("sponsor"))
+		if (!json.isNull("sponsor")) {
 			bill.sponsor = LegislatorService.fromAPI(json.getJSONObject("sponsor"));
+		}
 
-		if (!json.isNull("summary"))
+		if (!json.isNull("summary")) {
 			bill.summary = json.getString("summary");
+		}
 
 		if (!json.isNull("cosponsors")) {
 			JSONArray cosponsorObjects = json.getJSONArray("cosponsors");
@@ -159,8 +191,9 @@ public class BillService {
 			
 			bill.cosponsors = new ArrayList<Legislator>();
 			
-			for (int i=0; i<length; i++)
+			for (int i=0; i<length; i++) {
 				bill.cosponsors.add(LegislatorService.fromAPI(cosponsorObjects.getJSONObject(i).getJSONObject("legislator")));
+			}
 		}
 		
 		if (!json.isNull("votes")) {
@@ -170,8 +203,9 @@ public class BillService {
 			bill.votes = new ArrayList<Bill.Vote>();
 
 			// load in descending order
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < length; i++) {
 				bill.votes.add(0, voteFromAPI(voteObjects.getJSONObject(i)));
+			}
 		}
 
 		if (!json.isNull("actions")) {
@@ -181,12 +215,14 @@ public class BillService {
 			bill.actions = new ArrayList<Bill.Action>();
 			
 			// load in descending order
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < length; i++) {
 				bill.actions.add(0, actionFromAPI(actionObjects.getJSONObject(i)));
+			}
 		}
 		
-		if (!json.isNull("last_action"))
+		if (!json.isNull("last_action")) {
 			bill.lastAction = actionFromAPI(json.getJSONObject("last_action"));
+		}
 		
 		if (!json.isNull("upcoming")) {
 			JSONArray upcomingObjects = json.getJSONArray("upcoming");
@@ -194,8 +230,9 @@ public class BillService {
 			
 			List<UpcomingBill> upcoming = new ArrayList<UpcomingBill>();
 			
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < length; i++) {
 				upcoming.add(UpcomingBillService.fromAPI(upcomingObjects.getJSONObject(i)));
+			}
 			
 			// sort in order of legislative day
 			Collections.sort(upcoming, new Comparator<UpcomingBill>() {
@@ -213,29 +250,36 @@ public class BillService {
 			if (!version.isNull("urls")) {
 				bill.versionUrls = new HashMap<String,String>();
 				JSONObject urls = version.getJSONObject("urls");
-				if (!urls.isNull("html"))
+				if (!urls.isNull("html")) {
 					bill.versionUrls.put("html", urls.getString("html"));
-				if (!urls.isNull("xml"))
+				}
+				if (!urls.isNull("xml")) {
 					bill.versionUrls.put("xml", urls.getString("xml"));
-				if (!urls.isNull("pdf"))
+				}
+				if (!urls.isNull("pdf")) {
 					bill.versionUrls.put("pdf", urls.getString("pdf"));
+				}
 			}
 		}
 		
 		if (!json.isNull("urls")) {
 			bill.urls = new HashMap<String,String>();
 			JSONObject urls = json.getJSONObject("urls");
-			if (!urls.isNull("congress"))
+			if (!urls.isNull("congress")) {
 				bill.urls.put("congress", urls.getString("congress"));
-			if (!urls.isNull("govtrack"))
+			}
+			if (!urls.isNull("govtrack")) {
 				bill.urls.put("govtrack", urls.getString("govtrack"));
-			if (!urls.isNull("opencongress"))
+			}
+			if (!urls.isNull("opencongress")) {
 				bill.urls.put("opencongress", urls.getString("opencongress"));
+			}
 		}
 		
 		// coming from a search endpoint, generate a search object
-		if (!json.isNull("search"))
+		if (!json.isNull("search")) {
 			bill.search = Congress.SearchResult.from(json.getJSONObject("search"));
+		}
 		
 		return bill;
 	}
@@ -250,8 +294,9 @@ public class BillService {
 		vote.chamber = json.getString("chamber");
 		vote.voted_at = Congress.parseDateEither(json.getString("acted_at"));
 
-		if (!json.isNull("roll_id"))
+		if (!json.isNull("roll_id")) {
 			vote.roll_id = json.getString("roll_id");
+		}
 		return vote;
 	}
 	
@@ -261,10 +306,12 @@ public class BillService {
 		action.type = json.getString("type");
 		action.acted_at = Congress.parseDateEither(json.getString("acted_at"));
 		
-		if (!json.isNull("chamber"))
+		if (!json.isNull("chamber")) {
 			action.chamber = json.getString("chamber");
-		if (!json.isNull("result"))
+		}
+		if (!json.isNull("result")) {
 			action.result = json.getString("result");
+		}
 		
 		return action;
 	}
@@ -275,10 +322,11 @@ public class BillService {
 	private static Bill billFor(String url) throws CongressException {
 		try {
 			JSONObject json = Congress.firstResult(url);
-			if (json != null)
+			if (json != null) {
 				return fromAPI(json);
-			else
+			} else {
 				throw new BillNotFoundException();
+			}
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);
 		} catch (ParseException e) {
@@ -292,8 +340,9 @@ public class BillService {
 			JSONArray results = Congress.resultsFor(url);
 
 			int length = results.length();
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < length; i++) {
 				bills.add(fromAPI(results.getJSONObject(i)));
+			}
 
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);

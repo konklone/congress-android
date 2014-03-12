@@ -66,12 +66,14 @@ public class HearingListFragment extends ListFragment {
 		
 		setupControls();
 		
-		if (hearings != null)
+		if (hearings != null) {
 			displayHearings();
+		}
 	}
 	
 	private void setupControls() {
 		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				refresh();
 			}
@@ -122,8 +124,9 @@ public class HearingListFragment extends ListFragment {
 	public void onLoadHearings(List<Hearing> hearings) {
 		this.hearings = hearings;
 		
-		if (isAdded())
+		if (isAdded()) {
 			displayHearings();
+		}
 	}
 	
 	public void onLoadHearings(CongressException exception) {
@@ -137,8 +140,9 @@ public class HearingListFragment extends ListFragment {
 			header.setVisibility(View.VISIBLE);
 			
 			setListAdapter(new HearingAdapter(this, hearings));
-		} else
+		} else {
 			FragmentUtils.showEmpty(this, R.string.hearings_empty);
+		}
 	}
 	
 	static class HearingAdapter extends ArrayAdapter<Hearing> {
@@ -169,8 +173,9 @@ public class HearingListFragment extends ListFragment {
 		public View getView(int position, View view, ViewGroup parent) {
 			Hearing hearing = getItem(position);
 		
-			if (view == null)
+			if (view == null) {
 				view = inflater.inflate(R.layout.hearing, null);
+			}
 			
 			Date date = hearing.occursAt;
 			String month = new SimpleDateFormat("MMM d").format(date).toUpperCase();
@@ -183,8 +188,9 @@ public class HearingListFragment extends ListFragment {
 			name = name.replaceFirst("^" + chamberCap + " ", "");
 			
 			String room = hearing.room;
-			if (room.equals("TBA"))
+			if (room.equals("TBA")) {
 				room = "Room TBA";
+			}
 			
 			((TextView) view.findViewById(R.id.month)).setText(month);
 			((TextView) view.findViewById(R.id.time)).setText(time);
@@ -224,10 +230,11 @@ public class HearingListFragment extends ListFragment {
 
 		@Override
 		protected void onPostExecute(List<Hearing> hearings) {
-			if (exception != null)
+			if (exception != null) {
 				context.onLoadHearings(exception);
-			else
+			} else {
 				context.onLoadHearings(hearings);
+			}
 		}
 
 	}

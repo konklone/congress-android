@@ -46,26 +46,31 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 		setupDebugBar();
 		
 		findViewById(R.id.about).setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) { showAbout(); }
 		});
 		
 		findViewById(R.id.review).setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) { goReview(); }
 		});
 		
 		findViewById(R.id.feedback).setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) { doFeedback(); }
 		});
 		
 		ActionBarUtils.setTitle(this, R.string.app_name, null);
 		
 		ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.notifications, new View.OnClickListener() {
+			@Override
 			public void onClick(View v) { 
 				startActivity(new Intent(MenuMain.this, NotificationTabs.class)); 
 			}
 		});
 		
 		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
+			@Override
 			public void onClick(View v) { 
 				onSearchRequested();
 			}
@@ -76,16 +81,19 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 	
 	private void setupFragments() {
 		FragmentManager manager = getSupportFragmentManager();
-		if (manager.findFragmentById(R.id.main_navigation) == null)
+		if (manager.findFragmentById(R.id.main_navigation) == null) {
 			manager.beginTransaction().add(R.id.main_navigation, MainMenuFragment.newInstance()).commit();
-		if (manager.findFragmentById(R.id.upcoming_list) == null)
+		}
+		if (manager.findFragmentById(R.id.upcoming_list) == null) {
 			manager.beginTransaction().add(R.id.upcoming_list, UpcomingFragment.newInstance()).commit();
+		}
 	}
 	
 	private void setupDebugBar() {
 		if (getResources().getString(R.string.debug_show_buttons).equals("true")) {
 			findViewById(R.id.debug_bar).setVisibility(View.VISIBLE);
 			findViewById(R.id.check).setOnClickListener(new View.OnClickListener() {
+				@Override
 				public void onClick(View v) {
 					WakefulIntentService.sendWakefulWork(MenuMain.this, NotificationService.class);
 				}
@@ -123,9 +131,9 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 	public boolean newVersion() {
 		String lastVersionSeen = getVersionSeen();
 		String currentVersion = getResources().getString(R.string.app_version);
-		if (lastVersionSeen != null && lastVersionSeen.equals(currentVersion))
+		if (lastVersionSeen != null && lastVersionSeen.equals(currentVersion)) {
 			return false;
-		else {
+		} else {
 			setVersionSeen(currentVersion);
 			return true;
 		}
@@ -161,10 +169,11 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 		
 		try {
 			String uri;
-			if (channel.equals("amazon"))
+			if (channel.equals("amazon")) {
 				uri = "http://www.amazon.com/gp/mas/dl/android?p=" + packageName;
-			else
+			} else {
 				uri = "market://details?id=" + packageName;
+			}
 			
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uri)));
 		} catch(ActivityNotFoundException e) {

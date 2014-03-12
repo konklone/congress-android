@@ -113,8 +113,9 @@ public class Utils {
 		String[] names = context.getResources().getStringArray(R.array.state_names);
 
 		for (int i=0; i<codes.length; i++) {
-			if (codes[i].equals(code))
+			if (codes[i].equals(code)) {
 				return names[i];
+			}
 		}
 		return null;
 	}
@@ -124,8 +125,9 @@ public class Utils {
 		String[] names = context.getResources().getStringArray(R.array.state_names);
 
 		for (int i=0; i<names.length; i++) {
-			if (names[i].equals(name))
+			if (names[i].equals(name)) {
 				return codes[i];
+			}
 		}
 		return null;
 	}
@@ -134,17 +136,19 @@ public class Utils {
 		String[] names = context.getResources().getStringArray(R.array.state_names);
 
 		for (int i=0; i<names.length; i++) {
-			if (names[i].equals(name))
+			if (names[i].equals(name)) {
 				return i;
+			}
 		}
 		return 0;
 	}
 
 	public static String truncate(String text, int length, boolean ellipses) {
-		if (text.length() > length)
+		if (text.length() > length) {
 			return text.substring(0, length - 3) + (ellipses ? "..." : "");
-		else
+		} else {
 			return text;
+		}
 	}
 	
 	public static String truncate(String text, int length) {
@@ -210,12 +214,15 @@ public class Utils {
 	}
 	
 	public static String capitalize(String text) {
-		if(text == null) 
+		if(text == null) {
 			return "";
-		if(text.length() == 0)
+		}
+		if(text.length() == 0) {
 			return text;
-		if(text.length() == 1) 
+		}
+		if(text.length() == 1) {
 			return text.toUpperCase();
+		}
 		return text.substring(0, 1).toUpperCase() + text.substring(1);
 	}
 	
@@ -275,14 +282,15 @@ public class Utils {
 		
 		// SimpleDateFormat dateNameFormat = new SimpleDateFormat("EEEE");
 		
-		if (today.equals(subjectDate))
+		if (today.equals(subjectDate)) {
 			return "TODAY";
-		else if (tomorrow.equals(subjectDate))
-			return "TOMORROW"; 
-		else if (yesterday.equals(subjectDate))
+		} else if (tomorrow.equals(subjectDate)) {
+			return "TOMORROW";
+		} else if (yesterday.equals(subjectDate)) {
 			return "YESTERDAY";
-		else
+		} else {
 			return null;
+		}
 	}
 	
 	public static String fullDate(Date subject) {
@@ -291,10 +299,11 @@ public class Utils {
 	
 	public static String nearbyOrFullDate(Date subject) {
 		String result = nearbyDate(subject);
-		if (result != null)
+		if (result != null) {
 			return result;
-		else
+		} else {
 			return fullDateThisYear(subject);
+		}
 	}
 	
 	public static String fullDateThisYear(Date subject) {

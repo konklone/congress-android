@@ -29,8 +29,9 @@ public class Analytics {
 			attachCustomData(activity, tracker);
 			tracker.activityStart(activity);
 			return tracker;
-		} else
+		} else {
 			return null;
+		}
 	}
 	
 	public static void stop(Activity activity) {
@@ -44,7 +45,9 @@ public class Analytics {
 	public static void event(Activity activity, String category, String action, String label) {
 		EasyTracker tracker = EasyTracker.getInstance(activity);
 		if (tracker != null && analyticsEnabled(activity)) {
-			if (label == null) label = "";
+			if (label == null) {
+				label = "";
+			}
 			
 			attachCustomData(activity, tracker);
 			Log.i(Utils.TAG, "[Analytics] Tracking event - category: " + category + ", action: " + action + ", label: " + label);
@@ -88,8 +91,9 @@ public class Analytics {
 		tracker.set(Fields.customDimension(DIMENSION_NOTIFICATIONS_ON), notificationsOn ? "on" : "off");
 		
 		String entrySource = entrySource(activity);
-		if (entrySource != null)
+		if (entrySource != null) {
 			tracker.set(Fields.customDimension(DIMENSION_ENTRY), entrySource);
+		}
 		
 		// debug: output custom dimensions
 		// String msg = "[" + marketChannel + "][" + originalChannel + "][" + (notificationsOn ? "on" : "off") + "][" + (entrySource != null ? entrySource : "nothing") + "]";
@@ -112,12 +116,14 @@ public class Analytics {
 			Bundle extras = intent.getExtras();
 			if (extras != null) {
 				String extra = extras.getString(EXTRA_ENTRY_FROM);
-				if (extra != null)
+				if (extra != null) {
 					source = extra;
+				}
 			}
 			return source;
-		} else
+		} else {
 			return null;
+		}
 	}
 	
 	public static Intent passEntry(Activity activity, Intent intent) {

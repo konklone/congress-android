@@ -43,8 +43,9 @@ public class ActionBarUtils {
 	public static void setTitle(Activity activity, String title, Intent up) {
 		((TextView) activity.findViewById(R.id.title_text)).setText(title);
 		
-		if (up != null) // send a null up intent to disable up button
-			setTitleButton(activity, up); 
+		if (up != null) {
+			setTitleButton(activity, up);
+		} 
 	}
 
 	public static void setTitleButton(final Activity activity, final Intent up) {

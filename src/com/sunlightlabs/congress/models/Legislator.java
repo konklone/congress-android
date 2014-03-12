@@ -23,16 +23,18 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	}
 	
 	public String firstName() {
-		if (nickname != null && nickname.length() > 0)
+		if (nickname != null && nickname.length() > 0) {
 			return nickname;
-		else
+		} else {
 			return first_name;
+		}
 	}
 	
 	public String titledName() {
 		String name = title + ". " + getName();
-		if (name_suffix != null && !name_suffix.equals(""))
+		if (name_suffix != null && !name_suffix.equals("")) {
 			name += ", " + name_suffix;
+		}
 		return name;
 	}
 	
@@ -42,48 +44,55 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 
 	public String fullTitle() {
 		String title = this.title;
-		if (title.equals("Del"))
+		if (title.equals("Del")) {
 			return "Delegate";
-		else if (title.equals("Com"))
+		} else if (title.equals("Com")) {
 			return "Resident Commissioner";
-		else if (title.equals("Sen"))
+		} else if (title.equals("Sen")) {
 			return "Senator";
-		else // "Rep"
+		} else {
 			return "Representative";
+		}
 	}
 	
 	public String getDomain() {
-		if (this.chamber.equals("senate"))
+		if (this.chamber.equals("senate")) {
 			return "Senator";
-		else if (district != null && district.equals("0"))
+		} else if (district != null && district.equals("0")) {
 			return "At-Large";
-		else
+		} else {
 			return "District " + district;
+		}
 	}
 	
 	public static String partyName(String party) {
-		if (party.equals("D"))
+		if (party.equals("D")) {
 			return "Democrat";
-		if (party.equals("R"))
+		}
+		if (party.equals("R")) {
 			return "Republican";
-		if (party.equals("I"))
+		}
+		if (party.equals("I")) {
 			return "Independent";
-		else
+		} else {
 			return "";
+		}
 	}
 	
 	public String getPosition(String stateName) {
 		String position = "";
 
-		if (this.chamber.equals("senate"))
+		if (this.chamber.equals("senate")) {
 			position = "Senator from " + stateName;
-		else if (district != null && district.equals("0")) {
-			if (title.equals("Rep"))
+		} else if (district != null && district.equals("0")) {
+			if (title.equals("Rep")) {
 				position = "Representative for " + stateName + " At-Large";
-			else
+			} else {
 				position = fullTitle() + " for " + stateName;
-		} else
+			}
+		} else {
 			position = "Representative for " + stateName + "-" + district;
+		}
 
 		return "(" + party + ") " + position;
 	}
@@ -104,10 +113,12 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 		return "http://cngr.es/l/" + bioguide_id;
 	}
 	
+	@Override
 	public String toString() {
 		return titledName();
 	}
 	
+	@Override
 	public int compareTo(Legislator another) {
 		return this.last_name.compareTo(another.last_name);
 	}
@@ -118,20 +129,23 @@ public class Legislator implements Comparable<Legislator>, Serializable {
     }
 	
 	public String twitterUrl() {
-		if (this.twitter_id == null || this.twitter_id.equals(""))
+		if (this.twitter_id == null || this.twitter_id.equals("")) {
 			return null;
+		}
 		return "https://twitter.com/" + this.twitter_id;
 	}
 	
 	public String youtubeUrl() {
-		if (this.youtube_id == null || this.youtube_id.equals(""))
+		if (this.youtube_id == null || this.youtube_id.equals("")) {
 			return null;
+		}
 		return "https://www.youtube.com/" + this.youtube_id;
 	}
 	
 	public String facebookUrl() {
-		if (this.facebook_id == null || this.facebook_id.equals(""))
+		if (this.facebook_id == null || this.facebook_id.equals("")) {
 			return null;
+		}
 		return "https://www.facebook.com/" + this.facebook_id;
 	}
 

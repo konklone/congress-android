@@ -58,15 +58,17 @@ public class BillActionFragment extends ListFragment implements LoadBillTask.Loa
 		
 		FragmentUtils.setLoading(this, R.string.bill_history_loading);
 		
-		if (bill.actions != null)
+		if (bill.actions != null) {
 			displayBill();
+		}
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (bill.actions != null)
+		if (bill.actions != null) {
 			setupSubscription();
+		}
 	}
 	
 	private void setupSubscription() {
@@ -77,22 +79,27 @@ public class BillActionFragment extends ListFragment implements LoadBillTask.Loa
 		new LoadBillTask(this, bill.id).execute("actions");
 	}
 	
+	@Override
 	public void onLoadBill(Bill bill) {
 		this.bill.actions = bill.actions;
-		if (isAdded())
+		if (isAdded()) {
 			displayBill();
+		}
 	}
 	
+	@Override
 	public void onLoadBill(CongressException exception) {
-		if (isAdded())
+		if (isAdded()) {
 			FragmentUtils.showRefresh(this, R.string.error_connection);
+		}
 	}
 	
 	public void displayBill() {
-		if (bill.actions != null && bill.actions.size() > 0)
+		if (bill.actions != null && bill.actions.size() > 0) {
 			setListAdapter(new BillActionAdapter(this).adapterFor(bill.actions));
-		else
+		} else {
 			FragmentUtils.showEmpty(this, R.string.bill_actions_empty);
+		}
 		
 		setupSubscription();
 	}
@@ -112,12 +119,14 @@ public class BillActionFragment extends ListFragment implements LoadBillTask.Loa
 			View view = inflater.inflate(R.layout.bill_action, null);
 			
 			String text = action.text;
-			if (!text.endsWith("."))
+			if (!text.endsWith(".")) {
 				text += ".";
+			}
 			
 			String type = action.type;
-			if (type.equals("vote") || type.equals("vote2") || type.equals("vote-aux") || type.equals("vetoed") || type.equals("enacted"))
+			if (type.equals("vote") || type.equals("vote2") || type.equals("vote-aux") || type.equals("vetoed") || type.equals("enacted")) {
 				text = "<b>" + text + "</b>";
+			}
 			
 			((TextView) view).setText(Html.fromHtml(text));
 			return view;

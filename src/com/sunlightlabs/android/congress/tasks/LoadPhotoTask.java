@@ -1,10 +1,10 @@
 package com.sunlightlabs.android.congress.tasks;
 
-import com.sunlightlabs.android.congress.utils.LegislatorImage;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+
+import com.sunlightlabs.android.congress.utils.LegislatorImage;
 
 public class LoadPhotoTask extends AsyncTask<String,Void,Drawable> {
 	public LoadsPhoto context;

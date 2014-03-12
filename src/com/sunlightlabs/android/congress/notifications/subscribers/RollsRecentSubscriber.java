@@ -35,12 +35,13 @@ public class RollsRecentSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results == RollListFragment.PER_PAGE)
+		if (results == RollListFragment.PER_PAGE) {
 			return results + " or more new votes.";
-		else if (results > 1)
+		} else if (results > 1) {
 			return results + " new votes.";
-		else
+		} else {
 			return results + " new vote.";
+		}
 	}
 
 	@Override

@@ -15,7 +15,8 @@ public class CongressException extends Exception {
     	this.msg = msg;
     }
     
-    public String getMessage() {
+    @Override
+	public String getMessage() {
     	return this.msg;
     }
     

@@ -44,10 +44,11 @@ public class LoadBillTask extends AsyncTask<String,Void,Bill> {
 	@Override
 	public void onPostExecute(Bill bill) {
 		LoadsBill loader = (LoadsBill) (context != null ? context : fragment);
-		if (exception != null && bill == null)
+		if (exception != null && bill == null) {
 			loader.onLoadBill(exception);
-		else
+		} else {
 			loader.onLoadBill(bill);
+		}
 	}
 	
 	public interface LoadsBill {

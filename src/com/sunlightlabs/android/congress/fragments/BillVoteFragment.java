@@ -61,15 +61,17 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 		
 		FragmentUtils.setLoading(this, R.string.bill_votes_loading);
 		
-		if (bill.votes != null)
+		if (bill.votes != null) {
 			displayBill();
+		}
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (bill.votes != null)
+		if (bill.votes != null) {
 			setupSubscription();
+		}
 	}
 	
 	private void setupSubscription() {
@@ -80,22 +82,27 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 		new LoadBillTask(this, bill.id).execute("votes");
 	}
 	
+	@Override
 	public void onLoadBill(Bill bill) {
 		this.bill.votes = bill.votes;
-		if (isAdded())
+		if (isAdded()) {
 			displayBill();
+		}
 	}
 	
+	@Override
 	public void onLoadBill(CongressException exception) {
-		if (isAdded())
+		if (isAdded()) {
 			FragmentUtils.showRefresh(this, R.string.error_connection);
+		}
 	}
 	
 	public void displayBill() {
-		if (bill.votes.size() > 0)
+		if (bill.votes.size() > 0) {
 			setListAdapter(new BillVoteAdapter(this, bill.votes));
-		else
+		} else {
 			FragmentUtils.showEmpty(this, R.string.bill_votes_empty);
+		}
 		
 		setupSubscription();
 	}
@@ -103,8 +110,9 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 	@Override
     public void onListItemClick(ListView l, View v, int position, long id) {
 		String rollId = (String) v.getTag();
-    	if (rollId != null)
-    		startActivity(Utils.rollIntent(getActivity(), rollId));
+    	if (rollId != null) {
+			startActivity(Utils.rollIntent(getActivity(), rollId));
+		}
     }
 	
 	protected class BillVoteAdapter extends ArrayAdapter<Bill.Vote> {
@@ -129,8 +137,9 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 
 		@Override
 		public View getView(int position, View view, ViewGroup parent) {
-			if (view == null)
+			if (view == null) {
 				view = inflater.inflate(R.layout.bill_vote, null);
+			}
 			
 			Bill.Vote vote = getItem(position);
 			
@@ -140,10 +149,11 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 			TextView resultView = (TextView) view.findViewById(R.id.result);
 			String result = vote.result;
 			String resultDisplay;
-			if (result.equals("pass"))
+			if (result.equals("pass")) {
 				resultDisplay = "Passed";
-			else // if (result.equals("fail"))
+			} else {
 				resultDisplay = "Failed";
+			}
 				
 			resultView.setText(resultDisplay + " the " + Utils.capitalize(vote.chamber));
 			

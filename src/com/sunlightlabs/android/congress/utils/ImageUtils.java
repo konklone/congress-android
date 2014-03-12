@@ -22,15 +22,17 @@ public class ImageUtils {
 	// should be called from within a background task, as this performs a
 	// network call
 	public static BitmapDrawable getImage(String size, String url, Context context) {
-		if (context == null) // rare race condition
+		if (context == null) {
 			return null;
+		}
 		
 		int hash = url.hashCode();
 		BitmapDrawable drawable = quickGetImage(size, hash, context);
 		if (drawable == null) {
 			cacheImage(size, hash, url, context);
-			if (context != null) // in case activity disappeared while loading
+			if (context != null) {
 				drawable = quickGetImage(size, hash, context);
+			}
 		}
 		return drawable;
 	}
@@ -39,10 +41,11 @@ public class ImageUtils {
 	// drawable, otherwise null
 	public static BitmapDrawable quickGetImage(String size, int hash, Context context) {
 		File imageFile = new File(picPath(size, hash, context));
-		if (!imageFile.exists())
+		if (!imageFile.exists()) {
 			return null;
-		else
+		} else {
 			return new BitmapDrawable(context.getResources(), picPath(size, hash, context));
+		}
 	}
 
 	public static String picPath(String size, int hash, Context context) {
@@ -51,8 +54,9 @@ public class ImageUtils {
 
 	public static String picDir(int hash, Context context) {
 		File cacheDir = context.getCacheDir();
-		if (cacheDir == null)
+		if (cacheDir == null) {
 			cacheDir = context.getFilesDir();
+		}
 		File picDir = new File(context.getCacheDir().getPath() + "/" + hash);
 		picDir.mkdirs();
 		return picDir.getPath();
@@ -60,8 +64,9 @@ public class ImageUtils {
 
 	public static void cacheImage(String size, int hash, String url, Context context) {
 		File outFile = new File(picPath(size, hash, context));
-		if (outFile.exists())
+		if (outFile.exists()) {
 			outFile.delete();
+		}
 
 		downloadFile(url, outFile);
 	}
@@ -80,10 +85,11 @@ public class ImageUtils {
                 fos.write(buffer);
                 fos.flush();
                 fos.close();
-	        } else if (statusCode == HttpStatus.SC_NOT_FOUND)
-	        	return;
-	        else
-	        	return;
+	        } else if (statusCode == HttpStatus.SC_NOT_FOUND) {
+				return;
+			} else {
+				return;
+			}
         } catch (ClientProtocolException e) {
         	return;
 	    } catch (IOException e) {

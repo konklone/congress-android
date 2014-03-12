@@ -38,14 +38,15 @@ public class AlertFragment extends DialogFragment {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		int type = getArguments().getInt("type");
 		
-		if (type == ABOUT)
+		if (type == ABOUT) {
 			return about(inflater);
-		else if (type == CHANGELOG)
+		} else if (type == CHANGELOG) {
 			return changelog(inflater);
-		else if (type == FIRST)
+		} else if (type == FIRST) {
 			return firstTime(inflater);
-		else
+		} else {
 			return null;
+		}
 	}
 	
 	public Dialog firstTime(LayoutInflater inflater) {
@@ -55,6 +56,7 @@ public class AlertFragment extends DialogFragment {
 			.setTitle(R.string.app_name)
 			.setView(firstView)
 			.setPositiveButton(R.string.first_button, new DialogInterface.OnClickListener() {
+				@Override
 				public void onClick(DialogInterface dialog, int which) {}
 			})
 			.create();
@@ -92,6 +94,7 @@ public class AlertFragment extends DialogFragment {
 		return new AlertDialog.Builder(getActivity()).setIcon(R.drawable.icon)
 			.setView(aboutView)
 			.setPositiveButton(R.string.about_button, new DialogInterface.OnClickListener() {
+				@Override
 				public void onClick(DialogInterface dialog, int which) {}
 			})
 			.create();
@@ -115,6 +118,7 @@ public class AlertFragment extends DialogFragment {
 			.setCustomTitle(title)
 			.setView(changelogView)
 			.setPositiveButton(R.string.changelog_button, new DialogInterface.OnClickListener() {
+				@Override
 				public void onClick(DialogInterface dialog, int which) {}
 			})
 			.create();
@@ -123,8 +127,9 @@ public class AlertFragment extends DialogFragment {
 	private Spanned getChangelogHtml(int stringArrayId) {
 		String[] array = getActivity().getResources().getStringArray(stringArrayId);
 		List<String> items = new ArrayList<String>();
-		for (String item : array)
-			items.add("<b>&#183;</b> " + item); 
+		for (String item : array) {
+			items.add("<b>&#183;</b> " + item);
+		} 
 		return Html.fromHtml(TextUtils.join("<br/><br/>", items));
 	}
 	

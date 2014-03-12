@@ -41,12 +41,13 @@ public class FloorUpdatesSubscriber extends Subscriber {
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
 		String chamber = Utils.capitalize(subscription.data);
-		if (results == FloorUpdateFragment.PER_PAGE)
+		if (results == FloorUpdateFragment.PER_PAGE) {
 			return results + " or more new updates from the " + chamber + " floor.";
-		else if (results > 1)
+		} else if (results > 1) {
 			return results + " new updates from the " + chamber + " floor.";
-		else
+		} else {
 			return results + " new update from the " + chamber + " floor.";
+		}
 	}
 	
 	@Override

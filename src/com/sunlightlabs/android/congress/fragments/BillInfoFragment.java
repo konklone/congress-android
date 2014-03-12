@@ -78,11 +78,13 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 		
 		setupControls();
 		
-		if (summary != null)
+		if (summary != null) {
 			displaySummary();
+		}
 		
-		if (sponsorPhoto != null)
-    		displayPhoto();
+		if (sponsorPhoto != null) {
+			displayPhoto();
+		}
 	}
 	
 	public void setupControls() {
@@ -97,8 +99,9 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 				
 				String matchText = "\"" + bill.search.query + "\" matched the bill's " + Bill.matchText(field) + ":";
 				String highlightText = Utils.truncate(bill.search.highlight.get(field).get(0), 300, false);
-				if (field.equals("versions") || field.equals("summary"))
+				if (field.equals("versions") || field.equals("summary")) {
 					highlightText = "..." + highlightText + "...";
+				}
 				
 				((TextView) searchView.findViewById(R.id.match_field)).setText(matchText);
 				((TextView) searchView.findViewById(R.id.highlight_field)).setText(Html.fromHtml(highlightText));
@@ -182,8 +185,9 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 			upcomingHeader.setVisibility(View.VISIBLE);
 			
 			ViewGroup upcomingContainer = (ViewGroup) getView().findViewById(R.id.upcoming_container);
-			for (int i=0; i<latestUpcoming.size(); i++)
+			for (int i=0; i<latestUpcoming.size(); i++) {
 				upcomingContainer.addView(upcomingView(latestUpcoming.get(i)));
+			}
 			upcomingContainer.setVisibility(View.VISIBLE);
 		}
 		
@@ -199,14 +203,15 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 		ViewGroup view = (ViewGroup) inflater.inflate(R.layout.bill_upcoming_item, null);
 		
 		String text;
-		if (upcoming.range == null || upcoming.legislativeDay == null)
+		if (upcoming.range == null || upcoming.legislativeDay == null) {
 			text = "SOMETIME";
-		else if (upcoming.range.equals("day"))
+		} else if (upcoming.range.equals("day")) {
 			text = Utils.nearbyOrFullDate(upcoming.legislativeDay);
-		else if (upcoming.range.equals("week"))
+		} else if (upcoming.range.equals("week")) {
 			text = "WEEK OF " + Utils.fullDate(upcoming.legislativeDay);
-		else
+		} else {
 			text = "SOMETIME";
+		}
 		
 		((TextView) view.findViewById(R.id.date)).setText(text);
 		((TextView) view.findViewById(R.id.where)).setText(upcomingSource(upcoming.sourceType, upcoming.chamber));
@@ -220,26 +225,25 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(upcoming.sourceUrl)));
 				}
 			});
-		} else
+		} else {
 			moreView.setVisibility(View.GONE);
+		}
 		
 		return view;
 	}
 	
 	public String upcomingSource(String type, String chamber) {
-		if (type.equals("senate_daily"))
+		if (type.equals("senate_daily")) {
 			return "On the Senate Floor";
-		else if (type.equals("house_daily") || type.equals("house_weekly") || type.equals("house_floor"))
+		} else if (type.equals("house_daily") || type.equals("house_weekly") || type.equals("house_floor")) {
 			return "On the House Floor";
-		
-		// fallbacks, if we add more upcoming source types
-		else if (chamber.equals("senate"))
+		} else if (chamber.equals("senate")) {
 			return "In the Senate";
-		else if (chamber.equals("house"))
+		} else if (chamber.equals("house")) {
 			return "In the House";
-		
-		else // should never happen
+		} else {
 			return "In Congress";
+		}
 	}
 	
 	public void displayPhoto() {
@@ -283,25 +287,32 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 		new LoadPhotoTask(this, LegislatorImage.PIC_LARGE).execute(sponsor.bioguide_id);
 	}
 	
+	@Override
 	public void onLoadBill(Bill bill) {
-		if (bill.summary != null)
+		if (bill.summary != null) {
 			this.summary = bill.summary;
-		else
+		} else {
 			this.summary = "";
+		}
 		
-		if (isAdded())
+		if (isAdded()) {
 			displaySummary();
+		}
 	}
 	
+	@Override
 	public void onLoadBill(CongressException exception) {
-		if (isAdded())
+		if (isAdded()) {
 			Utils.alert(getActivity(), R.string.error_connection);
+		}
 	}
 	
+	@Override
 	public void onLoadPhoto(Drawable photo, Object tag) {
 		sponsorPhoto = photo;
-		if (isAdded())
+		if (isAdded()) {
 			displayPhoto();
+		}
 	}
 	
 	// Take the layout view given, and append all applicable bill_event TextViews
@@ -309,65 +320,74 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 	public void addBillTimeline() {
 		ViewGroup inner = (ViewGroup) getView().findViewById(R.id.header_inner);
 		
-		if (bill.introduced_on != null)
+		if (bill.introduced_on != null) {
 			addTimelinePiece(inner, "Introduced on", bill.introduced_on.getTime());
+		}
 		
 		String house_passage_result = bill.house_passage_result;
 		long house_passage_result_at = bill.house_passage_result_at == null ? 0 : bill.house_passage_result_at.getTime();
 		if (house_passage_result != null && house_passage_result_at > 0) {
-			if (house_passage_result.equals("pass"))
+			if (house_passage_result.equals("pass")) {
 				addTimelinePiece(inner, "Passed the House on", house_passage_result_at);
-			else if (house_passage_result.equals("fail"))
+			} else if (house_passage_result.equals("fail")) {
 				addTimelinePiece(inner, "Failed the House on", house_passage_result_at);
+			}
 		}
 		
 		String senate_cloture_result = bill.senate_cloture_result;
 		long senate_cloture_result_at = bill.senate_cloture_result_at == null ? 0 : bill.senate_cloture_result_at.getTime();
 		if (senate_cloture_result != null && senate_cloture_result_at > 0) {
-			if (senate_cloture_result.equals("pass"))
+			if (senate_cloture_result.equals("pass")) {
 				addTimelinePiece(inner, "Passed cloture in the Senate on", senate_cloture_result_at);
-			else if (senate_cloture_result.equals("fail"))
+			} else if (senate_cloture_result.equals("fail")) {
 				addTimelinePiece(inner, "Failed cloture in the Senate on", senate_cloture_result_at);
+			}
 		}
 		
 		String senate_passage_result = bill.senate_passage_result;
 		long senate_passage_result_at = bill.senate_passage_result_at == null ? 0 : bill.senate_passage_result_at.getTime();
 		if (senate_passage_result != null && senate_passage_result_at > 0) {
-			if (senate_passage_result.equals("pass"))
+			if (senate_passage_result.equals("pass")) {
 				addTimelinePiece(inner, "Passed the Senate on", senate_passage_result_at);
-			else if (senate_passage_result.equals("fail"))
+			} else if (senate_passage_result.equals("fail")) {
 				addTimelinePiece(inner, "Failed the Senate on", senate_passage_result_at);
+			}
 		}
 		
 		long vetoed_at = bill.vetoed_at == null ? 0 : bill.vetoed_at.getTime();
-		if (bill.vetoed && vetoed_at > 0)
+		if (bill.vetoed && vetoed_at > 0) {
 			addTimelinePiece(inner, "Vetoed on", vetoed_at);
+		}
 		
 		String house_override_result = bill.house_override_result;
 		long house_override_result_at = bill.house_override_result_at == null ? 0 : bill.house_override_result_at.getTime();
 		if (house_override_result != null && house_override_result_at > 0) {
-			if (house_override_result.equals("pass"))
+			if (house_override_result.equals("pass")) {
 				addTimelinePiece(inner, "Override passed in the House on", house_override_result_at);
-			else if (house_override_result.equals("fail"))
+			} else if (house_override_result.equals("fail")) {
 				addTimelinePiece(inner, "Override failed in the House on", house_override_result_at);
+			}
 		}
 		
 		String senate_override_result = bill.senate_override_result;
 		long senate_override_result_at = bill.senate_override_result_at == null ? 0 : bill.senate_override_result_at.getTime();
 		if (senate_override_result != null && senate_override_result_at > 0) {
-			if (senate_override_result.equals("pass"))
+			if (senate_override_result.equals("pass")) {
 				addTimelinePiece(inner, "Override passed in the Senate on", senate_override_result_at);
-			else if (senate_override_result.equals("fail"))
+			} else if (senate_override_result.equals("fail")) {
 				addTimelinePiece(inner, "Override failed in the Senate on", senate_override_result_at);
+			}
 		}
 		
 		long awaiting_signature_since = bill.awaiting_signature_since == null ? 0 : bill.awaiting_signature_since.getTime();
-		if (bill.awaiting_signature && awaiting_signature_since > 0)
+		if (bill.awaiting_signature && awaiting_signature_since > 0) {
 			addTimelinePiece(inner, "Awaiting signature since", awaiting_signature_since);
+		}
 		
 		long enacted_at = bill.enacted_at == null ? 0 : bill.enacted_at.getTime();
-		if (bill.enacted && enacted_at > 0)
+		if (bill.enacted && enacted_at > 0) {
 			addTimelinePiece(inner, "Enacted on", enacted_at);
+		}
 	}
 	
 	public void addTimelinePiece(ViewGroup container, String prefix, long timestamp) {
@@ -379,18 +399,20 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 
 	public int sizeOfTitle(String title) {
 		int length = title.length();
-		if (length <= 100)
+		if (length <= 100) {
 			return 18;
-		else if (length <= 200)
+		} else if (length <= 200) {
 			return 16;
-		else if (length <= 300)
+		} else if (length <= 300) {
 			return 14;
-		else if (length <= 400)
+		} else if (length <= 400) {
 			return 12;
-		else // should be truncated above this anyhow
+		} else {
 			return 12;
+		}
 	}
 	
+	@Override
 	public Context getContext() {
 		return getActivity();
 	}

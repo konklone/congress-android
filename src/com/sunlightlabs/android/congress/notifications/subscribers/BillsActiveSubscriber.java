@@ -35,12 +35,13 @@ public class BillsActiveSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results == BillListFragment.PER_PAGE)
+		if (results == BillListFragment.PER_PAGE) {
 			return results + " or more new active bills .";
-		else if (results > 1)
+		} else if (results > 1) {
 			return results + " new active bills.";
-		else
+		} else {
 			return results + " new active bill.";
+		}
 	}
 
 	@Override

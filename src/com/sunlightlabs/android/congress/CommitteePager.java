@@ -31,17 +31,19 @@ public class CommitteePager extends FragmentActivity {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
 		adapter.add("committee_members", R.string.tab_committees_members, LegislatorListFragment.forCommittee(committee));
 		
-		if (committee.subcommittee)
+		if (committee.subcommittee) {
 			findViewById(R.id.pager_titles).setVisibility(View.GONE);
-		else
+		} else {
 			adapter.add("committee_subcommittees", R.string.tab_committees_sub, CommitteeListFragment.forCommittee(committee));
+		}
 	}
 	
 	public void setupControls() {
 		String name = committee.name;
 		
-		if (committee.subcommittee)
+		if (committee.subcommittee) {
 			name = "Subcommittee on " + name;
+		}
 		
 		ActionBarUtils.setTitle(this, name, new Intent(this, CommitteeListPager.class));
 		ActionBarUtils.setTitleSize(this, 16);
