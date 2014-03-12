@@ -130,7 +130,7 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 		if (sponsor != null) {
 			View sponsorView = getView().findViewById(R.id.bill_sponsor);
 			
-			String name = sponsor.title + ". " + sponsor.firstName() + " " + sponsor.last_name;
+			String name = sponsor.titledName();
 			((TextView) sponsorView.findViewById(R.id.name)).setText(name);
 			
 			String stateName = Utils.stateCodeToName(getContext(), sponsor.state);

@@ -353,9 +353,9 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 
 		public String nameFor(Legislator legislator) {
 			if (context.type == SEARCH_COMMITTEE) {
-				return legislator.title + ". " + legislator.firstName() + " " + legislator.last_name;
+				return legislator.titledName();
 			} else {
-				return legislator.last_name + ", " + legislator.firstName();
+				return legislator.getOfficialName();
 			}
 		}
 

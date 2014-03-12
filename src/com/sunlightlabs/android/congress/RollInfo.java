@@ -665,7 +665,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		public String nameFor(Legislator legislator) {
 			String position = legislator.party + "-" + legislator.state;
-			return legislator.last_name + ", " + legislator.firstName() + " [" + position + "]";
+			return legislator.getOfficialName() + " [" + position + "]";
 		}
 		
 		static class ViewHolder {
