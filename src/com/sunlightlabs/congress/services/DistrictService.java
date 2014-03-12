@@ -25,7 +25,7 @@ public class DistrictService {
 	}
 	
 	public static String urlForLegislator(Legislator legislator) {
-		if (legislator.chamber.equals("senate")) {
+		if (legislator.isSenator()) {
 			return urlForState(legislator.state);
 		} else {
 			return urlForDistrict(legislator.state, legislator.district);

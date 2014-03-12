@@ -149,4 +149,8 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 		return "https://www.facebook.com/" + this.facebook_id;
 	}
 
+	public boolean isSenator() {
+	    return chamber.equals("senate");	
+	}
+
 }

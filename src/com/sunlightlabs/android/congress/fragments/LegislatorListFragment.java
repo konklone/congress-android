@@ -371,7 +371,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 				}
 			} else {
 				String district;
-				if (legislator.chamber.equals("senate")) {
+				if (legislator.isSenator()) {
 					district = "Senator";
 				} else {
 					district = "District " + legislator.district;
@@ -480,7 +480,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 					List<Legislator> lower = new ArrayList<Legislator>();
 					
 					for (int i = 0; i < temp.size(); i++) {
-						if (temp.get(i).chamber.equals("senate")) {
+						if (temp.get(i).isSenator()) {
 							upper.add(temp.get(i));
 						} else {
 							lower.add(temp.get(i));
