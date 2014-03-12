@@ -25,10 +25,11 @@ public class DistrictService {
 	}
 	
 	public static String urlForLegislator(Legislator legislator) {
-		if (legislator.chamber.equals("senate"))
+		if (legislator.isSenator()) {
 			return urlForState(legislator.state);
-		else
+		} else {
 			return urlForDistrict(legislator.state, legislator.district);
+		}
 	}
 	
 	// uses a special Jackson-based GeoJSON parser, not the typical JSONObject-based parser
@@ -46,10 +47,9 @@ public class DistrictService {
 				district.state = legislator.state;
 				district.district = legislator.district;
 				return district;
+			} else {
+				return null;
 			}
-			
-			// otherwise, gracefully choke
-			else return null;
 		} catch (JsonParseException e) {
 			throw new CongressException(e, "Error parsing JSON from " + url);
 		} catch (JsonMappingException e) {

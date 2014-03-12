@@ -35,8 +35,9 @@ public class LoadLegislatorTask extends AsyncTask<String, Void, Legislator> {
 	protected Legislator doInBackground(String... params) {
 		try {
 			Legislator legislator = LegislatorService.find(params[0]);
-			if (legislator == null)
+			if (legislator == null) {
 				this.exception = new CongressException("Can't load legislator with this ID from Sunlight.");
+			}
 			
 			return legislator;
 		} catch (CongressException exception) {
@@ -50,10 +51,11 @@ public class LoadLegislatorTask extends AsyncTask<String, Void, Legislator> {
 	protected void onPostExecute(Legislator legislator) {
 		LoadsLegislator loader = (LoadsLegislator) (context != null ? context : fragment);
 		
-		if (legislator == null) // guaranteed to be an exception stored
+		if (legislator == null) {
 			loader.onLoadLegislator(this.exception);
-		else
+		} else {
 			loader.onLoadLegislator(legislator);
+		}
 	}
 
 	public interface LoadsLegislator {

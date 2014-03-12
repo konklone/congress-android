@@ -24,12 +24,14 @@ public class Settings extends PreferenceActivity {
 		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 		
 		findPreference(ANALYTICS_ENABLED_KEY).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				boolean value = ((Boolean) newValue).booleanValue();
 				
 				// if user is disabling analytics, fire off one last event so that we can get an idea of how many are disabling it
-				if (!value)
+				if (!value) {
 					Analytics.analyticsDisable(Settings.this);
+				}
 				
 				return true;
 			}

@@ -56,59 +56,82 @@ public class LegislatorService {
 	/* JSON parsers, also useful for other service endpoints within this package */
 
 	protected static Legislator fromAPI(JSONObject json) throws JSONException, CongressException {
-		if (json == null)
+		if (json == null) {
 			return null;
+		}
 		
 		Legislator legislator = new Legislator();
 
-		if (!json.isNull("bioguide_id"))
+		if (!json.isNull("bioguide_id")) {
 			legislator.bioguide_id = json.getString("bioguide_id");
-		if (!json.isNull("govtrack_id"))
+		}
+		if (!json.isNull("govtrack_id")) {
 			legislator.govtrack_id = json.getString("govtrack_id");
-		if (!json.isNull("thomas_id"))
+		}
+		if (!json.isNull("thomas_id")) {
 			legislator.thomas_id = json.getString("thomas_id");
+		}
 		
-		if (!json.isNull("in_office"))
+		if (!json.isNull("in_office")) {
 			legislator.in_office = json.getBoolean("in_office");
+		}
 
-		if (!json.isNull("first_name"))
+		if (!json.isNull("first_name")) {
 			legislator.first_name = json.getString("first_name");
-		if (!json.isNull("last_name"))
+		}
+		if (!json.isNull("last_name")) {
 			legislator.last_name = json.getString("last_name");
-		if (!json.isNull("nickname"))
+		}
+		if (!json.isNull("nickname")) {
 			legislator.nickname = json.getString("nickname");
-		if (!json.isNull("name_suffix"))
+		}
+		if (!json.isNull("name_suffix")) {
 			legislator.name_suffix = json.getString("name_suffix");
+		}
 		
-		if (!json.isNull("title"))
+		if (!json.isNull("title")) {
 			legislator.title = json.getString("title");
-		if (!json.isNull("party"))
+		}
+		if (!json.isNull("party")) {
 			legislator.party = json.getString("party");
-		if (!json.isNull("state"))
+		}
+		if (!json.isNull("state")) {
 			legislator.state = json.getString("state");
-		if (!json.isNull("district"))
+		}
+		if (!json.isNull("district")) {
 			legislator.district = json.getString("district");
-		if (!json.isNull("chamber"))
+		}
+		if (!json.isNull("chamber")) {
 			legislator.chamber = json.getString("chamber");
-		if (!json.isNull("term_start"))
+		}
+		if (!json.isNull("term_start")) {
 			legislator.term_start = json.getString("term_start");
-		if (!json.isNull("term_end"))
+		}
+		if (!json.isNull("term_end")) {
 			legislator.term_end = json.getString("term_end");
+		}
 
-		if (!json.isNull("gender"))
+		if (!json.isNull("gender")) {
 			legislator.gender = json.getString("gender");
-		if (!json.isNull("office"))
+		}
+		if (!json.isNull("office")) {
 			legislator.office = json.getString("office");
-		if (!json.isNull("website"))
+		}
+		if (!json.isNull("website")) {
 			legislator.website = json.getString("website");
-		if (!json.isNull("phone"))
+		}
+		if (!json.isNull("phone")) {
 			legislator.phone = json.getString("phone");
-		if (!json.isNull("youtube_id"))
+		}
+		if (!json.isNull("youtube_id")) {
 			legislator.youtube_id = json.getString("youtube_id");
-		if (!json.isNull("twitter_id"))
+		}
+		if (!json.isNull("twitter_id")) {
 			legislator.twitter_id = json.getString("twitter_id");
-		if (!json.isNull("facebook_id"))
+		}
+		if (!json.isNull("facebook_id")) {
 			legislator.facebook_id = json.getString("facebook_id");
+		}
 		
 		return legislator;
 	}
@@ -128,8 +151,9 @@ public class LegislatorService {
 			JSONArray results = Congress.resultsFor(url);
 
 			int length = results.length();
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < length; i++) {
 				legislators.add(fromAPI(results.getJSONObject(i)));
+			}
 
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);

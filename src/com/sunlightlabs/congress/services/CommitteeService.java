@@ -59,10 +59,12 @@ public class CommitteeService {
 		committee.name = json.getString("name");
 		committee.chamber = json.getString("chamber");
 		
-		if (!json.isNull("subcommittee"))
+		if (!json.isNull("subcommittee")) {
 			committee.subcommittee = json.getBoolean("subcommittee");
-		if (!json.isNull("parent_committee_id"))
+		}
+		if (!json.isNull("parent_committee_id")) {
 			committee.parent_committee_id = json.getString("parent_committee_id");
+		}
 
 		if (!json.isNull("members")) {
 			committee.members = new ArrayList<Legislator>();
@@ -73,12 +75,15 @@ public class CommitteeService {
 				Legislator legislator = LegislatorService.fromAPI(memberJson.getJSONObject("legislator"));
 				
 				Committee.Membership membership = new Committee.Membership();
-				if (!memberJson.isNull("side"))
+				if (!memberJson.isNull("side")) {
 					membership.side = memberJson.getString("side");
-				if (!memberJson.isNull("rank"))
+				}
+				if (!memberJson.isNull("rank")) {
 					membership.rank = memberJson.getInt("rank");
-				if (!memberJson.isNull("title"))
+				}
+				if (!memberJson.isNull("title")) {
 					membership.title = memberJson.getString("title");
+				}
 				
 				legislator.membership = membership;
 						
@@ -104,8 +109,9 @@ public class CommitteeService {
 			JSONArray results = Congress.resultsFor(url);
 
 			int length = results.length();
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < length; i++) {
 				committees.add(fromAPI(results.getJSONObject(i)));
+			}
 
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);

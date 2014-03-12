@@ -100,15 +100,17 @@ public class NewsListFragment extends ListFragment implements LoadsNews {
 		
 		setupControls();
 		
-		if (items != null)
+		if (items != null) {
 			displayNews();
+		}
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (items != null)
+		if (items != null) {
 			setupSubscription();
+		}
 	}
 	
 	private void setupControls() {
@@ -119,6 +121,7 @@ public class NewsListFragment extends ListFragment implements LoadsNews {
 		header.setVisibility(View.VISIBLE);
 		
 		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				items = null;
 				FragmentUtils.showLoading(NewsListFragment.this);
@@ -157,32 +160,36 @@ public class NewsListFragment extends ListFragment implements LoadsNews {
 					String bId = "" + b.timestamp.getTime();
 					boolean hasA = newIds.contains(aId);
 					boolean hasB = newIds.contains(bId);
-					if (hasA && !hasB)
+					if (hasA && !hasB) {
 						return -1;
-					else if (!hasA && hasB)
+					} else if (!hasA && hasB) {
 						return 1;
-					else
+					} else {
 						return 0;
+					}
 				}
 			});
 		}
 		
 		this.items = items;
-		if (isAdded())
+		if (isAdded()) {
 			displayNews();
+		}
 	}
 
 	@Override
 	public void onLoadNews(CongressException e) {
-		if (isAdded())
-			FragmentUtils.showRefresh(this, R.string.news_empty);		
+		if (isAdded()) {
+			FragmentUtils.showRefresh(this, R.string.news_empty);
+		}		
 	}
 
 	protected void displayNews() {
-		if (items != null && items.size() > 0)
+		if (items != null && items.size() > 0) {
 			setListAdapter(new NewsAdapter(this, items));
-		else
+		} else {
 			FragmentUtils.showRefresh(this, R.string.news_empty);
+		}
 		
 		setupSubscription();
 	}
@@ -207,8 +214,9 @@ public class NewsListFragment extends ListFragment implements LoadsNews {
 
 		@Override
 		public View getView(int position, View view, ViewGroup parent) {
-			if (view == null)
+			if (view == null) {
 				view = inflater.inflate(R.layout.news_item, null);
+			}
 
 			NewsItem item = getItem(position);
 			
@@ -220,10 +228,11 @@ public class NewsListFragment extends ListFragment implements LoadsNews {
 			((TextView) view.findViewById(R.id.news_where)).setText(item.source);
 			
 			String id = "" + item.timestamp.getTime();
-			if (newIds != null && newIds.contains(id))
+			if (newIds != null && newIds.contains(id)) {
 				view.findViewById(R.id.new_result).setVisibility(View.VISIBLE);
-			else
+			} else {
 				view.findViewById(R.id.new_result).setVisibility(View.GONE);
+			}
 			
 			return view;
 		}
@@ -232,8 +241,9 @@ public class NewsListFragment extends ListFragment implements LoadsNews {
 			if (date.getYear() == Calendar.getInstance().get(Calendar.YEAR)) { 
 				view.setTextSize(18);
 				view.setText(new SimpleDateFormat("MMM d", Locale.US).format(date).toUpperCase(Locale.US));
-			} else
+			} else {
 				longDate(view, date);
+			}
 		}
 		
 		private void longDate(TextView view, Date date) {

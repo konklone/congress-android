@@ -29,15 +29,17 @@ public class LegislatorImage {
 	
 	// should be called from within a background task, as this performs a network call
 	public static BitmapDrawable getImage(String size, String bioguideId, Context context) {
-		if (context == null) // if we've lost the activity, abandon it
+		if (context == null) {
 			return null;
+		}
 		
 		BitmapDrawable drawable = quickGetImage(size, bioguideId, context);
 		if (drawable == null) {
 			cacheImage(size, bioguideId, context);
 			
-			if (context != null) // activity may have disappeared while the image was being downloaded
+			if (context != null) {
 				drawable = quickGetImage(size, bioguideId, context);
+			}
 		}
 		return drawable;
 	}
@@ -45,10 +47,11 @@ public class LegislatorImage {
 	// will not make a network call, if file exists on disk you get the drawable, otherwise null
 	public static BitmapDrawable quickGetImage(String size, String bioguideId, Context context) {
 		File imageFile = new File(picPath(size, bioguideId, context));
-		if (!imageFile.exists() || tooOld(imageFile))
+		if (!imageFile.exists() || tooOld(imageFile)) {
 			return null;
-		else
+		} else {
 			return new BitmapDrawable(context.getResources(), picPath(size, bioguideId, context));
+		}
 	}
 	
 	// assumes you've already checked to make sure the file exists
@@ -66,8 +69,9 @@ public class LegislatorImage {
 	
 	public static String picDir(String bioguideId, Context context) {
 		File cacheDir = context.getCacheDir();
-		if (cacheDir == null)
+		if (cacheDir == null) {
 			cacheDir = context.getFilesDir();
+		}
 		File picDir = new File(cacheDir.getPath() + "/" + bioguideId);
 		picDir.mkdirs();
 		return picDir.getPath();
@@ -75,8 +79,9 @@ public class LegislatorImage {
 	
 	public static void cacheImage(String size, String bioguideId, Context context) {
 		File outFile = new File(picPath(size, bioguideId, context));
-		if (outFile.exists())
+		if (outFile.exists()) {
 			outFile.delete();
+		}
 		
 		String url = picUrl(size, bioguideId);
 		downloadFile(url, outFile);
@@ -96,10 +101,11 @@ public class LegislatorImage {
                 fos.write(buffer);
                 fos.flush();
                 fos.close();
-	        } else if (statusCode == HttpStatus.SC_NOT_FOUND)
-	        	return;
-	        else
-	        	return;
+	        } else if (statusCode == HttpStatus.SC_NOT_FOUND) {
+				return;
+			} else {
+				return;
+			}
         } catch (ClientProtocolException e) {
         	return;
 	    } catch (IOException e) {

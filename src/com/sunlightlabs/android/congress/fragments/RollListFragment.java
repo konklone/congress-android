@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -92,19 +91,22 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		
 		setupControls();
 		
-		if (rolls != null)
+		if (rolls != null) {
 			displayRolls();
+		}
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (rolls != null)
+		if (rolls != null) {
 			setupSubscription();
+		}
 	}
 	
 	public void setupControls() {
 		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				refresh();
 			}
@@ -123,20 +125,23 @@ public class RollListFragment extends ListFragment implements PaginationListener
 	private void setupSubscription() {
 		Subscription subscription = null;
 		
-		if (type == ROLLS_VOTER)
+		if (type == ROLLS_VOTER) {
 			subscription = new Subscription(voter.bioguide_id, Subscriber.notificationName(voter), "RollsLegislatorSubscriber", voter.chamber);
-		else if (type == ROLLS_RECENT)
+		} else if (type == ROLLS_RECENT) {
 			subscription = new Subscription("RecentVotes", "Recent Votes", "RollsRecentSubscriber", null);
+		}
 		
-		if (subscription != null)
+		if (subscription != null) {
 			Footer.setup(this, subscription, rolls);
+		}
 	}
 	
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		Roll roll = (Roll) parent.getItemAtPosition(position);
-		if (roll != null) // happened once somehow
+		if (roll != null) {
 			startActivity(Utils.rollIntent(getActivity(), roll));
+		}
 	}
 	
 
@@ -159,8 +164,9 @@ public class RollListFragment extends ListFragment implements PaginationListener
 	}
 	
 	public void onLoadRolls(List<Roll> rolls, int page) {
-		if (!isAdded())
+		if (!isAdded()) {
 			return;
+		}
 		
 		if (page == 1) {
 			this.rolls= rolls;
@@ -172,13 +178,15 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		}
 		
 		// only re-enable the pagination if we got a full page back
-		if (rolls.size() == PER_PAGE)
+		if (rolls.size() == PER_PAGE) {
 			getListView().setOnScrollListener(pager);
+		}
 	}
 	
 	public void onLoadRolls(CongressException exception) {
-		if (isAdded())
+		if (isAdded()) {
 			FragmentUtils.showRefresh(this, R.string.votes_error);
+		}
 	}
 	
 	public void displayRolls() {
@@ -189,8 +197,10 @@ public class RollListFragment extends ListFragment implements PaginationListener
 			if (type == ROLLS_VOTER) {
 				FragmentUtils.showEmpty(this, R.string.votes_empty_voter);
 				setupSubscription();
-			} else // ROLLS_RECENT
+			}
+			else {
 				FragmentUtils.showRefresh(this, R.string.votes_error); // should not happen
+			}
 		}
 	}
 
@@ -210,7 +220,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		public List<Roll> doInBackground(Void... nothing) {
 			try {
 
-				Map<String,String> params = new HashMap<String,String>();
+				new HashMap<String,String>();
 				
 				switch (context.type) {
 				case ROLLS_VOTER:
@@ -228,10 +238,11 @@ public class RollListFragment extends ListFragment implements PaginationListener
 
 		@Override
 		public void onPostExecute(List<Roll> rolls) {
-			if (exception != null)
+			if (exception != null) {
 				context.onLoadRolls(exception);
-			else
+			} else {
 				context.onLoadRolls(rolls, page);
+			}
 		}
 	}
 	
@@ -265,19 +276,22 @@ public class RollListFragment extends ListFragment implements PaginationListener
 				holder.result = (TextView) view.findViewById(R.id.result);
 				
 				view.setTag(holder);
-			} else
+			} else {
 				holder = (ViewHolder) view.getTag();
+			}
 			
 			TextView msgView = holder.roll;
 			if (context.voter != null && (context.type == ROLLS_VOTER || context.type == ROLLS_RECENT)) {
 				Roll.Vote vote = roll.voter_ids.get(context.voter.bioguide_id);
-				if (vote == null || vote.vote.equals(Roll.NOT_VOTING))
+				if (vote == null || vote.vote.equals(Roll.NOT_VOTING)) {
 					msgView.setText("Did Not Vote");
-				else
+				} else {
 					msgView.setText(vote.vote);
+				}
 				
-			} else
+			} else {
 				msgView.setText(Utils.capitalize(roll.chamber));
+			}
 			
 			holder.roll = msgView;
 			
@@ -300,13 +314,15 @@ public class RollListFragment extends ListFragment implements PaginationListener
 				Iterator<Integer> iter = roll.voteBreakdown.values().iterator();
 				while (iter.hasNext()) {
 					breakdown += iter.next();
-					if (iter.hasNext())
+					if (iter.hasNext()) {
 						breakdown += "-";
+					}
 				}
 			} else {
 				breakdown = roll.voteBreakdown.get(Roll.YEA)+ "-" + roll.voteBreakdown.get(Roll.NAY);
-				if (roll.voteBreakdown.get(Roll.PRESENT) > 0)
+				if (roll.voteBreakdown.get(Roll.PRESENT) > 0) {
 					breakdown += "-" + roll.voteBreakdown.get(Roll.PRESENT);
+				}
 			}
 			
 			return roll.result + ", " + breakdown.toString();
@@ -316,8 +332,9 @@ public class RollListFragment extends ListFragment implements PaginationListener
 			if (date.getYear() == Calendar.getInstance().get(Calendar.YEAR)) { 
 				view.setTextSize(18);
 				view.setText(new SimpleDateFormat("MMM d", Locale.US).format(date).toUpperCase(Locale.US));
-			} else
+			} else {
 				longDate(view, date);
+			}
 		}
 		
 		private void longDate(TextView view, Date date) {

@@ -32,8 +32,10 @@ public class LegislatorLoaderFragment extends Fragment implements LoadLegislator
 		} else if (restart) {
 			fragment.context = context;
 			fragment.run();
-		} else
+		}
+		else {
 			fragment.context = context; // still assign context
+		}
 	}
 	
 	@Override
@@ -47,28 +49,32 @@ public class LegislatorLoaderFragment extends Fragment implements LoadLegislator
 		// of the *activity's* onCreate method (in super.onCreate()), before any context has been assigned to this fragment.
 		// If this happens, context will be null, and it's okay to simply pass on this, because the run()
 		// call will get called again at the end of the activity's onCreate() method, at the call to start(). 
-		if (context != null)
+		if (context != null) {
 			new LoadLegislatorTask(this).execute(context.bioguide_id);
+		}
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		if (this.legislator != null)
+		if (this.legislator != null) {
 			context.onLoadLegislator(legislator);
-		else if (this.exception != null)
+		} else if (this.exception != null) {
 			context.onLoadLegislator(this.exception);
+		}
 	}
 	
 	public LegislatorLoaderFragment() {}
 	
 	// pass through
+	@Override
 	public void onLoadLegislator(Legislator legislator) {
 		this.legislator = legislator;
 		context.onLoadLegislator(legislator);
 	}
 	
+	@Override
 	public void onLoadLegislator(CongressException exception) {
 		this.exception = exception;
 		context.onLoadLegislator(exception);

@@ -41,8 +41,9 @@ public class NewsService {
 			JSONObject resultSet = new JSONObject(rawJSON);
 			JSONArray results = resultSet.getJSONObject("responseData").getJSONArray("results");
 			items = new ArrayList<NewsItem>(results.length());
-			for (int i = 0; i<results.length(); i++)
+			for (int i = 0; i<results.length(); i++) {
 				items.add(new NewsItem(results.getJSONObject(i)));
+			}
 				
 		} catch(JSONException e) {
 			throw new NewsException(e);

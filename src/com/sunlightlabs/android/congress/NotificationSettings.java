@@ -59,6 +59,7 @@ public class NotificationSettings extends PreferenceActivity {
 		updateRingtoneSummary(PreferenceManager.getDefaultSharedPreferences(this).getString(KEY_NOTIFY_RINGTONE, null));
 		
 		findPreference(KEY_NOTIFY_ENABLED).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				boolean value = ((Boolean) newValue).booleanValue();
 				if (value) {
@@ -74,6 +75,7 @@ public class NotificationSettings extends PreferenceActivity {
 		});
 		
 		findPreference(KEY_NOTIFY_INTERVAL).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				updateIntervalSummary((String) newValue);
 				Utils.stopNotificationsBroadcast(NotificationSettings.this);
@@ -84,6 +86,7 @@ public class NotificationSettings extends PreferenceActivity {
 		});
 		
 		findPreference(KEY_NOTIFY_RINGTONE).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				updateRingtoneSummary((String) newValue);
 				return true;
@@ -100,12 +103,14 @@ public class NotificationSettings extends PreferenceActivity {
 		
 		if (uri != null && !uri.equals("")) {
 			Ringtone ringtone = RingtoneManager.getRingtone(this, Uri.parse(uri));
-			if (ringtone != null)
+			if (ringtone != null) {
 				summary = ringtone.getTitle(this);
-			else
+			} else {
 				summary = "Unknown";
-		} else
+			}
+		} else {
 			summary = "Silent";
+		}
 		
 		findPreference(KEY_NOTIFY_RINGTONE).setSummary(summary);
 	}
@@ -115,8 +120,9 @@ public class NotificationSettings extends PreferenceActivity {
 		String[] names = getResources().getStringArray(R.array.notify_interval_names);
 
 		for (int i=0; i<codes.length; i++) {
-			if (codes[i].equals(code))
+			if (codes[i].equals(code)) {
 				return names[i];
+			}
 		}
 		return null;
 	}
@@ -148,6 +154,7 @@ public class NotificationSettings extends PreferenceActivity {
 				.setCustomTitle(title)
 				.setView(explanation)
 				.setPositiveButton(R.string.explanation_button, new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int which) {}
 				});
 		}

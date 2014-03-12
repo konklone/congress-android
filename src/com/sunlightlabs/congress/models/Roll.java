@@ -61,6 +61,7 @@ public class Roll implements Serializable {
 		
 		public Vote() {}
 		
+		@Override
 		public int compareTo(Vote another) {
 			return this.voter.compareTo(another.voter);
 		}
@@ -70,15 +71,17 @@ public class Roll implements Serializable {
 	public static Roll splitRollId(String roll_id) {
 		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)-(\\d{4})$");
 		Matcher matcher = pattern.matcher(roll_id);
-		if (!matcher.matches())
+		if (!matcher.matches()) {
 			return null;
+		}
 		Roll roll = new Roll();
 		
 		String chamber = matcher.group(1);
-		if (chamber.equals("h"))
+		if (chamber.equals("h")) {
 			roll.chamber = "house";
-		else // if (chamber.equals("s")
+		} else {
 			roll.chamber = "senate";
+		}
 		roll.number = Integer.parseInt(matcher.group(2));
 		roll.year = Integer.parseInt(matcher.group(3));
 		
@@ -89,12 +92,13 @@ public class Roll implements Serializable {
 	// the chamber's first letter will be used, and combined into a roll ID
 	public static String normalizeRollId(String chamber, String year, String formattedNumber) {
 		String shortChamber;
-		if (chamber.equals("house"))
+		if (chamber.equals("house")) {
 			shortChamber = "h";
-		else if (chamber.equals("senate"))
+		} else if (chamber.equals("senate")) {
 			shortChamber = "s";
-		else
+		} else {
 			return null;
+		}
 		
 		String number = formattedNumber.replaceAll("[^\\d]", "");
 		

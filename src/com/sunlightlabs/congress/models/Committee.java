@@ -13,6 +13,7 @@ public class Committee implements Comparable<Committee>, Serializable {
 	
 	public List<Legislator> members;
 	
+	@Override
 	public String toString() {
 		return name;
 	}
@@ -27,6 +28,7 @@ public class Committee implements Comparable<Committee>, Serializable {
 		public Membership() {};
 	}
 	
+	@Override
 	public int compareTo(Committee another) {
 		String mine = name.replace("the ", "");
 		String other = another.name.replace("the ", "");

@@ -74,19 +74,22 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 		
 		setupControls();
 		
-		if (updates != null)
+		if (updates != null) {
 			displayUpdates();
+		}
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (updates != null)
+		if (updates != null) {
 			setupSubscription();
+		}
 	}
 	
 	public void setupControls() {
 		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				refresh();
 			}
@@ -125,8 +128,9 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 	}
 	
 	public void onLoadUpdates(List<FloorUpdate> updates, int page) {
-		if (!isAdded())
+		if (!isAdded()) {
 			return;
+		}
 		
 		if (page == 1) {
 			this.updates = updates;
@@ -138,21 +142,25 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 		}
 		
 		// only re-enable the pagination if we got a full page back
-		if (updates.size() == PER_PAGE)
+		if (updates.size() == PER_PAGE) {
 			adapterHelper.setOnScrollListener(pager);
+		}
 	}
 	
 	public void onLoadUpdates(CongressException exception) {
-		if (isAdded())
+		if (isAdded()) {
 			FragmentUtils.showRefresh(this, R.string.floor_updates_error);
+		}
 	}
 	
 	public void displayUpdates() {
 		if (updates.size() > 0) {
 			setListAdapter(adapterHelper.adapterFor(updates));
 			setupSubscription();
-		} else
+		}
+		else {
 			FragmentUtils.showRefresh(this, R.string.floor_updates_error); // should not happen
+		}
 	}
 	
 	private void setupSubscription() {
@@ -205,10 +213,11 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 						"congress://com.sunlightlabs.android.congress/roll/" + update.chamber + "/" + year + "/");
 			}
 			
-			if (showTime)
+			if (showTime) {
 				timeView.setVisibility(View.VISIBLE);
-			else
+			} else {
 				timeView.setVisibility(View.INVISIBLE);
+			}
 			
 			return view;
 		}
@@ -245,10 +254,11 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 
 		@Override
 		protected void onPostExecute(List<FloorUpdate> updates) {
-			if (updates == null && exception != null)
+			if (updates == null && exception != null) {
 				context.onLoadUpdates(exception);
-			else
+			} else {
 				context.onLoadUpdates(updates, page);
+			}
 		}
 
 	}

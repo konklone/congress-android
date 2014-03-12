@@ -26,11 +26,11 @@ public class OnServiceActionReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		String action = intent.getAction();
 
-		if (action.equals(Utils.START_NOTIFICATION_SERVICE))
+		if (action.equals(Utils.START_NOTIFICATION_SERVICE)) {
 			scheduleNotifications(context);
-
-		else if (action.equals(Utils.STOP_NOTIFICATION_SERVICE))
+		} else if (action.equals(Utils.STOP_NOTIFICATION_SERVICE)) {
 			stopNotifications(context);
+		}
 	}
 
 	private static PendingIntent getPendingIntent(Context context) {
@@ -51,10 +51,11 @@ public class OnServiceActionReceiver extends BroadcastReceiver {
 		
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		// if the interval is 15 minutes or tighter, use inexact alarms to conserve on battery
-		if (interval <= (15 * 60000))
+		if (interval <= (15 * 60000)) {
 			am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), interval,	getPendingIntent(context));
-		else
+		} else {
 			am.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), interval,	getPendingIntent(context));
+		}
 	}
 
 	private static void stopNotifications(Context context) {

@@ -94,8 +94,9 @@ public class NotificationService extends WakefulIntentService {
 			List<String> unseenIds = new ArrayList<String>();
 			
 			// in case the database got closed by now (has happened before)
-			if (!database.isOpen())
+			if (!database.isOpen()) {
 				database.open();
+			}
 			
 			// debug flags
 			boolean alwaysNotify = getResources().getString(R.string.debug_always_notify).equals("true");
@@ -106,8 +107,9 @@ public class NotificationService extends WakefulIntentService {
 			int size = updates.size();
 			for (int i=0; i<size; i++) {
 				String itemId = subscriber.decodeId(updates.get(i));
-				if (alwaysConsiderNew || (sometimesConsiderNew && (i % sometimesOften == 0)) || !database.hasSubscriptionItem(subscription.id, subscription.notificationClass, itemId))
+				if (alwaysConsiderNew || (sometimesConsiderNew && (i % sometimesOften == 0)) || !database.hasSubscriptionItem(subscription.id, subscription.notificationClass, itemId)) {
 					unseenIds.add(itemId);
+				}
 			}
 			
 			database.addSeenIds(subscription, unseenIds);
@@ -133,9 +135,10 @@ public class NotificationService extends WakefulIntentService {
 				
 				Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
 					"notified of " + results + " results");
-			} else
+			} else {
 				Log.i(Utils.TAG, "[" + subscriber.getClass().getSimpleName() + "][" + subscription.id + "] - " +
 						"0 new results, not notifying.");
+			}
 			
 		} while(cursor.moveToNext());
 		
@@ -160,13 +163,15 @@ public class NotificationService extends WakefulIntentService {
 		
 		// Attach notification sound if the user picked one (defaults to silent)
 		String ringtone = PreferenceManager.getDefaultSharedPreferences(this).getString(NotificationSettings.KEY_NOTIFY_RINGTONE, NotificationSettings.DEFAULT_NOTIFY_RINGTONE);
-		if (ringtone != null)
+		if (ringtone != null) {
 			notification.sound = Uri.parse(ringtone);
+		}
 		
 		// Vibrate unless user disabled it
 		boolean vibration = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(NotificationSettings.KEY_NOTIFY_VIBRATION, NotificationSettings.DEFAULT_NOTIFY_VIBRATION);
-		if (vibration)
+		if (vibration) {
 			notification.defaults |= Notification.DEFAULT_VIBRATE;
+		}
 		
 		// always show the light
 		notification.ledARGB = 0xffffffff;

@@ -95,20 +95,21 @@ public class Bill implements Serializable {
 	}
 	
 	public static String matchText(String field) {
-		if (field.equals("versions"))
+		if (field.equals("versions")) {
 			return "text";
-		else if (field.equals("short_title"))
+		} else if (field.equals("short_title")) {
 			return "title";
-		else if (field.equals("popular_title"))
+		} else if (field.equals("popular_title")) {
 			return "nickname";
-		else if (field.equals("official_title"))
+		} else if (field.equals("official_title")) {
 			return "official title";
-		else if (field.equals("summary"))
+		} else if (field.equals("summary")) {
 			return "summary";
-		else if (field.equals("keywords"))
+		} else if (field.equals("keywords")) {
 			return "official keywords";
-		else
+		} else {
 			return "";
+		}
 	}
 	
 	// from a highlight hash, return the field name with the highest priority
@@ -129,8 +130,9 @@ public class Bill implements Serializable {
 	public static String formatCode(String bill_id) {
 		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)-\\d+$");
 		Matcher matcher = pattern.matcher(bill_id);
-		if (!matcher.find())
+		if (!matcher.find()) {
 			return bill_id;
+		}
 		
 		String bill_type = matcher.group(1);
 		int number = Integer.valueOf(matcher.group(2));
@@ -138,37 +140,39 @@ public class Bill implements Serializable {
 	}
 	
 	public static String formatCode(String bill_type, int number) {
-		if (bill_type.equals("hr"))
+		if (bill_type.equals("hr")) {
 			return "H.R. " + number;
-		else if (bill_type.equals("hres"))
+		} else if (bill_type.equals("hres")) {
 			return "H. Res. " + number;
-		else if (bill_type.equals("hjres"))
+		} else if (bill_type.equals("hjres")) {
 			return "H.J. Res. " + number;
-		else if (bill_type.equals("hconres"))
+		} else if (bill_type.equals("hconres")) {
 			return "H.Con. Res. " + number;
-		else if (bill_type.equals("s"))
+		} else if (bill_type.equals("s")) {
 			return "S. " + number;
-		else if (bill_type.equals("sres"))
+		} else if (bill_type.equals("sres")) {
 			return "S. Res. " + number;
-		else if (bill_type.equals("sjres"))
+		} else if (bill_type.equals("sjres")) {
 			return "S.J. Res. " + number;
-		else if (bill_type.equals("sconres"))
+		} else if (bill_type.equals("sconres")) {
 			return "S.Con. Res. " + number;
-		else
+		} else {
 			return bill_type + number;
+		}
 	}
 	
 	// prioritizes GPO "html" version (really text),
 	// then GPO PDF, then finally the THOMAS landing page
 	public String bestFullTextUrl() {
-		if (this.versionUrls != null && this.versionUrls.containsKey("html"))
+		if (this.versionUrls != null && this.versionUrls.containsKey("html")) {
 			return versionUrls.get("html");
-		else if (this.versionUrls != null && this.versionUrls.containsKey("pdf"))
+		} else if (this.versionUrls != null && this.versionUrls.containsKey("pdf")) {
 			return versionUrls.get("pdf");
-		else if (this.urls != null && this.urls.containsKey("congress"))
+		} else if (this.urls != null && this.urls.containsKey("congress")) {
 			return this.urls.get("congress");
-		else
+		} else {
 			return fallbackTextUrl();
+		}
 	}
 	
 	// next best thing to official, easily calculable from bill fields
@@ -184,8 +188,9 @@ public class Bill implements Serializable {
 		String formatted = summary;
 		formatted = formatted.replaceFirst("^\\d+\\/\\d+\\/\\d+--.+?\\.\\s*", "");
 		formatted = formatted.replaceFirst("(\\(This measure.+?\\))\n*\\s*", "");
-		if (short_title != null)
+		if (short_title != null) {
 			formatted = formatted.replaceFirst("^" + short_title + " - ", "");
+		}
 		formatted = formatted.replaceAll("\n", "\n\n");
 		formatted = formatted.replaceAll(" (\\(\\d\\))", "\n\n$1");
 		formatted = formatted.replaceAll("( [^A-Z\\s]+\\.)\\s+", "$1\n\n");
@@ -209,9 +214,10 @@ public class Bill implements Serializable {
 	
 	// for news searching, don't use legislator.titledName() because we don't want to use the name_suffix
 	public static String searchTermFor(Bill bill) {
-    	if (bill.short_title != null && !bill.short_title.equals(""))
-    		return "\"" + NEWS_SEARCH_REGEX.matcher(bill.short_title).replaceFirst("") + "\" OR \"" + Bill.formatCode(bill.bill_type, bill.number) + "\"";
-    	else
-    		return "\"" + Bill.formatCode(bill.bill_type, bill.number) + "\"";
+    	if (bill.short_title != null && !bill.short_title.equals("")) {
+			return "\"" + NEWS_SEARCH_REGEX.matcher(bill.short_title).replaceFirst("") + "\" OR \"" + Bill.formatCode(bill.bill_type, bill.number) + "\"";
+		} else {
+			return "\"" + Bill.formatCode(bill.bill_type, bill.number) + "\"";
+		}
     }
 }

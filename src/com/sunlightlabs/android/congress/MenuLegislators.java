@@ -39,12 +39,14 @@ public class MenuLegislators extends FragmentActivity {
 		ActionBarUtils.setTitle(this, R.string.menu_main_legislators);
 		
 		ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.location, new View.OnClickListener() {
+			@Override
 			public void onClick(View v) { 
 				startActivity(new Intent(MenuLegislators.this, LegislatorSearch.class).putExtra("location", true));
 			}
 		});
 		
 		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
+			@Override
 			public void onClick(View v) { 
 				onSearchRequested();
 			}

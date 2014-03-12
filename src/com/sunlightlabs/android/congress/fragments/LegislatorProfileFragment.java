@@ -67,29 +67,35 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		
 		setupControls();
 		
-		if (avatar != null)
+		if (avatar != null) {
 			displayAvatar();
+		}
 	}
 
 	public void loadPhoto() {
 		new LoadPhotoTask(this, LegislatorImage.PIC_LARGE).execute(legislator.bioguide_id);
 	}
 
+	@Override
 	public void onLoadPhoto(Drawable avatar, Object tag) {
 		if (avatar == null) {
 			Resources resources = null;
-			if (getActivity() != null)
+			if (getActivity() != null) {
 				resources = getActivity().getResources();
+			}
 			
-			if (resources != null)
+			if (resources != null) {
 				avatar = resources.getDrawable(R.drawable.person);
+			}
 		}
 		this.avatar = avatar;
 		
-		if (isAdded())
+		if (isAdded()) {
 			displayAvatar();
+		}
 	}
 	
+	@Override
 	public Context getContext() {
 		return getActivity();
 	}
@@ -116,8 +122,9 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
     public void setupControls() {
 		View mainView = getView();
 		
-		if (!legislator.in_office)
+		if (!legislator.in_office) {
 			mainView.findViewById(R.id.out_of_office_text).setVisibility(View.VISIBLE);
+		}
 		
 		String party = partyName(legislator.party);
 		String state = Utils.stateCodeToName(getActivity(), legislator.state);
@@ -129,10 +136,11 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		socialButton(R.id.facebook, legislator.facebookUrl(), Analytics.LEGISLATOR_FACEBOOK);
 		
 		TextView officeView = (TextView) mainView.findViewById(R.id.profile_office);
-		if (legislator.office != null && !legislator.office.equals(""))
+		if (legislator.office != null && !legislator.office.equals("")) {
 			officeView.setText(officeName(legislator.office));
-		else
+		} else {
 			officeView.setVisibility(View.GONE);
+		}
 		
 		// allow for devices without phones
 		boolean hasPhone = getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
@@ -143,8 +151,9 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 					callOffice();
 				}
 			});
-		} else
+		} else {
 			mainView.findViewById(R.id.call_office_container).setVisibility(View.GONE);
+		}
 		
 		if (legislator.website != null && !legislator.website.equals("")) {
 			mainView.findViewById(R.id.visit_website).setOnClickListener(new View.OnClickListener() {
@@ -153,8 +162,9 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 					visit(legislator.website, Analytics.LEGISLATOR_WEBSITE);
 				}
 			});
-		} else
+		} else {
 			mainView.findViewById(R.id.visit_website_container).setVisibility(View.GONE);
+		}
 
 		// we should always be able to link to their committees
 		mainView.findViewById(R.id.committees).setOnClickListener(new View.OnClickListener() {
@@ -166,17 +176,19 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 				
 		// we support froyo for now, but maps use a jackson version not supported in the version of Java Froyo uses.
 		// so, for now, let's just not give the map.
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO)
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
 			setupMap();
-		else
+		} else {
 			((TextView) mainView.findViewById(R.id.map_text)).setText(R.string.map_unsupported);
+		}
 	}
 	
 	public void setupMap() {
-		if (this.district != null)
+		if (this.district != null) {
 			displayDistrict();
-		else
+		} else {
 			loadDistrict();
+		}
 	}
 	
 	// can assume this.district is set
@@ -201,8 +213,9 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 	@Override
 	public void onLoadDistrict(District district) {
 		this.district = district;
-		if (isAdded())
+		if (isAdded()) {
 			displayDistrict();
+		}
 	}
 	
 	@Override
@@ -220,26 +233,31 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 					visit(url, network);
 				}
 			});
-		} else
+		} else {
 			view.setVisibility(View.GONE);
+		}
 	}
 	
 	public static String partyName(String code) {
-		if (code.equals("D"))
+		if (code.equals("D")) {
 			return "Democrat";
-		if (code.equals("R"))
+		}
+		if (code.equals("R")) {
 			return "Republican";
-		if (code.equals("I"))
+		}
+		if (code.equals("I")) {
 			return "Independent";
-		else
+		} else {
 			return "";
+		}
 	}
 	
 	public static String pronoun(String gender) {
-		if (gender.equals("M"))
+		if (gender.equals("M")) {
 			return "his";
-		else // "F"
+		} else {
 			return "her";
+		}
 	}
 	
 	public static String officeName(String office) {

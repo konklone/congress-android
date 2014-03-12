@@ -49,10 +49,11 @@ public class LoadNewsTask extends AsyncTask<String, Void, List<NewsItem>> {
 
 	@Override
 	protected void onPostExecute(List<NewsItem> news) {
-		if (news == null && exception != null)
+		if (news == null && exception != null) {
 			((LoadsNews) context).onLoadNews(exception);
-		else
+		} else {
 			((LoadsNews) context).onLoadNews(news);
+		}
 	}
 
 }

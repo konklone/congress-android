@@ -47,10 +47,11 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 		
 		setupControls();
 		
-		if (legislator == null)
+		if (legislator == null) {
 			LegislatorLoaderFragment.start(this);
-		else
+		} else {
 			onLoadLegislator(legislator);
+		}
 	}
 	
 	public void onLoadLegislator(Legislator legislator) {
@@ -83,6 +84,7 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 		Utils.setLoading(this, R.string.legislator_loading);
 		
 		((Button) findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				refresh();
 			}
@@ -96,7 +98,9 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 		adapter.add("votes", R.string.tab_votes, RollListFragment.forLegislator(legislator));
 		adapter.add("bills", R.string.tab_bills, BillListFragment.forSponsor(legislator));
 		
-		if (tab != null) adapter.selectPage(tab);
+		if (tab != null) {
+			adapter.selectPage(tab);
+		}
 	}
 	
 	private void setupDatabase() {
@@ -109,17 +113,20 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if (database != null && database.isOpen())
+		if (database != null && database.isOpen()) {
 			database.close();
+		}
 	}
 	
 	public void setupButtons() {
 		String titledName = legislator.titledName();
 		ActionBarUtils.setTitle(this, titledName, new Intent(this, MenuLegislators.class));
-		if (titledName.length() >= 23)
+		if (titledName.length() >= 23) {
 			ActionBarUtils.setTitleSize(this, 16);
+		}
 		
 		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.star_off, new View.OnClickListener() {
+			@Override
 			public void onClick(View v) { 
 				toggleDatabaseFavorite(); 
 			}
@@ -131,10 +138,11 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 	}
 
 	private void toggleFavoriteStar(boolean enabled) {
-		if (enabled)
+		if (enabled) {
 			ActionBarUtils.setActionIcon(this, R.id.action_1, R.drawable.star_on);
-		else
+		} else {
 			ActionBarUtils.setActionIcon(this, R.id.action_1, R.drawable.star_off);
+		}
 	}
 
 	private void toggleDatabaseFavorite() {
@@ -144,14 +152,16 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 			if (database.removeLegislator(id) != 0) {
 				toggleFavoriteStar(false);
 				Analytics.removeFavoriteLegislator(this, id);
-			} else
+			} else {
 				Utils.alert(this, "Problem unstarring legislator.");
+			}
 		} else {
 			if (database.addLegislator(legislator) != -1) {
 				toggleFavoriteStar(true);
 				Analytics.addFavoriteLegislator(this, id);
-			} else
+			} else {
 				Utils.alert(this, "Problem starring legislator.");
+			}
 		}
 	}
 	
@@ -170,7 +180,10 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 	
     @Override
     public void menuSelected(MenuItem item) {
-    	if (legislator == null) return; // safety valve (only matters on pre-4.0 devices)
+    	if (legislator == null)
+		 {
+			return; // safety valve (only matters on pre-4.0 devices)
+		}
     	
         switch(item.getItemId()) {
             case R.id.addcontact:

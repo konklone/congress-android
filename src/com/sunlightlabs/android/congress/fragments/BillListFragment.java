@@ -134,19 +134,22 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		
 		setupControls();
 		
-		if (bills != null)
+		if (bills != null) {
 			displayBills();
+		}
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (bills != null)
+		if (bills != null) {
 			setupSubscription();
+		}
 	}
 	
 	public void setupControls() {
 		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				refresh();
 			}
@@ -189,8 +192,9 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	
 	// handles coming in with any page of bills, even the first one
 	public void onLoadBills(List<Bill> bills, int page) {
-		if (!isAdded())
+		if (!isAdded()) {
 			return;
+		}
 		
 		if (page == 1) {
 			// if new IDs, sort them to the top.
@@ -201,12 +205,13 @@ public class BillListFragment extends ListFragment implements PaginationListener
 					public int compare(Bill a, Bill b) {
 						boolean hasA = newIds.contains(a.id);
 						boolean hasB = newIds.contains(b.id);
-						if (hasA && !hasB)
+						if (hasA && !hasB) {
 							return -1;
-						else if (!hasA && hasB)
+						} else if (!hasA && hasB) {
 							return 1;
-						else
+						} else {
 							return 0;
+						}
 					}
 				});
 			}
@@ -220,13 +225,15 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		}
 		
 		// only re-enable the pagination if we got a full page back
-		if (bills.size() == PER_PAGE)
+		if (bills.size() == PER_PAGE) {
 			getListView().setOnScrollListener(pager);
+		}
 	}
 	
 	public void onLoadBills(CongressException exception) {
-		if (isAdded())
+		if (isAdded()) {
 			FragmentUtils.showRefresh(this, R.string.bills_error);
+		}
 	}
 	
 	// only run for the first page of bill results
@@ -247,41 +254,43 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			} else if (type == BILLS_SPONSOR) {
 				FragmentUtils.showEmpty(this, R.string.bills_empty_sponsor);
 				setupSubscription();
-			} else // active bills, all bills
+			}
+			else {
 				FragmentUtils.showRefresh(this, R.string.bills_error); // should not happen
+			}
 		}
 	}
 	
 	private String subscriberClass() {
-		if (type == BILLS_ALL)
+		if (type == BILLS_ALL) {
 			return "BillsRecentSubscriber";
-		// can't turn on until this is a tab, not a thing through LegislatorLoader
-//		else if (type == BILLS_SPONSOR)
-//			return "BillsLegislatorSubscriber";
-		else if (type == BILLS_ACTIVE)
+		} else if (type == BILLS_ACTIVE) {
 			return "BillsActiveSubscriber";
-		else if (type == BILLS_SEARCH_NEWEST)
+		} else if (type == BILLS_SEARCH_NEWEST) {
 			return "BillsSearchSubscriber";
-		else
+		} else {
 			return null;
+		}
 	}
 	
 	private void setupSubscription() {
 		Subscription subscription = null;
-		if (type == BILLS_ALL)
+		if (type == BILLS_ALL) {
 			subscription = new Subscription("RecentBills", getResources().getString(R.string.subscriber_bills_all), "BillsRecentSubscriber", null);
-		else if (type == BILLS_SPONSOR)
+		} else if (type == BILLS_SPONSOR) {
 			subscription = new Subscription(sponsor.bioguide_id, Subscriber.notificationName(sponsor), "BillsLegislatorSubscriber", null);
-		else if (type == BILLS_ACTIVE)
+		} else if (type == BILLS_ACTIVE) {
 			subscription = new Subscription("ActiveBills", getResources().getString(R.string.subscriber_bills_active), "BillsActiveSubscriber", null);
-		else if (type == BILLS_SEARCH_NEWEST)
+		} else if (type == BILLS_SEARCH_NEWEST) {
 			subscription = new Subscription(query, query, "BillsSearchSubscriber", query);
+		}
 		
 		// no subscription offered for a bill code search
 		// no subscription offered for "best match" searches
 		
-		if (subscription != null)
+		if (subscription != null) {
 			Footer.setup(this, subscription, bills);
+		}
 	}
 
 	
@@ -330,10 +339,11 @@ public class BillListFragment extends ListFragment implements PaginationListener
 
 		@Override
 		public void onPostExecute(List<Bill> bills) {
-			if (exception != null)
+			if (exception != null) {
 				context.onLoadBills(exception);
-			else
+			} else {
 				context.onLoadBills(bills, page);
+			}
 		}
 	}
 
@@ -368,8 +378,9 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				holder.newResult = view.findViewById(R.id.new_result);
 				
 				view.setTag(holder);
-			} else
+			} else {
 				holder = (ViewHolder) view.getTag();
+			}
 			
 			switch (context.type) {
 			case BILLS_ACTIVE:
@@ -405,13 +416,15 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			if (context.type == BILLS_ACTIVE) {
 				holder.last_action.setText(actionText(bill.lastAction));
 				holder.last_action.setVisibility(View.VISIBLE);
-			} else
+			} else {
 				holder.last_action.setVisibility(View.GONE);
+			}
 			
-			if (context.newIds != null && context.newIds.contains(bill.id))
+			if (context.newIds != null && context.newIds.contains(bill.id)) {
 				holder.newResult.setVisibility(View.VISIBLE);
-			else
+			} else {
 				holder.newResult.setVisibility(View.GONE);
+			}
 
 			return view;
 		}
@@ -425,8 +438,9 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			if (date.getYear() == Calendar.getInstance().get(Calendar.YEAR)) { 
 				view.setTextSize(18);
 				view.setText(new SimpleDateFormat("MMM d", Locale.US).format(date).toUpperCase(Locale.US));
-			} else
+			} else {
 				longDate(view, date);
+			}
 		}
 		
 		private void longDate(TextView view, Date date) {

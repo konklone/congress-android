@@ -52,10 +52,18 @@ public class District {
 					line.addPoint(new GeoPoint(y, x));
 					
 					// establish bounding box
-					if (x < minX) minX = x;
-					if (x > maxX) maxX = x;
-					if (y < minY) minY = y;
-					if (y > maxY) maxY = y;
+					if (x < minX) {
+						minX = x;
+					}
+					if (x > maxX) {
+						maxX = x;
+					}
+					if (y < minY) {
+						minY = y;
+					}
+					if (y > maxY) {
+						maxY = y;
+					}
 				}
 				
 				map.getOverlays().add(line);

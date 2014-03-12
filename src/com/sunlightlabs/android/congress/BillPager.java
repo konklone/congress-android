@@ -61,10 +61,11 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 		
 		setupControls();
 		
-		if (bill == null)
+		if (bill == null) {
 			BillLoaderFragment.start(this);
-		else
+		} else {
 			onLoadBill(bill);
+		}
 	}
 	
 	public void setupControls() {
@@ -75,6 +76,7 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 		Utils.setLoading(this, R.string.bill_loading);
 		
 		((Button) findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				refresh();
 			}
@@ -100,10 +102,11 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 	}
 	
 	public void onLoadBill(CongressException exception) {
-		if (exception instanceof BillService.BillNotFoundException)
+		if (exception instanceof BillService.BillNotFoundException) {
 			Utils.showEmpty(this, R.string.bill_not_known_yet);
-		else
+		} else {
 			Utils.showRefresh(this, R.string.bill_loading_error);
+		}
 	}
 	
 	private void setupPager() {
@@ -114,7 +117,9 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 		adapter.add("history", R.string.tab_history, BillActionFragment.create(bill));
 		adapter.add("votes", R.string.tab_votes, BillVoteFragment.create(bill));
 		
-		if (tab != null) adapter.selectPage(tab);
+		if (tab != null) {
+			adapter.selectPage(tab);
+		}
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -128,12 +133,14 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if (database != null && database.isOpen())
+		if (database != null && database.isOpen()) {
 			database.close();
+		}
 	}
 	
 	public void setupButtons() {
 		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.star_off, new View.OnClickListener() {
+			@Override
 			public void onClick(View v) { 
 				toggleDatabaseFavorite(); 
 			}
@@ -142,6 +149,7 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 		toggleFavoriteStar(cursor.getCount() == 1);
 		
 		ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.share, new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				Analytics.billShare(BillPager.this, bill.id);
 	    		Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain")
@@ -163,10 +171,11 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 	}
 
 	private void toggleFavoriteStar(boolean enabled) {
-		if (enabled)
+		if (enabled) {
 			ActionBarUtils.setActionIcon(this, R.id.action_1, R.drawable.star_on);
-		else
+		} else {
 			ActionBarUtils.setActionIcon(this, R.id.action_1, R.drawable.star_off);
+		}
 	}
 
 	private void toggleDatabaseFavorite() {
@@ -176,14 +185,16 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 			if (database.removeBill(id) != 0) {
 				toggleFavoriteStar(false);
 				Analytics.removeFavoriteBill(this, id);
-			} else
+			} else {
 				Utils.alert(this, "Problem unstarring bill.");
+			}
 		} else {
 			if (database.addBill(bill) != -1) {
 				toggleFavoriteStar(true);
 				Analytics.addFavoriteBill(this, id);
-			} else
+			} else {
 				Utils.alert(this, "Problem starring bill.");
+			}
 		}
 	}
 	
@@ -202,7 +213,9 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 	
 	@Override
 	public void menuSelected(MenuItem item) {
-		if (bill == null) return; // safety valve (only matters on pre-4.0 devices)
+		if (bill == null) {
+			return; // safety valve (only matters on pre-4.0 devices)
+		}
 		
 		switch(item.getItemId()) {
     	case R.id.text:
@@ -211,13 +224,15 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
     		break;
     	case R.id.govtrack:
     		Analytics.billGovTrack(this, bill.id);
-    		if (bill.urls != null && bill.urls.containsKey("govtrack"))
-    			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.urls.get("govtrack"))));
+    		if (bill.urls != null && bill.urls.containsKey("govtrack")) {
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.urls.get("govtrack"))));
+			}
     		break;
     	case R.id.opencongress:
     		Analytics.billOpenCongress(this, bill.id);
-    		if (bill.urls != null && bill.urls.containsKey("opencongress"))
-    			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.urls.get("opencongress"))));
+    		if (bill.urls != null && bill.urls.containsKey("opencongress")) {
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.urls.get("opencongress"))));
+			}
     		break;
     	}
 	}

@@ -59,8 +59,9 @@ public abstract class DateAdapterHelper<Content> {
 				// updateStickyHeader(dateFor(contents.get(0)));
 				stickyHeader.setVisibility(View.VISIBLE);
 			}
-		} else
+		} else {
 			context.getListView().setOnScrollListener(auxScrollListener);
+		}
 		
 		return adapter;
 	}
@@ -129,11 +130,13 @@ public abstract class DateAdapterHelper<Content> {
 			String date = dateFormat.format(contentDate);
 			String time = timeFormat.format(contentDate);
 			
-			if (!currentDate.equals(date))
+			if (!currentDate.equals(date)) {
 				items.add(new DateWrapper(contentDate));
+			}
 			
-			if (!currentTime.equals(time))
+			if (!currentTime.equals(time)) {
 				wrapper.showTime = true;
+			}
 				
 			currentDate = date;
 			currentTime = time;
@@ -168,10 +171,11 @@ public abstract class DateAdapterHelper<Content> {
         @Override
         public int getItemViewType(int position) {
         	DateAdapterHelper<Content>.ItemWrapper item = getItem(position);
-        	if (item instanceof DateAdapterHelper.DateWrapper)
-        		return TYPE_DATE;
-        	else
-        		return TYPE_CONTENT;
+        	if (item instanceof DateAdapterHelper.DateWrapper) {
+				return TYPE_DATE;
+			} else {
+				return TYPE_CONTENT;
+			}
         }
         
         @Override
@@ -183,9 +187,9 @@ public abstract class DateAdapterHelper<Content> {
 		@Override
 		public View getView(int position, View view, ViewGroup parent) {
 			DateAdapterHelper<Content>.ItemWrapper item = getItem(position);
-			if (item instanceof DateAdapterHelper.DateWrapper)
+			if (item instanceof DateAdapterHelper.DateWrapper) {
 				return dateView(((DateWrapper) item).date);
-			else { 
+			} else { 
 				ContentWrapper wrapper = (ContentWrapper) item;
 				return contentView(wrapper.content, wrapper.showTime);
 			}
@@ -198,22 +202,25 @@ public abstract class DateAdapterHelper<Content> {
 			
 			// guaranteed to be at least one item after a date wrapper, and it will be a content item, 
 			// because of how the adapter builds itself
-			if (getItemViewType(position) == TYPE_DATE)
+			if (getItemViewType(position) == TYPE_DATE) {
 				position += 1;
+			}
 			
 			Content content = ((ContentWrapper) getItem(position)).content;
 			
 			helper.updateStickyHeader(dateFor(content));
 			
-			if (helper.auxScrollListener != null)
+			if (helper.auxScrollListener != null) {
 				helper.auxScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+			}
 		}
 
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState) {
 			// pass on the scroll event if an auxiliary scroll listener is registered
-			if (helper.auxScrollListener != null)
+			if (helper.auxScrollListener != null) {
 				helper.auxScrollListener.onScrollStateChanged(view, scrollState);
+			}
 		}
     }
 	

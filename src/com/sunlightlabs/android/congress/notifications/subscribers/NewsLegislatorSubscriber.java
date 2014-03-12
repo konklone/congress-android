@@ -35,12 +35,13 @@ public class NewsLegislatorSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results == NewsService.RESULTS)
+		if (results == NewsService.RESULTS) {
 			return results + " or more new mentions in the news.";
-		else if (results > 1)
+		} else if (results > 1) {
 			return results + " new mentions in the news.";
-		else
+		} else {
 			return results + " new mention in the news.";
+		}
 	}
 
 	@Override

@@ -24,8 +24,9 @@ public class LoadDistrictTask extends AsyncTask<Legislator, Void, District> {
 		Legislator legislator = params[0];
 		try {
 			District district = DistrictService.find(legislator);
-			if (district == null)
+			if (district == null) {
 				this.exception = new CongressException("Can't load district.");
+			}
 			
 			return district;
 		} catch (CongressException exception) {
@@ -37,10 +38,11 @@ public class LoadDistrictTask extends AsyncTask<Legislator, Void, District> {
 
 	@Override
 	protected void onPostExecute(District district) {
-		if (district == null) // guaranteed to be an exception stored
+		if (district == null) {
 			fragment.onLoadDistrict(this.exception);
-		else
+		} else {
 			fragment.onLoadDistrict(district);
+		}
 	}
 
 	public interface LoadsDistrict {

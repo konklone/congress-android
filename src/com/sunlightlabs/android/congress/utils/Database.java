@@ -83,8 +83,9 @@ public class Database {
 
 	public long addLegislator(Legislator legislator) {
 		ContentValues cv = fromLegislator(legislator);
-		if (cv != null)
+		if (cv != null) {
 			return database.insert("legislators", null, cv);
+		}
 		return -1;
 	}
 
@@ -224,10 +225,11 @@ public class Database {
 			cv.put("subscription_id", subscription.id);
 			cv.put("subscription_class", subscription.notificationClass);
 			cv.put("seen_id", latestIds.get(i));
-			if (database.insert("seen_items", null, cv) >= 0)
+			if (database.insert("seen_items", null, cv) >= 0) {
 				rows += 1;
-			else
+			} else {
 				failed = true;
+			}
 		}
 		
 		return (failed ? -1 : rows);
@@ -259,8 +261,9 @@ public class Database {
 			StringBuilder sql = new StringBuilder("CREATE TABLE " + table);
 			sql.append(" (_id INTEGER PRIMARY KEY AUTOINCREMENT");
 
-			for (int i = 0; i < columns.length; i++)
+			for (int i = 0; i < columns.length; i++) {
 				sql.append(", " + columns[i] + " TEXT");
+			}
 
 			sql.append(");");
 			db.execSQL(sql.toString());

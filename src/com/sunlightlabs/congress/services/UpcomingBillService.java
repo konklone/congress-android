@@ -35,33 +35,42 @@ public class UpcomingBillService {
 	protected static UpcomingBill fromAPI(JSONObject json) throws JSONException, ParseException, CongressException {
 		UpcomingBill upcoming = new UpcomingBill();
 		
-		if (!json.isNull("context"))
+		if (!json.isNull("context")) {
 			upcoming.context = json.getString("context");
+		}
 		
-		if (!json.isNull("chamber"))
+		if (!json.isNull("chamber")) {
 			upcoming.chamber = json.getString("chamber");
+		}
 		
 		// field can be present but actually null 
-		if (!json.isNull("legislative_day"))
+		if (!json.isNull("legislative_day")) {
 			upcoming.legislativeDay = Congress.parseDateOnly(json.getString("legislative_day"));
+		}
 		
-		if (!json.isNull("range"))
+		if (!json.isNull("range")) {
 			upcoming.range = json.getString("range");
+		}
 		
-		if (!json.isNull("bill_id"))
+		if (!json.isNull("bill_id")) {
 			upcoming.billId = json.getString("bill_id");
+		}
 		
-		if (!json.isNull("source_type"))
+		if (!json.isNull("source_type")) {
 			upcoming.sourceType = json.getString("source_type");
+		}
 		
-		if (!json.isNull("url"))
+		if (!json.isNull("url")) {
 			upcoming.sourceUrl = json.getString("url");
+		}
 		
-		if (!json.isNull("congress"))
+		if (!json.isNull("congress")) {
 			upcoming.congress = json.getInt("congress");
+		}
 		
-		if (!json.isNull("bill"))
+		if (!json.isNull("bill")) {
 			upcoming.bill = BillService.fromAPI(json.getJSONObject("bill"));
+		}
 		
 		return upcoming;
 	}
@@ -72,8 +81,9 @@ public class UpcomingBillService {
 			JSONArray results = Congress.resultsFor(url);
 
 			int length = results.length();
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < length; i++) {
 				upcomings.add(fromAPI(results.getJSONObject(i)));
+			}
 
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);

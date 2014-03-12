@@ -44,8 +44,9 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 		state = intent.getStringExtra("state");
 		location = intent.getBooleanExtra("location", false); 
 		
-		if (query != null) // may come in from the state list
+		if (query != null) {
 			query = query.trim();
+		}
 	    
 		setupControls();
 		setupPager();
@@ -102,6 +103,7 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 		
 		if (location) {
 			ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.refresh, new View.OnClickListener() {
+				@Override
 				public void onClick(View v) {
 					locate();
 						
@@ -109,6 +111,7 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 			});
 		} else {
 			ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.location, new View.OnClickListener() {
+				@Override
 				public void onClick(View v) {
 					startActivity(new Intent(LegislatorSearch.this, LegislatorSearch.class).putExtra("location", true));
 				}
@@ -116,6 +119,7 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 		}
 		
 		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
+			@Override
 			public void onClick(View v) { 
 				onSearchRequested();
 			}
@@ -128,10 +132,11 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 		
 		LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		// if GPS is enabled, we'll be trying it first, so use a GPS-specific message 
-		if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+		if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			Utils.setLoading(this, R.string.menu_location_updating_gps);
-		else
+		} else {
 			Utils.setLoading(this, R.string.menu_location_updating_network);
+		}
 		
 		updateLocation();
 	}
@@ -235,8 +240,9 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 			Utils.setLoading(this, R.string.menu_location_updating_network);
 			timer = LocationUtils.requestLocationUpdate(this, handler, LocationManager.NETWORK_PROVIDER);
 			Log.d(Utils.TAG, "LegislatorSearch - onTimeout(): requesting update from network");
-		} else
+		} else {
 			onLocationUpdateError();
+		}
 	}
 	
 }
