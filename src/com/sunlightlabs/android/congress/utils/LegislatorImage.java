@@ -48,7 +48,7 @@ public class LegislatorImage {
 		if (!imageFile.exists() || tooOld(imageFile))
 			return null;
 		else
-			return new BitmapDrawable(picPath(size, bioguideId, context));
+			return new BitmapDrawable(context.getResources(), picPath(size, bioguideId, context));
 	}
 	
 	// assumes you've already checked to make sure the file exists
