@@ -1,11 +1,13 @@
 package com.sunlightlabs.android.congress.fragments;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import android.os.AsyncTask;
@@ -420,16 +422,16 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		}
 		
 		private void shortDate(TextView view, Date date) {
-			if (date.getYear() == new Date().getYear()) { 
-				view.setTextSize(16);
-				view.setText(new SimpleDateFormat("MMM d").format(date).toUpperCase());
+			if (date.getYear() == Calendar.getInstance().get(Calendar.YEAR)) { 
+				view.setTextSize(18);
+				view.setText(new SimpleDateFormat("MMM d", Locale.US).format(date).toUpperCase(Locale.US));
 			} else
 				longDate(view, date);
 		}
 		
 		private void longDate(TextView view, Date date) {
 			view.setTextSize(14);
-			view.setText(new SimpleDateFormat("MMM d, ''yy").format(date).toUpperCase());
+			view.setText(new SimpleDateFormat("MMM d, ''yy", Locale.US).format(date).toUpperCase(Locale.US));
 		}
 		
 		private String actionText(Bill.Action action) {
