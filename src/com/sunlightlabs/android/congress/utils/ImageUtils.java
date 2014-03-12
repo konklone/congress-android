@@ -42,7 +42,7 @@ public class ImageUtils {
 		if (!imageFile.exists())
 			return null;
 		else
-			return new BitmapDrawable(picPath(size, hash, context));
+			return new BitmapDrawable(context.getResources(), picPath(size, hash, context));
 	}
 
 	public static String picPath(String size, int hash, Context context) {
