@@ -1,16 +1,33 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots'}
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.9.+'
     }
 }
+
 apply plugin: 'android'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+repositories {
+    mavenCentral()
+}
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
+    compile fileTree(dir: 'libs', include: '*.aar')
+
+    compile 'com.android.support:support-v4:19.0.+'
+    compile 'com.squareup.okhttp:okhttp:1.3.0'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.jakewharton:disklrucache:2.0.1'
+    compile 'com.google.guava:guava:16.0.1'
 }
+
 
 android {
     compileSdkVersion 19
