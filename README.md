@@ -18,6 +18,14 @@ When setting this up:
 
 Use the [Github Issues page](/sunlightlabs/congress-android/issues) for this project.
 
+### License
+
+We use a [mixed GPLv3 and BSD license](LICENSE) for our code in this repository. Generally speaking, the code specific to our Android app is GPLv3, and the code you could reuse in any Java or Android app is BSD. 
+
+The repository also contains some miscellaneous `.jar` files in `/libs`, who have separate individual licenses.
+
+See [LICENSE](LICENSE) for complete details.
+
 
 ### Release Checklist
 
