@@ -1,18 +1,11 @@
 package com.sunlightlabs.congress.models;
 
-import java.util.List;
+import com.mapbox.mapboxsdk.views.MapView;
 
 import org.geojson.LngLatAlt;
 import org.geojson.MultiPolygon;
-import org.osmdroid.util.BoundingBoxE6;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.PathOverlay;
 
-import android.graphics.Color;
-import android.util.Log;
-
-import com.sunlightlabs.android.congress.utils.DistrictMapView;
-import com.sunlightlabs.android.congress.utils.Utils;
+import java.util.List;
 
 // GeoJSON-based map from the web
 public class District {
@@ -25,7 +18,7 @@ public class District {
 	
 	// helper function to draw a MultiPolygon onto a MapView
 	// this is tied to the MapBox Android SDK - this could be moved into a Utils package for better decoupling.
-	public static void drawDistrict(District district, DistrictMapView map) {
+	public static void drawDistrict(District district, MapView map) {
 		MultiPolygon multiPolygon = district.polygon;
 		List<List<List<LngLatAlt>>> polygons = multiPolygon.getCoordinates();
 		int numPolygons = polygons.size();
@@ -42,14 +35,14 @@ public class District {
 			int numRings = rings.size();
 			for (int j=0; j<numRings; j++) {
 				List<LngLatAlt> points = rings.get(0);
-				PathOverlay line = new PathOverlay(Color.BLUE, map.getContext());
+//				PathOverlay line = new PathOverlay(Color.BLUE, map.getContext());
 				
 				int numPoints = points.size();
 				for (int k=0; k<numPoints; k++) {
 					LngLatAlt point = points.get(k);
 					double x = point.getLongitude();
 					double y = point.getLatitude();
-					line.addPoint(new GeoPoint(y, x));
+//					line.addPoint(new GeoPoint(y, x));
 					
 					// establish bounding box
 					if (x < minX) minX = x;
@@ -58,7 +51,7 @@ public class District {
 					if (y > maxY) maxY = y;
 				}
 				
-				map.getOverlays().add(line);
+//				map.getOverlays().add(line);
 			}
 		}
 		
@@ -73,8 +66,8 @@ public class District {
 		
 		// north, east, south, west
 		double s = 0.5; // padding, in degrees
-		map.boundingBox = new BoundingBoxE6(maxY+s, maxX+s, minY-s, minX-s);
+//		map.boundingBox = new BoundingBoxE6(maxY+s, maxX+s, minY-s, minX-s);
 		
-    	Log.i(Utils.TAG, "Bounding box: " + map.boundingBox.getLatNorthE6() + "|" + map.boundingBox.getLonEastE6() + "|" + map.boundingBox.getLatSouthE6() + "|" + map.boundingBox.getLonWestE6());
+//    	Log.i(Utils.TAG, "Bounding box: " + map.boundingBox.getLatNorthE6() + "|" + map.boundingBox.getLonEastE6() + "|" + map.boundingBox.getLatSouthE6() + "|" + map.boundingBox.getLonWestE6());
 	}
 }
