@@ -20,10 +20,13 @@ import com.sunlightlabs.android.congress.Settings;
  */
 
 public class Analytics {
-	
+
 	
 	public static EasyTracker start(Activity activity) {
 		if (analyticsEnabled(activity)) {
+            // play nice with OkHttp
+            HttpManager.init();
+
 			Log.i(Utils.TAG, "[Analytics] Tracker starting for " + activity.getLocalClassName());
 			EasyTracker tracker = EasyTracker.getInstance(activity);
 			attachCustomData(activity, tracker);
@@ -35,6 +38,10 @@ public class Analytics {
 	
 	public static void stop(Activity activity) {
 		EasyTracker tracker = EasyTracker.getInstance(activity);
+
+        // play nice with OkHttp
+        HttpManager.init();
+
 		if (tracker != null) {
 			Log.i(Utils.TAG, "[Analytics] Tracker stopping for " + activity.getLocalClassName());
 			tracker.activityStop(activity);
@@ -44,6 +51,9 @@ public class Analytics {
 	public static void event(Activity activity, String category, String action, String label) {
 		EasyTracker tracker = EasyTracker.getInstance(activity);
 		if (tracker != null && analyticsEnabled(activity)) {
+            // play nice with OkHttp
+            HttpManager.init();
+
 			if (label == null) label = "";
 			
 			attachCustomData(activity, tracker);
