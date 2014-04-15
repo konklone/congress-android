@@ -6,10 +6,8 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,19 +17,17 @@ import android.widget.TextView;
 import com.mapbox.mapboxsdk.views.MapView;
 import com.sunlightlabs.android.congress.CommitteeMember;
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.tasks.LoadDistrictTask;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.District;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask.LoadsPhoto, LoadDistrictTask.LoadsDistrict {
+public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask.LoadsPhoto {
 	private Legislator legislator;
-	private District district;
+//	private District district;
 	
 	private Drawable avatar;
 	
@@ -163,54 +159,16 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 				seeCommittees();
 			}
 		});
-				
-		// we support froyo for now, but maps use a jackson version not supported in the version of Java Froyo uses.
-		// so, for now, let's just not give the map.
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO)
-			setupMap();
-		else
-			((TextView) mainView.findViewById(R.id.map_text)).setText(R.string.map_unsupported);
+
+        // note: this depends on 2.3 and up, which we're now requiring (2014-04-14)
+		setupMap();
 	}
 	
 	public void setupMap() {
-		if (this.district != null)
-			displayDistrict();
-		else
-			loadDistrict();
+        MapView mapView = (MapView) getView().findViewById(R.id.map_view);
+        mapView.loadFromGeoJSONURL(District.urlForLegislator(this.legislator));
 	}
-	
-	// can assume this.district is set
-	public void displayDistrict() {
-		Log.i(Utils.TAG, "Got district map fetched, loading Mapbox map...");
-		
-		Context context = this.getActivity();
-		MapView mapView = (MapView) LayoutInflater.from(getContext()).inflate(R.layout.legislator_map, null);
 
-		District.drawDistrict(district, mapView);
-		
-		ViewGroup container = (ViewGroup) getView().findViewById(R.id.map_container);
-		container.addView(mapView);
-		Log.i(Utils.TAG, "Drew a map.");
-	}
-	
-	public void loadDistrict() {
-		Log.i(Utils.TAG, "Kicking off district map fetching...");
-		new LoadDistrictTask(this).execute(legislator);
-	}
-	
-	@Override
-	public void onLoadDistrict(District district) {
-		this.district = district;
-		if (isAdded())
-			displayDistrict();
-	}
-	
-	@Override
-	public void onLoadDistrict(CongressException exception) {
-		Log.e(Utils.TAG, "Error fetching map :(", exception);
-		Utils.alert(this.getContext(), "There was an error loading the district map.");
-	}
-	
 	private void socialButton(int id, final String url, final String network) {
 		View view = getView().findViewById(id);
 		if (url != null && !url.equals("")) {
