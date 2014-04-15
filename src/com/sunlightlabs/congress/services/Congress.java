@@ -1,5 +1,17 @@
 package com.sunlightlabs.congress.services;
 
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.sunlightlabs.android.congress.utils.HttpManager;
+import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.CongressException;
+
+import org.apache.http.impl.cookie.DateUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,18 +34,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
-
-import org.apache.http.impl.cookie.DateUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.os.Build;
-import android.text.TextUtils;
-import android.util.Log;
-
-import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.congress.models.CongressException;
 
 
 public class Congress {
@@ -94,7 +94,7 @@ public class Congress {
 	
 	public static String url(String method, String[] fields, Map<String,String> params, int page, int per_page) throws CongressException {
 		if (fields == null || fields.length == 0)
-			throw new CongressException("App policy to explicitly spell out all fields.");
+			throw new CongressException("App policy is to explicitly spell out all fields.");
 		
 		params.put("apikey", apiKey);
 		params.put("fields", TextUtils.join(",", fields));
@@ -182,8 +182,10 @@ public class Congress {
 	
 	public static String fetchJSON(String url) throws CongressException {
 		Log.d(Utils.TAG, "Congress API: " + url);
-		
-		HttpURLConnection connection;
+
+        HttpManager.init();
+
+        HttpURLConnection connection;
 		URL theUrl;
 		
 		try {
