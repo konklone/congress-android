@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mapbox.mapboxsdk.views.MapView;
 import com.sunlightlabs.android.congress.CommitteeMember;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
@@ -22,7 +21,6 @@ import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.congress.models.District;
 import com.sunlightlabs.congress.models.Legislator;
 
 public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask.LoadsPhoto {
@@ -165,8 +163,8 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 	}
 	
 	public void setupMap() {
-        MapView mapView = (MapView) getView().findViewById(R.id.map_view);
-        mapView.loadFromGeoJSONURL(District.urlForLegislator(this.legislator));
+//        MapView mapView = (MapView) getView().findViewById(R.id.map_view);
+//        mapView.loadFromGeoJSONURL(District.urlForLegislator(this.legislator));
 	}
 
 	private void socialButton(int id, final String url, final String network) {
