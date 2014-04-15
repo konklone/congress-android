@@ -183,6 +183,7 @@ public class Congress {
 	public static String fetchJSON(String url) throws CongressException {
 		Log.d(Utils.TAG, "Congress API: " + url);
 
+        // play nice with OkHttp
         HttpManager.init();
 
         HttpURLConnection connection;

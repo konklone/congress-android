@@ -43,7 +43,7 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         FragmentUtils.setupAPI(this);
         
         legislator = (Legislator) getArguments().getSerializable("legislator");
