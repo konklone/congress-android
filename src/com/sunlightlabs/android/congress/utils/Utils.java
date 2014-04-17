@@ -1,10 +1,5 @@
 package com.sunlightlabs.android.congress.utils;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +21,11 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.Congress;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class Utils {
 	public static final String TAG = "Congress";
@@ -150,12 +150,7 @@ public class Utils {
 	public static String truncate(String text, int length) {
 		return truncate(text, length, true);
 	}
-	
-	public static View inflateHeader(LayoutInflater inflater, int text) {
-		View view = inflater.inflate(R.layout.header, null);
-		((TextView) view.findViewById(R.id.header_text)).setText(text);
-		return view;
-	}
+
 
 	/** TODO: Remove these list-oriented show methods entirely once we're all on ListFragments */
 	

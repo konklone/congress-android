@@ -249,22 +249,19 @@
 	 	
 		<FrameLayout android:id="@+id/map_container"
 		    android:layout_width="fill_parent"
-		    android:layout_height="350dp"
+		    android:layout_height="300dp"
 		    android:layout_weight="1"
 		    android:background="@color/background_dark"
 		    >
-		    
-		    <TextView android:id="@+id/map_text"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_gravity="center_horizontal"
-		        android:layout_marginTop="100dp"
-		        android:paddingLeft="10dp"
-		        android:paddingRight="10dp"
-		        android:textColor="@color/text_grey"
-		        android:textSize="14sp"
-		        android:text="@string/map_loading"
-		        />
+
+            <com.mapbox.mapboxsdk.views.MapView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/map_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                mapbox:mapid="@string/mapbox_id"
+                />
 		    
 		</FrameLayout>
 	</LinearLayout>

@@ -6,7 +6,7 @@
       >
       
     <uses-sdk 
-    	android:minSdkVersion="8"
+    	android:minSdkVersion="9"
     	android:targetSdkVersion="19"
     	/>
       
@@ -35,7 +35,7 @@
     <application android:icon="@drawable/icon" 
     	android:label="@string/app_name"
     	android:theme="@style/MainTheme"
-    	android:hardwareAccelerated="true"
+        android:hardwareAccelerated="false"
     	>
         <activity android:name=".MenuMain"
             android:label="@string/app_name"

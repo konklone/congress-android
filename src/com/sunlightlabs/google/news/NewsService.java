@@ -1,18 +1,25 @@
 package com.sunlightlabs.google.news;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
+import android.util.Log;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
+import com.sunlightlabs.android.congress.utils.HttpManager;
+import com.sunlightlabs.android.congress.utils.Utils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NewsService {
 	public static final int RESULTS = 8;
@@ -53,28 +60,49 @@ public class NewsService {
 	
 	public String fetchJSON(String query) throws NewsException {
 		String queryString = queryString(query);
-		
 		String url = BASE_URL + "?" + queryString;
-		HttpGet request = new HttpGet(url);
-		
-		request.addHeader("User-Agent", USER_AGENT);
-        request.addHeader("Referer", referer);
-		
-        DefaultHttpClient client = new DefaultHttpClient();
-        
+
+        Log.d(Utils.TAG, "Google News: " + url);
+
+        // play nice with OkHttp
+        HttpManager.init();
+
+        HttpURLConnection connection;
+        URL theUrl;
+
         try {
-	        HttpResponse response = client.execute(request);
-	        int statusCode = response.getStatusLine().getStatusCode();
-	        
-	        if (statusCode == HttpStatus.SC_OK) {
-	        	String body = EntityUtils.toString(response.getEntity());
-	        	return body;
-	        } else {
-	        	throw new NewsException("Bad status code on fetching news", statusCode);
-	        }
-        } catch (Exception e) {
-	    	throw new NewsException(e);
-	    }
+            theUrl = new URL(url);
+            connection = (HttpURLConnection) theUrl.openConnection();
+        } catch(MalformedURLException e) {
+            throw new NewsException(e);
+        } catch (IOException e) {
+            throw new NewsException(e);
+        }
+
+        try {
+            connection.setRequestProperty("User-Agent", USER_AGENT);
+            connection.setRequestProperty("Referer", referer);
+
+            int status = connection.getResponseCode();
+            if (status == HttpURLConnection.HTTP_OK) {
+                // read input stream first to fetch response headers
+                InputStream in = connection.getInputStream();
+
+                // adapted from http://stackoverflow.com/a/2549222/16075
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                StringBuilder total = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) total.append(line);
+
+                return total.toString();
+
+            } else
+                throw new NewsException("Error talking to Google News.", status);
+        } catch (IOException e) {
+            throw new NewsException(e);
+        } finally {
+            connection.disconnect();
+        }
 	}
 	
 	private String queryString(String query) {

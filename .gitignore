@@ -4,3 +4,8 @@
 /res/values/keys.xml
 /res/values/analytics.xml
 /.idea
+
+# gradle/android studio stuff
+/.gradle
+/local.properties
+/build

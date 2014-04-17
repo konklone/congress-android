@@ -1,20 +1,20 @@
 package com.sunlightlabs.android.congress.utils;
 
+import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
+
+import com.sunlightlabs.congress.models.CongressException;
+
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
-import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Various static methods that other classes can use to fetch legislator profile images,
@@ -22,6 +22,7 @@ import android.util.Log;
  */
 
 public class LegislatorImage {
+    public static final String USER_AGENT = "Sunlight's Congress Android App (https://github.com/sunlightlabs/congress-android)";
 	public static final String PIC_LARGE = "450x550";
 	
 	// 30 day expiration time on cached legislator avatars
@@ -79,33 +80,74 @@ public class LegislatorImage {
 			outFile.delete();
 		
 		String url = picUrl(size, bioguideId);
-		downloadFile(url, outFile);
-	}
-	
-	public static void downloadFile(String url, File outputFile) {
-		DefaultHttpClient client = new DefaultHttpClient();
-		HttpGet request = new HttpGet(url);
-		
         try {
-	        HttpResponse response = client.execute(request);
-	        int statusCode = response.getStatusLine().getStatusCode();
-	        
-	        if (statusCode == HttpStatus.SC_OK) {
-	        	byte[] buffer = EntityUtils.toByteArray(response.getEntity());
-	        	DataOutputStream fos = new DataOutputStream(new FileOutputStream(outputFile));
+            downloadFile(url, outFile);
+        } catch (CongressException e) {
+            // swallow!
+        }
+	}
+
+    // adapted from HttpClient's EntityUtils
+    public static byte[] toByteArray(HttpURLConnection connection) throws IOException {
+        if (connection == null) {
+            throw new IllegalArgumentException("HTTP entity may not be null");
+        }
+
+        InputStream instream = connection.getInputStream();
+        if (instream == null) {
+            return null;
+        }
+
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        try {
+            byte[] tmp = new byte[4096];
+            int l;
+            while((l = instream.read(tmp)) != -1) {
+                buffer.write(tmp, 0, l);
+            }
+        } finally {
+            instream.close();
+        }
+        return buffer.toByteArray();
+    }
+	
+	public static void downloadFile(String url, File outputFile) throws CongressException {
+        Log.d(Utils.TAG, "Member photo: " + url);
+
+        // play nice with OkHttp
+        HttpManager.init();
+
+        HttpURLConnection connection;
+        URL theUrl;
+
+        try {
+            theUrl = new URL(url);
+            connection = (HttpURLConnection) theUrl.openConnection();
+        } catch(MalformedURLException e) {
+            throw new CongressException(e, "Bad URL: " + url);
+        } catch (IOException e) {
+            throw new CongressException(e, "Problem opening connection to " + url);
+        }
+
+        try {
+            connection.setRequestProperty("User-Agent", USER_AGENT);
+
+            int status = connection.getResponseCode();
+            if (status == HttpURLConnection.HTTP_OK) {
+                // read input stream first to fetch response headers
+                byte[] buffer = toByteArray(connection);
+                DataOutputStream fos = new DataOutputStream(new FileOutputStream(outputFile));
                 fos.write(buffer);
                 fos.flush();
                 fos.close();
-	        } else if (statusCode == HttpStatus.SC_NOT_FOUND)
-	        	return;
-	        else
-	        	return;
-        } catch (ClientProtocolException e) {
-        	return;
-	    } catch (IOException e) {
-	    	Log.e(Utils.TAG, "IO Exception on getting legislator photo", e);
-	    	return;
-	    }
+            } else
+                return;
+        } catch (IOException e) {
+            Log.e(Utils.TAG, "IO Exception on getting legislator photo", e);
+            throw new CongressException(e, "IO Exception on getting legislator photo");
+        } finally {
+            connection.disconnect();
+        }
 	}
 	
 }
