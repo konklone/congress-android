@@ -13,11 +13,14 @@ apply plugin: 'signing'
 
 repositories {
     mavenCentral()
+
+    // currently using a Mapbox SDK AAR built from source.
+
     flatDir {
         dirs 'aars'
     }
 
-//    maven { url 'https://oss.sonatype.org/content/repositories/snapshots'}
+    // maven { url 'https://oss.sonatype.org/content/repositories/snapshots'}
 
 }
 
