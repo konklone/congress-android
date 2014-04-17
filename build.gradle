@@ -17,6 +17,8 @@ repositories {
         dirs 'aars'
     }
 
+//    maven { url 'https://oss.sonatype.org/content/repositories/snapshots'}
+
 }
 
 

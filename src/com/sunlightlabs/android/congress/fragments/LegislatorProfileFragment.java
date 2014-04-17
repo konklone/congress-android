@@ -8,24 +8,30 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mapbox.mapboxsdk.geometry.BoundingBox;
+import com.mapbox.mapboxsdk.views.MapView;
 import com.sunlightlabs.android.congress.CommitteeMember;
 import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.android.congress.tasks.LoadDistrictTask;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.District;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask.LoadsPhoto {
+public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask.LoadsPhoto, LoadDistrictTask.LoadsDistrict {
 	private Legislator legislator;
-//	private District district;
+	private District district;
 	
 	private Drawable avatar;
 	
@@ -162,10 +168,52 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		setupMap();
 	}
 	
-	public void setupMap() {
+//	public void setupMap() {
 //        MapView mapView = (MapView) getView().findViewById(R.id.map_view);
-//        mapView.loadFromGeoJSONURL(District.urlForLegislator(this.legislator));
-	}
+
+        // debug: Washington, DC
+//        mapView.setCenter(new LatLng(38.8875839,-76.9872818));
+
+
+        // download and display GeoJSON
+//        mapView.loadFromGeoJSONURL(DistrictService.urlForLegislator(this.legislator));
+//	}
+
+    // can assume this.district is set
+    public void displayDistrict() {
+        Log.i(Utils.TAG, "Got district map fetched, drawing it to the Mapbox map...");
+
+        MapView mapView = (MapView) getView().findViewById(R.id.map_view);
+        BoundingBox box = District.drawDistrict(district, mapView);
+        mapView.zoomToBoundingBox(box);
+
+        Log.i(Utils.TAG, "Drew district to the map.");
+    }
+
+    public void setupMap() {
+        if (this.district != null)
+            displayDistrict();
+        else
+            loadDistrict();
+    }
+
+    public void loadDistrict() {
+        Log.i(Utils.TAG, "Kicking off district map fetching...");
+        new LoadDistrictTask(this).execute(legislator);
+    }
+
+    @Override
+    public void onLoadDistrict(District district) {
+        this.district = district;
+        if (isAdded())
+            displayDistrict();
+    }
+
+    @Override
+    public void onLoadDistrict(CongressException exception) {
+        Log.e(Utils.TAG, "Error fetching map :(", exception);
+        Utils.alert(this.getContext(), "There was an error loading the district map.");
+    }
 
 	private void socialButton(int id, final String url, final String network) {
 		View view = getView().findViewById(id);
