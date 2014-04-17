@@ -1,3 +1,11 @@
+## Congress for Android
+
+This is the source code for the Sunlight Foundation's [Congress app](http://congress.sunlightfoundation.com) for Android phones.
+
+Find the most up-to-date version in the Google Play Store: https://play.google.com/store/apps/details?id=com.sunlightlabs.android.congress
+
+We ship the app using the code found in this repository, with some miscellaneous unversioned API keys and build information placed in `res/values/keys.xml`.
+
 ### Setup
 
 When setting this up:
@@ -9,6 +17,14 @@ When setting this up:
 ### Issue Tracking
 
 Use the [Github Issues page](/sunlightlabs/congress-android/issues) for this project.
+
+### License
+
+We use a [mixed GPLv3 and BSD license](LICENSE) for our code in this repository. Generally speaking, the code specific to our Android app is GPLv3, and the code you could reuse in any Java or Android app is BSD. 
+
+The repository also contains some miscellaneous `.jar` files in `/libs`, who have separate individual licenses.
+
+See [LICENSE](LICENSE) for complete details.
 
 
 ### Release Checklist
