@@ -1,5 +1,13 @@
 package com.sunlightlabs.congress.services;
 
+import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.Roll;
+import com.sunlightlabs.congress.models.Roll.Vote;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,21 +15,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.sunlightlabs.congress.models.CongressException;
-import com.sunlightlabs.congress.models.Roll;
-import com.sunlightlabs.congress.models.Roll.Vote;
-
 public class RollService {
 	
 	public static String[] basicFields = {
 		"roll_id", "chamber", "number", "year", "congress", "bill_id",
 		"bill.official_title", "bill.short_title",
 		"voted_at", "vote_type", "roll_type", "question", "required", "result",
-		"breakdown"
+		"breakdown",
+        "nomination.nominees", "nomination.nomination_id", "nomination.number", "nomination.organization"
 	};
 	
 	public static Roll find(String id, String[] fields) throws CongressException {
@@ -40,7 +41,7 @@ public class RollService {
 		String[] fields = new String[basicFields.length + 1];
 		System.arraycopy(basicFields, 0, fields, 0, basicFields.length);
 		fields[basicFields.length + 0] = "voter_ids." + bioguideId;
-		
+
 		return rollsFor(Congress.url("votes", fields, params, page, per_page)); 
 	}
 	
@@ -115,6 +116,11 @@ public class RollService {
 				roll.voteBreakdown.remove(Roll.NAY);
 			}
 		}
+
+        if (!json.isNull("nomination")) {
+            JSONObject nominationObject = json.getJSONObject("nomination");
+            roll.nomination = NominationService.fromAPI(nominationObject);
+        }
 
 		if (!json.isNull("voters")) {
 			roll.voters = new HashMap<String, Vote>();

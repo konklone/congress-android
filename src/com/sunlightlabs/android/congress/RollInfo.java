@@ -1,15 +1,5 @@
 package com.sunlightlabs.android.congress;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.RejectedExecutionException;
-
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -41,9 +31,30 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
+import com.sunlightlabs.congress.models.Nomination;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.models.Roll.Vote;
 import com.sunlightlabs.congress.services.RollService;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.RejectedExecutionException;
+
+/*
+ * Eric's notes - this class should be refactored into a RollPager activity,
+ * and a RollInfoFragment. This would remove a lot of the screen-flipping logic
+ * from this class, and bring it into line with the best practices elsewhere.
+ * Cribbing from LegislatorProfileFragment and BillInfoFragment would make this easy.
+ *
+ * This would also make it easier to make new tabs, such as showing a breakdown
+ * of the votes by party, etc. *
+ */
 
 public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private String id;
@@ -223,16 +234,13 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		((TextView) headerTop.findViewById(R.id.question)).setText(simpleQuestion(roll));
 		((TextView) headerTop.findViewById(R.id.voted_at)).setText(new SimpleDateFormat("MMM dd, yyyy").format(roll.voted_at).toUpperCase());
-		
+
+        if (roll.nomination != null && roll.nomination.nominees != null) {
+            headerTop.findViewById(R.id.details).setVisibility(View.VISIBLE);
+            ((TextView) headerTop.findViewById(R.id.details_text)).setText(Nomination.nomineesFor(roll.nomination));
+        }
+
 		adapter.addView(headerTop);
-		
-		if (roll.amendmentPurpose != null && !roll.amendmentPurpose.equals("")) {
-			View amendment = inflater.inflate(R.layout.roll_amendment_purpose, null);
-			//((TextView) amendment.findViewById(R.id.header_text)).setText(R.string.vote_amendment_purpose);
-			((TextView) amendment.findViewById(R.id.amendment_purpose)).setText(roll.amendmentPurpose);
-			amendment.setEnabled(false);
-			adapter.addView(amendment);
-		}
 		
 		if (roll.bill_id != null && !roll.bill_id.equals("")) {
 			View header = inflater.inflate(R.layout.header, null);

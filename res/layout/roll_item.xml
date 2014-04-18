@@ -43,7 +43,7 @@
 				android:textSize="14sp"
 				android:textColor="@color/text_grey"
 				
-				android:text="House, #49"
+				android:text="House"
 				/>
 			
 		</RelativeLayout>
@@ -62,14 +62,41 @@
 				android:lineSpacingExtra="2sp"
 				
 				android:textSize="14sp"
-				android:text="On the Nomination (Confirmation Benita Y. Pearson, of Ohio to be U.S. District Judge)"
+				android:text="On the Nomination PN1182"
 				/>
+
+            <LinearLayout android:id="@+id/details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+
+                android:layout_marginTop="5dp"
+                >
+
+                <View android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/text_grey"
+                    />
+
+                <TextView android:id="@+id/details_text"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+
+                    android:lineSpacingExtra="2sp"
+                    android:layout_marginLeft="7dp"
+
+                    android:textSize="12sp"
+                    android:text="Michelle T. Friedland for United States Circuit Court Judge for the Ninth Circuit"
+                    />
+            </LinearLayout>
 			
 			<TextView android:id="@+id/result"
 			    android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				
-				android:layout_marginTop="3dp"
+				android:layout_marginTop="5dp"
 				
 				android:textSize="14sp"
 				android:textColor="@color/text_grey"

@@ -1,14 +1,5 @@
 package com.sunlightlabs.android.congress.fragments;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -29,8 +20,18 @@ import com.sunlightlabs.android.congress.utils.PaginationListener;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
+import com.sunlightlabs.congress.models.Nomination;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.RollService;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class RollListFragment extends ListFragment implements PaginationListener.Paginates {
 	
@@ -263,6 +264,8 @@ public class RollListFragment extends ListFragment implements PaginationListener
 				holder.date = (TextView) view.findViewById(R.id.date);
 				holder.question = (TextView) view.findViewById(R.id.question);
 				holder.result = (TextView) view.findViewById(R.id.result);
+                holder.details = (ViewGroup) view.findViewById(R.id.details);
+                holder.detailsText = (TextView) view.findViewById(R.id.details_text);
 				
 				view.setTag(holder);
 			} else
@@ -285,12 +288,19 @@ public class RollListFragment extends ListFragment implements PaginationListener
 			
 			holder.question.setText(Utils.truncate(roll.question, 200));
 			holder.result.setText(resultFor(roll));
-				
+
+            // vote views can use an optional 'details' pane for more info
+            if (roll.nomination != null && roll.nomination.nominees != null) {
+                holder.details.setVisibility(View.VISIBLE);
+                holder.detailsText.setText(Nomination.nomineesFor(roll.nomination));
+            }
+
 			return view;
 		}
-		
-		static class ViewHolder {
-			TextView roll, date, question, result;
+
+        static class ViewHolder {
+			TextView roll, date, question, result, detailsText;
+            ViewGroup details;
 		}
 		
 		private String resultFor(Roll roll) {

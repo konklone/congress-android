@@ -19,7 +19,10 @@
 		/>
 	
 	<!--  Hand-made tab layout for a tab-like experience while still keeping the tabs and list inline
-		  (so the tabs themselves will scroll up with the content) -->
+		  (so the tabs themselves will scroll up with the content).
+
+		  (This needs to get killed post-haste.)
+		   -->
 		
 	<LinearLayout android:id="@+id/vote_tabs"
 		android:layout_width="fill_parent"

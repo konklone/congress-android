@@ -36,6 +36,9 @@ public class Roll implements Serializable {
 	
 	// amendment purpose
 	public String amendmentPurpose;
+
+    // nomination
+    public Nomination nomination;
 	
 	// search result metadata (if coming from a search)
 	public SearchResult search;
