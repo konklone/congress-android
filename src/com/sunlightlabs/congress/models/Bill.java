@@ -136,7 +136,8 @@ public class Bill implements Serializable {
 		int number = Integer.valueOf(matcher.group(2));
 		return formatCode(bill_type, number);
 	}
-	
+
+    // also expanded to handle amendment IDs
 	public static String formatCode(String bill_type, int number) {
 		if (bill_type.equals("hr"))
 			return "H.R. " + number;
@@ -154,6 +155,12 @@ public class Bill implements Serializable {
 			return "S.J. Res. " + number;
 		else if (bill_type.equals("sconres"))
 			return "S.Con. Res. " + number;
+
+        else if (bill_type.equals("hamdt"))
+            return "H.Amdt. " + number;
+        else if (bill_type.equals("samdt"))
+            return "S.Amdt. " + number;
+
 		else
 			return bill_type + number;
 	}

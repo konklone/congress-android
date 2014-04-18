@@ -18,6 +18,8 @@ import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.PaginationListener;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.Amendment;
+import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.models.Nomination;
@@ -293,6 +295,14 @@ public class RollListFragment extends ListFragment implements PaginationListener
             if (roll.nomination != null && roll.nomination.nominees != null) {
                 holder.details.setVisibility(View.VISIBLE);
                 holder.detailsText.setText(Nomination.nomineesFor(roll.nomination));
+            } else if (roll.amendment != null && roll.amendment.amends_bill_id != null) {
+                holder.details.setVisibility(View.VISIBLE);
+                String text = "Amendment to " + Bill.formatCode(roll.amendment.amends_bill_id) + ": " + Amendment.description(roll.amendment);
+                holder.detailsText.setText(Utils.truncate(text, 300));
+
+            } else if (roll.bill != null) {
+                holder.details.setVisibility(View.VISIBLE);
+                holder.detailsText.setText(Bill.formatCode(roll.bill_id) + ": " + Bill.displayTitle(roll.bill));
             }
 
 			return view;

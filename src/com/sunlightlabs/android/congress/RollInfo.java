@@ -28,6 +28,7 @@ import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Database;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.Amendment;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
@@ -238,6 +239,10 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
         if (roll.nomination != null && roll.nomination.nominees != null) {
             headerTop.findViewById(R.id.details).setVisibility(View.VISIBLE);
             ((TextView) headerTop.findViewById(R.id.details_text)).setText(Nomination.nomineesFor(roll.nomination));
+        } else if (roll.amendment != null && roll.amendment.amends_bill_id != null) {
+            headerTop.findViewById(R.id.details).setVisibility(View.VISIBLE);
+            String text = "Amendment to " + Bill.formatCode(roll.amendment.amends_bill_id) + ": " + Amendment.description(roll.amendment);
+            ((TextView) headerTop.findViewById(R.id.details_text)).setText(text);
         }
 
 		adapter.addView(headerTop);

@@ -22,7 +22,8 @@ public class RollService {
 		"bill.official_title", "bill.short_title",
 		"voted_at", "vote_type", "roll_type", "question", "required", "result",
 		"breakdown",
-        "nomination.nominees", "nomination.nomination_id", "nomination.number", "nomination.organization"
+        "nomination.nominees", "nomination.nomination_id", "nomination.number", "nomination.organization",
+        "amendment.amendment_id", "amendment.purpose", "amendment.description", "amendment.amends_bill_id"
 	};
 	
 	public static Roll find(String id, String[] fields) throws CongressException {
@@ -120,6 +121,11 @@ public class RollService {
         if (!json.isNull("nomination")) {
             JSONObject nominationObject = json.getJSONObject("nomination");
             roll.nomination = NominationService.fromAPI(nominationObject);
+        }
+
+        if (!json.isNull("amendment")) {
+            JSONObject amendmentObject = json.getJSONObject("amendment");
+            roll.amendment = AmendmentService.fromAPI(amendmentObject);
         }
 
 		if (!json.isNull("voters")) {
