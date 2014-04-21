@@ -7,6 +7,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
@@ -53,6 +54,16 @@ public class NotificationSettings extends PreferenceActivity {
 		
 		setupControls();
 	}
+
+    public void updateNotificationSettings(boolean enabling) {
+        if (enabling) {
+            Utils.startNotificationsBroadcast(NotificationSettings.this);
+            Log.d(Utils.TAG, "Prefs changed: START notification service");
+        } else {
+            Utils.stopNotificationsBroadcast(NotificationSettings.this);
+            Log.d(Utils.TAG, "Prefs changed: STOP notification service");
+        }
+    }
 	
 	public void setupControls() {
 		updateIntervalSummary(PreferenceManager.getDefaultSharedPreferences(this).getString(KEY_NOTIFY_INTERVAL, DEFAULT_NOTIFY_INTERVAL));
@@ -61,14 +72,7 @@ public class NotificationSettings extends PreferenceActivity {
 		findPreference(KEY_NOTIFY_ENABLED).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				boolean value = ((Boolean) newValue).booleanValue();
-				if (value) {
-					Utils.startNotificationsBroadcast(NotificationSettings.this);
-					Log.d(Utils.TAG, "Prefs changed: START notification service");
-				} else {
-					Utils.stopNotificationsBroadcast(NotificationSettings.this);
-					Log.d(Utils.TAG, "Prefs changed: STOP notification service");
-				}
-				
+				updateNotificationSettings(value);
 				return true;
 			}
 		});
@@ -122,7 +126,7 @@ public class NotificationSettings extends PreferenceActivity {
 	}
 	
 	private boolean firstTime() {
-		return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(KEY_FIRST_TIME_SETTINGS, DEFAULT_FIRST_TIME_SETTINGS);
+        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(KEY_FIRST_TIME_SETTINGS, DEFAULT_FIRST_TIME_SETTINGS);
 	}
 	
 	private void tripFirstTimeFlag() {
@@ -147,14 +151,23 @@ public class NotificationSettings extends PreferenceActivity {
 			builder.setIcon(R.drawable.icon)
 				.setCustomTitle(title)
 				.setView(explanation)
-				.setPositiveButton(R.string.explanation_button, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {}
-				});
+                .setPositiveButton(R.string.notifications_enable, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Utils.setBooleanPreference(NotificationSettings.this, KEY_NOTIFY_ENABLED, true);
+                        ((CheckBoxPreference) findPreference(KEY_NOTIFY_ENABLED)).setChecked(true);
+                        updateNotificationSettings(true);
+                    }
+                })
+                .setNegativeButton(R.string.notifications_no_enable, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
 		}
 		
 		return builder.create();
 	}
-	
+
+
 	@Override
 	public void onStart() {
 		super.onStart();

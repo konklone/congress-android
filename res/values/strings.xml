@@ -107,6 +107,8 @@
     <string name="changelog_button">Awesome</string>
     <string name="changelog_title_prefix">New In Version</string>
     <string name="explanation_title">Notifications</string>
+    <string name="notifications_enable">Enable</string>
+    <string name="notifications_no_enable">Not Now</string>
     
     <string name="explanation_1">You can be notified of new votes, bills, and all sorts of things.</string>
     <string name="explanation_2">First, enable this feature, then find what you\'re interested in and tap the bar at the bottom.</string>
