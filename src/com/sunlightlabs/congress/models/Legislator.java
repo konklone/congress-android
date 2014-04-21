@@ -10,7 +10,7 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	public String title, party, state, district, chamber;
 	public String gender, office, website, phone;
 	public String twitter_id, youtube_id, facebook_id; 
-	public String term_start, term_end;
+	public String term_start, term_end, leadership_role;
 	public boolean in_office;
 	
 	// this gets assigned onto the legislator, even though it's not set this way in the API,

@@ -1,16 +1,16 @@
 package com.sunlightlabs.congress.services;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.Legislator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sunlightlabs.congress.models.CongressException;
-import com.sunlightlabs.congress.models.Legislator;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class LegislatorService {
 	
@@ -18,7 +18,7 @@ public class LegislatorService {
 		"bioguide_id", "thomas_id", "govtrack_id",
 		"in_office", "party", "gender", "state", "state_name",
 		"district", "title", "chamber", "senate_class", "birthday",
-		"term_start", "term_end",
+		"term_start", "term_end", "leadership_role",
 		"first_name", "nickname", "middle_name", "last_name", "name_suffix",
 		"phone", "website", "office",
 		"twitter_id", "youtube_id", "facebook_id"
@@ -94,6 +94,8 @@ public class LegislatorService {
 			legislator.term_start = json.getString("term_start");
 		if (!json.isNull("term_end"))
 			legislator.term_end = json.getString("term_end");
+        if (!json.isNull("leadership_role"))
+            legislator.leadership_role = json.getString("leadership_role");
 
 		if (!json.isNull("gender"))
 			legislator.gender = json.getString("gender");

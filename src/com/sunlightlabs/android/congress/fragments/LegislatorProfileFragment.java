@@ -122,7 +122,11 @@ public class LegislatorProfileFragment extends Fragment implements LoadPhotoTask
 		String party = partyName(legislator.party);
 		String state = Utils.stateCodeToName(getActivity(), legislator.state);
 		((TextView) mainView.findViewById(R.id.profile_state_party)).setText(party + " from " + state);
-		((TextView) mainView.findViewById(R.id.profile_domain)).setText(legislator.getDomain());
+
+        String domain = legislator.getDomain();
+        if (legislator.leadership_role != null && !legislator.leadership_role.equals(""))
+            domain = legislator.leadership_role + ", " + domain;
+		((TextView) mainView.findViewById(R.id.profile_domain)).setText(domain);
 		
 		socialButton(R.id.twitter, legislator.twitterUrl(), Analytics.LEGISLATOR_TWITTER);
 		socialButton(R.id.youtube, legislator.youtubeUrl(), Analytics.LEGISLATOR_YOUTUBE);
