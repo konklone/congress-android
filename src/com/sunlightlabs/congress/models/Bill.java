@@ -95,7 +95,7 @@ public class Bill implements Serializable {
 	}
 	
 	public static String matchText(String field) {
-		if (field.equals("versions"))
+		if (field.equals("text"))
 			return "text";
 		else if (field.equals("short_title"))
 			return "title";
@@ -113,7 +113,7 @@ public class Bill implements Serializable {
 	
 	// from a highlight hash, return the field name with the highest priority
 	public static String matchField(Map<String,ArrayList<String>> highlight) {
-		String[] priorities = new String[] {"popular_title", "short_title", "official_title", "summary", "versions", "keywords"};
+		String[] priorities = new String[] {"popular_title", "short_title", "official_title", "summary", "text", "keywords"};
 		String field = null;
 		
 		for (int i=0; i<priorities.length; i++) {

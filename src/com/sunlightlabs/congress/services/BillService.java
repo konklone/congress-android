@@ -1,5 +1,16 @@
 package com.sunlightlabs.congress.services;
 
+import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.Bill.Action;
+import com.sunlightlabs.congress.models.Bill.Vote;
+import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.Legislator;
+import com.sunlightlabs.congress.models.UpcomingBill;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,17 +18,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.sunlightlabs.congress.models.Bill;
-import com.sunlightlabs.congress.models.Bill.Action;
-import com.sunlightlabs.congress.models.Bill.Vote;
-import com.sunlightlabs.congress.models.CongressException;
-import com.sunlightlabs.congress.models.Legislator;
-import com.sunlightlabs.congress.models.UpcomingBill;
 
 public class BillService {
 	
@@ -54,7 +54,17 @@ public class BillService {
 	}
 	
 	public static List<Bill> search(String query, Map<String,String> params, int page, int per_page) throws CongressException {
-		return billsFor(Congress.searchUrl("bills", query, true, basicFields, params, page, per_page));
+        String quoted = "\"" + query+ "\"";
+		List<Bill> bills = billsFor(Congress.searchUrl("bills", quoted, true, basicFields, params, page, per_page));
+
+        // insert the search query on each bill
+        int length = bills.size();
+        for (int i=0; i<length; i++) {
+            Bill bill = bills.get(i);
+            bill.search.query = query;
+        }
+
+        return bills;
 	}
 	
 	public static List<Bill> where(Map<String,String> params, int page, int per_page) throws CongressException {

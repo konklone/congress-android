@@ -35,17 +35,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.apache.http.impl.cookie.DateUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.text.TextUtils;
-import android.util.Log;
-
-import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.congress.models.CongressException;
-
 public class Congress {
 	public static final String dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 	public static final String dateOnlyFormat = "yyyy-MM-dd";
@@ -89,9 +78,6 @@ public class Congress {
 
 				search.highlight = highlight;
 			}
-
-			if (!json.isNull("query"))
-				search.query = json.getString("query");
 
 			return search;
 		}
