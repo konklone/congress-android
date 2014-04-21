@@ -10,7 +10,7 @@ We ship the app using the code found in this repository, with some miscellaneous
 
 When setting this up:
 
-* copy `keys.xml.example` to `res/values/keys.xml` and fill in your [Sunlight API](http://services.sunlightlabs.com) key and [Google Search API key](http://code.google.com/apis/loader/signup.html) for use in the [Google Search News API](http://code.google.com/apis/newssearch/v1/jsondevguide.html).
+* copy `keys.xml.example` to `res/values/keys.xml` and fill in your [Sunlight API](http://services.sunlightlabs.com) key.
 * If using Google Analytics, copy `analytics.xml.example` to `res/values/analytics.xml` and fill in the `ga_trackingId` field with your Google Analytics profile tracking ID. (Make sure you've set up a profile in Google Analytics first.)
 
 
@@ -20,7 +20,7 @@ Use the [Github Issues page](/sunlightlabs/congress-android/issues) for this pro
 
 ### License
 
-We use a [mixed GPLv3 and BSD license](LICENSE) for our code in this repository. Generally speaking, the code specific to our Android app is GPLv3, and the code you could reuse in any Java or Android app is BSD. 
+We use a [mixed GPLv3 and BSD license](LICENSE) for our code in this repository. Generally speaking, the code specific to our Android app is GPLv3, and the code you could reuse in any Java or Android app is BSD.
 
 The repository also contains some miscellaneous `.jar` files in `/libs`, who have separate individual licenses.
 

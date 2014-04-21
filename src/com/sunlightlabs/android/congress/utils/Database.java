@@ -1,10 +1,5 @@
 package com.sunlightlabs.android.congress.utils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -18,8 +13,13 @@ import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.Congress;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 public class Database {
-	private static final int DATABASE_VERSION = 8; // updated last for version 4.1
+	private static final int DATABASE_VERSION = 9; // updated last for version 4.6
 
 	public boolean closed = true;
 
@@ -541,6 +541,26 @@ public class Database {
 				rows = db.delete("seen_items", "subscription_class=?", new String[] {"BillsLawsSubscriber"});
 				Log.i(Utils.TAG, "Removed " + rows + " BillsLawsSubscriber entries from seen_items");
 			}
+
+            // Version 9 -
+            //   * Remove NewsBillSubscriber, NewsLegislatorSubscriber subscriptions (Google deprecated API)
+
+            Log.i(Utils.TAG, "oldVersion: " + oldVersion);
+            if (oldVersion < 9) {
+                long rows = 0;
+
+                Log.i(Utils.TAG, "Removing NewsBillSubscriber subscriptions and seen items...");
+                rows = db.delete("subscriptions", "notification_class=?", new String[]{"NewsBillSubscriber"});
+                Log.i(Utils.TAG, "Removed " + rows + " NewsBillSubscriber entries from subscriptions");
+                rows = db.delete("seen_items", "subscription_class=?", new String[]{"NewsBillSubscriber"});
+                Log.i(Utils.TAG, "Removed " + rows + " NewsBillSubscriber entries from seen_items");
+
+                Log.i(Utils.TAG, "Removing NewsLegislatorSubscriber subscriptions and seen items...");
+                rows = db.delete("subscriptions", "notification_class=?", new String[]{"NewsLegislatorSubscriber"});
+                Log.i(Utils.TAG, "Removed " + rows + " NewsLegislatorSubscriber entries from subscriptions");
+                rows = db.delete("seen_items", "subscription_class=?", new String[]{"NewsLegislatorSubscriber"});
+                Log.i(Utils.TAG, "Removed " + rows + " NewsLegislatorSubscriber entries from seen_items");
+            }
 		}
 	}
 }

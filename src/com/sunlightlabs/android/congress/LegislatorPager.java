@@ -15,7 +15,6 @@ import android.widget.Button;
 import com.sunlightlabs.android.congress.fragments.BillListFragment;
 import com.sunlightlabs.android.congress.fragments.LegislatorLoaderFragment;
 import com.sunlightlabs.android.congress.fragments.LegislatorProfileFragment;
-import com.sunlightlabs.android.congress.fragments.NewsListFragment;
 import com.sunlightlabs.android.congress.fragments.RollListFragment;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils.HasActionMenu;
@@ -92,7 +91,6 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 	private void setupPager() {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
 		adapter.add("info", R.string.tab_profile, LegislatorProfileFragment.create(legislator));
-		adapter.add("news", R.string.tab_news, NewsListFragment.forLegislator(legislator));
 		adapter.add("votes", R.string.tab_votes, RollListFragment.forLegislator(legislator));
 		adapter.add("bills", R.string.tab_bills, BillListFragment.forSponsor(legislator));
 		

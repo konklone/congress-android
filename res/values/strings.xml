@@ -36,10 +36,6 @@
     <string name="error_loading_favorites">There was a problem loading your starred bills and legislators. If the problem persists, try un-starring and re-starring them.</string>
     <string name="loading_more_general">Loading more…</string>
     
-    <string name="google_news_branding">Powered by Google</string>
-    <string name="news_loading">Plucking news from the air…</string>
-    <string name="error_fetching_news">There was an error while fetching news.</string>
-    <string name="news_empty">No recent news found.</string>
     <string name="bills_loading">Plucking bills from the air…</string>
     <string name="legislator_loading_error">Couldn\'t load information for this lawmaker.</string>
     <string name="legislators_loading">Searching for lawmakers…</string>
@@ -232,7 +228,6 @@
     <string name="notification_ticker_text">Congress updates</string>
     
     <string name="tab_profile">Profile</string>
-    <string name="tab_news">News</string>
     <string name="tab_details">Bill</string>
     <string name="tab_history">Activity</string>
     <string name="tab_votes">Votes</string>

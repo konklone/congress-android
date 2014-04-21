@@ -1,8 +1,5 @@
 package com.sunlightlabs.android.congress.fragments;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -18,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AlertFragment extends DialogFragment {
 
@@ -73,9 +73,7 @@ public class AlertFragment extends DialogFragment {
 				"and the Congressional Research Service.<br/><br/>" +
 				
 				"Votes, committee hearings, and floor updates come from official " +
-				"<a href=\"http://www.senate.gov/\">Senate</a> and <a href=\"http://house.gov/\">House</a> websites.<br/><br/>" +
-				
-				"News mentions provided by the <a href=\"http://code.google.com/apis/newssearch/v1/\">Google News Search API</a>."
+				"<a href=\"http://www.senate.gov/\">Senate</a> and <a href=\"http://house.gov/\">House</a> websites.<br/><br/>"
 		);
 		TextView aboutView1 = (TextView) aboutView.findViewById(R.id.about_1);
 		aboutView1.setText(about1);

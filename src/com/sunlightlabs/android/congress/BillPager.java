@@ -1,7 +1,5 @@
 package com.sunlightlabs.android.congress;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,7 +14,6 @@ import com.sunlightlabs.android.congress.fragments.BillActionFragment;
 import com.sunlightlabs.android.congress.fragments.BillInfoFragment;
 import com.sunlightlabs.android.congress.fragments.BillLoaderFragment;
 import com.sunlightlabs.android.congress.fragments.BillVoteFragment;
-import com.sunlightlabs.android.congress.fragments.NewsListFragment;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils.HasActionMenu;
 import com.sunlightlabs.android.congress.utils.Analytics;
@@ -26,6 +23,8 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.BillService;
+
+import java.util.List;
 
 public class BillPager extends FragmentActivity implements HasActionMenu {
 	public String bill_id;
@@ -110,7 +109,6 @@ public class BillPager extends FragmentActivity implements HasActionMenu {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
 		
 		adapter.add("info", R.string.tab_details, BillInfoFragment.create(bill));
-		adapter.add("news", R.string.tab_news, NewsListFragment.forBill(bill));
 		adapter.add("history", R.string.tab_history, BillActionFragment.create(bill));
 		adapter.add("votes", R.string.tab_votes, BillVoteFragment.create(bill));
 		
