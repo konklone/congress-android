@@ -19,7 +19,7 @@
 		>
 			
 		<TextView android:id="@+id/tab_name"
-			android:layout_width="fill_parent"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			
@@ -35,14 +35,14 @@
 			/>
 		
 		<View android:id="@+id/tab_line"
-			android:layout_width="fill_parent"
+			android:layout_width="match_parent"
 			android:layout_height="4dp"
 			android:background="@color/tab_selected"
 			android:visibility="invisible"
 			/>
 		
 		<View
-			android:layout_width="fill_parent"
+			android:layout_width="match_parent"
 			android:layout_height="2dp"
 			android:background="@color/tab_selected"
 			/>

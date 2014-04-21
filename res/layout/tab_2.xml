@@ -12,19 +12,19 @@
 	android:clickable="true"
 	>
 	<LinearLayout
-		android:layout_width="fill_parent"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
 		>
 		
 		<View 
 			android:layout_width="1px"
-			android:layout_height="fill_parent"
+			android:layout_height="match_parent"
 			android:background="@color/background_dark"
 			/>
 		
 		<LinearLayout
-			android:layout_width="fill_parent"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
 			
@@ -35,7 +35,7 @@
 			>
 		
 			<TextView android:id="@+id/name"
-				android:layout_width="fill_parent"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				
 				android:gravity="center"
@@ -48,7 +48,7 @@
 				/>
 			
 			<TextView android:id="@+id/subname"
-				android:layout_width="fill_parent"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				
 				android:paddingTop="1dp"
@@ -64,7 +64,7 @@
 		
 		<View 
 			android:layout_width="1px"
-			android:layout_height="fill_parent"
+			android:layout_height="match_parent"
 			
 			android:background="@color/background_dark"
 			/>
@@ -72,7 +72,7 @@
 	</LinearLayout>
 	
 	<View 
-		android:layout_width="fill_parent"
+		android:layout_width="match_parent"
 		android:layout_height="2dp"
 		android:background="@color/tab_selected"
 		/>

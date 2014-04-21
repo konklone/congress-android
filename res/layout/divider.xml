@@ -3,7 +3,7 @@
 	
 	<View
 		android:layout_width="1px"
-		android:layout_height="fill_parent"
+		android:layout_height="match_parent"
 		android:background="@color/background_dark"
 		/>
 </merge>
