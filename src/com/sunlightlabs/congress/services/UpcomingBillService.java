@@ -1,17 +1,21 @@
 package com.sunlightlabs.congress.services;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.UpcomingBill;
 
+import org.apache.http.impl.cookie.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sunlightlabs.congress.models.CongressException;
-import com.sunlightlabs.congress.models.UpcomingBill;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class UpcomingBillService {
 	
@@ -25,9 +29,16 @@ public class UpcomingBillService {
 		
 		// require an attached bill
 		params.put("bill__exists", "true");
+
 		// soonest first, since this is the future
 		// within a day, list day-specific ones first, then week-specific 
 		params.put("order", "legislative_day__asc,range__asc");
+
+        // only look for upcoming bills whose upcoming date is more than a week ago
+        GregorianCalendar calendar = new GregorianCalendar(DateUtils.GMT);
+        calendar.add(Calendar.DATE, -7);
+        Date now = calendar.getTime();
+        params.put("legislative_day__gte", Congress.formatDateOnly(now));
 		
 		return upcomingBillsFor(Congress.url("upcoming_bills", fields, params, 1, Congress.MAX_PER_PAGE));
 	}
