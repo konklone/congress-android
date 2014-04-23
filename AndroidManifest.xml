@@ -23,6 +23,8 @@
     
     <!-- we can hide the call button if the device has no phone -->
     <uses-feature android:name="android.hardware.telephony" android:required="false" />
+    <!-- we can hide the location search button if the device has no location detection -->
+    <uses-feature android:name="android.hardware.location" android:required="false" />
     
     <supports-screens
     	android:smallScreens="true"
