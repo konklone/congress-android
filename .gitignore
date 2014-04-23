@@ -2,7 +2,7 @@
 /bin
 /gen
 /res/values/keys.xml
-/res/values/analytics.xml
+/res/*/analytics*
 /.idea
 
 # gradle/android studio stuff
