@@ -34,7 +34,8 @@
     	/>
     
       
-    <application android:icon="@drawable/icon" 
+    <application android:icon="@drawable/icon"
+        android:name=".CongressApp"
     	android:label="@string/app_name"
     	android:theme="@style/MainTheme"
         android:hardwareAccelerated="false"

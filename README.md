@@ -12,7 +12,7 @@ When setting this up:
 
 * copy `keys.xml.example` to `res/values/keys.xml` and fill in your [Sunlight API](http://services.sunlightlabs.com) key.
 * If using Google Analytics, copy `analytics.xml.example` to `res/values/analytics.xml` and fill in the `ga_trackingId` field with your Google Analytics profile tracking ID. (Make sure you've set up a profile in Google Analytics first.)
-
+* If using an *additional* "roll-up" global tracker with Google Analytics, change `global_tracker` in `keys.xml` to `true`, and copy `analytics.xml.example` to `res/values/analytics-global.xml` and fill in the `ga_trackingId` field with your roll-up tracking ID.
 
 ### Issue Tracking
 

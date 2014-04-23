@@ -6,9 +6,8 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
+import com.google.android.gms.analytics.Tracker;
+import com.sunlightlabs.android.congress.CongressApp;
 import com.sunlightlabs.android.congress.NotificationSettings;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.Settings;
@@ -22,18 +21,19 @@ import com.sunlightlabs.android.congress.Settings;
 public class Analytics {
 
 	
-	public static EasyTracker start(Activity activity) {
+	public static void start(Activity activity) {
 		if (analyticsEnabled(activity)) {
             // play nice with OkHttp
             HttpManager.init();
 
 			Log.i(Utils.TAG, "[Analytics] Tracker starting for " + activity.getLocalClassName());
-			EasyTracker tracker = EasyTracker.getInstance(activity);
+
+            Tracker tracker = ((CongressApp) activity.getApplication()).appTracker();
+            tracker.
+
 			attachCustomData(activity, tracker);
 			tracker.activityStart(activity);
-			return tracker;
-		} else
-			return null;
+		}
 	}
 	
 	public static void stop(Activity activity) {
