@@ -3,6 +3,7 @@
 /gen
 /res/values/keys.xml
 /res/values/analytics.xml
+/res/values/analytics-global.xml
 /.idea
 
 # gradle/android studio stuff
