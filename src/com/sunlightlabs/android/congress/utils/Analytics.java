@@ -2,15 +2,16 @@ package com.sunlightlabs.android.congress.utils;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.sunlightlabs.android.congress.CongressApp;
-import com.sunlightlabs.android.congress.NotificationSettings;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.Settings;
+
+import java.util.Map;
 
 /**
  * Helper class to manage Google Analytics tracking. 
@@ -21,47 +22,29 @@ import com.sunlightlabs.android.congress.Settings;
 public class Analytics {
 
 	
-	public static void start(Activity activity) {
+	public static void event(Activity activity, String category, String action, String label) {
 		if (analyticsEnabled(activity)) {
             // play nice with OkHttp
             HttpManager.init();
 
-			Log.i(Utils.TAG, "[Analytics] Tracker starting for " + activity.getLocalClassName());
+            if (label == null) label = "";
 
-            Tracker tracker = ((CongressApp) activity.getApplication()).appTracker();
-            tracker.
+            // TODO: restore event data
+//			attachCustomData(activity, tracker);
 
-			attachCustomData(activity, tracker);
-			tracker.activityStart(activity);
-		}
-	}
-	
-	public static void stop(Activity activity) {
-		EasyTracker tracker = EasyTracker.getInstance(activity);
-
-        // play nice with OkHttp
-        HttpManager.init();
-
-		if (tracker != null) {
-			Log.i(Utils.TAG, "[Analytics] Tracker stopping for " + activity.getLocalClassName());
-			tracker.activityStop(activity);
-		}
-	}
-	
-	public static void event(Activity activity, String category, String action, String label) {
-		EasyTracker tracker = EasyTracker.getInstance(activity);
-		if (tracker != null && analyticsEnabled(activity)) {
-            // play nice with OkHttp
-            HttpManager.init();
-
-			if (label == null) label = "";
-			
-			attachCustomData(activity, tracker);
 			Log.i(Utils.TAG, "[Analytics] Tracking event - category: " + category + ", action: " + action + ", label: " + label);
-			
-			tracker.send(
-				MapBuilder.createEvent(category, action, label, null).build()
-			);
+
+            Map<String,String> event = new HitBuilders.EventBuilder()
+                    .setCategory(category)
+                    .setAction(action)
+                    .setLabel(label)
+                    .build();
+
+            Tracker app = ((CongressApp) activity.getApplication()).appTracker();
+            Tracker global = ((CongressApp) activity.getApplication()).appTracker();
+
+            if (app != null) app.send(event);
+            if (global != null) global.send(event);
 		}
 	}
 	
@@ -85,26 +68,26 @@ public class Analytics {
 	
 	public static final int DIMENSION_ENTRY = 4; // how the user entered the app (hit)
 	
-	public static void attachCustomData(Activity activity, EasyTracker tracker) {
-		Resources res = activity.getResources();
-		
-		String marketChannel = res.getString(R.string.market_channel);
-		tracker.set(Fields.customDimension(DIMENSION_MARKET_CHANNEL), marketChannel);
-		
-		String originalChannel = Utils.getStringPreference(activity, DIMENSION_ORIGINAL_CHANNEL_PREFERENCE);
-		tracker.set(Fields.customDimension(DIMENSION_ORIGINAL_CHANNEL), originalChannel);
-		
-		boolean notificationsOn = Utils.getBooleanPreference(activity, NotificationSettings.KEY_NOTIFY_ENABLED, false);
-		tracker.set(Fields.customDimension(DIMENSION_NOTIFICATIONS_ON), notificationsOn ? "on" : "off");
-		
-		String entrySource = entrySource(activity);
-		if (entrySource != null)
-			tracker.set(Fields.customDimension(DIMENSION_ENTRY), entrySource);
-		
-		// debug: output custom dimensions
-		// String msg = "[" + marketChannel + "][" + originalChannel + "][" + (notificationsOn ? "on" : "off") + "][" + (entrySource != null ? entrySource : "nothing") + "]";
-		// Log.i(Utils.TAG, msg);
-	}
+//	public static void attachCustomData(Activity activity, EasyTracker tracker) {
+//		Resources res = activity.getResources();
+//
+//		String marketChannel = res.getString(R.string.market_channel);
+//		tracker.set(Fields.customDimension(DIMENSION_MARKET_CHANNEL), marketChannel);
+//
+//		String originalChannel = Utils.getStringPreference(activity, DIMENSION_ORIGINAL_CHANNEL_PREFERENCE);
+//		tracker.set(Fields.customDimension(DIMENSION_ORIGINAL_CHANNEL), originalChannel);
+//
+//		boolean notificationsOn = Utils.getBooleanPreference(activity, NotificationSettings.KEY_NOTIFY_ENABLED, false);
+//		tracker.set(Fields.customDimension(DIMENSION_NOTIFICATIONS_ON), notificationsOn ? "on" : "off");
+//
+//		String entrySource = entrySource(activity);
+//		if (entrySource != null)
+//			tracker.set(Fields.customDimension(DIMENSION_ENTRY), entrySource);
+//
+//		// debug: output custom dimensions
+//		// String msg = "[" + marketChannel + "][" + originalChannel + "][" + (notificationsOn ? "on" : "off") + "][" + (entrySource != null ? entrySource : "nothing") + "]";
+//		// Log.i(Utils.TAG, msg);
+//	}
 	
 	
 	/*
