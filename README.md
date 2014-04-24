@@ -49,6 +49,8 @@ Code changes:
 
 Then, release work:
 
+* **Temporarily** add `android:debuggable="false"` in the `<application>` tag in `AndroidManifest.xml`.
+    * manually specifying is (unfortunately) [required](http://stackoverflow.com/questions/20051192/unable-to-upload-updated-apk-to-google-play-store) when working in Android Studio, as it will otherwise default to being debuggable.
 * Check keys.xml:
   - is api_endpoint pointing to production? https?
   - is the distribution_channel correct? (market vs ____)
@@ -57,6 +59,7 @@ Then, release work:
 * Produce unsigned APK version
 * Produce signed APK version
   - if desired, produce separate APK version for Amazon
+* Then **remove** `android:debuggable` from the `<application>` tag in `AndroidManifest.xml`.
 * Take any screenshots needed to replace outdated ones
   - Replace any new screenshots in Dropbox
 * Store APKs in Dropbox
