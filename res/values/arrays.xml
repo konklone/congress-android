@@ -2,11 +2,11 @@
 <resources>
     
     <string-array name="changelog">
-        <item>Unfortunately: we've had to remove the News tab. Google announced their API shutdown years ago, and no viable alternative has emerged.</item>
+        <item>Unfortunately: we\'ve had to remove the News tab. Google announced their API shutdown years ago, and no viable alternative has emerged.</item>
         <item>Fortunately: now displaying more context for votes on nominations, bills, and amendments. (For example, names of nominees.)</item>
         <item>Show a party leadership title for members of Congress, if they have one.</item>
         <item>Using new and improved source for photos of members of Congress.</item>
-        <item>If your device doesn't have GPS or network location, the location button will be hidden.</item>
+        <item>If your device doesn\'t have GPS or network location, the location button will be hidden.</item>
         <item>Updated our district maps to be scrollable, zoom-able, and more stable.</item>
         <item>Various bug fixes and invisible improvements.</item>
         <item>Dropped support for Android 2.2 (Froyo).</item>
