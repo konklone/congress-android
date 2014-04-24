@@ -3,9 +3,6 @@
     <string name="contact_email"></string>
     <string name="contact_subject"></string>
 
-    <!-- use a second analytics "roll-up" tracker, defined at res/values/analytics-global.xml -->
-    <string name="global_tracker">false</string>
-
 	<string name="mapbox_id"></string>
 
     <string name="sunlight_api_key">CHANGEME</string>
@@ -21,4 +18,6 @@
     <string name="debug_disable_analytics">false</string>
     <string name="debug_show_buttons">false</string>
     <string name="debug_always_notify">false</string>
+    <string name="debug_always_consider_new">false</string>
+    <string name="debug_sometimes_consider_new">false</string>
 </resources>
