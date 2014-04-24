@@ -155,13 +155,20 @@
         </receiver>
 		
 		<service android:name=".notifications.NotificationService" />
-		
-		<!-- Used for install referrer tracking -->
-		<receiver android:name="com.google.android.apps.analytics.AnalyticsReceiver" android:exported="true">
-		  <intent-filter>
-		    <action android:name="com.android.vending.INSTALL_REFERRER" />
-		  </intent-filter>
-		</receiver>
+
+        <!-- Used for install referrer tracking-->
+        <service android:name="com.google.android.gms.analytics.CampaignTrackingService"/>
+        <receiver
+            android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data android:name="com.google.android.gms.analytics.globalConfigResource"
+            android:resource="@xml/analytics"
+            />
 		
     </application>
 </manifest>

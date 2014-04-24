@@ -4,7 +4,4 @@ tools:ignore="TypographyDashes">
   <string name="ga_trackingId">UA-XXX-YY</string>
   <bool name="ga_autoActivityTracking">true</bool>
   <bool name="ga_reportUncaughtExceptions">true</bool>
-  <bool name="ga_anonymizeIp">true</bool>
-  <string name="ga_logLevel">warning</string>
-  <integer name="ga_dispatchPeriod">1</integer>
 </resources>

@@ -22,13 +22,13 @@ public class CongressApp extends Application {
         if (local == null) {
 
             try {
-                getResources().getXml(R.xml.analytics);
+                getResources().getXml(R.xml.tracker_app);
             } catch(Resources.NotFoundException e) {
                 hasLocal = false;
                 return null;
             }
 
-            local = GoogleAnalytics.getInstance(this).newTracker(R.xml.analytics);
+            local = GoogleAnalytics.getInstance(this).newTracker(R.xml.tracker_app);
         }
 
         return local;
@@ -39,13 +39,13 @@ public class CongressApp extends Application {
 
         if (global == null) {
             try {
-                getResources().getXml(R.xml.analytics_global);
+                getResources().getXml(R.xml.tracker_global);
             } catch(Resources.NotFoundException e) {
                 hasGlobal = false;
                 return null;
             }
 
-            global = GoogleAnalytics.getInstance(this).newTracker(R.xml.analytics_global);
+            global = GoogleAnalytics.getInstance(this).newTracker(R.xml.tracker_global);
         }
 
         return global;
