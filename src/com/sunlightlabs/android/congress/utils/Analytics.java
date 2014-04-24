@@ -50,6 +50,12 @@ public class Analytics {
         GoogleAnalytics.getInstance(activity).reportActivityStop(activity);
     }
 
+    // set the Google opt-out mid-stream
+    public static void optout(Activity activity, boolean value) {
+        Log.i(Utils.TAG, "[Analytics] Setting app-wide GA opt-out to: " + value);
+        GoogleAnalytics.getInstance(activity).setAppOptOut(value);
+    }
+
 
     public static void event(Activity activity, String category, String action, String label) {
 		if (analyticsEnabled(activity)) {
@@ -80,8 +86,12 @@ public class Analytics {
 	
 	public static boolean analyticsEnabled(Activity activity) {
 		boolean debugDisabled = activity.getResources().getString(R.string.debug_disable_analytics).equals("true");
+
+        // these should be in sync, but in case they get out of sync, err towards turning off analytics
+        boolean googleOptout = GoogleAnalytics.getInstance(activity).getAppOptOut();
 		boolean userEnabled = Utils.getBooleanPreference(activity, Settings.ANALYTICS_ENABLED_KEY, Settings.ANALYTICS_ENABLED_DEFAULT);
-		return (!debugDisabled && userEnabled);
+
+		return (!debugDisabled && !googleOptout && userEnabled);
 	}
 	
 	
