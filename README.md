@@ -6,16 +6,20 @@ Find the most up-to-date version in the Google Play Store: https://play.google.c
 
 We ship the app using the code found in this repository, with some miscellaneous unversioned API keys and build information placed in `res/values/keys.xml`.
 
+We use [Github Issues](/sunlightlabs/congress-android/issues) for issue tracking.
+
 ### Setup
 
 When setting this up:
 
 * copy `keys.xml.example` to `res/values/keys.xml` and fill in your [Sunlight API](http://services.sunlightlabs.com) key.
-* If using Google Analytics, copy `tracker.xml.example` to `res/xml/tracker.xml` and fill in the `ga_trackingId` field with your Google Analytics profile tracking ID. (Make sure you've set up a profile in Google Analytics first.)
+* copy `tracker.xml.example` to `res/xml/tracker.xml`
 
-### Issue Tracking
+If you're using Google Analytics, fill in `res/xml/tracker.xml`'s `ga_trackingId` field with your Google Analytics profile tracking ID. (Make sure you've set up a profile in Google Analytics first.)
 
-Use the [Github Issues page](/sunlightlabs/congress-android/issues) for this project.
+If you're **not** using Google Analytics, then turn off analytics by setting`res/values/keys,xml`'s `debug_disable_analytics` field to `true`.
+
+
 
 ### License
 
@@ -55,7 +59,6 @@ Then, release work:
   - if desired, produce separate APK version for Amazon
 * Take any screenshots needed to replace outdated ones
   - Replace any new screenshots in Dropbox
-
 * Store APKs in Dropbox
 
 Finally, publish:
