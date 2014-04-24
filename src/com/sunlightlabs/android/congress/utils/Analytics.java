@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.sunlightlabs.android.congress.CongressApp;
 import com.sunlightlabs.android.congress.NotificationSettings;
 import com.sunlightlabs.android.congress.R;
@@ -26,10 +25,8 @@ public class Analytics {
 
     // in onCreate(), ensure trackers are created and configured for that activity
     public static void init(Activity activity) {
-        if (analyticsEnabled(activity)) {
+        if (analyticsEnabled(activity))
             ((CongressApp) activity.getApplication()).appTracker();
-            ((CongressApp) activity.getApplication()).globalTracker();
-        }
     }
 
     // in onStart(), start auto-tracking with any previously initialized trackers
@@ -77,11 +74,7 @@ public class Analytics {
                 .setLabel(label)
             ).build();
 
-            Tracker app = ((CongressApp) activity.getApplication()).appTracker();
-            Tracker global = ((CongressApp) activity.getApplication()).globalTracker();
-
-            if (app != null) app.send(event);
-            if (global != null) global.send(event);
+            ((CongressApp) activity.getApplication()).appTracker().send(event);
 		}
 	}
 	
