@@ -67,13 +67,15 @@ public class AlertFragment extends DialogFragment {
 				"Follow <a href=\"https://twitter.com/congress_app\">@congress_app</a>, and tell your friends with iPhones about <a href=\"http://congress.sunlightfoundation.com/\">our iOS app</a>.<br/><br/>" +
 		
 				"Our people and committee data is powered by the " + 
-				"<a href=\"http://theunitedstates.io\">/unitedstates</a> project.<br/><br/>" +
+				"<a href=\"http://theunitedstates.io\">@unitedstates</a> project.<br/><br/>" +
 				
-				"Data on bills comes from the <a href=\"http://congress.gov\">Library of Congress</a> " +
+				"Data on bills comes from the <a href=\"http://beta.congress.gov\">Library of Congress</a> " +
 				"and the Congressional Research Service.<br/><br/>" +
 				
 				"Votes, committee hearings, and floor updates come from official " +
-				"<a href=\"http://www.senate.gov/\">Senate</a> and <a href=\"http://house.gov/\">House</a> websites.<br/><br/>"
+				"<a href=\"http://www.senate.gov/\">Senate</a> and <a href=\"http://house.gov/\">House</a> websites.<br/><br/>" +
+
+                "District maps powered by <a href=\"https://www.mapbox.com/\">Mapbox</a>."
 		);
 		TextView aboutView1 = (TextView) aboutView.findViewById(R.id.about_1);
 		aboutView1.setText(about1);
