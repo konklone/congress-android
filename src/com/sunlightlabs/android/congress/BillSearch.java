@@ -1,8 +1,5 @@
 package com.sunlightlabs.android.congress;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +14,9 @@ import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
 import com.sunlightlabs.congress.models.Bill;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class BillSearch extends FragmentActivity {
 	
 	String query;
@@ -24,6 +24,7 @@ public class BillSearch extends FragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        Analytics.init(this);
 		setContentView(R.layout.pager_titled);
 		
 		query = getIntent().getStringExtra(SearchManager.QUERY).trim();

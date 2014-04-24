@@ -1,7 +1,5 @@
 package com.sunlightlabs.android.congress;
 
-import java.util.regex.Pattern;
-
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +23,8 @@ import com.sunlightlabs.android.congress.utils.LocationUtils.LocationTimer;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
 import com.sunlightlabs.android.congress.utils.Utils;
 
+import java.util.regex.Pattern;
+
 public class LegislatorSearch extends FragmentActivity implements LocationListenerTimeout {
 	
 	String query;
@@ -36,6 +36,7 @@ public class LegislatorSearch extends FragmentActivity implements LocationListen
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        Analytics.init(this);
 		setContentView(R.layout.pager_titled);
 		
 		

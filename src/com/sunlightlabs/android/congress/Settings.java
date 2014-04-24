@@ -16,6 +16,7 @@ public class Settings extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        Analytics.init(this);
 		setContentView(R.layout.list_titled);
 		
 		ActionBarUtils.setTitle(this, R.string.menu_settings);

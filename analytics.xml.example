@@ -6,5 +6,5 @@ tools:ignore="TypographyDashes">
   <bool name="ga_reportUncaughtExceptions">true</bool>
   <bool name="ga_anonymizeIp">true</bool>
   <string name="ga_logLevel">warning</string>
-  <string name="ga_dispatchPeriod">1</string>
+  <integer name="ga_dispatchPeriod">1</integer>
 </resources>

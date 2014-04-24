@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.sunlightlabs.android.congress.CongressApp;
@@ -21,16 +22,41 @@ import java.util.Map;
 
 public class Analytics {
 
-	
-	public static void event(Activity activity, String category, String action, String label) {
+    // in onCreate(), ensure trackers are created and configured for that activity
+    public static void init(Activity activity) {
+        if (analyticsEnabled(activity)) {
+            Tracker app = ((CongressApp) activity.getApplication()).appTracker();
+            Tracker global = ((CongressApp) activity.getApplication()).globalTracker();
+            // TODO: custom data
+            // attachCustomData(activity, app);
+        }
+    }
+
+    // in onStart(), start auto-tracking with any previously initialized trackers
+    public static void start(Activity activity) {
+        if (analyticsEnabled(activity)) {
+            // play nice with OkHttp
+            HttpManager.init();
+            Log.i(Utils.TAG, "[Analytics] Tracker starting for " + activity.getLocalClassName());
+            GoogleAnalytics.getInstance(activity).reportActivityStart(activity);
+        }
+    }
+
+    // in onStop(), stop auto-tracking with any previously initialized trackers
+    public static void stop(Activity activity) {
+        // play nice with OkHttp
+        HttpManager.init();
+        Log.i(Utils.TAG, "[Analytics] Tracker stopping for " + activity.getLocalClassName());
+        GoogleAnalytics.getInstance(activity).reportActivityStop(activity);
+    }
+
+
+    public static void event(Activity activity, String category, String action, String label) {
 		if (analyticsEnabled(activity)) {
             // play nice with OkHttp
             HttpManager.init();
 
             if (label == null) label = "";
-
-            // TODO: restore event data
-//			attachCustomData(activity, tracker);
 
 			Log.i(Utils.TAG, "[Analytics] Tracking event - category: " + category + ", action: " + action + ", label: " + label);
 
@@ -41,7 +67,11 @@ public class Analytics {
                     .build();
 
             Tracker app = ((CongressApp) activity.getApplication()).appTracker();
-            Tracker global = ((CongressApp) activity.getApplication()).appTracker();
+            Tracker global = ((CongressApp) activity.getApplication()).globalTracker();
+
+            // TODO: restore event data
+            // attachCustomData(activity, app);
+            // attachCustomData(activity, global);
 
             if (app != null) app.send(event);
             if (global != null) global.send(event);
@@ -68,7 +98,7 @@ public class Analytics {
 	
 	public static final int DIMENSION_ENTRY = 4; // how the user entered the app (hit)
 	
-//	public static void attachCustomData(Activity activity, EasyTracker tracker) {
+//	public static void attachCustomData(Activity activity, Tracker tracker) {
 //		Resources res = activity.getResources();
 //
 //		String marketChannel = res.getString(R.string.market_channel);

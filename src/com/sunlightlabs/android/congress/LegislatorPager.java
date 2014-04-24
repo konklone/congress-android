@@ -38,6 +38,7 @@ public class LegislatorPager extends FragmentActivity implements HasActionMenu {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pager_titled);
+        Analytics.init(this);
 		
 		Bundle extras = getIntent().getExtras();
 		bioguide_id = extras.getString("bioguide_id");

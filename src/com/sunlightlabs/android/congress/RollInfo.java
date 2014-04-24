@@ -89,6 +89,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        Analytics.init(this);
 		setContentView(R.layout.list_titled_fastscroll);
 		
 		inflater = LayoutInflater.from(this);
