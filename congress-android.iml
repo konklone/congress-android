@@ -74,8 +74,8 @@
     <orderEntry type="library" exported="" name="mapbox-android-sdk-0.2.3-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="jackson-databind-2.3.1" level="project" />
     <orderEntry type="library" exported="" name="jackson-annotations-2.3.0" level="project" />
+    <orderEntry type="library" exported="" name="play-services-4.3.23" level="project" />
     <orderEntry type="library" exported="" name="geojson-jackson-1.1" level="project" />
-    <orderEntry type="library" exported="" name="libGoogleAnalyticsServices" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.0.1" level="project" />
     <orderEntry type="library" exported="" name="disklrucache-2.0.1" level="project" />
     <orderEntry type="library" exported="" name="library-2.4.0" level="project" />

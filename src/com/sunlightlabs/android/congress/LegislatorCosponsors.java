@@ -20,6 +20,7 @@ public class LegislatorCosponsors extends FragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        Analytics.init(this);
 		setContentView(R.layout.pager_titled);
 		
 		Intent intent = getIntent();

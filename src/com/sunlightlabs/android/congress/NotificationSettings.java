@@ -42,6 +42,7 @@ public class NotificationSettings extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        Analytics.init(this);
 		setContentView(R.layout.list_bare);
 		
 		addPreferencesFromResource(R.xml.notification_settings);

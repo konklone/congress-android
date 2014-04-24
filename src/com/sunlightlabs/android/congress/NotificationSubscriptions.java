@@ -27,6 +27,7 @@ public class NotificationSubscriptions extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        Analytics.init(this);
 		setContentView(R.layout.list);
 		
 		setupDatabase();

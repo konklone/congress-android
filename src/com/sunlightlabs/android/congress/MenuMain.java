@@ -29,6 +29,8 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menu_main);
 
+        Analytics.init(this);
+
 		setupControls();
 		setupFragments();
 		

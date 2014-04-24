@@ -14,6 +14,7 @@ public class CommitteeMember extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        Analytics.init(this);
 		setContentView(R.layout.frame_titled);
 		
 		Legislator legislator = (Legislator) getIntent().getExtras().getSerializable("legislator");

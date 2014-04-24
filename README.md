@@ -11,8 +11,7 @@ We ship the app using the code found in this repository, with some miscellaneous
 When setting this up:
 
 * copy `keys.xml.example` to `res/values/keys.xml` and fill in your [Sunlight API](http://services.sunlightlabs.com) key.
-* If using Google Analytics, copy `analytics.xml.example` to `res/values/analytics.xml` and fill in the `ga_trackingId` field with your Google Analytics profile tracking ID. (Make sure you've set up a profile in Google Analytics first.)
-
+* If using Google Analytics, copy `tracker.xml.example` to `res/xml/tracker.xml` and fill in the `ga_trackingId` field with your Google Analytics profile tracking ID. (Make sure you've set up a profile in Google Analytics first.)
 
 ### Issue Tracking
 

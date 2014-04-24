@@ -16,6 +16,7 @@ public class Settings extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        Analytics.init(this);
 		setContentView(R.layout.list_titled);
 		
 		ActionBarUtils.setTitle(this, R.string.menu_settings);
@@ -25,12 +26,14 @@ public class Settings extends PreferenceActivity {
 		
 		findPreference(ANALYTICS_ENABLED_KEY).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				boolean value = ((Boolean) newValue).booleanValue();
-				
+				boolean yesToAnalytics = ((Boolean) newValue).booleanValue();
+
 				// if user is disabling analytics, fire off one last event so that we can get an idea of how many are disabling it
-				if (!value)
+				if (!yesToAnalytics)
 					Analytics.analyticsDisable(Settings.this);
-				
+
+                Analytics.optout(Settings.this, !yesToAnalytics);
+
 				return true;
 			}
 		});

@@ -26,6 +26,8 @@ public class MenuLegislators extends FragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pager_titled);
+
+        Analytics.init(this);
 		
 		setupControls();
 		setupPager();

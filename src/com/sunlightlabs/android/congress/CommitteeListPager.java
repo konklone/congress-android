@@ -12,6 +12,7 @@ public class CommitteeListPager extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        Analytics.init(this);
 		setContentView(R.layout.pager_titled);
 		
 		ActionBarUtils.setTitle(this, "Committees");

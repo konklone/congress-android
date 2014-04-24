@@ -6,12 +6,14 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.sunlightlabs.android.congress.CongressApp;
 import com.sunlightlabs.android.congress.NotificationSettings;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.Settings;
+
+import java.util.Map;
 
 /**
  * Helper class to manage Google Analytics tracking. 
@@ -21,54 +23,69 @@ import com.sunlightlabs.android.congress.Settings;
 
 public class Analytics {
 
-	
-	public static EasyTracker start(Activity activity) {
+    // in onCreate(), ensure trackers are created and configured for that activity
+    public static void init(Activity activity) {
+        if (analyticsEnabled(activity))
+            ((CongressApp) activity.getApplication()).appTracker();
+    }
+
+    // in onStart(), start auto-tracking with any previously initialized trackers
+    public static void start(Activity activity) {
+        if (analyticsEnabled(activity)) {
+            // play nice with OkHttp
+            HttpManager.init();
+            Log.i(Utils.TAG, "[Analytics] Tracker starting for " + activity.getLocalClassName());
+            GoogleAnalytics.getInstance(activity).reportActivityStart(activity);
+
+            // send an event to insist that custom dimensions get associated with other activity.
+            // wasteful, but this is done because there is no longer a way to set custom dimensions
+            // at a tracker level, while using auto-tracking for activities.
+            ping(activity);
+        }
+    }
+
+    // in onStop(), stop auto-tracking with any previously initialized trackers
+    public static void stop(Activity activity) {
+        // play nice with OkHttp
+        HttpManager.init();
+        Log.i(Utils.TAG, "[Analytics] Tracker stopping for " + activity.getLocalClassName());
+        GoogleAnalytics.getInstance(activity).reportActivityStop(activity);
+    }
+
+    // set the Google opt-out mid-stream
+    public static void optout(Activity activity, boolean value) {
+        Log.i(Utils.TAG, "[Analytics] Setting app-wide GA opt-out to: " + value);
+        GoogleAnalytics.getInstance(activity).setAppOptOut(value);
+    }
+
+
+    public static void event(Activity activity, String category, String action, String label) {
 		if (analyticsEnabled(activity)) {
             // play nice with OkHttp
             HttpManager.init();
 
-			Log.i(Utils.TAG, "[Analytics] Tracker starting for " + activity.getLocalClassName());
-			EasyTracker tracker = EasyTracker.getInstance(activity);
-			attachCustomData(activity, tracker);
-			tracker.activityStart(activity);
-			return tracker;
-		} else
-			return null;
-	}
-	
-	public static void stop(Activity activity) {
-		EasyTracker tracker = EasyTracker.getInstance(activity);
+            if (label == null) label = "";
 
-        // play nice with OkHttp
-        HttpManager.init();
-
-		if (tracker != null) {
-			Log.i(Utils.TAG, "[Analytics] Tracker stopping for " + activity.getLocalClassName());
-			tracker.activityStop(activity);
-		}
-	}
-	
-	public static void event(Activity activity, String category, String action, String label) {
-		EasyTracker tracker = EasyTracker.getInstance(activity);
-		if (tracker != null && analyticsEnabled(activity)) {
-            // play nice with OkHttp
-            HttpManager.init();
-
-			if (label == null) label = "";
-			
-			attachCustomData(activity, tracker);
 			Log.i(Utils.TAG, "[Analytics] Tracking event - category: " + category + ", action: " + action + ", label: " + label);
-			
-			tracker.send(
-				MapBuilder.createEvent(category, action, label, null).build()
-			);
+
+            Map<String,String> event = attachCustomDimensions(activity, new HitBuilders.EventBuilder()
+                .setCategory(category)
+                .setAction(action)
+                .setLabel(label)
+            ).build();
+
+            ((CongressApp) activity.getApplication()).appTracker().send(event);
 		}
 	}
 	
 	public static boolean analyticsEnabled(Activity activity) {
 		boolean debugDisabled = activity.getResources().getString(R.string.debug_disable_analytics).equals("true");
+
+        // these should be in sync, but in case they get out of sync, err towards turning off analytics
+        boolean googleOptout = GoogleAnalytics.getInstance(activity).getAppOptOut();
 		boolean userEnabled = Utils.getBooleanPreference(activity, Settings.ANALYTICS_ENABLED_KEY, Settings.ANALYTICS_ENABLED_DEFAULT);
-		return (!debugDisabled && userEnabled);
+
+		return (!debugDisabled && !googleOptout && userEnabled);
 	}
 	
 	
@@ -85,25 +102,27 @@ public class Analytics {
 	
 	public static final int DIMENSION_ENTRY = 4; // how the user entered the app (hit)
 	
-	public static void attachCustomData(Activity activity, EasyTracker tracker) {
+	public static HitBuilders.EventBuilder attachCustomDimensions(Activity activity, HitBuilders.EventBuilder event) {
 		Resources res = activity.getResources();
-		
+
 		String marketChannel = res.getString(R.string.market_channel);
-		tracker.set(Fields.customDimension(DIMENSION_MARKET_CHANNEL), marketChannel);
-		
+		event = event.setCustomDimension(DIMENSION_MARKET_CHANNEL, marketChannel);
+
 		String originalChannel = Utils.getStringPreference(activity, DIMENSION_ORIGINAL_CHANNEL_PREFERENCE);
-		tracker.set(Fields.customDimension(DIMENSION_ORIGINAL_CHANNEL), originalChannel);
-		
+        event = event.setCustomDimension(DIMENSION_ORIGINAL_CHANNEL, originalChannel);
+
 		boolean notificationsOn = Utils.getBooleanPreference(activity, NotificationSettings.KEY_NOTIFY_ENABLED, false);
-		tracker.set(Fields.customDimension(DIMENSION_NOTIFICATIONS_ON), notificationsOn ? "on" : "off");
-		
+        event = event.setCustomDimension(DIMENSION_NOTIFICATIONS_ON, notificationsOn ? "on" : "off");
+
 		String entrySource = entrySource(activity);
 		if (entrySource != null)
-			tracker.set(Fields.customDimension(DIMENSION_ENTRY), entrySource);
-		
+            event = event.setCustomDimension(DIMENSION_ENTRY, entrySource);
+
 		// debug: output custom dimensions
-		// String msg = "[" + marketChannel + "][" + originalChannel + "][" + (notificationsOn ? "on" : "off") + "][" + (entrySource != null ? entrySource : "nothing") + "]";
-		// Log.i(Utils.TAG, msg);
+//		String msg = "[" + marketChannel + "][" + originalChannel + "][" + (notificationsOn ? "on" : "off") + "][" + (entrySource != null ? entrySource : "nothing") + "]";
+//		Log.i(Utils.TAG, msg);
+
+        return event;
 	}
 	
 	
@@ -150,7 +169,8 @@ public class Analytics {
 		public static final String ENTRY_MAIN = "main";
 		public static final String ENTRY_SHORTCUT = "shortcut";
 		public static final String ENTRY_NOTIFICATION = "notification";
-		
+
+
 		// categories of events
 		public static final String EVENT_FAVORITE = "favorites";
 		public static final String EVENT_NOTIFICATION = "notifications";
@@ -161,6 +181,7 @@ public class Analytics {
 		public static final String EVENT_ABOUT = "about";
 		public static final String EVENT_CHANGELOG = "changelog";
 		public static final String EVENT_REVIEW = "review"; // values will be "google" or "amazon"
+        public static final String EVENT_PING = "ping";
 		
 		// event values
 		public static final String FAVORITE_ADD_LEGISLATOR = "add_legislator";
@@ -185,7 +206,12 @@ public class Analytics {
 		public static final String ANALYTICS_DISABLE = "disable";
 		public static final String ABOUT_VALUE = "open";
 		public static final String CHANGELOG_VALUE = "open";
-	
+        public static final String PING_VALUE = "ping";
+
+    public static void ping(Activity activity) {
+        event(activity, EVENT_PING, PING_VALUE, null);
+    }
+
 	public static void aboutPage(Activity activity) {
 		event(activity, EVENT_ABOUT, ABOUT_VALUE, null);
 	}
