@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.sunlightlabs.android.congress"
-      android:versionCode="52"
-      android:versionName="4.5.5"
+      android:versionCode="53"
+      android:versionName="4.6.0"
       >
       
     <uses-sdk 
