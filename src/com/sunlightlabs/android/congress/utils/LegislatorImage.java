@@ -24,6 +24,7 @@ import java.net.URL;
 public class LegislatorImage {
     public static final String USER_AGENT = "Sunlight's Congress Android App (https://github.com/sunlightlabs/congress-android)";
 	public static final String PIC_LARGE = "450x550";
+    public static final String PIC_SMALL = "225x275";
 	
 	// 30 day expiration time on cached legislator avatars
 	public static final long CACHE_IMAGES = (long) 1000 * 60 * 60 * 24 * 30;

@@ -1,13 +1,5 @@
 package com.sunlightlabs.android.congress.fragments;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.RejectedExecutionException;
-
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -36,6 +28,14 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.BillService;
 import com.sunlightlabs.congress.services.CommitteeService;
 import com.sunlightlabs.congress.services.LegislatorService;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.RejectedExecutionException;
 
 public class LegislatorListFragment extends ListFragment implements LoadPhotoTask.LoadsPhoto {
 	public static final int SEARCH_ZIP = 0;
@@ -229,7 +229,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 	public void loadPhoto(String bioguide_id) {
 		if (!loadPhotoTasks.containsKey(bioguide_id)) {
 			try {
-				loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_LARGE, bioguide_id).execute(bioguide_id));
+				loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_SMALL, bioguide_id).execute(bioguide_id));
 			} catch (RejectedExecutionException e) {
 				Log.e(Utils.TAG, "[LegislatorListFragment] RejectedExecutionException occurred while loading photo.", e);
 				onLoadPhoto(null, bioguide_id); // if we can't run it, then just show the no photo image and move on
@@ -329,7 +329,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 //					holder.title.setVisibility(View.GONE);
 //			}
 
-			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_LARGE, legislator.bioguide_id, context.getActivity());
+			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_SMALL, legislator.bioguide_id, context.getActivity());
 			if (photo != null)
 				holder.photo.setImageDrawable(photo);
 			else {
