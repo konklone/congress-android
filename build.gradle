@@ -14,13 +14,15 @@ apply plugin: 'signing'
 repositories {
     mavenCentral()
 
-    // currently using a Mapbox SDK AAR built from source.
+    // Use a Mapbox SDK AAR either:
+    //
+    // 1. built from source:
+//    flatDir {
+//        dirs 'aars'
+//    }
 
-    flatDir {
-        dirs 'aars'
-    }
-
-    // maven { url 'https://oss.sonatype.org/content/repositories/snapshots'}
+    // 2. from the currently published snapshot:
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots'}
 
 }
 
@@ -35,10 +37,10 @@ dependencies {
     compile 'com.android.support:support-v4:19.0.+'
     compile 'com.google.android.gms:play-services:4.3.23'
 
-    compile 'com.squareup.okhttp:okhttp:1.3.0'
-    compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.jakewharton:disklrucache:2.0.1'
-    compile 'com.google.guava:guava:16.0.1'
+//    compile 'com.squareup.okhttp:okhttp:1.3.0'
+//    compile 'com.nineoldandroids:library:2.4.0'
+//    compile 'com.jakewharton:disklrucache:2.0.1'
+//    compile 'com.google.guava:guava:16.0.1'
 }
 
 
