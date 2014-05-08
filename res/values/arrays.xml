@@ -2,6 +2,7 @@
 <resources>
     
     <string-array name="changelog">
+        <item>4.6.1 - Fixed a crash affecting some users when visiting legislator screens.</item>
         <item>Unfortunately: we\'ve had to remove the News tab. Google announced their API shutdown years ago, and no viable alternative has emerged.</item>
         <item>Fortunately: now displaying more context for votes on nominations, bills, and amendments. (For example, names of nominees.)</item>
         <item>Show a party leadership title for members of Congress, if they have one.</item>
