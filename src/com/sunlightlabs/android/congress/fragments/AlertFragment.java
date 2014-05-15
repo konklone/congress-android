@@ -77,7 +77,7 @@ public class AlertFragment extends DialogFragment {
 
                 "District maps powered by <a href=\"https://www.mapbox.com/\">Mapbox</a>.<br/><br/>" +
 
-                "Some map data © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap contributors</a>, CC BY-SA"
+                "Some map data © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap contributors</a>, CC BY-SA"
 		);
 		TextView aboutView1 = (TextView) aboutView.findViewById(R.id.about_1);
 		aboutView1.setText(about1);
