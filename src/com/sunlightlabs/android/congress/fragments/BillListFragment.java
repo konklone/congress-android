@@ -43,6 +43,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	public static final int BILLS_SEARCH_NEWEST = 3;
 	public static final int BILLS_SEARCH_RELEVANT = 4;
 	public static final int BILLS_CODE = 5;
+	public static final int BILLS_LAW = 6;
 	
 	List<Bill> bills;
 	List<String> newIds;
@@ -69,6 +70,15 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		BillListFragment frag = new BillListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", BILLS_ACTIVE);
+		frag.setArguments(args);
+		frag.setRetainInstance(true);
+		return frag;
+	}
+
+	public static BillListFragment forLaw() {
+		BillListFragment frag = new BillListFragment();
+		Bundle args = new Bundle();
+		args.putInt("type", BILLS_LAW);
 		frag.setArguments(args);
 		frag.setRetainInstance(true);
 		return frag;
@@ -307,6 +317,8 @@ public class BillListFragment extends ListFragment implements PaginationListener
 					return BillService.recentlyIntroduced(page, PER_PAGE);
 				case BILLS_ACTIVE:
 					return BillService.recentlyActive(page, PER_PAGE);
+				case BILLS_LAW:
+					return BillService.recentlyLaw(page, PER_PAGE);
 				case BILLS_SPONSOR:
 					return BillService.recentlySponsored(context.sponsor.bioguide_id, page, PER_PAGE);
 				case BILLS_CODE:

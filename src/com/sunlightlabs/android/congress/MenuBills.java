@@ -26,6 +26,7 @@ public class MenuBills extends FragmentActivity {
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
 		adapter.add("bills_menu", R.string.menu_bills_menu, MenuBillsFragment.newInstance());
 		adapter.add("bills_active", R.string.menu_bills_active, BillListFragment.forActive());
+		adapter.add("bills_law", R.string.menu_bills_law, BillListFragment.forLaw());
 		adapter.add("bills_new", R.string.menu_bills_recent, BillListFragment.forAll());
 		
 		String tab = getIntent().getStringExtra("tab");
