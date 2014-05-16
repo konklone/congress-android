@@ -30,7 +30,7 @@ public class LoadPhotoTask extends AsyncTask<String,Void,Drawable> {
 	
 	@Override
 	public Drawable doInBackground(String... bioguideId) {
-		return LegislatorImage.getImage(size, bioguideId[0], context.getContext());
+		return LegislatorImage.getImage(bioguideId[0], size, context.getContext());
 	}
 	
 	@Override

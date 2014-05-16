@@ -140,19 +140,11 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 			name.setText(nameFor(legislator));
 			TextView position = (TextView) view.findViewById(R.id.position);
 			position.setText(positionFor(legislator));
-			
-			BitmapDrawable picture = LegislatorImage.quickGetImage(LegislatorImage.PIC_LARGE, legislator.bioguide_id, context);
-			
+
 			ImageView photo = (ImageView) view.findViewById(R.id.photo);
-			
-			if (picture != null)
-				photo.setImageDrawable(picture);
-			else {
-				photo.setImageResource(R.drawable.loading_photo);
-				photoViews.put(legislator.bioguide_id, photo);
-				fragment.loadPhoto(legislator.bioguide_id);
-			}
-			
+			LegislatorImage.setImageView(legislator.bioguide_id, LegislatorImage.PIC_LARGE,
+					context, photo);
+
 			view.setTag(legislator);
 		}
 		

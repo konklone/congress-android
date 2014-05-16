@@ -633,15 +633,12 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 				voteView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 			
 			voteView.setText(vote.vote);
-			
-			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_SMALL, legislator.bioguide_id, context);
-			if (photo != null)
-				holder.photo.setImageDrawable(photo);
-			else {
-				holder.photo.setImageResource(R.drawable.loading_photo);
-				context.loadPhoto(legislator.bioguide_id);
-			}
-			
+
+			ImageView photo = (ImageView) view.findViewById(R.id.photo);
+			LegislatorImage.setImageView(legislator.bioguide_id, LegislatorImage.PIC_SMALL,
+					context.getContext(), holder.photo);
+
+
 			return view;
 		}
 		
