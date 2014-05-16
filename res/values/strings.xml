@@ -143,6 +143,7 @@
     <string name="menu_bills_active">Active</string>
     <string name="menu_bills_law">Law</string>
     <string name="menu_bills_active_subscription">Active Bills</string>
+    <string name="menu_bills_law_subscription">Law</string>
     <string name="menu_bills_recent">New</string>
     <string name="menu_bills_recent_subscription">New Bills</string>
     <string name="menu_bills_menu">Following</string>
@@ -161,7 +162,8 @@
     
     <string name="subscriber_bills_all">New Bills</string>
     <string name="subscriber_bills_active">Active Bills</string>
-    
+    <string name="subscriber_bills_law">Enacted Legislation</string>
+
     <string name="bill_not_found">No bill found by that code.</string>
     <string name="bill_loading_error">Error while loading bill.</string>
     <string name="bills_error">Couldn\'t load bills.</string>

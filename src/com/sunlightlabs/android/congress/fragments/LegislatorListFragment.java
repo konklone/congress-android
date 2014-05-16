@@ -329,13 +329,9 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 //					holder.title.setVisibility(View.GONE);
 //			}
 
-			BitmapDrawable photo = LegislatorImage.quickGetImage(LegislatorImage.PIC_SMALL, legislator.bioguide_id, context.getActivity());
-			if (photo != null)
-				holder.photo.setImageDrawable(photo);
-			else {
-				holder.photo.setImageResource(R.drawable.loading_photo);
-				context.loadPhoto(legislator.bioguide_id);
-			}
+			ImageView photo = (ImageView) view.findViewById(R.id.photo);
+			LegislatorImage.setImageView(legislator.bioguide_id, LegislatorImage.PIC_SMALL,
+					context.getContext(), holder.photo);
 
 			return view;
 		}

@@ -284,6 +284,8 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			subscription = new Subscription(sponsor.bioguide_id, Subscriber.notificationName(sponsor), "BillsLegislatorSubscriber", null);
 		else if (type == BILLS_ACTIVE)
 			subscription = new Subscription("ActiveBills", getResources().getString(R.string.subscriber_bills_active), "BillsActiveSubscriber", null);
+		else if (type == BILLS_LAW)
+			subscription = new Subscription("EnactedLegislation", getResources().getString(R.string.subscriber_bills_law), "BillsLawSubscriber", null);
 		else if (type == BILLS_SEARCH_NEWEST)
 			subscription = new Subscription(query, query, "BillsSearchSubscriber", query);
 		
