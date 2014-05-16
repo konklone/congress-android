@@ -46,6 +46,14 @@ public class BillService {
 		return billsFor(Congress.url("bills", basicFields, params, page, per_page)); 
 	}
 
+	public static List<Bill> recentlyLaw(int page, int per_page) throws CongressException {
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("order", "last_action_at");
+		params.put("history.enacted", "true");
+
+		return billsFor(Congress.url("bills", basicFields, params, page, per_page));
+	}
+
 	public static List<Bill> recentlySponsored(String sponsorId, int page, int per_page) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("order", "introduced_on,bill_type,number");
