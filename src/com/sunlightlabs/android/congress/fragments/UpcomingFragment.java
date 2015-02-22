@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +27,8 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.UpcomingBill;
 import com.sunlightlabs.congress.services.UpcomingBillService;
 
-public class UpcomingFragment extends ListFragment {
+public class UpcomingFragment extends ListFragment implements
+	LoaderManager.LoaderCallbacks<List<UpcomingBill>> {
 	
 	List<UpcomingBill> upcomingBills;
 	
@@ -71,7 +74,7 @@ public class UpcomingFragment extends ListFragment {
 	}
 	
 	public void loadUpcoming() {
-		new UpcomingBillsTask(this).execute();
+		getLoaderManager().initLoader(0, null, this);
 	}
 	
 	@Override
@@ -102,6 +105,23 @@ public class UpcomingFragment extends ListFragment {
 			FragmentUtils.showEmpty(this, R.string.upcoming_empty);
 	}
 	
+	@Override
+	public Loader<List<UpcomingBill>> onCreateLoader(int id, Bundle args) {
+		return new UpcomingBillsTask(this);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<List<UpcomingBill>> loader, List<UpcomingBill> result) {
+		if (result != null && ((UpcomingBillsTask) loader).exception == null)
+			onLoadUpcomingBills(result);
+		else
+			onLoadUpcomingBills(((UpcomingBillsTask) loader).exception);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<List<UpcomingBill>> loader) {
+	}
+
 	static class UpcomingAdapter extends ArrayAdapter<UpcomingAdapter.Item> {
 		LayoutInflater inflater;
 		
@@ -258,31 +278,27 @@ public class UpcomingFragment extends ListFragment {
 		}
 	}
 	
-	static class UpcomingBillsTask extends AsyncTask<String, Void, List<UpcomingBill>> {
-		private UpcomingFragment context;
-		private CongressException exception;
+	static class UpcomingBillsTask extends AsyncTaskLoader<List<UpcomingBill>> {
+		CongressException exception;
 
 		public UpcomingBillsTask(UpcomingFragment context) {
+			super(context.getActivity());
 			FragmentUtils.setupAPI(context);
-			this.context = context;
 		}
 
 		@Override
-		protected List<UpcomingBill> doInBackground(String... params) {
+		protected void onStartLoading() {
+			forceLoad();
+		}
+
+		@Override
+		public List<UpcomingBill> loadInBackground() {
 			try {
 				return UpcomingBillService.comingUp();
 			} catch (CongressException e) {
 				this.exception = new CongressException(e, "Error loading upcoming activity.");
 				return null;
 			}
-		}
-		
-		@Override
-		protected void onPostExecute(List<UpcomingBill> result) {
-			if (result != null && exception == null)
-				context.onLoadUpcomingBills(result);
-			else
-				context.onLoadUpcomingBills(exception);
 		}
 	}
 }
