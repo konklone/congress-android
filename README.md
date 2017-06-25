@@ -4,7 +4,7 @@ This is the source code for the Sunlight Foundation's [Congress app](http://cong
 
 Find the most up-to-date version in the Google Play Store: https://play.google.com/store/apps/details?id=com.sunlightlabs.android.congress
 
-We ship the app using the code found in this repository, with some miscellaneous unversioned API keys and build information placed in `res/values/keys.xml`.
+We ship the app using the code found in this repository, with some miscellaneous unversioned API keys and build information placed in `app/src/main/res/values/keys.xml`.
 
 We use [Github Issues](/sunlightlabs/congress-android/issues) for issue tracking.
 
@@ -12,12 +12,12 @@ We use [Github Issues](/sunlightlabs/congress-android/issues) for issue tracking
 
 When setting this up:
 
-* copy `keys.xml.example` to `res/values/keys.xml` and fill in your [Sunlight API](http://services.sunlightlabs.com) key.
-* copy `tracker.xml.example` to `res/xml/tracker.xml`
+* copy `keys.xml.example` to `app/src/main/res/values/keys.xml` and fill in your [Sunlight API](http://services.sunlightlabs.com) key.
+* copy `tracker.xml.example` to `app/src/main/res/xml/tracker.xml`
 
-If you're using Google Analytics, fill in `res/xml/tracker.xml`'s `ga_trackingId` field with your Google Analytics profile tracking ID. (Make sure you've set up a profile in Google Analytics first.)
+If you're using Google Analytics, fill in `app/src/main/res/xml/tracker.xml`'s `ga_trackingId` field with your Google Analytics profile tracking ID. (Make sure you've set up a profile in Google Analytics first.)
 
-If you're **not** using Google Analytics, then turn off analytics by setting`res/values/keys,xml`'s `debug_disable_analytics` field to `true`.
+If you're **not** using Google Analytics, then turn off analytics by setting `app/src/main/res/values/keys,xml`'s `debug_disable_analytics` field to `true`.
 
 
 
