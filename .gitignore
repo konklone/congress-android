@@ -1,6 +1,8 @@
 /todo.txt
 *.swp
 
+/app/build
+
 /.settings
 /bin
 /gen
