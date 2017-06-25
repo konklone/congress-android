@@ -1,7 +1,0 @@
-#Sun Jun 25 19:14:23 EDT 2017
-base.0=/home/eric/StudioProjects/congress-android/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_bbbccc441f105c769a0ddbad775aa131443ec000
-renamed.1=classes.dex
-renamed.0=classes2.dex
-file.1=/home/eric/StudioProjects/congress-android/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_79a3e404966bbc9419e1c92d524b9e5c74c45d49/classes.dex
-base.1=/home/eric/StudioProjects/congress-android/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_79a3e404966bbc9419e1c92d524b9e5c74c45d49
-file.0=/home/eric/StudioProjects/congress-android/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_bbbccc441f105c769a0ddbad775aa131443ec000/classes.dex

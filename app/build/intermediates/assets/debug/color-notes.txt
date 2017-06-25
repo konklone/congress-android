@@ -1,3 +1,0 @@
-
-Blue fill of star_big - #33b5e5|f0
-Grey fill of star (and anything that fits in the header or footer) - #b7b7b7|f0
