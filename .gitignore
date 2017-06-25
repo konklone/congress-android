@@ -1,10 +1,11 @@
-/.settings
-/bin
-/gen
-/res/values/keys.xml
-/.idea
-/res/xml/tracker.xml
+/todo.txt
+*.swp
 
+/app/build
+.idea
+
+/app/src/main/res/values/keys.xml
+/app/src/main/res/xml/tracker.xml
 
 # gradle/android studio stuff
 /.gradle
