@@ -4,24 +4,24 @@
         "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/layout/pager.xml"
     },
     {
-        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/layout/bill_action.xml",
-        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/layout/bill_action.xml"
-    },
-    {
         "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/layout/line.xml",
         "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/layout/line.xml"
     },
     {
-        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/layout/upcoming_header.xml",
-        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/layout/upcoming_header.xml"
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/layout/bill_action.xml",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/layout/bill_action.xml"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/layout/list.xml",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/layout/list.xml"
     },
     {
         "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/layout/subscription_item.xml",
         "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/layout/subscription_item.xml"
     },
     {
-        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/layout/list.xml",
-        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/layout/list.xml"
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/layout/upcoming_header.xml",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/layout/upcoming_header.xml"
     },
     {
         "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/layout/list_empty.xml",
@@ -48,12 +48,12 @@
         "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/layout/bill_vote.xml"
     },
     {
-        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/layout/loading_retry.xml",
-        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/layout/loading_retry.xml"
-    },
-    {
         "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/layout/line_vertical.xml",
         "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/layout/line_vertical.xml"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/layout/loading_retry.xml",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/layout/loading_retry.xml"
     },
     {
         "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/layout/icon_list_item.xml",

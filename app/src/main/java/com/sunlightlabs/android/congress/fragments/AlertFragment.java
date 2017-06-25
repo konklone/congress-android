@@ -73,11 +73,7 @@ public class AlertFragment extends DialogFragment {
 				"and the Congressional Research Service.<br/><br/>" +
 				
 				"Votes, committee hearings, and floor updates come from official " +
-				"<a href=\"http://www.senate.gov/\">Senate</a> and <a href=\"http://house.gov/\">House</a> websites.<br/><br/>" +
-
-                "District maps powered by <a href=\"https://www.mapbox.com/\">Mapbox</a>.<br/><br/>" +
-
-                "Some map data © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap contributors</a>, CC BY-SA"
+				"<a href=\"http://www.senate.gov/\">Senate</a> and <a href=\"http://house.gov/\">House</a> websites.<br/><br/>"
 		);
 		TextView aboutView1 = (TextView) aboutView.findViewById(R.id.about_1);
 		aboutView1.setText(about1);

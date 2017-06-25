@@ -1,5 +1,9 @@
 [
     {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable/common_signin_btn_icon_dark.xml",
+        "source": "/home/eric/.android/build-cache/62e6fc70f681f3bedfbc7b375b3ccaa402e2d732/output/res/drawable/common_signin_btn_icon_dark.xml"
+    },
+    {
         "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable/selector_legacy.xml",
         "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable/selector_legacy.xml"
     },
@@ -8,11 +12,23 @@
         "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable/circle_on.xml"
     },
     {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable/common_signin_btn_text_dark.xml",
+        "source": "/home/eric/.android/build-cache/62e6fc70f681f3bedfbc7b375b3ccaa402e2d732/output/res/drawable/common_signin_btn_text_dark.xml"
+    },
+    {
         "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable/circle_off.xml",
         "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable/circle_off.xml"
     },
     {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable/common_signin_btn_text_light.xml",
+        "source": "/home/eric/.android/build-cache/62e6fc70f681f3bedfbc7b375b3ccaa402e2d732/output/res/drawable/common_signin_btn_text_light.xml"
+    },
+    {
         "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable/tab.xml",
         "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable/tab.xml"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable/common_signin_btn_icon_light.xml",
+        "source": "/home/eric/.android/build-cache/62e6fc70f681f3bedfbc7b375b3ccaa402e2d732/output/res/drawable/common_signin_btn_icon_light.xml"
     }
 ]

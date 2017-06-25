@@ -17,6 +17,7 @@ ADDED from /home/eric/StudioProjects/congress-android/app/src/main/AndroidManife
 		ADDED from /home/eric/StudioProjects/congress-android/app/src/main/AndroidManifest.xml:2:11-69
 uses-sdk
 ADDED from /home/eric/StudioProjects/congress-android/app/src/main/AndroidManifest.xml:8:5-11:8
+MERGED from [com.google.android.gms:play-services:4.3.23] /home/eric/.android/build-cache/62e6fc70f681f3bedfbc7b375b3ccaa402e2d732/output/AndroidManifest.xml:7:5-42
 	android:targetSdkVersion
 		ADDED from /home/eric/StudioProjects/congress-android/app/src/main/AndroidManifest.xml:10:6-35
 		INJECTED from /home/eric/StudioProjects/congress-android/app/src/main/AndroidManifest.xml

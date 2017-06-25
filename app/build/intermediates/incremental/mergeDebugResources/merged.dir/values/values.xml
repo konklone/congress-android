@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
     <string-array name="changelog">
         <item>4.6.1 - Fixed a crash affecting some users when visiting legislator screens.</item>
         <item>Unfortunately: we\'ve had to remove the News tab. Google announced their API shutdown years ago, and no viable alternative has emerged.</item>
@@ -157,20 +157,55 @@
     <color name="background_date">#343434</color>
     <color name="background_grey">#5f5f5f</color>
     <color name="background_light">#4470A3</color>
+    <color name="common_action_bar_splitter">#d2d2d2</color>
+    <color name="common_signin_btn_dark_text_default">@android:color/white</color>
+    <color name="common_signin_btn_dark_text_disabled">#FFAAAAAA</color>
+    <color name="common_signin_btn_dark_text_focused">@android:color/white</color>
+    <color name="common_signin_btn_dark_text_pressed">@android:color/white</color>
+    <color name="common_signin_btn_default_background">#FFDD4B39</color>
+    <color name="common_signin_btn_light_text_default">#FF737373</color>
+    <color name="common_signin_btn_light_text_disabled">#FFAAAAAA</color>
+    <color name="common_signin_btn_light_text_focused">#FF737373</color>
+    <color name="common_signin_btn_light_text_pressed">@android:color/white</color>
     <color name="selector">#f58525</color>
     <color name="tab_dim">#4f4f4f</color>
     <color name="tab_selected">#4F84BF</color>
     <color name="text">@android:color/white</color>
     <color name="text_grey">#c5c5c5</color>
     <color name="text_link">#4c98d7</color>
+    <declare-styleable name="AdsAttrs"><attr format="string" name="adSize"/><attr format="string" name="adSizes"/><attr format="string" name="adUnitId"/></declare-styleable>
+    <declare-styleable name="MapAttrs"><attr format="enum" name="mapType">
+      <enum name="none" value="0"/>
+      <enum name="normal" value="1"/>
+      <enum name="satellite" value="2"/>
+      <enum name="terrain" value="3"/>
+      <enum name="hybrid" value="4"/>
+    </attr><attr format="float" name="cameraBearing"/><attr format="float" name="cameraTargetLat"/><attr format="float" name="cameraTargetLng"/><attr format="float" name="cameraTilt"/><attr format="float" name="cameraZoom"/><attr format="boolean" name="uiCompass"/><attr format="boolean" name="uiRotateGestures"/><attr format="boolean" name="uiScrollGestures"/><attr format="boolean" name="uiTiltGestures"/><attr format="boolean" name="uiZoomControls"/><attr format="boolean" name="uiZoomGestures"/><attr format="boolean" name="useViewLifecycle"/><attr format="boolean" name="zOrderOnTop"/></declare-styleable>
+    <integer name="google_play_services_version">4323000</integer>
     <string name="about_button">Cool</string>
     <string name="analytics_enabled">Allow Analytics</string>
     <string name="analytics_enabled_summary_off">Do not allow collection of anonymous app usage statistics.</string>
     <string name="analytics_enabled_summary_on">Allow collection of anonymous app usage statistics.</string>
+    <string name="api_endpoint">https://congress.api.sunlightfoundation.com</string>
+    <string name="api_user_agent">Congress app for Android</string>
     <string name="app_name">Congress</string>
     <string name="app_package_name">com.sunlightlabs.android.congress</string>
     <string name="app_version">4.6.1</string>
     <string name="app_version_older">Version 4.5</string>
+    <string name="auth_client_needs_enabling_title">
+      An application requires Google Play Services to be enabled.
+  </string>
+    <string name="auth_client_needs_installation_title">
+      An application requires installation of Google Play Services.
+  </string>
+    <string name="auth_client_needs_update_title">
+      An application requires an update for Google Play Services.
+  </string>
+    <string name="auth_client_play_services_err_notification_msg">Google Play services error</string>
+    <string name="auth_client_requested_by_msg">Requested by <ns1:g id="app_name">%1$s</ns1:g></string>
+    <string name="auth_client_using_bad_version_title">
+      An application attempted to use a bad version of Google Play Services.
+  </string>
     <string name="bill_actions_empty">This bill has no activity at this time.</string>
     <string name="bill_cosponsor_other_plural">others</string>
     <string name="bill_cosponsor_other_singular">other</string>
@@ -207,8 +242,36 @@
     <string name="committees_loading">Plucking committees from the air…</string>
     <string name="committees_no_subcommittees">No subcommittees.</string>
     <string name="committees_title">Committees</string>
+    <string msgid="2523291102206661146" name="common_google_play_services_enable_button">Enable Google Play services</string>
+    <string msgid="227660514972886228" name="common_google_play_services_enable_text">This app won\'t work unless you enable Google Play services.</string>
+    <string msgid="5122002158466380389" name="common_google_play_services_enable_title">Enable Google Play services</string>
+    <string msgid="7153882981874058840" name="common_google_play_services_install_button">Get Google Play services</string>
+    <string msgid="2122112764540849864" name="common_google_play_services_install_text_phone">This app won\'t run without Google Play services, which are missing from your phone.</string>
+    <string msgid="7351599665250191022" name="common_google_play_services_install_text_tablet">This app won\'t run without Google Play services, which are missing from your tablet.</string>
+    <string msgid="7215213145546190223" name="common_google_play_services_install_title">Get Google Play services</string>
+    <string name="common_google_play_services_invalid_account_text">The specified account does not exist on this device. Please choose a different account.</string>
+    <string name="common_google_play_services_invalid_account_title">Invalid Account</string>
+    <string name="common_google_play_services_network_error_text">A data connection is required to connect to Google Play services.</string>
+    <string name="common_google_play_services_network_error_title">Network Error</string>
+    <string name="common_google_play_services_unknown_issue">Unknown issue with Google Play services.</string>
+    <string name="common_google_play_services_unsupported_date_text">The date on the device appears to be incorrect. Please check the date on the device.</string>
+    <string name="common_google_play_services_unsupported_text">Google Play services, which some of your applications rely on, is not supported by your device. Please contact the manufacturer for assistance.</string>
+    <string name="common_google_play_services_unsupported_title">Google Play services</string>
+    <string msgid="6556509956452265614" name="common_google_play_services_update_button">Update</string>
+    <string msgid="9053896323427875356" name="common_google_play_services_update_text">This app won\'t run unless you update Google Play services.</string>
+    <string msgid="1788179980625863495" name="common_google_play_services_update_title">Update Google Play services</string>
+    <string name="common_signin_button_text">Sign in</string>
+    <string name="common_signin_button_text_long">Sign in with Google</string>
     <string name="connection_failed">Connection failed. Press refresh to try again.</string>
+    <string name="contact_email">eric+congress@konklone.com</string>
+    <string name="contact_subject">Congress app feedback</string>
+    <string name="debug_always_consider_new">false</string>
+    <string name="debug_always_notify">false</string>
+    <string name="debug_disable_analytics">true</string>
+    <string name="debug_show_buttons">false</string>
+    <string name="debug_sometimes_consider_new">false</string>
     <string name="demo_header_text">Header Text</string>
+    <string name="distribution_channel">market</string>
     <string name="district_map">District Map</string>
     <string name="empty_bills">There are no bills that match your search.</string>
     <string name="empty_bills_sponsored">This legislator has not sponsored any bills.</string>
@@ -264,10 +327,12 @@
     <string name="loading">Loading…</string>
     <string name="loading_committees">Loading committees…</string>
     <string name="loading_more_general">Loading more…</string>
+    <string name="location_client_powered_by_google">Powered by Google</string>
     <string name="location_update">Tap here to find your location again.</string>
     <string name="location_update_fail">Couldn\'t update your location. Please try again later.</string>
     <string name="map_loading">Loading a district map...</string>
     <string name="map_unsupported">Our apologies, but we\'re unable to support embedded district maps on Android 2.2 (Froyo) at this time.</string>
+    <string name="market_channel">google</string>
     <string name="menu_about">About</string>
     <string name="menu_bills_active">Active</string>
     <string name="menu_bills_active_subscription">Active Bills</string>
@@ -339,6 +404,7 @@
     <string name="subscriber_bills_active">Active Bills</string>
     <string name="subscriber_bills_all">New Bills</string>
     <string name="subscriber_bills_law">Enacted Legislation</string>
+    <string name="sunlight_api_key">sunlight9</string>
     <string name="tab_bills">Bills</string>
     <string name="tab_committees_members">Members</string>
     <string name="tab_committees_sub">Subcommittees</string>

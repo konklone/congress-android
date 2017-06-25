@@ -16,6 +16,10 @@
         "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/xml/searchable_bills.xml"
     },
     {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/xml/tracker.xml",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/xml/tracker.xml"
+    },
+    {
         "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/xml/notification_settings.xml",
         "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/xml/notification_settings.xml"
     }

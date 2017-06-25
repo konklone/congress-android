@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/color/common_signin_btn_text_dark.xml",
+        "source": "/home/eric/.android/build-cache/62e6fc70f681f3bedfbc7b375b3ccaa402e2d732/output/res/color/common_signin_btn_text_dark.xml"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/color/common_signin_btn_text_light.xml",
+        "source": "/home/eric/.android/build-cache/62e6fc70f681f3bedfbc7b375b3ccaa402e2d732/output/res/color/common_signin_btn_text_light.xml"
+    }
+]
