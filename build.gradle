@@ -13,24 +13,13 @@ apply plugin: 'signing'
 
 repositories {
     mavenCentral()
-
-    // Use a Mapbox SDK AAR either:
-    //
-    // 1. built from source:
-//    flatDir {
-//        dirs 'aars'
-//    }
-
-    // 2. from the currently published snapshot:
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots'}
-
 }
 
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 
-    compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:0.2.3-SNAPSHOT@aar'){
+    compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:0.3.0@aar'){
         transitive=true
     }
 
@@ -47,7 +36,7 @@ dependencies {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    buildToolsVersion "19.1.0"
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
