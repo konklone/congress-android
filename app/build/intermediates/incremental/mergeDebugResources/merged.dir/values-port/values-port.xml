@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MainNavigationFrame">
+        <item name="android:layout_width">125dp</item>
+    </style>
+    <style name="MainNavigationGrid">
+        <item name="android:numColumns">1</item>
+    </style>
+    <style name="OnePagerContainer">
+        <item name="android:paddingTop">8dp</item>
+    </style>
+    <style name="ProfileItemText">
+    	<item name="android:textSize">16sp</item>
+    </style>
+    <style name="ProfileTextWidth">
+    	<item name="android:layout_width">match_parent</item>
+    </style>
+</resources>

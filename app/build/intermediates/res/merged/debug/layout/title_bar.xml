@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal"
+	android:gravity="center_vertical"
+	
+	android:background="@color/background_dark"
+	
+	android:id="@+id/bar"
+	>
+	
+    <LinearLayout android:id="@+id/title_button"
+        android:orientation="horizontal"
+        
+        android:layout_width="wrap_content"
+		android:layout_height="44dp"
+		
+		android:paddingLeft="3dp"
+		android:layout_marginRight="10dp"
+		android:layout_weight="0"
+		
+		style="@style/Pressable"
+		>
+        
+        <ImageView android:id="@+id/title_up_icon"
+            android:layout_width="8dp"
+            android:layout_height="16dp"
+            
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/action_bar_up"
+            
+            android:visibility="gone"
+            />
+        
+		<ImageView android:id="@+id/title_icon"
+			android:layout_width="44dp"
+			android:layout_height="44dp"
+			android:src="@drawable/title_icon"
+			/>
+		
+		
+	</LinearLayout>
+	
+	<TextView android:id="@+id/title_text"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		
+		android:layout_weight="1"
+		
+		android:layout_marginTop="1dp"
+		android:layout_marginBottom="1dp"
+		
+		android:textSize="18sp"
+		
+		android:text="@string/app_name"
+		/>
+	
+	<include layout="@layout/action_spinner"
+	    android:id="@+id/action_spinner"
+	    />
+	
+	<!-- adding these action buttons dynamically caused surprising and inscrutable issues with triggering the right selectors -->
+	
+	<include layout="@layout/action_button"
+		android:id="@+id/action_2"
+		/>
+		
+	<include layout="@layout/action_button"
+		android:id="@+id/action_1"
+		/>
+	
+	<include layout="@layout/action_button_menu"
+	    android:id="@+id/action_menu"
+	    />
+	
+</LinearLayout>

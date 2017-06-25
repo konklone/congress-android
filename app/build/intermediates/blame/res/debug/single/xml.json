@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/xml/analytics.xml",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/xml/analytics.xml"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/xml/searchable_legislators.xml",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/xml/searchable_legislators.xml"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/xml/settings.xml",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/xml/settings.xml"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/xml/searchable_bills.xml",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/xml/searchable_bills.xml"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/xml/notification_settings.xml",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/xml/notification_settings.xml"
+    }
+]

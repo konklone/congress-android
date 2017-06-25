@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <LinearLayout
+	    android:orientation="horizontal"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    >
+	    
+	    <TextView android:id="@+id/date"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0"
+	        
+	        android:paddingLeft="10dp"
+	        android:paddingRight="10dp"
+	        
+	        android:paddingTop="10dp"
+	        android:paddingBottom="10dp"
+	        
+	        android:textSize="14sp"
+	        android:textStyle="bold"
+	        
+	        android:text="Tomorrow" 
+	        />
+	    
+	    <TextView android:id="@+id/where"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        
+	        android:paddingTop="10dp"
+	        android:paddingBottom="10dp"
+	        
+	        android:paddingLeft="10dp"
+	        android:paddingRight="10dp"
+	        
+	        android:textSize="14sp"
+	        
+	        android:text="On the Senate Floor"
+	        />
+	    
+	    <include layout="@layout/line_vertical" />
+	    
+	    <FrameLayout android:layout_width="wrap_content"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0"
+	        android:background="@color/background_grey" 
+	        >
+		    <TextView android:id="@+id/more"
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        
+		        android:paddingTop="10dp"
+		        android:paddingBottom="10dp"
+		        
+		        android:paddingLeft="10dp"
+		        android:paddingRight="10dp"
+		        
+		        android:textSize="14sp"
+		        android:text="More"
+		        
+		        style="@style/Pressable"
+		        />
+	    </FrameLayout>
+	    
+	</LinearLayout>
+	
+    <include layout="@layout/line" />
+</LinearLayout>

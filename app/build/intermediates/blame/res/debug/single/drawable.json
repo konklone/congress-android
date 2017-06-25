@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable/selector_legacy.xml",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable/selector_legacy.xml"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable/circle_on.xml",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable/circle_on.xml"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable/circle_off.xml",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable/circle_off.xml"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable/tab.xml",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable/tab.xml"
+    }
+]

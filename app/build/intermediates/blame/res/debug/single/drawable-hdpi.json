@@ -1,0 +1,94 @@
+[
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/location.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/location.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/search.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/search.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/review.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/review.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/notifications.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/notifications.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/share.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/share.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/twitter.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/twitter.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/icon.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/icon.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/action_bar_menu.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/action_bar_menu.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/facebook.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/facebook.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/star_off.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/star_off.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/about.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/about.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/star.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/star.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/opencongress.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/opencongress.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/title_icon.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/title_icon.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/feedback.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/feedback.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/sunlight.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/sunlight.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/action_bar_up.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/action_bar_up.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/youtube.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/youtube.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/govtrack.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/govtrack.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/star_on.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/star_on.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/loading_photo.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/loading_photo.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/refresh.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/refresh.png"
+    },
+    {
+        "merged": "/home/eric/StudioProjects/congress-android/app/build/intermediates/res/merged/debug/drawable-hdpi/person.png",
+        "source": "/home/eric/StudioProjects/congress-android/app/src/main/res/drawable-hdpi/person.png"
+    }
+]

@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="changelog">
+        <item>4.6.1 - Fixed a crash affecting some users when visiting legislator screens.</item>
+        <item>Unfortunately: we\'ve had to remove the News tab. Google announced their API shutdown years ago, and no viable alternative has emerged.</item>
+        <item>Fortunately: now displaying more context for votes on nominations, bills, and amendments. (For example, names of nominees.)</item>
+        <item>Show a party leadership title for members of Congress, if they have one.</item>
+        <item>Using new and improved source for photos of members of Congress.</item>
+        <item>If your device doesn\'t have GPS or network location, the location button will be hidden.</item>
+        <item>Updated our district maps to be scrollable, zoom-able, and more stable.</item>
+        <item>Various bug fixes and invisible improvements.</item>
+        <item>Dropped support for Android 2.2 (Froyo).</item>
+    </string-array>
+    <string-array name="changelogLast">
+        <item>Hearings now wait a few hours after starting to disappear from list.</item>
+        <item>Finally fixed our district maps: replaced with Mapbox, displayed in-app</item>
+        <item>Clicking on the Call button now immediately begins a call</item>
+        <item>Nearly all web requests for Congressional information now use an encrypted connection (HTTPS)</item>
+        <item>Buttons to jump to legislators\' Twitter, YouTube, and Facebook accounts</item>
+	</string-array>
+    <string-array name="notify_interval_codes">
+		<item>5</item>
+		<item>15</item>
+		<item>30</item>
+		<item>60</item>
+		<item>120</item>
+		<item>240</item>
+		<item>1440</item>
+	</string-array>
+    <string-array name="notify_interval_names">
+		<item>5 minutes</item>
+		<item>15 minutes</item>
+		<item>30 minutes</item>
+		<item>1 hour</item>
+		<item>2 hours</item>
+		<item>4 hours</item>
+		<item>1 day</item>
+	</string-array>
+    <string-array name="state_codes">
+		<item>AL</item>
+        <item>AK</item>
+        <item>AS</item>
+        <item>AZ</item>
+        <item>AR</item>
+        <item>CA</item>
+        <item>CO</item>
+        <item>CT</item>
+        <item>DE</item>
+        <item>DC</item>
+        <item>FL</item>
+        <item>GA</item>
+        <item>GU</item>
+        <item>HI</item>
+        <item>ID</item>
+        <item>IL</item>
+        <item>IN</item>
+        <item>IA</item>
+        <item>KS</item>
+        <item>KY</item>
+        <item>LA</item>
+        <item>ME</item>
+        <item>MD</item>
+        <item>MA</item>
+        <item>MI</item>
+        <item>MN</item>
+        <item>MS</item>
+        <item>MO</item>
+        <item>MT</item>
+        <item>NE</item>
+        <item>NV</item>
+        <item>NH</item>
+        <item>NJ</item>
+        <item>NM</item>
+        <item>NY</item>
+        <item>NC</item>
+        <item>ND</item>
+        <item>MP</item>
+        <item>OH</item>
+        <item>OK</item>
+        <item>OR</item>
+        <item>PA</item>
+        <item>PR</item>
+        <item>RI</item>
+        <item>SC</item>
+        <item>SD</item>
+        <item>TN</item>
+        <item>TX</item>
+        <item>UT</item>
+        <item>VT</item>
+        <item>VI</item>
+        <item>VA</item>
+        <item>WA</item>
+        <item>WV</item>
+        <item>WI</item>
+        <item>WY</item>
+	</string-array>
+    <string-array name="state_names">
+		<item>Alabama</item>
+		<item>Alaska</item>
+		<item>American Samoa</item>
+		<item>Arizona</item>
+		<item>Arkansas</item>
+		<item>California</item>
+		<item>Colorado</item>
+		<item>Connecticut</item>
+		<item>Delaware</item>
+		<item>District of Columbia</item>
+		<item>Florida</item>
+		<item>Georgia</item>
+		<item>Guam</item>
+		<item>Hawaii</item>
+		<item>Idaho</item>
+		<item>Illinois</item>
+		<item>Indiana</item>
+		<item>Iowa</item>
+		<item>Kansas</item>
+		<item>Kentucky</item>
+		<item>Louisiana</item>
+		<item>Maine</item>
+		<item>Maryland</item>
+		<item>Massachusetts</item>
+		<item>Michigan</item>
+		<item>Minnesota</item>
+		<item>Mississippi</item>
+		<item>Missouri</item>
+		<item>Montana</item>
+		<item>Nebraska</item>
+		<item>Nevada</item>
+		<item>New Hampshire</item>
+		<item>New Jersey</item>
+		<item>New Mexico</item>
+		<item>New York</item>
+		<item>North Carolina</item>
+		<item>North Dakota</item>
+		<item>Northern Mariana Islands</item>
+		<item>Ohio</item>
+		<item>Oklahoma</item>
+		<item>Oregon</item>
+		<item>Pennsylvania</item>
+		<item>Puerto Rico</item>
+		<item>Rhode Island</item>
+		<item>South Carolina</item>
+		<item>South Dakota</item>
+		<item>Tennessee</item>
+		<item>Texas</item>
+		<item>Utah</item>
+		<item>Vermont</item>
+		<item>Virgin Islands</item>
+		<item>Virginia</item>
+		<item>Washington</item>
+		<item>West Virginia</item>
+		<item>Wisconsin</item>
+		<item>Wyoming</item>
+	</string-array>
+    <color name="background">#2D4B6E</color>
+    <color name="background_dark">#141414</color>
+    <color name="background_date">#343434</color>
+    <color name="background_grey">#5f5f5f</color>
+    <color name="background_light">#4470A3</color>
+    <color name="selector">#f58525</color>
+    <color name="tab_dim">#4f4f4f</color>
+    <color name="tab_selected">#4F84BF</color>
+    <color name="text">@android:color/white</color>
+    <color name="text_grey">#c5c5c5</color>
+    <color name="text_link">#4c98d7</color>
+    <string name="about_button">Cool</string>
+    <string name="analytics_enabled">Allow Analytics</string>
+    <string name="analytics_enabled_summary_off">Do not allow collection of anonymous app usage statistics.</string>
+    <string name="analytics_enabled_summary_on">Allow collection of anonymous app usage statistics.</string>
+    <string name="app_name">Congress</string>
+    <string name="app_package_name">com.sunlightlabs.android.congress</string>
+    <string name="app_version">4.6.1</string>
+    <string name="app_version_older">Version 4.5</string>
+    <string name="bill_actions_empty">This bill has no activity at this time.</string>
+    <string name="bill_cosponsor_other_plural">others</string>
+    <string name="bill_cosponsor_other_singular">other</string>
+    <string name="bill_history_loading">Plucking the bill\'s history from the air…</string>
+    <string name="bill_loading">Plucking bill from the air…</string>
+    <string name="bill_loading_error">Error while loading bill.</string>
+    <string name="bill_no_sponsor">This bill does not have a sponsor.</string>
+    <string name="bill_no_sponsor_yet">Bill\'s sponsor not yet known.</string>
+    <string name="bill_no_title">(no title)</string>
+    <string name="bill_no_title_yet">(Bill information not yet available.)</string>
+    <string name="bill_not_found">No bill found by that code.</string>
+    <string name="bill_not_known_yet">We don\'t have information for this bill yet.</string>
+    <string name="bill_sort">Sort by</string>
+    <string name="bill_sort_best">Best</string>
+    <string name="bill_sort_newest">Newest</string>
+    <string name="bill_summary_header">SUMMARY</string>
+    <string name="bill_vote_not_roll">No roll call was taken for this vote.</string>
+    <string name="bill_vote_roll">Tap to see how each legislator voted.</string>
+    <string name="bill_votes_empty">No votes have taken place on this bill yet.</string>
+    <string name="bill_votes_loading">Plucking the bill\'s votes from the air…</string>
+    <string name="bills_empty_code">No bills found by that bill code.</string>
+    <string name="bills_empty_search_newest">No bills found by that search.\n\nYou can still tap the bar below to be notified when a match comes up.</string>
+    <string name="bills_empty_search_relevant">No bills found by that search.\n\nWhen searching by relevance, searching is limited to the current session of Congress.\n\nBills from previous sessions of Congress will not appear.</string>
+    <string name="bills_empty_sponsor">No bills found by this person.</string>
+    <string name="bills_error">Couldn\'t load bills.</string>
+    <string name="bills_loading">Plucking bills from the air…</string>
+    <string name="bills_retry">Retry</string>
+    <string name="call_office">Call</string>
+    <string name="changelog_button">Awesome</string>
+    <string name="changelog_title_prefix">New In Version</string>
+    <string name="committees">Committees</string>
+    <string name="committees_empty">No committees found.</string>
+    <string name="committees_error">Error loading committees.</string>
+    <string name="committees_loading">Plucking committees from the air…</string>
+    <string name="committees_no_subcommittees">No subcommittees.</string>
+    <string name="committees_title">Committees</string>
+    <string name="connection_failed">Connection failed. Press refresh to try again.</string>
+    <string name="demo_header_text">Header Text</string>
+    <string name="district_map">District Map</string>
+    <string name="empty_bills">There are no bills that match your search.</string>
+    <string name="empty_bills_sponsored">This legislator has not sponsored any bills.</string>
+    <string name="empty_general">No legislators found.</string>
+    <string name="empty_last_name">No legislators found by that last name.</string>
+    <string name="empty_location">No legislators found for your location.</string>
+    <string name="empty_votes">This legislator has not cast any recent votes.</string>
+    <string name="empty_zipcode">No legislators found for your zipcode.</string>
+    <string name="error_connection">Couldn\'t connect to the network. Please try again when you have a connection.</string>
+    <string name="error_loading_favorites">There was a problem loading your starred bills and legislators. If the problem persists, try un-starring and re-starring them.</string>
+    <string name="explanation_1">You can be notified of new votes, bills, and all sorts of things.</string>
+    <string name="explanation_2">First, enable this feature, then find what you\'re interested in and tap the bar at the bottom.</string>
+    <string name="explanation_3">Please note:</string>
+    <string name="explanation_3a">New bills can be delayed up to a day, votes up to an hour.</string>
+    <string name="explanation_3b">Congress operates in bursts, so days may go by without any activity.</string>
+    <string name="explanation_button">Wow</string>
+    <string name="explanation_title">Notifications</string>
+    <string name="first_button">Awesome</string>
+    <string name="first_tip_1_body">Use your location to find, track, and call your representatives.</string>
+    <string name="first_tip_1_header">Follow your representatives.</string>
+    <string name="first_tip_2_body">See what\'s coming up, and what just went down.</string>
+    <string name="first_tip_2_header">Keep track of what\'s happening.</string>
+    <string name="first_tip_3_body">Get notified in real time of new votes, floor activity, and more.</string>
+    <string name="first_tip_3_header">Stay up to date.</string>
+    <string name="floor_updates_error">Error loading the latest from the floor.</string>
+    <string name="floor_updates_loading">Loading latest from the floor…</string>
+    <string name="floor_updates_related_bill">Related bill</string>
+    <string name="floor_updates_related_roll">Related vote</string>
+    <string name="floor_updates_title">The Floor</string>
+    <string name="footer_busy">Currently processing other subscriptions. Try again in a few seconds.</string>
+    <string name="footer_disabled">Notifications are disabled. Tap to enable.</string>
+    <string name="footer_error">Error accessing your notifications.</string>
+    <string name="footer_first_time">You can be notified of updates. Tap to enable.</string>
+    <string name="footer_off">Tap to be notified of updates.</string>
+    <string name="footer_on">You will be notified of updates.</string>
+    <string name="footer_working">Updating your subscription…</string>
+    <string name="hearings_empty">No known upcoming hearings.</string>
+    <string name="hearings_error">Error loading upcoming hearings.</string>
+    <string name="hearings_header">Tap a hearing to add it your calendar.</string>
+    <string name="hearings_loading">Loading upcoming hearings…</string>
+    <string name="hearings_no_calendar">Unable to find a standard Calendar app on this device.</string>
+    <string name="hearings_title">Upcoming Hearings</string>
+    <string name="image_legislator_photo">Photo of lawmaker</string>
+    <string name="image_search">Search</string>
+    <string name="image_star">Star</string>
+    <string name="legislator_loading">Plucking a person from the air…</string>
+    <string name="legislator_loading_error">Couldn\'t load information for this lawmaker.</string>
+    <string name="legislator_no_committees">Belongs to no committees.</string>
+    <string name="legislators_error">Error loading lawmakers.</string>
+    <string name="legislators_loading">Searching for lawmakers…</string>
+    <string name="legislators_loading_cosponsors">Loading cosponsors…</string>
+    <string name="legislators_loading_location">Found your location, searching…</string>
+    <string name="loading">Loading…</string>
+    <string name="loading_committees">Loading committees…</string>
+    <string name="loading_more_general">Loading more…</string>
+    <string name="location_update">Tap here to find your location again.</string>
+    <string name="location_update_fail">Couldn\'t update your location. Please try again later.</string>
+    <string name="map_loading">Loading a district map...</string>
+    <string name="map_unsupported">Our apologies, but we\'re unable to support embedded district maps on Android 2.2 (Froyo) at this time.</string>
+    <string name="menu_about">About</string>
+    <string name="menu_bills_active">Active</string>
+    <string name="menu_bills_active_subscription">Active Bills</string>
+    <string name="menu_bills_favorite">Starred</string>
+    <string name="menu_bills_law">Law</string>
+    <string name="menu_bills_law_subscription">Law</string>
+    <string name="menu_bills_menu">Following</string>
+    <string name="menu_bills_no_favorites">Any bills you follow will be added here.\n\nTo find bills, use the search button up top, or slide over to the right to see what bills just got introduced, or signed into law.\n\nWhile viewing a bill, follow it by tapping the star in the top right corner.</string>
+    <string name="menu_bills_recent">New</string>
+    <string name="menu_bills_recent_subscription">New Bills</string>
+    <string name="menu_changelog">Changelog</string>
+    <string name="menu_committees">Committees</string>
+    <string name="menu_favorite_bill_error">Error loading starred bills.</string>
+    <string name="menu_favorite_legislator_error">Error loading starred legislators.</string>
+    <string name="menu_feedback">Feedback</string>
+    <string name="menu_legislators_following">Following</string>
+    <string name="menu_legislators_house">House</string>
+    <string name="menu_legislators_no_favorites">Any senators and representatives you follow will be added here.\n\nTo find people, tap the compass button above to use your location, or the search button to search by zip code or last name.\n\nYou can also slide over to the right to find people by state, or by the chamber they\'re a part of.\n\nWhile viewing a person, follow them by tapping the star in the top right corner.</string>
+    <string name="menu_legislators_senate">Senate</string>
+    <string name="menu_legislators_state">States</string>
+    <string name="menu_location_no_location">Couldn\'t locate you. Tap the refresh icon above to try again.\n\nYou may need to update your device\'s location settings to allow this app to find you.</string>
+    <string name="menu_location_updating_gps">Finding your location, trying GPS first…</string>
+    <string name="menu_location_updating_network">Finding your location, using the network…</string>
+    <string name="menu_main_bills">Bills</string>
+    <string name="menu_main_committees">Committees</string>
+    <string name="menu_main_floor_updates">The Floor</string>
+    <string name="menu_main_hearings">Hearings</string>
+    <string name="menu_main_legislators">People</string>
+    <string name="menu_main_votes">Votes</string>
+    <string name="menu_notification_settings">Notifications</string>
+    <string name="menu_review">Review</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_votes_recent">Votes</string>
+    <string name="nays">Nays</string>
+    <string name="new_result">NEW</string>
+    <string name="no_market_installed">You need to have the Google Play Store in order to review the app.</string>
+    <string name="not_voting">Did Not Vote</string>
+    <string name="not_voting_short">No Vote</string>
+    <string name="notification_not_found">Problem loading subscription.</string>
+    <string name="notification_ticker_text">Congress updates</string>
+    <string name="notifications">Notifications</string>
+    <string name="notifications_empty">You haven\'t subscribed for any notifications yet.</string>
+    <string name="notifications_enable">Enable</string>
+    <string name="notifications_no_enable">Not Now</string>
+    <string name="notify_enable">Enable Notifications</string>
+    <string name="notify_enable_summary_off">Notifications are disabled</string>
+    <string name="notify_enable_summary_on">Notifications are enabled</string>
+    <string name="notify_interval">Notification Interval</string>
+    <string name="notify_ringtone">Select a ringtone</string>
+    <string name="notify_vibration">Vibrate</string>
+    <string name="notify_vibration_summary_off">Do not vibrate on notify</string>
+    <string name="notify_vibration_summary_on">Vibrate on notify</string>
+    <string name="out_of_office_message">This legislator is no longer in office.</string>
+    <string name="present">Present</string>
+    <string name="search_bills_hint">Search bills</string>
+    <string name="search_bills_label">Bills</string>
+    <string name="search_bills_recent">Most Recent</string>
+    <string name="search_bills_relevant">Most Relevant</string>
+    <string name="search_bills_settings">Bills</string>
+    <string name="search_legislators_hint">Last name or zip code</string>
+    <string name="search_legislators_label">Lawmakers</string>
+    <string name="search_people_settings">People</string>
+    <string name="search_votes_hint">Search votes</string>
+    <string name="search_votes_label">Votes</string>
+    <string name="search_votes_recent">Most Recent</string>
+    <string name="search_votes_relevant">Most Relevant</string>
+    <string name="search_votes_settings">Votes</string>
+    <string name="sponsored_bills">Sponsored Bills</string>
+    <string name="subscriber_bills_active">Active Bills</string>
+    <string name="subscriber_bills_all">New Bills</string>
+    <string name="subscriber_bills_law">Enacted Legislation</string>
+    <string name="tab_bills">Bills</string>
+    <string name="tab_committees_members">Members</string>
+    <string name="tab_committees_sub">Subcommittees</string>
+    <string name="tab_details">Bill</string>
+    <string name="tab_history">Activity</string>
+    <string name="tab_house">House</string>
+    <string name="tab_joint">Joint</string>
+    <string name="tab_profile">Profile</string>
+    <string name="tab_senate">Senate</string>
+    <string name="tab_settings">Settings</string>
+    <string name="tab_subscriptions">Subscriptions</string>
+    <string name="tab_votes">Votes</string>
+    <string name="upcoming_empty">No details on upcoming activity right now.</string>
+    <string name="upcoming_error">Error loading upcoming activity.</string>
+    <string name="upcoming_header">COMING UP</string>
+    <string name="upcoming_loading">Finding out…</string>
+    <string name="view_legislator_district">View Legislator District</string>
+    <string name="vote_amendment_purpose">Amendment Purpose</string>
+    <string name="vote_loading">Loading vote details…</string>
+    <string name="vote_no_voters_yet">Vote details not yet known.</string>
+    <string name="vote_not_found">Vote details not yet available.</string>
+    <string name="vote_related_to_bill">Related to</string>
+    <string name="vote_related_to_bill_cloture">On cloture for</string>
+    <string name="vote_related_to_bill_passage">On passage of</string>
+    <string name="vote_results_header">RESULTS</string>
+    <string name="votes_empty_voter">No votes found by this person.</string>
+    <string name="votes_error">Error loading votes.</string>
+    <string name="votes_loading">Plucking votes from the air…</string>
+    <string name="voting_record">Voting Record</string>
+    <string name="web_office">Web</string>
+    <string name="yeas">Yeas</string>
+    <style name="LegislatorProfileText">
+        <item name="android:layout_width">wrap_content</item>
+	  	<item name="android:layout_height">wrap_content</item>
+	  	<item name="android:textSize">14sp</item>
+	  	<item name="android:paddingBottom">5dp</item>
+    </style>
+    <style name="MainDialog" parent="RootDialog">
+    </style>
+    <style name="MainList" parent="RootList">
+        <item name="android:dividerHeight">1dp</item>
+	    <item name="android:divider">@color/background_dark</item>
+	    <item name="android:cacheColorHint">@color/background</item>
+    </style>
+    <style name="MainTheme" parent="RootTheme">
+        <item name="android:listViewStyle">@style/MainList</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="android:textColorLink">@color/text_link</item>
+        <item name="android:textColorPrimary">@color/text</item>
+        <item name="android:textColorSecondary">@color/text</item>
+        <item name="android:textColorTertiary">@color/text</item>
+    </style>
+    <style name="OnePagerButton">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="Pressable">
+        <item name="android:background">@drawable/selector_legacy</item>
+        <item name="android:focusable">true</item>
+    </style>
+    <style name="RootDialog" parent="android:Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    <style name="RootList" parent="@android:style/Widget.ListView"/>
+    <style name="RootTheme" parent="android:Theme.NoTitleBar"/>
+</resources>

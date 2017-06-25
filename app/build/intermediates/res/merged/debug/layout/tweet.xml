@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	
+	android:paddingLeft="10dp"
+	android:paddingRight="10dp"
+	android:paddingBottom="10dp"
+	android:paddingTop="10dp"
+	
+	android:clickable="false"
+	android:focusable="false"
+	>
+
+	<TextView android:id="@+id/tweet_text"
+		
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="2dp"
+		
+		android:layout_gravity="left"
+		android:layout_weight="1"
+		
+		android:textSize="16sp"
+		android:autoLink="web"
+		
+		android:focusable="true"
+		android:clickable="true"
+		
+		android:text="This tweet could be as long as 140 characters, which is longer than you may think. And it might start with an @reply."
+		/>
+		
+	<TextView android:id="@+id/tweet_byline"
+		
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="8dp"
+		
+		android:textColor="@color/text_grey"
+		android:textSize="14sp"
+		
+		android:text="posted 1 day ago by @SomeBody"
+		/>
+
+</LinearLayout>
