@@ -1,12 +1,12 @@
 package com.sunlightlabs.android.congress;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +23,7 @@ import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.Utils;
 
-public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActionMenu {
+public class MenuMain extends Activity implements ActionBarUtils.HasActionMenu {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,7 +77,7 @@ public class MenuMain extends FragmentActivity implements ActionBarUtils.HasActi
 	}
 	
 	private void setupFragments() {
-		FragmentManager manager = getSupportFragmentManager();
+		FragmentManager manager = getFragmentManager();
 		if (manager.findFragmentById(R.id.main_navigation) == null)
 			manager.beginTransaction().add(R.id.main_navigation, MainMenuFragment.newInstance()).commit();
 		if (manager.findFragmentById(R.id.upcoming_list) == null)

@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.app.Activity;
+import android.app.Fragment;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,10 +32,10 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
 	String currentHandle;
 	
 	private ViewPager pager;
-	private FragmentActivity activity;
+	private Activity activity;
 	
-	public TitlePageAdapter(FragmentActivity activity) {
-        super(activity.getSupportFragmentManager());
+	public TitlePageAdapter(Activity activity) {
+        super(activity.getFragmentManager());
         this.activity = activity;
         this.pager = (ViewPager) activity.findViewById(R.id.pager);
         

@@ -1,7 +1,7 @@
 package com.sunlightlabs.android.congress;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 import com.sunlightlabs.android.congress.fragments.RollListFragment;
@@ -9,7 +9,7 @@ import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
 
-public class MenuVotes extends FragmentActivity {
+public class MenuVotes extends Activity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

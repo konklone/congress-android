@@ -1,7 +1,7 @@
 package com.sunlightlabs.android.congress;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 import com.sunlightlabs.android.congress.fragments.BillListFragment;
@@ -10,7 +10,7 @@ import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
 
-public class MenuBills extends FragmentActivity {
+public class MenuBills extends Activity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

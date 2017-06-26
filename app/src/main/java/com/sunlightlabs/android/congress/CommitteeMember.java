@@ -1,8 +1,8 @@
 package com.sunlightlabs.android.congress;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 
 import com.sunlightlabs.android.congress.fragments.CommitteeListFragment;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
@@ -10,7 +10,7 @@ import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class CommitteeMember extends FragmentActivity {
+public class CommitteeMember extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,7 +22,7 @@ public class CommitteeMember extends FragmentActivity {
 		ActionBarUtils.setTitle(this, "Committees for " + legislator.titledName(), Utils.legislatorIntent(this, legislator));
 		ActionBarUtils.setTitleSize(this, 16);
 		
-		FragmentManager manager = getSupportFragmentManager();
+		FragmentManager manager = getFragmentManager();
 		if (manager.findFragmentById(R.id.frame) == null)
 			manager.beginTransaction().add(R.id.frame, CommitteeListFragment.forLegislator(legislator)).commit();
 	}

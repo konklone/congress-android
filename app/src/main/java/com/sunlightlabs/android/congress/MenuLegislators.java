@@ -1,11 +1,11 @@
 package com.sunlightlabs.android.congress;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.ListFragment;
+import android.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +20,7 @@ import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
 
 import java.util.List;
 
-public class MenuLegislators extends FragmentActivity {
+public class MenuLegislators extends Activity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

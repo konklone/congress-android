@@ -1,8 +1,8 @@
 package com.sunlightlabs.android.congress.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.Fragment;
+import android.app.FragmentManager;
 
 import com.sunlightlabs.android.congress.BillPager;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
@@ -22,7 +22,7 @@ public class BillLoaderFragment extends Fragment implements LoadBillTask.LoadsBi
 	}
 	
 	public static void start(BillPager context, boolean restart) {
-		FragmentManager manager = context.getSupportFragmentManager();
+		FragmentManager manager = context.getFragmentManager();
 		BillLoaderFragment fragment = (BillLoaderFragment) manager.findFragmentByTag(FRAGMENT_TAG);
 		if (fragment == null) {
 			fragment = new BillLoaderFragment();

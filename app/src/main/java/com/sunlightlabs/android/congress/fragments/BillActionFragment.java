@@ -3,7 +3,7 @@ package com.sunlightlabs.android.congress.fragments;
 import java.util.Date;
 
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.app.ListFragment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;

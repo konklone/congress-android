@@ -1,10 +1,10 @@
 package com.sunlightlabs.android.congress;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 import com.sunlightlabs.android.congress.fragments.BillListFragment;
@@ -17,7 +17,7 @@ import com.sunlightlabs.congress.models.Bill;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BillSearch extends FragmentActivity {
+public class BillSearch extends Activity {
 	
 	String query;
 	

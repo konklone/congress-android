@@ -8,9 +8,9 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import android.app.ListFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;

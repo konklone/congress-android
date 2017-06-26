@@ -1,8 +1,8 @@
 package com.sunlightlabs.android.congress.fragments;
 
+import android.app.ListFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -333,11 +333,11 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		}
 		
 		private void shortDate(TextView view, Date date) {
-			if (date.getYear() == Calendar.getInstance().get(Calendar.YEAR)) { 
-				view.setTextSize(18);
-				view.setText(new SimpleDateFormat("MMM d", Locale.US).format(date).toUpperCase(Locale.US));
-			} else
-				longDate(view, date);
+//			if (date.getYear() == Calendar.getInstance().get(Calendar.YEAR)) {
+//				view.setTextSize(18);
+//				view.setText(new SimpleDateFormat("MMM d", Locale.US).format(date).toUpperCase(Locale.US));
+//			} else
+			longDate(view, date);
 		}
 		
 		private void longDate(TextView view, Date date) {

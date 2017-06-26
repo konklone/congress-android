@@ -1,8 +1,8 @@
 package com.sunlightlabs.android.congress.tasks;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
 
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;

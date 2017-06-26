@@ -4,12 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -31,7 +31,7 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.models.UpcomingBill;
 
-public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPhoto, LoadBillTask.LoadsBill {	
+public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPhoto, LoadBillTask.LoadsBill {
 	// fields from the intent 
 	private Bill bill;
 	private Legislator sponsor;

@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +52,7 @@ public class Footer {
 	}
 	
 	public Footer(Fragment fragment) {
-		FragmentActivity activity = fragment.getActivity();
+		Activity activity = fragment.getActivity();
 		this.context = activity;
 		this.resources = activity.getResources();
 		
