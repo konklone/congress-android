@@ -4,8 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,8 +18,8 @@ public class FragmentUtils {
 		Utils.setupAPI(fragment.getActivity());
 	}
 	
-	public static void alertDialog(FragmentActivity activity, int type) {
-		AlertFragment.create(type).show(activity.getSupportFragmentManager(), "dialog");
+	public static void alertDialog(Activity activity, int type) {
+		AlertFragment.create(type).show(activity.getFragmentManager(), "dialog");
 	}
 	
 	public static List<String> newIds(Fragment fragment, String subscriberClass) {

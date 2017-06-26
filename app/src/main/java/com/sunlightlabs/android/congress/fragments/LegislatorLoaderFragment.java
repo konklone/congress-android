@@ -1,8 +1,8 @@
 package com.sunlightlabs.android.congress.fragments;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 
 import com.sunlightlabs.android.congress.LegislatorPager;
 import com.sunlightlabs.android.congress.tasks.LoadLegislatorTask;
@@ -21,7 +21,7 @@ public class LegislatorLoaderFragment extends Fragment implements LoadLegislator
 	}
 	
 	public static void start(LegislatorPager context, boolean restart) {
-		FragmentManager manager = context.getSupportFragmentManager();
+		FragmentManager manager = context.getFragmentManager();
 		LegislatorLoaderFragment fragment = (LegislatorLoaderFragment) manager.findFragmentByTag(FRAGMENT_TAG);
 		if (fragment == null) {
 			fragment = new LegislatorLoaderFragment();

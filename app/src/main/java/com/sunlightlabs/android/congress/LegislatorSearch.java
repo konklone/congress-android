@@ -1,5 +1,6 @@
 package com.sunlightlabs.android.congress;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.SearchRecentSuggestions;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 
@@ -25,7 +25,7 @@ import com.sunlightlabs.android.congress.utils.Utils;
 
 import java.util.regex.Pattern;
 
-public class LegislatorSearch extends FragmentActivity implements LocationListenerTimeout {
+public class LegislatorSearch extends Activity implements LocationListenerTimeout {
 	
 	String query;
 	String state;

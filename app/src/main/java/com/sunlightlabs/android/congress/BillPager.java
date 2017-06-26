@@ -1,10 +1,10 @@
 package com.sunlightlabs.android.congress;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +26,7 @@ import com.sunlightlabs.congress.services.BillService;
 
 import java.util.List;
 
-public class BillPager extends FragmentActivity implements HasActionMenu {
+public class BillPager extends Activity implements HasActionMenu {
 	public String bill_id;
 	public Bill bill;
 	

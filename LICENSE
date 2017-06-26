@@ -11,7 +11,7 @@ This application makes use of various Commonsware libraries. These, along with t
 
 ==================
 
-Files in /libs are compiled JARs, distributed under their own license terms.
+Files in /app/libs are compiled JARs, distributed under their own license terms.
 
 geojson-jackson-1.1.jar
   Apache License 2.0
@@ -23,18 +23,6 @@ jackson-databind-2.3.1.jar
   http://jackson.codehaus.org
   Apache License 2.0
 
-mapbox-android-sdk.jar
-  https://github.com/mapbox/mapbox-android-sdk/blob/master/LICENSE.md
-  Apache License 2.0
-
-android-support-v4.jar
-  Apache License 2.0
-  Visible at top of source files
-
-libGoogleAnalyticsServices.jar
-  unknown, proprietary?
-  https://developers.google.com/analytics/devguides/collection/android/v3/
-
 ==================
 
 The General Public License v3 covers all code in packages matched by:
@@ -43,11 +31,11 @@ The General Public License v3 covers all code in packages matched by:
 
 This is all code found in the directory:
 
-  /src/com/sunlightlabs/android
+  /app/src/main/java/com/sunlightlabs/android
 
 The General Public License v3 can be found here:
 
-  http://www.gnu.org/licenses/gpl-3.0.txt
+  https://www.gnu.org/licenses/gpl-3.0.txt
 
 
 ==================

@@ -1,14 +1,14 @@
 package com.sunlightlabs.android.congress;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
 import com.sunlightlabs.android.congress.fragments.HearingListFragment;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
 
-public class HearingPager extends FragmentActivity {
+public class HearingPager extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

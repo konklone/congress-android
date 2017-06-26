@@ -2,9 +2,9 @@ package com.sunlightlabs.android.congress.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -64,24 +64,24 @@ public class AlertFragment extends DialogFragment {
 		View aboutView = inflater.inflate(R.layout.about, null);
 
 		Spanned about1 = Html.fromHtml(
-				"Follow <a href=\"https://twitter.com/congress_app\">@congress_app</a>, and tell your friends with iPhones about <a href=\"http://congress.sunlightfoundation.com/\">our iOS app</a>.<br/><br/>" +
-		
-				"Our people and committee data is powered by the " + 
-				"<a href=\"http://theunitedstates.io\">@unitedstates</a> project.<br/><br/>" +
+				"This app is powered by the <a href=\"https://www.propublica.org/datastore/api/propublica-congress-api\">Pro Publica Congress API</a><br/><br/>" +
+
+				"Data on people and committees comes from the " +
+				"<a href=\"https://github.com/unitedstates\">@unitedstates</a> project.<br/><br/>" +
 				
-				"Data on bills comes from the <a href=\"http://beta.congress.gov\">Library of Congress</a> " +
-				"and the Congressional Research Service.<br/><br/>" +
+				"Data on bills comes from the <a href=\"https://www.congress.gov\">Library of Congress</a>.<br/><br/>" +
 				
 				"Votes, committee hearings, and floor updates come from official " +
-				"<a href=\"http://www.senate.gov/\">Senate</a> and <a href=\"http://house.gov/\">House</a> websites.<br/><br/>"
+				"<a href=\"https://www.senate.gov/\">Senate</a> and <a href=\"https://www.house.gov/\">House</a> websites.<br/><br/>"
 		);
 		TextView aboutView1 = (TextView) aboutView.findViewById(R.id.about_1);
 		aboutView1.setText(about1);
 		aboutView1.setMovementMethod(LinkMovementMethod.getInstance());
 
 		Spanned about2 = Html.fromHtml(
-				"This app is made by the <a href=\"http://sunlightfoundation.com\">Sunlight Foundation</a>, " +
-				"a non-partisan non-profit dedicated to increasing government transparency through the power of technology."
+				"This app is made by <a href=\"https://twitter.com/konklone\">Eric Mill</a>.<br/><br/>" +
+				"This app's development was supported for years by the <a href=\"https://sunlightfoundation.com\">Sunlight Foundation</a>, " +
+				"a non-partisan non-profit dedicated to making government and politics more accountable and transparent."
 		);
 		TextView aboutView2 = (TextView) aboutView.findViewById(R.id.about_2);
 		aboutView2.setText(about2);

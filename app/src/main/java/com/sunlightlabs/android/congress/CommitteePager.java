@@ -1,8 +1,8 @@
 package com.sunlightlabs.android.congress;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 import com.sunlightlabs.android.congress.fragments.CommitteeListFragment;
@@ -12,7 +12,7 @@ import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
 import com.sunlightlabs.congress.models.Committee;
 
-public class CommitteePager extends FragmentActivity {
+public class CommitteePager extends Activity {
 	
 	Committee committee;
 	

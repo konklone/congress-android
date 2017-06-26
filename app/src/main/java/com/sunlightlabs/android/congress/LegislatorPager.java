@@ -1,11 +1,11 @@
 package com.sunlightlabs.android.congress;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +25,7 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
-public class LegislatorPager extends FragmentActivity implements HasActionMenu {
+public class LegislatorPager extends Activity implements HasActionMenu {
 	public String bioguide_id;
 	public Legislator legislator;
 	public String tab;

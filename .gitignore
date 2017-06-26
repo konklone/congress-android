@@ -1,5 +1,6 @@
 /todo.txt
 *.swp
+*.iml
 
 /app/build
 .idea
