@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "com.sunlightlabs.android.congress"
-        minSdkVersion 9
+        minSdkVersion 16
         targetSdkVersion 19
     }
 
