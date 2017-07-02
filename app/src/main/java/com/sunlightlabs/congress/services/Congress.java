@@ -45,7 +45,6 @@ public class Congress {
 	public static String baseUrl = null;
 	public static String userAgent = null;
 	public static String appVersion = null;
-	public static String appChannel = null;
 	public static String apiKey = null;
 
 	// filled in by the client from Android system reflection
@@ -203,15 +202,12 @@ public class Congress {
 	        if (appVersion != null)
 	        	connection.setRequestProperty("x-app-version", appVersion);
 
-	        if (appChannel != null)
-	        	connection.setRequestProperty("x-app-channel", appChannel);
-
 	        int status = connection.getResponseCode();
 	        if (status == HttpURLConnection.HTTP_OK) {
 	        	// read input stream first to fetch response headers
 	        	InputStream in = connection.getInputStream();
 
-	        	// adapted from http://stackoverflow.com/a/2549222/16075
+	        	// adapted from https://stackoverflow.com/a/2549222/16075
 	        	BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 	        	StringBuilder total = new StringBuilder();
 	        	String line;

@@ -1,12 +1,12 @@
 ## Congress for Android
 
-This is the source code for the Sunlight Foundation's [Congress app](http://congress.sunlightfoundation.com) for Android phones.
+This is the source code for the Eric Mill's Congress app for Android phones. (This app was previously funded and developed for years by the [Sunlight Foundation](https://sunlightfoundation.com).)
 
 Find the most up-to-date version in the Google Play Store: https://play.google.com/store/apps/details?id=com.sunlightlabs.android.congress
 
 We ship the app using the code found in this repository, with some miscellaneous unversioned API keys and build information placed in `app/src/main/res/values/keys.xml`.
 
-We use [Github Issues](/sunlightlabs/congress-android/issues) for issue tracking.
+We use [Github Issues](https:/github.com/konklone/congress-android/issues) for issue tracking.
 
 ### Setup
 
@@ -50,21 +50,14 @@ Code changes:
 Then, release work:
 
 * **Temporarily** add `android:debuggable="false"` in the `<application>` tag in `AndroidManifest.xml`.
-    * manually specifying is (unfortunately) [required](http://stackoverflow.com/questions/20051192/unable-to-upload-updated-apk-to-google-play-store) when working in Android Studio, as it will otherwise default to being debuggable.
+    * manually specifying is (unfortunately) [required](https://stackoverflow.com/questions/20051192/unable-to-upload-updated-apk-to-google-play-store) when working in Android Studio, as it will otherwise default to being debuggable.
 * Check keys.xml:
-  - is api_endpoint pointing to production? https?
-  - is the distribution_channel correct? (market vs ____)
-  - is the market_channel correct? (google vs amazon)
+  - is api_endpoint pointing to production?
   - are all debug flags set to false?
 * Produce unsigned APK version
 * Produce signed APK version
-  - if desired, produce separate APK version for Amazon
 * Then **remove** `android:debuggable` from the `<application>` tag in `AndroidManifest.xml`.
 * Take any screenshots needed to replace outdated ones
-  - Replace any new screenshots in Dropbox
-* Store APKs in Dropbox
+  - Replace any new screenshots in _____ (GitHub?)
+* Store APKs in ____ (GitHub?)
 
-Finally, publish:
-
-* Google Play market
-* Amazon Appstore market

@@ -93,11 +93,6 @@ public class Analytics {
 	 *  Custom dimensions and metrics.
 	 */
 	
-	public static final int DIMENSION_MARKET_CHANNEL = 1; // market channel (user)
-	
-	public static final int DIMENSION_ORIGINAL_CHANNEL = 2; // original distribution channel (user)
-	public static final String DIMENSION_ORIGINAL_CHANNEL_PREFERENCE = "original_distribution_channel";
-	
 	public static final int DIMENSION_NOTIFICATIONS_ON = 3; // whether notifications are enabled (session)
 	
 	public static final int DIMENSION_ENTRY = 4; // how the user entered the app (hit)
@@ -105,22 +100,12 @@ public class Analytics {
 	public static HitBuilders.EventBuilder attachCustomDimensions(Activity activity, HitBuilders.EventBuilder event) {
 		Resources res = activity.getResources();
 
-		String marketChannel = res.getString(R.string.market_channel);
-		event = event.setCustomDimension(DIMENSION_MARKET_CHANNEL, marketChannel);
-
-		String originalChannel = Utils.getStringPreference(activity, DIMENSION_ORIGINAL_CHANNEL_PREFERENCE);
-        event = event.setCustomDimension(DIMENSION_ORIGINAL_CHANNEL, originalChannel);
-
 		boolean notificationsOn = Utils.getBooleanPreference(activity, NotificationSettings.KEY_NOTIFY_ENABLED, false);
         event = event.setCustomDimension(DIMENSION_NOTIFICATIONS_ON, notificationsOn ? "on" : "off");
 
 		String entrySource = entrySource(activity);
 		if (entrySource != null)
             event = event.setCustomDimension(DIMENSION_ENTRY, entrySource);
-
-		// debug: output custom dimensions
-//		String msg = "[" + marketChannel + "][" + originalChannel + "][" + (notificationsOn ? "on" : "off") + "][" + (entrySource != null ? entrySource : "nothing") + "]";
-//		Log.i(Utils.TAG, msg);
 
         return event;
 	}
@@ -220,10 +205,10 @@ public class Analytics {
 		event(activity, EVENT_CHANGELOG, CHANGELOG_VALUE, null);
 	}
 	
-	public static void reviewClick(Activity activity, String market) {
-		event(activity, EVENT_REVIEW, market, null);
+	public static void reviewClick(Activity activity) {
+		event(activity, EVENT_REVIEW, null, null);
 	}
-	
+
 	public static void addFavoriteLegislator(Activity activity, String bioguideId) {
 		event(activity, EVENT_FAVORITE, FAVORITE_ADD_LEGISLATOR, bioguideId);
 	}
