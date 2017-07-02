@@ -53,9 +53,6 @@ public class Bill implements Serializable {
 	// search result metadata (if coming from a search)
 	public SearchResult search;
 	
-	// latest upcoming bill data
-	public List<UpcomingBill> upcoming;
-	
 	// homepage URLs on services
 	public Map<String,String> urls;
 	

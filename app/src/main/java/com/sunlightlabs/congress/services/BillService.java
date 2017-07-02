@@ -5,7 +5,6 @@ import com.sunlightlabs.congress.models.Bill.Action;
 import com.sunlightlabs.congress.models.Bill.Vote;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
-import com.sunlightlabs.congress.models.UpcomingBill;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,8 +12,6 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +25,6 @@ public class BillService {
 		"urls", "last_version.urls",
 		"history", 
 		"sponsor",
-		"upcoming",
 		"last_action"
 	};
 	
@@ -205,26 +201,6 @@ public class BillService {
 		
 		if (!json.isNull("last_action"))
 			bill.lastAction = actionFromAPI(json.getJSONObject("last_action"));
-		
-		if (!json.isNull("upcoming")) {
-			JSONArray upcomingObjects = json.getJSONArray("upcoming");
-			int length = upcomingObjects.length();
-			
-			List<UpcomingBill> upcoming = new ArrayList<UpcomingBill>();
-			
-			for (int i = 0; i < length; i++)
-				upcoming.add(UpcomingBillService.fromAPI(upcomingObjects.getJSONObject(i)));
-			
-			// sort in order of legislative day
-			Collections.sort(upcoming, new Comparator<UpcomingBill>() {
-				@Override
-				public int compare(UpcomingBill a, UpcomingBill b) {
-					return a.legislativeDay.compareTo(b.legislativeDay);
-				}
-			});
-			
-			bill.upcoming = upcoming;
-		}
 		
 		if (!json.isNull("last_version")) {
 			JSONObject version = json.getJSONObject("last_version");
