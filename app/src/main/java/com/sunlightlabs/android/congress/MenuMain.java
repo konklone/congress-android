@@ -36,7 +36,6 @@ public class MenuMain extends Activity implements ActionBarUtils.HasActionMenu {
 		
 		if (firstTime()) {
 			newVersion(); // don't need to see the changelog on first install
-			storeOriginalChannel();
 			FragmentUtils.alertDialog(this, AlertFragment.FIRST);
 			setNotificationState(); // initially, all notifications are stopped
 		} else if (newVersion()) {
@@ -103,15 +102,7 @@ public class MenuMain extends Activity implements ActionBarUtils.HasActionMenu {
 		}
 		return false;
 	}
-	
-	// store the value that was originally in keys.xml as the distribution channel
-	// this is essentially to track non-Market original installs, even if the user 
-	// eventually updates to a version of the app from the Market.
-	public void storeOriginalChannel() {
-		String channel = getResources().getString(R.string.distribution_channel);
-		Utils.setStringPreference(this, Analytics.DIMENSION_ORIGINAL_CHANNEL_PREFERENCE, channel);
-	}
-	
+
 	// used for one-pager
 	// change name of preference variable for a new one-pager
 	 public boolean shownOnePager() {
@@ -157,16 +148,11 @@ public class MenuMain extends Activity implements ActionBarUtils.HasActionMenu {
 	
 	public void goReview() {
 		String packageName = getResources().getString(R.string.app_package_name);
-		String channel = getResources().getString(R.string.market_channel);
-		
-		Analytics.reviewClick(this, channel);
+
+		Analytics.reviewClick(this);
 		
 		try {
-			String uri;
-			if (channel.equals("amazon"))
-				uri = "http://www.amazon.com/gp/mas/dl/android?p=" + packageName;
-			else
-				uri = "market://details?id=" + packageName;
+			String uri = "market://details?id=" + packageName;
 			
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uri)));
 		} catch(ActivityNotFoundException e) {
