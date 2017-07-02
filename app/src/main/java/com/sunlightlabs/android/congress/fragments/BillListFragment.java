@@ -265,9 +265,6 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	private String subscriberClass() {
 		if (type == BILLS_ALL)
 			return "BillsRecentSubscriber";
-		// can't turn on until this is a tab, not a thing through LegislatorLoader
-//		else if (type == BILLS_SPONSOR)
-//			return "BillsLegislatorSubscriber";
 		else if (type == BILLS_ACTIVE)
 			return "BillsActiveSubscriber";
 		else if (type == BILLS_SEARCH_NEWEST)
@@ -288,10 +285,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			subscription = new Subscription("EnactedLegislation", getResources().getString(R.string.subscriber_bills_law), "BillsLawSubscriber", null);
 		else if (type == BILLS_SEARCH_NEWEST)
 			subscription = new Subscription(query, query, "BillsSearchSubscriber", query);
-		
-		// no subscription offered for a bill code search
-		// no subscription offered for "best match" searches
-		
+
 		if (subscription != null)
 			Footer.setup(this, subscription, bills);
 	}
@@ -389,6 +383,9 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			case BILLS_ACTIVE:
 				shortDate(holder.date, bill.last_action_at);
 				break;
+			case BILLS_LAW:
+				shortDate(holder.date, bill.enacted_at);
+				break;
 			case BILLS_SEARCH_RELEVANT:
 				longDate(holder.date, bill.last_action_at);
 				break;
@@ -445,7 +442,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		
 		private void longDate(TextView view, Date date) {
 			view.setTextSize(14);
-			view.setText(new SimpleDateFormat("MMM d, ''yy", Locale.US).format(date).toUpperCase(Locale.US));
+			view.setText(new SimpleDateFormat("MMM d, yyyy", Locale.US).format(date).toUpperCase(Locale.US));
 		}
 		
 		private String actionText(Bill.Action action) {
