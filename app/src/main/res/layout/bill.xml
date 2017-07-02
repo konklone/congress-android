@@ -70,17 +70,7 @@
 			</FrameLayout>
 		
 		</LinearLayout>
-		
-		<include layout="@layout/header"
-		    android:id="@+id/upcoming_header"
-		    android:visibility="gone"
-		    />
-		
-		<include layout="@layout/bill_upcoming"
-		    android:id="@+id/upcoming_container"
-		    android:visibility="gone"
-		    />
-		
+
 		<include layout="@layout/header"
 		    android:id="@+id/summary_header" 
 		    />

@@ -29,13 +29,11 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
-import com.sunlightlabs.congress.models.UpcomingBill;
 
 public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPhoto, LoadBillTask.LoadsBill {
 	// fields from the intent 
 	private Bill bill;
 	private Legislator sponsor;
-	private List<UpcomingBill> latestUpcoming;
 
 	// fields fetched remotely
 	private String summary;
@@ -62,7 +60,6 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
         
         bill = (Bill) getArguments().getSerializable("bill");
         sponsor = bill.sponsor;
-        latestUpcoming = bill.upcoming;
         
         loadSummary();
 	}
@@ -174,72 +171,12 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 			noSponsor.setText(R.string.bill_no_sponsor);
 			noSponsor.setVisibility(View.VISIBLE);
 		}
-		
-		// prepare the upcoming container if one is necessary
-		if (latestUpcoming != null && latestUpcoming.size() > 0) {
-			TextView upcomingHeader = (TextView) getView().findViewById(R.id.upcoming_header);
-			upcomingHeader.setText(R.string.upcoming_header);
-			upcomingHeader.setVisibility(View.VISIBLE);
-			
-			ViewGroup upcomingContainer = (ViewGroup) getView().findViewById(R.id.upcoming_container);
-			for (int i=0; i<latestUpcoming.size(); i++)
-				upcomingContainer.addView(upcomingView(latestUpcoming.get(i)));
-			upcomingContainer.setVisibility(View.VISIBLE);
-		}
-		
+
 		((TextView) getView().findViewById(R.id.summary_header)).setText(R.string.bill_summary_header);
 		
 		View summaryLoading = getView().findViewById(R.id.summary_loading);
 		((TextView) summaryLoading.findViewById(R.id.loading_message)).setText("Loading summary...");
 		summaryLoading.setVisibility(View.VISIBLE);
-	}
-	
-	public View upcomingView(final UpcomingBill upcoming) {
-		LayoutInflater inflater = getActivity().getLayoutInflater();
-		ViewGroup view = (ViewGroup) inflater.inflate(R.layout.bill_upcoming_item, null);
-		
-		String text;
-		if (upcoming.range == null || upcoming.legislativeDay == null)
-			text = "SOMETIME";
-		else if (upcoming.range.equals("day"))
-			text = Utils.nearbyOrFullDate(upcoming.legislativeDay);
-		else if (upcoming.range.equals("week"))
-			text = "WEEK OF " + Utils.fullDate(upcoming.legislativeDay);
-		else
-			text = "SOMETIME";
-		
-		((TextView) view.findViewById(R.id.date)).setText(text);
-		((TextView) view.findViewById(R.id.where)).setText(upcomingSource(upcoming.sourceType, upcoming.chamber));
-		
-		View moreView = view.findViewById(R.id.more);
-		if (upcoming.sourceUrl != null) {
-			moreView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Analytics.billUpcomingMore(getActivity(), upcoming.sourceType);
-					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(upcoming.sourceUrl)));
-				}
-			});
-		} else
-			moreView.setVisibility(View.GONE);
-		
-		return view;
-	}
-	
-	public String upcomingSource(String type, String chamber) {
-		if (type.equals("senate_daily"))
-			return "On the Senate Floor";
-		else if (type.equals("house_daily") || type.equals("house_weekly") || type.equals("house_floor"))
-			return "On the House Floor";
-		
-		// fallbacks, if we add more upcoming source types
-		else if (chamber.equals("senate"))
-			return "In the Senate";
-		else if (chamber.equals("house"))
-			return "In the House";
-		
-		else // should never happen
-			return "In Congress";
 	}
 	
 	public void displayPhoto() {
