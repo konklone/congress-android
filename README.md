@@ -59,5 +59,7 @@ Then, release work:
 * Then **remove** `android:debuggable` from the `<application>` tag in `AndroidManifest.xml`.
 * Take any screenshots needed to replace outdated ones
   - Replace any new screenshots in _____ (GitHub?)
-* Store APKs in ____ (GitHub?)
+* Store APKs in GitHub
+  - into releases/
+  - create a Release associated with the tag
 
