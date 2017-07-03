@@ -3,6 +3,8 @@
     
     <string-array name="changelog">
 		<item>We\'re back! After a few years without updates, the app is now maintained by Eric Mill, its original developer. My deep thanks to the Sunlight Foundation for funding the development of this app from 2009 until now.</item>
+		<item>Warning: This app is about to undergo significant changes. The API it relies on, Sunlight\'s Congress API, is shutting down. Pro Publica will serve some, but not all, of the information that Sunlight\'s API has now. Some information will disappear in a near term release.</item>
+		<item>Now, back to the list of changes in this release...</item>
 		<item>Removed upcoming activity from bill display. It was super buggy and would often show way too many items.</item>
 		<item>On the \"Law\" tab, it now shows the date the law was enacted, rather than the date the bill was introduced.</item>
 		<item>Android 4.4 is now the minimum version. Dropped support for Android 2.3 through 4.3 (Gingerbread, Honeycomb, Ice Cream Sandwich, and Jellybean).</item>
