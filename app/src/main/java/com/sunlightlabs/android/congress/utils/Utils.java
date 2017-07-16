@@ -42,7 +42,7 @@ public class Utils {
 		Congress.appVersion = resources.getString(R.string.app_version);
 		Congress.osVersion = "Android " + Build.VERSION.SDK_INT;
 
-		ProPublica.baseUrl = resources.getString(R.string.propublica_api_endpoint);
+        ProPublica.baseUrl = resources.getString(R.string.propublica_api_endpoint);
         ProPublica.userAgent = resources.getString(R.string.api_user_agent);
         ProPublica.apiKey = resources.getString(R.string.propublica_api_key);
     }
