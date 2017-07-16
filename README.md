@@ -54,7 +54,6 @@ Then, release work:
 * Check keys.xml:
   - is api_endpoint pointing to production?
   - are all debug flags set to false?
-* Produce unsigned APK version
 * Produce signed APK version
 * Then **remove** `android:debuggable` from the `<application>` tag in `AndroidManifest.xml`.
 * Take any screenshots needed to replace outdated ones
