@@ -49,13 +49,10 @@ Code changes:
 
 Then, release work:
 
-* **Temporarily** add `android:debuggable="false"` in the `<application>` tag in `AndroidManifest.xml`.
-    * manually specifying is (unfortunately) [required](https://stackoverflow.com/questions/20051192/unable-to-upload-updated-apk-to-google-play-store) when working in Android Studio, as it will otherwise default to being debuggable.
 * Check keys.xml:
   - is api_endpoint pointing to production?
   - are all debug flags set to false?
 * Produce signed APK version
-* Then **remove** `android:debuggable` from the `<application>` tag in `AndroidManifest.xml`.
 * Take any screenshots needed to replace outdated ones
   - Replace any new screenshots in _____ (GitHub?)
 * Store APKs in GitHub
