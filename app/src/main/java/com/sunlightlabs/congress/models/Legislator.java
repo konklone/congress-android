@@ -40,6 +40,20 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 		return last_name + ", " + firstName();
 	}
 
+	// Used to parse long titles from Pro Publica API
+	// TODO: store long title natively and abbreviate at render-time
+	public static String shortTitle(String longTitle) {
+		if (longTitle.equals("Representative"))
+			return "Rep";
+		// Can be "Senator, 3rd Class"
+		else if (longTitle.startsWith("Senator"))
+			return "Sen";
+		else if (longTitle.equals("Delegate"))
+			return "Del";
+		else if (longTitle.equals("Resident Commissioner"));
+			return "Com";
+	}
+
 	public String fullTitle() {
 		String title = this.title;
 		if (title.equals("Del"))

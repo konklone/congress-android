@@ -19,20 +19,30 @@ import java.util.Date;
 import java.util.List;
 
 public class Database {
-	private static final int DATABASE_VERSION = 9; // updated last for version 4.6
+	// updated last for version 4.6
+	private static final int DATABASE_VERSION = 9;
 
 	public boolean closed = true;
 
 	private static final String DATABASE_NAME = "congress.db";
 
-	private static final String[] LEGISLATOR_COLUMNS = new String[] { "bioguide_id",
-			"first_name", "last_name", "nickname", "name_suffix", "title", "party",
-			"state", "district", "gender" };
-	private static final String[] BILL_COLUMNS = new String[] { "id", "short_title", "official_title" };
+	// TODO: remove/migrate out name_suffix, nickname fields
+	private static final String[] LEGISLATOR_COLUMNS = new String[] {
+		"bioguide_id", "first_name", "last_name", "nickname",
+		"name_suffix", "title", "party", "state", "district", "gender"
+	};
 
-	private static final String[] SUBSCRIPTION_COLUMNS = new String[] { "id", "name", "data", "notification_class", "unseen_count" };
+	private static final String[] BILL_COLUMNS = new String[] {
+		"id", "short_title", "official_title"
+	};
+
+	private static final String[] SUBSCRIPTION_COLUMNS = new String[] {
+		"id", "name", "data", "notification_class", "unseen_count"
+	};
 	
-	private static final String[] SEEN_COLUMNS = new String[] { "subscription_id", "subscription_class", "seen_id" };
+	private static final String[] SEEN_COLUMNS = new String[] {
+		"subscription_id", "subscription_class", "seen_id"
+	};
 
 	private DatabaseHelper helper;
 	private SQLiteDatabase database;

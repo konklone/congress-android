@@ -47,13 +47,87 @@ public class LegislatorService {
 	}
 	
 	public static Legislator find(String bioguideId) throws CongressException {
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("bioguide_id", bioguideId);
-		params.put("all_legislators", "true");
-		return legislatorFor(Congress.url("legislators", basicFields, params));
+        String[] paths = new String[] {"members", bioguideId};
+		return proPublicaLegislatorFor(ProPublica.url(paths));
 	}
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
+
+	protected static Legislator fromProPublica(JSONObject json) throws JSONException, CongressException {
+        if (json == null)
+            return null;
+
+        Legislator legislator = new Legislator();
+
+        if (!json.isNull("member_id"))
+            legislator.bioguide_id = json.getString("member_id");
+        if (!json.isNull("govtrack_id"))
+            legislator.govtrack_id = json.getString("govtrack_id");
+
+        // API may return in_office as a string, but JSONObject should auto-coerce:
+        // https://developer.android.com/reference/org/json/JSONObject.html
+        if (!json.isNull("in_office"))
+            legislator.in_office = json.getBoolean("in_office");
+
+        if (!json.isNull("first_name"))
+            legislator.first_name = json.getString("first_name");
+        if (!json.isNull("last_name"))
+            legislator.last_name = json.getString("last_name");
+
+        if (!json.isNull("gender"))
+            legislator.gender = json.getString("gender");
+
+        if (!json.isNull("url"))
+            legislator.website = json.getString("url");
+
+        if (!json.isNull("youtube_account")) {
+            String youtube = json.getString("youtube_account");
+            if (!youtube.isEmpty()) legislator.youtube_id = youtube;
+        }
+        if (!json.isNull("twitter_account")) {
+            String twitter = json.getString("twitter_account");
+            if (!twitter.isEmpty()) legislator.twitter_id = twitter;
+        }
+        if (!json.isNull("facebook_account")) {
+            String facebook = json.getString("facebook_account");
+            if (!facebook.isEmpty()) legislator.facebook_id = facebook;
+        }
+
+        // Some fields come from the legislator's current role
+        // TODO: a Role object on Legislator?
+        if (json.isNull("roles")) return null;
+        JSONArray roles = json.getJSONArray("roles");
+        if (roles.length() == 0) return null;
+        JSONObject role = (JSONObject) roles.get(0);
+        if (role == null) return null;
+
+        // PP API uses long title (e.g. "Representative", "Senator, 3rd Class")
+        // We currently store/display short titles (e.g. "Rep", "Sen").
+        if (!role.isNull("title")) {
+            String longTitle = role.getString("title");
+            legislator.title = Legislator.shortTitle(longTitle);
+        }
+        if (!role.isNull("party"))
+            legislator.party = role.getString("party");
+        if (!role.isNull("state"))
+            legislator.state = role.getString("state");
+        if (!role.isNull("district"))
+            legislator.district = role.getString("district");
+        if (!role.isNull("chamber"))
+            legislator.chamber = role.getString("chamber").toLowerCase();
+        if (!role.isNull("start_date"))
+            legislator.term_start = role.getString("start_date");
+        if (!role.isNull("end_date"))
+            legislator.term_end = role.getString("end_date");
+        if (!role.isNull("leadership_role"))
+            legislator.leadership_role = role.getString("leadership_role");
+        if (!role.isNull("office"))
+            legislator.office = role.getString("office");
+        if (!role.isNull("phone"))
+            legislator.phone = role.getString("phone");
+
+        return legislator;
+    }
 
 	protected static Legislator fromAPI(JSONObject json) throws JSONException, CongressException {
 		if (json == null)
@@ -123,6 +197,15 @@ public class LegislatorService {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);
 		}
 	}
+
+	// TODO: rename to legislatorFor and remove old Sunlight method
+	private static Legislator proPublicaLegislatorFor(String url) throws CongressException {
+        try {
+            return fromProPublica(ProPublica.firstResult(url));
+        } catch (JSONException e) {
+            throw new CongressException(e, "Problem parsing the JSON from " + url);
+        }
+    }
 
 	private static List<Legislator> legislatorsFor(String url) throws CongressException {
 		List<Legislator> legislators = new ArrayList<Legislator>();

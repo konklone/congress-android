@@ -21,6 +21,7 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.Congress;
+import com.sunlightlabs.congress.services.ProPublica;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,9 +40,12 @@ public class Utils {
 		Congress.userAgent = resources.getString(R.string.api_user_agent);
 		Congress.apiKey = resources.getString(R.string.sunlight_api_key);
 		Congress.appVersion = resources.getString(R.string.app_version);
-		
 		Congress.osVersion = "Android " + Build.VERSION.SDK_INT;
-	}
+
+		ProPublica.baseUrl = resources.getString(R.string.propublica_api_endpoint);
+        ProPublica.userAgent = resources.getString(R.string.api_user_agent);
+        ProPublica.apiKey = resources.getString(R.string.propublica_api_key);
+    }
 
 	public static void alert(Context context, String msg) {
 		Toast.makeText(context, msg, Toast.LENGTH_LONG).show();

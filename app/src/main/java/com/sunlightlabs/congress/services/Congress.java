@@ -114,7 +114,7 @@ public class Congress {
 					query.append("&");
 			}
 		} catch(UnsupportedEncodingException e) {
-			throw new CongressException(e, "Unicode not supported on this phone somehow.");
+			throw new CongressException(e, "Unicode not supported on this device somehow.");
 		}
 
 		return baseUrl + "/" + method + "?" + query.toString();
