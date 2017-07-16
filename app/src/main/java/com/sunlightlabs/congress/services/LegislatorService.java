@@ -93,8 +93,6 @@ public class LegislatorService {
         if (!json.isNull("govtrack_id"))
             legislator.govtrack_id = json.getString("govtrack_id");
 
-        // API may return in_office as a string, but JSONObject should auto-coerce:
-        // https://developer.android.com/reference/org/json/JSONObject.html
         if (!json.isNull("in_office"))
             legislator.in_office = json.getBoolean("in_office");
 
