@@ -2,16 +2,19 @@
 <resources>
     
     <string-array name="changelog">
+		<item>Summary: This release adds no new functionality, but makes an important under-the-hood change.</item>
+        <item>Please test out the app for any bugs, and report them using the Feedback button on the main menu if you find anything amiss.</item>
+        <item>Details: this release begins our transition away from the Sunlight Congress API (which is shutting down) and to the Pro Publica Congress API.</item>
+		<item>The Pro Publica API is now used when viewing the fullscreen details for a member of Congress, and when listing members by state.</item>
+    </string-array>
+
+    <string-array name="changelogLast">
 		<item>We\'re back! After a few years without updates, the app is now maintained by Eric Mill, its original developer. My deep thanks to the Sunlight Foundation for funding the development of this app from 2009 until now.</item>
 		<item>Warning: This app is about to undergo significant changes. The API it relies on, Sunlight\'s Congress API, is shutting down. Pro Publica will serve some, but not all, of the information that Sunlight\'s API has now. Some information will disappear in a near term release.</item>
 		<item>Now, back to the list of changes in this release...</item>
 		<item>Removed upcoming activity from bill display. It was super buggy and would often show way too many items.</item>
 		<item>On the \"Law\" tab, it now shows the date the law was enacted, rather than the date the bill was introduced.</item>
 		<item>Android 4.4 is now the minimum version. Dropped support for Android 2.3 through 4.3 (Gingerbread, Honeycomb, Ice Cream Sandwich, and Jellybean).</item>
-    </string-array>
-
-    <string-array name="changelogLast">
-		<item>(Omitting old changelog since it\'s been so long.)</item>
 	</string-array>
     
 	<string-array name="state_codes">
