@@ -179,9 +179,6 @@ public class LegislatorPager extends Activity implements HasActionMenu {
             case R.id.govtrack:
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.govTrackUrl(legislator.govtrack_id))));
     		break;
-            case R.id.opencongress:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.openCongressUrl(legislator.govtrack_id))));
-    		break;
             case R.id.bioguide:
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.bioguideUrl(legislator.bioguide_id))));
     		break;

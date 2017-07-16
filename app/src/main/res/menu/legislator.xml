@@ -15,9 +15,4 @@
 		android:alphabeticShortcut="g"
 		android:icon="@drawable/govtrack"
 		/>
-	<item android:id="@+id/opencongress"
-		android:title="More at OpenCongress"
-		android:alphabeticShortcut="o"
-		android:icon="@drawable/opencongress"
-		/>
 </menu>

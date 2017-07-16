@@ -123,16 +123,8 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 		return "http://bioguide.congress.gov/scripts/biodisplay.pl?index=" + bioguide_id;
 	}
 	
-	public static String openCongressUrl(String govtrack_id) {
-		return "http://www.opencongress.org/person/show/" + govtrack_id;
-	}
-	
 	public static String govTrackUrl(String govtrack_id) {
-		return "http://www.govtrack.us/congress/person.xpd?id=" + govtrack_id;
-	}
-	
-	public static String sunlightShortUrl(String bioguide_id) {
-		return "http://cngr.es/l/" + bioguide_id;
+        return "https://www.govtrack.us/congress/members/anything/" + govtrack_id;
 	}
 	
 	public String toString() {
