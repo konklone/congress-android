@@ -36,11 +36,11 @@ public class LoadLegislatorTask extends AsyncTask<String, Void, Legislator> {
 		try {
 			Legislator legislator = LegislatorService.find(params[0]);
 			if (legislator == null)
-				this.exception = new CongressException("Can't load legislator with this ID from Sunlight.");
+				this.exception = new CongressException("Can't find/load legislator with ID: " + params[0]);
 			
 			return legislator;
 		} catch (CongressException exception) {
-			Log.w(Utils.TAG, "Could not load the legislator with id " + params[0] + " from Sunlight");
+			Log.w(Utils.TAG, "Error loading the legislator with ID: " + params[0]);
 			this.exception = exception;
 			return null;
 		}
