@@ -271,7 +271,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 	}
 
 	public void selectLegislator(Legislator legislator) {
-		startActivity(Utils.legislatorIntent(getActivity(), legislator));
+		startActivity(Utils.legislatorIntent(legislator.bioguide_id));
 	}
 	
 	private static class LegislatorAdapter extends ArrayAdapter<Legislator> {
@@ -407,7 +407,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 					temp = CommitteeService.find(context.committee.id).members;
 					break;
 				case SEARCH_STATE:
-					temp = LegislatorService.allWhere("state", context.state);
+					temp = LegislatorService.allForState(context.state);
 					break;
 				case SEARCH_COSPONSORS:
 					temp = BillService.find(context.billId, new String[] {"cosponsors"}).cosponsors;

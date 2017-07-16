@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LegislatorService {
-	
+
 	private static String[] basicFields = new String[] {
 		"bioguide_id", "thomas_id", "govtrack_id",
 		"in_office", "party", "gender", "state", "state_name",
@@ -23,13 +23,13 @@ public class LegislatorService {
 		"phone", "website", "office",
 		"twitter_id", "youtube_id", "facebook_id"
 	};
-	
+
 	public static List<Legislator> allWhere(String key, String value) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put(key, value);
 		params.put("order", "last_name__asc");
 		params.put("per_page", "all");
-		
+
 		return legislatorsFor(Congress.url("legislators", basicFields, params));
 	}
 
@@ -45,7 +45,32 @@ public class LegislatorService {
 		params.put("longitude", String.valueOf(longitude));
 		return legislatorsFor(Congress.url("legislators/locate", basicFields, params));
 	}
-	
+
+	public static List<Legislator> allForState(String state) throws CongressException {
+        // /members/{chamber}/{state}/current.json
+        String[] senate = new String[] { "members", "senate", state, "current" };
+        String[] house = new String[] { "members", "house", state, "current" };
+
+        List<Legislator> members = new ArrayList<Legislator>();
+
+        List<Legislator> senators = proPublicaLegislatorsFor(ProPublica.url(senate));
+        for (int i=0; i<senators.size(); i++) {
+            senators.get(i).state = state;
+            senators.get(i).chamber = "senate";
+        }
+
+        List<Legislator> representatives = proPublicaLegislatorsFor(ProPublica.url(house));
+        for (int i=0; i<representatives.size(); i++) {
+            representatives.get(i).state = state;
+            representatives.get(i).chamber = "house";
+        }
+
+        members.addAll(senators);
+        members.addAll(representatives);
+
+        return members;
+    }
+
 	public static Legislator find(String bioguideId) throws CongressException {
         String[] paths = new String[] {"members", bioguideId};
 		return proPublicaLegislatorFor(ProPublica.url(paths));
@@ -61,6 +86,10 @@ public class LegislatorService {
 
         if (!json.isNull("member_id"))
             legislator.bioguide_id = json.getString("member_id");
+        // on some endpoints, the bioguide ID is in the 'id' field
+        else if (!json.isNull("id"))
+            legislator.bioguide_id = json.getString("id");
+
         if (!json.isNull("govtrack_id"))
             legislator.govtrack_id = json.getString("govtrack_id");
 
@@ -93,38 +122,67 @@ public class LegislatorService {
             if (!facebook.isEmpty()) legislator.facebook_id = facebook;
         }
 
-        // Some fields come from the legislator's current role
+        // Some fields come from the legislator's current role.
+        // If we have a roles array, use it for some data.
+        // Otherwise, see if we can scrounge up data on the main object.
         // TODO: a Role object on Legislator?
-        if (json.isNull("roles")) return null;
-        JSONArray roles = json.getJSONArray("roles");
-        if (roles.length() == 0) return null;
-        JSONObject role = (JSONObject) roles.get(0);
-        if (role == null) return null;
+        if (!json.isNull("roles")) {
+            JSONArray roles = json.getJSONArray("roles");
+            if (roles.length() == 0) return null;
+            JSONObject role = (JSONObject) roles.get(0);
+            if (role == null) return null;
 
-        // PP API uses long title (e.g. "Representative", "Senator, 3rd Class")
-        // We currently store/display short titles (e.g. "Rep", "Sen").
-        if (!role.isNull("title")) {
-            String longTitle = role.getString("title");
-            legislator.title = Legislator.shortTitle(longTitle);
+            // PP API uses long title (e.g. "Representative", "Senator, 3rd Class")
+            // We currently store/display short titles (e.g. "Rep", "Sen").
+            if (!role.isNull("title")) {
+                String longTitle = role.getString("title");
+                legislator.title = Legislator.shortTitle(longTitle);
+            }
+
+            if (!role.isNull("party"))
+                legislator.party = role.getString("party");
+            if (!role.isNull("state"))
+                legislator.state = role.getString("state");
+            if (!role.isNull("district"))
+                legislator.district = role.getString("district");
+            if (!role.isNull("chamber"))
+                legislator.chamber = role.getString("chamber").toLowerCase();
+            if (!role.isNull("start_date"))
+                legislator.term_start = role.getString("start_date");
+            if (!role.isNull("end_date"))
+                legislator.term_end = role.getString("end_date");
+            if (!role.isNull("leadership_role"))
+                legislator.leadership_role = role.getString("leadership_role");
+            if (!role.isNull("office"))
+                legislator.office = role.getString("office");
+            if (!role.isNull("phone"))
+                legislator.phone = role.getString("phone");
         }
-        if (!role.isNull("party"))
-            legislator.party = role.getString("party");
-        if (!role.isNull("state"))
-            legislator.state = role.getString("state");
-        if (!role.isNull("district"))
-            legislator.district = role.getString("district");
-        if (!role.isNull("chamber"))
-            legislator.chamber = role.getString("chamber").toLowerCase();
-        if (!role.isNull("start_date"))
-            legislator.term_start = role.getString("start_date");
-        if (!role.isNull("end_date"))
-            legislator.term_end = role.getString("end_date");
-        if (!role.isNull("leadership_role"))
-            legislator.leadership_role = role.getString("leadership_role");
-        if (!role.isNull("office"))
-            legislator.office = role.getString("office");
-        if (!role.isNull("phone"))
-            legislator.phone = role.getString("phone");
+
+        // There's no 'roles' object, so we're parsing from a list endpoint.
+        else {
+            // Currently, this is parsing only from the state/district list.
+
+            // On some endpoints, the field can be called 'role'.
+            // https://github.com/propublica/congress-api-docs/issues/43
+            if (!json.isNull("role")) {
+                String longTitle = json.getString("role");
+                legislator.title = Legislator.shortTitle(longTitle);
+            }
+
+            if (!json.isNull("party"))
+                legislator.party = json.getString("party");
+
+            if (!json.isNull("district"))
+                legislator.district = json.getString("district");
+
+            if (!json.isNull("name")) {
+                String displayName = json.getString("name");
+                String[] pieces = Legislator.splitName(displayName);
+                legislator.first_name = pieces[0];
+                legislator.last_name = pieces[1];
+            }
+        }
 
         return legislator;
     }
@@ -222,5 +280,36 @@ public class LegislatorService {
 
 		return legislators;
 	}
+
+    // TODO: rename to legislatorsFor and remove old Sunlight method
+    private static List<Legislator> proPublicaLegislatorsFor(String url) throws CongressException {
+        List<Legislator> legislators = new ArrayList<Legislator>();
+        try {
+            JSONArray results = ProPublica.resultsFor(url);
+
+            // 'get specific member' puts members in 'results'.
+            // 'get current members by state/district' also uses 'results'.
+            // But other member responses use a subfield of "members".
+            // Need to introspect on the first result object to figure out
+            // if that's the case. Documented behavior here:
+            // https://github.com/propublica/congress-api-docs/issues/42
+
+            JSONArray members = results;
+            if (results.length() > 0) {
+                JSONObject firstResult = results.getJSONObject(0);
+                if (!firstResult.isNull("members"))
+                    members = firstResult.getJSONArray("members");
+            }
+
+            int length = members.length();
+            for (int i = 0; i < length; i++)
+                legislators.add(fromProPublica(members.getJSONObject(i)));
+
+        } catch (JSONException e) {
+            throw new CongressException(e, "Problem parsing the JSON from " + url);
+        }
+
+        return legislators;
+    }
 
 }
