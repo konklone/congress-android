@@ -162,7 +162,7 @@ public class BillService {
 		}
 
 		if (!json.isNull("sponsor"))
-			bill.sponsor = LegislatorService.fromAPI(json.getJSONObject("sponsor"));
+			bill.sponsor = LegislatorService.fromSunlight(json.getJSONObject("sponsor"));
 
 		if (!json.isNull("summary"))
 			bill.summary = json.getString("summary");
@@ -174,7 +174,7 @@ public class BillService {
 			bill.cosponsors = new ArrayList<Legislator>();
 			
 			for (int i=0; i<length; i++)
-				bill.cosponsors.add(LegislatorService.fromAPI(cosponsorObjects.getJSONObject(i).getJSONObject("legislator")));
+				bill.cosponsors.add(LegislatorService.fromSunlight(cosponsorObjects.getJSONObject(i).getJSONObject("legislator")));
 		}
 		
 		if (!json.isNull("votes")) {

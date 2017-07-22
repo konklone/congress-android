@@ -70,7 +70,7 @@ public class CommitteeService {
 			JSONArray memberList = json.getJSONArray("members");
 			for (int i = 0; i < memberList.length(); i++) {
 				JSONObject memberJson = memberList.getJSONObject(i);
-				Legislator legislator = LegislatorService.fromAPI(memberJson.getJSONObject("legislator"));
+				Legislator legislator = LegislatorService.fromSunlight(memberJson.getJSONObject("legislator"));
 				
 				Committee.Membership membership = new Committee.Membership();
 				if (!memberJson.isNull("side"))
