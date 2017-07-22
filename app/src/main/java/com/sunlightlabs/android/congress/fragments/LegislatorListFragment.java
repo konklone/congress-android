@@ -37,8 +37,6 @@ import java.util.Map;
 import java.util.concurrent.RejectedExecutionException;
 
 public class LegislatorListFragment extends ListFragment implements LoadPhotoTask.LoadsPhoto {
-	public static final int SEARCH_ZIP = 0;
-	public static final int SEARCH_LOCATION = 1;
 	public static final int SEARCH_STATE = 2;
 	public static final int SEARCH_LASTNAME = 3;
 	public static final int SEARCH_COMMITTEE = 4;
@@ -51,10 +49,8 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 	int type;
 	String chamber;
 	String billId;
-	String zipCode, lastName, state;
+	String lastName, state;
 	Committee committee;
-	double latitude = -1;
-	double longitude = -1;
 	
 	public static LegislatorListFragment forChamber(String chamber) {
 		LegislatorListFragment frag = new LegislatorListFragment();
@@ -85,17 +81,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		frag.setRetainInstance(true);
 		return frag;
 	}
-	
-	public static LegislatorListFragment forZip(String zip) {
-		LegislatorListFragment frag = new LegislatorListFragment();
-		Bundle args = new Bundle();
-		args.putInt("type", SEARCH_ZIP);
-		args.putString("zip", zip);
-		frag.setArguments(args);
-		frag.setRetainInstance(true);
-		return frag;
-	}
-	
+
 	public static LegislatorListFragment forBill(String billId) {
 		LegislatorListFragment frag = new LegislatorListFragment();
 		Bundle args = new Bundle();
@@ -115,18 +101,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		frag.setRetainInstance(true);
 		return frag;
 	}
-	
-	public static LegislatorListFragment forLocation(double latitude, double longitude) {
-		LegislatorListFragment frag = new LegislatorListFragment();
-		Bundle args = new Bundle();
-		args.putInt("type", SEARCH_LOCATION);
-		args.putDouble("latitude", latitude);
-		args.putDouble("longitude", longitude);
-		frag.setArguments(args);
-		frag.setRetainInstance(true);
-		return frag;
-	}
-	
+
 	public LegislatorListFragment() {}
 	
 	@Override
@@ -136,14 +111,11 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		Bundle args = getArguments();
 		type = args.getInt("type");
 		chamber = args.getString("chamber");
-		zipCode = args.getString("zip");
 		lastName = args.getString("last_name");
 		state = args.getString("state");
 		committee = (Committee) args.getSerializable("committee");
 		billId = args.getString("billId");
-		latitude = args.getDouble("latitude", -1);
-		longitude = args.getDouble("longitude", -1);
-		
+
 		loadLegislators();
 	}
 	
@@ -178,8 +150,6 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 
 		if (type == SEARCH_COSPONSORS)
 			FragmentUtils.setLoading(this, R.string.legislators_loading_cosponsors);
-		else if (type == SEARCH_LOCATION)
-			FragmentUtils.setLoading(this, R.string.legislators_loading_location);
 		else
 			FragmentUtils.setLoading(this, R.string.legislators_loading);
 	}
@@ -193,7 +163,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 			return;
 		
 		// if there's only one result, don't even make them click it
-		if (legislators.size() == 1 && (type != SEARCH_LOCATION && type != SEARCH_COSPONSORS)) {
+		if ((legislators.size() == 1) && (type != SEARCH_COSPONSORS)) {
 			selectLegislator(legislators.get(0));
 			getActivity().finish();
 		} else 
@@ -210,12 +180,6 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 			setListAdapter(new LegislatorAdapter(this, legislators));
 		else {
 			switch (type) {
-			case SEARCH_ZIP:
-				FragmentUtils.showEmpty(this, R.string.empty_zipcode);
-				break;
-			case SEARCH_LOCATION:
-				FragmentUtils.showEmpty(this, R.string.empty_location);
-				break;
 			case SEARCH_LASTNAME:
 				FragmentUtils.showEmpty(this, R.string.empty_last_name);
 				break;
@@ -319,14 +283,6 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 
 			holder.name.setText(nameFor(legislator));
 			holder.position.setText(positionFor(legislator));
-			
-//			if (context.type == SEARCH_COMMITTEE) {
-//				if (legislator.membership != null && legislator.membership.title != null) {
-//					holder.title.setText(legislator.membership.title);
-//					holder.title.setVisibility(View.VISIBLE);
-//				} else
-//					holder.title.setVisibility(View.GONE);
-//			}
 
 			ImageView photo = (ImageView) view.findViewById(R.id.photo);
 			LegislatorImage.setImageView(legislator.bioguide_id, LegislatorImage.PIC_SMALL,
@@ -394,12 +350,6 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 			List<Legislator> temp;
 			try {
 				switch (context.type) {
-				case SEARCH_ZIP:
-					temp = LegislatorService.allForZipCode(context.zipCode);
-					break;
-				case SEARCH_LOCATION:
-					temp = LegislatorService.allForLatLong(context.latitude, context.longitude);
-					break;
 				case SEARCH_LASTNAME:
 					temp = LegislatorService.allWhere("query", context.lastName);
 					break;

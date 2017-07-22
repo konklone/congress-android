@@ -126,7 +126,7 @@
     <string name="menu_main_floor_updates">The Floor</string>
     <string name="menu_main_hearings">Hearings</string>
     
-    <string name="search_legislators_hint">Last name or zip code</string>
+    <string name="search_legislators_hint">Search by last name</string>
     <string name="search_legislators_label">Lawmakers</string>
     <string name="search_bills_hint">Search bills</string>
     <string name="search_bills_label">Bills</string>

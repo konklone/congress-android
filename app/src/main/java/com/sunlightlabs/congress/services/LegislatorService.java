@@ -33,19 +33,6 @@ public class LegislatorService {
 		return legislatorsFor(Congress.url("legislators", basicFields, params));
 	}
 
-	public static List<Legislator> allForZipCode(String zip) throws CongressException {
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("zip", zip);
-		return legislatorsFor(Congress.url("legislators/locate", basicFields, params));
-	}
-
-	public static List<Legislator> allForLatLong(double latitude, double longitude) throws CongressException {
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("latitude", String.valueOf(latitude));
-		params.put("longitude", String.valueOf(longitude));
-		return legislatorsFor(Congress.url("legislators/locate", basicFields, params));
-	}
-
 	public static List<Legislator> allForState(String state) throws CongressException {
         // /members/{chamber}/{state}/current.json
         String[] senate = new String[] { "members", "senate", state, "current" };
