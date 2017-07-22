@@ -86,11 +86,11 @@ public class Bill implements Serializable {
 		return Pattern.compile("^(hr|hres|hjres|hconres|s|sres|sjres|sconres)(\\d+)$").matcher(code).matches();
 	}
 	
-	public static String currentSession() {
+	public static int currentCongress() {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
-		return "" + (((year + 1901) / 2) - 894);
+		return ((year + 1) / 2) - 894;
 	}
-	
+
 	public static String matchText(String field) {
 		if (field.equals("text"))
 			return "text";
