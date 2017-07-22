@@ -1,5 +1,6 @@
 package com.sunlightlabs.congress.services;
 
+import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
@@ -12,26 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// See Pro Publica Congress API docs:
+// https://projects.propublica.org/api-docs/congress-api/endpoints/
+
 public class LegislatorService {
-
-	private static String[] basicFields = new String[] {
-		"bioguide_id", "thomas_id", "govtrack_id",
-		"in_office", "party", "gender", "state", "state_name",
-		"district", "title", "chamber", "senate_class", "birthday",
-		"term_start", "term_end", "leadership_role",
-		"first_name", "nickname", "middle_name", "last_name", "name_suffix",
-		"phone", "website", "office",
-		"twitter_id", "youtube_id", "facebook_id"
-	};
-
-	public static List<Legislator> allWhere(String key, String value) throws CongressException {
-		Map<String,String> params = new HashMap<String,String>();
-		params.put(key, value);
-		params.put("order", "last_name__asc");
-		params.put("per_page", "all");
-
-		return legislatorsFor(Congress.url("legislators", basicFields, params));
-	}
 
 	public static List<Legislator> allForState(String state) throws CongressException {
         // /members/{chamber}/{state}/current.json
@@ -58,9 +43,45 @@ public class LegislatorService {
         return members;
     }
 
+    // Expensive: request data for both chambers, and search client-side.
+    public static List<Legislator> allByLastName(String name) throws CongressException {
+        List<Legislator> members = new ArrayList<Legislator>();
+        members.addAll(allByChamber("senate"));
+        members.addAll(allByChamber("house"));
+
+        String lower = name.toLowerCase();
+
+        List<Legislator> matches = new ArrayList<Legislator>();
+
+        // client-side match, nice
+        for (int i=0; i<members.size(); i++) {
+            Legislator member = members.get(i);
+            if (member.last_name != null && member.last_name.toLowerCase().contains(lower))
+                matches.add(member);
+            else if (member.first_name != null && member.first_name.toLowerCase().contains(lower))
+                matches.add(member);
+            else if (member.middle_name != null && member.middle_name.toLowerCase().contains(lower))
+                matches.add(member);
+        }
+
+        return matches;
+    }
+
+    public static List<Legislator> allByChamber(String chamber) throws CongressException {
+        // /{congress}/{chamber}/members.json
+        String[] endpoint = { String.valueOf(Bill.currentCongress()), chamber, "members" };
+        List<Legislator> members = proPublicaLegislatorsFor(ProPublica.url(endpoint));
+
+        // The 'chamber' field is omitted in responses
+        for (int i=0; i<members.size(); i++)
+            members.get(i).chamber = chamber;
+
+        return members;
+    }
+
 	public static Legislator find(String bioguideId) throws CongressException {
-        String[] paths = new String[] {"members", bioguideId};
-		return proPublicaLegislatorFor(ProPublica.url(paths));
+        String[] endpoint = new String[] {"members", bioguideId};
+		return proPublicaLegislatorFor(ProPublica.url(endpoint));
 	}
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
@@ -85,6 +106,8 @@ public class LegislatorService {
 
         if (!json.isNull("first_name"))
             legislator.first_name = json.getString("first_name");
+        if (!json.isNull("middle_name"))
+            legislator.middle_name = json.getString("middle_name");
         if (!json.isNull("last_name"))
             legislator.last_name = json.getString("last_name");
 
@@ -157,6 +180,9 @@ public class LegislatorService {
 
             if (!json.isNull("party"))
                 legislator.party = json.getString("party");
+
+            if (!json.isNull("state"))
+                legislator.state = json.getString("state");
 
             if (!json.isNull("district"))
                 legislator.district = json.getString("district");

@@ -351,7 +351,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 			try {
 				switch (context.type) {
 				case SEARCH_LASTNAME:
-					temp = LegislatorService.allWhere("query", context.lastName);
+					temp = LegislatorService.allByLastName(context.lastName);
 					break;
 				case SEARCH_COMMITTEE:
 					temp = CommitteeService.find(context.committee.id).members;
@@ -363,7 +363,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 					temp = BillService.find(context.billId, new String[] {"cosponsors"}).cosponsors;
 					break;
 				case SEARCH_CHAMBER:
-					return LegislatorService.allWhere("chamber", context.chamber);
+					return LegislatorService.allByChamber(context.chamber);
 				default:
 					return legislators;
 				}
