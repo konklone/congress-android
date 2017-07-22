@@ -1,13 +1,13 @@
 This application makes use of various Commonsware libraries. These, along with their respective Apache licenses, are:
 
   com.commonsware.cwac.wakeful:
-  http://github.com/commonsguy/cwac-wakeful/blob/master/LICENSE
+  https://github.com/commonsguy/cwac-wakeful/blob/master/LICENSE
 
   com.commonsware.cwac.merge:
-  http://github.com/commonsguy/cwac-merge/blob/master/LICENSE
+  https://github.com/commonsguy/cwac-merge/blob/master/LICENSE
 
   com.commonsware.cwac.sacklist:
-  http://github.com/commonsguy/cwac-sacklist/blob/master/LICENSE
+  https://github.com/commonsguy/cwac-sacklist/blob/master/LICENSE
 
 ==================
 
@@ -20,7 +20,7 @@ geojson-jackson-1.1.jar
 jackson-annotations-2.3.0.jar
 jackson-core-2.3.1.jar
 jackson-databind-2.3.1.jar
-  http://jackson.codehaus.org
+  https://github.com/FasterXML/jackson
   Apache License 2.0
 
 ==================
