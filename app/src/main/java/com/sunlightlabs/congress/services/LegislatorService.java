@@ -207,9 +207,7 @@ public class LegislatorService {
 			legislator.bioguide_id = json.getString("bioguide_id");
 		if (!json.isNull("govtrack_id"))
 			legislator.govtrack_id = json.getString("govtrack_id");
-		if (!json.isNull("thomas_id"))
-			legislator.thomas_id = json.getString("thomas_id");
-		
+
 		if (!json.isNull("in_office"))
 			legislator.in_office = json.getBoolean("in_office");
 
@@ -217,11 +215,7 @@ public class LegislatorService {
 			legislator.first_name = json.getString("first_name");
 		if (!json.isNull("last_name"))
 			legislator.last_name = json.getString("last_name");
-		if (!json.isNull("nickname"))
-			legislator.nickname = json.getString("nickname");
-		if (!json.isNull("name_suffix"))
-			legislator.name_suffix = json.getString("name_suffix");
-		
+
 		if (!json.isNull("title"))
 			legislator.title = json.getString("title");
 		if (!json.isNull("party"))

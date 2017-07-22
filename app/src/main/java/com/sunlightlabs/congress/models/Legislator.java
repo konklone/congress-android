@@ -5,9 +5,8 @@ import java.io.Serializable;
 public class Legislator implements Comparable<Legislator>, Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	public String bioguide_id, govtrack_id, thomas_id;
+	public String bioguide_id, govtrack_id;
 	public String first_name, middle_name, last_name;
-	public String nickname, name_suffix; // TODO: remove
 	public String title, party, state, district, chamber;
 	public String gender, office, website, phone;
 	public String twitter_id, youtube_id, facebook_id; 
@@ -17,29 +16,11 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	// this gets assigned onto the legislator, even though it's not set this way in the API,
 	// so that we can reuse legislator listing code to list committee memberships
 	public Committee.Membership membership;
-
 		
 	public String getName() {
-		return firstName() + " " + last_name;
+		return first_name + " " + last_name;
 	}
-	
-	public String firstName() {
-		if (nickname != null && nickname.length() > 0)
-			return nickname;
-		else
-			return first_name;
-	}
-	
-	public String titledName() {
-		String name = title + ". " + getName();
-		if (name_suffix != null && !name_suffix.equals(""))
-			name += ", " + name_suffix;
-		return name;
-	}
-	
-	public String getOfficialName() {
-		return last_name + ", " + firstName();
-	}
+	public String titledName() { return title + ". " + getName(); }
 
 	public static String[] splitName(String displayName) {
 		String[] pieces = displayName.split(" ");
@@ -59,7 +40,6 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	}
 
 	// Used to parse long titles from Pro Publica API
-	// TODO: store long title natively and abbreviate at render-time
 	public static String shortTitle(String longTitle) {
 		if (longTitle.equals("Representative"))
 			return "Rep";
@@ -83,41 +63,14 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 		else // "Rep"
 			return "Representative";
 	}
-	
+
+	// TODO: Use an eventual at_large boolean to display At-Large
+    // See: https://github.com/propublica/congress-api-docs/issues/41
 	public String getDomain() {
 		if (this.chamber.equals("senate"))
 			return "Senator";
-		else if (district != null && district.equals("0"))
-			return "At-Large";
 		else
 			return "District " + district;
-	}
-	
-	public static String partyName(String party) {
-		if (party.equals("D"))
-			return "Democrat";
-		if (party.equals("R"))
-			return "Republican";
-		if (party.equals("I"))
-			return "Independent";
-		else
-			return "";
-	}
-	
-	public String getPosition(String stateName) {
-		String position = "";
-
-		if (this.chamber.equals("senate"))
-			position = "Senator from " + stateName;
-		else if (district != null && district.equals("0")) {
-			if (title.equals("Rep"))
-				position = "Representative for " + stateName + " At-Large";
-			else
-				position = fullTitle() + " for " + stateName;
-		} else
-			position = "Representative for " + stateName + "-" + district;
-
-		return "(" + party + ") " + position;
 	}
 
 	public static String bioguideUrl(String bioguide_id) {
