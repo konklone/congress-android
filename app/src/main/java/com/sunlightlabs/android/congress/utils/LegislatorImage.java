@@ -39,7 +39,7 @@ public class LegislatorImage {
 	 * Return the URL for a given bioguideID and size pair
 	 */
 	public static String getImageURL(String bioguideId, String size) {
-		return "http://theunitedstates.io/images/congress/" + size + "/" + bioguideId + ".jpg";
+		return "https://theunitedstates.io/images/congress/" + size + "/" + bioguideId + ".jpg";
 	}
 
 	/**
