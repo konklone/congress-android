@@ -44,22 +44,24 @@ public class LegislatorService {
     }
 
     // Expensive: request data for both chambers, and search client-side.
-    public static List<Legislator> allByLastName(String lastName) throws CongressException {
+    public static List<Legislator> allByLastName(String name) throws CongressException {
         List<Legislator> members = new ArrayList<Legislator>();
         members.addAll(allByChamber("senate"));
         members.addAll(allByChamber("house"));
 
-        String lower = lastName.toLowerCase();
+        String lower = name.toLowerCase();
 
         List<Legislator> matches = new ArrayList<Legislator>();
 
         // client-side match, nice
         for (int i=0; i<members.size(); i++) {
             Legislator member = members.get(i);
-            if (member.last_name != null) {
-                if (member.last_name.toLowerCase().equals(lower))
-                    matches.add(member);
-            }
+            if (member.last_name != null && member.last_name.toLowerCase().contains(lower))
+                matches.add(member);
+            else if (member.first_name != null && member.first_name.toLowerCase().contains(lower))
+                matches.add(member);
+            else if (member.middle_name != null && member.middle_name.toLowerCase().contains(lower))
+                matches.add(member);
         }
 
         return matches;
@@ -104,6 +106,8 @@ public class LegislatorService {
 
         if (!json.isNull("first_name"))
             legislator.first_name = json.getString("first_name");
+        if (!json.isNull("middle_name"))
+            legislator.middle_name = json.getString("middle_name");
         if (!json.isNull("last_name"))
             legislator.last_name = json.getString("last_name");
 

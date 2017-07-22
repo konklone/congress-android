@@ -6,7 +6,8 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	public String bioguide_id, govtrack_id, thomas_id;
-	public String first_name, last_name, nickname, name_suffix;
+	public String first_name, middle_name, last_name;
+	public String nickname, name_suffix; // TODO: remove
 	public String title, party, state, district, chamber;
 	public String gender, office, website, phone;
 	public String twitter_id, youtube_id, facebook_id; 
