@@ -140,27 +140,9 @@ public class BillPager extends Activity implements HasActionMenu {
 		
 		toggleFavoriteStar(cursor.getCount() == 1);
 		
-		ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.share, new View.OnClickListener() {
-			public void onClick(View v) {
-				Analytics.billShare(BillPager.this, bill.id);
-	    		Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain")
-	    				.putExtra(Intent.EXTRA_TEXT, shareText())
-	    				.putExtra(Intent.EXTRA_SUBJECT, shareSubject());
-	    		startActivity(Intent.createChooser(intent, "Share bill via:"));
-			}
-		});
-		
 		ActionBarUtils.setActionMenu(this, R.menu.bill);
 	}
 	
-	public String shareText() {
-		return bill.sunlightShortUrl();
-	}
-	
-	public String shareSubject() {
-		return Bill.formatCode(bill.id);
-	}
-
 	private void toggleFavoriteStar(boolean enabled) {
 		if (enabled)
 			ActionBarUtils.setActionIcon(this, R.id.action_1, R.drawable.star_on);
@@ -212,11 +194,6 @@ public class BillPager extends Activity implements HasActionMenu {
     		Analytics.billGovTrack(this, bill.id);
     		if (bill.urls != null && bill.urls.containsKey("govtrack"))
     			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.urls.get("govtrack"))));
-    		break;
-    	case R.id.opencongress:
-    		Analytics.billOpenCongress(this, bill.id);
-    		if (bill.urls != null && bill.urls.containsKey("opencongress"))
-    			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.urls.get("opencongress"))));
     		break;
     	}
 	}

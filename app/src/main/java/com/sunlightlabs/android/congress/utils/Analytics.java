@@ -144,54 +144,46 @@ public class Analytics {
 		return intent;
 	}
 	
-	
-	
 	/*
 	 * Event definitions
 	 */
 	
 	// types of entry into the application
-		public static final String ENTRY_MAIN = "main";
-		public static final String ENTRY_SHORTCUT = "shortcut";
-		public static final String ENTRY_NOTIFICATION = "notification";
+	public static final String ENTRY_MAIN = "main";
+	public static final String ENTRY_NOTIFICATION = "notification";
 
 
-		// categories of events
-		public static final String EVENT_FAVORITE = "favorites";
-		public static final String EVENT_NOTIFICATION = "notifications";
-		public static final String EVENT_LEGISLATOR = "legislator";
-		public static final String EVENT_BILL = "bill";
-		public static final String EVENT_ANALYTICS = "analytics";
-		public static final String EVENT_ENTRY = "entry";
-		public static final String EVENT_ABOUT = "about";
-		public static final String EVENT_CHANGELOG = "changelog";
-		public static final String EVENT_REVIEW = "review"; // values will be "google" or "amazon"
-        public static final String EVENT_PING = "ping";
-		
-		// event values
-		public static final String FAVORITE_ADD_LEGISLATOR = "add_legislator";
-		public static final String FAVORITE_REMOVE_LEGISLATOR = "remove_legislator";
-		public static final String FAVORITE_ADD_BILL = "add_bill";
-		public static final String FAVORITE_REMOVE_BILL = "remove_bill";
-		public static final String NOTIFICATION_ADD = "subscribe";
-		public static final String NOTIFICATION_REMOVE = "unsubscribe";
-		public static final String LEGISLATOR_CALL = "call";
-		public static final String LEGISLATOR_WEBSITE = "website";
-		public static final String LEGISLATOR_TWITTER = "twitter";
-		public static final String LEGISLATOR_YOUTUBE = "youtube";
-		public static final String LEGISLATOR_FACEBOOK = "facebook";
-		public static final String LEGISLATOR_DISTRICT = "district";
-		public static final String LEGISLATOR_CONTACTS = "contacts";
-		public static final String BILL_SHARE = "share";
-		public static final String BILL_TEXT = "text";
-		public static final String BILL_OPENCONGRESS = "opencongress";
-		public static final String BILL_GOVTRACK = "govtrack";
-		public static final String BILL_UPCOMING = "upcoming";
-		public static final String BILL_UPCOMING_MORE = "upcoming_more";
-		public static final String ANALYTICS_DISABLE = "disable";
-		public static final String ABOUT_VALUE = "open";
-		public static final String CHANGELOG_VALUE = "open";
-        public static final String PING_VALUE = "ping";
+	// categories of events
+	public static final String EVENT_FAVORITE = "favorites";
+	public static final String EVENT_NOTIFICATION = "notifications";
+	public static final String EVENT_LEGISLATOR = "legislator";
+	public static final String EVENT_BILL = "bill";
+	public static final String EVENT_ANALYTICS = "analytics";
+	public static final String EVENT_ABOUT = "about";
+	public static final String EVENT_CHANGELOG = "changelog";
+	public static final String EVENT_REVIEW = "review"; // values will be "google" or "amazon"
+	public static final String EVENT_PING = "ping";
+
+	// event values
+	public static final String FAVORITE_ADD_LEGISLATOR = "add_legislator";
+	public static final String FAVORITE_REMOVE_LEGISLATOR = "remove_legislator";
+	public static final String FAVORITE_ADD_BILL = "add_bill";
+	public static final String FAVORITE_REMOVE_BILL = "remove_bill";
+	public static final String NOTIFICATION_ADD = "subscribe";
+	public static final String NOTIFICATION_REMOVE = "unsubscribe";
+	public static final String LEGISLATOR_CALL = "call";
+	public static final String LEGISLATOR_WEBSITE = "website";
+	public static final String LEGISLATOR_TWITTER = "twitter";
+	public static final String LEGISLATOR_YOUTUBE = "youtube";
+	public static final String LEGISLATOR_FACEBOOK = "facebook";
+	public static final String LEGISLATOR_CONTACTS = "contacts";
+	public static final String BILL_TEXT = "text";
+	public static final String BILL_GOVTRACK = "govtrack";
+	public static final String BILL_UPCOMING = "upcoming";
+	public static final String ANALYTICS_DISABLE = "disable";
+	public static final String ABOUT_VALUE = "open";
+	public static final String CHANGELOG_VALUE = "open";
+	public static final String PING_VALUE = "ping";
 
     public static void ping(Activity activity) {
         event(activity, EVENT_PING, PING_VALUE, null);
@@ -241,40 +233,20 @@ public class Analytics {
 		event(activity, EVENT_LEGISLATOR, network, bioguideId);
 	}
 	
-	public static void legislatorDistrict(Activity activity, String bioguideId) {
-		event(activity, EVENT_LEGISLATOR, LEGISLATOR_DISTRICT, bioguideId);
-	}
-	
 	public static void legislatorContacts(Activity activity, String bioguideId) {
 		event(activity, EVENT_LEGISLATOR, LEGISLATOR_CONTACTS, bioguideId);
-	}
-	
-	public static void billShare(Activity activity, String billId) {
-		event(activity, EVENT_BILL, BILL_SHARE, billId);
 	}
 	
 	public static void billText(Activity activity, String billId) {
 		event(activity, EVENT_BILL, BILL_TEXT, billId);
 	}
 	
-	public static void billOpenCongress(Activity activity, String billId) {
-		event(activity, EVENT_BILL, BILL_OPENCONGRESS, billId);
-	}
-	
 	public static void billGovTrack(Activity activity, String billId) {
 		event(activity, EVENT_BILL, BILL_GOVTRACK, billId);
 	}
 	
-	public static void billUpcomingMore(Activity activity, String sourceType) {
-		event(activity, EVENT_BILL, BILL_UPCOMING_MORE, sourceType);
-	}
-	
 	public static void billUpcoming(Activity activity, String billId) {
 		event(activity, EVENT_BILL, BILL_UPCOMING, billId);
-	}
-	
-	public static void markEntry(Activity activity, String source) {
-		event(activity, EVENT_ENTRY, source, source);
 	}
 	
 	public static void analyticsDisable(Activity activity) {
