@@ -1,9 +1,7 @@
 package com.sunlightlabs.android.congress;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.ListFragment;
 import android.view.LayoutInflater;
@@ -18,7 +16,6 @@ import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
 
-import java.util.List;
 
 public class MenuLegislators extends Activity {
 	
@@ -44,18 +41,7 @@ public class MenuLegislators extends Activity {
 	public void setupControls() {
 		ActionBarUtils.setTitle(this, R.string.menu_main_legislators);
 
-        // we only support GPS and network location
-        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        List<String> providers = manager.getProviders(true);
-        if (providers.contains("gps") || providers.contains("network")) {
-            ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.location, new View.OnClickListener() {
-                public void onClick(View v) {
-                    startActivity(new Intent(MenuLegislators.this, LegislatorSearch.class).putExtra("location", true));
-                }
-            });
-        }
-		
-		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
+        ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
 			public void onClick(View v) { 
 				onSearchRequested();
 			}
