@@ -12,7 +12,7 @@ We use [Github Issues](https:/github.com/konklone/congress-android/issues) for i
 
 When setting this up:
 
-* copy `keys.xml.example` to `app/src/main/res/values/keys.xml` and fill in your [Sunlight API](http://services.sunlightlabs.com) key.
+* copy `keys.xml.example` to `app/src/main/res/values/keys.xml` and fill in your [Pro Publica API](https://projects.propublica.org/api-docs/congress-api/) key.
 * copy `tracker.xml.example` to `app/src/main/res/xml/tracker.xml`
 
 If you're using Google Analytics, fill in `app/src/main/res/xml/tracker.xml`'s `ga_trackingId` field with your Google Analytics profile tracking ID. (Make sure you've set up a profile in Google Analytics first.)
