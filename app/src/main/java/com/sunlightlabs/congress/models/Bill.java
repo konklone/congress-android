@@ -135,7 +135,7 @@ public class Bill implements Serializable {
 	// then GPO PDF, then finally the THOMAS landing page
 	public String bestFullTextUrl() {
 		if (this.congress_url != null)
-			return this.congress_url +"/text";
+			return this.congress_url + "/text";
 		else if (this.gpo_url != null)
 			return this.gpo_url;
         else
@@ -147,6 +147,7 @@ public class Bill implements Serializable {
 		return "https://www.govtrack.us/congress/bills/" + congress + "/" + bill_type + number + "/text";
 	}
 
+	// TODO: this may not be necessary anymore
 	public static String formatSummary(String summary, String short_title) {
 		String formatted = summary;
 		formatted = formatted.replaceFirst("^\\d+\\/\\d+\\/\\d+--.+?\\.\\s*", "");
