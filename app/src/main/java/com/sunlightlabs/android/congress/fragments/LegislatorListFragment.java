@@ -299,6 +299,10 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 		}
 
 		public String positionFor(Legislator legislator) {
+			// For cosponsor listings
+            if (legislator.state == null || legislator.party == null || legislator.district == null)
+			    return "";
+
 			String stateName = Utils.stateCodeToName(context.getActivity(), legislator.state);
 			
 			if (context.type == SEARCH_COMMITTEE) {
@@ -360,7 +364,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 					temp = LegislatorService.allForState(context.state);
 					break;
 				case SEARCH_COSPONSORS:
-					temp = BillService.allCosponsors(context.billId);
+					temp = LegislatorService.allCosponsors(context.billId);
 					break;
 				case SEARCH_CHAMBER:
 					return LegislatorService.allByChamber(context.chamber);

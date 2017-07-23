@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +66,23 @@ public class LegislatorService {
         return matches;
     }
 
+    // /{congress}/bills/{bill_number}{bill_type}/cosponsors.json
+    public static List<Legislator> allCosponsors(String bill_id) throws CongressException {
+        String congress = String.valueOf(Bill.currentCongress());
+        String[] pieces = Bill.splitBillId(bill_id);
+        String billNumber = pieces[0] + pieces[1];
+        String[] endpoint = { congress, "bills", billNumber, "cosponsors" };
+        List<Legislator> members = legislatorsFor(ProPublica.url(endpoint));
+
+        // Fill in chamber field based on bill_id
+        String chamber = Bill.chamberFrom(pieces[0]);
+        for (int i=0; i<members.size(); i++)
+            members.get(i).chamber = chamber;
+
+        return members;
+    }
+
+
     public static List<Legislator> allByChamber(String chamber) throws CongressException {
         // /{congress}/{chamber}/members.json
         String[] endpoint = { String.valueOf(Bill.currentCongress()), chamber, "members" };
@@ -84,7 +102,7 @@ public class LegislatorService {
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
 
-	protected static Legislator fromAPI(JSONObject json) throws JSONException, CongressException {
+	protected static Legislator fromAPI(JSONObject json) throws ParseException, JSONException, CongressException {
         if (json == null)
             return null;
 
@@ -165,6 +183,15 @@ public class LegislatorService {
                 legislator.office = role.getString("office");
             if (!role.isNull("phone"))
                 legislator.phone = role.getString("phone");
+        }
+
+        // most minimal form: list of cosponsors, ID and name only
+        else if (!json.isNull("cosponsor_id")) {
+            legislator.bioguide_id = json.getString("cosponsor_id");
+            String[] names = Legislator.splitName(json.getString("name"));
+            legislator.first_name = names[0];
+            legislator.last_name = names[1];
+            legislator.cosponsored_on = ProPublica.parseDateOnly(json.getString("date"));
         }
 
         // There's no 'roles' object, so we're parsing from a list endpoint.
@@ -264,6 +291,8 @@ public class LegislatorService {
             return fromAPI(ProPublica.firstResult(url));
         } catch (JSONException e) {
             throw new CongressException(e, "Problem parsing the JSON from " + url);
+        } catch (ParseException e) {
+            throw new CongressException(e, "Problem parsing a date in the JSON from " + url);
         }
     }
 
@@ -284,6 +313,8 @@ public class LegislatorService {
                 JSONObject firstResult = results.getJSONObject(0);
                 if (!firstResult.isNull("members"))
                     members = firstResult.getJSONArray("members");
+                else if (!firstResult.isNull("cosponsors"))
+                    members = firstResult.getJSONArray("cosponsors");
             }
 
             int length = members.length();
@@ -292,6 +323,8 @@ public class LegislatorService {
 
         } catch (JSONException e) {
             throw new CongressException(e, "Problem parsing the JSON from " + url);
+        } catch (ParseException e) {
+            throw new CongressException(e, "Problem parsing date in the JSON from " + url);
         }
 
         return legislators;

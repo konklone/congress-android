@@ -1,6 +1,7 @@
 package com.sunlightlabs.congress.models;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Legislator implements Comparable<Legislator>, Serializable {
 	private static final long serialVersionUID = 1L;
@@ -12,6 +13,9 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	public String twitter_id, youtube_id, facebook_id; 
 	public String term_start, term_end, leadership_role;
 	public boolean in_office, at_large;
+
+    // Only used when in a cosponsor context
+    public Date cosponsored_on;
 	
 	// this gets assigned onto the legislator, even though it's not set this way in the API,
 	// so that we can reuse legislator listing code to list committee memberships

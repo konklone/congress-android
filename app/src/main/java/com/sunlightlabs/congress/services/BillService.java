@@ -87,20 +87,6 @@ public class BillService {
         String quoted = "\"" + query+ "\"";
 		return sunlightBillsFor(Congress.searchUrl("bills", quoted, true, basicFields, params, page, per_page));
 	}
-	
-	public static List<Bill> where(Map<String,String> params, int page, int per_page) throws CongressException {
-		if (!params.containsKey("order"))
-			params.put("order", "introduced_at,bill_type,number");
-		
-		return sunlightBillsFor(Congress.url("bills", basicFields, params, page, per_page));
-	}
-
-	public static List<Legislator> allCosponsors(String bill_id) throws CongressException {
-        Map<String,String> params = new HashMap<String,String>();
-        params.put("bill_id", bill_id);
-        String[] fields = { "cosponsors" };
-        return sunlightBillsFor(Congress.url("bills", fields, params)).get(0).cosponsors;
-    }
 
 	public static Bill find(String id) throws CongressException {
 		// /{congress}/bills/{bill_type+bill_number}.json
