@@ -27,6 +27,7 @@ public class Database {
 	private static final String DATABASE_NAME = "congress.db";
 
 	// TODO: remove/migrate out name_suffix, nickname fields
+    // TODO: add middle_name or display_name fields?
 	private static final String[] LEGISLATOR_COLUMNS = new String[] {
 		"bioguide_id", "first_name", "last_name",
 		"title", "party", "state", "district", "gender"

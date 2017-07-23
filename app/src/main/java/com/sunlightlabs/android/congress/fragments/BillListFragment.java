@@ -405,18 +405,11 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			
 			holder.code.setText(Bill.formatCode(bill.bill_type, bill.number));
 
-			if (bill.short_title != null) {
-				String title = Utils.truncate(bill.short_title, 250);
-				holder.title.setTextSize(18);
-				holder.title.setText(title);
-			} else if (bill.official_title != null) {
-				String title = Utils.truncate(bill.official_title, 250);
-				holder.title.setTextSize(14);
-				holder.title.setText(title);
-			} else {
-				holder.title.setTextSize(14);
+            holder.title.setTextSize(14);
+			if (bill.short_title != null)
+				holder.title.setText(Utils.truncate(bill.short_title, 250));
+			else
 				holder.title.setText(R.string.bill_no_title);
-			}
 			
 			if (context.type == BILLS_ACTIVE) {
 				holder.last_action.setText(actionText(bill.lastAction));
@@ -451,7 +444,10 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		}
 		
 		private String actionText(Bill.Action action) {
-			return Utils.truncate(action.description, 80);
+            if (action.description != null)
+			    return Utils.truncate(action.description, 80);
+            else
+                return "";
 		}
 	}
 	

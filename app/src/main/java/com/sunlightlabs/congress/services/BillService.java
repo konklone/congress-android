@@ -190,7 +190,12 @@ public class BillService {
                 bill.lastAction = bill.actions.get(0);
         }
 
-        // TODO: make it voted_at again and parse the time
+        // if no actions array (list of bills), then make a minimal lastAction
+        else if (!json.isNull("latest_major_action")) {
+            bill.lastAction = new Bill.Action();
+            bill.lastAction.description = json.getString("latest_major_action");
+        }
+
         if (!json.isNull("votes")) {
             JSONArray jsonVotes = json.getJSONArray("votes");
             List<Bill.Vote> votes = new ArrayList<Bill.Vote>();
