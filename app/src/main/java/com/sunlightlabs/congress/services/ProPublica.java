@@ -71,10 +71,11 @@ public class ProPublica {
         Map<String,String> params = new HashMap<String,String>();
 
         // Only use for query string is an "offset" for pagination as needed
-        if (page > 0) {
-            int offset = (page - 1) * PPPP;
-            params.put("offset", String.valueOf(offset));
-        }
+        // TODO: disable for now while it causes problems
+//        if (page > 0) {
+//            int offset = (page - 1) * PPPP;
+//            params.put("offset", String.valueOf(offset));
+//        }
 
         StringBuilder query = new StringBuilder("");
         Iterator<String> iterator = params.keySet().iterator();
