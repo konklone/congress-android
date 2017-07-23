@@ -19,20 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 public class BillService {
-	
-	public static String[] basicFields = {
-		"bill_id", "bill_type", "chamber", "number", "congress",
-		"introduced_on", "last_action_at", "last_vote_at",
-		"official_title", "short_title", "cosponsors_count",
-		"urls", "last_version.urls",
-		"history", 
-		"sponsor",
-		"last_action"
-	};
 
-    // Make two calls, one per-chamber, and combine them client-side.
-	// /{congress}/{chamber}/bills/{type}.json
-
+    // /{congress}/both/bills/{type}.json
     public static List<Bill> recentlyIntroduced(int page) throws CongressException {
         return recently("introduced", new Comparator<Bill>() {
             @Override
@@ -61,18 +49,13 @@ public class BillService {
     }
 
 	public static List<Bill> recently(String type, Comparator<Bill> comparator, int page) throws CongressException {
-        List<Bill> bills = new ArrayList<Bill>();
-
         String congress = String.valueOf(Bill.currentCongress());
-        String[] house = { congress , "house", "bills", type };
-        String[] senate = { congress , "senate", "bills", type };
-        bills.addAll(billsFor(ProPublica.url(house, page)));
-        bills.addAll(billsFor(ProPublica.url(senate, page)));
+        String[] both = { congress, "both", "bills", type };
+        List<Bill> bills = billsFor(ProPublica.url(both, page));
 
-        // TODO: This isn't going to sort things the way users expect,
-        // because pagination is done client-side instead of server-
-        // side. It could jump from new to old and back as pages turn.
-        Collections.sort(bills, comparator);
+        // TODO: Ditch this (and all above comparators) if possible?
+        // https://github.com/propublica/congress-api-docs/issues/68
+        // Collections.sort(bills, comparator);
 
 		return bills;
 	}
@@ -82,14 +65,19 @@ public class BillService {
 		String[] endpoint = { "members", sponsorId, "bills", "introduced" };
         return billsFor(ProPublica.url(endpoint, page));
 	}
-	
-	public static List<Bill> search(String query, Map<String,String> params, int page, int per_page) throws CongressException {
-        String quoted = "\"" + query+ "\"";
-		return sunlightBillsFor(Congress.searchUrl("bills", quoted, true, basicFields, params, page, per_page));
+
+	// /bills/search.json?query={query}
+	public static List<Bill> search(String query, int page) throws CongressException {
+        String[] endpoint = { "bills", "search" };
+
+        Map<String,String> params = new HashMap<String,String>();
+        params.put("query", query);
+
+        return billsFor(ProPublica.url(endpoint, params, page));
 	}
 
+    // /{congress}/bills/{bill_type+bill_number}.json
 	public static Bill find(String id) throws CongressException {
-		// /{congress}/bills/{bill_type+bill_number}.json
         String[] pieces = Bill.splitBillId(id);
         String typeNumber = pieces[0] + pieces[1];
         String[] endpoint = { String.valueOf(Bill.currentCongress()), "bills", typeNumber };
@@ -224,6 +212,7 @@ public class BillService {
         return bill;
 	}
 
+	// TODO: remove once unused by RollService and UpcomingBillService
 	protected static Bill fromSunlightAPI(JSONObject json) throws JSONException, ParseException, CongressException {
 		Bill bill = new Bill();
 
@@ -292,62 +281,9 @@ public class BillService {
 				bill.cosponsors.add(LegislatorService.fromSunlight(cosponsorObjects.getJSONObject(i).getJSONObject("legislator")));
 		}
 		
-		if (!json.isNull("votes")) {
-			JSONArray voteObjects = json.getJSONArray("votes");
-			int length = voteObjects.length();
-			
-			bill.votes = new ArrayList<Bill.Vote>();
-
-			// load in descending order
-			for (int i = 0; i < length; i++)
-				bill.votes.add(0, sunlightVoteFromAPI(voteObjects.getJSONObject(i)));
-		}
-
-		if (!json.isNull("actions")) {
-			JSONArray actionObjects = json.getJSONArray("actions");
-			int length = actionObjects.length();
-
-			bill.actions = new ArrayList<Bill.Action>();
-			
-			// load in descending order
-			for (int i = 0; i < length; i++)
-				bill.actions.add(0, actionFromSunlightAPI(actionObjects.getJSONObject(i)));
-		}
-		
-		if (!json.isNull("last_action")) {
-            bill.lastAction = actionFromSunlightAPI(json.getJSONObject("last_action"));
-            bill.last_action_on = bill.lastAction.acted_on;
-        }
-
 		return bill;
 	}
-	
-	protected static Vote sunlightVoteFromAPI(JSONObject json) throws JSONException, ParseException, CongressException {
-		Vote vote = new Vote();
-		
-		vote.result = json.getString("result");
-		vote.question = json.getString("text");
-		vote.chamber = json.getString("chamber");
-		vote.voted_on = Congress.parseDateEither(json.getString("acted_at"));
 
-		if (!json.isNull("roll_id"))
-			vote.roll_id = json.getString("roll_id");
-		return vote;
-	}
-	
-	protected static Action actionFromSunlightAPI(JSONObject json) throws JSONException, ParseException, CongressException {
-		Action action = new Action();
-		action.description = json.getString("text");
-		action.type = json.getString("type");
-		action.acted_on = Congress.parseDateEither(json.getString("acted_at"));
-		
-		if (!json.isNull("chamber"))
-			action.chamber = json.getString("chamber");
-		
-		return action;
-	}
-	
-	
 	/* Private helpers for loading single or plural bill objects */
 
 	private static Bill billFor(String url) throws CongressException {
@@ -386,24 +322,6 @@ public class BillService {
 			throw new CongressException(e, "Problem parsing a date in the JSON from " + url);
 		}
 
-		return bills;
-	}
-
-	private static List<Bill> sunlightBillsFor(String url) throws CongressException {
-		List<Bill> bills = new ArrayList<Bill>();
-		try {
-			JSONArray results = Congress.resultsFor(url);
-
-			int length = results.length();
-			for (int i = 0; i < length; i++)
-				bills.add(fromSunlightAPI(results.getJSONObject(i)));
-
-		} catch (JSONException e) {
-			throw new CongressException(e, "Problem parsing the JSON from " + url);
-		} catch (ParseException e) {
-			throw new CongressException(e, "Problem parsing a date in the JSON from " + url);
-		}
-		
 		return bills;
 	}
 	

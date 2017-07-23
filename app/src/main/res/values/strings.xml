@@ -161,7 +161,7 @@
     <string name="menu_committees">Committees</string>
     
     <string name="subscriber_bills_all">New Bills</string>
-    <string name="subscriber_bills_active">Active Bills</string>
+    <string name="subscriber_bills_active">Updated Bills</string>
     <string name="subscriber_bills_law">Enacted Legislation</string>
 
     <string name="bill_not_found">No bill found by that code.</string>

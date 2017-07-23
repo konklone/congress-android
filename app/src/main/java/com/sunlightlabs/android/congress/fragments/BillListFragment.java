@@ -42,7 +42,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	public static final int BILLS_ALL = 1;
 	public static final int BILLS_SPONSOR = 2;
 	public static final int BILLS_SEARCH_NEWEST = 3;
-	public static final int BILLS_SEARCH_RELEVANT = 4;
+//	public static final int BILLS_SEARCH_RELEVANT = 4;
 	public static final int BILLS_CODE = 5;
 	public static final int BILLS_LAW = 6;
 	
@@ -250,9 +250,9 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			if (type == BILLS_SEARCH_NEWEST) {
 				FragmentUtils.showEmpty(this, R.string.bills_empty_search_newest);
 				setupSubscription();
-			} else if (type == BILLS_SEARCH_RELEVANT) {
-				FragmentUtils.showEmpty(this, R.string.bills_empty_search_relevant);
-				setupSubscription();
+//			} else if (type == BILLS_SEARCH_RELEVANT) {
+//				FragmentUtils.showEmpty(this, R.string.bills_empty_search_relevant);
+//				setupSubscription();
 			} else if (type == BILLS_CODE) {
 				FragmentUtils.showEmpty(this, R.string.bills_empty_code);
 				setupSubscription();
@@ -308,8 +308,6 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		public List<Bill> doInBackground(Void... nothing) {
 			try {
 				
-				Map<String,String> params = new HashMap<String,String>();
-				
 				switch (context.type) {
 				case BILLS_ALL:
 					return BillService.recentlyIntroduced(page);
@@ -327,11 +325,9 @@ public class BillListFragment extends ListFragment implements PaginationListener
                     if (bill != null) matches.add(bill);
                     return matches;
 				case BILLS_SEARCH_NEWEST:
-					params.put("order", "introduced_on");
-					return BillService.search(context.query, params, page, PER_PAGE);
-				case BILLS_SEARCH_RELEVANT:
-					params.put("order", "_score");					
-					return BillService.search(context.query, params, page, PER_PAGE);
+					return BillService.search(context.query, page);
+//				case BILLS_SEARCH_RELEVANT:
+//					return BillService.search(context.query, page);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
 				}
@@ -391,9 +387,9 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			case BILLS_LAW:
 				shortDate(holder.date, bill.enacted_on);
 				break;
-			case BILLS_SEARCH_RELEVANT:
-				longDate(holder.date, bill.last_action_on);
-				break;
+//			case BILLS_SEARCH_RELEVANT:
+//				longDate(holder.date, bill.last_action_on);
+//				break;
 			case BILLS_SEARCH_NEWEST:
 			case BILLS_ALL:
 			case BILLS_SPONSOR:

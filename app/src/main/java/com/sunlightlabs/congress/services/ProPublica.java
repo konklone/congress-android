@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 public class ProPublica {
 
@@ -45,10 +44,15 @@ public class ProPublica {
     public static final String dateOnlyFormat = "yyyy-MM-dd";
 
     public static String url(String[] components) throws CongressException {
-        return url(components, -1);
+        return url(components, null, -1);
     }
 
     public static String url(String[] components, int page) throws CongressException {
+        return url(components, null, page);
+    }
+
+    public static String url(String[] components, Map<String,String> params, int page) throws CongressException {
+
         if (components == null || components.length == 0)
             throw new CongressException("No path components given.");
 
@@ -68,7 +72,7 @@ public class ProPublica {
 
 
         // cobble together any needed query string params
-        Map<String,String> params = new HashMap<String,String>();
+        if (params == null) params = new HashMap<String,String>();
 
         // Only use for query string is an "offset" for pagination as needed
         // TODO: disable for now while it causes problems

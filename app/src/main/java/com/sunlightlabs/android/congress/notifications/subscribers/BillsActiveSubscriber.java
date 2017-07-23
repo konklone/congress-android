@@ -28,7 +28,7 @@ public class BillsActiveSubscriber extends Subscriber {
 		try {
 			return BillService.recentlyActive(1);
 		} catch (CongressException e) {
-			Log.w(Utils.TAG, "Could not fetch the latest active bills for " + subscription, e);
+			Log.w(Utils.TAG, "Could not fetch the latest updated bills for " + subscription, e);
 			return null;
 		}
 	}
@@ -36,11 +36,11 @@ public class BillsActiveSubscriber extends Subscriber {
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
 		if (results == BillListFragment.PER_PAGE)
-			return results + " or more new active bills .";
+			return results + " or more new updated bills .";
 		else if (results > 1)
-			return results + " new active bills.";
+			return results + " new updated bills.";
 		else
-			return results + " new active bill.";
+			return results + " new updated bill.";
 	}
 
 	@Override
