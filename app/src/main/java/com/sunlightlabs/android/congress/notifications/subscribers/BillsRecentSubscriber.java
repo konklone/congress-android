@@ -26,7 +26,7 @@ public class BillsRecentSubscriber extends Subscriber {
 		Utils.setupAPI(context);
 		
 		try {
-			return BillService.recentlyIntroduced(1, BillListFragment.PER_PAGE);
+			return BillService.recentlyIntroduced(1);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest bills for " + subscription, e);
 			return null;

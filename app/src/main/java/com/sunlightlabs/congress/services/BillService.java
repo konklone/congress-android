@@ -3,6 +3,7 @@ package com.sunlightlabs.congress.services;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.Bill.Action;
 import com.sunlightlabs.congress.models.Bill.Vote;
+import com.sunlightlabs.congress.models.Committee;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
@@ -12,6 +13,8 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,10 +33,26 @@ public class BillService {
 
     // Make two calls, one per-chamber, and combine them client-side.
 	// /{congress}/{chamber}/bills/introduced.json
-	public static List<Bill> recentlyIntroduced(int page, int per_page) throws CongressException {
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("order", "introduced_on,bill_type,number");
-		return sunlightBillsFor(Congress.url("bills", basicFields, params, page, per_page));
+	public static List<Bill> recentlyIntroduced(int page) throws CongressException {
+        List<Bill> bills = new ArrayList<Bill>();
+
+        String congress = String.valueOf(Bill.currentCongress());
+        String[] house = { congress , "house", "bills", "introduced" };
+        String[] senate = { congress , "senate", "bills", "introduced" };
+        bills.addAll(billsFor(ProPublica.url(house, page)));
+        bills.addAll(billsFor(ProPublica.url(senate, page)));
+
+        // TODO: This isn't going to sort things the way users expect,
+        // because pagination is done client-side instead of server-
+        // side. It could jump from new to old and back as pages turn.
+        Collections.sort(bills, new Comparator<Bill>() {
+            @Override
+            public int compare(Bill a, Bill b) {
+                return b.introduced_on.compareTo(a.introduced_on);
+            }
+        });
+
+		return bills;
 	}
 	
 	public static List<Bill> recentlyActive(int page, int per_page) throws CongressException {

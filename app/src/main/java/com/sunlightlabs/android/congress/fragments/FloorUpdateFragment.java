@@ -138,7 +138,7 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 		}
 		
 		// only re-enable the pagination if we got a full page back
-		if (updates.size() == PER_PAGE)
+		if (updates.size() >= PER_PAGE)
 			adapterHelper.setOnScrollListener(pager);
 	}
 	

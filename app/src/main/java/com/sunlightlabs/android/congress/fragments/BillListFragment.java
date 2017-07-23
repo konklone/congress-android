@@ -231,7 +231,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		}
 		
 		// only re-enable the pagination if we got a full page back
-		if (bills.size() == PER_PAGE)
+		if (bills.size() >= PER_PAGE)
 			getListView().setOnScrollListener(pager);
 	}
 	
@@ -311,7 +311,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				
 				switch (context.type) {
 				case BILLS_ALL:
-					return BillService.recentlyIntroduced(page, PER_PAGE);
+					return BillService.recentlyIntroduced(page);
 				case BILLS_ACTIVE:
 					return BillService.recentlyActive(page, PER_PAGE);
 				case BILLS_LAW:

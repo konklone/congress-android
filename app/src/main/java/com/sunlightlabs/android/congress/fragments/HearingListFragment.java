@@ -208,7 +208,7 @@ public class HearingListFragment extends ListFragment {
 
 		@Override
 		protected List<Hearing> doInBackground(String... params) {
-			List<Hearing> hearings = new ArrayList<Hearing>();
+			List<Hearing> hearings;
 			String chamber = params[0];
 			
 			try {

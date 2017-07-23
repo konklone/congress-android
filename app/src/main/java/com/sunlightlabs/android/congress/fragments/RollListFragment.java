@@ -175,7 +175,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		}
 		
 		// only re-enable the pagination if we got a full page back
-		if (rolls.size() == PER_PAGE)
+		if (rolls.size() >= PER_PAGE)
 			getListView().setOnScrollListener(pager);
 	}
 	
