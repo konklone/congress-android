@@ -135,7 +135,7 @@ public class Bill implements Serializable {
 	// then GPO PDF, then finally the THOMAS landing page
 	public String bestFullTextUrl() {
 		if (this.congress_url != null)
-			return this.congress_url +"/description";
+			return this.congress_url +"/text";
 		else if (this.gpo_url != null)
 			return this.gpo_url;
         else
@@ -144,7 +144,7 @@ public class Bill implements Serializable {
 
 	// next best thing to official, easily calculable from bill fields
 	public String govtrackTextUrl() {
-		return "https://www.govtrack.us/congress/bills/" + congress + "/" + bill_type + number + "/description";
+		return "https://www.govtrack.us/congress/bills/" + congress + "/" + bill_type + number + "/text";
 	}
 
 	public static String formatSummary(String summary, String short_title) {
