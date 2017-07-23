@@ -1,6 +1,7 @@
 package com.sunlightlabs.android.congress.fragments;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -313,15 +314,18 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				case BILLS_ALL:
 					return BillService.recentlyIntroduced(page);
 				case BILLS_ACTIVE:
-					return BillService.recentlyActive(page, PER_PAGE);
+					return BillService.recentlyActive(page);
 				case BILLS_LAW:
-					return BillService.recentlyLaw(page, PER_PAGE);
+					return BillService.recentlyLaw(page);
 				case BILLS_SPONSOR:
 					return BillService.recentlySponsored(context.sponsor.bioguide_id, page);
 				case BILLS_CODE:
-					params.put("bill_type", context.bill_type);
-					params.put("number", String.valueOf(context.number));
-					return BillService.where(params, page, PER_PAGE);
+				    int congress = Bill.currentCongress();
+				    String bill_id = context.bill_type + String.valueOf(context.number) + "-" + String.valueOf(congress);
+					List<Bill> matches = new ArrayList<Bill>();
+                    Bill bill = BillService.find(bill_id);
+                    if (bill != null) matches.add(bill);
+                    return matches;
 				case BILLS_SEARCH_NEWEST:
 					params.put("order", "introduced_on");
 					return BillService.search(context.query, params, page, PER_PAGE);

@@ -3,7 +3,6 @@ package com.sunlightlabs.congress.services;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.Bill.Action;
 import com.sunlightlabs.congress.models.Bill.Vote;
-import com.sunlightlabs.congress.models.Committee;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
@@ -32,43 +31,50 @@ public class BillService {
 	};
 
     // Make two calls, one per-chamber, and combine them client-side.
-	// /{congress}/{chamber}/bills/introduced.json
-	public static List<Bill> recentlyIntroduced(int page) throws CongressException {
+	// /{congress}/{chamber}/bills/{type}.json
+
+    public static List<Bill> recentlyIntroduced(int page) throws CongressException {
+        return recently("introduced", new Comparator<Bill>() {
+            @Override
+            public int compare(Bill a, Bill b) {
+                return b.introduced_on.compareTo(a.introduced_on);
+            }
+        }, page);
+    }
+
+    public static List<Bill> recentlyActive(int page) throws CongressException {
+        return recently("updated", new Comparator<Bill>() {
+            @Override
+            public int compare(Bill a, Bill b) {
+                return b.last_action_on.compareTo(a.last_action_on);
+            }
+        }, page);
+    }
+
+    public static List<Bill> recentlyLaw(int page) throws CongressException {
+        return recently("enacted", new Comparator<Bill>() {
+            @Override
+            public int compare(Bill a, Bill b) {
+                return b.enacted_on.compareTo(a.enacted_on);
+            }
+        }, page);
+    }
+
+	public static List<Bill> recently(String type, Comparator<Bill> comparator, int page) throws CongressException {
         List<Bill> bills = new ArrayList<Bill>();
 
         String congress = String.valueOf(Bill.currentCongress());
-        String[] house = { congress , "house", "bills", "introduced" };
-        String[] senate = { congress , "senate", "bills", "introduced" };
+        String[] house = { congress , "house", "bills", type };
+        String[] senate = { congress , "senate", "bills", type };
         bills.addAll(billsFor(ProPublica.url(house, page)));
         bills.addAll(billsFor(ProPublica.url(senate, page)));
 
         // TODO: This isn't going to sort things the way users expect,
         // because pagination is done client-side instead of server-
         // side. It could jump from new to old and back as pages turn.
-        Collections.sort(bills, new Comparator<Bill>() {
-            @Override
-            public int compare(Bill a, Bill b) {
-                return b.introduced_on.compareTo(a.introduced_on);
-            }
-        });
+        Collections.sort(bills, comparator);
 
 		return bills;
-	}
-	
-	public static List<Bill> recentlyActive(int page, int per_page) throws CongressException {
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("order", "last_action_at");
-		params.put("history.active", "true");
-		
-		return sunlightBillsFor(Congress.url("bills", basicFields, params, page, per_page));
-	}
-
-	public static List<Bill> recentlyLaw(int page, int per_page) throws CongressException {
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("order", "last_action_at");
-		params.put("history.enacted", "true");
-
-		return sunlightBillsFor(Congress.url("bills", basicFields, params, page, per_page));
 	}
 
     // /members/{member-id}/bills/introduced.json
