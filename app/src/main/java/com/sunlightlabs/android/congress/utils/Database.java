@@ -28,10 +28,11 @@ public class Database {
 
 	// TODO: remove/migrate out name_suffix, nickname fields
 	private static final String[] LEGISLATOR_COLUMNS = new String[] {
-		"bioguide_id", "first_name", "last_name", "nickname",
-		"name_suffix", "title", "party", "state", "district", "gender"
+		"bioguide_id", "first_name", "last_name",
+		"title", "party", "state", "district", "gender"
 	};
 
+	// TODO: remove/migrate out fields in favor of title field
 	private static final String[] BILL_COLUMNS = new String[] {
 		"id", "short_title", "official_title"
 	};
