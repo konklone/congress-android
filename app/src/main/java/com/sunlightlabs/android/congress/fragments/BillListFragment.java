@@ -317,7 +317,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				case BILLS_LAW:
 					return BillService.recentlyLaw(page, PER_PAGE);
 				case BILLS_SPONSOR:
-					return BillService.recentlySponsored(context.sponsor.bioguide_id, page, PER_PAGE);
+					return BillService.recentlySponsored(context.sponsor.bioguide_id, page);
 				case BILLS_CODE:
 					params.put("bill_type", context.bill_type);
 					params.put("number", String.valueOf(context.number));

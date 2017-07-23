@@ -28,6 +28,7 @@ public class BillService {
 		"last_action"
 	};
 
+    // Make two calls, one per-chamber, and combine them client-side.
 	// /{congress}/{chamber}/bills/introduced.json
 	public static List<Bill> recentlyIntroduced(int page, int per_page) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
@@ -51,11 +52,10 @@ public class BillService {
 		return sunlightBillsFor(Congress.url("bills", basicFields, params, page, per_page));
 	}
 
-	public static List<Bill> recentlySponsored(String sponsorId, int page, int per_page) throws CongressException {
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("order", "introduced_at,bill_type,number");
-		params.put("sponsor_id", sponsorId);
-		return sunlightBillsFor(Congress.url("bills", basicFields, params, page, per_page));
+    // /members/{member-id}/bills/introduced.json
+	public static List<Bill> recentlySponsored(String sponsorId, int page) throws CongressException {
+		String[] endpoint = { "members", sponsorId, "bills", "introduced" };
+        return billsFor(ProPublica.url(endpoint, page));
 	}
 	
 	public static List<Bill> search(String query, Map<String,String> params, int page, int per_page) throws CongressException {
@@ -353,9 +353,16 @@ public class BillService {
 		try {
 			JSONArray results = ProPublica.resultsFor(url);
 
-			int length = results.length();
+            JSONArray jsonBills = results;
+            if (jsonBills.length() > 0) {
+                JSONObject firstResult = results.getJSONObject(0);
+                if (!firstResult.isNull("bills"))
+                    jsonBills = firstResult.getJSONArray("bills");
+            }
+
+			int length = jsonBills.length();
 			for (int i = 0; i < length; i++)
-				bills.add(fromAPI(results.getJSONObject(i)));
+				bills.add(fromAPI(jsonBills.getJSONObject(i)));
 
 		} catch (JSONException e) {
 			throw new CongressException(e, "Problem parsing the JSON from " + url);

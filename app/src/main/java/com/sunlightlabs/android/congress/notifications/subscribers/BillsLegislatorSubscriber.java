@@ -24,7 +24,7 @@ public class BillsLegislatorSubscriber extends Subscriber {
 	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupAPI(context);
 		try {
-			return BillService.recentlySponsored(subscription.id, 1, BillListFragment.PER_PAGE);
+			return BillService.recentlySponsored(subscription.id, 1);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest sponsored bills for " + subscription, e);
 			return null;
