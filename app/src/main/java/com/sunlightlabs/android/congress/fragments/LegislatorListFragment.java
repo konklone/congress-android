@@ -293,9 +293,9 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 
 		public String nameFor(Legislator legislator) {
 			if (context.type == SEARCH_COMMITTEE) {
-				return legislator.title + ". " + legislator.firstName() + " " + legislator.last_name;
+				return legislator.title + ". " + legislator.first_name + " " + legislator.last_name;
 			} else
-				return legislator.last_name + ", " + legislator.firstName();
+				return legislator.last_name + ", " + legislator.first_name;
 		}
 
 		public String positionFor(Legislator legislator) {
@@ -360,7 +360,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 					temp = LegislatorService.allForState(context.state);
 					break;
 				case SEARCH_COSPONSORS:
-					temp = BillService.find(context.billId, new String[] {"cosponsors"}).cosponsors;
+					temp = BillService.allCosponsors(context.billId);
 					break;
 				case SEARCH_CHAMBER:
 					return LegislatorService.allByChamber(context.chamber);

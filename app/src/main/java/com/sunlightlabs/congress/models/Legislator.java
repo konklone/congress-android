@@ -11,16 +11,22 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	public String gender, office, website, phone;
 	public String twitter_id, youtube_id, facebook_id; 
 	public String term_start, term_end, leadership_role;
-	public boolean in_office;
+	public boolean in_office, at_large;
 	
 	// this gets assigned onto the legislator, even though it's not set this way in the API,
 	// so that we can reuse legislator listing code to list committee memberships
 	public Committee.Membership membership;
-		
+
+    // TODO: replace first_name uses with display name function
 	public String getName() {
 		return first_name + " " + last_name;
 	}
-	public String titledName() { return title + ". " + getName(); }
+	public String titledName() {
+        if (this.title != null)
+            return title + ". " + getName();
+        else
+            return getName();
+	}
 
 	public static String[] splitName(String displayName) {
 		String[] pieces = displayName.split(" ");
@@ -64,11 +70,12 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 			return "Representative";
 	}
 
-	// TODO: Use an eventual at_large boolean to display At-Large
     // See: https://github.com/propublica/congress-api-docs/issues/41
 	public String getDomain() {
 		if (this.chamber.equals("senate"))
 			return "Senator";
+        else if (this.at_large == true)
+            return "At-Large";
 		else
 			return "District " + district;
 	}

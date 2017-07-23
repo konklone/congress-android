@@ -102,6 +102,9 @@ public class LegislatorService {
         if (!json.isNull("in_office"))
             legislator.in_office = json.getBoolean("in_office");
 
+        if (!json.isNull("at_large"))
+            legislator.at_large = json.getBoolean("at_large");
+
         if (!json.isNull("first_name"))
             legislator.first_name = json.getString("first_name");
         if (!json.isNull("middle_name"))
@@ -131,7 +134,6 @@ public class LegislatorService {
         // Some fields come from the legislator's current role.
         // If we have a roles array, use it for some data.
         // Otherwise, see if we can scrounge up data on the main object.
-        // TODO: a Role object on Legislator?
         if (!json.isNull("roles")) {
             JSONArray roles = json.getJSONArray("roles");
             if (roles.length() == 0) return null;
@@ -185,7 +187,13 @@ public class LegislatorService {
             if (!json.isNull("district"))
                 legislator.district = json.getString("district");
 
-            if (!json.isNull("name")) {
+            // assume that if first_name is there, all 3 are there
+            if (!json.isNull("first_name")) {
+                legislator.first_name = json.getString("first_name");
+                legislator.middle_name = json.getString("middle_name");
+                legislator.last_name = json.getString("last_name");
+            }
+            else if (!json.isNull("name")) {
                 String displayName = json.getString("name");
                 String[] pieces = Legislator.splitName(displayName);
                 legislator.first_name = pieces[0];

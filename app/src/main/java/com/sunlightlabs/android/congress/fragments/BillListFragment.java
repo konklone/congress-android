@@ -176,7 +176,8 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
-		startActivity(Utils.billIntent(getActivity(), (Bill) parent.getItemAtPosition(position)));
+		Bill bill = (Bill) parent.getItemAtPosition(position);
+		startActivity(Utils.billIntent(bill.id));
 	}
 
 	private void refresh() {
@@ -381,13 +382,13 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			
 			switch (context.type) {
 			case BILLS_ACTIVE:
-				shortDate(holder.date, bill.last_action_at);
+				shortDate(holder.date, bill.last_action_on);
 				break;
 			case BILLS_LAW:
-				shortDate(holder.date, bill.enacted_at);
+				shortDate(holder.date, bill.enacted_on);
 				break;
 			case BILLS_SEARCH_RELEVANT:
-				longDate(holder.date, bill.last_action_at);
+				longDate(holder.date, bill.last_action_on);
 				break;
 			case BILLS_SEARCH_NEWEST:
 			case BILLS_ALL:
@@ -446,7 +447,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		}
 		
 		private String actionText(Bill.Action action) {
-			return Utils.truncate(action.text, 80);
+			return Utils.truncate(action.description, 80);
 		}
 	}
 	

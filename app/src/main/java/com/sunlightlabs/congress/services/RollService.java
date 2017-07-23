@@ -20,7 +20,7 @@ public class RollService {
 	public static String[] basicFields = {
 		"roll_id", "chamber", "number", "year", "congress", "bill_id",
 		"bill.official_title", "bill.short_title",
-		"voted_at", "vote_type", "roll_type", "question", "required", "result",
+		"voted_on", "vote_type", "roll_type", "question", "required", "result",
 		"breakdown",
         "nomination.nominees", "nomination.nomination_id", "nomination.number", "nomination.organization",
         "amendment.amendment_id", "amendment.purpose", "amendment.description", "amendment.amends_bill_id"
@@ -35,7 +35,7 @@ public class RollService {
 	
 	public static List<Roll> latestVotes(String bioguideId, String chamber, int page, int per_page) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("order", "voted_at");
+		params.put("order", "voted_on");
 		params.put("chamber", chamber);
 		params.put("voter_ids." + bioguideId + "__exists", "true");
 		
@@ -48,7 +48,7 @@ public class RollService {
 	
 	public static List<Roll> latestVotes(int page, int per_page) throws CongressException {
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("order", "voted_at");
+		params.put("order", "voted_on");
 		return rollsFor(Congress.url("votes", basicFields, params, page, per_page));
 	}
 	
@@ -73,8 +73,8 @@ public class RollService {
 			roll.congress = json.getInt("congress");
 		if (!json.isNull("year"))
 			roll.year = json.getInt("year");
-		if (!json.isNull("voted_at"))
-			roll.voted_at = Congress.parseDate(json.getString("voted_at"));
+		if (!json.isNull("voted_on"))
+			roll.voted_at = Congress.parseDate(json.getString("voted_on"));
 		
 		// guaranteed fields for roll call votes
 		if (!json.isNull("required"))
@@ -91,7 +91,7 @@ public class RollService {
 			roll.bill_id = json.getString("bill_id");
 
 		if (!json.isNull("bill"))
-			roll.bill = BillService.fromAPI(json.getJSONObject("bill"));
+			roll.bill = BillService.fromSunlightAPI(json.getJSONObject("bill"));
 
 		roll.voteBreakdown.put(Roll.YEA, 0);
 		roll.voteBreakdown.put(Roll.NAY, 0);

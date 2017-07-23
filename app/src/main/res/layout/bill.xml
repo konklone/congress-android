@@ -8,11 +8,6 @@
 		android:layout_height="wrap_content"
 		>
 		
-	    <include layout="@layout/bill_search_data"
-	        android:id="@+id/bill_search_data"
-	        android:visibility="gone"
-	        />
-	    
 	    <LinearLayout android:id="@+id/header_inner"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"

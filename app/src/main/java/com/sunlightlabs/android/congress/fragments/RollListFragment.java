@@ -302,7 +302,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 
             } else if (roll.bill != null) {
                 holder.details.setVisibility(View.VISIBLE);
-                holder.detailsText.setText(Bill.formatCode(roll.bill_id) + ": " + Bill.displayTitle(roll.bill));
+                holder.detailsText.setText(Bill.formatCode(roll.bill_id) + ": " + roll.bill.short_title);
             }
 
 			return view;

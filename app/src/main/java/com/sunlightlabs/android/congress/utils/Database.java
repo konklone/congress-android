@@ -120,8 +120,6 @@ public class Database {
 		legislator.bioguide_id = c.getString(c.getColumnIndex("bioguide_id"));
 		legislator.first_name = c.getString(c.getColumnIndex("first_name"));
 		legislator.last_name = c.getString(c.getColumnIndex("last_name"));
-		legislator.nickname = c.getString(c.getColumnIndex("nickname"));
-		legislator.name_suffix = c.getString(c.getColumnIndex("name_suffix"));
 		legislator.title = c.getString(c.getColumnIndex("title"));
 		legislator.party = c.getString(c.getColumnIndex("party"));
 		legislator.state = c.getString(c.getColumnIndex("state"));

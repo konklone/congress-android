@@ -192,8 +192,8 @@ public class BillPager extends Activity implements HasActionMenu {
     		break;
     	case R.id.govtrack:
     		Analytics.billGovTrack(this, bill.id);
-    		if (bill.urls != null && bill.urls.containsKey("govtrack"))
-    			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.urls.get("govtrack"))));
+    		if (bill.govtrack_url != null)
+    			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(bill.govtrack_url)));
     		break;
     	}
 	}

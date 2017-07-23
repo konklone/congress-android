@@ -74,7 +74,7 @@ public class BillActionFragment extends ListFragment implements LoadBillTask.Loa
 	}
 	
 	public void loadBill() {
-		new LoadBillTask(this, bill.id).execute("actions");
+		new LoadBillTask(this, bill.id).execute();
 	}
 	
 	public void onLoadBill(Bill bill) {
@@ -104,14 +104,14 @@ public class BillActionFragment extends ListFragment implements LoadBillTask.Loa
 
 		@Override
 		public Date dateFor(Bill.Action action) {
-			return action.acted_at;
+			return action.acted_on;
 		}
 		
 		@Override
 		public View contentView(Bill.Action action) {
 			View view = inflater.inflate(R.layout.bill_action, null);
 			
-			String text = action.text;
+			String text = action.description;
 			if (!text.endsWith("."))
 				text += ".";
 			
