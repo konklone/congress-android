@@ -49,8 +49,9 @@ public class BillService {
 	public static List<Bill> search(String query, int page) throws CongressException {
         String[] endpoint = { "bills", "search" };
 
+        String quoted = "\"" + query + "\"";
         Map<String,String> params = new HashMap<String,String>();
-        params.put("query", query);
+        params.put("query", quoted);
 
         return billsFor(ProPublica.url(endpoint, params, page));
 	}
