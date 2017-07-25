@@ -177,7 +177,7 @@ public class Analytics {
 	public static final String LEGISLATOR_YOUTUBE = "youtube";
 	public static final String LEGISLATOR_FACEBOOK = "facebook";
 	public static final String LEGISLATOR_CONTACTS = "contacts";
-	public static final String BILL_TEXT = "description";
+	public static final String BILL_TEXT = "text";
 	public static final String BILL_GOVTRACK = "govtrack";
 	public static final String BILL_UPCOMING = "upcoming";
 	public static final String ANALYTICS_DISABLE = "disable";

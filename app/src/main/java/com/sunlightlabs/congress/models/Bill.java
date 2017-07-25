@@ -131,7 +131,7 @@ public class Bill implements Serializable {
 			return bill_type + number;
 	}
 	
-	// prioritizes GPO "html" version (really description),
+	// prioritizes GPO "html" version (really text),
 	// then GPO PDF, then finally the THOMAS landing page
 	public String bestFullTextUrl() {
 		if (this.congress_url != null)
