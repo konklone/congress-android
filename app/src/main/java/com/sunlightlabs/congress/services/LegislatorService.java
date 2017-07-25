@@ -201,6 +201,9 @@ public class LegislatorService {
 
             if (!json.isNull("cosponsor_state"))
                 legislator.state = json.getString("cosponsor_state");
+
+            if (!json.isNull("cosponsor_title"))
+                legislator.title = Legislator.trimTitle(json.getString("cosponsor_title"));
         }
 
         // There's no 'roles' object, so we're parsing from a list endpoint.

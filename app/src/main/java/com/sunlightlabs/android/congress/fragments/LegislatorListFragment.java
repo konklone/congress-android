@@ -293,14 +293,14 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 
 		public String nameFor(Legislator legislator) {
 			if (context.type == SEARCH_COMMITTEE) {
-				return legislator.title + ". " + legislator.first_name + " " + legislator.last_name;
+				return legislator.titledName();
 			} else
-				return legislator.last_name + ", " + legislator.first_name;
+				return legislator.getNameByLastName();
 		}
 
 		public String positionFor(Legislator legislator) {
 			// For cosponsor listings
-            if (legislator.state == null || legislator.party == null || legislator.district == null)
+            if (legislator.state == null || legislator.party == null)
 			    return "";
 
 			String stateName = Utils.stateCodeToName(context.getActivity(), legislator.state);
@@ -315,8 +315,10 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 				String district;
 				if (legislator.chamber.equals("senate"))
 					district = "Senator";
-				else
+				else if (legislator.district != null)
 					district = "District " + legislator.district;
+                else
+                    district = "House";
 				
 				return legislator.party + " - " + stateName + " - " + district;
 			}

@@ -25,12 +25,26 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	public String getName() {
 		return first_name + " " + last_name;
 	}
+    public String getNameByLastName() { return last_name + ", " + first_name; }
+
 	public String titledName() {
-        if (this.title != null)
+        if (title == null) {
+            // This will be wrong for Delegates and Resident Commissioners,
+            // But I can live with that. In many contexts, we'll have the title.
+            if (chamber.equals("house"))
+                return "Rep. " + getName();
+            else if (chamber.equals("senate"))
+                return "Sen. " + getName();
+            else
+                return getName();
+        } else
             return title + ". " + getName();
-        else
-            return getName();
 	}
+
+	// return any trailing .
+	public static String trimTitle(String title) {
+        return title.replace(".", "");
+    }
 
 	public static String[] splitName(String displayName) {
 		String[] pieces = displayName.split(" ");
