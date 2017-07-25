@@ -22,42 +22,21 @@ public class BillService {
 
     // /{congress}/both/bills/{type}.json
     public static List<Bill> recentlyIntroduced(int page) throws CongressException {
-        return recently("introduced", new Comparator<Bill>() {
-            @Override
-            public int compare(Bill a, Bill b) {
-                return b.introduced_on.compareTo(a.introduced_on);
-            }
-        }, page);
+        return recently("introduced", page);
     }
 
     public static List<Bill> recentlyActive(int page) throws CongressException {
-        return recently("updated", new Comparator<Bill>() {
-            @Override
-            public int compare(Bill a, Bill b) {
-                return b.last_action_on.compareTo(a.last_action_on);
-            }
-        }, page);
+        return recently("active", page);
     }
 
     public static List<Bill> recentlyLaw(int page) throws CongressException {
-        return recently("enacted", new Comparator<Bill>() {
-            @Override
-            public int compare(Bill a, Bill b) {
-                return b.enacted_on.compareTo(a.enacted_on);
-            }
-        }, page);
+        return recently("enacted", page);
     }
 
-	public static List<Bill> recently(String type, Comparator<Bill> comparator, int page) throws CongressException {
+	public static List<Bill> recently(String type, int page) throws CongressException {
         String congress = String.valueOf(Bill.currentCongress());
         String[] both = { congress, "both", "bills", type };
-        List<Bill> bills = billsFor(ProPublica.url(both, page));
-
-        // TODO: Ditch this (and all above comparators) if possible?
-        // https://github.com/propublica/congress-api-docs/issues/68
-        // Collections.sort(bills, comparator);
-
-		return bills;
+        return billsFor(ProPublica.url(both, page));
 	}
 
     // /members/{member-id}/bills/introduced.json
