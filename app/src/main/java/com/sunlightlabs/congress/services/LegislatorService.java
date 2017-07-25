@@ -188,10 +188,19 @@ public class LegislatorService {
         // most minimal form: list of cosponsors, ID and name only
         else if (!json.isNull("cosponsor_id")) {
             legislator.bioguide_id = json.getString("cosponsor_id");
-            String[] names = Legislator.splitName(json.getString("name"));
-            legislator.first_name = names[0];
-            legislator.last_name = names[1];
-            legislator.cosponsored_on = ProPublica.parseDateOnly(json.getString("date"));
+
+            if (!json.isNull("name")) {
+                String[] names = Legislator.splitName(json.getString("name"));
+                legislator.first_name = names[0];
+                legislator.last_name = names[1];
+                legislator.cosponsored_on = ProPublica.parseDateOnly(json.getString("date"));
+            }
+
+            if (!json.isNull("cosponsor_party"))
+                legislator.party = json.getString("cosponsor_party");
+
+            if (!json.isNull("cosponsor_state"))
+                legislator.state = json.getString("cosponsor_state");
         }
 
         // There's no 'roles' object, so we're parsing from a list endpoint.
