@@ -315,6 +315,8 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 				String district;
 				if (legislator.chamber.equals("senate"))
 					district = "Senator";
+				else if (legislator.at_large)
+				    district = "At-Large";
 				else if (legislator.district != null)
 					district = "District " + legislator.district;
                 else

@@ -92,7 +92,7 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	public String getDomain() {
 		if (this.chamber.equals("senate"))
 			return "Senator";
-        else if (this.at_large == true)
+        else if (this.at_large)
             return "At-Large";
 		else
 			return "District " + district;

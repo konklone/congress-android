@@ -165,6 +165,9 @@ public class LegislatorService {
                 legislator.title = Legislator.shortTitle(longTitle);
             }
 
+            if (!role.isNull("at_large"))
+                legislator.at_large = role.getBoolean("at_large");
+
             if (!role.isNull("party"))
                 legislator.party = role.getString("party");
             if (!role.isNull("state"))
