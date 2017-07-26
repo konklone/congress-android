@@ -554,6 +554,7 @@ public class Database {
 
             // Version 9 -
             //   * Remove NewsBillSubscriber, NewsLegislatorSubscriber subscriptions (Google deprecated API)
+			// released in version 4.6.0
 
             Log.i(Utils.TAG, "oldVersion: " + oldVersion);
             if (oldVersion < 9) {
