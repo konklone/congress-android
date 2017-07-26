@@ -179,7 +179,7 @@ public class BillService {
                 vote.no = object.getInt("total_no");
                 vote.not_voting = object.getInt("total_not_voting");
 
-                int year = vote.voted_on.getYear();
+                int year = vote.voted_on.getYear() + 1900;
                 String number = object.getString("roll_call");
                 vote.roll_id = "" + vote.chamber.charAt(0) + number + "-" + year;
 
