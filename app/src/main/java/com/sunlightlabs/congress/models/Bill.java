@@ -52,14 +52,23 @@ public class Bill implements Serializable {
 	public static class Action implements Serializable {
 		private static final long serialVersionUID = 1L;
 
-		public String type, description, chamber;
+		public int id;
+		public String full_id; // bill_id + "-" + id
+        public String type, description, chamber;
 		public Date acted_on;
 	}
 	
 	public static class Vote implements Serializable {
 		private static final long serialVersionUID = 1L;
-		public String roll_id, result, question, chamber;
+
+        // bill_id + "-" + roll_id
+        // This works as long as these are all roll call votes.
+        public String full_id;
+
+        public String roll_id, result, question, chamber;
         public int yes, no, not_voting;
+
+        // TODO: move this back to voted_at
 		public Date voted_on;
 	}
 	

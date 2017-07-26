@@ -16,7 +16,7 @@ public class ActionsBillSubscriber extends Subscriber {
 
 	@Override
 	public String decodeId(Object result) {
-		return String.valueOf(((Bill.Action) result).acted_on.getTime());
+		return ((Bill.Action) result).full_id;
 	}
 
 	@Override

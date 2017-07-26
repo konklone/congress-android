@@ -16,7 +16,7 @@ public class VotesBillSubscriber extends Subscriber {
 
 	@Override
 	public String decodeId(Object result) {
-		return String.valueOf(((Bill.Vote) result).voted_on.getTime());
+		return ((Bill.Vote) result).full_id;
 	}
 
 	@Override

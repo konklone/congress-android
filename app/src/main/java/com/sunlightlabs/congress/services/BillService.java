@@ -145,10 +145,15 @@ public class BillService {
             for (int i=0; i<jsonActions.length(); i++) {
                 JSONObject object = jsonActions.getJSONObject(i);
                 Bill.Action action = new Bill.Action();
+                action.id = object.getInt("id");
                 action.acted_on = ProPublica.parseDateOnly(object.getString("datetime"));
                 action.chamber = object.getString("chamber").toLowerCase();
                 action.type = object.getString("action_type");
                 action.description = object.getString("description");
+
+                // Unique ID for indexing "seen" actions.
+                action.full_id = bill.id + "-" + action.id;
+
                 actions.add(action);
             }
 
@@ -182,6 +187,9 @@ public class BillService {
                 int year = vote.voted_on.getYear() + 1900;
                 String number = object.getString("roll_call");
                 vote.roll_id = "" + vote.chamber.charAt(0) + number + "-" + year;
+
+                // Unique ID for indexing seen votes.
+                vote.full_id = bill.id + "-" + vote.roll_id;
 
                 votes.add(vote);
             }
