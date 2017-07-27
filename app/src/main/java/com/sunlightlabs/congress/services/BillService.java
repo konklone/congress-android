@@ -45,13 +45,25 @@ public class BillService {
         return billsFor(ProPublica.url(endpoint, page));
 	}
 
-	// /bills/search.json?query={query}
-	public static List<Bill> search(String query, int page) throws CongressException {
+	// /bills/search.json?query={query}&sort=date&dir=desc
+	public static List<Bill> searchLatest(String query, int page) throws CongressException {
+        return search(query, "date", page);
+	}
+
+    // /bills/search.json?query={query}&sort=_score&dir=desc
+    public static List<Bill> searchRelevant(String query, int page) throws CongressException {
+        return search(query, "_score", page);
+    }
+
+    // /bills/search.json?query={query}&sort={sort}&dir=desc
+    public static List<Bill> search(String query, String sort, int page) throws CongressException {
         String[] endpoint = { "bills", "search" };
 
         String quoted = "\"" + query + "\"";
         Map<String,String> params = new HashMap<String,String>();
         params.put("query", quoted);
+        params.put("sort", sort);
+        params.put("dir", "desc");
 
         return billsFor(ProPublica.url(endpoint, params, page));
 	}

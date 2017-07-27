@@ -64,11 +64,8 @@ public class BillSearch extends Activity {
 			
 			ActionBarUtils.setTitle(this, "Bills matching \"" + query + "\"", new Intent(this, MenuBills.class));
 			ActionBarUtils.setTitleSize(this, 14);
-//			adapter.add("bills_recent", R.string.search_bills_recent, BillListFragment.forSearch(query, BillListFragment.BILLS_SEARCH_NEWEST));
+			adapter.add("bills_recent", R.string.search_bills_recent, BillListFragment.forSearch(query, BillListFragment.BILLS_SEARCH_NEWEST));
 			adapter.add("bills_relevant", R.string.search_bills_relevant, BillListFragment.forSearch(query, BillListFragment.BILLS_SEARCH_RELEVANT));
-
-			// if restoring relevance tab, remove below line
-			findViewById(R.id.pager_titles).setVisibility(View.GONE);
 		}
 	}
 	

@@ -30,7 +30,7 @@ public class BillsSearchSubscriber extends Subscriber {
 		try {
 			Map<String,String> params = new HashMap<String,String>();
 			params.put("order", "introduced_on");
-			return BillService.search(query, 1);
+			return BillService.searchLatest(query, 1);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest bill search results for " + subscription, e);
 			return null;

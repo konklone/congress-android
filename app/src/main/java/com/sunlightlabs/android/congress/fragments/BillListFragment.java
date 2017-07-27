@@ -325,9 +325,9 @@ public class BillListFragment extends ListFragment implements PaginationListener
                     if (bill != null) matches.add(bill);
                     return matches;
 				case BILLS_SEARCH_NEWEST:
-					return BillService.search(context.query, page);
+					return BillService.searchLatest(context.query, page);
 				case BILLS_SEARCH_RELEVANT:
-					return BillService.search(context.query, page);
+					return BillService.searchRelevant(context.query, page);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
 				}
