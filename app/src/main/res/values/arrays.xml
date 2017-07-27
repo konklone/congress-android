@@ -2,10 +2,11 @@
 <resources>
     
     <string-array name="changelog">
-		<item>Summary: This release adds no new functionality, but makes an important under-the-hood change.</item>
-        <item>Please test out the app for any bugs, and report them using the Feedback button on the main menu if you find anything amiss.</item>
-        <item>Details: this release begins our transition away from the Sunlight Congress API (which is shutting down) and to the Pro Publica Congress API.</item>
-		<item>The Pro Publica API is now used when viewing the fullscreen details for a member of Congress, and when listing members by state.</item>
+		<item>Note! For this release, you may get some push notifications for things you\'ve seen before. This should only happen once, and is an (unfortunate) expected result of moving APIs. Our apologies for the annoyance.</item>
+        <item>This release adds no new functionality, but continues our under-the-hood transition to the Pro Publica API.</item>
+        <item>As a reminder: this app is transitioning away from the Sunlight Congress API (which is shutting down).</item>
+		<item>Please report any bugs using the Feedback button on the main menu.</item>
+		<item>The Pro Publica API is now used for all legislator and bill information.</item>
     </string-array>
 
     <string-array name="changelogLast">

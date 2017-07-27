@@ -19,7 +19,8 @@
 		<TextView android:id="@+id/changelog"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			
+
+			android:lineSpacingExtra="2sp"
 			android:textSize="14sp"
 			/>
 			
