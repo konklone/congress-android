@@ -11,8 +11,6 @@
     
     <string name="no_market_installed">You need to have the Google Play Store in order to review the app.</string>
     
-    <string name="empty_zipcode">No legislators found for your zipcode.</string>
-    <string name="empty_location">No legislators found for your location.</string>
     <string name="empty_last_name">No legislators found by that last name.</string>
     <string name="empty_general">No legislators found.</string>
     
@@ -39,7 +37,6 @@
     <string name="bills_loading">Plucking bills from the air…</string>
     <string name="legislator_loading_error">Couldn\'t load information for this lawmaker.</string>
     <string name="legislators_loading">Searching for lawmakers…</string>
-    <string name="legislators_loading_location">Found your location, searching…</string>
     <string name="legislators_error">Error loading lawmakers.</string>
     <string name="legislators_loading_cosponsors">Loading cosponsors…</string>
     <string name="votes_loading">Plucking votes from the air…</string>
@@ -113,7 +110,7 @@
     <string name="explanation_3b">Congress operates in bursts, so days may go by without any activity.</string>
     
     <string name="first_tip_1_header">Follow your representatives.</string>
-    <string name="first_tip_1_body">Use your location to find, track, and call your representatives.</string>
+    <string name="first_tip_1_body">Find, track, and call your representatives.</string>
     <string name="first_tip_2_header">Keep track of what\'s happening.</string>
     <string name="first_tip_2_body">See what\'s coming up, and what just went down.</string>
     <string name="first_tip_3_header">Stay up to date.</string>
@@ -137,7 +134,7 @@
     <string name="search_votes_recent">Most Recent</string>
     <string name="search_votes_relevant">Most Relevant</string>
     
-    <string name="menu_legislators_no_favorites">Any senators and representatives you follow will be added here.\n\nTo find people, tap the compass button above to use your location, or the search button to search by zip code or last name.\n\nYou can also slide over to the right to find people by state, or by the chamber they\'re a part of.\n\nWhile viewing a person, follow them by tapping the star in the top right corner.</string>
+    <string name="menu_legislators_no_favorites">Any senators and representatives you follow will be added here.\n\nYou can slide over to the right to find people by state, or by the chamber they\'re a part of.\n\nWhile viewing a person, follow them by tapping the star in the top right corner.</string>
     <string name="menu_bills_no_favorites">Any bills you follow will be added here.\n\nTo find bills, use the search button up top, or slide over to the right to see what bills just got introduced, or signed into law.\n\nWhile viewing a bill, follow it by tapping the star in the top right corner.</string>
     <string name="menu_bills_favorite">Starred</string>
     <string name="menu_bills_active">Active</string>
@@ -153,9 +150,6 @@
     <string name="menu_legislators_senate">Senate</string>
     
     <string name="menu_votes_recent">Votes</string>
-    <string name="menu_location_no_location">Couldn\'t locate you. Tap the refresh icon above to try again.\n\nYou may need to update your device\'s location settings to allow this app to find you.</string>
-    <string name="menu_location_updating_gps">Finding your location, trying GPS first…</string>
-    <string name="menu_location_updating_network">Finding your location, using the network…</string>
     <string name="menu_favorite_bill_error">Error loading starred bills.</string>
     <string name="menu_favorite_legislator_error">Error loading starred legislators.</string>
     <string name="menu_committees">Committees</string>
