@@ -4,17 +4,21 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
+import com.sunlightlabs.android.congress.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,30 +67,28 @@ public class AlertFragment extends DialogFragment {
 	public Dialog about(LayoutInflater inflater) {
 		View aboutView = inflater.inflate(R.layout.about, null);
 
-		Spanned about1 = Html.fromHtml(
-				"This app is powered by the <a href=\"https://www.propublica.org/datastore/api/propublica-congress-api\">Pro Publica Congress API</a><br/><br/>" +
-
-				"Data on people and committees comes from the " +
-				"<a href=\"https://github.com/unitedstates\">@unitedstates</a> project.<br/><br/>" +
-				
-				"Data on bills comes from the <a href=\"https://www.congress.gov\">Library of Congress</a>.<br/><br/>" +
-				
-				"Votes, committee hearings, and floor updates come from official " +
-				"<a href=\"https://www.senate.gov/\">Senate</a> and <a href=\"https://www.house.gov/\">House</a> websites.<br/><br/>"
-		);
-		TextView aboutView1 = (TextView) aboutView.findViewById(R.id.about_1);
-		aboutView1.setText(about1);
-		aboutView1.setMovementMethod(LinkMovementMethod.getInstance());
-
 		Spanned about2 = Html.fromHtml(
-				"This app is made by <a href=\"https://twitter.com/konklone\">Eric Mill</a>.<br/><br/>" +
-				"This app's development was supported for years by the <a href=\"https://sunlightfoundation.com\">Sunlight Foundation</a>, " +
-				"a non-partisan non-profit dedicated to making government and politics more accountable and transparent."
+            "The Congress app is developed by <a href=\"https://twitter.com/konklone\">Eric Mill</a>, a private citizen.<br/><br/>" +
+            "Until 2017, development was supported by the <a href=\"https://sunlightfoundation.com\">Sunlight Foundation</a>, " +
+            "a non-partisan non-profit dedicated to making government and politics more accountable and transparent.<br/><br/>" +
+            "This app is powered by the <a href=\"https://www.propublica.org/datastore/api/propublica-congress-api\">Pro Publica Congress API</a>, " +
+            "a service of <a href=\"https://www.propublica.org\">Pro Publica</a>, an independent, nonprofit newsroom that produces investigative journalism in the public interest."
 		);
 		TextView aboutView2 = (TextView) aboutView.findViewById(R.id.about_2);
 		aboutView2.setText(about2);
 		aboutView2.setMovementMethod(LinkMovementMethod.getInstance());
-		
+
+        // make the Pro Publica logo clickable
+        aboutView.findViewById(R.id.propublica);
+        aboutView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(Utils.TAG, "Opening Pro Publica homepage...");
+                String uri = "https://www.propublica.org";
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uri)));
+            }
+        });
+
 		return new AlertDialog.Builder(getActivity()).setIcon(R.drawable.icon)
 			.setView(aboutView)
 			.setPositiveButton(R.string.about_button, new DialogInterface.OnClickListener() {
