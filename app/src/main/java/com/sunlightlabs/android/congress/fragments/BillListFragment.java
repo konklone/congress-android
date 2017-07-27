@@ -388,9 +388,11 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				shortDate(holder.date, bill.enacted_on);
 				break;
 			case BILLS_SEARCH_RELEVANT:
-				longDate(holder.date, bill.last_action_on);
-				break;
+                longDate(holder.date, bill.last_action_on);
+                break;
 			case BILLS_SEARCH_NEWEST:
+				shortDate(holder.date, bill.last_action_on);
+				break;
 			case BILLS_ALL:
 			case BILLS_SPONSOR:
 			case BILLS_CODE:
