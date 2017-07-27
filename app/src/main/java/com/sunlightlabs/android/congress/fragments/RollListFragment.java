@@ -18,21 +18,17 @@ import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.PaginationListener;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.congress.models.Amendment;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
-import com.sunlightlabs.congress.models.Nomination;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.RollService;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class RollListFragment extends ListFragment implements PaginationListener.Paginates {
@@ -291,18 +287,16 @@ public class RollListFragment extends ListFragment implements PaginationListener
 			holder.question.setText(Utils.truncate(roll.question, 200));
 			holder.result.setText(resultFor(roll));
 
-            // vote views can use an optional 'details' pane for more info
-            if (roll.nomination != null && roll.nomination.nominees != null) {
+            if (roll.bill != null) {
                 holder.details.setVisibility(View.VISIBLE);
-                holder.detailsText.setText(Nomination.nomineesFor(roll.nomination));
-            } else if (roll.amendment != null && roll.amendment.amends_bill_id != null) {
-                holder.details.setVisibility(View.VISIBLE);
-                String text = "Amendment to " + Bill.formatCode(roll.amendment.amends_bill_id) + ": " + Amendment.description(roll.amendment);
-                holder.detailsText.setText(Utils.truncate(text, 300));
 
-            } else if (roll.bill != null) {
-                holder.details.setVisibility(View.VISIBLE);
-                holder.detailsText.setText(Bill.formatCode(roll.bill_id) + ": " + roll.bill.short_title);
+                String title;
+                if (roll.bill.official_title != null)
+                    title = Utils.truncate(roll.bill.official_title, 200);
+                else
+                    title = "(untitled)";
+
+                holder.detailsText.setText(Bill.formatCode(roll.bill_id) + ": " + title);
             }
 
 			return view;
