@@ -27,11 +27,13 @@ public class Database {
 	private static final String DATABASE_NAME = "congress.db";
 
 	// TODO: remove/migrate out name_suffix, nickname fields
+    // TODO: add middle_name or display_name fields?
 	private static final String[] LEGISLATOR_COLUMNS = new String[] {
-		"bioguide_id", "first_name", "last_name", "nickname",
-		"name_suffix", "title", "party", "state", "district", "gender"
+		"bioguide_id", "first_name", "last_name",
+		"title", "party", "state", "district", "gender"
 	};
 
+	// TODO: remove/migrate out fields in favor of title field
 	private static final String[] BILL_COLUMNS = new String[] {
 		"id", "short_title", "official_title"
 	};
@@ -120,8 +122,6 @@ public class Database {
 		legislator.bioguide_id = c.getString(c.getColumnIndex("bioguide_id"));
 		legislator.first_name = c.getString(c.getColumnIndex("first_name"));
 		legislator.last_name = c.getString(c.getColumnIndex("last_name"));
-		legislator.nickname = c.getString(c.getColumnIndex("nickname"));
-		legislator.name_suffix = c.getString(c.getColumnIndex("name_suffix"));
 		legislator.title = c.getString(c.getColumnIndex("title"));
 		legislator.party = c.getString(c.getColumnIndex("party"));
 		legislator.state = c.getString(c.getColumnIndex("state"));
@@ -554,6 +554,7 @@ public class Database {
 
             // Version 9 -
             //   * Remove NewsBillSubscriber, NewsLegislatorSubscriber subscriptions (Google deprecated API)
+			// released in version 4.6.0
 
             Log.i(Utils.TAG, "oldVersion: " + oldVersion);
             if (oldVersion < 9) {

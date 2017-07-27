@@ -1,45 +1,50 @@
 package com.sunlightlabs.congress.models;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Legislator implements Comparable<Legislator>, Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	public String bioguide_id, govtrack_id, thomas_id;
+	public String bioguide_id, govtrack_id;
 	public String first_name, middle_name, last_name;
-	public String nickname, name_suffix; // TODO: remove
 	public String title, party, state, district, chamber;
 	public String gender, office, website, phone;
 	public String twitter_id, youtube_id, facebook_id; 
 	public String term_start, term_end, leadership_role;
-	public boolean in_office;
+	public boolean in_office, at_large;
+
+    // Only used when in a cosponsor context
+    public Date cosponsored_on;
 	
 	// this gets assigned onto the legislator, even though it's not set this way in the API,
 	// so that we can reuse legislator listing code to list committee memberships
 	public Committee.Membership membership;
 
-		
+    // TODO: replace first_name uses with display name function
 	public String getName() {
-		return firstName() + " " + last_name;
+		return first_name + " " + last_name;
 	}
-	
-	public String firstName() {
-		if (nickname != null && nickname.length() > 0)
-			return nickname;
-		else
-			return first_name;
-	}
-	
+    public String getNameByLastName() { return last_name + ", " + first_name; }
+
 	public String titledName() {
-		String name = title + ". " + getName();
-		if (name_suffix != null && !name_suffix.equals(""))
-			name += ", " + name_suffix;
-		return name;
+        if (title == null) {
+            // This will be wrong for Delegates and Resident Commissioners,
+            // But I can live with that. In many contexts, we'll have the title.
+            if (chamber.equals("house"))
+                return "Rep. " + getName();
+            else if (chamber.equals("senate"))
+                return "Sen. " + getName();
+            else
+                return getName();
+        } else
+            return title + ". " + getName();
 	}
-	
-	public String getOfficialName() {
-		return last_name + ", " + firstName();
-	}
+
+	// return any trailing .
+	public static String trimTitle(String title) {
+        return title.replace(".", "");
+    }
 
 	public static String[] splitName(String displayName) {
 		String[] pieces = displayName.split(" ");
@@ -59,7 +64,6 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 	}
 
 	// Used to parse long titles from Pro Publica API
-	// TODO: store long title natively and abbreviate at render-time
 	public static String shortTitle(String longTitle) {
 		if (longTitle.equals("Representative"))
 			return "Rep";
@@ -83,41 +87,15 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 		else // "Rep"
 			return "Representative";
 	}
-	
+
+    // See: https://github.com/propublica/congress-api-docs/issues/41
 	public String getDomain() {
 		if (this.chamber.equals("senate"))
 			return "Senator";
-		else if (district != null && district.equals("0"))
-			return "At-Large";
+        else if (this.at_large)
+            return "At-Large";
 		else
 			return "District " + district;
-	}
-	
-	public static String partyName(String party) {
-		if (party.equals("D"))
-			return "Democrat";
-		if (party.equals("R"))
-			return "Republican";
-		if (party.equals("I"))
-			return "Independent";
-		else
-			return "";
-	}
-	
-	public String getPosition(String stateName) {
-		String position = "";
-
-		if (this.chamber.equals("senate"))
-			position = "Senator from " + stateName;
-		else if (district != null && district.equals("0")) {
-			if (title.equals("Rep"))
-				position = "Representative for " + stateName + " At-Large";
-			else
-				position = fullTitle() + " for " + stateName;
-		} else
-			position = "Representative for " + stateName + "-" + district;
-
-		return "(" + party + ") " + position;
 	}
 
 	public static String bioguideUrl(String bioguide_id) {

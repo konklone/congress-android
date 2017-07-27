@@ -8,10 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 // See Pro Publica Congress API docs:
 // https://projects.propublica.org/api-docs/congress-api/endpoints/
@@ -25,13 +24,13 @@ public class LegislatorService {
 
         List<Legislator> members = new ArrayList<Legislator>();
 
-        List<Legislator> senators = proPublicaLegislatorsFor(ProPublica.url(senate));
+        List<Legislator> senators = legislatorsFor(ProPublica.url(senate));
         for (int i=0; i<senators.size(); i++) {
             senators.get(i).state = state;
             senators.get(i).chamber = "senate";
         }
 
-        List<Legislator> representatives = proPublicaLegislatorsFor(ProPublica.url(house));
+        List<Legislator> representatives = legislatorsFor(ProPublica.url(house));
         for (int i=0; i<representatives.size(); i++) {
             representatives.get(i).state = state;
             representatives.get(i).chamber = "house";
@@ -67,10 +66,27 @@ public class LegislatorService {
         return matches;
     }
 
+    // /{congress}/bills/{bill_number}{bill_type}/cosponsors.json
+    public static List<Legislator> allCosponsors(String bill_id) throws CongressException {
+        String congress = String.valueOf(Bill.currentCongress());
+        String[] pieces = Bill.splitBillId(bill_id);
+        String billNumber = pieces[0] + pieces[1];
+        String[] endpoint = { congress, "bills", billNumber, "cosponsors" };
+        List<Legislator> members = legislatorsFor(ProPublica.url(endpoint));
+
+        // Fill in chamber field based on bill_id
+        String chamber = Bill.chamberFrom(pieces[0]);
+        for (int i=0; i<members.size(); i++)
+            members.get(i).chamber = chamber;
+
+        return members;
+    }
+
+
     public static List<Legislator> allByChamber(String chamber) throws CongressException {
         // /{congress}/{chamber}/members.json
         String[] endpoint = { String.valueOf(Bill.currentCongress()), chamber, "members" };
-        List<Legislator> members = proPublicaLegislatorsFor(ProPublica.url(endpoint));
+        List<Legislator> members = legislatorsFor(ProPublica.url(endpoint));
 
         // The 'chamber' field is omitted in responses
         for (int i=0; i<members.size(); i++)
@@ -81,12 +97,12 @@ public class LegislatorService {
 
 	public static Legislator find(String bioguideId) throws CongressException {
         String[] endpoint = new String[] {"members", bioguideId};
-		return proPublicaLegislatorFor(ProPublica.url(endpoint));
+		return legislatorFor(ProPublica.url(endpoint));
 	}
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
 
-	protected static Legislator fromProPublica(JSONObject json) throws JSONException, CongressException {
+	protected static Legislator fromAPI(JSONObject json) throws ParseException, JSONException, CongressException {
         if (json == null)
             return null;
 
@@ -103,6 +119,9 @@ public class LegislatorService {
 
         if (!json.isNull("in_office"))
             legislator.in_office = json.getBoolean("in_office");
+
+        if (!json.isNull("at_large"))
+            legislator.at_large = json.getBoolean("at_large");
 
         if (!json.isNull("first_name"))
             legislator.first_name = json.getString("first_name");
@@ -133,7 +152,6 @@ public class LegislatorService {
         // Some fields come from the legislator's current role.
         // If we have a roles array, use it for some data.
         // Otherwise, see if we can scrounge up data on the main object.
-        // TODO: a Role object on Legislator?
         if (!json.isNull("roles")) {
             JSONArray roles = json.getJSONArray("roles");
             if (roles.length() == 0) return null;
@@ -146,6 +164,9 @@ public class LegislatorService {
                 String longTitle = role.getString("title");
                 legislator.title = Legislator.shortTitle(longTitle);
             }
+
+            if (!role.isNull("at_large"))
+                legislator.at_large = role.getBoolean("at_large");
 
             if (!role.isNull("party"))
                 legislator.party = role.getString("party");
@@ -165,6 +186,27 @@ public class LegislatorService {
                 legislator.office = role.getString("office");
             if (!role.isNull("phone"))
                 legislator.phone = role.getString("phone");
+        }
+
+        // most minimal form: list of cosponsors, ID and name only
+        else if (!json.isNull("cosponsor_id")) {
+            legislator.bioguide_id = json.getString("cosponsor_id");
+
+            if (!json.isNull("name")) {
+                String[] names = Legislator.splitName(json.getString("name"));
+                legislator.first_name = names[0];
+                legislator.last_name = names[1];
+                legislator.cosponsored_on = ProPublica.parseDateOnly(json.getString("date"));
+            }
+
+            if (!json.isNull("cosponsor_party"))
+                legislator.party = json.getString("cosponsor_party");
+
+            if (!json.isNull("cosponsor_state"))
+                legislator.state = json.getString("cosponsor_state");
+
+            if (!json.isNull("cosponsor_title"))
+                legislator.title = Legislator.trimTitle(json.getString("cosponsor_title"));
         }
 
         // There's no 'roles' object, so we're parsing from a list endpoint.
@@ -187,7 +229,13 @@ public class LegislatorService {
             if (!json.isNull("district"))
                 legislator.district = json.getString("district");
 
-            if (!json.isNull("name")) {
+            // assume that if first_name is there, all 3 are there
+            if (!json.isNull("first_name")) {
+                legislator.first_name = json.getString("first_name");
+                legislator.middle_name = json.getString("middle_name");
+                legislator.last_name = json.getString("last_name");
+            }
+            else if (!json.isNull("name")) {
                 String displayName = json.getString("name");
                 String[] pieces = Legislator.splitName(displayName);
                 legislator.first_name = pieces[0];
@@ -198,7 +246,8 @@ public class LegislatorService {
         return legislator;
     }
 
-	protected static Legislator fromAPI(JSONObject json) throws JSONException, CongressException {
+    // TODO: on the chopping block once unused from other Services
+	protected static Legislator fromSunlight(JSONObject json) throws JSONException, CongressException {
 		if (json == null)
 			return null;
 		
@@ -208,9 +257,7 @@ public class LegislatorService {
 			legislator.bioguide_id = json.getString("bioguide_id");
 		if (!json.isNull("govtrack_id"))
 			legislator.govtrack_id = json.getString("govtrack_id");
-		if (!json.isNull("thomas_id"))
-			legislator.thomas_id = json.getString("thomas_id");
-		
+
 		if (!json.isNull("in_office"))
 			legislator.in_office = json.getBoolean("in_office");
 
@@ -218,11 +265,7 @@ public class LegislatorService {
 			legislator.first_name = json.getString("first_name");
 		if (!json.isNull("last_name"))
 			legislator.last_name = json.getString("last_name");
-		if (!json.isNull("nickname"))
-			legislator.nickname = json.getString("nickname");
-		if (!json.isNull("name_suffix"))
-			legislator.name_suffix = json.getString("name_suffix");
-		
+
 		if (!json.isNull("title"))
 			legislator.title = json.getString("title");
 		if (!json.isNull("party"))
@@ -257,43 +300,18 @@ public class LegislatorService {
 		
 		return legislator;
 	}
-	
-	
-	private static Legislator legislatorFor(String url) throws CongressException {
-		try {
-			return fromAPI(Congress.firstResult(url));
-		} catch (JSONException e) {
-			throw new CongressException(e, "Problem parsing the JSON from " + url);
-		}
-	}
 
-	// TODO: rename to legislatorFor and remove old Sunlight method
-	private static Legislator proPublicaLegislatorFor(String url) throws CongressException {
+	private static Legislator legislatorFor(String url) throws CongressException {
         try {
-            return fromProPublica(ProPublica.firstResult(url));
+            return fromAPI(ProPublica.firstResult(url));
         } catch (JSONException e) {
             throw new CongressException(e, "Problem parsing the JSON from " + url);
+        } catch (ParseException e) {
+            throw new CongressException(e, "Problem parsing a date in the JSON from " + url);
         }
     }
 
-	private static List<Legislator> legislatorsFor(String url) throws CongressException {
-		List<Legislator> legislators = new ArrayList<Legislator>();
-		try {
-			JSONArray results = Congress.resultsFor(url);
-
-			int length = results.length();
-			for (int i = 0; i < length; i++)
-				legislators.add(fromAPI(results.getJSONObject(i)));
-
-		} catch (JSONException e) {
-			throw new CongressException(e, "Problem parsing the JSON from " + url);
-		}
-
-		return legislators;
-	}
-
-    // TODO: rename to legislatorsFor and remove old Sunlight method
-    private static List<Legislator> proPublicaLegislatorsFor(String url) throws CongressException {
+    private static List<Legislator> legislatorsFor(String url) throws CongressException {
         List<Legislator> legislators = new ArrayList<Legislator>();
         try {
             JSONArray results = ProPublica.resultsFor(url);
@@ -310,14 +328,18 @@ public class LegislatorService {
                 JSONObject firstResult = results.getJSONObject(0);
                 if (!firstResult.isNull("members"))
                     members = firstResult.getJSONArray("members");
+                else if (!firstResult.isNull("cosponsors"))
+                    members = firstResult.getJSONArray("cosponsors");
             }
 
             int length = members.length();
             for (int i = 0; i < length; i++)
-                legislators.add(fromProPublica(members.getJSONObject(i)));
+                legislators.add(fromAPI(members.getJSONObject(i)));
 
         } catch (JSONException e) {
             throw new CongressException(e, "Problem parsing the JSON from " + url);
+        } catch (ParseException e) {
+            throw new CongressException(e, "Problem parsing date in the JSON from " + url);
         }
 
         return legislators;

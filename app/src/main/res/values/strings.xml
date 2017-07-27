@@ -182,9 +182,6 @@
     <string name="vote_related_to_bill_cloture">On cloture for</string>
     <string name="vote_amendment_purpose">Amendment Purpose</string>
        
-    <string name="location_update">Tap here to find your location again.</string>
-    <string name="location_update_fail">Couldn\'t update your location. Please try again later.</string>
-    
     <string name="out_of_office_message">This legislator is no longer in office.</string>
     <string name="call_office">Call</string>
     <string name="web_office">Web</string>

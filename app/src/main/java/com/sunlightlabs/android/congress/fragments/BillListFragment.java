@@ -1,6 +1,7 @@
 package com.sunlightlabs.android.congress.fragments;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -176,7 +177,8 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
-		startActivity(Utils.billIntent(getActivity(), (Bill) parent.getItemAtPosition(position)));
+		Bill bill = (Bill) parent.getItemAtPosition(position);
+		startActivity(Utils.billIntent(bill.id));
 	}
 
 	private void refresh() {
@@ -230,7 +232,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		}
 		
 		// only re-enable the pagination if we got a full page back
-		if (bills.size() == PER_PAGE)
+		if (bills.size() >= PER_PAGE)
 			getListView().setOnScrollListener(pager);
 	}
 	
@@ -306,27 +308,26 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		public List<Bill> doInBackground(Void... nothing) {
 			try {
 				
-				Map<String,String> params = new HashMap<String,String>();
-				
 				switch (context.type) {
 				case BILLS_ALL:
-					return BillService.recentlyIntroduced(page, PER_PAGE);
+					return BillService.recentlyIntroduced(page);
 				case BILLS_ACTIVE:
-					return BillService.recentlyActive(page, PER_PAGE);
+					return BillService.recentlyActive(page);
 				case BILLS_LAW:
-					return BillService.recentlyLaw(page, PER_PAGE);
+					return BillService.recentlyLaw(page);
 				case BILLS_SPONSOR:
-					return BillService.recentlySponsored(context.sponsor.bioguide_id, page, PER_PAGE);
+					return BillService.recentlySponsored(context.sponsor.bioguide_id, page);
 				case BILLS_CODE:
-					params.put("bill_type", context.bill_type);
-					params.put("number", String.valueOf(context.number));
-					return BillService.where(params, page, PER_PAGE);
+				    int congress = Bill.currentCongress();
+				    String bill_id = context.bill_type + String.valueOf(context.number) + "-" + String.valueOf(congress);
+					List<Bill> matches = new ArrayList<Bill>();
+                    Bill bill = BillService.find(bill_id);
+                    if (bill != null) matches.add(bill);
+                    return matches;
 				case BILLS_SEARCH_NEWEST:
-					params.put("order", "introduced_on");
-					return BillService.search(context.query, params, page, PER_PAGE);
+					return BillService.searchLatest(context.query, page);
 				case BILLS_SEARCH_RELEVANT:
-					params.put("order", "_score");					
-					return BillService.search(context.query, params, page, PER_PAGE);
+					return BillService.searchRelevant(context.query, page);
 				default:
 					throw new CongressException("Not sure what type of bills to find.");
 				}
@@ -381,13 +382,13 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			
 			switch (context.type) {
 			case BILLS_ACTIVE:
-				shortDate(holder.date, bill.last_action_at);
+				shortDate(holder.date, bill.last_action_on);
 				break;
 			case BILLS_LAW:
-				shortDate(holder.date, bill.enacted_at);
+				shortDate(holder.date, bill.enacted_on);
 				break;
 			case BILLS_SEARCH_RELEVANT:
-				longDate(holder.date, bill.last_action_at);
+				longDate(holder.date, bill.last_action_on);
 				break;
 			case BILLS_SEARCH_NEWEST:
 			case BILLS_ALL:
@@ -400,18 +401,11 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			
 			holder.code.setText(Bill.formatCode(bill.bill_type, bill.number));
 
-			if (bill.short_title != null) {
-				String title = Utils.truncate(bill.short_title, 250);
-				holder.title.setTextSize(18);
-				holder.title.setText(title);
-			} else if (bill.official_title != null) {
-				String title = Utils.truncate(bill.official_title, 250);
-				holder.title.setTextSize(14);
-				holder.title.setText(title);
-			} else {
-				holder.title.setTextSize(14);
+            holder.title.setTextSize(14);
+			if (bill.short_title != null)
+				holder.title.setText(Utils.truncate(bill.short_title, 250));
+			else
 				holder.title.setText(R.string.bill_no_title);
-			}
 			
 			if (context.type == BILLS_ACTIVE) {
 				holder.last_action.setText(actionText(bill.lastAction));
@@ -446,7 +440,10 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		}
 		
 		private String actionText(Bill.Action action) {
-			return Utils.truncate(action.text, 80);
+            if (action.description != null)
+			    return Utils.truncate(action.description, 80);
+            else
+                return "";
 		}
 	}
 	

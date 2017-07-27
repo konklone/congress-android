@@ -2,13 +2,11 @@ package com.sunlightlabs.android.congress.fragments;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -22,7 +20,6 @@ import com.sunlightlabs.android.congress.LegislatorCosponsors;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
-import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -83,26 +80,6 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 	}
 	
 	public void setupControls() {
-		// if this was coming in from a search result and has associated highlight data, show it
-		if (bill.search != null && bill.search.highlight != null) {
-			
-			String field = Bill.matchField(bill.search.highlight);
-			
-			// don't bother showing the short title, or the official title if it's the official title being shown
-			if (field != null && !field.equals("popular_title") && !field.equals("keywords") && !field.equals("short_title") && !(field.equals("official_title") && bill.short_title == null)) {
-				View searchView = getView().findViewById(R.id.bill_search_data);
-				
-				String matchText = "\"" + bill.search.query + "\" matched the bill's " + Bill.matchText(field) + ":";
-				String highlightText = Utils.truncate(bill.search.highlight.get(field).get(0), 300, false);
-				if (field.equals("versions") || field.equals("summary"))
-					highlightText = "..." + highlightText + "...";
-				
-				((TextView) searchView.findViewById(R.id.match_field)).setText(matchText);
-				((TextView) searchView.findViewById(R.id.highlight_field)).setText(Html.fromHtml(highlightText));
-				
-				searchView.setVisibility(View.VISIBLE);
-			}
-		}
 		
 		TextView titleView = (TextView) getView().findViewById(R.id.title);
 		String title;
@@ -123,9 +100,8 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 		
 		if (sponsor != null) {
 			View sponsorView = getView().findViewById(R.id.bill_sponsor);
-			
-			String name = sponsor.title + ". " + sponsor.firstName() + " " + sponsor.last_name;
-			((TextView) sponsorView.findViewById(R.id.name)).setText(name);
+
+			((TextView) sponsorView.findViewById(R.id.name)).setText(sponsor.titledName());
 			
 			String stateName = Utils.stateCodeToName(getContext(), sponsor.state);
 			String description = sponsor.party + " - " + stateName;
@@ -194,26 +170,16 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 			summaryView.setVisibility(View.VISIBLE);
 		} else {
 			TextView noSummary = (TextView) getView().findViewById(R.id.bill_no_summary);
-			if (bill.versionUrls != null && bill.versionUrls.containsKey("html")) {
-				noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\""
-					+ bill.versionUrls.get("html")
-					+ "\">Read the official text.</a>"));
-			} else if (bill.versionUrls != null && bill.versionUrls.containsKey("pdf")) {
-				noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\""
-					+ bill.versionUrls.get("pdf")
-					+ "\">Read the official text (PDF).</a>"));
-			} else {
-				noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\""
-						+ bill.fallbackTextUrl()
-						+ "\">Read the text of this bill on GovTrack.us.</a>"));
-			}
-        	noSummary.setMovementMethod(LinkMovementMethod.getInstance());
+			noSummary.setText(Html.fromHtml("No summary available.<br/><br/><a href=\""
+				+ bill.bestFullTextUrl()
+				+ "\">Read the official description.</a>"));
+			noSummary.setMovementMethod(LinkMovementMethod.getInstance());
         	noSummary.setVisibility(View.VISIBLE);
 		}
 	}
 	
 	public void loadSummary() {
-		new LoadBillTask(this, bill.id).execute("summary");
+		new LoadBillTask(this, bill.id).execute();
 	}
 	
 	public void loadPhoto() {
@@ -249,60 +215,19 @@ public class BillInfoFragment extends Fragment implements LoadPhotoTask.LoadsPho
 		if (bill.introduced_on != null)
 			addTimelinePiece(inner, "Introduced on", bill.introduced_on.getTime());
 		
-		String house_passage_result = bill.house_passage_result;
-		long house_passage_result_at = bill.house_passage_result_at == null ? 0 : bill.house_passage_result_at.getTime();
-		if (house_passage_result != null && house_passage_result_at > 0) {
-			if (house_passage_result.equals("pass"))
-				addTimelinePiece(inner, "Passed the House on", house_passage_result_at);
-			else if (house_passage_result.equals("fail"))
-				addTimelinePiece(inner, "Failed the House on", house_passage_result_at);
-		}
+		long house_passage_result_at = bill.house_passage_result_on == null ? 0 : bill.house_passage_result_on.getTime();
+		if (house_passage_result_at > 0)
+			addTimelinePiece(inner, "Passed the House on", house_passage_result_at);
 		
-		String senate_cloture_result = bill.senate_cloture_result;
-		long senate_cloture_result_at = bill.senate_cloture_result_at == null ? 0 : bill.senate_cloture_result_at.getTime();
-		if (senate_cloture_result != null && senate_cloture_result_at > 0) {
-			if (senate_cloture_result.equals("pass"))
-				addTimelinePiece(inner, "Passed cloture in the Senate on", senate_cloture_result_at);
-			else if (senate_cloture_result.equals("fail"))
-				addTimelinePiece(inner, "Failed cloture in the Senate on", senate_cloture_result_at);
-		}
+		long senate_passage_result_at = bill.senate_passage_result_on == null ? 0 : bill.senate_passage_result_on.getTime();
+		if (senate_passage_result_at > 0)
+			addTimelinePiece(inner, "Passed the Senate on", senate_passage_result_at);
 		
-		String senate_passage_result = bill.senate_passage_result;
-		long senate_passage_result_at = bill.senate_passage_result_at == null ? 0 : bill.senate_passage_result_at.getTime();
-		if (senate_passage_result != null && senate_passage_result_at > 0) {
-			if (senate_passage_result.equals("pass"))
-				addTimelinePiece(inner, "Passed the Senate on", senate_passage_result_at);
-			else if (senate_passage_result.equals("fail"))
-				addTimelinePiece(inner, "Failed the Senate on", senate_passage_result_at);
-		}
-		
-		long vetoed_at = bill.vetoed_at == null ? 0 : bill.vetoed_at.getTime();
+		long vetoed_at = bill.vetoed_on == null ? 0 : bill.vetoed_on.getTime();
 		if (bill.vetoed && vetoed_at > 0)
 			addTimelinePiece(inner, "Vetoed on", vetoed_at);
-		
-		String house_override_result = bill.house_override_result;
-		long house_override_result_at = bill.house_override_result_at == null ? 0 : bill.house_override_result_at.getTime();
-		if (house_override_result != null && house_override_result_at > 0) {
-			if (house_override_result.equals("pass"))
-				addTimelinePiece(inner, "Override passed in the House on", house_override_result_at);
-			else if (house_override_result.equals("fail"))
-				addTimelinePiece(inner, "Override failed in the House on", house_override_result_at);
-		}
-		
-		String senate_override_result = bill.senate_override_result;
-		long senate_override_result_at = bill.senate_override_result_at == null ? 0 : bill.senate_override_result_at.getTime();
-		if (senate_override_result != null && senate_override_result_at > 0) {
-			if (senate_override_result.equals("pass"))
-				addTimelinePiece(inner, "Override passed in the Senate on", senate_override_result_at);
-			else if (senate_override_result.equals("fail"))
-				addTimelinePiece(inner, "Override failed in the Senate on", senate_override_result_at);
-		}
-		
-		long awaiting_signature_since = bill.awaiting_signature_since == null ? 0 : bill.awaiting_signature_since.getTime();
-		if (bill.awaiting_signature && awaiting_signature_since > 0)
-			addTimelinePiece(inner, "Awaiting signature since", awaiting_signature_since);
-		
-		long enacted_at = bill.enacted_at == null ? 0 : bill.enacted_at.getTime();
+
+		long enacted_at = bill.enacted_on == null ? 0 : bill.enacted_on.getTime();
 		if (bill.enacted && enacted_at > 0)
 			addTimelinePiece(inner, "Enacted on", enacted_at);
 	}

@@ -39,8 +39,6 @@ public class Congress {
 	public static final String dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 	public static final String dateOnlyFormat = "yyyy-MM-dd";
 
-	public static final String highlightTags = "<b>,</b>"; // default highlight tags
-
 	// filled in by the client in keys.xml
 	public static String baseUrl = null;
 	public static String userAgent = null;
@@ -51,37 +49,6 @@ public class Congress {
 	public static String osVersion = null;
 
 	public static final int MAX_PER_PAGE = 50;
-
-	public static class SearchResult extends com.sunlightlabs.congress.models.SearchResult implements Serializable {
-		private static final long serialVersionUID = 1L;
-
-		static SearchResult from(JSONObject json) throws JSONException {
-			SearchResult search = new SearchResult();
-
-			if (!json.isNull("score"))
-				search.score = json.getDouble("score");
-
-			if (!json.isNull("highlight")) {
-				Map<String,ArrayList<String>> highlight = new HashMap<String,ArrayList<String>>();
-
-				JSONObject obj = json.getJSONObject("highlight");
-				Iterator<?> iter = obj.keys();
-				while (iter.hasNext()) {
-					String key = (String) iter.next();
-					JSONArray highlighted = obj.getJSONArray(key);
-					ArrayList<String> temp = new ArrayList<String>(highlighted.length());
-					for (int i=0; i<highlighted.length(); i++)
-						temp.add(highlighted.getString(i));
-					highlight.put(key, temp);
-				}
-
-				search.highlight = highlight;
-			}
-
-			return search;
-		}
-
-	}
 
 	public static String url(String method, String[] fields, Map<String,String> params) throws CongressException {
 		return url(method, fields, params, -1, -1);
@@ -121,14 +88,7 @@ public class Congress {
 	}
 
 	public static String searchUrl(String method, String query, boolean highlight, String[] fields, Map<String,String> params, int page, int per_page) throws CongressException {
-		if (highlight) {
-			params.put("highlight", "true");
-			if (!params.containsKey("highlight.tags"))
-				params.put("highlight.tags", Congress.highlightTags);
-		}
-
 		params.put("query", query);
-
 		return url(method + "/search", fields, params, page, per_page);
 	}
 

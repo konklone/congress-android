@@ -155,7 +155,7 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 		}
 		
 		public String nameFor(Legislator legislator) {
-			return legislator.last_name + ", " + legislator.firstName();
+			return legislator.last_name + ", " + legislator.first_name;
 		}
 
 		public String positionFor(Legislator legislator) {

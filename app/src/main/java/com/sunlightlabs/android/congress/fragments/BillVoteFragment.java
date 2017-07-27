@@ -77,7 +77,7 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 	}
 
 	public void loadBill() {
-		new LoadBillTask(this, bill.id).execute("votes");
+		new LoadBillTask(this, bill.id).execute();
 	}
 	
 	public void onLoadBill(Bill bill) {
@@ -134,7 +134,7 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 			
 			Bill.Vote vote = getItem(position);
 			
-			String timestamp = new SimpleDateFormat("MMM dd, yyyy").format(vote.voted_at).toUpperCase();
+			String timestamp = new SimpleDateFormat("MMM dd, yyyy").format(vote.voted_on).toUpperCase();
 			((TextView) view.findViewById(R.id.date)).setText(timestamp);
 			
 			TextView resultView = (TextView) view.findViewById(R.id.result);

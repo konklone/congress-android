@@ -26,7 +26,7 @@ public class BillsLawSubscriber extends Subscriber {
 		Utils.setupAPI(context);
 		
 		try {
-			return BillService.recentlyLaw(1, BillListFragment.PER_PAGE);
+			return BillService.recentlyLaw(1);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest enacted bills for " + subscription, e);
 			return null;

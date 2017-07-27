@@ -7,6 +7,7 @@ import com.sunlightlabs.android.congress.utils.HttpManager;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 
+import org.apache.http.impl.cookie.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,8 +21,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 public class ProPublica {
@@ -34,11 +41,18 @@ public class ProPublica {
     public static String userAgent = null;
     public static String apiKey = null;
 
+    public static final String dateOnlyFormat = "yyyy-MM-dd";
+
     public static String url(String[] components) throws CongressException {
-        return url(components, -1);
+        return url(components, null, -1);
     }
 
     public static String url(String[] components, int page) throws CongressException {
+        return url(components, null, page);
+    }
+
+    public static String url(String[] components, Map<String,String> params, int page) throws CongressException {
+
         if (components == null || components.length == 0)
             throw new CongressException("No path components given.");
 
@@ -58,7 +72,7 @@ public class ProPublica {
 
 
         // cobble together any needed query string params
-        Map<String,String> params = new HashMap<String,String>();
+        if (params == null) params = new HashMap<String,String>();
 
         // Only use for query string is an "offset" for pagination as needed
         if (page > 0) {
@@ -169,5 +183,21 @@ public class ProPublica {
         }
 
         return results;
+    }
+
+
+    // assumes date stamps are in "YYYY-MM-DD" format, which they will be.
+    // Date objects automatically assign a time of midnight, but these dates are meant to represent whole days.
+    // If we read these in as UTC, or even EST (Congress' time), then when formatted for display in the user's local timezone,
+    // they could be printed as the day before the one they represent.
+    // To work around Java/Android not having a class that represents a time-less day, we force the hour to be noon UTC,
+    // which means that no matter which timezone it is formatted as, it will be the same day.
+    public static Date parseDateOnly(String date) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat(dateOnlyFormat, Locale.US);
+        format.setTimeZone(DateUtils.GMT);
+        Calendar calendar = new GregorianCalendar(DateUtils.GMT);
+        calendar.setTime(format.parse(date));
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        return calendar.getTime();
     }
 }

@@ -16,7 +16,7 @@ public class VotesBillSubscriber extends Subscriber {
 
 	@Override
 	public String decodeId(Object result) {
-		return String.valueOf(((Bill.Vote) result).voted_at.getTime());
+		return ((Bill.Vote) result).full_id;
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class VotesBillSubscriber extends Subscriber {
 		String billId = subscription.data;
 		
 		try {
-			return BillService.find(billId, new String[] {"votes"}).votes;
+			return BillService.find(billId).votes;
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest votes for " + subscription, e);
 			return null;

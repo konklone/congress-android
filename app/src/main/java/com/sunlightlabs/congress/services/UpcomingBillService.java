@@ -72,7 +72,7 @@ public class UpcomingBillService {
 			upcoming.congress = json.getInt("congress");
 		
 		if (!json.isNull("bill"))
-			upcoming.bill = BillService.fromAPI(json.getJSONObject("bill"));
+			upcoming.bill = BillService.fromSunlightAPI(json.getJSONObject("bill"));
 		
 		return upcoming;
 	}

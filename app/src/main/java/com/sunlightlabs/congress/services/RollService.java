@@ -91,7 +91,7 @@ public class RollService {
 			roll.bill_id = json.getString("bill_id");
 
 		if (!json.isNull("bill"))
-			roll.bill = BillService.fromAPI(json.getJSONObject("bill"));
+			roll.bill = BillService.fromSunlightAPI(json.getJSONObject("bill"));
 
 		roll.voteBreakdown.put(Roll.YEA, 0);
 		roll.voteBreakdown.put(Roll.NAY, 0);
@@ -163,7 +163,7 @@ public class RollService {
 		Vote vote = new Vote();
 		vote.vote = json.getString("vote");
 		vote.voter_id = voter_id;
-		vote.voter = LegislatorService.fromAPI(json.getJSONObject("voter"));
+		vote.voter = LegislatorService.fromSunlight(json.getJSONObject("voter"));
 		if (vote.voter == null)
 			return null;
 		else

@@ -63,7 +63,7 @@ public class BillSearch extends Activity {
 	        suggestions.saveRecentQuery(query, null);
 			
 			ActionBarUtils.setTitle(this, "Bills matching \"" + query + "\"", new Intent(this, MenuBills.class));
-			ActionBarUtils.setTitleSize(this, 16);
+			ActionBarUtils.setTitleSize(this, 14);
 			adapter.add("bills_recent", R.string.search_bills_recent, BillListFragment.forSearch(query, BillListFragment.BILLS_SEARCH_NEWEST));
 			adapter.add("bills_relevant", R.string.search_bills_relevant, BillListFragment.forSearch(query, BillListFragment.BILLS_SEARCH_RELEVANT));
 		}
