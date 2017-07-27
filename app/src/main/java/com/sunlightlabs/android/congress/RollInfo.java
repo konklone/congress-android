@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -28,11 +27,9 @@ import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.Database;
 import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
-import com.sunlightlabs.congress.models.Amendment;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
-import com.sunlightlabs.congress.models.Nomination;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.models.Roll.Vote;
 import com.sunlightlabs.congress.services.RollService;
@@ -236,15 +233,6 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		((TextView) headerTop.findViewById(R.id.question)).setText(simpleQuestion(roll));
 		((TextView) headerTop.findViewById(R.id.voted_at)).setText(new SimpleDateFormat("MMM dd, yyyy").format(roll.voted_at).toUpperCase());
-
-        if (roll.nomination != null && roll.nomination.nominees != null) {
-            headerTop.findViewById(R.id.details).setVisibility(View.VISIBLE);
-            ((TextView) headerTop.findViewById(R.id.details_text)).setText(Nomination.nomineesFor(roll.nomination));
-        } else if (roll.amendment != null && roll.amendment.amends_bill_id != null) {
-            headerTop.findViewById(R.id.details).setVisibility(View.VISIBLE);
-            String text = "Amendment to " + Bill.formatCode(roll.amendment.amends_bill_id) + ": " + Amendment.description(roll.amendment);
-            ((TextView) headerTop.findViewById(R.id.details_text)).setText(text);
-        }
 
 		adapter.addView(headerTop);
 		

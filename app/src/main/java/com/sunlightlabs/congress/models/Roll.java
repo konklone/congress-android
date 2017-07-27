@@ -34,15 +34,6 @@ public class Roll implements Serializable {
 	// voter_ids
 	public Map<String,Vote> voter_ids;
 	
-	// amendment purpose
-	public String amendmentPurpose;
-
-    // associated nomination
-    public Nomination nomination;
-
-    // associated amendment
-    public Amendment amendment;
-	
 	// search result metadata (if coming from a search)
 	public SearchResult search;
 	
