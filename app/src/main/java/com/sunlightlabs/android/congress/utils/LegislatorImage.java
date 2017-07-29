@@ -49,15 +49,14 @@ public class LegislatorImage {
 	 * overhaul. This should likely be refactored out at some point in favor of the Picasso
 	 * async loader.
 	 */
-	public static Drawable getImage(
-			String bioguideId,
-			String imageSize,
-			Context context
-	) {
+	public static Drawable getImage(String bioguideId, String imageSize, Context context) {
 		String url = LegislatorImage.getImageURL(bioguideId, imageSize);
 		RequestCreator rc = Picasso.with(context)
 				.load(url)
 				.placeholder(R.drawable.loading_photo);
+
+		if (context == null) return null;
+		
 		try {
 			return new BitmapDrawable(context.getResources(), rc.get());
 		} catch (IOException e) {
