@@ -36,15 +36,6 @@ public class FragmentUtils {
 		view.findViewById(R.id.refresh).setVisibility(View.GONE);
 		view.findViewById(R.id.loading).setVisibility(View.VISIBLE);
 	}
-	
-	public static void showBack(Fragment fragment, String message) {
-		View view = fragment.getView();
-		view.findViewById(R.id.loading).setVisibility(View.GONE);
-		TextView messageView = (TextView) view.findViewById(R.id.empty_message);
-		messageView.setText(message);
-		messageView.setVisibility(View.VISIBLE);
-		view.findViewById(R.id.back).setVisibility(View.VISIBLE);	
-	}
 
 	public static void showRefresh(Fragment fragment, String message) {
 		View view = fragment.getView();
@@ -68,17 +59,14 @@ public class FragmentUtils {
 		((TextView) fragment.getView().findViewById(R.id.loading_message)).setText(message);
 	}
 	
-	
-	public static void showBack(Fragment fragment, int message) {
-		FragmentUtils.showBack(fragment, fragment.getActivity().getResources().getString(message));
-	}
-	
 	public static void showEmpty(Fragment fragment, int message) {
-		FragmentUtils.showEmpty(fragment, fragment.getActivity().getResources().getString(message));
+		if (fragment.getActivity() != null)
+			FragmentUtils.showEmpty(fragment, fragment.getActivity().getResources().getString(message));
 	}
 	
 	public static void showRefresh(Fragment fragment, int message) {
-		FragmentUtils.showRefresh(fragment, fragment.getActivity().getResources().getString(message));
+		if (fragment.getActivity() != null)
+			FragmentUtils.showRefresh(fragment, fragment.getActivity().getResources().getString(message));
 	}
 	
 }

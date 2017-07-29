@@ -56,7 +56,7 @@ public class LegislatorImage {
 				.placeholder(R.drawable.loading_photo);
 
 		if (context == null) return null;
-		
+
 		try {
 			return new BitmapDrawable(context.getResources(), rc.get());
 		} catch (IOException e) {
