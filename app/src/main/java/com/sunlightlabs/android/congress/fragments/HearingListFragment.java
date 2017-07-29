@@ -26,6 +26,7 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Hearing;
 import com.sunlightlabs.congress.services.HearingService;
+import com.sunlightlabs.congress.services.ProPublica;
 
 public class HearingListFragment extends ListFragment {
 	private List<Hearing> hearings;
@@ -159,8 +160,13 @@ public class HearingListFragment extends ListFragment {
 				view = inflater.inflate(R.layout.hearing, null);
 			
 			Date date = hearing.occursAt;
-			String month = new SimpleDateFormat("MMM d").format(date).toUpperCase();
-			String time = new SimpleDateFormat("h:mm aa").format(date);
+            SimpleDateFormat dateDisplay = new SimpleDateFormat("MMM d");
+            SimpleDateFormat timeDisplay = new SimpleDateFormat("h:mm aa");
+            dateDisplay.setTimeZone(ProPublica.CONGRESS_TIMEZONE);
+            timeDisplay.setTimeZone(ProPublica.CONGRESS_TIMEZONE);
+
+			String month = dateDisplay.format(date).toUpperCase();
+			String time = timeDisplay.format(date) + " ET";
 
             String chamberCap = hearing.chamber.substring(0, 1).toUpperCase() + hearing.chamber.substring(1);
 			String name = chamberCap + " " + hearing.committee.name;
