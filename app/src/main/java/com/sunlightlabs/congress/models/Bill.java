@@ -70,6 +70,15 @@ public class Bill implements Serializable {
 
         // TODO: move this back to voted_at
 		public Date voted_on;
+
+		public boolean passed() {
+			if (this.result == null) return false;
+
+            Pattern pattern = Pattern.compile("passed", Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(this.result);
+            boolean passed = matcher.find();
+            return passed;
+		}
 	}
 	
 	public static String normalizeCode(String code) {
