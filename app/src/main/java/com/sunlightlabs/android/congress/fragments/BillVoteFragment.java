@@ -138,11 +138,11 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 			((TextView) view.findViewById(R.id.date)).setText(timestamp);
 			
 			TextView resultView = (TextView) view.findViewById(R.id.result);
-			String result = vote.result;
+
 			String resultDisplay;
-			if (result.equals("pass"))
+			if (vote.passed())
 				resultDisplay = "Passed";
-			else // if (result.equals("fail"))
+			else
 				resultDisplay = "Failed";
 				
 			resultView.setText(resultDisplay + " the " + Utils.capitalize(vote.chamber));

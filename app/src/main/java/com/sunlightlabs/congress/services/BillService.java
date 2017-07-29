@@ -1,8 +1,6 @@
 package com.sunlightlabs.congress.services;
 
 import com.sunlightlabs.congress.models.Bill;
-import com.sunlightlabs.congress.models.Bill.Action;
-import com.sunlightlabs.congress.models.Bill.Vote;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
@@ -12,8 +10,6 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -190,7 +186,7 @@ public class BillService {
 
                 vote.voted_on = ProPublica.parseDateOnly(object.getString("date"));
                 vote.chamber = object.getString("chamber").toLowerCase();
-                vote.result = object.getString("result");
+                vote.result = object.getString("result").toLowerCase();
                 vote.question = object.getString("question");
                 vote.yes = object.getInt("total_yes");
                 vote.no = object.getInt("total_no");
