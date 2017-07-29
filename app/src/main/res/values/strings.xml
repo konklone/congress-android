@@ -230,6 +230,7 @@
     <string name="tab_subscriptions">Subscriptions</string>
     <string name="tab_house">House</string>
     <string name="tab_senate">Senate</string>
+    <string name="tab_upcoming_hearings">Upcoming</string>
     <string name="tab_joint">Joint</string>
     
     <string name="image_star">Star</string>

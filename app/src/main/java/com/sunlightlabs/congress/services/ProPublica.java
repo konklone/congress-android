@@ -30,11 +30,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class ProPublica {
 
+    public static TimeZone CONGRESS_TIMEZONE = TimeZone.getTimeZone("America/New_York");
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    public static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
+    public static SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
     // Pro Publica Per Page
-    public static int PPPP = 20;
+    public static int PER_PAGE = 20;
 
     // filled in by the client in keys.xml
     public static String baseUrl = null;
@@ -76,7 +82,7 @@ public class ProPublica {
 
         // Only use for query string is an "offset" for pagination as needed
         if (page > 0) {
-            int offset = (page - 1) * PPPP;
+            int offset = (page - 1) * PER_PAGE;
             params.put("offset", String.valueOf(offset));
         }
 

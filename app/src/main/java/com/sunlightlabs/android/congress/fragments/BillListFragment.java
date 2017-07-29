@@ -33,10 +33,9 @@ import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.BillService;
+import com.sunlightlabs.congress.services.ProPublica;
 
 public class BillListFragment extends ListFragment implements PaginationListener.Paginates {
-	
-	public static final int PER_PAGE = 20;
 	
 	public static final int BILLS_ACTIVE = 0;
 	public static final int BILLS_ALL = 1;
@@ -157,7 +156,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	}
 	
 	public void setupControls() {
-		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+		getView().findViewById(R.id.refresh).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				refresh();
 			}
@@ -232,7 +231,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		}
 		
 		// only re-enable the pagination if we got a full page back
-		if (bills.size() >= PER_PAGE)
+		if (bills.size() >= ProPublica.PER_PAGE)
 			getListView().setOnScrollListener(pager);
 	}
 	

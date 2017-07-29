@@ -2,6 +2,7 @@ package com.sunlightlabs.android.congress;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.sunlightlabs.android.congress.fragments.HearingListFragment;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
@@ -21,9 +22,10 @@ public class HearingPager extends Activity {
 	}
 
 	private void setupPager() {
+        findViewById(R.id.pager_titles).setVisibility(View.GONE);
+
 		TitlePageAdapter adapter = new TitlePageAdapter(this);
-		adapter.add("house", R.string.tab_house, HearingListFragment.forChamber("house"));
-		adapter.add("senate", R.string.tab_senate, HearingListFragment.forChamber("senate"));
+		adapter.add("upcoming", R.string.tab_upcoming_hearings, HearingListFragment.upcoming());
 		
 		String chamber = getIntent().getStringExtra("chamber");
 		if (chamber != null && chamber.equals("senate"))

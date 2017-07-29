@@ -14,58 +14,52 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.sunlightlabs.android.congress.utils.Utils;
+import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.Committee;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Hearing;
 
 public class HearingService {
-	
-	public static List<Hearing> upcoming(String chamber, int page, int per_page) throws CongressException {
-		GregorianCalendar calendar = new GregorianCalendar(DateUtils.GMT);
-		
-		// add a 3 hour buffer so that hearings don't disappear as soon as they begin 
-		calendar.add(Calendar.HOUR_OF_DAY, -3);
-		Date now = calendar.getTime();
-		
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("chamber", chamber);
-		params.put("occurs_at__gte", Congress.formatDate(now));
-		params.put("committee__exists", "true"); // the new API should require this, but just in case
-		params.put("order", "occurs_at__asc"); // start with the hearings closest to now
-		
-		params.put("dc", "true"); // some House hearings can take place in the field
-		
-		String[] fields = new String[] { 
-			"chamber", "occurs_at", "committee", "committee_id", "congress", "url", 
-			"room", "hearing_type", "description", "dc" 
-		};
-		
-		return hearingsFor(Congress.url("hearings", fields, params, page, per_page));
+
+	// /{congress}/committees/hearings.json
+	public static List<Hearing> upcoming(int page) throws CongressException {
+        String congress = String.valueOf(Bill.currentCongress());
+        String[] endpoint = { congress, "committees", "hearings" };
+		return hearingsFor(ProPublica.url(endpoint, page));
 	}
 	
 	private static Hearing fromJSON(JSONObject json) throws JSONException, ParseException, CongressException {
 		Hearing hearing = new Hearing();
 		
-		if (!json.isNull("congress"))
-			hearing.congress = json.getInt("congress");
 		if (!json.isNull("description"))
 			hearing.description = json.getString("description");
 		if (!json.isNull("chamber"))
-			hearing.chamber = json.getString("chamber");
-		if (!json.isNull("room"))
-			hearing.room = json.getString("room");
-		if (!json.isNull("occurs_at"))
-			hearing.occursAt = Congress.parseDate(json.getString("occurs_at"));
-		if (!json.isNull("dc"))
-			hearing.dc = json.getBoolean("dc");
-		
+			hearing.chamber = json.getString("chamber").toLowerCase();
+		if (!json.isNull("location"))
+			hearing.room = json.getString("location");
+
+        if (!json.isNull("date") && !json.isNull("time")) {
+            String timestamp = json.getString("date") + " " + json.getString("time");
+            ProPublica.datetimeFormat.setTimeZone(ProPublica.CONGRESS_TIMEZONE);
+            hearing.occursAt = ProPublica.datetimeFormat.parse(timestamp);
+        }
+
 		// House only
-		if (!json.isNull("url"))
+        // TODO: remove the empty string check after this is addressed:
+        // https://github.com/propublica/congress-api-docs/issues/36#issuecomment-318854367
+		if (!json.isNull("url") && !json.getString("url").equals(""))
 			hearing.url = json.getString("url");
-		if (!json.isNull("hearing_type"))
-			hearing.hearingType = json.getString("hearing_type");
+		if (!json.isNull("meeting_type") && !json.getString("meeting_type").equals(""))
+			hearing.hearingType = json.getString("meeting_type");
 		
-		if (!json.isNull("committee"))
-			hearing.committee = CommitteeService.fromAPI(json.getJSONObject("committee"));
+		if (!json.isNull("committee")) {
+            Committee committee = new Committee();
+            committee.name = Utils.decodeHTML(json.getString("committee"));
+            committee.id = json.getString("committee_code");
+            committee.chamber = hearing.chamber;
+            hearing.committee = committee;
+        }
 		
 		return hearing;
 	}
@@ -73,7 +67,13 @@ public class HearingService {
 	private static List<Hearing> hearingsFor(String url) throws CongressException {
 		List<Hearing> hearings = new ArrayList<Hearing>();
 		try {
-			JSONArray results = Congress.resultsFor(url);
+			JSONArray results = ProPublica.resultsFor(url);
+
+            if (results.length() > 0) {
+                JSONObject firstResult = results.getJSONObject(0);
+                if (!firstResult.isNull("hearings"))
+                    results = firstResult.getJSONArray("hearings");
+            }
 
 			int length = results.length();
 			for (int i = 0; i < length; i++)

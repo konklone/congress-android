@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TabHost;
@@ -31,8 +32,6 @@ import java.util.GregorianCalendar;
 public class Utils {
 	public static final String TAG = "Congress";
 	
-	public static SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm aa");
-	
 	public static void setupAPI(Context context) {
 		Resources resources = context.getResources();
 		
@@ -45,6 +44,12 @@ public class Utils {
         ProPublica.baseUrl = resources.getString(R.string.propublica_api_endpoint);
         ProPublica.userAgent = resources.getString(R.string.api_user_agent);
         ProPublica.apiKey = resources.getString(R.string.propublica_api_key);
+    }
+
+    // decode HTML entities like &#39;
+    // TODO: when moving to API level 24+, use proper Html methods
+    public static String decodeHTML(String input) {
+        return input.replace("&#39;", "'");
     }
 
 	public static void alert(Context context, String msg) {
@@ -321,15 +326,6 @@ public class Utils {
 			nearby.setText(fullDate);
 			full.setVisibility(View.GONE);
 		}
-		
-		return view;
-	}
-	
-	public static View dateTimeView(Context context, Date subject) {
-		View view = LayoutInflater.from(context).inflate(R.layout.list_item_date, null);
-		
-		((TextView) view.findViewById(R.id.date_left)).setText(Utils.nearbyOrFullDate(subject));
-		((TextView) view.findViewById(R.id.date_right)).setText(timeFormat.format(subject));
 		
 		return view;
 	}

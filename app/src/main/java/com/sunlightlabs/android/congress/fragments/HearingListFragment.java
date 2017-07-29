@@ -22,23 +22,21 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
+import com.sunlightlabs.android.congress.utils.PaginationListener;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Hearing;
 import com.sunlightlabs.congress.services.HearingService;
+import com.sunlightlabs.congress.services.ProPublica;
 
-public class HearingListFragment extends ListFragment {
-	public static final int PER_PAGE = 40;
-	
-	private String chamber;
-	
+public class HearingListFragment extends ListFragment implements PaginationListener.Paginates {
 	private List<Hearing> hearings;
+
+    PaginationListener pager;
+    View loadingView;
 	
-	public static HearingListFragment forChamber(String chamber) {
+	public static HearingListFragment upcoming() {
 		HearingListFragment frag = new HearingListFragment();
-		Bundle args = new Bundle();
-		args.putString("chamber", chamber);
-		frag.setArguments(args);
 		frag.setRetainInstance(true);
 		return frag;
 	}
@@ -48,9 +46,6 @@ public class HearingListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		Bundle args = getArguments();
-		chamber = args.getString("chamber");
 		
 		loadHearings();
 	}
@@ -71,18 +66,25 @@ public class HearingListFragment extends ListFragment {
 	}
 	
 	private void setupControls() {
-		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+		getView().findViewById(R.id.refresh).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				refresh();
 			}
 		});
 
+        loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_page, null);
+        loadingView.setVisibility(View.GONE);
+
+        pager = new PaginationListener(this);
+        getListView().setOnScrollListener(pager);
+
 		FragmentUtils.setLoading(this, R.string.hearings_loading);
 	}
-	
-	private void loadHearings() {
-		new LoadHearingsTask(this).execute(chamber);
-	}
+
+    @Override
+    public void onListItemClick(ListView parent, View v, int position, long id) {
+        selectHearing((Hearing) parent.getItemAtPosition(position));
+    }
 	
 	private void refresh() {
 		hearings = null;
@@ -90,11 +92,17 @@ public class HearingListFragment extends ListFragment {
 		FragmentUtils.showLoading(this);
 		loadHearings();
 	}
-	
-	@Override
-	public void onListItemClick(ListView parent, View v, int position, long id) {
-		selectHearing((Hearing) parent.getItemAtPosition(position));
-	}
+
+    private void loadHearings() {
+        new LoadHearingsTask(this, 1).execute();
+    }
+
+    @Override
+    public void loadNextPage(int page) {
+        getListView().setOnScrollListener(null);
+        loadingView.setVisibility(View.VISIBLE);
+        new LoadHearingsTask(this, page).execute();
+    }
 	
 	public void selectHearing(Hearing hearing) {
 		Date date = hearing.occursAt;
@@ -119,11 +127,22 @@ public class HearingListFragment extends ListFragment {
 		}
 	}
 	
-	public void onLoadHearings(List<Hearing> hearings) {
-		this.hearings = hearings;
-		
-		if (isAdded())
-			displayHearings();
+	public void onLoadHearings(List<Hearing> hearings, int page) {
+        if (!isAdded())
+            return;
+
+        if (page == 1) {
+            this.hearings = hearings;
+            displayHearings();
+        } else {
+            this.hearings.addAll(hearings);
+            loadingView.setVisibility(View.GONE);
+            ((HearingAdapter) getListAdapter()).notifyDataSetChanged();
+        }
+
+        // only re-enable the pagination if we got a full page back
+        if (hearings.size() >= ProPublica.PER_PAGE)
+            getListView().setOnScrollListener(pager);
 	}
 	
 	public void onLoadHearings(CongressException exception) {
@@ -140,14 +159,46 @@ public class HearingListFragment extends ListFragment {
 		} else
 			FragmentUtils.showEmpty(this, R.string.hearings_empty);
 	}
+
+    private static class LoadHearingsTask extends AsyncTask<Void, Void, List<Hearing>> {
+        private HearingListFragment context;
+        private CongressException exception;
+        private int page;
+
+        public LoadHearingsTask(HearingListFragment context, int page) {
+            FragmentUtils.setupAPI(context);
+            this.context = context;
+            this.page = page;
+        }
+
+        @Override
+        protected List<Hearing> doInBackground(Void... params) {
+            List<Hearing> hearings;
+
+            try {
+                hearings = HearingService.upcoming(page);
+            } catch (CongressException e) {
+                Log.e(Utils.TAG, "Error while loading committee hearings: " + e.getMessage());
+                this.exception = e;
+                return null;
+            }
+
+            return hearings;
+        }
+
+        @Override
+        protected void onPostExecute(List<Hearing> hearings) {
+            if (exception != null)
+                context.onLoadHearings(exception);
+            else
+                context.onLoadHearings(hearings, page);
+        }
+
+    }
 	
 	static class HearingAdapter extends ArrayAdapter<Hearing> {
     	LayoutInflater inflater;
     	Resources resources;
-    	
-    	public static final int TYPE_DATE = 0;
-    	public static final int TYPE_HEARING = 1;
-    	public static final int TYPE_COMMITTEE = 2;
 
         public HearingAdapter(HearingListFragment context, List<Hearing> items) {
             super(context.getActivity(), 0, items);
@@ -173,14 +224,16 @@ public class HearingListFragment extends ListFragment {
 				view = inflater.inflate(R.layout.hearing, null);
 			
 			Date date = hearing.occursAt;
-			String month = new SimpleDateFormat("MMM d").format(date).toUpperCase();
-			String time = new SimpleDateFormat("h:mm aa").format(date);
-			
-			String name = hearing.committee.name;
-			
-			// strip chamber prefix off of name
-			String chamberCap = hearing.chamber.substring(0, 1).toUpperCase() + hearing.chamber.substring(1);
-			name = name.replaceFirst("^" + chamberCap + " ", "");
+            SimpleDateFormat dateDisplay = new SimpleDateFormat("MMM d");
+            SimpleDateFormat timeDisplay = new SimpleDateFormat("h:mm aa");
+            dateDisplay.setTimeZone(ProPublica.CONGRESS_TIMEZONE);
+            timeDisplay.setTimeZone(ProPublica.CONGRESS_TIMEZONE);
+
+			String month = dateDisplay.format(date).toUpperCase();
+			String time = timeDisplay.format(date) + " ET";
+
+            String chamberCap = hearing.chamber.substring(0, 1).toUpperCase() + hearing.chamber.substring(1);
+			String name = chamberCap + " " + hearing.committee.name;
 			
 			String room = hearing.room;
 			if (room.equals("TBA"))
@@ -195,40 +248,4 @@ public class HearingListFragment extends ListFragment {
 			return view;
 		}
     }
-	
-	private static class LoadHearingsTask extends AsyncTask<String, Void, List<Hearing>> {
-		private HearingListFragment context;
-		
-		private CongressException exception;
-
-		public LoadHearingsTask(HearingListFragment context) {
-			FragmentUtils.setupAPI(context);
-			this.context = context;
-		}
-
-		@Override
-		protected List<Hearing> doInBackground(String... params) {
-			List<Hearing> hearings;
-			String chamber = params[0];
-			
-			try {
-				hearings = HearingService.upcoming(chamber, 1, PER_PAGE);
-			} catch (CongressException e) {
-				Log.e(Utils.TAG, "Error while loading committee hearings for " + chamber + ": " + e.getMessage());
-				this.exception = e;
-				return null;
-			}
-			
-			return hearings;
-		}
-
-		@Override
-		protected void onPostExecute(List<Hearing> hearings) {
-			if (exception != null)
-				context.onLoadHearings(exception);
-			else
-				context.onLoadHearings(hearings);
-		}
-
-	}
 }
