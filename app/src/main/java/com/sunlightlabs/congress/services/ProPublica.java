@@ -30,8 +30,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class ProPublica {
+
+    public static TimeZone CONGRESS_TIMEZONE = TimeZone.getTimeZone("America/New_York");
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    public static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
+    public static SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     // Pro Publica Per Page
     public static int PPPP = 20;

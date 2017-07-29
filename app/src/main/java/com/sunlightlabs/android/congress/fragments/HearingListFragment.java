@@ -28,17 +28,10 @@ import com.sunlightlabs.congress.models.Hearing;
 import com.sunlightlabs.congress.services.HearingService;
 
 public class HearingListFragment extends ListFragment {
-	public static final int PER_PAGE = 40;
-	
-	private String chamber;
-	
 	private List<Hearing> hearings;
 	
-	public static HearingListFragment forChamber(String chamber) {
+	public static HearingListFragment upcoming() {
 		HearingListFragment frag = new HearingListFragment();
-		Bundle args = new Bundle();
-		args.putString("chamber", chamber);
-		frag.setArguments(args);
 		frag.setRetainInstance(true);
 		return frag;
 	}
@@ -48,9 +41,6 @@ public class HearingListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		Bundle args = getArguments();
-		chamber = args.getString("chamber");
 		
 		loadHearings();
 	}
@@ -71,7 +61,7 @@ public class HearingListFragment extends ListFragment {
 	}
 	
 	private void setupControls() {
-		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+		getView().findViewById(R.id.refresh).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				refresh();
 			}
@@ -81,7 +71,7 @@ public class HearingListFragment extends ListFragment {
 	}
 	
 	private void loadHearings() {
-		new LoadHearingsTask(this).execute(chamber);
+		new LoadHearingsTask(this).execute();
 	}
 	
 	private void refresh() {
@@ -144,10 +134,6 @@ public class HearingListFragment extends ListFragment {
 	static class HearingAdapter extends ArrayAdapter<Hearing> {
     	LayoutInflater inflater;
     	Resources resources;
-    	
-    	public static final int TYPE_DATE = 0;
-    	public static final int TYPE_HEARING = 1;
-    	public static final int TYPE_COMMITTEE = 2;
 
         public HearingAdapter(HearingListFragment context, List<Hearing> items) {
             super(context.getActivity(), 0, items);
@@ -175,12 +161,9 @@ public class HearingListFragment extends ListFragment {
 			Date date = hearing.occursAt;
 			String month = new SimpleDateFormat("MMM d").format(date).toUpperCase();
 			String time = new SimpleDateFormat("h:mm aa").format(date);
-			
-			String name = hearing.committee.name;
-			
-			// strip chamber prefix off of name
-			String chamberCap = hearing.chamber.substring(0, 1).toUpperCase() + hearing.chamber.substring(1);
-			name = name.replaceFirst("^" + chamberCap + " ", "");
+
+            String chamberCap = hearing.chamber.substring(0, 1).toUpperCase() + hearing.chamber.substring(1);
+			String name = chamberCap + " " + hearing.committee.name;
 			
 			String room = hearing.room;
 			if (room.equals("TBA"))
@@ -196,7 +179,7 @@ public class HearingListFragment extends ListFragment {
 		}
     }
 	
-	private static class LoadHearingsTask extends AsyncTask<String, Void, List<Hearing>> {
+	private static class LoadHearingsTask extends AsyncTask<Void, Void, List<Hearing>> {
 		private HearingListFragment context;
 		
 		private CongressException exception;
@@ -207,14 +190,13 @@ public class HearingListFragment extends ListFragment {
 		}
 
 		@Override
-		protected List<Hearing> doInBackground(String... params) {
+		protected List<Hearing> doInBackground(Void... params) {
 			List<Hearing> hearings;
-			String chamber = params[0];
 			
 			try {
-				hearings = HearingService.upcoming(chamber, 1, PER_PAGE);
+				hearings = HearingService.upcoming(1);
 			} catch (CongressException e) {
-				Log.e(Utils.TAG, "Error while loading committee hearings for " + chamber + ": " + e.getMessage());
+				Log.e(Utils.TAG, "Error while loading committee hearings: " + e.getMessage());
 				this.exception = e;
 				return null;
 			}
