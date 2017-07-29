@@ -11,6 +11,7 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.BillService;
+import com.sunlightlabs.congress.services.ProPublica;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class BillsLawSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results == BillListFragment.PER_PAGE)
+		if (results == ProPublica.PER_PAGE)
 			return results + " or more bills signed into Law.";
 		else if (results > 1)
 			return results + " bills signed into Law.";

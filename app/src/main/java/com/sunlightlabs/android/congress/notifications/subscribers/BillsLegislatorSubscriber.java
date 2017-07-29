@@ -12,6 +12,7 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.BillService;
+import com.sunlightlabs.congress.services.ProPublica;
 
 public class BillsLegislatorSubscriber extends Subscriber {
 
@@ -33,7 +34,7 @@ public class BillsLegislatorSubscriber extends Subscriber {
 	
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
-		if (results == BillListFragment.PER_PAGE)
+		if (results == ProPublica.PER_PAGE)
 			return results + " or more new bills sponsored.";
 		else if (results > 1)
 			return results + " new bills sponsored.";

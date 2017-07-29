@@ -22,14 +22,18 @@ import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.utils.FragmentUtils;
+import com.sunlightlabs.android.congress.utils.PaginationListener;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Hearing;
 import com.sunlightlabs.congress.services.HearingService;
 import com.sunlightlabs.congress.services.ProPublica;
 
-public class HearingListFragment extends ListFragment {
+public class HearingListFragment extends ListFragment implements PaginationListener.Paginates {
 	private List<Hearing> hearings;
+
+    PaginationListener pager;
+    View loadingView;
 	
 	public static HearingListFragment upcoming() {
 		HearingListFragment frag = new HearingListFragment();
@@ -68,12 +72,19 @@ public class HearingListFragment extends ListFragment {
 			}
 		});
 
+        loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_page, null);
+        loadingView.setVisibility(View.GONE);
+
+        pager = new PaginationListener(this);
+        getListView().setOnScrollListener(pager);
+
 		FragmentUtils.setLoading(this, R.string.hearings_loading);
 	}
-	
-	private void loadHearings() {
-		new LoadHearingsTask(this).execute();
-	}
+
+    @Override
+    public void onListItemClick(ListView parent, View v, int position, long id) {
+        selectHearing((Hearing) parent.getItemAtPosition(position));
+    }
 	
 	private void refresh() {
 		hearings = null;
@@ -81,11 +92,17 @@ public class HearingListFragment extends ListFragment {
 		FragmentUtils.showLoading(this);
 		loadHearings();
 	}
-	
-	@Override
-	public void onListItemClick(ListView parent, View v, int position, long id) {
-		selectHearing((Hearing) parent.getItemAtPosition(position));
-	}
+
+    private void loadHearings() {
+        new LoadHearingsTask(this, 1).execute();
+    }
+
+    @Override
+    public void loadNextPage(int page) {
+        getListView().setOnScrollListener(null);
+        loadingView.setVisibility(View.VISIBLE);
+        new LoadHearingsTask(this, page).execute();
+    }
 	
 	public void selectHearing(Hearing hearing) {
 		Date date = hearing.occursAt;
@@ -110,11 +127,22 @@ public class HearingListFragment extends ListFragment {
 		}
 	}
 	
-	public void onLoadHearings(List<Hearing> hearings) {
-		this.hearings = hearings;
-		
-		if (isAdded())
-			displayHearings();
+	public void onLoadHearings(List<Hearing> hearings, int page) {
+        if (!isAdded())
+            return;
+
+        if (page == 1) {
+            this.hearings = hearings;
+            displayHearings();
+        } else {
+            this.hearings.addAll(hearings);
+            loadingView.setVisibility(View.GONE);
+            ((HearingAdapter) getListAdapter()).notifyDataSetChanged();
+        }
+
+        // only re-enable the pagination if we got a full page back
+        if (hearings.size() >= ProPublica.PER_PAGE)
+            getListView().setOnScrollListener(pager);
 	}
 	
 	public void onLoadHearings(CongressException exception) {
@@ -131,6 +159,42 @@ public class HearingListFragment extends ListFragment {
 		} else
 			FragmentUtils.showEmpty(this, R.string.hearings_empty);
 	}
+
+    private static class LoadHearingsTask extends AsyncTask<Void, Void, List<Hearing>> {
+        private HearingListFragment context;
+        private CongressException exception;
+        private int page;
+
+        public LoadHearingsTask(HearingListFragment context, int page) {
+            FragmentUtils.setupAPI(context);
+            this.context = context;
+            this.page = page;
+        }
+
+        @Override
+        protected List<Hearing> doInBackground(Void... params) {
+            List<Hearing> hearings;
+
+            try {
+                hearings = HearingService.upcoming(page);
+            } catch (CongressException e) {
+                Log.e(Utils.TAG, "Error while loading committee hearings: " + e.getMessage());
+                this.exception = e;
+                return null;
+            }
+
+            return hearings;
+        }
+
+        @Override
+        protected void onPostExecute(List<Hearing> hearings) {
+            if (exception != null)
+                context.onLoadHearings(exception);
+            else
+                context.onLoadHearings(hearings, page);
+        }
+
+    }
 	
 	static class HearingAdapter extends ArrayAdapter<Hearing> {
     	LayoutInflater inflater;
@@ -184,39 +248,4 @@ public class HearingListFragment extends ListFragment {
 			return view;
 		}
     }
-	
-	private static class LoadHearingsTask extends AsyncTask<Void, Void, List<Hearing>> {
-		private HearingListFragment context;
-		
-		private CongressException exception;
-
-		public LoadHearingsTask(HearingListFragment context) {
-			FragmentUtils.setupAPI(context);
-			this.context = context;
-		}
-
-		@Override
-		protected List<Hearing> doInBackground(Void... params) {
-			List<Hearing> hearings;
-			
-			try {
-				hearings = HearingService.upcoming(1);
-			} catch (CongressException e) {
-				Log.e(Utils.TAG, "Error while loading committee hearings: " + e.getMessage());
-				this.exception = e;
-				return null;
-			}
-			
-			return hearings;
-		}
-
-		@Override
-		protected void onPostExecute(List<Hearing> hearings) {
-			if (exception != null)
-				context.onLoadHearings(exception);
-			else
-				context.onLoadHearings(hearings);
-		}
-
-	}
 }

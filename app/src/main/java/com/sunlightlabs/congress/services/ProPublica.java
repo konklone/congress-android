@@ -40,7 +40,7 @@ public class ProPublica {
     public static SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     // Pro Publica Per Page
-    public static int PPPP = 20;
+    public static int PER_PAGE = 20;
 
     // filled in by the client in keys.xml
     public static String baseUrl = null;
@@ -82,7 +82,7 @@ public class ProPublica {
 
         // Only use for query string is an "offset" for pagination as needed
         if (page > 0) {
-            int offset = (page - 1) * PPPP;
+            int offset = (page - 1) * PER_PAGE;
             params.put("offset", String.valueOf(offset));
         }
 
