@@ -50,12 +50,12 @@ public class LegislatorImage {
 	 * async loader.
 	 */
 	public static Drawable getImage(String bioguideId, String imageSize, Context context) {
-		String url = LegislatorImage.getImageURL(bioguideId, imageSize);
+        if (context == null) return null;
+
+        String url = LegislatorImage.getImageURL(bioguideId, imageSize);
 		RequestCreator rc = Picasso.with(context)
 				.load(url)
 				.placeholder(R.drawable.loading_photo);
-
-		if (context == null) return null;
 
 		try {
 			return new BitmapDrawable(context.getResources(), rc.get());
