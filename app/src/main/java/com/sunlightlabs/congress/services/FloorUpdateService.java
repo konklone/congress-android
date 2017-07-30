@@ -36,10 +36,7 @@ public class FloorUpdateService {
 	protected static FloorUpdate fromAPI(JSONObject json) throws JSONException, ParseException, CongressException {
 		FloorUpdate update = new FloorUpdate();
 
-        if (!json.isNull("action_id"))
-            update.id = json.getString("action_id");
-
-		if (!json.isNull("description"))
+        if (!json.isNull("description"))
 			update.update = json.getString("description");
 
 		if (!json.isNull("congress"))
