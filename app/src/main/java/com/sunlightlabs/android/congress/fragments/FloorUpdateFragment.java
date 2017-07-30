@@ -198,7 +198,7 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 				
 				Linkify.addLinks(text, 
 						Pattern.compile("(S\\.|H\\.)(\\s?J\\.|\\s?R\\.|\\s?Con\\.| ?)(\\s?Res\\.)*\\s?\\d+", Pattern.CASE_INSENSITIVE), 
-						"congress://com.sunlightlabs.android.congress/bill/" + update.congress+ "/");
+						"congress://com.sunlightlabs.android.congress/bill/" + update.congress + "/");
 				
 				Linkify.addLinks(text,
 						Pattern.compile("Roll (?:no.|Call) (\\d+)"),
@@ -233,7 +233,7 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 			List<FloorUpdate> updates = new ArrayList<FloorUpdate>();
 			
 			try {
-				updates = FloorUpdateService.latest(chamber, page, PER_PAGE);
+				updates = FloorUpdateService.latest(chamber, page);
 			} catch (CongressException e) {
 				Log.e(Utils.TAG, "Error while loading floor updates for " + chamber + ": " + e.getMessage());
 				this.exception = e;
