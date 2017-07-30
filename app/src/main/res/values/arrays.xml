@@ -2,11 +2,11 @@
 <resources>
     
     <string-array name="changelog">
-		<item>Note! For this release, you may get some push notifications for things you\'ve seen before. This should only happen once, and is an (unfortunate) expected result of moving APIs. Our apologies for the annoyance.</item>
-        <item>This release adds no new functionality, but continues our under-the-hood transition to the Pro Publica API.</item>
+		<item>Migrated floor updates and committee hearings to the Pro Publica API. (Hearings now work!)</item>
+		<item>Fixed a bug where successful votes on bills were getting reported as failing.</item>
         <item>As a reminder: this app is transitioning away from the Sunlight Congress API (which is shutting down).</item>
 		<item>Please report any bugs using the Feedback button on the main menu.</item>
-		<item>The Pro Publica API is now used for all legislator and bill information.</item>
+		<item>The Pro Publica API is now used for all information about legislators, bills, committee hearings, and floor updates.</item>
     </string-array>
 
     <string-array name="changelogLast">
