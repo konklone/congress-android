@@ -1,6 +1,7 @@
 package com.sunlightlabs.congress.services;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,6 +23,8 @@ import com.sunlightlabs.congress.models.Hearing;
 
 public class HearingService {
 
+    public static String datetimeFormat = "yyyy-MM-dd hh:mm:ss";
+
 	// /{congress}/committees/hearings.json
 	public static List<Hearing> upcoming(int page) throws CongressException {
         String congress = String.valueOf(Bill.currentCongress());
@@ -41,8 +44,9 @@ public class HearingService {
 
         if (!json.isNull("date") && !json.isNull("time")) {
             String timestamp = json.getString("date") + " " + json.getString("time");
-            ProPublica.datetimeFormat.setTimeZone(ProPublica.CONGRESS_TIMEZONE);
-            hearing.occursAt = ProPublica.datetimeFormat.parse(timestamp);
+            SimpleDateFormat format = new SimpleDateFormat(datetimeFormat);
+            format.setTimeZone(ProPublica.CONGRESS_TIMEZONE);
+            hearing.occursAt = format.parse(timestamp);
         }
 
 		// House only

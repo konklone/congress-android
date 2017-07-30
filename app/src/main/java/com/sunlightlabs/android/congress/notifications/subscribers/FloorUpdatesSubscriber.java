@@ -26,7 +26,7 @@ public class FloorUpdatesSubscriber extends Subscriber {
 		String chamber = subscription.data;
 		
 		try {
-			return FloorUpdateService.latest(chamber, 1, FloorUpdateFragment.PER_PAGE);
+			return FloorUpdateService.latest(chamber, 1);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest floor updates for " + subscription, e);
 			return null;

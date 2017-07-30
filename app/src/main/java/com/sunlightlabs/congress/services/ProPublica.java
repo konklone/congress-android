@@ -35,9 +35,9 @@ import java.util.TimeZone;
 public class ProPublica {
 
     public static TimeZone CONGRESS_TIMEZONE = TimeZone.getTimeZone("America/New_York");
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    public static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
-    public static SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    public static String dateOnlyFormat = "yyyy-MM-dd";
+    public static String timeOnlyFormat = "hh:mm:ss";
+
 
     // Pro Publica Per Page
     public static int PER_PAGE = 20;
@@ -46,8 +46,6 @@ public class ProPublica {
     public static String baseUrl = null;
     public static String userAgent = null;
     public static String apiKey = null;
-
-    public static final String dateOnlyFormat = "yyyy-MM-dd";
 
     public static String url(String[] components) throws CongressException {
         return url(components, null, -1);
@@ -205,5 +203,12 @@ public class ProPublica {
         calendar.setTime(format.parse(date));
         calendar.set(Calendar.HOUR_OF_DAY, 12);
         return calendar.getTime();
+    }
+
+    // BYO timestamp format
+    public static Date parseTimestamp(String timestamp, String format) throws ParseException {
+        SimpleDateFormat simpleFormat = new SimpleDateFormat(format, Locale.US);
+        simpleFormat.setTimeZone(CONGRESS_TIMEZONE);
+        return simpleFormat.parse(timestamp);
     }
 }

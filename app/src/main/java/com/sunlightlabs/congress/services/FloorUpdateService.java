@@ -2,63 +2,67 @@ package com.sunlightlabs.congress.services;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.FloorUpdate;
 
 public class FloorUpdateService {
-	
-	private static String[] fields = new String[] {
-		"update", "chamber", "congress",
-		"legislative_day", "timestamp",
-		"legislator_ids", "bill_ids", "roll_ids"
-	};
-	
-	public static List<FloorUpdate> latest(String chamber, int page, int per_page) throws CongressException {
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("chamber", chamber);
-		params.put("order", "timestamp");
+
+    // e.g. "2017-05-15 10:02:43 -0400",
+    public static String datetimeFormat = "yyyy-MM-dd hh:mm:ss Z";
+
+	// /{congress}/{chamber}/floor_updates.json
+	public static List<FloorUpdate> latest(String chamber, int page) throws CongressException {
+		String congress = String.valueOf(Bill.currentCongress());
+        String[] endpoint = { congress, chamber, "floor_updates" };
 		
-		return updatesFor(Congress.url("floor_updates", fields, params, page, per_page));
+		List<FloorUpdate> updates = updatesFor(ProPublica.url(endpoint, page));
+
+        // insert chamber and congress onto each one
+        for (int i=0; i<updates.size(); i++) {
+            updates.get(i).chamber = chamber;
+            updates.get(i).congress = Integer.valueOf(congress);
+        }
+
+        return updates;
 	}
 	
 	protected static FloorUpdate fromAPI(JSONObject json) throws JSONException, ParseException, CongressException {
 		FloorUpdate update = new FloorUpdate();
-		
-		if (!json.isNull("update"))
-			update.update = json.getString("update");
-		
-		if (!json.isNull("chamber"))
-			update.chamber = json.getString("chamber");
+
+        if (!json.isNull("action_id"))
+            update.id = json.getString("action_id");
+
+		if (!json.isNull("description"))
+			update.update = json.getString("description");
+
 		if (!json.isNull("congress"))
 			update.congress = json.getInt("congress");
-		
-		if (!json.isNull("legislative_day"))
-			update.legislativeDay = Congress.parseDateOnly(json.getString("legislative_day"));
+
+		if (!json.isNull("date"))
+			update.legislativeDay = ProPublica.parseDateOnly(json.getString("date"));
 		if (!json.isNull("timestamp"))
-			update.timestamp = Congress.parseDate(json.getString("timestamp"));
-		
-		if (!json.isNull("legislator_ids"))
-			update.legislatorIds = Congress.listFrom(json.getJSONArray("legislator_ids"));
-		if (!json.isNull("bill_ids"))
-			update.billIds = Congress.listFrom(json.getJSONArray("bill_ids"));
-		if (!json.isNull("roll_ids"))
-			update.rollIds = Congress.listFrom(json.getJSONArray("roll_ids"));
-		
+			update.timestamp = ProPublica.parseTimestamp(json.getString("timestamp"), FloorUpdateService.datetimeFormat);
+
 		return update;
 	}
 	
 	private static List<FloorUpdate> updatesFor(String url) throws CongressException {
 		List<FloorUpdate> updates = new ArrayList<FloorUpdate>();
 		try {
-			JSONArray results = Congress.resultsFor(url);
+			JSONArray results = ProPublica.resultsFor(url);
+
+            if (results.length() > 0) {
+                JSONObject firstResult = results.getJSONObject(0);
+                if (!firstResult.isNull("floor_actions"))
+                    results = firstResult.getJSONArray("floor_actions");
+            }
 
 			int length = results.length();
 			for (int i = 0; i < length; i++)
