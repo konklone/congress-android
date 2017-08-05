@@ -58,12 +58,11 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private String id;
 	
 	private Roll roll;
-	private Map<String,Roll.Vote> voters;
 	
 	private Database database;
 	private Cursor peopleCursor;
 	
-	private LoadRollTask loadRollTask, loadVotersTask;
+	private LoadRollTask loadRollTask;
 	private View header, loadingView;
 	
 	private Map<String,LoadPhotoTask> loadPhotoTasks = new HashMap<String,LoadPhotoTask>();
@@ -99,13 +98,14 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		Bundle extras = getIntent().getExtras();
 		id = extras.getString("id");
 		roll = (Roll) extras.getSerializable("roll");
-		
+
+        // coming in from hyperlinked floor update?
 		Intent intent = getIntent();
 		if (intent != null) {
 			Uri uri = intent.getData();
 			if (uri != null) {
 				List<String> segments = uri.getPathSegments();
-				if (segments.size() == 4) { // coming in from floor
+				if (segments.size() == 4) {
 					String chamber = segments.get(1);
 					String year = segments.get(2);
 					String formattedNumber = segments.get(3);
@@ -120,8 +120,6 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		if (holder != null) {
 			this.loadRollTask = holder.loadRollTask;
 			this.roll = holder.roll;
-			this.loadVotersTask = holder.loadVotersTask;
-			this.voters = holder.voters;
 			this.loadPhotoTasks = holder.loadPhotoTasks;
 			this.currentTab = holder.currentTab;
 			
@@ -138,7 +136,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new RollInfoHolder(loadRollTask, roll, loadVotersTask, voters, loadPhotoTasks, currentTab);
+		return new RollInfoHolder(loadRollTask, roll, loadPhotoTasks, currentTab);
 	}
 	
 	@Override
@@ -180,49 +178,24 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			if (roll != null)
 				displayRoll();
 			else
-				loadRollTask = (LoadRollTask) new LoadRollTask(this, id, "basic").execute();
+				loadRollTask = (LoadRollTask) new LoadRollTask(this, id).execute();
 		}
 	}
-	
-	public void loadVotes() {
-		if (loadVotersTask != null)
-			loadVotersTask.onScreenLoad(this);
-		else {
-			if (voters != null)
-				displayVoters();
-			else
-				loadVotersTask = (LoadRollTask) new LoadRollTask(this, id, "voters").execute();
-		}
+
+	public void onLoadRoll(Roll roll) {
+        this.loadRollTask = null;
+        this.roll = roll;
+        displayRoll();
 	}
 	
-	public void onLoadRoll(String tag, Roll roll) {
-		if (tag.equals("basic")) {
-			this.loadRollTask = null;
-			this.roll = roll;
-			displayRoll();
-		} else if (tag.equals("voters")) {
-			this.loadVotersTask = null;
-			this.voters = roll.voters;
-			displayVoters();
-		}
-	}
-	
-	public void onLoadRoll(String tag, CongressException exception) {
-		if (tag.equals("basic")) {
-			if (exception instanceof CongressException.NotFound)
-				Utils.alert(this, R.string.vote_not_found);
-			else
-				Utils.alert(this, R.string.error_connection);
-			
-			this.loadRollTask = null;
-			finish();
-		} else if (tag.equals("voters")) {
-			this.loadVotersTask = null;
-			
-			View loadingView = findViewById(R.id.loading_votes);
-			loadingView.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
-			((TextView) loadingView.findViewById(R.id.loading_message)).setText(R.string.votes_error);
-		}
+	public void onLoadRoll(CongressException exception) {
+        if (exception instanceof CongressException.NotFound)
+            Utils.alert(this, R.string.vote_not_found);
+        else
+            Utils.alert(this, R.string.error_connection);
+
+        this.loadRollTask = null;
+        finish();
 	}
 	
 	public void displayRoll() {
@@ -283,9 +256,8 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		adapter.addView(header);
 		setListAdapter(adapter);
-		
-		// kick off vote loading
-		loadVotes();
+
+		displayVoters();
 	}
 	
 	// depends on the "header" member variable having been initialized and inflated
@@ -377,9 +349,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	// depends on setupTabs having been called, and that every vote a legislator has cast
 	// has an entry in voterBreakdown, as created in setupTabs
 	public void displayVoters() {
-		if (voters != null) {
+		if (roll.voters != null) {
 			// sort Map of voters into the voterBreakdown Map by vote type
-			List<Roll.Vote> allVoters = new ArrayList<Roll.Vote>(voters.values());
+			List<Roll.Vote> allVoters = new ArrayList<Roll.Vote>(roll.voters.values());
 			Collections.sort(allVoters); // sort once, all at once
 			
 			Iterator<Roll.Vote> iter = allVoters.iterator();
@@ -500,12 +472,11 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private class LoadRollTask extends AsyncTask<Void,Void,Roll> {
 		private RollInfo context;
 		private CongressException exception;
-		private String rollId, tag;
+		private String rollId;
 		
-		public LoadRollTask(RollInfo context, String rollId, String tag) {
+		public LoadRollTask(RollInfo context, String rollId) {
 			this.context = context;
 			this.rollId = rollId;
-			this.tag = tag;
 			Utils.setupAPI(context);
 		}
 		
@@ -532,9 +503,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			if (context.database.closed) return;
 			
 			if (exception != null && roll == null)
-				context.onLoadRoll(tag, exception);
+				context.onLoadRoll(exception);
 			else
-				context.onLoadRoll(tag, roll);
+				context.onLoadRoll(roll);
 		}
 	}
 	
@@ -623,17 +594,14 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	}
 	
 	static class RollInfoHolder {
-		LoadRollTask loadRollTask, loadVotersTask;
+		LoadRollTask loadRollTask;
 		Roll roll;
-		Map<String,Roll.Vote> voters;
 		Map<String,LoadPhotoTask> loadPhotoTasks;
 		String currentTab;
 		
-		public RollInfoHolder(LoadRollTask loadRollTask, Roll roll, LoadRollTask loadVotersTask, Map<String,Roll.Vote> voters, Map<String,LoadPhotoTask> loadPhotoTasks, String currentTab) {
+		public RollInfoHolder(LoadRollTask loadRollTask, Roll roll, Map<String,LoadPhotoTask> loadPhotoTasks, String currentTab) {
 			this.loadRollTask = loadRollTask;
 			this.roll = roll;
-			this.loadVotersTask = loadVotersTask;
-			this.voters = voters;
 			this.loadPhotoTasks = loadPhotoTasks;
 			this.currentTab = currentTab;
 		}
