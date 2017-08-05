@@ -117,8 +117,8 @@ public class RollService {
                     roll.required = "1/2";
                 else if (vote_type.equals(RollService.VOTE_TWO_THIRDS))
                     roll.required = "2/3";
-                else
-                    roll.required = vote_type; // shrug!
+                else // can be QUORUM, pass it through
+                    roll.required = vote_type; 
             }
         }
 
