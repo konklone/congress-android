@@ -3,7 +3,8 @@
     <string name="contact_email"></string>
     <string name="contact_subject"></string>
 
-   <string name="propublica_api_key">CHANGEME</string>
+    <string name="propublica_api_key">CHANGEME</string>
+    <string name="propublica_api_endpoint">https://api.propublica.org/congress/v1/</string>
     <string name="sunlight_api_key">CHANGEME</string>
     <string name="api_user_agent">CHANGEME</string>
     <string name="api_endpoint">https://congress.api.sunlightfoundation.com</string>
