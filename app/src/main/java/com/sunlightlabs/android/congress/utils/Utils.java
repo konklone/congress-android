@@ -59,11 +59,6 @@ public class Utils {
 	public static void alert(Context context, int msg) {
 		Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
 	}
-
-	public static void alert(Context context, CongressException exception) {
-		String message = exception == null ? "Unhandled error." : exception.getMessage();
-		Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-	}
 	
 	public static String formatRollId(String id) {
 		Roll tempRoll = Roll.splitRollId(id);
@@ -83,14 +78,6 @@ public class Utils {
 			.putExtra("legislator", legislator);
 	}
 
-   public static Intent legislatorLoadIntent(String id, Intent intent) {
-	   return new Intent().setClassName(
-			   "com.sunlightlabs.android.congress",
-			   "com.sunlightlabs.android.congress.LegislatorLoader")
-		   .putExtra("id", id)
-		   .putExtra("intent", intent);
-}
-
 
 	public static Intent billIntent(Context context, Bill bill) {
 		return new Intent(context, BillPager.class)
@@ -103,12 +90,6 @@ public class Utils {
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.BillPager")
 			.putExtra("bill_id", billId);
-	}
-	
-	public static Intent rollIntent(Context context, Roll roll) {
-		return new Intent(context, RollInfo.class)
-			.putExtra("id", roll.id)
-			.putExtra("roll", roll);
 	}
 	
 	public static Intent rollIntent(Context context, String rollId) {

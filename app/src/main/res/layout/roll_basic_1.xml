@@ -19,6 +19,20 @@
 		android:text="On Passage As Amended of H R 4489 Daniel Pearl Freedom of the Press Act"
 		/>
 
+	<TextView android:id="@+id/description"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+
+		android:layout_marginTop="10dp"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+
+		android:textSize="14sp"
+        android:lineSpacingExtra="2sp"
+
+		android:text="A bill to amend the Federal Food, Drug, and Cosmetic Act to revise and extend the user-fee programs for prescription drugs, medical devices, generic drugs, and biosimilar biological products, and for other purposes."
+		/>
+
     <LinearLayout android:id="@+id/details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

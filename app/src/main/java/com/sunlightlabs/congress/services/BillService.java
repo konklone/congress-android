@@ -208,7 +208,7 @@ public class BillService {
         return bill;
 	}
 
-	// TODO: remove once unused by RollService and UpcomingBillService
+	// TODO: remove once unused by UpcomingBillService
 	protected static Bill fromSunlightAPI(JSONObject json) throws JSONException, ParseException, CongressException {
 		Bill bill = new Bill();
 

@@ -180,7 +180,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			if (roll != null)
 				displayRoll();
 			else
-				loadRollTask = (LoadRollTask) new LoadRollTask(this, id, "basic").execute(RollService.basicFields);
+				loadRollTask = (LoadRollTask) new LoadRollTask(this, id, "basic").execute();
 		}
 	}
 	
@@ -191,7 +191,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			if (voters != null)
 				displayVoters();
 			else
-				loadVotersTask = (LoadRollTask) new LoadRollTask(this, id, "voters").execute("voters");
+				loadVotersTask = (LoadRollTask) new LoadRollTask(this, id, "voters").execute();
 		}
 	}
 	
@@ -231,7 +231,8 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		View headerTop = inflater.inflate(R.layout.roll_basic_1, null);
 		
-		((TextView) headerTop.findViewById(R.id.question)).setText(simpleQuestion(roll));
+		((TextView) headerTop.findViewById(R.id.question)).setText(roll.question);
+        ((TextView) headerTop.findViewById(R.id.description)).setText(roll.description);
 		((TextView) headerTop.findViewById(R.id.voted_at)).setText(new SimpleDateFormat("MMM dd, yyyy").format(roll.voted_at).toUpperCase());
 
 		adapter.addView(headerTop);
@@ -239,16 +240,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		if (roll.bill_id != null && !roll.bill_id.equals("")) {
 			View header = inflater.inflate(R.layout.header, null);
 			TextView related = (TextView) header.findViewById(R.id.header_text);
-			
-			if (roll.vote_type != null) {
-				if (roll.vote_type.equals("passage"))
-					related.setText(R.string.vote_related_to_bill_passage);
-				else if (roll.vote_type.equals("cloture"))
-					related.setText(R.string.vote_related_to_bill_cloture);
-				else
-					related.setText(R.string.vote_related_to_bill);
-			} else
-				related.setText(R.string.vote_related_to_bill);
+			related.setText(R.string.vote_related_to_bill);
 			adapter.addView(header);
 			
 			
@@ -256,17 +248,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			((TextView) bill.findViewById(R.id.code)).setText(Bill.formatCode(roll.bill_id));
 			
 			TextView titleView = (TextView) bill.findViewById(R.id.bill_title);
-			if (roll.bill != null) {
-				if (roll.bill.short_title != null) {
-					titleView.setTextSize(16);
-					titleView.setText(Utils.truncate(roll.bill.short_title, 200));
-				} else if (roll.bill.official_title != null) {
-					titleView.setTextSize(14);
-					titleView.setText(Utils.truncate(roll.bill.official_title, 200));
-				} else {
-					titleView.setTextSize(16);
-					titleView.setText(R.string.bill_no_title);
-				}
+			if (roll.bill_title != null) {
+				titleView.setTextSize(14);
+				titleView.setText(Utils.truncate(roll.bill_title, 200));
 			} else {
 				titleView.setTextSize(16);
 				titleView.setText(R.string.bill_no_title_yet);
@@ -304,14 +288,6 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		loadVotes();
 	}
 	
-	// if the roll's about a bill, strip out the bill information from the question
-	public String simpleQuestion(Roll roll) {
-		if (roll.bill != null)
-			return TextUtils.split(roll.question, " -- ")[0];
-		else
-			return roll.question;
-	}
-	
 	// depends on the "header" member variable having been initialized and inflated
 	public void setupTabs() {
 		View.OnClickListener tabListener = new View.OnClickListener() {
@@ -337,26 +313,26 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		// present and not voting should always be second to last and last
 		Comparator<String> tabSorter = new Comparator<String>() {
 			public int compare(String one, String other) {
-				if (one.equals(Roll.NOT_VOTING))
-					return 1;
-				else if (one.equals(Roll.PRESENT)) {
-					if (other.equals(Roll.NOT_VOTING))
-						return -1;
-					else
-						return 1;
-				} else if (one.equals(Roll.YEA))
-					return -1;
-				else if (one.equals(Roll.NAY)) {
-					if (other.equals(Roll.YEA))
-						return 1;
-					else
-						return -1;
-				} else {
-					if (other.equals(Roll.NOT_VOTING) || other.equals(Roll.PRESENT))
-						return -1;
-					else
-						return one.compareTo(other);
-				}
+            if (one.equals(Roll.NOT_VOTING))
+                return 1;
+            else if (one.equals(Roll.PRESENT)) {
+                if (other.equals(Roll.NOT_VOTING))
+                    return -1;
+                else
+                    return 1;
+            } else if (one.equals(Roll.YEA))
+                return -1;
+            else if (one.equals(Roll.NAY)) {
+                if (other.equals(Roll.YEA))
+                    return 1;
+                else
+                    return -1;
+            } else {
+                if (other.equals(Roll.NOT_VOTING) || other.equals(Roll.PRESENT))
+                    return -1;
+                else
+                    return one.compareTo(other);
+            }
 			}
 		};
 		
@@ -521,7 +497,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		return this;
 	}
 	
-	private class LoadRollTask extends AsyncTask<String,Void,Roll> {
+	private class LoadRollTask extends AsyncTask<Void,Void,Roll> {
 		private RollInfo context;
 		private CongressException exception;
 		private String rollId, tag;
@@ -538,9 +514,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		}
 		
 		@Override
-		public Roll doInBackground(String... fields) {
+		public Roll doInBackground(Void... nothing) {
 			try {
-				return RollService.find(rollId, fields);
+				return RollService.find(rollId);
 			} catch (CongressException exception) {
 				this.exception = exception;
 				return null;
@@ -588,7 +564,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 				view = inflater.inflate(R.layout.legislator_voter, null);
 				
 				holder = new ViewHolder();
-				holder.name = (TextView) view.findViewById(R.id.name);
+//				holder.name = (TextView) view.findViewById(R.id.name);
 				holder.vote = (TextView) view.findViewById(R.id.vote);
 				holder.photo = (ImageView) view.findViewById(R.id.photo);
 				
@@ -599,13 +575,13 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			}
 			
 			Roll.Vote vote = getItem(position);
-			Legislator legislator = vote.voter;
+//			Legislator legislator = vote.voter;
 			
 			// used as the hook to get the legislator image in place when it's loaded
 			// and to link to the legislator's activity
 			holder.bioguide_id = vote.voter_id;
 			
-			holder.name.setText(nameFor(legislator));
+//			holder.name.setText(nameFor(legislator));
 			
 			TextView voteView = holder.vote;
 			String value = vote.vote;
@@ -622,21 +598,20 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			
 			voteView.setText(vote.vote);
 
-			ImageView photo = (ImageView) view.findViewById(R.id.photo);
-			LegislatorImage.setImageView(legislator.bioguide_id, LegislatorImage.PIC_SMALL,
+			LegislatorImage.setImageView(vote.voter_id, LegislatorImage.PIC_SMALL,
 					context.getContext(), holder.photo);
-
 
 			return view;
 		}
 		
-		public String nameFor(Legislator legislator) {
-			String position = legislator.party + "-" + legislator.state;
-			return legislator.last_name + ", " + legislator.first_name + " [" + position + "]";
-		}
+//		public String nameFor(Legislator legislator) {
+//			String position = legislator.party + "-" + legislator.state;
+//			return legislator.last_name + ", " + legislator.first_name + " [" + position + "]";
+//		}
 		
 		static class ViewHolder {
-			TextView name, vote;
+//			TextView name;
+			TextView vote;
 			ImageView photo;
 			String bioguide_id;
 			

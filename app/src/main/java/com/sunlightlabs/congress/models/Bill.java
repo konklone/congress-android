@@ -100,8 +100,21 @@ public class Bill implements Serializable {
 	
 	public static int currentCongress() {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
-		return ((year + 1) / 2) - 894;
+		return congressForYear(year);
 	}
+
+	public static int congressForYear(int year) {
+        return ((year + 1) / 2) - 894;
+    }
+
+    public static int sessionForYear(int year) {
+        // odd years are the first session of a 2-year congress
+        if (year % 2 == 1)
+            return 1;
+        // even years are the second session of a 2-year congress
+        else
+            return 2;
+    }
 
 	public static String formatCode(String bill_id) {
 		// [bill_type, number, congress]

@@ -135,7 +135,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		Roll roll = (Roll) parent.getItemAtPosition(position);
 		if (roll != null) // happened once somehow
-			startActivity(Utils.rollIntent(getActivity(), roll));
+			startActivity(Utils.rollIntent(getActivity(), roll.id));
 	}
 	
 
@@ -213,7 +213,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 				
 				switch (context.type) {
 				case ROLLS_VOTER:
-					return RollService.latestVotes(context.voter.bioguide_id, context.voter.chamber, page, PER_PAGE);
+					return RollService.latestMemberVotes(context.voter.bioguide_id, context.voter.chamber, page, PER_PAGE);
 				case ROLLS_RECENT:
 					return RollService.latestVotes(page, PER_PAGE);
 				default:
@@ -287,12 +287,12 @@ public class RollListFragment extends ListFragment implements PaginationListener
 			holder.question.setText(Utils.truncate(roll.question, 200));
 			holder.result.setText(resultFor(roll));
 
-            if (roll.bill != null) {
+            if (roll.bill_id != null && roll.bill_title != null) {
                 holder.details.setVisibility(View.VISIBLE);
 
                 String title;
-                if (roll.bill.official_title != null)
-                    title = Utils.truncate(roll.bill.official_title, 200);
+                if (roll.bill_title != null)
+                    title = Utils.truncate(roll.bill_title, 200);
                 else
                     title = "(untitled)";
 
