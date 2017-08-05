@@ -22,10 +22,19 @@ public class RollService {
     public static String datetimeFormat = "yyyy-MM-dd hh:mm:ss";
 
     // standard field names that map to Roll vote type names
-    public static final String YEA = "yes";
-    public static final String NAY = "no";
-    public static final String PRESENT = "present";
-    public static final String NOT_VOTING = "not_voting";
+    public static final String YEA_FIELD = "yes";
+    public static final String NAY_FIELD = "no";
+    public static final String PRESENT_FIELD = "present";
+    public static final String NOT_VOTING_FIELD = "not_voting";
+
+    // standard response in Pro Publica API for vote positions
+    public static final String YEA = "Yes";
+    public static final String NAY = "No";
+    public static final String PRESENT = "Present";
+    public static final String NOT_VOTING = "Not Voting";
+
+    // Pro Publica API uses "Speaker" to represent Speaker not voting
+    public static final String SPEAKER = "Speaker";
 
 	public static String[] basicFields = {
 		"roll_id", "chamber", "number", "year", "congress", "bill_id",
@@ -120,13 +129,13 @@ public class RollService {
             while (iter.hasNext()) {
                 String key = (String) iter.next();
 
-                if (key.equals(RollService.YEA))
+                if (key.equals(RollService.YEA_FIELD))
                     roll.voteBreakdown.put(Roll.YEA, total.getInt(key));
-                else if (key.equals(RollService.NAY))
+                else if (key.equals(RollService.NAY_FIELD))
                     roll.voteBreakdown.put(Roll.NAY, total.getInt(key));
-                else if (key.equals(RollService.NOT_VOTING))
+                else if (key.equals(RollService.NOT_VOTING_FIELD))
                     roll.voteBreakdown.put(Roll.NOT_VOTING, total.getInt(key));
-                else if (key.equals(RollService.PRESENT))
+                else if (key.equals(RollService.PRESENT_FIELD))
                     roll.voteBreakdown.put(Roll.PRESENT, total.getInt(key));
                 else {
                     roll.voteBreakdown.put(key, total.getInt(key));
@@ -148,6 +157,35 @@ public class RollService {
         if (!json.isNull("tie_breaker_vote") && !json.getString("tie_breaker_vote").equals(""))
             roll.tie_breaker_vote = json.getString("tie_breaker_vote");
 
+        if (!json.isNull("positions")) {
+            roll.voters = new HashMap<String, Vote>();
+            JSONArray positions = json.getJSONArray("positions");
+            for (int i=0; i<positions.length(); i++) {
+                JSONObject position = positions.getJSONObject(i);
+                String voter_id = position.getString("member_id");
+                String vote_position = position.getString("vote_position");
+
+                // skip any non-votes *by* the Speaker
+                // this is how Pro Publica API represents Speaker votes
+                if (vote_position.equals(RollService.SPEAKER))
+                    continue;
+
+                Roll.Vote vote = new Roll.Vote();
+                vote.voter_id = voter_id;
+                if (vote_position.equals(RollService.YEA))
+                    vote.vote = Roll.YEA;
+                else if (vote_position.equals(RollService.NAY))
+                    vote.vote = Roll.NAY;
+                else if (vote_position.equals(RollService.NOT_VOTING))
+                    vote.vote = Roll.NOT_VOTING;
+                else if (vote_position.equals(RollService.PRESENT))
+                    vote.vote = Roll.PRESENT;
+                else
+                    vote.vote = vote_position;
+
+                roll.voters.put(voter_id, vote);
+            }
+        }
 
         return roll;
     }

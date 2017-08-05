@@ -385,7 +385,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			Iterator<Roll.Vote> iter = allVoters.iterator();
 			while (iter.hasNext()) {
 				Roll.Vote vote = iter.next();
-				voterBreakdown.get(vote.vote).add(vote);
+                voterBreakdown.get(vote.vote).add(vote);
 			}
 			
 			// hide loading, show tabs
@@ -564,7 +564,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 				view = inflater.inflate(R.layout.legislator_voter, null);
 				
 				holder = new ViewHolder();
-//				holder.name = (TextView) view.findViewById(R.id.name);
+				holder.name = (TextView) view.findViewById(R.id.name);
 				holder.vote = (TextView) view.findViewById(R.id.vote);
 				holder.photo = (ImageView) view.findViewById(R.id.photo);
 				
@@ -581,7 +581,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			// and to link to the legislator's activity
 			holder.bioguide_id = vote.voter_id;
 			
-//			holder.name.setText(nameFor(legislator));
+			holder.name.setText("");
 			
 			TextView voteView = holder.vote;
 			String value = vote.vote;
@@ -610,8 +610,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 //		}
 		
 		static class ViewHolder {
-//			TextView name;
-			TextView vote;
+			TextView name, vote;
 			ImageView photo;
 			String bioguide_id;
 			
