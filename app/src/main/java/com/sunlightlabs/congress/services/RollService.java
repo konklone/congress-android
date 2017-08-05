@@ -36,7 +36,14 @@ public class RollService {
     // Pro Publica API uses "Speaker" to represent Speaker not voting
     public static final String SPEAKER = "Speaker";
 
-	public static String[] basicFields = {
+    // Pro Publica API uses these to denote certain House vote types
+    public static final String VOTE_HALF_ONE = "YEA-AND-NAY";
+    public static final String VOTE_HALF_TWO = "RECORDED VOTE";
+    public static final String VOTE_TWO_THIRDS  = "2/3 YEA-AND-NAY";
+
+
+
+    public static String[] basicFields = {
 		"roll_id", "chamber", "number", "year", "congress", "bill_id",
 		"bill.official_title", "bill.short_title",
 		"voted_at", "vote_type", "roll_type", "question", "required", "result",
@@ -96,8 +103,22 @@ public class RollService {
             roll.result = json.getString("result");
         if (!json.isNull("description"))
             roll.description = json.getString("description");
-        if (!json.isNull("vote_type"))
-            roll.required = json.getString("vote_type");
+
+        // In the Senate, the vote_type is just the fraction (1/2, 3/5)
+        // In the House, it can be one of a few denotations.
+        if (!json.isNull("vote_type")) {
+            String vote_type = json.getString("vote_type");
+            if (roll.chamber.equals("senate"))
+                roll.required = vote_type;
+            else {
+                if (vote_type.equals(RollService.VOTE_HALF_ONE))
+                    roll.required = "1/2";
+                else if (vote_type.equals(RollService.VOTE_HALF_TWO))
+                    roll.required = "1/2";
+                else if (vote_type.equals(RollService.VOTE_TWO_THIRDS))
+                    roll.required = "2/3";
+            }
+        }
 
         // date and time fields make up a timestamp in Congress' time
         if (!json.isNull("date") && !json.isNull("time")) {
