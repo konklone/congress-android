@@ -14,7 +14,7 @@ When setting this up:
 
 * copy `keys.xml.example` to `app/src/main/res/values/keys.xml` and:
   * fill in `propublica_api_key` with your [Pro Publica API](https://projects.propublica.org/api-docs/congress-api/) key,
-  * fill in `propublica_api_endpoint` with the base Pro Publica API endpoint you wish to use. This is probably `https://api.propublica.org/congress/v1/`.
+  * fill in `propublica_api_endpoint` with the base Pro Publica API endpoint you wish to use. By default, this is `https://api.propublica.org/congress/v1/`.
 * copy `tracker.xml.example` to `app/src/main/res/xml/tracker.xml`
 
 If you're using Google Analytics, fill in `app/src/main/res/xml/tracker.xml`'s `ga_trackingId` field with your Google Analytics profile tracking ID. (Make sure you've set up a profile in Google Analytics first.)
