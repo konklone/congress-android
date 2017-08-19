@@ -2,6 +2,7 @@ package com.sunlightlabs.congress.services;
 
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.models.Roll.Vote;
 
@@ -195,6 +196,23 @@ public class RollService {
 
                 Roll.Vote vote = new Roll.Vote();
                 vote.voter_id = voter_id;
+
+                Legislator legislator = new Legislator();
+
+                if (!position.isNull("name")) {
+                    String[] names = Legislator.splitName(position.getString("name"));
+                    legislator.first_name = names[0];
+                    legislator.last_name = names[1];
+                }
+                if (!position.isNull("party"))
+                    legislator.party = position.getString("party");
+                if (!position.isNull("state"))
+                    legislator.state = position.getString("state");
+                if (!position.isNull("district"))
+                    legislator.district = position.getString("district");
+
+                vote.voter = legislator;
+
                 if (vote_position.equals(RollService.YEA))
                     vote.vote = Roll.YEA;
                 else if (vote_position.equals(RollService.NAY))

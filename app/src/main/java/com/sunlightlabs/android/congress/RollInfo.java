@@ -546,13 +546,13 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			}
 			
 			Roll.Vote vote = getItem(position);
-//			Legislator legislator = vote.voter;
+			Legislator legislator = vote.voter;
 			
 			// used as the hook to get the legislator image in place when it's loaded
 			// and to link to the legislator's activity
 			holder.bioguide_id = vote.voter_id;
 			
-			holder.name.setText("");
+			holder.name.setText(nameFor(legislator));
 			
 			TextView voteView = holder.vote;
 			String value = vote.vote;
@@ -575,10 +575,13 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			return view;
 		}
 		
-//		public String nameFor(Legislator legislator) {
-//			String position = legislator.party + "-" + legislator.state;
-//			return legislator.last_name + ", " + legislator.first_name + " [" + position + "]";
-//		}
+		public String nameFor(Legislator legislator) {
+			if (legislator.party != null && legislator.state != null && legislator.last_name != null && legislator.first_name != null) {
+				String position = legislator.party + "-" + legislator.state;
+				return legislator.last_name + ", " + legislator.first_name + " [" + position + "]";
+			} else
+				return "";
+		}
 		
 		static class ViewHolder {
 			TextView name, vote;
