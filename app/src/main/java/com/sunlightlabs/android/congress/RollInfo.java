@@ -109,7 +109,6 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 					String chamber = segments.get(1);
 					String year = segments.get(2);
 					String formattedNumber = segments.get(3);
-                    formattedNumber = "2";
 					id = Roll.normalizeRollId(chamber, year, formattedNumber);
 				}
 			}
