@@ -166,12 +166,6 @@ public class RollService {
                     roll.otherVotes = true;
                 }
             }
-
-            // if we detected there was a Speaker vote, remove yes/no from the breakdown
-            if (roll.otherVotes) {
-                roll.voteBreakdown.remove(Roll.YEA);
-                roll.voteBreakdown.remove(Roll.NAY);
-            }
         }
 
         // if there was a tiebreaker vote
@@ -181,6 +175,7 @@ public class RollService {
         if (!json.isNull("tie_breaker_vote") && !json.getString("tie_breaker_vote").equals(""))
             roll.tie_breaker_vote = json.getString("tie_breaker_vote");
 
+        // if we find speaker votes during the positions, add them to the breakdown
         if (!json.isNull("positions")) {
             roll.voters = new HashMap<String, Vote>();
             JSONArray positions = json.getJSONArray("positions");
@@ -221,11 +216,29 @@ public class RollService {
                     vote.vote = Roll.NOT_VOTING;
                 else if (vote_position.equals(RollService.PRESENT))
                     vote.vote = Roll.PRESENT;
-                else
+                else {
                     vote.vote = vote_position;
+
+                    // update the total breakdown
+                    // (the API currently does not put speaker votes in the total)
+                    if (roll.voteBreakdown.containsKey(vote_position)) {
+                        int count = roll.voteBreakdown.get(vote_position);
+                        roll.voteBreakdown.put(vote_position, count + 1);
+                    } else
+                        roll.voteBreakdown.put(vote_position, 1);
+
+                    // signify we have a speaker vote
+                    roll.otherVotes = true;
+                }
 
                 roll.voters.put(voter_id, vote);
             }
+        }
+
+        // if we detected there was a Speaker vote, remove yes/no from the breakdown
+        if (roll.otherVotes) {
+            roll.voteBreakdown.remove(Roll.YEA);
+            roll.voteBreakdown.remove(Roll.NAY);
         }
 
         return roll;
