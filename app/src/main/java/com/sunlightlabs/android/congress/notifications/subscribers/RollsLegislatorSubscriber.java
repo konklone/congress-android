@@ -26,7 +26,7 @@ public class RollsLegislatorSubscriber extends Subscriber {
 		String chamber = subscription.data;
 		
 		try {
-			return RollService.latestVotes(subscription.id, chamber, 1, RollListFragment.PER_PAGE);
+			return RollService.latestMemberVotes(subscription.id, chamber, 1, RollListFragment.PER_PAGE);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest votes for " + subscription, e);
 			return null;

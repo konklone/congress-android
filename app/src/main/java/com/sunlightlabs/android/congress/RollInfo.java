@@ -58,12 +58,11 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	private String id;
 	
 	private Roll roll;
-	private Map<String,Roll.Vote> voters;
 	
 	private Database database;
 	private Cursor peopleCursor;
 	
-	private LoadRollTask loadRollTask, loadVotersTask;
+	private LoadRollTask loadRollTask;
 	private View header, loadingView;
 	
 	private Map<String,LoadPhotoTask> loadPhotoTasks = new HashMap<String,LoadPhotoTask>();
@@ -99,13 +98,14 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		Bundle extras = getIntent().getExtras();
 		id = extras.getString("id");
 		roll = (Roll) extras.getSerializable("roll");
-		
+
+        // coming in from hyperlinked floor update?
 		Intent intent = getIntent();
 		if (intent != null) {
 			Uri uri = intent.getData();
 			if (uri != null) {
 				List<String> segments = uri.getPathSegments();
-				if (segments.size() == 4) { // coming in from floor
+				if (segments.size() == 4) {
 					String chamber = segments.get(1);
 					String year = segments.get(2);
 					String formattedNumber = segments.get(3);
@@ -120,8 +120,6 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		if (holder != null) {
 			this.loadRollTask = holder.loadRollTask;
 			this.roll = holder.roll;
-			this.loadVotersTask = holder.loadVotersTask;
-			this.voters = holder.voters;
 			this.loadPhotoTasks = holder.loadPhotoTasks;
 			this.currentTab = holder.currentTab;
 			
@@ -138,7 +136,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return new RollInfoHolder(loadRollTask, roll, loadVotersTask, voters, loadPhotoTasks, currentTab);
+		return new RollInfoHolder(loadRollTask, roll, loadPhotoTasks, currentTab);
 	}
 	
 	@Override
@@ -180,49 +178,24 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			if (roll != null)
 				displayRoll();
 			else
-				loadRollTask = (LoadRollTask) new LoadRollTask(this, id, "basic").execute(RollService.basicFields);
+				loadRollTask = (LoadRollTask) new LoadRollTask(this, id).execute();
 		}
 	}
-	
-	public void loadVotes() {
-		if (loadVotersTask != null)
-			loadVotersTask.onScreenLoad(this);
-		else {
-			if (voters != null)
-				displayVoters();
-			else
-				loadVotersTask = (LoadRollTask) new LoadRollTask(this, id, "voters").execute("voters");
-		}
+
+	public void onLoadRoll(Roll roll) {
+        this.loadRollTask = null;
+        this.roll = roll;
+        displayRoll();
 	}
 	
-	public void onLoadRoll(String tag, Roll roll) {
-		if (tag.equals("basic")) {
-			this.loadRollTask = null;
-			this.roll = roll;
-			displayRoll();
-		} else if (tag.equals("voters")) {
-			this.loadVotersTask = null;
-			this.voters = roll.voters;
-			displayVoters();
-		}
-	}
-	
-	public void onLoadRoll(String tag, CongressException exception) {
-		if (tag.equals("basic")) {
-			if (exception instanceof CongressException.NotFound)
-				Utils.alert(this, R.string.vote_not_found);
-			else
-				Utils.alert(this, R.string.error_connection);
-			
-			this.loadRollTask = null;
-			finish();
-		} else if (tag.equals("voters")) {
-			this.loadVotersTask = null;
-			
-			View loadingView = findViewById(R.id.loading_votes);
-			loadingView.findViewById(R.id.loading_spinner).setVisibility(View.GONE);
-			((TextView) loadingView.findViewById(R.id.loading_message)).setText(R.string.votes_error);
-		}
+	public void onLoadRoll(CongressException exception) {
+        if (exception instanceof CongressException.NotFound)
+            Utils.alert(this, R.string.vote_not_found);
+        else
+            Utils.alert(this, R.string.error_connection);
+
+        this.loadRollTask = null;
+        finish();
 	}
 	
 	public void displayRoll() {
@@ -231,7 +204,8 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		View headerTop = inflater.inflate(R.layout.roll_basic_1, null);
 		
-		((TextView) headerTop.findViewById(R.id.question)).setText(simpleQuestion(roll));
+		((TextView) headerTop.findViewById(R.id.question)).setText(roll.question);
+        ((TextView) headerTop.findViewById(R.id.description)).setText(roll.description);
 		((TextView) headerTop.findViewById(R.id.voted_at)).setText(new SimpleDateFormat("MMM dd, yyyy").format(roll.voted_at).toUpperCase());
 
 		adapter.addView(headerTop);
@@ -239,16 +213,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		if (roll.bill_id != null && !roll.bill_id.equals("")) {
 			View header = inflater.inflate(R.layout.header, null);
 			TextView related = (TextView) header.findViewById(R.id.header_text);
-			
-			if (roll.vote_type != null) {
-				if (roll.vote_type.equals("passage"))
-					related.setText(R.string.vote_related_to_bill_passage);
-				else if (roll.vote_type.equals("cloture"))
-					related.setText(R.string.vote_related_to_bill_cloture);
-				else
-					related.setText(R.string.vote_related_to_bill);
-			} else
-				related.setText(R.string.vote_related_to_bill);
+			related.setText(R.string.vote_related_to_bill);
 			adapter.addView(header);
 			
 			
@@ -256,17 +221,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			((TextView) bill.findViewById(R.id.code)).setText(Bill.formatCode(roll.bill_id));
 			
 			TextView titleView = (TextView) bill.findViewById(R.id.bill_title);
-			if (roll.bill != null) {
-				if (roll.bill.short_title != null) {
-					titleView.setTextSize(16);
-					titleView.setText(Utils.truncate(roll.bill.short_title, 200));
-				} else if (roll.bill.official_title != null) {
-					titleView.setTextSize(14);
-					titleView.setText(Utils.truncate(roll.bill.official_title, 200));
-				} else {
-					titleView.setTextSize(16);
-					titleView.setText(R.string.bill_no_title);
-				}
+			if (roll.bill_title != null) {
+				titleView.setTextSize(14);
+				titleView.setText(Utils.truncate(roll.bill_title, 200));
 			} else {
 				titleView.setTextSize(16);
 				titleView.setText(R.string.bill_no_title_yet);
@@ -299,17 +256,8 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		
 		adapter.addView(header);
 		setListAdapter(adapter);
-		
-		// kick off vote loading
-		loadVotes();
-	}
-	
-	// if the roll's about a bill, strip out the bill information from the question
-	public String simpleQuestion(Roll roll) {
-		if (roll.bill != null)
-			return TextUtils.split(roll.question, " -- ")[0];
-		else
-			return roll.question;
+
+		displayVoters();
 	}
 	
 	// depends on the "header" member variable having been initialized and inflated
@@ -337,26 +285,26 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		// present and not voting should always be second to last and last
 		Comparator<String> tabSorter = new Comparator<String>() {
 			public int compare(String one, String other) {
-				if (one.equals(Roll.NOT_VOTING))
-					return 1;
-				else if (one.equals(Roll.PRESENT)) {
-					if (other.equals(Roll.NOT_VOTING))
-						return -1;
-					else
-						return 1;
-				} else if (one.equals(Roll.YEA))
-					return -1;
-				else if (one.equals(Roll.NAY)) {
-					if (other.equals(Roll.YEA))
-						return 1;
-					else
-						return -1;
-				} else {
-					if (other.equals(Roll.NOT_VOTING) || other.equals(Roll.PRESENT))
-						return -1;
-					else
-						return one.compareTo(other);
-				}
+            if (one.equals(Roll.NOT_VOTING))
+                return 1;
+            else if (one.equals(Roll.PRESENT)) {
+                if (other.equals(Roll.NOT_VOTING))
+                    return -1;
+                else
+                    return 1;
+            } else if (one.equals(Roll.YEA))
+                return -1;
+            else if (one.equals(Roll.NAY)) {
+                if (other.equals(Roll.YEA))
+                    return 1;
+                else
+                    return -1;
+            } else {
+                if (other.equals(Roll.NOT_VOTING) || other.equals(Roll.PRESENT))
+                    return -1;
+                else
+                    return one.compareTo(other);
+            }
 			}
 		};
 		
@@ -401,15 +349,15 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	// depends on setupTabs having been called, and that every vote a legislator has cast
 	// has an entry in voterBreakdown, as created in setupTabs
 	public void displayVoters() {
-		if (voters != null) {
+		if (roll.voters != null) {
 			// sort Map of voters into the voterBreakdown Map by vote type
-			List<Roll.Vote> allVoters = new ArrayList<Roll.Vote>(voters.values());
+			List<Roll.Vote> allVoters = new ArrayList<Roll.Vote>(roll.voters.values());
 			Collections.sort(allVoters); // sort once, all at once
 			
 			Iterator<Roll.Vote> iter = allVoters.iterator();
 			while (iter.hasNext()) {
 				Roll.Vote vote = iter.next();
-				voterBreakdown.get(vote.vote).add(vote);
+                voterBreakdown.get(vote.vote).add(vote);
 			}
 			
 			// hide loading, show tabs
@@ -521,15 +469,14 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		return this;
 	}
 	
-	private class LoadRollTask extends AsyncTask<String,Void,Roll> {
+	private class LoadRollTask extends AsyncTask<Void,Void,Roll> {
 		private RollInfo context;
 		private CongressException exception;
-		private String rollId, tag;
+		private String rollId;
 		
-		public LoadRollTask(RollInfo context, String rollId, String tag) {
+		public LoadRollTask(RollInfo context, String rollId) {
 			this.context = context;
 			this.rollId = rollId;
-			this.tag = tag;
 			Utils.setupAPI(context);
 		}
 		
@@ -538,9 +485,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		}
 		
 		@Override
-		public Roll doInBackground(String... fields) {
+		public Roll doInBackground(Void... nothing) {
 			try {
-				return RollService.find(rollId, fields);
+				return RollService.find(rollId);
 			} catch (CongressException exception) {
 				this.exception = exception;
 				return null;
@@ -556,9 +503,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			if (context.database.closed) return;
 			
 			if (exception != null && roll == null)
-				context.onLoadRoll(tag, exception);
+				context.onLoadRoll(exception);
 			else
-				context.onLoadRoll(tag, roll);
+				context.onLoadRoll(roll);
 		}
 	}
 	
@@ -622,17 +569,18 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			
 			voteView.setText(vote.vote);
 
-			ImageView photo = (ImageView) view.findViewById(R.id.photo);
-			LegislatorImage.setImageView(legislator.bioguide_id, LegislatorImage.PIC_SMALL,
+			LegislatorImage.setImageView(vote.voter_id, LegislatorImage.PIC_SMALL,
 					context.getContext(), holder.photo);
-
 
 			return view;
 		}
 		
 		public String nameFor(Legislator legislator) {
-			String position = legislator.party + "-" + legislator.state;
-			return legislator.last_name + ", " + legislator.first_name + " [" + position + "]";
+			if (legislator.party != null && legislator.state != null && legislator.last_name != null && legislator.first_name != null) {
+				String position = legislator.party + "-" + legislator.state;
+				return legislator.last_name + ", " + legislator.first_name + " [" + position + "]";
+			} else
+				return "";
 		}
 		
 		static class ViewHolder {
@@ -649,17 +597,14 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 	}
 	
 	static class RollInfoHolder {
-		LoadRollTask loadRollTask, loadVotersTask;
+		LoadRollTask loadRollTask;
 		Roll roll;
-		Map<String,Roll.Vote> voters;
 		Map<String,LoadPhotoTask> loadPhotoTasks;
 		String currentTab;
 		
-		public RollInfoHolder(LoadRollTask loadRollTask, Roll roll, LoadRollTask loadVotersTask, Map<String,Roll.Vote> voters, Map<String,LoadPhotoTask> loadPhotoTasks, String currentTab) {
+		public RollInfoHolder(LoadRollTask loadRollTask, Roll roll, Map<String,LoadPhotoTask> loadPhotoTasks, String currentTab) {
 			this.loadRollTask = loadRollTask;
 			this.roll = roll;
-			this.loadVotersTask = loadVotersTask;
-			this.voters = voters;
 			this.loadPhotoTasks = loadPhotoTasks;
 			this.currentTab = currentTab;
 		}

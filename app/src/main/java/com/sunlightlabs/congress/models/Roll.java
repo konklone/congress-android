@@ -9,7 +9,8 @@ import java.util.regex.Pattern;
 
 public class Roll implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
+    // standard names for types of votes
 	public static final String YEA = "Yea";
 	public static final String NAY = "Nay";
 	public static final String NOT_VOTING = "Not Voting";
@@ -19,23 +20,23 @@ public class Roll implements Serializable {
 	public boolean otherVotes = false;
 	
 	// basic
-	public String id, chamber, vote_type, roll_type;
-	public String question, result, bill_id, required;
-	public int congress, number, year;
-	public Date voted_at;
-	public Map<String,Integer> voteBreakdown = new HashMap<String,Integer>();
-	
-	// bill
-	public Bill bill;
-	
-	// voters
+	public int congress, number, year, session;
+	public String id, chamber;
+    public String question, result, description, required;
+    public Date voted_at;
+
+    public Map<String,Integer> voteBreakdown = new HashMap<String,Integer>();
+
+    // if there was a tie breaker
+    public String tie_breaker, tie_breaker_vote;
+
+    // if a bill is associated
+    public String bill_id, bill_title;
+
+
+    // not yet migrated
 	public Map<String,Vote> voters;
-	
-	// voter_ids
 	public Map<String,Vote> voter_ids;
-	
-	// search result metadata (if coming from a search)
-	public SearchResult search;
 	
 	/**
 	 * Represents the vote of a legislator in a roll call. In almost all cases, votes will be 
@@ -59,9 +60,13 @@ public class Roll implements Serializable {
 		public Vote() {}
 		
 		public int compareTo(Vote another) {
-			return this.voter.compareTo(another.voter);
+            return this.voter_id.compareTo(another.voter_id);
 		}
 	}
+
+	public static String makeRollId(String chamber, int number, int year) {
+        return normalizeRollId(chamber, String.valueOf(number), String.valueOf(year));
+    }
 	
 	// splits a roll into chamber, number, and year, returned in a barebones Roll object
 	public static Roll splitRollId(String roll_id) {

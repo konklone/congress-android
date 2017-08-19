@@ -230,7 +230,7 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 
 		@Override
 		protected List<FloorUpdate> doInBackground(Void... nothing) {
-			List<FloorUpdate> updates = new ArrayList<FloorUpdate>();
+			List<FloorUpdate> updates;
 			
 			try {
 				updates = FloorUpdateService.latest(chamber, page);
