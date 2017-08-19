@@ -24,12 +24,6 @@ public class FloorUpdateService {
 		
 		List<FloorUpdate> updates = updatesFor(ProPublica.url(endpoint, page));
 
-        // insert chamber and congress onto each one
-        for (int i=0; i<updates.size(); i++) {
-            updates.get(i).chamber = chamber;
-            updates.get(i).congress = Integer.valueOf(congress);
-        }
-
         return updates;
 	}
 	
@@ -41,6 +35,9 @@ public class FloorUpdateService {
 
 		if (!json.isNull("congress"))
 			update.congress = json.getInt("congress");
+
+		if (!json.isNull("chamber"))
+		    update.chamber = json.getString("chamber").toLowerCase();
 
 		if (!json.isNull("date"))
 			update.legislativeDay = ProPublica.parseDateOnly(json.getString("date"));
