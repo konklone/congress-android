@@ -2,6 +2,7 @@ package com.sunlightlabs.congress.models;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class Legislator implements Comparable<Legislator>, Serializable {
 	private static final long serialVersionUID = 1L;
@@ -17,9 +18,11 @@ public class Legislator implements Comparable<Legislator>, Serializable {
     // Only used when in a cosponsor context
     public Date cosponsored_on;
 	
-	// this gets assigned onto the legislator, even though it's not set this way in the API,
-	// so that we can reuse legislator listing code to list committee memberships
+	// Set during committee membership parsing, with side/title/rank.
 	public Committee.Membership membership;
+
+    // Committees a legislator is a member of.
+	public List<Committee> committees;
 
     // TODO: replace first_name uses with display name function
 	public String getName() {
@@ -31,7 +34,9 @@ public class Legislator implements Comparable<Legislator>, Serializable {
         if (title == null) {
             // This will be wrong for Delegates and Resident Commissioners,
             // But I can live with that. In many contexts, we'll have the title.
-            if (chamber.equals("house"))
+			if (chamber == null)
+			    return getName();
+            else if (chamber.equals("house"))
                 return "Rep. " + getName();
             else if (chamber.equals("senate"))
                 return "Sen. " + getName();

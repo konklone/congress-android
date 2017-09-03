@@ -142,7 +142,7 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 	}
 	
 	public void setupControls() {
-		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+		getView().findViewById(R.id.refresh).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				refresh();
 			}
@@ -362,7 +362,10 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 					temp = LegislatorService.allByLastName(context.lastName);
 					break;
 				case SEARCH_COMMITTEE:
-					temp = CommitteeService.find(context.committee.id).members;
+					if (context.committee.subcommittee)
+					    temp = CommitteeService.find(context.committee.parent_committee_id, context.committee.id).members;
+                    else
+                        temp = CommitteeService.find(context.committee.id).members;
 					break;
 				case SEARCH_STATE:
 					temp = LegislatorService.allForState(context.state);

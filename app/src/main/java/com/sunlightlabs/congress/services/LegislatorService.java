@@ -1,6 +1,7 @@
 package com.sunlightlabs.congress.services;
 
 import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.Committee;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
@@ -186,6 +187,16 @@ public class LegislatorService {
                 legislator.office = role.getString("office");
             if (!role.isNull("phone"))
                 legislator.phone = role.getString("phone");
+
+            // committee memberships stored on roles, in separate fields
+            // the list of committees per-member will be sorted by committee ID
+            // so returning them as one big flat list will work
+            legislator.committees = new ArrayList<Committee>();
+            if (!role.isNull("committees"))
+                legislator.committees.addAll(CommitteeService.committeesFromArray(role.getJSONArray("committees"), false));
+            if (!role.isNull("subcommittees"))
+                legislator.committees.addAll(CommitteeService.committeesFromArray(role.getJSONArray("subcommittees"), true));
+
         }
 
         // most minimal form: list of cosponsors, ID and name only
@@ -316,7 +327,6 @@ public class LegislatorService {
         try {
             JSONArray results = ProPublica.resultsFor(url);
 
-            // 'get specific member' puts members in 'results'.
             // 'get current members by state/district' also uses 'results'.
             // But other member responses use a subfield of "members".
             // Need to introspect on the first result object to figure out

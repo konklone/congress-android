@@ -25,6 +25,7 @@ import com.sunlightlabs.congress.models.Committee;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.CommitteeService;
+import com.sunlightlabs.congress.services.LegislatorService;
 
 public class CommitteeListFragment extends ListFragment {
 	public static final int CHAMBER = 1;
@@ -196,7 +197,7 @@ public class CommitteeListFragment extends ListFragment {
 		private List<Committee> forLegislator(String bioguideId) {
 			List<Committee> committees;
 			try {
-				committees = CommitteeService.forLegislator(bioguideId);
+				committees = LegislatorService.find(bioguideId).committees;
 			} catch (CongressException e) {
 				this.exception = new CongressException(e, "Error loading committees.");
 				return null;
@@ -244,7 +245,7 @@ public class CommitteeListFragment extends ListFragment {
 		private List<Committee> forChamber(String chamber) {
 			List<Committee> result = new ArrayList<Committee>();
 			try {
-				result = CommitteeService.getAll(chamber);
+				result = CommitteeService.forChamber(chamber);
 			} catch (CongressException e) {
 				Log.e(Utils.TAG, "There has been an exception while getting the committees for chamber "
 						+ chamber + ": " + e.getMessage());
@@ -257,7 +258,7 @@ public class CommitteeListFragment extends ListFragment {
 		private List<Committee> forCommittee(String committeeId) {
 			List<Committee> result = new ArrayList<Committee>();
 			try {
-				result = CommitteeService.getSubcommitteesFor(committeeId);
+				result = CommitteeService.find(committeeId).subcommittees;
 			} catch (CongressException e) {
 				Log.e(Utils.TAG, "There has been an exception while getting the subcommittees for  "
 						+ committeeId + ": " + e.getMessage());
