@@ -58,8 +58,6 @@ public class CommitteeService {
         // is a subcommittee if it has a parent committee name/id
         if (!json.isNull("committee_name")) {
             committee.parent_committee_name = json.getString("committee_name");
-            // TODO: parent committee ID (for now, do it in calling method)
-            // committee.parent_committee_id = ___;
             committee.subcommittee = true;
         }
 
@@ -147,8 +145,6 @@ public class CommitteeService {
                     member.chamber = committee.chamber;
 
                 member.membership = new Committee.Membership();
-                // TODO: rank should really be absolute, not in party
-                // TODO: side and title, hopefully
                 if (!object.isNull("rank_in_party"))
                     member.membership.rank = Integer.valueOf(object.getString("rank_in_party"));
                 else
