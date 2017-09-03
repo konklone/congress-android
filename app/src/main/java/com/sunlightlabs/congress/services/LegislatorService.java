@@ -1,6 +1,7 @@
 package com.sunlightlabs.congress.services;
 
 import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.Committee;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
@@ -186,6 +187,30 @@ public class LegislatorService {
                 legislator.office = role.getString("office");
             if (!role.isNull("phone"))
                 legislator.phone = role.getString("phone");
+
+            // committee memberships get stored on roles
+            if (!role.isNull("committees")) {
+                JSONArray list = role.getJSONArray("committees");
+                List<Committee> committees =new ArrayList<Committee>();
+                for (int i=0; i<list.length(); i++) {
+                    JSONObject object = list.getJSONObject(i);
+                    Committee committee = new Committee();
+                    committee.name = object.getString("name");
+                    committee.id = object.getString("code");
+                    // TODO: note whether it's a subcommittee or not based on ID?
+                    committee.subcommittee = false;
+                    // TODO: detect chamber from ID?
+                    if (committee.id.startsWith("H"))
+                        committee.chamber = "house";
+                    else if (committee.id.startsWith("S"))
+                        committee.chamber = "senate";
+                    else // if (committee.id.startsWith("J"))
+                        committee.chamber ="joint";
+
+                    committees.add(committee);
+                }
+                legislator.committees = committees;
+            }
         }
 
         // most minimal form: list of cosponsors, ID and name only
@@ -316,7 +341,6 @@ public class LegislatorService {
         try {
             JSONArray results = ProPublica.resultsFor(url);
 
-            // 'get specific member' puts members in 'results'.
             // 'get current members by state/district' also uses 'results'.
             // But other member responses use a subfield of "members".
             // Need to introspect on the first result object to figure out

@@ -7,10 +7,14 @@ public class Committee implements Comparable<Committee>, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public String id, name, chamber;
+	public String url;
 	
 	public boolean subcommittee;
-	public String parent_committee_id; 
-	
+	public String parent_committee_id, parent_committee_name;
+
+    public List<Committee> subcommittees;
+
+    public Legislator chair;
 	public List<Legislator> members;
 	
 	public String toString() {
@@ -19,8 +23,7 @@ public class Committee implements Comparable<Committee>, Serializable {
 	
 	public static class Membership implements Serializable {
 		private static final long serialVersionUID = 1L;
-		
-		public Legislator member;
+
 		public String side, title;
 		public int rank;
 		
