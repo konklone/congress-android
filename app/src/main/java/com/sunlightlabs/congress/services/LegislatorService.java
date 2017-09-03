@@ -188,29 +188,15 @@ public class LegislatorService {
             if (!role.isNull("phone"))
                 legislator.phone = role.getString("phone");
 
-            // committee memberships get stored on roles
-            if (!role.isNull("committees")) {
-                JSONArray list = role.getJSONArray("committees");
-                List<Committee> committees =new ArrayList<Committee>();
-                for (int i=0; i<list.length(); i++) {
-                    JSONObject object = list.getJSONObject(i);
-                    Committee committee = new Committee();
-                    committee.name = object.getString("name");
-                    committee.id = object.getString("code");
-                    // TODO: note whether it's a subcommittee or not based on ID?
-                    committee.subcommittee = false;
-                    // TODO: detect chamber from ID?
-                    if (committee.id.startsWith("H"))
-                        committee.chamber = "house";
-                    else if (committee.id.startsWith("S"))
-                        committee.chamber = "senate";
-                    else // if (committee.id.startsWith("J"))
-                        committee.chamber ="joint";
+            // committee memberships stored on roles, in separate fields
+            // the list of committees per-member will be sorted by committee ID
+            // so returning them as one big flat list will work
+            legislator.committees = new ArrayList<Committee>();
+            if (!role.isNull("committees"))
+                legislator.committees.addAll(CommitteeService.committeesFromArray(role.getJSONArray("committees"), false));
+            if (!role.isNull("subcommittees"))
+                legislator.committees.addAll(CommitteeService.committeesFromArray(role.getJSONArray("subcommittees"), true));
 
-                    committees.add(committee);
-                }
-                legislator.committees = committees;
-            }
         }
 
         // most minimal form: list of cosponsors, ID and name only

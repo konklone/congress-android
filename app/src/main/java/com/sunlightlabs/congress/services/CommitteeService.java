@@ -15,8 +15,13 @@ import com.sunlightlabs.congress.models.Legislator;
 
 public class CommitteeService {
 
+    public static Committee find(String committee_id) throws CongressException {
+        return find(committee_id, null);
+    }
+
     // /{congress}/{chamber}/committees/{committee_id}.json
-	public static Committee find(String committee_id) throws CongressException {
+    // /{congress}/{chamber}/committees/{committee_id}/subcommittees/{subcommittee_id}.json
+	public static Committee find(String committee_id, String subcommittee_id) throws CongressException {
         String chamber;
         if (committee_id.toLowerCase().startsWith("h"))
             chamber = "house";
@@ -27,8 +32,14 @@ public class CommitteeService {
 
         String congress = String.valueOf(Bill.currentCongress());
 
-        String[] endpoint = { congress, chamber, "committees", committee_id };
-		return committeeFor(ProPublica.url(endpoint));
+        // slightly awkward conditional because of limits on String[] initializer syntax
+        if (subcommittee_id == null) {
+            String[] endpoint = {congress, chamber, "committees", committee_id};
+            return committeeFor(ProPublica.url(endpoint));
+        } else {
+            String[] endpoint = {congress, chamber, "committees", committee_id, "subcommittees", subcommittee_id};
+            return committeeFor(ProPublica.url(endpoint));
+        }
 	}
 
     // /{congress}/{chamber}/committees.json
@@ -128,6 +139,13 @@ public class CommitteeService {
                     member.last_name = names[1];
                 }
 
+                // if it's a House or Senate committee, assign the members' chamber
+                if (
+                    (committee.chamber != null) &&
+                    (committee.chamber.equals("house") || committee.chamber.equals("senate"))
+                )
+                    member.chamber = committee.chamber;
+
                 member.membership = new Committee.Membership();
                 // TODO: rank should really be absolute, not in party
                 // TODO: side and title, hopefully
@@ -149,6 +167,34 @@ public class CommitteeService {
         }
 
         return committee;
+    }
+
+    // parses committee and subcommittee info from fields on legislator roles
+    protected static List<Committee> committeesFromArray(JSONArray list, boolean subcommittee) throws JSONException {
+        List<Committee> committees = new ArrayList<Committee>();
+        for (int i=0; i<list.length(); i++) {
+            JSONObject object = list.getJSONObject(i);
+            Committee committee = new Committee();
+            committee.name = object.getString("name");
+            committee.id = object.getString("code");
+
+            committee.subcommittee = subcommittee;
+
+            if (committee.subcommittee)
+                committee.parent_committee_id = committee.id.substring(0, 4);
+
+            // Issue #128
+            if (committee.id.startsWith("H"))
+                committee.chamber = "house";
+            else if (committee.id.startsWith("S"))
+                committee.chamber = "senate";
+            else // if (committee.id.startsWith("J"))
+                committee.chamber = "joint";
+
+            committees.add(committee);
+        }
+
+        return committees;
     }
 	
 	private static Committee committeeFor(String url) throws CongressException {
