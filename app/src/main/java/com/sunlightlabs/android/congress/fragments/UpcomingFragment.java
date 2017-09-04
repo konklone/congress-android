@@ -61,7 +61,7 @@ public class UpcomingFragment extends ListFragment {
 	private void setupControls() {
 		FragmentUtils.setLoading(this, R.string.upcoming_loading);
 		
-		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+		getView().findViewById(R.id.refresh).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				upcomingBills = null;
 				FragmentUtils.showLoading(UpcomingFragment.this);
@@ -232,24 +232,18 @@ public class UpcomingFragment extends ListFragment {
 					
 					currentDayRange = testDayRange;
 				}
-				
-				com.sunlightlabs.congress.models.Bill rootBill = upcomingBill.bill;
-				if (rootBill == null)
+
+				// in case of "H.R. ____" or other changes, should safely skip
+				if (upcomingBill.billId == null || upcomingBill.description == null)
 					continue;
-				
+
+				String[] pieces = com.sunlightlabs.congress.models.Bill.splitBillId(upcomingBill.billId);
+
 				Bill bill = new Bill();
-				
-				bill.bill_type = rootBill.bill_type;
-				bill.number = rootBill.number;
-				
-				String title;
-				if (rootBill.short_title != null && !rootBill.short_title.equals(""))
-					title = rootBill.short_title;
-				else
-					title = Utils.truncate(rootBill.official_title, 55);
-				
-				bill.title = title;
-				bill.id = rootBill.id;
+				bill.bill_type = pieces[0];
+				bill.number = Integer.valueOf(pieces[1]);
+				bill.title = Utils.truncate(upcomingBill.description, 55);
+				bill.id = upcomingBill.billId;
 				
 				items.add(bill);
 			}

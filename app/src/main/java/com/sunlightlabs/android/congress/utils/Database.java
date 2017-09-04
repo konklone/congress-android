@@ -11,11 +11,6 @@ import android.util.Log;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.Legislator;
-import com.sunlightlabs.congress.services.Congress;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class Database {
@@ -49,9 +44,6 @@ public class Database {
 	private DatabaseHelper helper;
 	private SQLiteDatabase database;
 	private Context context;
-	
-	// standard date format across the API
-	private static SimpleDateFormat format = new SimpleDateFormat(Congress.dateFormat);
 
 	public Database(Context context) {
 		this.context = context;
@@ -129,14 +121,6 @@ public class Database {
 		legislator.gender = c.getString(c.getColumnIndex("gender"));
 		
 		return legislator;
-	}
-
-	public static String formatDate(Date date) {
-		return date == null ? null : format.format(date);
-	}
-
-	public static Date parseDate(String date) throws ParseException {
-		return date == null ? null : format.parse(date);
 	}
 	
 	/** Bills */
