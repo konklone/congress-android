@@ -33,9 +33,10 @@ public class Roll implements Serializable {
     // if a bill is associated
     public String bill_id, bill_title;
 
-    // not yet migrated
 	public Map<String,Vote> voters;
-	public Map<String,Vote> voter_ids;
+
+    // convenience field for when this is loaded for a specific member
+    public String member_position;
 	
 	/**
 	 * Represents the vote of a legislator in a roll call. In almost all cases, votes will be 

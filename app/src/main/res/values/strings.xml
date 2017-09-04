@@ -54,6 +54,7 @@
     <string name="bills_empty_search_relevant">No bills found by that search.\n\nWhen searching by relevance, searching is limited to the current session of Congress.\n\nBills from previous sessions of Congress will not appear.</string>
     
     <string name="votes_empty_voter">No votes found by this person.</string>
+    <string name="votes_did_not_vote">Did Not Vote</string>
     
     <string name="new_result">NEW</string>
     

@@ -137,8 +137,10 @@ public class RollService {
         // for now, not making use of latest_action
         if (!json.isNull("bill")) {
             JSONObject bill = json.getJSONObject("bill");
-            roll.bill_id = bill.getString("bill_id");
-            roll.bill_title = bill.getString("title");
+            if (!json.isNull("bill_id")) {
+                roll.bill_id = bill.getString("bill_id");
+                roll.bill_title = bill.getString("title");
+            }
         }
 
         roll.voteBreakdown.put(Roll.YEA, 0);
@@ -244,6 +246,24 @@ public class RollService {
             roll.voteBreakdown.remove(Roll.NAY);
         }
 
+        // if being parsed on the "specific votes for a member" endpoint,
+        // record the member's specific position (the view will know to look)
+        if (!json.isNull("position")) {
+            String member_position = json.getString("position");
+
+            // standardize display
+            if (member_position.equals(RollService.YEA))
+                roll.member_position = Roll.YEA;
+            else if (member_position.equals(RollService.NAY))
+                roll.member_position = Roll.NAY;
+            else if (member_position.equals(RollService.NOT_VOTING))
+                roll.member_position = Roll.NOT_VOTING;
+            else if (member_position.equals(RollService.PRESENT))
+                roll.member_position = Roll.PRESENT;
+            else
+                roll.member_position = member_position;
+        }
+
         return roll;
     }
 
@@ -283,8 +303,12 @@ public class RollService {
             if (!status.equals("OK"))
                 throw new CongressException("Got a non-OK status from " + url + "\n\n" + rawJSON);
 
-            JSONArray voteObjects = response.getJSONObject("results")
-                    .getJSONArray("votes");
+            JSONArray voteObjects;
+            Object results = response.get("results");
+            if (results instanceof JSONObject)
+                voteObjects = response.getJSONObject("results").getJSONArray("votes");
+            else
+                voteObjects = response.getJSONArray("results").getJSONObject(0).getJSONArray("votes");
 
             for (int i=0; i<voteObjects.length(); i++) {
                 JSONObject vote = voteObjects.getJSONObject(i);
