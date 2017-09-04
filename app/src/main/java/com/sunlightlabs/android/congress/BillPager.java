@@ -100,10 +100,7 @@ public class BillPager extends Activity implements HasActionMenu {
 	}
 	
 	public void onLoadBill(CongressException exception) {
-		if (exception instanceof BillService.BillNotFoundException)
-			Utils.showEmpty(this, R.string.bill_not_known_yet);
-		else
-			Utils.showRefresh(this, R.string.bill_loading_error);
+		Utils.showRefresh(this, R.string.bill_loading_error);
 	}
 	
 	private void setupPager() {
