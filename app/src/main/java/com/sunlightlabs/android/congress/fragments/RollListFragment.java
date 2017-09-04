@@ -123,7 +123,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		Subscription subscription = null;
 		
 		if (type == ROLLS_VOTER)
-			subscription = new Subscription(voter.bioguide_id, Subscriber.notificationName(voter), "RollsLegislatorSubscriber", null);
+			subscription = new Subscription(voter.bioguide_id, Subscriber.notificationName(voter), "RollsLegislatorSubscriber", voter.chamber);
 		else if (type == ROLLS_RECENT)
 			subscription = new Subscription("RecentVotes", "Recent Votes", "RollsRecentSubscriber", null);
 		
