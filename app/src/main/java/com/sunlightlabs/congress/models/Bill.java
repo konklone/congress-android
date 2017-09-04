@@ -116,6 +116,14 @@ public class Bill implements Serializable {
             return 2;
     }
 
+    public static int yearFrom(int congress, int session) {
+        // first year of that Congress
+        int base = (((congress + 894) * 2) - 1);
+
+        // if it's session 2, up it by 1 year
+        return base + (session - 1);
+    }
+
 	public static String formatCode(String bill_id) {
 		// [bill_type, number, congress]
         String[] pieces = splitBillId(bill_id);

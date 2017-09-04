@@ -213,9 +213,9 @@ public class RollListFragment extends ListFragment implements PaginationListener
 				
 				switch (context.type) {
 				case ROLLS_VOTER:
-					return RollService.latestMemberVotes(context.voter.bioguide_id, context.voter.chamber, page, PER_PAGE);
+					return RollService.latestMemberVotes(context.voter.bioguide_id, page);
 				case ROLLS_RECENT:
-					return RollService.latestVotes(page, PER_PAGE);
+					return RollService.latestVotes(page);
 				default:
 					throw new CongressException("Not sure what type of votes to find.");
 				}
@@ -270,12 +270,13 @@ public class RollListFragment extends ListFragment implements PaginationListener
 				holder = (ViewHolder) view.getTag();
 			
 			TextView msgView = holder.roll;
+
+            // ?? why does this also activate for ROLLS_RECENT?
 			if (context.voter != null && (context.type == ROLLS_VOTER || context.type == ROLLS_RECENT)) {
-				Roll.Vote vote = roll.voter_ids.get(context.voter.bioguide_id);
-				if (vote == null || vote.vote.equals(Roll.NOT_VOTING))
-					msgView.setText("Did Not Vote");
+				if (roll.member_position == null || roll.member_position.equals(Roll.NOT_VOTING))
+					msgView.setText(R.string.votes_did_not_vote);
 				else
-					msgView.setText(vote.vote);
+					msgView.setText(roll.member_position);
 				
 			} else
 				msgView.setText(Utils.capitalize(roll.chamber));
@@ -327,10 +328,6 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		}
 		
 		private void shortDate(TextView view, Date date) {
-//			if (date.getYear() == Calendar.getInstance().get(Calendar.YEAR)) {
-//				view.setTextSize(18);
-//				view.setText(new SimpleDateFormat("MMM d", Locale.US).format(date).toUpperCase(Locale.US));
-//			} else
 			longDate(view, date);
 		}
 		
