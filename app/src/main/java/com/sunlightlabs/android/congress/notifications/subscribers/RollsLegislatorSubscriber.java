@@ -23,10 +23,9 @@ public class RollsLegislatorSubscriber extends Subscriber {
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupAPI(context);
-		String chamber = subscription.data;
 		
 		try {
-			return RollService.latestMemberVotes(subscription.id, chamber, 1, RollListFragment.PER_PAGE);
+			return RollService.latestMemberVotes(subscription.id, 1);
 		} catch (CongressException e) {
 			Log.w(Utils.TAG, "Could not fetch the latest votes for " + subscription, e);
 			return null;

@@ -36,7 +36,6 @@ public class ProPublica {
 
     public static TimeZone CONGRESS_TIMEZONE = TimeZone.getTimeZone("America/New_York");
     public static String dateOnlyFormat = "yyyy-MM-dd";
-    public static String timeOnlyFormat = "hh:mm:ss";
 
 
     // Pro Publica Per Page

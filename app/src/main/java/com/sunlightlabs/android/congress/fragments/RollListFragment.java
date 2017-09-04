@@ -123,7 +123,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		Subscription subscription = null;
 		
 		if (type == ROLLS_VOTER)
-			subscription = new Subscription(voter.bioguide_id, Subscriber.notificationName(voter), "RollsLegislatorSubscriber", voter.chamber);
+			subscription = new Subscription(voter.bioguide_id, Subscriber.notificationName(voter), "RollsLegislatorSubscriber", null);
 		else if (type == ROLLS_RECENT)
 			subscription = new Subscription("RecentVotes", "Recent Votes", "RollsRecentSubscriber", null);
 		
@@ -213,9 +213,9 @@ public class RollListFragment extends ListFragment implements PaginationListener
 				
 				switch (context.type) {
 				case ROLLS_VOTER:
-					return RollService.latestMemberVotes(context.voter.bioguide_id, context.voter.chamber, page, PER_PAGE);
+					return RollService.latestMemberVotes(context.voter.bioguide_id, page);
 				case ROLLS_RECENT:
-					return RollService.latestVotes(page, PER_PAGE);
+					return RollService.latestVotes(page);
 				default:
 					throw new CongressException("Not sure what type of votes to find.");
 				}
@@ -327,10 +327,6 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		}
 		
 		private void shortDate(TextView view, Date date) {
-//			if (date.getYear() == Calendar.getInstance().get(Calendar.YEAR)) {
-//				view.setTextSize(18);
-//				view.setText(new SimpleDateFormat("MMM d", Locale.US).format(date).toUpperCase(Locale.US));
-//			} else
 			longDate(view, date);
 		}
 		

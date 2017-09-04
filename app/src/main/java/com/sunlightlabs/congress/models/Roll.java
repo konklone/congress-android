@@ -33,7 +33,6 @@ public class Roll implements Serializable {
     // if a bill is associated
     public String bill_id, bill_title;
 
-
     // not yet migrated
 	public Map<String,Vote> voters;
 	public Map<String,Vote> voter_ids;
@@ -58,8 +57,9 @@ public class Roll implements Serializable {
 		public Legislator voter;
 		
 		public Vote() {}
-		
-		public int compareTo(Vote another) {
+
+        @Override
+        public int compareTo(Vote another) {
             return this.voter_id.compareTo(another.voter_id);
 		}
 	}
@@ -89,7 +89,7 @@ public class Roll implements Serializable {
 	
 	// formattedNumber can be anything that ends with a number - the number will be extracted,
 	// the chamber's first letter will be used, and combined into a roll ID
-	public static String normalizeRollId(String chamber, String year, String formattedNumber) {
+	public static String normalizeRollId(String chamber, String formattedNumber, String year) {
 		String shortChamber;
 		if (chamber.equals("house"))
 			shortChamber = "h";
