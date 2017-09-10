@@ -257,62 +257,7 @@ public class LegislatorService {
         return legislator;
     }
 
-    // TODO: on the chopping block once unused from other Services
-	protected static Legislator fromSunlight(JSONObject json) throws JSONException, CongressException {
-		if (json == null)
-			return null;
-		
-		Legislator legislator = new Legislator();
-
-		if (!json.isNull("bioguide_id"))
-			legislator.bioguide_id = json.getString("bioguide_id");
-		if (!json.isNull("govtrack_id"))
-			legislator.govtrack_id = json.getString("govtrack_id");
-
-		if (!json.isNull("in_office"))
-			legislator.in_office = json.getBoolean("in_office");
-
-		if (!json.isNull("first_name"))
-			legislator.first_name = json.getString("first_name");
-		if (!json.isNull("last_name"))
-			legislator.last_name = json.getString("last_name");
-
-		if (!json.isNull("title"))
-			legislator.title = json.getString("title");
-		if (!json.isNull("party"))
-			legislator.party = json.getString("party");
-		if (!json.isNull("state"))
-			legislator.state = json.getString("state");
-		if (!json.isNull("district"))
-			legislator.district = json.getString("district");
-		if (!json.isNull("chamber"))
-			legislator.chamber = json.getString("chamber");
-		if (!json.isNull("term_start"))
-			legislator.term_start = json.getString("term_start");
-		if (!json.isNull("term_end"))
-			legislator.term_end = json.getString("term_end");
-        if (!json.isNull("leadership_role"))
-            legislator.leadership_role = json.getString("leadership_role");
-
-		if (!json.isNull("gender"))
-			legislator.gender = json.getString("gender");
-		if (!json.isNull("office"))
-			legislator.office = json.getString("office");
-		if (!json.isNull("website"))
-			legislator.website = json.getString("website");
-		if (!json.isNull("phone"))
-			legislator.phone = json.getString("phone");
-		if (!json.isNull("youtube_id"))
-			legislator.youtube_id = json.getString("youtube_id");
-		if (!json.isNull("twitter_id"))
-			legislator.twitter_id = json.getString("twitter_id");
-		if (!json.isNull("facebook_id"))
-			legislator.facebook_id = json.getString("facebook_id");
-		
-		return legislator;
-	}
-
-	private static Legislator legislatorFor(String url) throws CongressException {
+    private static Legislator legislatorFor(String url) throws CongressException {
         try {
             return fromAPI(ProPublica.firstResult(url));
         } catch (JSONException e) {
