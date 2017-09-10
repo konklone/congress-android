@@ -29,7 +29,6 @@
     	android:anyDensity="true"
     	/>
     
-      
     <application android:icon="@drawable/icon"
         android:name=".CongressApp"
     	android:label="@string/app_name"
