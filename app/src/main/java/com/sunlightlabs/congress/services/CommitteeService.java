@@ -179,8 +179,10 @@ public class CommitteeService {
             if (committee.subcommittee)
                 committee.parent_committee_id = committee.id.substring(0, 4);
 
-            // Issue #128
-            if (committee.id.startsWith("H"))
+            if (!object.isNull("chamber"))
+                committee.chamber = object.getString("chamber").toLowerCase();
+            // fallback in case this field disappears (it was added by request)
+            else if (committee.id.startsWith("H"))
                 committee.chamber = "house";
             else if (committee.id.startsWith("S"))
                 committee.chamber = "senate";
