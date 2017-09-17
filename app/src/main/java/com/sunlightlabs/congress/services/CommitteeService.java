@@ -176,8 +176,13 @@ public class CommitteeService {
 
             committee.subcommittee = subcommittee;
 
-            if (committee.subcommittee)
-                committee.parent_committee_id = committee.id.substring(0, 4);
+            if (committee.subcommittee) {
+                if (!object.isNull("parent_committee_id"))
+                    committee.parent_committee_id = object.getString("parent_committee_id");
+                // fallback
+                else
+                    committee.parent_committee_id = committee.id.substring(0, 4);
+            }
 
             if (!object.isNull("chamber"))
                 committee.chamber = object.getString("chamber").toLowerCase();
