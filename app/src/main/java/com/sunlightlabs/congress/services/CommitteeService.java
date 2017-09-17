@@ -137,11 +137,11 @@ public class CommitteeService {
                     member.last_name = names[1];
                 }
 
-                // if it's a House or Senate committee, assign the members' chamber
-                if (
-                    (committee.chamber != null) &&
-                    (committee.chamber.equals("house") || committee.chamber.equals("senate"))
-                )
+                // if a chamber field exists for members, assign it (needed for joint committees)
+                if (!object.isNull("chamber"))
+                    member.chamber = object.getString("chamber").toLowerCase();
+                // if it's missing and a House or Senate committee, assign the members' chamber
+                else if ((committee.chamber != null) && (committee.chamber.equals("house") || committee.chamber.equals("senate")))
                     member.chamber = committee.chamber;
 
                 member.membership = new Committee.Membership();
