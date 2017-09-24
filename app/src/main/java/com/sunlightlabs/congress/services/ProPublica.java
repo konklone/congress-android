@@ -7,7 +7,6 @@ import com.sunlightlabs.android.congress.utils.HttpManager;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 
-import org.apache.http.impl.cookie.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -197,8 +196,9 @@ public class ProPublica {
     // which means that no matter which timezone it is formatted as, it will be the same day.
     public static Date parseDateOnly(String date) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat(dateOnlyFormat, Locale.US);
-        format.setTimeZone(DateUtils.GMT);
-        Calendar calendar = new GregorianCalendar(DateUtils.GMT);
+        TimeZone gmt = TimeZone.getTimeZone("GMT");
+        format.setTimeZone(gmt);
+        Calendar calendar = new GregorianCalendar(gmt);
         calendar.setTime(format.parse(date));
         calendar.set(Calendar.HOUR_OF_DAY, 12);
         return calendar.getTime();

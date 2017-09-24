@@ -3,7 +3,6 @@ package com.sunlightlabs.congress.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.impl.cookie.DateParseException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +48,7 @@ public class CommitteeService {
 		return committeesFor(ProPublica.url(endpoint));
 	}
 
-	protected static Committee fromAPI(JSONObject json) throws JSONException, DateParseException, CongressException {
+	protected static Committee fromAPI(JSONObject json) throws JSONException, CongressException {
         Committee committee = new Committee();
 
         if (!json.isNull("id"))
@@ -206,8 +205,6 @@ public class CommitteeService {
             return fromAPI(results.getJSONObject(0));
         } catch (JSONException e) {
             throw new CongressException(e, "Problem parsing the JSON from " + url);
-        } catch (DateParseException e) {
-            throw new CongressException(e, "Problem parsing date in JSON at " + url);
         }
     }
 
@@ -228,8 +225,6 @@ public class CommitteeService {
 
         } catch (JSONException e) {
             throw new CongressException(e, "Problem parsing the JSON from " + url);
-        } catch (DateParseException e) {
-            throw new CongressException(e, "Problem parsing date in JSON at " + url);
         }
 
         return committees;

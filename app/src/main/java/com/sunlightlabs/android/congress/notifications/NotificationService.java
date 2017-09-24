@@ -22,7 +22,6 @@ import com.sunlightlabs.android.congress.utils.Database;
 import com.sunlightlabs.android.congress.utils.Utils;
 
 public class NotificationService extends WakefulIntentService {
-	public static final int NOTIFY_UPDATES = 0;
 	public static final String EXTRA_NEW_IDS_PREFIX = "com.sunlightlabs.android.congress.notifications.new_ids.";
 	
 	private NotificationManager notifyManager;
@@ -46,16 +45,8 @@ public class NotificationService extends WakefulIntentService {
 		database.close();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void doWakefulWork(Intent intent) {
-		// only proceed if background data is enabled
-		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		if (!cm.getBackgroundDataSetting()) {
-			Log.i(Utils.TAG, "User has background data disabled, not polling. Alarms remain scheduled.");
-			return;
-		}
-		
 		Cursor cursor = database.getSubscriptions();
 		
 		if (!cursor.moveToFirst()) {
@@ -142,13 +133,10 @@ public class NotificationService extends WakefulIntentService {
 		cursor.close();
 	}
 
-	@SuppressWarnings("deprecation")
 	private Notification getNotification(String notificationClass, String ticker, String title, String message, Intent intent, List<String> unseenIds, Uri uri) {
 		int icon = R.drawable.notification_icon;
 		long when = System.currentTimeMillis();
-		
-		Notification notification = new Notification(icon, ticker, when);
-		
+
 		intent.setAction(Intent.ACTION_MAIN);
 		intent.setData(uri);
 		intent.putExtra(Analytics.EXTRA_ENTRY_FROM, Analytics.ENTRY_NOTIFICATION);
@@ -156,7 +144,14 @@ public class NotificationService extends WakefulIntentService {
 		
 		PendingIntent contentIntent = PendingIntent
 				.getActivity(this, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		notification.setLatestEventInfo(this, title, message, contentIntent);
+
+		Notification notification = new Notification.Builder(this)
+				.setContentTitle(title)
+				.setContentText(message)
+				.setTicker(ticker)
+				.setSmallIcon(icon)
+				.setContentIntent(contentIntent)
+				.build();
 		
 		// Attach notification sound if the user picked one (defaults to silent)
 		String ringtone = PreferenceManager.getDefaultSharedPreferences(this).getString(NotificationSettings.KEY_NOTIFY_RINGTONE, NotificationSettings.DEFAULT_NOTIFY_RINGTONE);
