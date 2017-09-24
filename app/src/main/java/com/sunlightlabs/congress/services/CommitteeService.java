@@ -137,11 +137,11 @@ public class CommitteeService {
                     member.last_name = names[1];
                 }
 
-                // if it's a House or Senate committee, assign the members' chamber
-                if (
-                    (committee.chamber != null) &&
-                    (committee.chamber.equals("house") || committee.chamber.equals("senate"))
-                )
+                // if a chamber field exists for members, assign it (needed for joint committees)
+                if (!object.isNull("chamber"))
+                    member.chamber = object.getString("chamber").toLowerCase();
+                // if it's missing and a House or Senate committee, assign the members' chamber
+                else if ((committee.chamber != null) && (committee.chamber.equals("house") || committee.chamber.equals("senate")))
                     member.chamber = committee.chamber;
 
                 member.membership = new Committee.Membership();
@@ -176,11 +176,18 @@ public class CommitteeService {
 
             committee.subcommittee = subcommittee;
 
-            if (committee.subcommittee)
-                committee.parent_committee_id = committee.id.substring(0, 4);
+            if (committee.subcommittee) {
+                if (!object.isNull("parent_committee_id"))
+                    committee.parent_committee_id = object.getString("parent_committee_id");
+                // fallback
+                else
+                    committee.parent_committee_id = committee.id.substring(0, 4);
+            }
 
-            // Issue #128
-            if (committee.id.startsWith("H"))
+            if (!object.isNull("chamber"))
+                committee.chamber = object.getString("chamber").toLowerCase();
+            // fallback in case this field disappears (it was added by request)
+            else if (committee.id.startsWith("H"))
                 committee.chamber = "house";
             else if (committee.id.startsWith("S"))
                 committee.chamber = "senate";
