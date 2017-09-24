@@ -32,6 +32,8 @@ public class MenuBills extends Activity {
 		String tab = getIntent().getStringExtra("tab");
 		
 		if (tab != null && tab.equals("bills_new"))
+			adapter.selectPage(3);
+		else if (tab != null && tab.equals("bills_law"))
 			adapter.selectPage(2);
 		else if (tab != null && tab.equals("bills_active"))
 			adapter.selectPage(1);
