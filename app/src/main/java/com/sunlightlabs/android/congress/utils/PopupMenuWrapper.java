@@ -11,7 +11,7 @@ public class PopupMenuWrapper {
 	private PopupMenu menu;
 	
 	interface OnMenuItemClickListener {
-		public boolean onMenuItemClick(MenuItem item);
+		boolean onMenuItemClick(MenuItem item);
 	}
 	
 	PopupMenuWrapper(Activity activity, View view) {

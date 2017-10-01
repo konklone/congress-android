@@ -2,6 +2,7 @@ package com.sunlightlabs.android.congress.utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ public class ActionBarUtils {
 	   }
 	
 	public interface HasActionMenu {
-		public void menuSelected(MenuItem item);
+		void menuSelected(MenuItem item);
 	}
 	
 	public static void setTitle(Activity activity, String title) {
@@ -45,6 +46,10 @@ public class ActionBarUtils {
 		
 		if (up != null) // send a null up intent to disable up button
 			setTitleButton(activity, up); 
+	}
+
+	public static void setTitleIcon(Activity activity, Drawable drawable) {
+		((ImageView) activity.findViewById(R.id.title_icon)).setImageDrawable(drawable);
 	}
 
 	public static void setTitleButton(final Activity activity, final Intent up) {

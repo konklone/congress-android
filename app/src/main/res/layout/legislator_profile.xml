@@ -8,205 +8,38 @@
     android:background="@color/background_dark"
 	>
 
-	<include layout="@layout/title_bar" />
+    <include layout="@layout/legislator_out_of_office" />
 
-	<include layout="@layout/legislator_out_of_office" />
+    <include layout="@layout/title_bar" />
 
-	<LinearLayout android:orientation="horizontal"
-		android:layout_height="125dp"
-		android:layout_width="wrap_content"
-		android:layout_weight="0"
-		>
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
 
-		<ImageView android:id="@+id/profile_picture"
-			android:layout_width="100dp"
-			android:layout_height="125dp"
+        <include layout="@layout/action_button"
+            android:id="@+id/call"
+            />
 
-			android:src="@drawable/loading_photo"
-			/>
+        <LinearLayout android:id="@+id/profile_basic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            >
 
-		<LinearLayout android:id="@+id/profile_basic"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:orientation="vertical"
-			android:paddingTop="10dp"
-			android:paddingLeft="10dp"
-			>
+            <TextView android:id="@+id/profile_state_party"
+                style="@style/LegislatorProfileText"
+                android:text="Democrat from Montana, District 3"
+                />
 
-			<TextView android:id="@+id/profile_domain"
-				style="@style/LegislatorProfileText"
-				android:text="District 3"
-				/>
+            <TextView android:id="@+id/profile_office"
+                style="@style/LegislatorProfileText"
+                android:text="3356 Rayburn House Office Building"
+                />
 
-			<TextView android:id="@+id/profile_state_party"
-				style="@style/LegislatorProfileText"
-				android:text="District of Columbia, Democrat"
-				/>
-
-			<LinearLayout android:orientation="horizontal"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="10dp"
-				>
-
-				<FrameLayout android:id="@+id/twitter"
-					android:layout_height="36dp"
-					android:layout_width="36dp"
-					android:layout_marginRight="10dp"
-					style="@style/Pressable"
-					>
-					<ImageView
-						android:layout_width="32dp"
-						android:layout_height="32dp"
-
-						android:layout_gravity="center"
-
-						android:src="@drawable/twitter"
-						/>
-				</FrameLayout>
-
-				<FrameLayout android:id="@+id/facebook"
-					android:layout_height="36dp"
-					android:layout_width="36dp"
-					android:layout_marginRight="10dp"
-					style="@style/Pressable"
-					>
-
-					<ImageView
-						android:layout_width="32dp"
-						android:layout_height="32dp"
-
-						android:layout_gravity="center"
-
-						android:src="@drawable/facebook"
-						/>
-
-				</FrameLayout>
-
-				<FrameLayout android:id="@+id/youtube"
-					android:layout_height="36dp"
-					android:layout_width="36dp"
-					android:layout_marginRight="10dp"
-					style="@style/Pressable"
-					>
-
-					<ImageView
-						android:layout_width="32dp"
-						android:layout_height="32dp"
-
-						android:layout_gravity="center"
-
-						android:src="@drawable/youtube"
-						/>
-
-				</FrameLayout>
-
-
-			</LinearLayout>
-
-		</LinearLayout>
-
-	</LinearLayout>
-
-	<LinearLayout android:orientation="horizontal"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:padding="10dp"
-
-		android:background="@color/background_dark"
-		>
-
-		<TextView android:id="@+id/profile_office"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-
-			android:text="3356 Rayburn"
-			android:textSize="14sp"
-
-			android:layout_gravity="center"
-
-			android:layout_marginRight="20dp"
-			/>
-
-		<FrameLayout android:id="@+id/call_office_container"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-
-			android:background="@color/text_grey"
-			android:padding="1dp"
-
-			android:layout_marginRight="15dp"
-			>
-			<FrameLayout
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:background="@color/background_dark"
-				>
-
-				<FrameLayout android:id="@+id/call_office"
-					android:layout_height="wrap_content"
-					android:layout_width="wrap_content"
-
-					android:layout_gravity="center"
-
-					style="@style/Pressable"
-
-					android:paddingLeft="5dp"
-					android:paddingRight="5dp"
-					android:paddingTop="2dp"
-					android:paddingBottom="2dp"
-					>
-					<TextView
-						android:layout_height="wrap_content"
-						android:layout_width="wrap_content"
-						android:layout_gravity="center"
-
-						android:text="@string/call_office"
-						android:textSize="14sp"
-						/>
-				</FrameLayout>
-			</FrameLayout>
-		</FrameLayout>
-
-		<FrameLayout android:id="@+id/visit_website_container"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-
-			android:background="@color/text_grey"
-			android:padding="1dp"
-
-			android:layout_marginRight="15dp"
-			>
-			<FrameLayout
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:background="@color/background_dark"
-				>
-
-				<FrameLayout android:id="@+id/visit_website"
-					android:layout_height="wrap_content"
-					android:layout_width="wrap_content"
-
-					android:layout_gravity="center"
-					style="@style/Pressable"
-
-					android:paddingLeft="5dp"
-					android:paddingRight="5dp"
-					android:paddingTop="2dp"
-					android:paddingBottom="2dp"
-					>
-					<TextView
-						android:layout_height="wrap_content"
-						android:layout_width="wrap_content"
-						android:layout_gravity="center"
-
-						android:text="@string/web_office"
-						android:textSize="14sp"
-						/>
-				</FrameLayout>
-			</FrameLayout>
-		</FrameLayout>
-
-	</LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

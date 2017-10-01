@@ -75,8 +75,7 @@ public class LegislatorPager extends Activity implements HasActionMenu, LoadPhot
 		findViewById(android.R.id.empty).setVisibility(View.GONE);
 		
 		setupDatabase();
-		setupButtons();
-        setupProfile();
+		setupProfile();
 		setupPager();
 
         if (avatar != null)
@@ -132,67 +131,53 @@ public class LegislatorPager extends Activity implements HasActionMenu, LoadPhot
 			database.close();
 	}
 	
-	public void setupButtons() {
+	public void setupProfile() {
 		String titledName = legislator.titledName();
 		ActionBarUtils.setTitle(this, titledName, new Intent(this, MenuLegislators.class));
-		if (titledName.length() >= 23)
-			ActionBarUtils.setTitleSize(this, 16);
+        if (titledName.length() >= 23)
+            ActionBarUtils.setTitleSize(this, 16);
 		
 		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.star_off, new View.OnClickListener() {
 			public void onClick(View v) { 
 				toggleDatabaseFavorite(); 
 			}
 		});
+
+        // allow for devices without phones
+        boolean hasPhone = getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
+        hasPhone = true;
+        if (hasPhone && (legislator.phone != null) && (!legislator.phone.equals(""))) {
+            ActionBarUtils.setActionButton(this, R.id.call, android.R.drawable.ic_menu_call, new View.OnClickListener() {
+                public void onClick(View v) {
+                    callOffice();
+                }
+            });
+        }
 		
 		toggleFavoriteStar(cursor.getCount() == 1);
 		
 		ActionBarUtils.setActionMenu(this, R.menu.legislator);
-	}
 
-	public void setupProfile() {
         if (!legislator.in_office)
             findViewById(R.id.out_of_office_text).setVisibility(View.VISIBLE);
 
         String party = partyName(legislator.party);
         String state = Utils.stateCodeToName(this, legislator.state);
-        ((TextView) findViewById(R.id.profile_state_party)).setText(party + " from " + state);
+        String description;
+        if (legislator.chamber.equals("senate"))
+            description = party + " from " + state;
+        else if (legislator.at_large)
+            description = party + " from " + state;
+        else
+            description = party + " from " + state + "-" + legislator.district;
 
-        String domain = legislator.getDomain();
-        if (legislator.leadership_role != null && !legislator.leadership_role.equals(""))
-            domain = legislator.leadership_role + ", " + domain;
-        ((TextView) findViewById(R.id.profile_domain)).setText(domain);
-
-        socialButton(R.id.twitter, legislator.twitterUrl(), Analytics.LEGISLATOR_TWITTER);
-        socialButton(R.id.youtube, legislator.youtubeUrl(), Analytics.LEGISLATOR_YOUTUBE);
-        socialButton(R.id.facebook, legislator.facebookUrl(), Analytics.LEGISLATOR_FACEBOOK);
+        ((TextView) findViewById(R.id.profile_state_party)).setText(description);
 
         TextView officeView = (TextView) findViewById(R.id.profile_office);
         if (legislator.office != null && !legislator.office.equals(""))
             officeView.setText(officeName(legislator.office));
         else
             officeView.setVisibility(View.GONE);
-
-        // allow for devices without phones
-        boolean hasPhone = getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
-        if (hasPhone && legislator.phone != null && !legislator.phone.equals("")) {
-            findViewById(R.id.call_office).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callOffice();
-                }
-            });
-        } else
-            findViewById(R.id.call_office_container).setVisibility(View.GONE);
-
-        if (legislator.website != null && !legislator.website.equals("")) {
-            findViewById(R.id.visit_website).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    visit(legislator.website, Analytics.LEGISLATOR_WEBSITE);
-                }
-            });
-        } else
-            findViewById(R.id.visit_website_container).setVisibility(View.GONE);
     }
 
     public void loadPhoto() {
@@ -211,7 +196,7 @@ public class LegislatorPager extends Activity implements HasActionMenu, LoadPhot
     }
 
     public void displayAvatar() {
-        ((ImageView) findViewById(R.id.profile_picture)).setImageDrawable(avatar);
+        ActionBarUtils.setTitleIcon(this, avatar);
     }
 
     public void callOffice() {
@@ -311,6 +296,9 @@ public class LegislatorPager extends Activity implements HasActionMenu, LoadPhot
             case R.id.bioguide:
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Legislator.bioguideUrl(legislator.bioguide_id))));
     		break;
+            case R.id.visit_website:
+                visit(legislator.website, Analytics.LEGISLATOR_WEBSITE);
+            break;
         }
     }
 

@@ -93,20 +93,18 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 			return "Representative";
 	}
 
-    // See: https://github.com/propublica/congress-api-docs/issues/41
-	public String getDomain() {
-		if (this.chamber.equals("senate"))
-			return "Senator";
-        else if (this.at_large)
-            return "At-Large";
-		else
-			return "District " + district;
-	}
+    public String getOffice() {
+        if (this.chamber.equals("house"))
+            return this.office + " House Office Building";
+        else
+            return this.office + " Senate Office Building";
+    }
 
 	public static String bioguideUrl(String bioguide_id) {
 		return "http://bioguide.congress.gov/scripts/biodisplay.pl?index=" + bioguide_id;
 	}
-	
+
+	// "anything" can be anything
 	public static String govTrackUrl(String govtrack_id) {
         return "https://www.govtrack.us/congress/members/anything/" + govtrack_id;
 	}
