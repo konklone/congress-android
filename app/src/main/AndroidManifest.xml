@@ -119,7 +119,6 @@
         </activity>
         
         <activity android:name=".CommitteeListPager" />
-        <activity android:name=".CommitteeMember" />
         <activity android:name=".CommitteePager" />
         
         <activity android:name=".FloorUpdatePager" />

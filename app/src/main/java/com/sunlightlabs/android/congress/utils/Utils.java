@@ -1,10 +1,13 @@
 package com.sunlightlabs.android.congress.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TabHost;
@@ -12,11 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sunlightlabs.android.congress.BillPager;
-import com.sunlightlabs.android.congress.LegislatorPager;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.RollInfo;
 import com.sunlightlabs.congress.models.Bill;
-import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.ProPublica;
 
@@ -27,7 +28,7 @@ import java.util.GregorianCalendar;
 
 public class Utils {
 	public static final String TAG = "Congress";
-	
+
 	public static void setupAPI(Context context) {
 		Resources resources = context.getResources();
 
@@ -41,6 +42,10 @@ public class Utils {
     public static String decodeHTML(String input) {
         return input.replace("&#39;", "'");
     }
+
+	public static boolean checkPermission(Activity activity, String permission) {
+		return (ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED);
+	}
 
 	public static void alert(Context context, String msg) {
 		Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
@@ -56,18 +61,19 @@ public class Utils {
 	}
 	
 	public static Intent legislatorIntent(String id) {
-		return new Intent().setClassName(
+		// eventually go to the legislator pager
+		Intent destination = new Intent().setClassName(
 				"com.sunlightlabs.android.congress",
 				"com.sunlightlabs.android.congress.LegislatorPager")
 			.putExtra("bioguide_id", id);
-	}
 
-	public static Intent legislatorIntent(Context context, Legislator legislator) {
-		return new Intent(context, LegislatorPager.class)
-			.putExtra("bioguide_id", legislator.bioguide_id)
-			.putExtra("legislator", legislator);
+		// but always load the legislator first
+		return new Intent().setClassName(
+				"com.sunlightlabs.android.congress",
+				"com.sunlightlabs.android.congress.LegislatorLoader")
+			.putExtra("id", id)
+			.putExtra("intent", destination);
 	}
-
 
 	public static Intent billIntent(Context context, Bill bill) {
 		return new Intent(context, BillPager.class)
@@ -145,10 +151,6 @@ public class Utils {
 
 	public static void setLoading(Activity activity, int message) {
 		((TextView) activity.findViewById(R.id.loading_message)).setText(message);
-	}
-	
-	public static void showBack(Activity activity, int message) {
-		showBack(activity, activity.getResources().getString(message));
 	}
 	
 	public static void showEmpty(Activity activity, int message) {
