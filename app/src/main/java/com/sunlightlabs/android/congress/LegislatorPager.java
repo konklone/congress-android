@@ -144,8 +144,7 @@ public class LegislatorPager extends Activity implements HasActionMenu, LoadPhot
 		});
 
         // allow for devices without phones
-        boolean hasPhone = getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
-        if (hasPhone && (legislator.phone != null) && (!legislator.phone.equals(""))) {
+        if ((legislator.phone != null) && (!legislator.phone.equals(""))) {
             ActionBarUtils.setActionButton(this, R.id.call, android.R.drawable.ic_menu_call, new View.OnClickListener() {
                 public void onClick(View v) {
                     callOffice();
