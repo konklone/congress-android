@@ -2,14 +2,14 @@
 <resources>
     
     <string-array name="changelog">
-		<item>This app is now fully migrated to use the Pro Publica Congress API for all information!</item>
-		<item>A huge thank you to Pro Publica, and in particular to Derek Willis, for their rapid response and support during this migration.</item>
-		<item>Generally speaking, information should now be more timely and more complete, but if you see any issues, please email the developer (Eric Mill) at eric+congress@konklone.com.</item>
+		<item>The legislator screen is now simplified and redesigned. Social media buttons removed for lack of use.</item>
+        <item>A bunch of under-the-hood work to remove a bunch of work-arounds for older versions of Android that are now unsupported.</item>
     </string-array>
 
     <string-array name="changelogLast">
-		<item>We\'re back! After a few years without updates, the app is now maintained by Eric Mill, its original developer. My deep thanks to the Sunlight Foundation for funding the development of this app from 2009 until now.</item>
-		<item>The Pro Publica API is now used for all information about legislators, bills, committee hearings, and floor updates.</item>
+		<item>This app is now fully migrated to use the Pro Publica Congress API for all information!</item>
+		<item>A huge thank you to Pro Publica, and in particular to Derek Willis, for their rapid response and support during this migration.</item>
+		<item>Generally speaking, information should now be more timely and more complete, but if you see any issues, please email the developer (Eric Mill) at eric+congress@konklone.com.</item>
 		<item>Android 4.4 is now the minimum version. Dropped support for Android 2.3 through 4.3 (Gingerbread, Honeycomb, Ice Cream Sandwich, and Jellybean).</item>
 	</string-array>
     

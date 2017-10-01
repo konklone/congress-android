@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Congress</string>
-    <string name="app_version">4.9.0</string>
-    <string name="app_version_older">Version 4.7 - 4.8</string>
+    <string name="app_version">4.9.1</string>
+    <string name="app_version_older">Version 4.8 - 4.9</string>
     <string name="app_package_name">com.sunlightlabs.android.congress</string>
     
     <string name="search_bills_settings">Bills</string>
