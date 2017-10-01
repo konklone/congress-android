@@ -84,9 +84,9 @@
     <string name="sponsored_bills">Sponsored Bills</string>
     <string name="committees">Committees</string>
     <string name="loading_committees">Loading committees…</string>
-    <string name="district_map">District Map</string>
     <string name="view_legislator_district">View Legislator District</string>
-    
+    <string name="visit_website">Visit official website</string>
+
     <string name="map_loading">Loading a district map...</string>
     <string name="map_unsupported">Our apologies, but we\'re unable to support embedded district maps on Android 2.2 (Froyo) at this time.</string>
     
