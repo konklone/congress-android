@@ -428,7 +428,11 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		}
 		
 		private void shortDate(TextView view, Date date) {
-			if (date.getYear() == Calendar.getInstance().get(Calendar.YEAR)) { 
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			int dateYear = calendar.get(Calendar.YEAR);
+			int todayYear = Calendar.getInstance().get(Calendar.YEAR);
+			if (dateYear == todayYear) {
 				view.setTextSize(18);
 				view.setText(new SimpleDateFormat("MMM d", Locale.US).format(date).toUpperCase(Locale.US));
 			} else
