@@ -43,7 +43,7 @@ public final class Base64Encoder {
      * @return the input string encoded using Base 64 encoding.
      */
     public static String encode (String string) {
-        return encode(string.getBytes()).toString ();
+        return encode(string.getBytes());
     }
     
     public static String encode (byte [] data) {

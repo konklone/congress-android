@@ -324,7 +324,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 					breakdown += "-" + roll.voteBreakdown.get(Roll.PRESENT);
 			}
 			
-			return roll.result + ", " + breakdown.toString();
+			return roll.result + ", " + breakdown;
 		}
 		
 		private void shortDate(TextView view, Date date) {
