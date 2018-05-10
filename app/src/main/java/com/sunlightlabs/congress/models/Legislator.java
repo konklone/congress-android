@@ -77,8 +77,10 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 			return "Sen";
 		else if (longTitle.equals("Delegate"))
 			return "Del";
-		else if (longTitle.equals("Resident Commissioner"));
+		else if (longTitle.equals("Resident Commissioner"))
 			return "Com";
+
+		return "";
 	}
 
 	public String fullTitle() {
