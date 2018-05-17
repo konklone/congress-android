@@ -124,9 +124,8 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			this.currentTab = holder.currentTab;
 			
 			if (loadPhotoTasks != null) {
-				Iterator<LoadPhotoTask> iterator = loadPhotoTasks.values().iterator();
-				while (iterator.hasNext())
-					iterator.next().onScreenLoad(this);
+				for (LoadPhotoTask loadPhotoTask : loadPhotoTasks.values())
+					loadPhotoTask.onScreenLoad(this);
 			}
 		}
 		
@@ -265,9 +264,7 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 		View.OnClickListener tabListener = new View.OnClickListener() {
 			public void onClick(View view) {
 				String tag = (String) view.getTag();
-				Iterator<String> iter = voterBreakdown.keySet().iterator();
-				while (iter.hasNext()) {
-					String tabTag = iter.next();
+				for (String tabTag : voterBreakdown.keySet()) {
 					if (tabTag.equals(tag))
 						header.findViewWithTag(tabTag).setSelected(true);
 					else
@@ -353,11 +350,9 @@ public class RollInfo extends ListActivity implements LoadPhotoTask.LoadsPhoto {
 			// sort Map of voters into the voterBreakdown Map by vote type
 			List<Roll.Vote> allVoters = new ArrayList<Roll.Vote>(roll.voters.values());
 			Collections.sort(allVoters); // sort once, all at once
-			
-			Iterator<Roll.Vote> iter = allVoters.iterator();
-			while (iter.hasNext()) {
-				Roll.Vote vote = iter.next();
-                voterBreakdown.get(vote.vote).add(vote);
+
+			for (Vote vote : allVoters) {
+				voterBreakdown.get(vote.vote).add(vote);
 			}
 			
 			// hide loading, show tabs
