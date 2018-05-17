@@ -27,7 +27,7 @@ public class FloorUpdateService {
         return updates;
 	}
 	
-	protected static FloorUpdate fromAPI(JSONObject json) throws JSONException, ParseException, CongressException {
+	protected static FloorUpdate fromAPI(JSONObject json) throws JSONException, ParseException {
 		FloorUpdate update = new FloorUpdate();
 
         if (!json.isNull("description"))
