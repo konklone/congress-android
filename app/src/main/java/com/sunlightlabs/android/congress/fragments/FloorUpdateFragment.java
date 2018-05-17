@@ -63,9 +63,8 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View main = inflater.inflate(R.layout.list_footer, container, false);
-		
-		return main;
+
+		return inflater.inflate(R.layout.list_footer, container, false);
 	}
 	
 	@Override
