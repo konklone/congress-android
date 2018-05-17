@@ -251,7 +251,7 @@ public class Database {
 			StringBuilder sql = new StringBuilder("CREATE TABLE " + table);
 			sql.append(" (_id INTEGER PRIMARY KEY AUTOINCREMENT");
 
-			for (String column : columns) sql.append(", " + column + " TEXT");
+			for (String column : columns) sql.append(", ").append(column).append(" TEXT");
 
 			sql.append(");");
 			db.execSQL(sql.toString());

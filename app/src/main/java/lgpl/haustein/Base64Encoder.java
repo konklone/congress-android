@@ -119,7 +119,7 @@ public final class Base64Encoder {
         case '/': return 63;
         case '=': return 0;
         default:
-            throw new RuntimeException (new StringBuffer("unexpected code: ").append(c).toString());
+            throw new RuntimeException ("unexpected code: " + c);
         }
     }
                 
