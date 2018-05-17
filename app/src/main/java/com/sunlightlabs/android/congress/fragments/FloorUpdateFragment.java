@@ -86,7 +86,7 @@ public class FloorUpdateFragment extends ListFragment implements PaginationListe
 	}
 	
 	public void setupControls() {
-		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+		getView().findViewById(R.id.refresh).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				refresh();
 			}
