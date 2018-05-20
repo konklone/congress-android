@@ -39,7 +39,7 @@ public class LoadPhotoTask extends AsyncTask<String,Void,Drawable> {
 	}
 	
 	public interface LoadsPhoto {
-		public void onLoadPhoto(Drawable photo, Object tag);
-		public Context getContext();
+		void onLoadPhoto(Drawable photo, Object tag);
+		Context getContext();
 	}
 }

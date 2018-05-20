@@ -64,8 +64,7 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 			last_name = pieces[pieces.length-2] + " " + pieces[pieces.length-1];
 
 
-		String[] names = {first_name, last_name};
-		return names;
+		return new String[]{first_name, last_name};
 	}
 
 	// Used to parse long titles from Pro Publica API

@@ -6,7 +6,7 @@ import android.widget.AbsListView.OnScrollListener;
 public class PaginationListener implements OnScrollListener {
 	
 	public interface Paginates {
-		public void loadNextPage(int page);
+		void loadNextPage(int page);
 	}
 	
 	private Paginates context;

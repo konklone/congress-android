@@ -74,7 +74,7 @@ public class BillPager extends Activity implements HasActionMenu {
 		findViewById(R.id.pager_container).setVisibility(View.GONE);
 		Utils.setLoading(this, R.string.bill_loading);
 		
-		((Button) findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+		findViewById(R.id.refresh).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				refresh();
 			}

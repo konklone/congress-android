@@ -103,7 +103,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 	}
 	
 	public void setupControls() {
-		((Button) getView().findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+		getView().findViewById(R.id.refresh).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				refresh();
 			}
@@ -309,22 +309,22 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		}
 		
 		private String resultFor(Roll roll) {
-			String breakdown;
+			StringBuilder breakdown;
 			if (roll.otherVotes) {
-				breakdown = "";
+				breakdown = new StringBuilder();
 				Iterator<Integer> iter = roll.voteBreakdown.values().iterator();
 				while (iter.hasNext()) {
-					breakdown += iter.next();
+					breakdown.append(iter.next());
 					if (iter.hasNext())
-						breakdown += "-";
+						breakdown.append("-");
 				}
 			} else {
-				breakdown = roll.voteBreakdown.get(Roll.YEA)+ "-" + roll.voteBreakdown.get(Roll.NAY);
+				breakdown = new StringBuilder(roll.voteBreakdown.get(Roll.YEA) + "-" + roll.voteBreakdown.get(Roll.NAY));
 				if (roll.voteBreakdown.get(Roll.PRESENT) > 0)
-					breakdown += "-" + roll.voteBreakdown.get(Roll.PRESENT);
+					breakdown.append("-").append(roll.voteBreakdown.get(Roll.PRESENT));
 			}
 			
-			return roll.result + ", " + breakdown.toString();
+			return roll.result + ", " + breakdown;
 		}
 		
 		private void shortDate(TextView view, Date date) {

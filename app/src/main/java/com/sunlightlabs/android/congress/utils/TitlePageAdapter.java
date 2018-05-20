@@ -131,8 +131,8 @@ public class TitlePageAdapter extends FragmentPagerAdapter {
     	titleViews.get(handle).findViewById(R.id.tab_line).setVisibility(View.VISIBLE);
     }
     
-    public static interface SelectedOnce {
-    	public void onSelectedOnce();
+    public interface SelectedOnce {
+    	void onSelectedOnce();
     }
     
     private static class TitlePageListener extends ViewPager.SimpleOnPageChangeListener {

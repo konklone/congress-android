@@ -26,7 +26,7 @@ public class HearingService {
 		return hearingsFor(ProPublica.url(endpoint, page));
 	}
 	
-	private static Hearing fromJSON(JSONObject json) throws JSONException, ParseException, CongressException {
+	private static Hearing fromJSON(JSONObject json) throws JSONException, ParseException {
 		Hearing hearing = new Hearing();
 		
 		if (!json.isNull("description"))

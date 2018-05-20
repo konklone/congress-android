@@ -20,7 +20,7 @@ public class UpcomingBillService {
         return upcomingBillsFor(ProPublica.url(house));
 	}
 	
-	protected static UpcomingBill fromAPI(JSONObject json) throws JSONException, ParseException, CongressException {
+	protected static UpcomingBill fromAPI(JSONObject json) throws JSONException, ParseException {
 		UpcomingBill upcoming = new UpcomingBill();
 
         if (!json.isNull("congress"))

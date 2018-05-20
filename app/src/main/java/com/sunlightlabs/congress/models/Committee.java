@@ -27,8 +27,8 @@ public class Committee implements Comparable<Committee>, Serializable {
 		public String side, title;
 		public int rank;
 		
-		public Membership() {};
-	}
+		public Membership() {}
+    }
 	
 	public int compareTo(Committee another) {
 		String mine = name.replace("the ", "");
