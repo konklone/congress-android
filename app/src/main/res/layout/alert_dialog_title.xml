@@ -20,8 +20,8 @@
 		
 		android:textSize="16sp"
 		android:textStyle="bold"
-		
-		android:text="Title of Dialog"
+
+		android:text="@string/title_of_dialog"
 		/>
 	
 </LinearLayout>

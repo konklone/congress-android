@@ -19,8 +19,8 @@
 		
 		android:textSize="16sp"
 		android:textColor="@color/text"
-		
-		android:text="Header Text"
+
+		android:text="@string/header_text"
 		/>
 	
 	<TextView android:id="@+id/header_text_right"
@@ -33,8 +33,8 @@
 		
 		android:textSize="14sp"
 		android:textColor="@color/text"
-		
-		android:text="Header Text"
-		/>
+
+		android:layout_alignParentEnd="true"
+		android:text="@string/header_text" />
 		
 </RelativeLayout>

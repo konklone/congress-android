@@ -16,29 +16,30 @@
 	   	<TextView android:id="@+id/code"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			
-			android:layout_gravity="left"
+
+			android:layout_gravity="start"
 			
 			android:layout_marginTop="3dp"
 			android:layout_marginRight="5dp"
 			
 			android:textSize="14sp"
 			android:textColor="@color/text_grey"
-			
-			android:text="H.Res. 3222"
-			/>
-	   	
-	   	 <ImageView android:id="@+id/icon"
+
+			android:layout_marginEnd="5dp"
+			android:text="@string/h_res_3222" />
+
+		<ImageView
+			android:id="@+id/icon"
 			android:layout_width="24dp"
-			android:layout_height="24dp"
-			
-			android:layout_weight="0"
+			android:layout_height="0dp"
+
 			android:layout_marginRight="10dp"
 			android:layout_marginLeft="8dp"
 			
 			android:src="@drawable/star_on"
-			/>
-	
+			android:layout_marginEnd="10dp"
+			android:layout_marginStart="8dp" />
+		<!-- android:layout_weight="0" -->
 	</LinearLayout>
 		
 	<TextView android:id="@+id/title"
@@ -51,7 +52,7 @@
 		android:layout_weight="1"
 		
 		android:textSize="16sp"
-		android:text="Title Of The Bill And Such"
-		/>
+		android:layout_marginStart="5dp"
+		android:text="@string/title_of_the_bill_and_such" />
 		
 </LinearLayout>

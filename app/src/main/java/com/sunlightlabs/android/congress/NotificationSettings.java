@@ -2,13 +2,11 @@ package com.sunlightlabs.android.congress;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.text.Html;
@@ -67,32 +65,28 @@ public class NotificationSettings extends PreferenceActivity {
     }
 	
 	public void setupControls() {
-		updateIntervalSummary(PreferenceManager.getDefaultSharedPreferences(this).getString(KEY_NOTIFY_INTERVAL, DEFAULT_NOTIFY_INTERVAL));
-		updateRingtoneSummary(PreferenceManager.getDefaultSharedPreferences(this).getString(KEY_NOTIFY_RINGTONE, null));
-		
-		findPreference(KEY_NOTIFY_ENABLED).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				boolean value = ((Boolean) newValue).booleanValue();
-				updateNotificationSettings(value);
-				return true;
-			}
+		updateIntervalSummary(PreferenceManager.getDefaultSharedPreferences(this)
+				.getString(KEY_NOTIFY_INTERVAL, DEFAULT_NOTIFY_INTERVAL));
+		updateRingtoneSummary(PreferenceManager.getDefaultSharedPreferences(this)
+				.getString(KEY_NOTIFY_RINGTONE, null));
+
+		findPreference(KEY_NOTIFY_ENABLED).setOnPreferenceChangeListener((preference, newValue) -> {
+			boolean value = (Boolean) newValue;
+			updateNotificationSettings(value);
+			return true;
 		});
-		
-		findPreference(KEY_NOTIFY_INTERVAL).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				updateIntervalSummary((String) newValue);
-				Utils.stopNotificationsBroadcast(NotificationSettings.this);
-				Utils.startNotificationsBroadcast(NotificationSettings.this);
-				Log.d(Utils.TAG, "Prefs changed: RESTART notification service");
-				return true;
-			}
+
+		findPreference(KEY_NOTIFY_INTERVAL).setOnPreferenceChangeListener((preference, newValue) -> {
+			updateIntervalSummary((String) newValue);
+			Utils.stopNotificationsBroadcast(NotificationSettings.this);
+			Utils.startNotificationsBroadcast(NotificationSettings.this);
+			Log.d(Utils.TAG, "Prefs changed: RESTART notification service");
+			return true;
 		});
-		
-		findPreference(KEY_NOTIFY_RINGTONE).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				updateRingtoneSummary((String) newValue);
-				return true;
-			}
+
+		findPreference(KEY_NOTIFY_RINGTONE).setOnPreferenceChangeListener((preference, newValue) -> {
+			updateRingtoneSummary((String) newValue);
+			return true;
 		});
 	}
 
@@ -127,11 +121,13 @@ public class NotificationSettings extends PreferenceActivity {
 	}
 	
 	private boolean firstTime() {
-        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(KEY_FIRST_TIME_SETTINGS, DEFAULT_FIRST_TIME_SETTINGS);
+		return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(KEY_FIRST_TIME_SETTINGS,
+				DEFAULT_FIRST_TIME_SETTINGS);
 	}
 	
 	private void tripFirstTimeFlag() {
-		PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean(KEY_FIRST_TIME_SETTINGS, !DEFAULT_FIRST_TIME_SETTINGS).commit();
+		PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean(KEY_FIRST_TIME_SETTINGS,
+				!DEFAULT_FIRST_TIME_SETTINGS).apply();
 	}
 	
 	@Override
@@ -152,22 +148,16 @@ public class NotificationSettings extends PreferenceActivity {
 			builder.setIcon(R.drawable.icon)
 				.setCustomTitle(title)
 				.setView(explanation)
-                .setPositiveButton(R.string.notifications_enable, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Utils.setBooleanPreference(NotificationSettings.this, KEY_NOTIFY_ENABLED, true);
-                        ((CheckBoxPreference) findPreference(KEY_NOTIFY_ENABLED)).setChecked(true);
-                        updateNotificationSettings(true);
-                    }
-                })
-                .setNegativeButton(R.string.notifications_no_enable, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
+					.setPositiveButton(R.string.notifications_enable, (dialog, which) -> {
+						Utils.setBooleanPreference(NotificationSettings.this, KEY_NOTIFY_ENABLED, true);
+						((CheckBoxPreference) findPreference(KEY_NOTIFY_ENABLED)).setChecked(true);
+						updateNotificationSettings(true);
+					})
+					.setNegativeButton(R.string.notifications_no_enable, (dialog, which) -> {
+					});
 		}
-		
 		return builder.create();
 	}
-
 
 	@Override
 	public void onStart() {
@@ -180,5 +170,4 @@ public class NotificationSettings extends PreferenceActivity {
 		super.onStop();
 		Analytics.stop(this);
 	}
-	
 }

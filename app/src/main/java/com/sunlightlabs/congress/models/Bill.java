@@ -1,12 +1,10 @@
 package com.sunlightlabs.congress.models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,7 +46,6 @@ public class Bill implements Serializable {
 	public List<Bill.Action> actions;
 	public Bill.Action lastAction;
 
-
 	public static class Action implements Serializable {
 		private static final long serialVersionUID = 1L;
 
@@ -58,28 +55,40 @@ public class Bill implements Serializable {
 		public Date acted_on;
 	}
 	
-	public static class Vote implements Serializable {
-		private static final long serialVersionUID = 1L;
-
-        // bill_id + "-" + roll_id
-        // This works as long as these are all roll call votes.
-        public String full_id;
-
-        public String roll_id, result, question, chamber;
-        public int yes, no, not_voting;
-
-        // TODO: move this back to voted_at
-		public Date voted_on;
-
-		public boolean passed() {
-			if (this.result == null) return false;
-
-            		return Pattern.compile("passed", Pattern.CASE_INSENSITIVE).matcher(this.result).find();
-		}
-	}
-	
 	public static String normalizeCode(String code) {
-		return code.toLowerCase(Locale.US).replaceAll("[^\\w\\d]", "").replace("con", "c").replace("joint", "j").replace(" ", "").replace(".", "");
+		return code.toLowerCase(Locale.US).replaceAll("[^\\w\\d]", "")
+				.replace("con", "c")
+				.replace("joint", "j")
+				.replace(" ", "")
+				.replace(".", "");
+	}
+
+	// also expanded to handle amendment IDs
+	public static String formatCode(String bill_type, int number) {
+		switch (bill_type) {
+			case "hr":
+				return "H.R. " + number;
+			case "hres":
+				return "H. Res. " + number;
+			case "hjres":
+				return "H.J. Res. " + number;
+			case "hconres":
+				return "H.Con. Res. " + number;
+			case "s":
+				return "S. " + number;
+			case "sres":
+				return "S. Res. " + number;
+			case "sjres":
+				return "S.J. Res. " + number;
+			case "sconres":
+				return "S.Con. Res. " + number;
+			case "hamdt":
+				return "H.Amdt. " + number;
+			case "samdt":
+				return "S.Amdt. " + number;
+			default:
+				return bill_type + number;
+		}
 	}
 
 	public static String chamberFrom(String bill_type) {
@@ -138,32 +147,17 @@ public class Bill implements Serializable {
         	return new String[]{ matcher.group(1), matcher.group(2), matcher.group(3) };
 	}
 
-    // also expanded to handle amendment IDs
-	public static String formatCode(String bill_type, int number) {
-		if (bill_type.equals("hr"))
-			return "H.R. " + number;
-		else if (bill_type.equals("hres"))
-			return "H. Res. " + number;
-		else if (bill_type.equals("hjres"))
-			return "H.J. Res. " + number;
-		else if (bill_type.equals("hconres"))
-			return "H.Con. Res. " + number;
-		else if (bill_type.equals("s"))
-			return "S. " + number;
-		else if (bill_type.equals("sres"))
-			return "S. Res. " + number;
-		else if (bill_type.equals("sjres"))
-			return "S.J. Res. " + number;
-		else if (bill_type.equals("sconres"))
-			return "S.Con. Res. " + number;
-
-        else if (bill_type.equals("hamdt"))
-            return "H.Amdt. " + number;
-        else if (bill_type.equals("samdt"))
-            return "S.Amdt. " + number;
-
-		else
-			return bill_type + number;
+	// TODO: this may not be necessary anymore
+	public static String formatSummary(String summary, String short_title) {
+		String formatted = summary;
+		formatted = formatted.replaceFirst("^\\d+/\\d+/\\d+--.+?\\.\\s*", "");
+		formatted = formatted.replaceFirst("(\\(This measure.+?\\))\n*\\s*", "");
+		if (short_title != null)
+			formatted = formatted.replaceFirst("^" + short_title + " - ", "");
+		formatted = formatted.replaceAll("\n", "\n\n");
+		formatted = formatted.replaceAll(" (\\(\\d\\))", "\n\n$1");
+		formatted = formatted.replaceAll("( [^A-Z\\s]+\\.)\\s+", "$1\n\n");
+		return formatted;
 	}
 	
 	// prioritizes GPO "html" version (really text),
@@ -182,17 +176,23 @@ public class Bill implements Serializable {
 		return "https://www.govtrack.us/congress/bills/" + congress + "/" + bill_type + number + "/text";
 	}
 
-	// TODO: this may not be necessary anymore
-	public static String formatSummary(String summary, String short_title) {
-		String formatted = summary;
-		formatted = formatted.replaceFirst("^\\d+\\/\\d+\\/\\d+--.+?\\.\\s*", "");
-		formatted = formatted.replaceFirst("(\\(This measure.+?\\))\n*\\s*", "");
-		if (short_title != null)
-			formatted = formatted.replaceFirst("^" + short_title + " - ", "");
-		formatted = formatted.replaceAll("\n", "\n\n");
-		formatted = formatted.replaceAll(" (\\(\\d\\))", "\n\n$1");
-		formatted = formatted.replaceAll("( [^A-Z\\s]+\\.)\\s+", "$1\n\n");
-		return formatted;
-	}
+	public static class Vote implements Serializable {
+		private static final long serialVersionUID = 1L;
 
+		// bill_id + "-" + roll_id
+		// This works as long as these are all roll call votes.
+		public String full_id;
+
+		public String roll_id, result, question, chamber;
+		public int yes, no, not_voting;
+
+		// TODO: move this back to voted_at
+		public Date voted_on;
+
+		public boolean passed() {
+			return this.result != null && Pattern.compile("passed", Pattern.CASE_INSENSITIVE)
+					.matcher(this.result).find();
+
+		}
+	}
 }

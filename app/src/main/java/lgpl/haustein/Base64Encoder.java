@@ -1,7 +1,6 @@
-
 package lgpl.haustein;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
 
 /**
  * Routines to encode and decode using base 64 encoding. 
@@ -35,10 +34,10 @@ import java.io.*;
  */
 public final class Base64Encoder {
 
-    static final char[] charTab = 
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray (); 
+    static final char[] charTab =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
 
-    /**
+    /*
      * @param string
      * @return the input string encoded using Base 64 encoding.
      */
@@ -50,13 +49,11 @@ public final class Base64Encoder {
         return encode (data, 0, data.length, null).toString ();
     }
 
-
     /** Encodes the part of the given byte array denoted by start and
         len to the Base64 format.  The encoded data is appended to the
         given StringBuffer. If no StringBuffer is given, a new one is
         created automatically. The StringBuffer is the return value of
         this method. */
- 
 
     public static StringBuffer encode (byte [] data, int start, int len, StringBuffer buf) {
 
@@ -85,7 +82,6 @@ public final class Base64Encoder {
             }
         }
 
-
         if (i == start + len - 2) {
             int d = (((data [i]) & 0x0ff) << 16) 
                 | (((data [i+1]) & 255) << 8);
@@ -106,7 +102,6 @@ public final class Base64Encoder {
         return buf;
     }
 
-
     static int decode (char c) {
         if (c >= 'A' && c <= 'Z') 
             return c - 65;
@@ -122,7 +117,6 @@ public final class Base64Encoder {
             throw new RuntimeException ("unexpected code: " + c);
         }
     }
-                
 
     /** Decodes the given Base64 encoded String to a new byte array. 
         The byte array holding the decoded data is returned. */
@@ -153,6 +147,4 @@ public final class Base64Encoder {
         }
         return bos.toByteArray ();
     }
-
-  
 }

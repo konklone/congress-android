@@ -1,7 +1,6 @@
 package com.sunlightlabs.congress.services;
 
 import com.sunlightlabs.congress.models.Bill;
-import com.sunlightlabs.congress.models.Committee;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
@@ -23,7 +22,7 @@ public class LegislatorService {
         String[] senate = new String[] { "members", "senate", state, "current" };
         String[] house = new String[] { "members", "house", state, "current" };
 
-        List<Legislator> members = new ArrayList<Legislator>();
+		List<Legislator> members = new ArrayList<>();
 
         List<Legislator> senators = legislatorsFor(ProPublica.url(senate));
         for (int i=0; i<senators.size(); i++) {
@@ -45,13 +44,13 @@ public class LegislatorService {
 
     // Expensive: request data for both chambers, and search client-side.
     public static List<Legislator> allByLastName(String name) throws CongressException {
-        List<Legislator> members = new ArrayList<Legislator>();
+		List<Legislator> members = new ArrayList<>();
         members.addAll(allByChamber("senate"));
         members.addAll(allByChamber("house"));
 
         String lower = name.toLowerCase();
 
-        List<Legislator> matches = new ArrayList<Legislator>();
+		List<Legislator> matches = new ArrayList<>();
 
         // client-side match, nice
         for (int i=0; i<members.size(); i++) {
@@ -82,7 +81,6 @@ public class LegislatorService {
 
         return members;
     }
-
 
     public static List<Legislator> allByChamber(String chamber) throws CongressException {
         // /{congress}/{chamber}/members.json
@@ -191,12 +189,13 @@ public class LegislatorService {
             // committee memberships stored on roles, in separate fields
             // the list of committees per-member will be sorted by committee ID
             // so returning them as one big flat list will work
-            legislator.committees = new ArrayList<Committee>();
+			legislator.committees = new ArrayList<>();
             if (!role.isNull("committees"))
-                legislator.committees.addAll(CommitteeService.committeesFromArray(role.getJSONArray("committees"), false));
+				legislator.committees.addAll(CommitteeService.committeesFromArray(role.getJSONArray(
+						"committees"), false));
             if (!role.isNull("subcommittees"))
-                legislator.committees.addAll(CommitteeService.committeesFromArray(role.getJSONArray("subcommittees"), true));
-
+				legislator.committees.addAll(CommitteeService.committeesFromArray(role.getJSONArray(
+						"subcommittees"), true));
         }
 
         // most minimal form: list of cosponsors, ID and name only
@@ -268,7 +267,7 @@ public class LegislatorService {
     }
 
     private static List<Legislator> legislatorsFor(String url) throws CongressException {
-        List<Legislator> legislators = new ArrayList<Legislator>();
+		List<Legislator> legislators = new ArrayList<>();
         try {
             JSONArray results = ProPublica.resultsFor(url);
 
@@ -299,5 +298,4 @@ public class LegislatorService {
 
         return legislators;
     }
-
 }

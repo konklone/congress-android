@@ -51,7 +51,7 @@ public class UpcomingBillService {
 	}
 	
 	private static List<UpcomingBill> upcomingBillsFor(String url) throws CongressException {
-		List<UpcomingBill> upcomings = new ArrayList<UpcomingBill>();
+		List<UpcomingBill> upcomings = new ArrayList<>();
 		try {
 			JSONArray results = ProPublica.resultsFor(url);
 

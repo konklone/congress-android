@@ -1,19 +1,19 @@
 package com.sunlightlabs.congress.services;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.Committee;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Hearing;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HearingService {
 
@@ -63,7 +63,7 @@ public class HearingService {
 	}
 	
 	private static List<Hearing> hearingsFor(String url) throws CongressException {
-		List<Hearing> hearings = new ArrayList<Hearing>();
+		List<Hearing> hearings = new ArrayList<>();
 		try {
 			JSONArray results = ProPublica.resultsFor(url);
 

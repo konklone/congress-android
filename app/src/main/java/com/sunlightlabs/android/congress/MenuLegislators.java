@@ -1,9 +1,9 @@
 package com.sunlightlabs.android.congress;
 
 import android.app.Activity;
+import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +15,6 @@ import com.sunlightlabs.android.congress.fragments.MenuLegislatorsFragment;
 import com.sunlightlabs.android.congress.utils.ActionBarUtils;
 import com.sunlightlabs.android.congress.utils.Analytics;
 import com.sunlightlabs.android.congress.utils.TitlePageAdapter;
-
 
 public class MenuLegislators extends Activity {
 	
@@ -41,11 +40,7 @@ public class MenuLegislators extends Activity {
 	public void setupControls() {
 		ActionBarUtils.setTitle(this, R.string.menu_main_legislators);
 
-        ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
-			public void onClick(View v) { 
-				onSearchRequested();
-			}
-		});
+		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, v -> onSearchRequested());
 	}
 	
 	public static class StatesFragment extends ListFragment {
@@ -75,8 +70,8 @@ public class MenuLegislators extends Activity {
 			
 			stateCodes = getResources().getStringArray(R.array.state_codes);
 			String[] stateNames = getResources().getStringArray(R.array.state_names);
-					
-			setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, stateNames));
+
+			setListAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, stateNames));
 		}
 		
 		@Override

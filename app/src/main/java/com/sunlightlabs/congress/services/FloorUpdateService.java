@@ -1,16 +1,16 @@
 package com.sunlightlabs.congress.services;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.FloorUpdate;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sunlightlabs.congress.models.Bill;
-import com.sunlightlabs.congress.models.CongressException;
-import com.sunlightlabs.congress.models.FloorUpdate;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FloorUpdateService {
 
@@ -40,13 +40,14 @@ public class FloorUpdateService {
 		if (!json.isNull("date"))
 			update.legislativeDay = ProPublica.parseDateOnly(json.getString("date"));
 		if (!json.isNull("timestamp"))
-			update.timestamp = ProPublica.parseTimestamp(json.getString("timestamp"), FloorUpdateService.datetimeFormat);
+			update.timestamp = ProPublica.parseTimestamp(json.getString("timestamp"),
+					FloorUpdateService.datetimeFormat);
 
 		return update;
 	}
 	
 	private static List<FloorUpdate> updatesFor(String url) throws CongressException {
-		List<FloorUpdate> updates = new ArrayList<FloorUpdate>();
+		List<FloorUpdate> updates = new ArrayList<>();
 		try {
 			JSONArray results = ProPublica.resultsFor(url);
 

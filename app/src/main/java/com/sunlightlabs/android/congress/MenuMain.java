@@ -45,32 +45,19 @@ public class MenuMain extends Activity implements ActionBarUtils.HasActionMenu {
 	
 	public void setupControls() {
 		setupDebugBar();
-		
-		findViewById(R.id.about).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) { showAbout(); }
-		});
-		
-		findViewById(R.id.review).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) { goReview(); }
-		});
-		
-		findViewById(R.id.feedback).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) { doFeedback(); }
-		});
+
+		findViewById(R.id.about).setOnClickListener(v -> showAbout());
+
+		findViewById(R.id.review).setOnClickListener(v -> goReview());
+
+		findViewById(R.id.feedback).setOnClickListener(v -> doFeedback());
 		
 		ActionBarUtils.setTitle(this, R.string.app_name, null);
-		
-		ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.notifications, new View.OnClickListener() {
-			public void onClick(View v) { 
-				startActivity(new Intent(MenuMain.this, NotificationTabs.class)); 
-			}
-		});
-		
-		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
-			public void onClick(View v) { 
-				onSearchRequested();
-			}
-		});
+
+		ActionBarUtils.setActionButton(this, R.id.action_2, R.drawable.notifications,
+				v -> startActivity(new Intent(MenuMain.this, NotificationTabs.class)));
+
+		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, v -> onSearchRequested());
 		
 		ActionBarUtils.setActionMenu(this, R.menu.main);
 	}
@@ -86,11 +73,8 @@ public class MenuMain extends Activity implements ActionBarUtils.HasActionMenu {
 	private void setupDebugBar() {
 		if (getResources().getString(R.string.debug_show_buttons).equals("true")) {
 			findViewById(R.id.debug_bar).setVisibility(View.VISIBLE);
-			findViewById(R.id.check).setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					WakefulIntentService.sendWakefulWork(MenuMain.this, NotificationService.class);
-				}
-			});
+			findViewById(R.id.check).setOnClickListener(v -> WakefulIntentService.sendWakefulWork(
+					MenuMain.this, NotificationService.class));
 		}
 	}
 
@@ -106,7 +90,7 @@ public class MenuMain extends Activity implements ActionBarUtils.HasActionMenu {
 	// used for one-pager
 	// change name of preference variable for a new one-pager
 	 public boolean shownOnePager() {
-		 if (Utils.getBooleanPreference(this, "shownThomas", false) == false) {	
+		 if (!Utils.getBooleanPreference(this, "shownThomas", false)) {
 			 Utils.setBooleanPreference(this, "shownThomas", true);
 			 return false;	
 		 }
@@ -170,7 +154,8 @@ public class MenuMain extends Activity implements ActionBarUtils.HasActionMenu {
 	}
 	
 	public void doFeedback() {
-		Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getResources().getString(R.string.contact_email), null));
+		Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",
+				getResources().getString(R.string.contact_email), null));
 		intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.contact_subject));
 		startActivity(intent);
 	}
@@ -238,21 +223,15 @@ public class MenuMain extends Activity implements ActionBarUtils.HasActionMenu {
 		}
 		
 		private View menuItem(int id, int text, float size, final Intent intent) {
-			ViewGroup item = (ViewGroup) getView().findViewById(id);
-			TextView textView = (TextView) item.findViewById(R.id.text);
+			ViewGroup item = getView().findViewById(id);
+			TextView textView = item.findViewById(R.id.text);
 			textView.setText(text);
 			textView.setTextSize(size);
-			
-			item.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					startActivity(intent);
-				}
-			});
+
+			item.setOnClickListener(v -> startActivity(intent));
 			
 			return item;
 		}
-		
 	}
 	
 	@Override

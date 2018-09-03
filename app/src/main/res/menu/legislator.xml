@@ -5,17 +5,17 @@
         android:alphabeticShortcut="w"
         />
 	<item android:id="@+id/bioguide"
-		android:title="Congressional Biography"
+		android:title="@string/congressional_biography"
 		android:alphabeticShortcut="b"
 		android:icon="@android:drawable/ic_menu_info_details"
 		/> 
 	<item android:id="@+id/govtrack"
-		android:title="More at GovTrack"
+		android:title="@string/more_at_govtrack"
 		android:alphabeticShortcut="g"
 		android:icon="@drawable/govtrack"
 		/>
     <item android:id="@+id/addcontact"
-        android:title="Add to Contacts"
+		android:title="@string/add_to_contacts"
         android:alphabeticShortcut="a"
         android:icon="@android:drawable/ic_menu_add"
         />

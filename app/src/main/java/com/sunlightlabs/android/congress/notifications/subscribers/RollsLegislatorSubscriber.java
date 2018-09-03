@@ -1,7 +1,5 @@
 package com.sunlightlabs.android.congress.notifications.subscribers;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.util.Log;
 
@@ -13,8 +11,10 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.RollService;
 
+import java.util.List;
+
 public class RollsLegislatorSubscriber extends Subscriber {
-	
+
 	@Override
 	public String decodeId(Object result) {
 		return ((Roll) result).id;
@@ -23,7 +23,7 @@ public class RollsLegislatorSubscriber extends Subscriber {
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupAPI(context);
-		
+
 		try {
 			return RollService.latestMemberVotes(subscription.id, 1);
 		} catch (CongressException e) {
@@ -31,7 +31,7 @@ public class RollsLegislatorSubscriber extends Subscriber {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
 		if (results == RollListFragment.PER_PAGE)
@@ -46,7 +46,7 @@ public class RollsLegislatorSubscriber extends Subscriber {
 	public Intent notificationIntent(Subscription subscription) {
 		return Utils.legislatorIntent(subscription.id).putExtra("tab", "votes");
 	}
-	
+
 	@Override
 	public String subscriptionName(Subscription subscription) {
 		return "Votes by " + subscription.name;

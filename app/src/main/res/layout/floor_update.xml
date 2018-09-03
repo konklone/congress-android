@@ -19,7 +19,7 @@
 		android:textColor="@color/text_grey"
 		
 		android:text="12:34 PM"
-		/>
+		android:paddingEnd="10dp" />
         
     <TextView
 		android:id="@+id/text"

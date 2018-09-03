@@ -1,28 +1,27 @@
 package com.sunlightlabs.android.congress.fragments;
 
-import android.os.Bundle;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.os.Bundle;
 
 import com.sunlightlabs.android.congress.BillPager;
 import com.sunlightlabs.android.congress.tasks.LoadBillTask;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
-import com.sunlightlabs.congress.services.BillService;
 
 public class BillLoaderFragment extends Fragment implements LoadBillTask.LoadsBill {
-	private static String FRAGMENT_TAG = "BillLoaderFragment";
-	
+
 	public BillPager context;
 	public Bill bill;
 	public CongressException exception;
-	
+
 	public static void start(BillPager context) {
 		start(context, false);
 	}
-	
+
 	public static void start(BillPager context, boolean restart) {
 		FragmentManager manager = context.getFragmentManager();
+		String FRAGMENT_TAG = "BillLoaderFragment";
 		BillLoaderFragment fragment = (BillLoaderFragment) manager.findFragmentByTag(FRAGMENT_TAG);
 		if (fragment == null) {
 			fragment = new BillLoaderFragment();
@@ -35,13 +34,13 @@ public class BillLoaderFragment extends Fragment implements LoadBillTask.LoadsBi
 		} else
 			fragment.context = context; // still assign context
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		run();
 	}
-	
+
 	public void run() {
 		// If this activity was killed and is being resumed, it's possible for this to get run at the start
 		// of the *activity's* onCreate method (in super.onCreate()), before any context has been assigned to this fragment.
@@ -50,25 +49,24 @@ public class BillLoaderFragment extends Fragment implements LoadBillTask.LoadsBi
 		if (context != null)
 			new LoadBillTask(this, context.bill_id).execute();
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
 		if (this.bill != null)
 			context.onLoadBill(bill);
 		else if (this.exception != null)
 			context.onLoadBill(this.exception);
 	}
-	
+
 	public BillLoaderFragment() {}
-	
+
 	// pass through
 	public void onLoadBill(Bill bill) {
 		this.bill = bill;
 		context.onLoadBill(bill);
 	}
-	
+
 	public void onLoadBill(CongressException exception) {
 		this.exception = exception;
 		context.onLoadBill(exception);

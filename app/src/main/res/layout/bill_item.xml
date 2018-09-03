@@ -16,28 +16,28 @@
 	    <TextView android:id="@+id/date"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			
-			android:layout_gravity="left"
+
+			android:layout_gravity="start"
 			
 			android:textSize="14sp"
-			
-			android:text="FEB 22, '11"
+
+			android:text="@string/feb_22_11"
 			/>
 	
 		<TextView android:id="@+id/code"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			
-			android:layout_gravity="left"
+
+			android:layout_gravity="start"
 			
 			android:layout_marginTop="3dp"
 			android:layout_marginRight="5dp"
 			
 			android:textSize="14sp"
 			android:textColor="@color/text_grey"
-			
-			android:text="H.Res. 3222"
-			/>
+
+			android:layout_marginEnd="5dp"
+			android:text="@string/h_res_3222" />
 		
 		<include layout="@layout/new_result" />
 	
@@ -49,7 +49,7 @@
         android:layout_weight="1"
         android:layout_marginLeft="5dp"
         android:baselineAligned="false"
-        >
+		android:layout_marginStart="5dp">
 		
 		<TextView android:id="@+id/title"
 			android:layout_width="match_parent"
@@ -58,8 +58,8 @@
 			android:lineSpacingExtra="2sp"
 			
 			android:textSize="18sp"
-			
-			android:text="Title Of The Bill And Such"
+
+			android:text="@string/title_of_the_bill_and_such"
 			/>
 		
 		<TextView android:id="@+id/last_action"
@@ -68,11 +68,10 @@
 		    
 		    android:textSize="14sp"
 		    android:textColor="@color/text_grey"
-		    
-		    android:text="On motion that the House agree to the Senate..."
+
+			android:text="@string/on_motion_that_the_house_agree_to_the_senate"
 		    />
-		    
-		
+
 	</LinearLayout>
 		
 </LinearLayout>

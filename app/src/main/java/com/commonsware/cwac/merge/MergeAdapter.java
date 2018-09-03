@@ -15,15 +15,15 @@
 
 package com.commonsware.cwac.merge;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 
 import com.commonsware.cwac.sacklist.SackOfViewsAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter that merges multiple child adapters and views
@@ -36,7 +36,7 @@ import com.commonsware.cwac.sacklist.SackOfViewsAdapter;
  *
  */
 public class MergeAdapter extends BaseAdapter {
-	private ArrayList<ListAdapter> pieces=new ArrayList<ListAdapter>();
+	private ArrayList<ListAdapter> pieces = new ArrayList<>();
 
 	/**
 		* Stock constructor, simply chaining to the superclass.
@@ -60,7 +60,7 @@ public class MergeAdapter extends BaseAdapter {
 		* @param view Single view to add
     */
 	public void addView(View view) {
-		ArrayList<View> list=new ArrayList<View>(1);
+		ArrayList<View> list = new ArrayList<>(1);
 		
 		list.add(view);
 		
@@ -122,8 +122,8 @@ public class MergeAdapter extends BaseAdapter {
 		for (ListAdapter piece : pieces) {
 			total+=piece.getViewTypeCount();
 		}
-		
-		return(Math.max(total, 1));		// needed for setListAdapter() before content add'
+
+		return (Math.max(total, 1)); // needed for setListAdapter() before content add'
 	}
 
 	/**
@@ -173,10 +173,8 @@ public class MergeAdapter extends BaseAdapter {
 			if (position<size) {
 				return(piece.isEnabled(position));
 			}
-
 			position-=size;
 		}
-		
 		return(false);
 	}
 
@@ -219,7 +217,6 @@ public class MergeAdapter extends BaseAdapter {
 
 			position-=size;
 		}
-		
 		return(-1);
 	}
 }

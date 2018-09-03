@@ -1,6 +1,5 @@
 package com.sunlightlabs.congress.services;
 
-
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.utils.HttpManager;
@@ -74,7 +73,7 @@ public class ProPublica {
 
 
         // cobble together any needed query string params
-        if (params == null) params = new HashMap<String,String>();
+        if (params == null) params = new HashMap<>();
 
         // Only use for query string is an "offset" for pagination as needed
         if (page > 0) {
@@ -169,7 +168,7 @@ public class ProPublica {
 
     public static JSONArray resultsFor(String url) throws CongressException {
         String rawJSON = fetchJSON(url);
-        JSONArray results = null;
+        JSONArray results;
         try {
             JSONObject response = new JSONObject(rawJSON);
 
@@ -183,10 +182,8 @@ public class ProPublica {
         } catch(JSONException e) {
             throw new CongressException(e, "Problem parsing the JSON from " + url);
         }
-
         return results;
     }
-
 
     // assumes date stamps are in "YYYY-MM-DD" format, which they will be.
     // Date objects automatically assign a time of midnight, but these dates are meant to represent whole days.

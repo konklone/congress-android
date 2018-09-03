@@ -1,24 +1,13 @@
 package com.sunlightlabs.android.congress.fragments;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import android.app.ListFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,8 +24,16 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.BillService;
 import com.sunlightlabs.congress.services.ProPublica;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 public class BillListFragment extends ListFragment implements PaginationListener.Paginates {
-	
+
 	public static final int BILLS_ACTIVE = 0;
 	public static final int BILLS_ALL = 1;
 	public static final int BILLS_SPONSOR = 2;
@@ -44,20 +41,20 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	public static final int BILLS_SEARCH_RELEVANT = 4;
 	public static final int BILLS_CODE = 5;
 	public static final int BILLS_LAW = 6;
-	
+
 	List<Bill> bills;
 	List<String> newIds;
-	
+
 	int type;
 	Legislator sponsor;
 	String bill_type;
 	int number;
 	String query;
-	
+
 	PaginationListener pager;
 	View loadingView;
-	
-	public static BillListFragment forAll() {
+
+	public static Fragment forAll() {
 		BillListFragment frag = new BillListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", BILLS_ALL);
@@ -65,8 +62,8 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		frag.setRetainInstance(true);
 		return frag;
 	}
-	
-	public static BillListFragment forActive() {
+
+	public static Fragment forActive() {
 		BillListFragment frag = new BillListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", BILLS_ACTIVE);
@@ -75,7 +72,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		return frag;
 	}
 
-	public static BillListFragment forLaw() {
+	public static Fragment forLaw() {
 		BillListFragment frag = new BillListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", BILLS_LAW);
@@ -83,8 +80,8 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		frag.setRetainInstance(true);
 		return frag;
 	}
-	
-	public static BillListFragment forSponsor(Legislator sponsor) {
+
+	public static Fragment forSponsor(Legislator sponsor) {
 		BillListFragment frag = new BillListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", BILLS_SPONSOR);
@@ -93,8 +90,8 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		frag.setRetainInstance(true);
 		return frag;
 	}
-	
-	public static BillListFragment forCode(String bill_type, int number) {
+
+	public static Fragment forCode(String bill_type, int number) {
 		BillListFragment frag = new BillListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", BILLS_CODE);
@@ -104,8 +101,8 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		frag.setRetainInstance(true);
 		return frag;
 	}
-	
-	public static BillListFragment forSearch(String query, int type) {
+
+	public static Fragment forSearch(String query, int type) {
 		BillListFragment frag = new BillListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", type);
@@ -114,13 +111,13 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		frag.setRetainInstance(true);
 		return frag;
 	}
-	
+
 	public BillListFragment() {}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		Bundle args = getArguments();
 		type = args.getInt("type");
 		query = args.getString("query");
@@ -130,38 +127,31 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		
 		loadBills();
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.list_footer, container, false);
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
 		newIds = FragmentUtils.newIds(this, subscriberClass());
-		
 		setupControls();
-		
 		if (bills != null)
 			displayBills();
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
 		if (bills != null)
 			setupSubscription();
 	}
-	
+
 	public void setupControls() {
-		getView().findViewById(R.id.refresh).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				refresh();
-			}
-		});
-		
+		getView().findViewById(R.id.refresh).setOnClickListener(v -> refresh());
+
 		if (type != BILLS_CODE) {
 			loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_page, null);
 			loadingView.setVisibility(View.GONE);
@@ -170,10 +160,9 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			pager = new PaginationListener(this);
 			getListView().setOnScrollListener(pager);
 		}
-
 		FragmentUtils.setLoading(this, R.string.bills_loading);
 	}
-	
+
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		Bill bill = (Bill) parent.getItemAtPosition(position);
@@ -190,38 +179,35 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	public void loadBills() {
 		new LoadBillsTask(this, 1).execute();
 	}
-	
+
 	@Override
 	public void loadNextPage(int page) {
 		getListView().setOnScrollListener(null);
 		loadingView.setVisibility(View.VISIBLE);
 		new LoadBillsTask(this, page).execute();
 	}
-	
+
 	// handles coming in with any page of bills, even the first one
 	public void onLoadBills(List<Bill> bills, int page) {
 		if (!isAdded())
 			return;
-		
+
 		if (page == 1) {
 			// if new IDs, sort them to the top.
 			// (new IDs will only affect page 1)
 			if (newIds != null) {
-				Collections.sort(bills, new Comparator<Bill>() {
-					@Override
-					public int compare(Bill a, Bill b) {
-						boolean hasA = newIds.contains(a.id);
-						boolean hasB = newIds.contains(b.id);
-						if (hasA && !hasB)
-							return -1;
-						else if (!hasA && hasB)
-							return 1;
-						else
-							return 0;
-					}
+				Collections.sort(bills, (a, b) -> {
+					boolean hasA = newIds.contains(a.id);
+					boolean hasB = newIds.contains(b.id);
+					if (hasA && !hasB)
+						return -1;
+					else if (!hasA && hasB)
+						return 1;
+					else
+						return 0;
 				});
 			}
-			
+
 			this.bills = bills;
 			displayBills();
 		} else {
@@ -229,17 +215,17 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			loadingView.setVisibility(View.GONE);
 			((BillAdapter) getListAdapter()).notifyDataSetChanged();
 		}
-		
+
 		// only re-enable the pagination if we got a full page back
 		if (bills.size() >= ProPublica.PER_PAGE)
 			getListView().setOnScrollListener(pager);
 	}
-	
+
 	public void onLoadBills(CongressException exception) {
 		if (isAdded())
 			FragmentUtils.showRefresh(this, R.string.bills_error);
 	}
-	
+
 	// only run for the first page of bill results
 	public void displayBills() {
 		if (bills.size() > 0) {
@@ -262,7 +248,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				FragmentUtils.showRefresh(this, R.string.bills_error); // should not happen
 		}
 	}
-	
+
 	private String subscriberClass() {
 		if (type == BILLS_ALL)
 			return "BillsRecentSubscriber";
@@ -273,7 +259,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		else
 			return null;
 	}
-	
+
 	private void setupSubscription() {
 		Subscription subscription = null;
 		if (type == BILLS_ALL)
@@ -291,7 +277,6 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			Footer.setup(this, subscription, bills);
 	}
 
-	
 	private static class LoadBillsTask extends AsyncTask<Void,Void,List<Bill>> {
 		private BillListFragment context;
 		private CongressException exception;
@@ -306,7 +291,6 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		@Override
 		public List<Bill> doInBackground(Void... nothing) {
 			try {
-				
 				switch (context.type) {
 				case BILLS_ALL:
 					return BillService.recentlyIntroduced(page);
@@ -319,7 +303,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				case BILLS_CODE:
 				    int congress = Bill.currentCongress();
 				    String bill_id = context.bill_type + String.valueOf(context.number) + "-" + String.valueOf(congress);
-					List<Bill> matches = new ArrayList<Bill>();
+					List<Bill> matches = new ArrayList<>();
                     Bill bill = BillService.find(bill_id);
                     if (bill != null) matches.add(bill);
                     return matches;
@@ -348,13 +332,13 @@ public class BillListFragment extends ListFragment implements PaginationListener
 	private static class BillAdapter extends ArrayAdapter<Bill> {
 		private LayoutInflater inflater;
 		private BillListFragment context;
-		
+
 		public BillAdapter(BillListFragment context, List<Bill> bills) {
 			super(context.getActivity(), 0, bills);
 			this.inflater = LayoutInflater.from(context.getActivity());
 			this.context = context;
 		}
-		
+
 		@Override
 		public int getViewTypeCount() {
 			return 1;
@@ -363,22 +347,22 @@ public class BillListFragment extends ListFragment implements PaginationListener
 		@Override
 		public View getView(int position, View view, ViewGroup parent) {
 			Bill bill = getItem(position);
-			
+
 			ViewHolder holder;
 			if (view == null) {
 				view = inflater.inflate(R.layout.bill_item, null);
-				
+
 				holder = new ViewHolder();
-				holder.code = (TextView) view.findViewById(R.id.code);
-				holder.date = (TextView) view.findViewById(R.id.date);
-				holder.title = (TextView) view.findViewById(R.id.title);
-				holder.last_action = (TextView) view.findViewById(R.id.last_action);
+				holder.code = view.findViewById(R.id.code);
+				holder.date = view.findViewById(R.id.date);
+				holder.title = view.findViewById(R.id.title);
+				holder.last_action = view.findViewById(R.id.last_action);
 				holder.newResult = view.findViewById(R.id.new_result);
-				
+
 				view.setTag(holder);
 			} else
 				holder = (ViewHolder) view.getTag();
-			
+
 			switch (context.type) {
 			case BILLS_ACTIVE:
 				shortDate(holder.date, bill.last_action_on);
@@ -399,7 +383,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				shortDate(holder.date, bill.introduced_on);
 				break;
 			}
-			
+
 			holder.code.setText(Bill.formatCode(bill.bill_type, bill.number));
 
             holder.title.setTextSize(14);
@@ -407,13 +391,13 @@ public class BillListFragment extends ListFragment implements PaginationListener
 				holder.title.setText(Utils.truncate(bill.short_title, 250));
 			else
 				holder.title.setText(R.string.bill_no_title);
-			
+
 			if (context.type == BILLS_ACTIVE) {
 				holder.last_action.setText(actionText(bill.lastAction));
 				holder.last_action.setVisibility(View.VISIBLE);
 			} else
 				holder.last_action.setVisibility(View.GONE);
-			
+
 			if (context.newIds != null && context.newIds.contains(bill.id))
 				holder.newResult.setVisibility(View.VISIBLE);
 			else
@@ -421,12 +405,12 @@ public class BillListFragment extends ListFragment implements PaginationListener
 
 			return view;
 		}
-		
+
 		static class ViewHolder {
 			TextView code, date, title, last_action;
 			View newResult;
 		}
-		
+
 		private void shortDate(TextView view, Date date) {
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(date);
@@ -438,12 +422,12 @@ public class BillListFragment extends ListFragment implements PaginationListener
 			} else
 				longDate(view, date);
 		}
-		
+
 		private void longDate(TextView view, Date date) {
 			view.setTextSize(14);
 			view.setText(new SimpleDateFormat("MMM d, yyyy", Locale.US).format(date).toUpperCase(Locale.US));
 		}
-		
+
 		private String actionText(Bill.Action action) {
             if (action.description != null)
 			    return Utils.truncate(action.description, 80);
@@ -451,5 +435,4 @@ public class BillListFragment extends ListFragment implements PaginationListener
                 return "";
 		}
 	}
-	
 }

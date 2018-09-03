@@ -84,14 +84,17 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 
 	public String fullTitle() {
 		String title = this.title;
-		if (title.equals("Del"))
-			return "Delegate";
-		else if (title.equals("Com"))
-			return "Resident Commissioner";
-		else if (title.equals("Sen"))
-			return "Senator";
-		else // "Rep"
-			return "Representative";
+		switch (title) {
+			case "Del":
+				return "Delegate";
+			case "Com":
+				return "Resident Commissioner";
+			case "Sen":
+				return "Senator";
+			default:
+// "Rep"
+				return "Representative";
+		}
 	}
 
     public String getOffice() {
@@ -136,5 +139,4 @@ public class Legislator implements Comparable<Legislator>, Serializable {
 			return null;
 		return "https://www.facebook.com/" + this.facebook_id;
 	}
-
 }

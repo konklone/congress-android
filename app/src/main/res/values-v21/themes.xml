@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MainList" parent="@android:style/Widget.Material.ListView">
+        <item name="android:dividerHeight">1dp</item>
+        <item name="android:divider">@color/background_dark</item>
+        <item name="android:cacheColorHint">@color/background</item>
+    </style>
+
+    <style name="MainTheme" parent="android:Theme.Material.NoActionBar">
+        <item name="android:listViewStyle">@style/MainList</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="android:textColorLink">@color/text_link</item>
+        <item name="android:textColorPrimary">@color/text</item>
+        <item name="android:textColorSecondary">@color/text</item>
+        <item name="android:textColorTertiary">@color/text</item>
+    </style>
+
+</resources>

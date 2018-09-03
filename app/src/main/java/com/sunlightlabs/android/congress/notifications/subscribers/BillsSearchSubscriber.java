@@ -1,13 +1,8 @@
 package com.sunlightlabs.android.congress.notifications.subscribers;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.fragments.BillListFragment;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -15,6 +10,10 @@ import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.BillService;
 import com.sunlightlabs.congress.services.ProPublica;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class BillsSearchSubscriber extends Subscriber {
 
@@ -27,9 +26,9 @@ public class BillsSearchSubscriber extends Subscriber {
 	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupAPI(context);
 		String query = subscription.data;
-		
+
 		try {
-			Map<String,String> params = new HashMap<String,String>();
+			Map<String, String> params = new HashMap<>();
 			params.put("order", "introduced_on");
 			return BillService.searchLatest(query, 1);
 		} catch (CongressException e) {
@@ -37,7 +36,7 @@ public class BillsSearchSubscriber extends Subscriber {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
 		if (results == ProPublica.PER_PAGE)
@@ -50,11 +49,12 @@ public class BillsSearchSubscriber extends Subscriber {
 
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
-		return new Intent().setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.BillSearch")
-			.putExtra("query", subscription.data)
-			.putExtra("tab", "bills_recent");
+		return new Intent().setClassName("com.sunlightlabs.android.congress",
+				"com.sunlightlabs.android.congress.BillSearch")
+				.putExtra("query", subscription.data)
+				.putExtra("tab", "bills_recent");
 	}
-	
+
 	@Override
 	public String subscriptionName(Subscription subscription) {
 		return "Bills matching \"" + subscription.data + "\""; 

@@ -1,7 +1,6 @@
 package com.sunlightlabs.android.congress;
 
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
@@ -23,19 +22,16 @@ public class Settings extends PreferenceActivity {
 		
 		addPreferencesFromResource(R.xml.settings);
 		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-		
-		findPreference(ANALYTICS_ENABLED_KEY).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				boolean yesToAnalytics = ((Boolean) newValue).booleanValue();
 
-				// if user is disabling analytics, fire off one last event so that we can get an idea of how many are disabling it
-				if (!yesToAnalytics)
-					Analytics.analyticsDisable(Settings.this);
+		findPreference(ANALYTICS_ENABLED_KEY).setOnPreferenceChangeListener((preference, newValue) -> {
+			boolean yesToAnalytics = (Boolean) newValue;
 
-                Analytics.optout(Settings.this, !yesToAnalytics);
+			// if user is disabling analytics, fire off one last event so that we can get an idea of how many are disabling it
+			if (!yesToAnalytics)
+				Analytics.analyticsDisable(Settings.this);
+			Analytics.optout(Settings.this, !yesToAnalytics);
 
-				return true;
-			}
+			return true;
 		});
 	}
 	

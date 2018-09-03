@@ -19,13 +19,13 @@
 		
 		android:layout_alignParentLeft="true"
 		android:layout_centerVertical="true"
-		android:gravity="left"
+		android:layout_alignParentStart="true"
 		
 		android:textSize="16sp"
 		android:textColor="@color/text"
 		
 		android:text="TODAY"
-		/>
+		android:gravity="start" />
 	
 	<TextView android:id="@+id/date_right"
 		android:layout_width="150dp"
@@ -33,12 +33,12 @@
 		
 		android:layout_alignParentRight="true"
 		android:layout_centerVertical="true"
-		android:gravity="right"
+		android:layout_alignParentEnd="true"
 		
 		android:textSize="16sp"
 		android:textColor="@color/text_grey"
 		
 		android:text="Nov 8"
-		/>
+		android:gravity="end" />
 		
 </RelativeLayout>

@@ -11,6 +11,7 @@ import android.util.Log;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.Legislator;
+
 import java.util.List;
 
 public class Database {
@@ -36,7 +37,7 @@ public class Database {
 	private static final String[] SUBSCRIPTION_COLUMNS = new String[] {
 		"id", "name", "data", "notification_class", "unseen_count"
 	};
-	
+
 	private static final String[] SEEN_COLUMNS = new String[] {
 		"subscription_id", "subscription_class", "seen_id"
 	};
@@ -48,7 +49,7 @@ public class Database {
 	public Database(Context context) {
 		this.context = context;
 	}
-	
+
 	public Database open() {
 		helper = new DatabaseHelper(context);
 		closed = false;
@@ -64,7 +65,7 @@ public class Database {
 		closed = true;
 		helper.close();
 	}
-	
+
 	/** Legislators */
 
 	private ContentValues fromLegislator(Legislator legislator, int size) {
@@ -106,7 +107,7 @@ public class Database {
 	public Cursor getLegislators() {
 		return database.rawQuery("SELECT * FROM legislators", null);
 	}
-	
+
 	public static Legislator loadLegislator(Cursor c) {
 		Legislator legislator = new Legislator();
 
@@ -118,12 +119,50 @@ public class Database {
 		legislator.state = c.getString(c.getColumnIndex("state"));
 		legislator.district = c.getString(c.getColumnIndex("district"));
 		legislator.gender = c.getString(c.getColumnIndex("gender"));
-		
+
 		return legislator;
 	}
-	
-	/** Bills */
 
+	public static Bill loadBill(Cursor c) {
+		Bill bill = new Bill();
+
+		bill.id = c.getString(c.getColumnIndex("id"));
+		bill.short_title = c.getString(c.getColumnIndex("short_title"));
+		bill.official_title = c.getString(c.getColumnIndex("official_title"));
+
+		return bill;
+	}
+
+	// error condition is 0
+	public int removeBill(String id) {
+		try { 
+			return database.delete("bills", "id=?", new String[] { id });
+		} catch (SQLiteException e) {
+			Log.w(Utils.TAG, "Exception while unstarring bill: " + e.getMessage());
+			return 0;
+		}
+	}
+
+	public Cursor getBill(String id) {
+		Cursor cursor = database.query("bills", BILL_COLUMNS, "id=?", new String[] { id }, null, null, null);
+		cursor.moveToFirst();
+		return cursor;
+	}
+
+	public Cursor getBills() {
+		return database.rawQuery("SELECT * FROM bills", null);
+	}
+
+	public static Subscription loadSubscription(Cursor c) {
+		String id = c.getString(c.getColumnIndex("id"));
+		String name = c.getString(c.getColumnIndex("name"));
+		String data = c.getString(c.getColumnIndex("data"));
+		String notificationClass = c.getString(c.getColumnIndex("notification_class"));
+
+		return new Subscription(id, name, notificationClass, data);
+	}
+
+	/* Bills */
 	// error condition is -1
 	public long addBill(Bill bill) {
 		try {
@@ -138,56 +177,16 @@ public class Database {
 		}
 	}
 
-	// error condition is 0
-	public int removeBill(String id) {
-		try { 
-			return database.delete("bills", "id=?", new String[] { id });
-		} catch (SQLiteException e) {
-			Log.w(Utils.TAG, "Exception while unstarring bill: " + e.getMessage());
-			return 0;
-		}
-	}
-	
-	public Cursor getBill(String id) {
-		Cursor cursor = database.query("bills", BILL_COLUMNS, "id=?", new String[] { id }, null, null, null);
-		cursor.moveToFirst();
-		return cursor;
-	}
-
-	public Cursor getBills() {
-		return database.rawQuery("SELECT * FROM bills", null);
-	}
-
-	public static Bill loadBill(Cursor c) {
-		Bill bill = new Bill();
-
-		bill.id = c.getString(c.getColumnIndex("id"));
-		bill.short_title = c.getString(c.getColumnIndex("short_title"));
-		bill.official_title = c.getString(c.getColumnIndex("official_title"));
-		
-		return bill;
-	}
-
-	
-	/** Subscriptions */
-
-	public Cursor getSubscriptions() {
-		return database.rawQuery("SELECT * FROM subscriptions", null);
-	}
-
 	public Cursor getSubscription(String id, String notificationClass) {
 		return database.query("subscriptions", SUBSCRIPTION_COLUMNS, "id=? AND notification_class=?",
 				new String[] { id, notificationClass }, null, null, null);
 	}
-	
-	public boolean hasSubscription(String id, String notificationClass) {
-		Cursor c = getSubscription(id, notificationClass);
-		boolean hasSubscription = c.moveToFirst();
-		c.close();
-		
-		return hasSubscription;
+
+	/* Subscriptions */
+	public Cursor getSubscriptions() {
+		return database.rawQuery("SELECT * FROM subscriptions", null);
 	}
-	
+
 	public boolean hasSubscriptionItem(String subscriptionId, String subscriptionClass, String itemId) {
 		Cursor c = database.query("seen_items", SEEN_COLUMNS, "subscription_id=? AND subscription_class=? AND seen_id=?",
 				new String[] { subscriptionId, subscriptionClass, itemId }, null, null, null);
@@ -205,11 +204,27 @@ public class Database {
 		cv.put("data", subscription.data);
 		return database.insert("subscriptions", null, cv);
 	}
-	
+
+	public boolean hasSubscription(String id, String notificationClass) {
+		Cursor c = getSubscription(id, notificationClass);
+		boolean hasSubscription = c.moveToFirst();
+		c.close();
+
+		return hasSubscription;
+	}
+
+	public long removeSubscription(String id, String notificationClass) {
+		long first = database.delete("subscriptions", "id=? AND notification_class=?",
+				new String[]{id, notificationClass});
+		long second = database.delete("seen_items", "subscription_id=? AND subscription_class=?",
+				new String[]{id, notificationClass});
+		return first + second;
+	}
+
 	public long addSeenIds(Subscription subscription, List<String> latestIds) {
 		int rows = 0;
 		boolean failed = false;
-		
+
 		int size = latestIds.size();
 		for (int i=0; i<size; i++) {
 			ContentValues cv = new ContentValues(SUBSCRIPTION_COLUMNS.length);
@@ -221,25 +236,7 @@ public class Database {
 			else
 				failed = true;
 		}
-		
 		return (failed ? -1 : rows);
-	}
-	
-	public long removeSubscription(String id, String notificationClass) {
-		long first = database.delete("subscriptions", "id=? AND notification_class=?", 
-				new String[] { id , notificationClass });
-		long second = database.delete("seen_items", "subscription_id=? AND subscription_class=?", 
-				new String[] { id , notificationClass });
-		return first + second;
-	}
-	
-	public static Subscription loadSubscription(Cursor c) {
-		String id = c.getString(c.getColumnIndex("id"));
-		String name = c.getString(c.getColumnIndex("name"));
-		String data = c.getString(c.getColumnIndex("data"));
-		String notificationClass = c.getString(c.getColumnIndex("notification_class"));
-		
-		return new Subscription(id, name, notificationClass, data);
 	}
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {
@@ -256,11 +253,11 @@ public class Database {
 			sql.append(");");
 			db.execSQL(sql.toString());
 		}
-		
-		private void addColumn(SQLiteDatabase db, String table, String newColumn) {
-			db.execSQL("ALTER TABLE " + table + " ADD COLUMN " + newColumn + " TEXT;");
+
+		private void addColumn(SQLiteDatabase db, String newColumn) {
+			db.execSQL("ALTER TABLE " + "subscriptions" + " ADD COLUMN " + newColumn + " TEXT;");
 		}
-		
+
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			createTable(db, "bills", BILL_COLUMNS);
@@ -275,32 +272,32 @@ public class Database {
 
 			// Version 2 - Favorites (bills and legislators table), 
 			//   first release, in version 2.6
-			
+
 			// Version 3 - Notifications (subscriptions table)
 			// 	 released in version 2.9
 			if (oldVersion < 3) {
 				// add the table as it was then, not as it may be now, so that future migrations run correctly
 				createTable(db, "subscriptions", new String[] {"id", "name", "data", "last_seen_id", "notification_class" });
 			}
-			
+
 			// Version 4 - Remove a bunch of timeline columns, update subscription structure
 			//   released in version 2.9.8
 			if (oldVersion < 4) {
 				// no SQL commands needed for timeline, columns are left abandoned
-				
+
 				// abandon lastSeenId column
 				try {
-					addColumn(db, "subscriptions", "seen_id");
+					addColumn(db, "seen_id");
 				} catch(SQLiteException e) {
 					// need this to catch a bug I created by having my old 2->3 migration not use the original column names,
 					// which caused there to be a dupe seen_id column for users upgrading directly from 2->4. 
 					// I fixed the 2->3 createTable line, but for those stuck in that state, I need to swallow their dupe
 					// column exception and let them move on with their lives.
-					
+
 					// swallow!
 				}
 			}
-			
+
 			// Version 5 - Fix bug in subscription rows
 			//   released in version 3.0
 			if (oldVersion < 5) {
@@ -308,7 +305,7 @@ public class Database {
 				// meaning that when loading a list of all subscriptions, there would be many many duplicate rows.
 				// This migration finds all distinct subscriptions, removes all rows where the seen_id is null, and then
 				// recreates one row with that information, essentially cleaning out duplicates.
-				
+
 				// get all unique subscriptions (with columns as they existed at this state)
 				Cursor cursor = db.rawQuery("SELECT DISTINCT id, name, data, notification_class FROM subscriptions", null);
 				if (cursor.getCount() > 0 && cursor.moveToFirst()) {
@@ -320,12 +317,12 @@ public class Database {
 						String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
 						String data = cursor.getString(cursor.getColumnIndexOrThrow("data"));
 						String notificationClass = cursor.getString(cursor.getColumnIndexOrThrow("notification_class"));
-						
+
 						// delete all rows for this subscription where seen_id is null
 						long rows = db.delete("subscriptions", "id=? AND notification_class=? AND seen_id IS NULL", 
 								new String[] { id , notificationClass });
-						Log.i(Utils.TAG, "Removed " + rows + " rows for subscription with {id: " + id + ", notificationClass: " + notificationClass + ", name: " + name + ", data: " + data + "}"); 
-						
+						Log.i(Utils.TAG, "Removed " + rows + " rows for subscription with {id: " + id + ", notificationClass: " + notificationClass + ", name: " + name + ", data: " + data + "}");
+
 						// insert placeholder item with null seen_id, so that a subscription is registered even for empty lists
 						ContentValues cv = new ContentValues(SUBSCRIPTION_COLUMNS.length);
 						cv.put("id", id);
@@ -334,17 +331,16 @@ public class Database {
 						cv.put("data", data);
 						long results = db.insert("subscriptions", null, cv);
 						Log.i(Utils.TAG, "Inserted row with ID " + results + " in their place");
-						
+
 						i += 1;
 					} while (cursor.moveToNext());
-					
+
 					cursor.close();
-					
+
 					Log.i(Utils.TAG, "Migration to level 5 complete, de-duped " + i + " subscriptions");
 				}
-				
 			}
-			
+
 			// Version 6 - Remove nominations subscriber, split subscriptions tables in two 
 			//   released in version 3.3
 			if (oldVersion < 6) {
@@ -352,10 +348,10 @@ public class Database {
 				Log.i(Utils.TAG, "Expunging RollsNominationSubscriber rows from database...");
 				long rows = db.delete("subscriptions", "notification_class=?", new String[] {"RollsNominationsSubscriber"});
 				Log.i(Utils.TAG, "Removed " + rows + " RollsNominationsSubscriber entries from database");
-				
+
 				// Restructure subscriptions tables to split them out into two.
 				// This is much cleaner, and sets the foundation for proper accumulated unseen counts.
-				
+
 				// remove subscriptions->seen_id (no SQL necessary, column abandoned)
 				Log.i(Utils.TAG, "Creating seen_items table...");
 				createTable(db, "seen_items", new String[] { "subscription_id", "subscription_class", "seen_id" });
@@ -369,34 +365,33 @@ public class Database {
 						String subscriptionId = cursor.getString(cursor.getColumnIndexOrThrow("id"));
 						String subscriptionClass = cursor.getString(cursor.getColumnIndexOrThrow("notification_class"));
 						String seenId = cursor.getString(cursor.getColumnIndexOrThrow("seen_id"));
-						
+
 						ContentValues cv = new ContentValues(3);
 						cv.put("subscription_id", subscriptionId);
 						cv.put("subscription_class", subscriptionClass);
 						cv.put("seen_id", seenId);
-						
+
 						long results = db.insert("seen_items", null, cv);
 						Log.i(Utils.TAG, "Transferred seen_item into seen_items with ID " + results);
-						
+
 						i += 1;
 					} while (cursor.moveToNext());
-					
+
 					Log.i(Utils.TAG, "Finished transfer, counted " + i + " transferrals");
 				}
-				
+
 				// delete all those seen items from the original table
 				Log.i(Utils.TAG, "Clearing out subscriptions with a seen_id...");
 				long seenRows = db.delete("subscriptions", "seen_id IS NOT NULL", null);
 				Log.i(Utils.TAG, "Removed " + seenRows + " subscription rows with a seen_id");
-				
-				
+
 				// add accumulated unseen_items field on subscriptions
 				Log.i(Utils.TAG, "Adding unseen_count to subscriptions table...");
-				addColumn(db, "subscriptions", "unseen_count");
-				
+				addColumn(db, "unseen_count");
+
 				Log.i(Utils.TAG, "Migration to level 6 complete");
 			}
-			
+
 			// Version 7 - 
 			//   * Remove RollsSearchSubscriber subscriptions
 			//   * Remove TwitterSubscriber subscriptions
@@ -410,14 +405,14 @@ public class Database {
 			if (oldVersion < 7) {
 				// Not actually removing columns, but am documenting which ones remain on the table,
 				// but are not supported.
-				
+
 				// Abandoning fields on `legislators`:
 				//	"id", "govtrack_id", "congress_office", "website", "phone", "twitter_id", "youtube_url"
-				
+
 				// Abandoning fields on `bills`: "code"
-				
+
 				Log.i(Utils.TAG, "Renaming bill IDs from hcres/scres to hconres/sconres...");
-				
+
 				long rows = 0;
 				Cursor cursor;
 				try {
@@ -428,7 +423,7 @@ public class Database {
 							String billId = cursor.getString(cursor.getColumnIndexOrThrow("id"));
 							if (billId.contains("cres")) {
 								String newId = billId.replace("cres", "conres");
-								
+
 								Log.i(Utils.TAG, "    [" + billId + "] -> [" + newId + "]");
 								db.execSQL("UPDATE bills SET id=? WHERE id=?", new String[] {newId, billId});
 								rows += 1;
@@ -436,8 +431,7 @@ public class Database {
 						} while (cursor.moveToNext());
 					}
 					Log.i(Utils.TAG, "Updated " + rows + " bills in bills table.");
-					
-					
+
 					String[] subscriptions = new String[] {"ActionsBillSubscriber", "VotesBillSubscriber", "NewsBillSubscriber"};
 					for (String subscription : subscriptions) {
 						rows = 0;
@@ -467,7 +461,7 @@ public class Database {
 
 						Log.i(Utils.TAG, "Updated " + rows + " subscriptions rows with new ids (" + subscription + ")");
 					}
-					
+
 					String[] seenTypes = new String[] { "BillsLawsSubscriber", "BillsLegislatorSubscriber", "BillsRecentSubscriber", "BillsSearchSubscriber" };
 					for (String seenType : seenTypes) {
 						rows = 0;
@@ -489,13 +483,13 @@ public class Database {
 
 						Log.i(Utils.TAG, "Updated " + rows + " seen_items rows with new ids (" + seenType + ")");
 					}
-					
+
 					cursor.close();
-					
+
 				} catch (SQLiteException e) {
 					Log.e(Utils.TAG, "Error while renaming bill IDs:", e);
 				}
-				
+
 				Log.i(Utils.TAG, "Removing RollsSearchSubscriber subscriptions and seen items...");
 				rows = db.delete("subscriptions", "notification_class=?", new String[] {"RollsSearchSubscriber"});
 				Log.i(Utils.TAG, "Removed " + rows + " RollsSearchSubscriber entries from subscriptions");
@@ -508,22 +502,22 @@ public class Database {
 				rows = db.delete("seen_items", "subscription_class=?", new String[] {"TwitterSubscriber"});
 				Log.i(Utils.TAG, "Removed " + rows + " TwitterSubscriber entries from seen_items");
 			}
-			
+
 			// Version 8 - 
 			//   * Remove YouTubeSubscriber subscriptions (we'll now link to YouTube profiles)
 			//	 * Remove BillsLaws subscriptions (was not heavily used)
 			// released in version 4.1
-			
+
 			Log.i(Utils.TAG, "oldVersion: " + oldVersion);
 			if (oldVersion < 8) {
-				long rows = 0;
-				
+				long rows;
+
 				Log.i(Utils.TAG, "Removing YoutubeSubscriber subscriptions and seen items...");
 				rows = db.delete("subscriptions", "notification_class=?", new String[] {"YoutubeSubscriber"});
 				Log.i(Utils.TAG, "Removed " + rows + " YoutubeSubscriber entries from subscriptions");
 				rows = db.delete("seen_items", "subscription_class=?", new String[] {"YoutubeSubscriber"});
 				Log.i(Utils.TAG, "Removed " + rows + " YoutubeSubscriber entries from seen_items");
-				
+
 				Log.i(Utils.TAG, "Removing BillsLawsSubscriber subscriptions and seen items...");
 				rows = db.delete("subscriptions", "notification_class=?", new String[] {"BillsLawsSubscriber"});
 				Log.i(Utils.TAG, "Removed " + rows + " BillsLawsSubscriber entries from subscriptions");
@@ -537,7 +531,7 @@ public class Database {
 
             Log.i(Utils.TAG, "oldVersion: " + oldVersion);
             if (oldVersion < 9) {
-                long rows = 0;
+				long rows;
 
                 Log.i(Utils.TAG, "Removing NewsBillSubscriber subscriptions and seen items...");
                 rows = db.delete("subscriptions", "notification_class=?", new String[]{"NewsBillSubscriber"});

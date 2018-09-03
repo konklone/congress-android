@@ -77,7 +77,7 @@ public class NotificationSubscriptions extends ListActivity {
 		
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
-			TextView text = (TextView) view.findViewById(R.id.text);
+			TextView text = view.findViewById(R.id.text);
 			
 			Subscription subscription = Database.loadSubscription(cursor);
 			Subscriber subscriber;
@@ -89,7 +89,8 @@ public class NotificationSubscriptions extends ListActivity {
 				view.setTag(subscriber.notificationIntent(subscription));
 				view.setEnabled(true);
 			} catch (Exception e) {
-				Log.e(Utils.TAG, "Could not instantiate a Subscriber of class " + subscription.notificationClass, e);
+				Log.e(Utils.TAG, "Could not instantiate a Subscriber of class " +
+						subscription.notificationClass, e);
 				
 				text.setText(R.string.notification_not_found);
 				view.setTag(null);

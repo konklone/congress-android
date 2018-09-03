@@ -4,7 +4,6 @@
 	
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	
 	>
 
 	<ImageView android:id="@+id/photo"
@@ -30,8 +29,8 @@
 		android:layout_weight="1"
 		
 		android:textSize="18sp"
-		
-		android:text="Text"
+
+		android:text="@string/text"
 		/>
 		
 </LinearLayout>

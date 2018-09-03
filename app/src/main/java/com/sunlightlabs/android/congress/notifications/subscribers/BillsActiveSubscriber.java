@@ -1,12 +1,9 @@
 package com.sunlightlabs.android.congress.notifications.subscribers;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.util.Log;
 
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.android.congress.fragments.BillListFragment;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -15,8 +12,10 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.BillService;
 import com.sunlightlabs.congress.services.ProPublica;
 
+import java.util.List;
+
 public class BillsActiveSubscriber extends Subscriber {
-	
+
 	@Override
 	public String decodeId(Object result) {
 		return ((Bill) result).id;
@@ -25,7 +24,7 @@ public class BillsActiveSubscriber extends Subscriber {
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupAPI(context);
-		
+
 		try {
 			return BillService.recentlyActive(1);
 		} catch (CongressException e) {
@@ -33,7 +32,7 @@ public class BillsActiveSubscriber extends Subscriber {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
 		if (results == ProPublica.PER_PAGE)
@@ -46,10 +45,11 @@ public class BillsActiveSubscriber extends Subscriber {
 
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
-		return new Intent().setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.MenuBills")
-			.putExtra("tab", "bills_active");
+		return new Intent().setClassName("com.sunlightlabs.android.congress",
+				"com.sunlightlabs.android.congress.MenuBills")
+				.putExtra("tab", "bills_active");
 	}
-	
+
 	@Override
 	public String subscriptionName(Subscription subscription) {
 		return context.getResources().getString(R.string.menu_bills_active_subscription);

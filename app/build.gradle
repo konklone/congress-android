@@ -1,38 +1,53 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.0'
-
-    packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-    }
-
+    compileSdkVersion 28
+    buildToolsVersion '28.0.2'
     defaultConfig {
         applicationId "com.sunlightlabs.android.congress"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 28
+		versionName "4.9.1"
+		versionCode 60
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+	compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+	packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
     }
 }
 
 dependencies {
-    compile files('libs/geojson-jackson-1.1.jar')
-    compile files('libs/jackson-annotations-2.3.0.jar')
-    compile files('libs/jackson-core-2.3.1.jar')
-    compile files('libs/jackson-databind-2.3.1.jar')
+	implementation 'de.grundid.opendatalab:geojson-jackson:1.8'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.6'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.9.6'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
 
-    compile 'com.android.support:support-v13:25.3.1'
-    compile 'com.squareup.okhttp:okhttp:1.3.0'
-    compile 'com.squareup.picasso:picasso:2.2.0'
-    compile 'com.google.android.gms:play-services:4.3.23'
+	implementation 'com.android.support:design:28.0.0-rc01'
+	implementation 'com.android.support:support-v4:28.0.0-rc01'
+	implementation 'com.android.support:appcompat-v7:28.0.0-rc01'
+    implementation 'com.android.support:exifinterface:28.0.0-rc01'
+
+	implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.google.android.gms:play-services-base:15.0.1'
+    implementation 'com.google.android.gms:play-services-analytics:16.0.3'
+
+    implementation 'com.commonsware.cwac:merge:1.1.2'
+    implementation 'com.commonsware.cwac:sacklist:1.0.3'
+
     testImplementation 'junit:junit:4.12'
 }
