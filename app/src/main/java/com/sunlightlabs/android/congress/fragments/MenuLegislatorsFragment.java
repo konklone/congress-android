@@ -1,8 +1,5 @@
 package com.sunlightlabs.android.congress.fragments;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.ListFragment;
 import android.content.Context;
 import android.database.Cursor;
@@ -16,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sunlightlabs.android.congress.MenuLegislators;
 import com.sunlightlabs.android.congress.R;
 import com.sunlightlabs.android.congress.tasks.LoadPhotoTask;
 import com.sunlightlabs.android.congress.utils.Database;
@@ -23,47 +21,49 @@ import com.sunlightlabs.android.congress.utils.LegislatorImage;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Legislator;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTask.LoadsPhoto {
-	private Map<String, LoadPhotoTask> loadPhotoTasks = new HashMap<String, LoadPhotoTask>();
-	private Map<String, ImageView> photoViews = new HashMap<String, ImageView>();
-	
+	private Map<String, LoadPhotoTask> loadPhotoTasks = new HashMap<>();
+	private Map<String, ImageView> photoViews = new HashMap<>();
+
 	private Database database;
 	private Cursor cursor;
-	
-	public static MenuLegislatorsFragment newInstance() {
+
+	public static MenuLegislators.StatesFragment newInstance() {
 		MenuLegislatorsFragment frag = new MenuLegislatorsFragment();
 		frag.setRetainInstance(true);
 		return frag;
 	}
-	
+
 	public MenuLegislatorsFragment() {}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		setupDatabase();
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.menu_legislators, container, false);
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		setupControls();
 	}
-	
+
 	public void setupDatabase() {
 		database = new Database(getActivity());
 		database.open();
-		
+
 		cursor = database.getLegislators();
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -71,13 +71,13 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 			cursor.requery();
 		setupControls();
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		database.close();
 	}
-	
+
 	private void setupControls() {
 		if (cursor != null && cursor.getCount() > 0) {
 			setListAdapter(new FavoriteLegislatorsAdapter(this, cursor));
@@ -88,7 +88,7 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 			getListView().setVisibility(View.GONE);
 		}
 	}
-	
+
 	@Override
 	public void onListItemClick(ListView l, View view, int position, long id) {
 		startActivity(Utils.legislatorIntent(((Legislator) view.getTag()).bioguide_id));
@@ -96,8 +96,8 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 
 	public void loadPhoto(String bioguide_id) {
 		if (!loadPhotoTasks.containsKey(bioguide_id))
-			loadPhotoTasks.put(bioguide_id, 
-					(LoadPhotoTask) new LoadPhotoTask(this, LegislatorImage.PIC_LARGE, bioguide_id).execute(bioguide_id));
+			loadPhotoTasks.put(bioguide_id, (LoadPhotoTask) new LoadPhotoTask(this,
+					LegislatorImage.PIC_LARGE, bioguide_id).execute(bioguide_id));
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 	public void onLoadPhoto(Drawable photo, Object tag) {
 		if (!isAdded())
 			return;
-		
+
 		String bioguide_id = (String) tag;
 		loadPhotoTasks.remove(bioguide_id);
 		ImageView photoView = photoViews.get(bioguide_id);
@@ -120,11 +120,11 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 				photoView.setImageResource(R.drawable.person);
 		}
 	}
-	
+
 	public class FavoriteLegislatorsAdapter extends CursorAdapter {
 		MenuLegislatorsFragment fragment;
 		LayoutInflater inflater;
-		
+
 		public FavoriteLegislatorsAdapter(MenuLegislatorsFragment fragment, Cursor cursor) {
 			super(fragment.getActivity(), cursor);
 			this.fragment = fragment;
@@ -134,26 +134,25 @@ public class MenuLegislatorsFragment extends ListFragment implements LoadPhotoTa
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
 			Legislator legislator = Database.loadLegislator(cursor);
-			
-			TextView name = (TextView) view.findViewById(R.id.name);
+
+			TextView name = view.findViewById(R.id.name);
 			name.setText(nameFor(legislator));
-			TextView position = (TextView) view.findViewById(R.id.position);
+			TextView position = view.findViewById(R.id.position);
 			position.setText(positionFor(legislator));
 
-			ImageView photo = (ImageView) view.findViewById(R.id.photo);
-			LegislatorImage.setImageView(legislator.bioguide_id, LegislatorImage.PIC_LARGE,
-					context, photo);
+			ImageView photo = view.findViewById(R.id.photo);
+			LegislatorImage.setImageView(legislator.bioguide_id, LegislatorImage.PIC_LARGE, context, photo);
 
 			view.setTag(legislator);
 		}
-		
+
 		@Override
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
 			View view = inflater.inflate(R.layout.legislator_item, null);
 			bindView(view, context, cursor);
 			return view;
 		}
-		
+
 		public String nameFor(Legislator legislator) {
 			return legislator.last_name + ", " + legislator.first_name;
 		}

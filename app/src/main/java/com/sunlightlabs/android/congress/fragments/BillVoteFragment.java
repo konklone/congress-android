@@ -1,8 +1,5 @@
 package com.sunlightlabs.android.congress.fragments;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-
 import android.app.Fragment;
 import android.app.ListFragment;
 import android.content.res.Resources;
@@ -24,29 +21,32 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 
+import java.text.SimpleDateFormat;
+import java.util.List;
+
 public class BillVoteFragment extends ListFragment implements LoadBillTask.LoadsBill {
 	private Bill bill;
 
-	public static BillVoteFragment create(Bill bill) {
+	public static android.support.v4.app.Fragment create(Bill bill) {
 		BillVoteFragment frag = new BillVoteFragment();
 		Bundle args = new Bundle();
-		
+
 		args.putSerializable("bill", bill);
-		
+
 		frag.setArguments(args);
 		frag.setRetainInstance(true);
 		return frag;
 	}
-	
+
 	public BillVoteFragment() {}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		Bundle args = getArguments();
 		bill = (Bill) args.getSerializable("bill");
-		
+
 		loadBill();
 	}
 	
@@ -54,24 +54,24 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.list_footer, container, false);
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		FragmentUtils.setLoading(this, R.string.bill_votes_loading);
-		
+
 		if (bill.votes != null)
 			displayBill();
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
 		if (bill.votes != null)
 			setupSubscription();
 	}
-	
+
 	private void setupSubscription() {
 		Footer.setup(this, new Subscription(bill.id, Subscriber.notificationName(bill), "VotesBillSubscriber", bill.id), bill.votes);
 	}
@@ -79,34 +79,34 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 	public void loadBill() {
 		new LoadBillTask(this, bill.id).execute();
 	}
-	
+
 	public void onLoadBill(Bill bill) {
 		this.bill.votes = bill.votes;
 		if (isAdded())
 			displayBill();
 	}
-	
+
 	public void onLoadBill(CongressException exception) {
 		if (isAdded())
 			FragmentUtils.showRefresh(this, R.string.error_connection);
 	}
-	
+
 	public void displayBill() {
 		if (bill.votes.size() > 0)
 			setListAdapter(new BillVoteAdapter(this, bill.votes));
 		else
 			FragmentUtils.showEmpty(this, R.string.bill_votes_empty);
-		
+
 		setupSubscription();
 	}
-	
+
 	@Override
     public void onListItemClick(ListView l, View v, int position, long id) {
 		String rollId = (String) v.getTag();
     	if (rollId != null)
     		startActivity(Utils.rollIntent(getActivity(), rollId));
     }
-	
+
 	protected class BillVoteAdapter extends ArrayAdapter<Bill.Vote> {
     	LayoutInflater inflater;
     	Resources resources;
@@ -116,13 +116,13 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
             inflater = LayoutInflater.from(context.getActivity());
             resources = context.getResources();
         }
-        
-        @Override
+
+		@Override
         public boolean areAllItemsEnabled() {
         	return true;
         }
-        
-        @Override
+
+		@Override
         public int getViewTypeCount() {
         	return 1;
         }
@@ -131,24 +131,24 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 		public View getView(int position, View view, ViewGroup parent) {
 			if (view == null)
 				view = inflater.inflate(R.layout.bill_vote, null);
-			
+
 			Bill.Vote vote = getItem(position);
-			
+
 			String timestamp = new SimpleDateFormat("MMM dd, yyyy").format(vote.voted_on).toUpperCase();
 			((TextView) view.findViewById(R.id.date)).setText(timestamp);
-			
-			TextView resultView = (TextView) view.findViewById(R.id.result);
+
+			TextView resultView = view.findViewById(R.id.result);
 
 			String resultDisplay;
 			if (vote.passed())
 				resultDisplay = "Passed";
 			else
 				resultDisplay = "Failed";
-				
-			resultView.setText(resultDisplay + " the " + Utils.capitalize(vote.chamber));
-			
+
+			resultView.setText(resultDisplay + R.string.the + Utils.capitalize(vote.chamber));
+
 			String roll_id = vote.roll_id;
-			TextView typeMessage = (TextView) view.findViewById(R.id.type_message);
+			TextView typeMessage = view.findViewById(R.id.type_message);
 			if (roll_id != null) {
 				typeMessage.setTextColor(resources.getColor(R.color.text));
 				typeMessage.setText(R.string.bill_vote_roll);
@@ -158,9 +158,8 @@ public class BillVoteFragment extends ListFragment implements LoadBillTask.Loads
 				typeMessage.setText(R.string.bill_vote_not_roll);
 				view.setTag(null);
 			}
-			
+
 			return view;
 		}
-
     }
 }

@@ -67,11 +67,7 @@ public class LegislatorSearch extends Activity {
 	}
 	
 	public void setupControls() {
-		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
-			public void onClick(View v) { 
-				onSearchRequested();
-			}
-		});
+		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, v -> onSearchRequested());
 	}
 
 	@Override
@@ -85,5 +81,4 @@ public class LegislatorSearch extends Activity {
 		super.onStop();
 		Analytics.stop(this);
 	}
-	
 }

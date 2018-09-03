@@ -12,7 +12,7 @@ public class LoadBillTask extends AsyncTask<Void,Void,Bill> {
 	private Fragment fragment;
 	private CongressException exception;
 	private String billId;
-	
+
 	public LoadBillTask(Fragment fragment, String billId) {
 		this.fragment = fragment;
 		this.billId = billId;
@@ -28,7 +28,7 @@ public class LoadBillTask extends AsyncTask<Void,Void,Bill> {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public void onPostExecute(Bill bill) {
 		LoadsBill loader = (LoadsBill) fragment;
@@ -37,7 +37,7 @@ public class LoadBillTask extends AsyncTask<Void,Void,Bill> {
 		else
 			loader.onLoadBill(bill);
 	}
-	
+
 	public interface LoadsBill {
 		void onLoadBill(Bill bill);
 		void onLoadBill(CongressException exception);

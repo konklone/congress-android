@@ -1,7 +1,5 @@
 package com.sunlightlabs.android.congress.notifications.subscribers;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.util.Log;
 
@@ -12,6 +10,8 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.FloorUpdate;
 import com.sunlightlabs.congress.services.FloorUpdateService;
+
+import java.util.List;
 
 public class FloorUpdatesSubscriber extends Subscriber {
 
@@ -24,7 +24,7 @@ public class FloorUpdatesSubscriber extends Subscriber {
 	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupAPI(context);
 		String chamber = subscription.data;
-		
+
 		try {
 			return FloorUpdateService.latest(chamber, 1);
 		} catch (CongressException e) {
@@ -32,7 +32,7 @@ public class FloorUpdatesSubscriber extends Subscriber {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public String notificationTitle(Subscription subscription) {
 		return Utils.capitalize(subscription.data) + " Floor"; 
@@ -48,14 +48,15 @@ public class FloorUpdatesSubscriber extends Subscriber {
 		else
 			return results + " new update from the " + chamber + " floor.";
 	}
-	
+
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
 		return new Intent()
-			.setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.FloorUpdatePager")
-			.putExtra("chamber", subscription.data);
+				.setClassName("com.sunlightlabs.android.congress",
+						"com.sunlightlabs.android.congress.FloorUpdatePager")
+				.putExtra("chamber", subscription.data);
 	}
-	
+
 	@Override
 	public String subscriptionName(Subscription subscription) {
 		return Utils.capitalize(subscription.data) + " Floor";

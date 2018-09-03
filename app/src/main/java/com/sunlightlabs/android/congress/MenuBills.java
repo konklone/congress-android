@@ -2,7 +2,6 @@ package com.sunlightlabs.android.congress;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
 
 import com.sunlightlabs.android.congress.fragments.BillListFragment;
 import com.sunlightlabs.android.congress.fragments.MenuBillsFragment;
@@ -41,12 +40,8 @@ public class MenuBills extends Activity {
 	
 	public void setupControls() {
 		ActionBarUtils.setTitle(this, R.string.menu_main_bills);
-		
-		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, new View.OnClickListener() {
-			public void onClick(View v) { 
-				onSearchRequested();
-			}
-		});
+
+		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.search, v -> onSearchRequested());
 	}
 	
 	@Override

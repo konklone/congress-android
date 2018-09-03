@@ -8,6 +8,6 @@
 	
 	android:textSize="14sp"
 	android:textColor="@color/text_grey"
-	
-	android:text="Introduced on Feb 12, 2010"
+
+	android:text="@string/introduced_on_feb_12_2010"
 	/>

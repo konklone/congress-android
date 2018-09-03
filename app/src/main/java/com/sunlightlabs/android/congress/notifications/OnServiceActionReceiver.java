@@ -1,8 +1,5 @@
 package com.sunlightlabs.android.congress.notifications;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -12,6 +9,9 @@ import android.util.Log;
 
 import com.sunlightlabs.android.congress.NotificationSettings;
 import com.sunlightlabs.android.congress.utils.Utils;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * The service must be stopped from the same context from which it was started.
@@ -48,7 +48,7 @@ public class OnServiceActionReceiver extends BroadcastReceiver {
 		c.setTime(new Date()); // set time to now
 		c.add(Calendar.MINUTE, interval);
 		interval *= 60000; // convert to milliseconds
-		
+
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		// if the interval is 15 minutes or tighter, use inexact alarms to conserve on battery
 		if (interval <= (15 * 60000))
@@ -63,5 +63,4 @@ public class OnServiceActionReceiver extends BroadcastReceiver {
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getPendingIntent(context));
 	}
-
 }

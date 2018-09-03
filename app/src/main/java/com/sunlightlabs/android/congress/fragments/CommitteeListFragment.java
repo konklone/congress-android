@@ -1,14 +1,10 @@
 package com.sunlightlabs.android.congress.fragments;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
+import android.app.ListFragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,18 +23,19 @@ import com.sunlightlabs.congress.models.Legislator;
 import com.sunlightlabs.congress.services.CommitteeService;
 import com.sunlightlabs.congress.services.LegislatorService;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class CommitteeListFragment extends ListFragment {
 	public static final int CHAMBER = 1;
 	public static final int LEGISLATOR = 2;
 	public static final int COMMITTEE = 3;
-	
+
 	private List<Committee> committees;
 	private int type;
-	private String chamber;
-	private Legislator legislator;
-	private Committee committee;
-	
-	public static CommitteeListFragment forChamber(String chamber) {
+
+	public static Fragment forChamber(String chamber) {
 		CommitteeListFragment frag = new CommitteeListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", CHAMBER);
@@ -47,8 +44,8 @@ public class CommitteeListFragment extends ListFragment {
 		frag.setRetainInstance(true);
 		return frag;
 	}
-	
-	public static CommitteeListFragment forLegislator(Legislator legislator) {
+
+	public static Fragment forLegislator(Legislator legislator) {
 		CommitteeListFragment frag = new CommitteeListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", LEGISLATOR);
@@ -57,8 +54,8 @@ public class CommitteeListFragment extends ListFragment {
 		frag.setRetainInstance(true);
 		return frag;
 	}
-	
-	public static CommitteeListFragment forCommittee(Committee committee) {
+
+	public static Fragment forCommittee(Committee committee) {
 		CommitteeListFragment frag = new CommitteeListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", COMMITTEE);
@@ -67,19 +64,19 @@ public class CommitteeListFragment extends ListFragment {
 		frag.setRetainInstance(true);
 		return frag;
 	}
-	
+
 	public CommitteeListFragment() {}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		Bundle args = getArguments();
 		type = args.getInt("type");
-		chamber = args.getString("chamber");
-		legislator = (Legislator) args.getSerializable("legislator");
-		committee = (Committee) args.getSerializable("committee");
-		
+		String chamber = args.getString("chamber");
+		Legislator legislator = (Legislator) args.getSerializable("legislator");
+		Committee committee = (Committee) args.getSerializable("committee");
+
 		if (type == CHAMBER)
 			new LoadCommitteesTask(this).execute(chamber);
 		else if (type == LEGISLATOR)
@@ -87,22 +84,22 @@ public class CommitteeListFragment extends ListFragment {
 		else if (type == COMMITTEE)
 			new LoadCommitteesTask(this).execute(committee.id);
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.list, container, false);
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		FragmentUtils.setLoading(this, R.string.committees_loading);
-		
+
 		if (committees != null)
 			displayCommittees();
 	}
-	
+
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		selectCommittee((Committee) parent.getItemAtPosition(position));
@@ -112,14 +109,14 @@ public class CommitteeListFragment extends ListFragment {
 		startActivity(new Intent(getActivity(), CommitteePager.class)
 			.putExtra("committee", committee));
 	}
-	
+
 	public void onLoadCommittees(List<Committee> committees) {
 		this.committees = committees;
 		
 		if (isAdded()) 
 			displayCommittees();
 	}
-	
+
 	public void onLoadCommittees(CongressException exception) {
 		if (isAdded())
 			FragmentUtils.showEmpty(this, exception.getMessage());
@@ -159,20 +156,20 @@ public class CommitteeListFragment extends ListFragment {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			Committee committee = getItem(position);
-			
+
 			View view;
 			if (committee.subcommittee && context.type != COMMITTEE)
 				view = inflater.inflate(R.layout.committee_item_sub, null);
 			else
 				view = inflater.inflate(R.layout.committee_item, null);
-			
-			TextView name = (TextView) view.findViewById(R.id.name);
+
+			TextView name = view.findViewById(R.id.name);
 			name.setText(committee.name);
-			
+
 			return view;
 		}
 	}
-	
+
 	private static class LoadCommitteesTask extends AsyncTask<String, Void, List<Committee>> {
 		private CommitteeListFragment context;
 		private CongressException exception;
@@ -193,7 +190,7 @@ public class CommitteeListFragment extends ListFragment {
 			else
 				return null;
 		}
-		
+
 		private List<Committee> forLegislator(String bioguideId) {
 			List<Committee> committees;
 			try {
@@ -202,68 +199,60 @@ public class CommitteeListFragment extends ListFragment {
 				this.exception = new CongressException(e, "Error loading committees.");
 				return null;
 			}
-			
-			List<Committee> chamber = new ArrayList<Committee>();
-			List<Committee> joint = new ArrayList<Committee>();
-			
+
+			List<Committee> chamber = new ArrayList<>();
+			List<Committee> joint = new ArrayList<>();
+
 			for (int i=0; i<committees.size(); i++) {
 				if (committees.get(i).chamber.equals("joint"))
 					joint.add(committees.get(i));
 				else
 					chamber.add(committees.get(i));
 			}
-			
+
 			// sort by their committee ID, not the name
 			// but make an exception to put parent committees above their subcommittees
 			// (they'd naturally end up below)
-			Collections.sort(chamber, new Comparator<Committee>() {
-				@Override
-				public int compare(Committee a, Committee b) {
-					if (a.subcommittee && !b.subcommittee && a.parent_committee_id.equals(b.id))
-						return 1;
-					else if (b.subcommittee && !a.subcommittee && b.parent_committee_id.equals(a.id))
-						return -1;
-					else
-						return a.id.compareTo(b.id);
-				}
-			});
-			
-			Collections.sort(joint, new Comparator<Committee>() {
-				@Override
-				public int compare(Committee a, Committee b) {
+			Collections.sort(chamber, (a, b) -> {
+				if (a.subcommittee && !b.subcommittee && a.parent_committee_id.equals(b.id))
+					return 1;
+				else if (b.subcommittee && !a.subcommittee && b.parent_committee_id.equals(a.id))
+					return -1;
+				else
 					return a.id.compareTo(b.id);
-				}
 			});
-			
-			List<Committee> result = new ArrayList<Committee>();
+
+			Collections.sort(joint, (a, b) -> a.id.compareTo(b.id));
+
+			List<Committee> result = new ArrayList<>();
 			result.addAll(chamber);
 			result.addAll(joint);
-			
+
 			return result;
 		}
-		
+
 		private List<Committee> forChamber(String chamber) {
-			List<Committee> result = new ArrayList<Committee>();
+			List<Committee> result = new ArrayList<>();
 			try {
 				result = CommitteeService.forChamber(chamber);
 			} catch (CongressException e) {
 				Log.e(Utils.TAG, "There has been an exception while getting the committees for chamber "
 						+ chamber + ": " + e.getMessage());
 			}
-			
+
 			Collections.sort(result);
 			return result;
 		}
-		
+
 		private List<Committee> forCommittee(String committeeId) {
-			List<Committee> result = new ArrayList<Committee>();
+			List<Committee> result = new ArrayList<>();
 			try {
 				result = CommitteeService.find(committeeId).subcommittees;
 			} catch (CongressException e) {
 				Log.e(Utils.TAG, "There has been an exception while getting the subcommittees for  "
 						+ committeeId + ": " + e.getMessage());
 			}
-			
+
 			Collections.sort(result);
 			return result;
 		}
@@ -275,6 +264,5 @@ public class CommitteeListFragment extends ListFragment {
 			else
 				context.onLoadCommittees(exception);
 		}
-
 	}
 }

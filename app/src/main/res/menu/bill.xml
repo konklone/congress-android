@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:id="@+id/text"
-		android:title="Official text"
+		android:title="@string/official_text"
 		android:alphabeticShortcut="t"
 		android:icon="@android:drawable/ic_menu_info_details"
 		/> 
 	<item android:id="@+id/govtrack"
-		android:title="More at GovTrack"
+		android:title="@string/more_at_govtrack"
 		android:alphabeticShortcut="g"
 		android:icon="@drawable/govtrack"
 		/>

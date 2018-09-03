@@ -1,7 +1,5 @@
 package com.sunlightlabs.android.congress.notifications.subscribers;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.util.Log;
 
@@ -11,6 +9,8 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.BillService;
+
+import java.util.List;
 
 public class ActionsBillSubscriber extends Subscriber {
 
@@ -23,7 +23,7 @@ public class ActionsBillSubscriber extends Subscriber {
 	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupAPI(context);
 		String billId = subscription.data;
-		
+
 		try {
 			return BillService.find(billId).actions;
 		} catch (CongressException e) {
@@ -39,12 +39,12 @@ public class ActionsBillSubscriber extends Subscriber {
 		else
 			return results + " new action item.";
 	}
-	
+
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
 		return Utils.billIntent(subscription.id).putExtra("tab", "history");
 	}
-	
+
 	@Override
 	public String subscriptionName(Subscription subscription) {
 		return "Activity: " + subscription.name;

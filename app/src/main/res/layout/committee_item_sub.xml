@@ -11,6 +11,7 @@
 	
 	android:textSize="14sp"
 	android:textColor="@color/text_grey"
-	
-	android:text="Subcommittee Name"
-	/>
+
+	android:paddingEnd="20dp"
+	android:paddingStart="40dp"
+	android:text="@string/subcommittee_name" />

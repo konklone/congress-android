@@ -18,7 +18,7 @@ public class ActionBarUtils {
 	public interface HasActionMenu {
 		void menuSelected(MenuItem item);
 	}
-	
+
 	public static void setTitle(Activity activity, String title) {
 		setTitle(activity, title, new Intent(activity, MenuMain.class)); // default intent is home
 	}
@@ -30,7 +30,7 @@ public class ActionBarUtils {
 	public static void setTitle(Activity activity, int title, Intent up) {
 		setTitle(activity, activity.getResources().getString(title), up);
 	}
-	
+
 	public static void setTitle(Activity activity, String title, Intent up) {
 		((TextView) activity.findViewById(R.id.title_text)).setText(title);
 		
@@ -44,14 +44,9 @@ public class ActionBarUtils {
 
 	public static void setTitleButton(final Activity activity, final Intent up) {
 		View button = activity.findViewById(R.id.title_button);
-		
+
 		button.findViewById(R.id.title_up_icon).setVisibility(View.VISIBLE);
-		button.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				activity.startActivity(up.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-			}
-		});
+		button.setOnClickListener(v -> activity.startActivity(up.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)));
 		button.setFocusable(true);
 	}
 
@@ -60,14 +55,14 @@ public class ActionBarUtils {
 	}
 
 	public static void setActionButton(Activity activity, int id, int icon, View.OnClickListener listener) {
-		ViewGroup button = (ViewGroup) activity.findViewById(id);
+		ViewGroup button = activity.findViewById(id);
 		button.setOnClickListener(listener);
 		((ImageView) button.findViewById(R.id.icon)).setImageResource(icon);
 		button.setVisibility(View.VISIBLE);
 	}
 
 	public static void setActionIcon(Activity activity, int id, int icon) {
-		ViewGroup button = (ViewGroup) activity.findViewById(id);
+		ViewGroup button = activity.findViewById(id);
 		((ImageView) button.findViewById(R.id.icon)).setImageResource(icon);
 	}
 
@@ -76,22 +71,13 @@ public class ActionBarUtils {
         final PopupMenu menu = new PopupMenu(activity, menuView);
 
         menu.inflate(menuId);
-        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                ((HasActionMenu) activity).menuSelected(item);
-                return false;
-            }
-        });
+		menu.setOnMenuItemClickListener(item -> {
+			((HasActionMenu) activity).menuSelected(item);
+			return false;
+		});
 
-        menuView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                menu.show();
-            }
-        });
+		menuView.setOnClickListener(v -> menu.show());
 
         menuView.setVisibility(View.VISIBLE);
 	}
-
 }

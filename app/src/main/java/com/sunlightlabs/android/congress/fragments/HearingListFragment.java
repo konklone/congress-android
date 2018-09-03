@@ -1,22 +1,17 @@
 package com.sunlightlabs.android.congress.fragments;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import android.app.ListFragment;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,48 +24,47 @@ import com.sunlightlabs.congress.models.Hearing;
 import com.sunlightlabs.congress.services.HearingService;
 import com.sunlightlabs.congress.services.ProPublica;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 public class HearingListFragment extends ListFragment implements PaginationListener.Paginates {
 	private List<Hearing> hearings;
 
     PaginationListener pager;
     View loadingView;
-	
-	public static HearingListFragment upcoming() {
+
+	public static Fragment upcoming() {
 		HearingListFragment frag = new HearingListFragment();
 		frag.setRetainInstance(true);
 		return frag;
 	}
-	
+
 	public HearingListFragment() {}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		loadHearings();
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.list, container, false);
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		setupControls();
-		
+
 		if (hearings != null)
 			displayHearings();
 	}
-	
+
 	private void setupControls() {
-		getView().findViewById(R.id.refresh).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				refresh();
-			}
-		});
+		getView().findViewById(R.id.refresh).setOnClickListener(v -> refresh());
 
         loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_page, null);
         loadingView.setVisibility(View.GONE);
@@ -85,7 +79,7 @@ public class HearingListFragment extends ListFragment implements PaginationListe
     public void onListItemClick(ListView parent, View v, int position, long id) {
         selectHearing((Hearing) parent.getItemAtPosition(position));
     }
-	
+
 	private void refresh() {
 		hearings = null;
 		FragmentUtils.setLoading(this, R.string.hearings_loading);
@@ -103,30 +97,30 @@ public class HearingListFragment extends ListFragment implements PaginationListe
         loadingView.setVisibility(View.VISIBLE);
         new LoadHearingsTask(this, page).execute();
     }
-	
+
 	public void selectHearing(Hearing hearing) {
 		Date date = hearing.occursAt;
 		long startTime = date.getTime();
 		long endTime = startTime + (3 * 60 * 60 * 1000);
-		
+
 		Intent intent = new Intent(Intent.ACTION_EDIT);
 		intent.setType("vnd.android.cursor.item/event");
-		
+
 		intent.putExtra("title", "Hearing: " + hearing.committee.name);
 		intent.putExtra("description", hearing.description);
 		intent.putExtra("eventLocation", hearing.room);
-		
+
 		intent.putExtra("beginTime", startTime);
 		intent.putExtra("endTime", endTime);
 		intent.putExtra("allDay", false);
-		
+
 		try {
 			startActivity(intent);
 		} catch (ActivityNotFoundException e) {
 			Utils.alert(getActivity(), R.string.hearings_no_calendar);
 		}
 	}
-	
+
 	public void onLoadHearings(List<Hearing> hearings, int page) {
         if (!isAdded())
             return;
@@ -144,17 +138,17 @@ public class HearingListFragment extends ListFragment implements PaginationListe
         if (hearings.size() >= ProPublica.PER_PAGE)
             getListView().setOnScrollListener(pager);
 	}
-	
+
 	public void onLoadHearings(CongressException exception) {
 		FragmentUtils.showRefresh(this, R.string.hearings_error);
 	}
-	
+
 	public void displayHearings() {
 		if (hearings.size() > 0) {
-			TextView header = (TextView) getView().findViewById(R.id.header_simple_text);
+			TextView header = getView().findViewById(R.id.header_simple_text);
 			header.setText(R.string.hearings_header);
 			header.setVisibility(View.VISIBLE);
-			
+
 			setListAdapter(new HearingAdapter(this, hearings));
 		} else
 			FragmentUtils.showEmpty(this, R.string.hearings_empty);
@@ -193,9 +187,8 @@ public class HearingListFragment extends ListFragment implements PaginationListe
             else
                 context.onLoadHearings(hearings, page);
         }
-
     }
-	
+
 	static class HearingAdapter extends ArrayAdapter<Hearing> {
     	LayoutInflater inflater;
     	Resources resources;
@@ -205,13 +198,13 @@ public class HearingListFragment extends ListFragment implements PaginationListe
             inflater = LayoutInflater.from(context.getActivity());
             resources = context.getResources();
         }
-        
-        @Override
+
+		@Override
         public boolean areAllItemsEnabled() {
         	return true;
         }
-        
-        @Override
+
+		@Override
         public int getViewTypeCount() {
         	return 1;
         }
@@ -219,10 +212,10 @@ public class HearingListFragment extends ListFragment implements PaginationListe
 		@Override
 		public View getView(int position, View view, ViewGroup parent) {
 			Hearing hearing = getItem(position);
-		
+
 			if (view == null)
 				view = inflater.inflate(R.layout.hearing, null);
-			
+
 			Date date = hearing.occursAt;
             SimpleDateFormat dateDisplay = new SimpleDateFormat("MMM d");
             SimpleDateFormat timeDisplay = new SimpleDateFormat("h:mm aa");
@@ -234,17 +227,17 @@ public class HearingListFragment extends ListFragment implements PaginationListe
 
             String chamberCap = hearing.chamber.substring(0, 1).toUpperCase() + hearing.chamber.substring(1);
 			String name = chamberCap + " " + hearing.committee.name;
-			
+
 			String room = hearing.room;
 			if (room.equals("TBA"))
 				room = "Room TBA";
-			
+
 			((TextView) view.findViewById(R.id.month)).setText(month);
 			((TextView) view.findViewById(R.id.time)).setText(time);
 			((TextView) view.findViewById(R.id.name)).setText(name);
 			((TextView) view.findViewById(R.id.room)).setText(room);
 			((TextView) view.findViewById(R.id.description)).setText(Utils.truncate(hearing.description, 200));
-			
+
 			return view;
 		}
     }

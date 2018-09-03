@@ -27,8 +27,8 @@
 		android:paddingRight="10dp"
 		android:textSize="14sp"
 		android:textColor="@color/text"
-		
-		android:text="Footer not correctly initialized."
+
+		android:text="@string/footer_not_correctly_initialized"
 		/>
 	
 	<ImageView android:id="@+id/image"
@@ -39,7 +39,7 @@
 		android:layout_centerVertical="true"
 		
 		android:visibility="gone"
-		/>
+		android:layout_toStartOf="@id/text" />
 	
 	<ProgressBar android:id="@+id/working"
    		android:layout_width="wrap_content"
@@ -50,6 +50,6 @@
 		android:layout_centerVertical="true"
 		
    		android:visibility="gone"
-   		/>
+		android:layout_toStartOf="@id/text" />
 	
 </RelativeLayout>

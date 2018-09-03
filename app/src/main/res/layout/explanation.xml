@@ -56,8 +56,8 @@
 			android:layout_marginTop="10dp"
 			
 			android:textSize="16sp"
-			
-			android:text="Bullet 1"
+
+			android:text="@string/bullet_1"
 			/>
 		
 		<TextView android:id="@+id/explanation_3b"
@@ -67,8 +67,8 @@
 			android:layout_marginTop="10dp"
 			
 			android:textSize="16sp"
-			
-			android:text="Bullet 2"
+
+			android:text="@string/bullet_2"
 			/>
 	</LinearLayout>
 </ScrollView>

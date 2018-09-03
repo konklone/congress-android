@@ -3,11 +3,11 @@ package com.sunlightlabs.android.congress.fragments;
 import android.app.ListFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,22 +32,22 @@ import java.util.List;
 import java.util.Map;
 
 public class RollListFragment extends ListFragment implements PaginationListener.Paginates {
-	
+
 	public static final int PER_PAGE = 20;
-	
+
 	public static final int ROLLS_VOTER = 0;
 	public static final int ROLLS_RECENT = 1;
-	
+
 	private List<Roll> rolls;
-	
+
 	private Legislator voter;
 	private int type;
 	String query;
-	
+
 	PaginationListener pager;
 	View loadingView;
-	
-	public static RollListFragment forRecent() {
+
+	public static Fragment forRecent() {
 		RollListFragment frag = new RollListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", ROLLS_RECENT);
@@ -55,8 +55,8 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		frag.setRetainInstance(true);
 		return frag;
 	}
-	
-	public static RollListFragment forLegislator(Legislator legislator) {
+
+	public static Fragment forLegislator(Legislator legislator) {
 		RollListFragment frag = new RollListFragment();
 		Bundle args = new Bundle();
 		args.putInt("type", ROLLS_VOTER);
@@ -65,13 +65,13 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		frag.setRetainInstance(true);
 		return frag;
 	}
-	
+
 	public RollListFragment() {}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		Bundle args = getArguments();
 		type = args.getInt("type", ROLLS_VOTER);
 		voter = (Legislator) args.getSerializable("legislator");
@@ -79,65 +79,62 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		
 		loadRolls();
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.list_footer, container, false);
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		setupControls();
-		
+
 		if (rolls != null)
 			displayRolls();
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
 		if (rolls != null)
 			setupSubscription();
 	}
-	
+
 	public void setupControls() {
-		getView().findViewById(R.id.refresh).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				refresh();
-			}
-		});
-		
+		getView().findViewById(R.id.refresh).setOnClickListener(v -> refresh());
+
 		loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_page, null);
 		loadingView.setVisibility(View.GONE);
 		getListView().addFooterView(loadingView);
-		
+
 		pager = new PaginationListener(this);
 		getListView().setOnScrollListener(pager);
 
 		FragmentUtils.setLoading(this, R.string.votes_loading);
 	}
-	
+
 	private void setupSubscription() {
 		Subscription subscription = null;
-		
+
 		if (type == ROLLS_VOTER)
-			subscription = new Subscription(voter.bioguide_id, Subscriber.notificationName(voter), "RollsLegislatorSubscriber", voter.chamber);
+			subscription = new Subscription(voter.bioguide_id, Subscriber.notificationName(voter),
+					"RollsLegislatorSubscriber", voter.chamber);
 		else if (type == ROLLS_RECENT)
-			subscription = new Subscription("RecentVotes", "Recent Votes", "RollsRecentSubscriber", null);
-		
+			subscription = new Subscription("RecentVotes", "Recent Votes",
+					"RollsRecentSubscriber", null);
+
 		if (subscription != null)
 			Footer.setup(this, subscription, rolls);
 	}
-	
+
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		Roll roll = (Roll) parent.getItemAtPosition(position);
 		if (roll != null) // happened once somehow
 			startActivity(Utils.rollIntent(getActivity(), roll.id));
 	}
-	
 
 	private void refresh() {
 		rolls = null;
@@ -145,7 +142,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		FragmentUtils.showLoading(this);
 		loadRolls();
 	}
-	
+
 	@Override
 	public void loadNextPage(int page) {
 		getListView().setOnScrollListener(null);
@@ -156,11 +153,11 @@ public class RollListFragment extends ListFragment implements PaginationListener
 	public void loadRolls() {
 		new LoadRollsTask(this, 1).execute();
 	}
-	
+
 	public void onLoadRolls(List<Roll> rolls, int page) {
 		if (!isAdded())
 			return;
-		
+
 		if (page == 1) {
 			this.rolls= rolls;
 			displayRolls();
@@ -169,17 +166,17 @@ public class RollListFragment extends ListFragment implements PaginationListener
 			loadingView.setVisibility(View.GONE);
 			((RollAdapter) getListAdapter()).notifyDataSetChanged();
 		}
-		
+
 		// only re-enable the pagination if we got a full page back
 		if (rolls.size() >= PER_PAGE)
 			getListView().setOnScrollListener(pager);
 	}
-	
+
 	public void onLoadRolls(CongressException exception) {
 		if (isAdded())
 			FragmentUtils.showRefresh(this, R.string.votes_error);
 	}
-	
+
 	public void displayRolls() {
 		if (rolls.size() > 0) {
 			setListAdapter(new RollAdapter(this, rolls));
@@ -193,51 +190,10 @@ public class RollListFragment extends ListFragment implements PaginationListener
 		}
 	}
 
-
-	private class LoadRollsTask extends AsyncTask<Void,Void,List<Roll>> {
-		private RollListFragment context;
-		private CongressException exception;
-		int page;
-
-		public LoadRollsTask(RollListFragment context, int page) {
-			this.context = context;
-			this.page = page;
-			FragmentUtils.setupAPI(context);
-		}
-
-		@Override
-		public List<Roll> doInBackground(Void... nothing) {
-			try {
-
-				Map<String,String> params = new HashMap<String,String>();
-				
-				switch (context.type) {
-				case ROLLS_VOTER:
-					return RollService.latestMemberVotes(context.voter.bioguide_id, page);
-				case ROLLS_RECENT:
-					return RollService.latestVotes(page);
-				default:
-					throw new CongressException("Not sure what type of votes to find.");
-				}
-			} catch(CongressException exception) {
-				this.exception = exception;
-				return null;
-			}
-		}
-
-		@Override
-		public void onPostExecute(List<Roll> rolls) {
-			if (exception != null)
-				context.onLoadRolls(exception);
-			else
-				context.onLoadRolls(rolls, page);
-		}
-	}
-	
 	private static class RollAdapter extends ArrayAdapter<Roll> {
 		private LayoutInflater inflater;
 		private RollListFragment context;
-		
+
 		public RollAdapter(RollListFragment context, List<Roll> rolls) {
 			super(context.getActivity(), 0, rolls);
 			this.inflater = LayoutInflater.from(context.getActivity());
@@ -256,19 +212,19 @@ public class RollListFragment extends ListFragment implements PaginationListener
 			ViewHolder holder;
 			if (view == null) {
 				view = inflater.inflate(R.layout.roll_item, null);
-				
+
 				holder = new ViewHolder();
-				holder.roll = (TextView) view.findViewById(R.id.chamber_number);
-				holder.date = (TextView) view.findViewById(R.id.date);
-				holder.question = (TextView) view.findViewById(R.id.question);
-				holder.result = (TextView) view.findViewById(R.id.result);
-                holder.details = (ViewGroup) view.findViewById(R.id.details);
-                holder.detailsText = (TextView) view.findViewById(R.id.details_text);
-				
+				holder.roll = view.findViewById(R.id.chamber_number);
+				holder.date = view.findViewById(R.id.date);
+				holder.question = view.findViewById(R.id.question);
+				holder.result = view.findViewById(R.id.result);
+				holder.details = view.findViewById(R.id.details);
+				holder.detailsText = view.findViewById(R.id.details_text);
+
 				view.setTag(holder);
 			} else
 				holder = (ViewHolder) view.getTag();
-			
+
 			TextView msgView = holder.roll;
 
             // ?? why does this also activate for ROLLS_RECENT?
@@ -277,14 +233,14 @@ public class RollListFragment extends ListFragment implements PaginationListener
 					msgView.setText(R.string.votes_did_not_vote);
 				else
 					msgView.setText(roll.member_position);
-				
+
 			} else
 				msgView.setText(Utils.capitalize(roll.chamber));
-			
+
 			holder.roll = msgView;
-			
+
 			shortDate(holder.date, roll.voted_at);
-			
+
 			holder.question.setText(Utils.truncate(roll.question, 200));
 			holder.result.setText(resultFor(roll));
 
@@ -297,7 +253,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
                 else
                     title = "(untitled)";
 
-                holder.detailsText.setText(Bill.formatCode(roll.bill_id) + ": " + title);
+				holder.detailsText.setText(Bill.formatCode(roll.bill_id) + R.string.colon + title);
             }
 
 			return view;
@@ -307,7 +263,7 @@ public class RollListFragment extends ListFragment implements PaginationListener
 			TextView roll, date, question, result, detailsText;
             ViewGroup details;
 		}
-		
+
 		private String resultFor(Roll roll) {
 			StringBuilder breakdown;
 			if (roll.otherVotes) {
@@ -323,18 +279,56 @@ public class RollListFragment extends ListFragment implements PaginationListener
 				if (roll.voteBreakdown.get(Roll.PRESENT) > 0)
 					breakdown.append("-").append(roll.voteBreakdown.get(Roll.PRESENT));
 			}
-			
+
 			return roll.result + ", " + breakdown;
 		}
-		
+
 		private void shortDate(TextView view, Date date) {
 			longDate(view, date);
 		}
-		
+
 		private void longDate(TextView view, Date date) {
 			view.setTextSize(14);
 			view.setText(new SimpleDateFormat("MMM d, ''yy").format(date).toUpperCase());
 		}
 	}
-	
+
+	private class LoadRollsTask extends AsyncTask<Void, Void, List<Roll>> {
+		private RollListFragment context;
+		private CongressException exception;
+		int page;
+
+		public LoadRollsTask(RollListFragment context, int page) {
+			this.context = context;
+			this.page = page;
+			FragmentUtils.setupAPI(context);
+		}
+
+		@Override
+		public List<Roll> doInBackground(Void... nothing) {
+			try {
+				Map<String, String> params = new HashMap<>();
+
+				switch (context.type) {
+					case ROLLS_VOTER:
+						return RollService.latestMemberVotes(context.voter.bioguide_id, page);
+					case ROLLS_RECENT:
+						return RollService.latestVotes(page);
+					default:
+						throw new CongressException("Not sure what type of votes to find.");
+				}
+			} catch (CongressException exception) {
+				this.exception = exception;
+				return null;
+			}
+		}
+
+		@Override
+		public void onPostExecute(List<Roll> rolls) {
+			if (exception != null)
+				context.onLoadRolls(exception);
+			else
+				context.onLoadRolls(rolls, page);
+		}
+	}
 }

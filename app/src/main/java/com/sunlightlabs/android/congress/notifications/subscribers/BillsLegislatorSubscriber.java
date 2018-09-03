@@ -1,11 +1,8 @@
 package com.sunlightlabs.android.congress.notifications.subscribers;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.fragments.BillListFragment;
 import com.sunlightlabs.android.congress.notifications.Subscriber;
 import com.sunlightlabs.android.congress.notifications.Subscription;
 import com.sunlightlabs.android.congress.utils.Utils;
@@ -13,6 +10,8 @@ import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.BillService;
 import com.sunlightlabs.congress.services.ProPublica;
+
+import java.util.List;
 
 public class BillsLegislatorSubscriber extends Subscriber {
 
@@ -31,7 +30,7 @@ public class BillsLegislatorSubscriber extends Subscriber {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
 		if (results == ProPublica.PER_PAGE)
@@ -46,7 +45,7 @@ public class BillsLegislatorSubscriber extends Subscriber {
 	public Intent notificationIntent(Subscription subscription) {
 		return Utils.legislatorIntent(subscription.id).putExtra("tab", "bills");
 	}
-	
+
 	@Override
 	public String subscriptionName(Subscription subscription) {
 		return "Sponsored Bills: " + subscription.name;

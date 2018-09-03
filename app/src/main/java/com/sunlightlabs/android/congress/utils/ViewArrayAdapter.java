@@ -1,12 +1,12 @@
 package com.sunlightlabs.android.congress.utils;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+
+import java.util.List;
 
 /**
  * Dirt simple class, to give views the selectable appearance on click and long click
@@ -18,7 +18,7 @@ public class ViewArrayAdapter extends ArrayAdapter<View> {
 	public ViewArrayAdapter(Activity context, List<View> items) {
 		super(context, 0, items);
 	}
-	
+
 	public ViewArrayAdapter(Fragment context, List<View> items) {
 		super(context.getActivity(), 0, items);
 	}

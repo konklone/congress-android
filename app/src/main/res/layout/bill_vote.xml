@@ -9,8 +9,8 @@
 	
     <LinearLayout android:orientation="horizontal" 
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"        
-        >
+		android:layout_height="wrap_content"
+		android:baselineAligned="false">
 	
 	    <RelativeLayout 
 	        android:layout_width="90dp"
@@ -26,9 +26,9 @@
 				android:layout_alignParentTop="true"
 				
 				android:textSize="14sp"
-				
-				android:text="FEB 22, '11"
-				/>
+
+				android:layout_alignParentStart="true"
+				android:text="@string/feb_22_11" />
 			
 		</RelativeLayout>
 			
@@ -37,7 +37,7 @@
 			android:layout_height="wrap_content"
 	        android:layout_weight="1"
 	        android:layout_marginLeft="5dp"
-	        >
+			android:layout_marginStart="5dp">
 	    
 			<TextView android:id="@+id/result"
 				android:layout_width="match_parent"
@@ -46,7 +46,7 @@
 				android:lineSpacingExtra="2sp"
 				
 				android:textSize="14sp"
-				android:text="Passed the House"
+				android:text="@string/passed_the_house"
 				/>
 			
 			<TextView android:id="@+id/type_message"
@@ -57,7 +57,7 @@
 				
 				android:textSize="14sp"
 				android:textColor="@color/text_grey"
-				android:text="No roll call was taken for ths vote."
+				android:text="@string/no_roll_call_was_taken_for_ths_vote"
 				/>
 			
 		</LinearLayout>

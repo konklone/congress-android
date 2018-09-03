@@ -1,7 +1,5 @@
 package com.sunlightlabs.android.congress.notifications.subscribers;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.util.Log;
 
@@ -14,8 +12,10 @@ import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Roll;
 import com.sunlightlabs.congress.services.RollService;
 
+import java.util.List;
+
 public class RollsRecentSubscriber extends Subscriber {
-	
+
 	@Override
 	public String decodeId(Object result) {
 		return ((Roll) result).id;
@@ -24,7 +24,7 @@ public class RollsRecentSubscriber extends Subscriber {
 	@Override
 	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupAPI(context);
-		
+
 		try {
 			return RollService.latestVotes(1);
 		} catch (CongressException e) {
@@ -32,7 +32,7 @@ public class RollsRecentSubscriber extends Subscriber {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
 		if (results == RollListFragment.PER_PAGE)
@@ -45,12 +45,12 @@ public class RollsRecentSubscriber extends Subscriber {
 
 	@Override
 	public Intent notificationIntent(Subscription subscription) {
-		return new Intent().setClassName("com.sunlightlabs.android.congress", "com.sunlightlabs.android.congress.MenuVotes");
+		return new Intent().setClassName("com.sunlightlabs.android.congress",
+				"com.sunlightlabs.android.congress.MenuVotes");
 	}
-	
+
 	@Override
 	public String subscriptionName(Subscription subscription) {
 		return context.getResources().getString(R.string.menu_votes_recent);
 	}
-	
 }

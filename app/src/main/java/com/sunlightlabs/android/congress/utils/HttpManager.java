@@ -1,14 +1,14 @@
 package com.sunlightlabs.android.congress.utils;
 
-
 import android.util.Log;
 
-import com.squareup.okhttp.OkHttpClient;
-
 import java.net.URL;
+import java.net.URLStreamHandlerFactory;
 import java.security.GeneralSecurityException;
 
 import javax.net.ssl.SSLContext;
+
+import okhttp3.OkHttpClient;
 
 /**
  * Singleton class to manage HTTP interaction between OkHttp and HttpUrlConnection.
@@ -31,9 +31,9 @@ public class HttpManager {
         } catch (GeneralSecurityException e) {
             throw new AssertionError(); // The system has no TLS. Just give up.
         }
-        okHttpClient.setSslSocketFactory(sslContext.getSocketFactory());
+		//okHttpClient.sslSocketFactory(SSLContext.getSocketFactory());
 
         Log.w(Utils.TAG, "Initializing an OkHttpClient instance as the URL stream handler factory forevermore.");
-        URL.setURLStreamHandlerFactory(okHttpClient);
+		URL.setURLStreamHandlerFactory((URLStreamHandlerFactory) okHttpClient);
     }
 }

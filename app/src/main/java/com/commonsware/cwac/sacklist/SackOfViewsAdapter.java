@@ -1,4 +1,4 @@
-/***
+/*
 	Copyright (c) 2008-2009 CommonsWare, LLC
 	Portions (c) 2009 Google, Inc.
 	
@@ -15,12 +15,12 @@
 
 package com.commonsware.cwac.sacklist;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter that simply returns row views from a list.
@@ -48,7 +48,7 @@ import android.widget.BaseAdapter;
  * arbitrary number of rows, so it all appears seamless.
  */
 public class SackOfViewsAdapter extends BaseAdapter {
-	private List<View> views=null;
+	private List<View> views;
 
 	/**
 		* Constructor creating an empty list of views, but with
@@ -56,8 +56,8 @@ public class SackOfViewsAdapter extends BaseAdapter {
     */
 	public SackOfViewsAdapter(int count) {
 		super();
-		
-		views=new ArrayList<View>(count);
+
+		views = new ArrayList<>(count);
 		
 		for (int i=0;i<count;i++) {
 			views.add(null);

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -15,7 +14,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sunlightlabs.android.congress.fragments.BillListFragment;
@@ -101,12 +99,8 @@ public class LegislatorPager extends Activity implements HasActionMenu, LoadPhot
 		findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
 		findViewById(R.id.pager_container).setVisibility(View.GONE);
 		Utils.setLoading(this, R.string.legislator_loading);
-		
-		findViewById(R.id.refresh).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				refresh();
-			}
-		});
+
+		findViewById(R.id.refresh).setOnClickListener(v -> refresh());
     }
 	
 	private void setupPager() {
@@ -136,20 +130,12 @@ public class LegislatorPager extends Activity implements HasActionMenu, LoadPhot
 		ActionBarUtils.setTitle(this, titledName, new Intent(this, MenuLegislators.class));
         if (titledName.length() >= 23)
             ActionBarUtils.setTitleSize(this, 16);
-		
-		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.star_off, new View.OnClickListener() {
-			public void onClick(View v) { 
-				toggleDatabaseFavorite(); 
-			}
-		});
+
+		ActionBarUtils.setActionButton(this, R.id.action_1, R.drawable.star_off, v -> toggleDatabaseFavorite());
 
         // allow for devices without phones
         if ((legislator.phone != null) && (!legislator.phone.equals(""))) {
-            ActionBarUtils.setActionButton(this, R.id.call, android.R.drawable.ic_menu_call, new View.OnClickListener() {
-                public void onClick(View v) {
-                    callOffice();
-                }
-            });
+			ActionBarUtils.setActionButton(this, R.id.call, android.R.drawable.ic_menu_call, v -> callOffice());
         }
 		
 		toggleFavoriteStar(cursor.getCount() == 1);
@@ -171,7 +157,7 @@ public class LegislatorPager extends Activity implements HasActionMenu, LoadPhot
 
         ((TextView) findViewById(R.id.profile_state_party)).setText(description);
 
-        TextView officeView = (TextView) findViewById(R.id.profile_office);
+		TextView officeView = findViewById(R.id.profile_office);
         if (legislator.office != null && !legislator.office.equals(""))
             officeView.setText(officeName(legislator.office));
         else
@@ -216,12 +202,7 @@ public class LegislatorPager extends Activity implements HasActionMenu, LoadPhot
     private void socialButton(int id, final String url, final String network) {
         View view = findViewById(id);
         if (url != null && !url.equals("")) {
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View arg0) {
-                    visit(url, network);
-                }
-            });
+			view.setOnClickListener(arg0 -> visit(url, network));
         } else
             view.setVisibility(View.GONE);
     }

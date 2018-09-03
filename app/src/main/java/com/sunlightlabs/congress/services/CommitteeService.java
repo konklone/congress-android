@@ -1,16 +1,16 @@
 package com.sunlightlabs.congress.services;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.sunlightlabs.congress.models.Bill;
+import com.sunlightlabs.congress.models.Committee;
+import com.sunlightlabs.congress.models.CongressException;
+import com.sunlightlabs.congress.models.Legislator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sunlightlabs.congress.models.Bill;
-import com.sunlightlabs.congress.models.Committee;
-import com.sunlightlabs.congress.models.CongressException;
-import com.sunlightlabs.congress.models.Legislator;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommitteeService {
 
@@ -95,7 +95,7 @@ public class CommitteeService {
 
         if (!json.isNull("subcommittees")) {
             JSONArray array = json.getJSONArray("subcommittees");
-            List<Committee> subcommittees = new ArrayList<Committee>();
+			List<Committee> subcommittees = new ArrayList<>();
 
             for (int i=0; i<array.length(); i++) {
                 Committee subcommittee = new Committee();
@@ -117,7 +117,7 @@ public class CommitteeService {
             String chair_id = json.getString("chair_id");
             String ranking_id = json.getString("ranking_member_id");
 
-            List<Legislator> members = new ArrayList<Legislator>();
+			List<Legislator> members = new ArrayList<>();
             JSONArray array = json.getJSONArray("current_members");
 
             for (int i=0; i<array.length(); i++) {
@@ -166,7 +166,7 @@ public class CommitteeService {
 
     // parses committee and subcommittee info from fields on legislator roles
     protected static List<Committee> committeesFromArray(JSONArray list, boolean subcommittee) throws JSONException {
-        List<Committee> committees = new ArrayList<Committee>();
+		List<Committee> committees = new ArrayList<>();
         for (int i=0; i<list.length(); i++) {
             JSONObject object = list.getJSONObject(i);
             Committee committee = new Committee();
@@ -209,7 +209,7 @@ public class CommitteeService {
     }
 
     private static List<Committee> committeesFor(String url) throws CongressException {
-        List<Committee> committees = new ArrayList<Committee>();
+		List<Committee> committees = new ArrayList<>();
         try {
             JSONArray results = ProPublica.resultsFor(url);
 

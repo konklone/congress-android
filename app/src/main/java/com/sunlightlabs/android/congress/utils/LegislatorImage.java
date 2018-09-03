@@ -3,26 +3,15 @@ package com.sunlightlabs.android.congress.utils;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.congress.models.CongressException;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOError;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
-/**
+/*
  * Various static methods that other classes can use to fetch legislator profile images,
  * and cause them to be downloaded and cached to disk.
  */
@@ -53,7 +42,7 @@ public class LegislatorImage {
         if (context == null) return null;
 
         String url = LegislatorImage.getImageURL(bioguideId, imageSize);
-		RequestCreator rc = Picasso.with(context)
+		RequestCreator rc = Picasso.get()
 				.load(url)
 				.placeholder(R.drawable.loading_photo);
 
@@ -74,7 +63,7 @@ public class LegislatorImage {
 			ImageView imageView
 	) {
 		String url = LegislatorImage.getImageURL(bioguideId, imageSize);
-		Picasso.with(context)
+		Picasso.get()
 				.load(url)
 				.placeholder(R.drawable.loading_photo)
 				.into(imageView);

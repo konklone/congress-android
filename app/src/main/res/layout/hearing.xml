@@ -19,7 +19,7 @@
 		android:paddingRight="15dp"
 		
 		android:gravity="center_horizontal"
-		>
+		android:paddingEnd="15dp">
 		
 		<TextView android:id="@+id/month"
 			android:layout_width="wrap_content"
@@ -53,8 +53,8 @@
 			android:layout_height="wrap_content"
 			
 			android:textSize="16sp"
-			
-			android:text="Homeland Security and Governmental Affairs"
+
+			android:text="@string/homeland_security_and_governmental_affairs"
 			/>
 			
 		<TextView android:id="@+id/description"

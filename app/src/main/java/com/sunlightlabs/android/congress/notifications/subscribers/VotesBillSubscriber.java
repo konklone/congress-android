@@ -1,7 +1,5 @@
 package com.sunlightlabs.android.congress.notifications.subscribers;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.util.Log;
 
@@ -11,6 +9,8 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.Bill;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.services.BillService;
+
+import java.util.List;
 
 public class VotesBillSubscriber extends Subscriber {
 
@@ -23,7 +23,7 @@ public class VotesBillSubscriber extends Subscriber {
 	public List<?> fetchUpdates(Subscription subscription) {
 		Utils.setupAPI(context);
 		String billId = subscription.data;
-		
+
 		try {
 			return BillService.find(billId).votes;
 		} catch (CongressException e) {
@@ -31,7 +31,7 @@ public class VotesBillSubscriber extends Subscriber {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public String notificationMessage(Subscription subscription, int results) {
 		if (results > 1)
@@ -46,7 +46,7 @@ public class VotesBillSubscriber extends Subscriber {
 	public Intent notificationIntent(Subscription subscription) {
 		return Utils.billIntent(subscription.id).putExtra("tab", "votes");
 	}
-	
+
 	@Override
 	public String subscriptionName(Subscription subscription) {
 		return "Votes: " + subscription.name;

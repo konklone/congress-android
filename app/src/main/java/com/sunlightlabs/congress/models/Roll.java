@@ -25,7 +25,7 @@ public class Roll implements Serializable {
     public String question, result, description, required;
     public Date voted_at;
 
-    public Map<String,Integer> voteBreakdown = new HashMap<String,Integer>();
+	public Map<String, Integer> voteBreakdown = new HashMap<>();
 
     // if there was a tie breaker
     public String tie_breaker, tie_breaker_vote;
@@ -92,12 +92,16 @@ public class Roll implements Serializable {
 	// the chamber's first letter will be used, and combined into a roll ID
 	public static String normalizeRollId(String chamber, String formattedNumber, String year) {
 		String shortChamber;
-		if (chamber.equals("house"))
-			shortChamber = "h";
-		else if (chamber.equals("senate"))
-			shortChamber = "s";
-		else
-			return null;
+		switch (chamber) {
+			case "house":
+				shortChamber = "h";
+				break;
+			case "senate":
+				shortChamber = "s";
+				break;
+			default:
+				return null;
+		}
 		
 		String number = formattedNumber.replaceAll("[^\\d]", "");
 		

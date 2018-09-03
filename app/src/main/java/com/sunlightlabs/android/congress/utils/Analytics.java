@@ -58,7 +58,6 @@ public class Analytics {
         GoogleAnalytics.getInstance(activity).setAppOptOut(value);
     }
 
-
     public static void event(Activity activity, String category, String action, String label) {
 		if (analyticsEnabled(activity)) {
             // play nice with OkHttp
@@ -66,7 +65,8 @@ public class Analytics {
 
             if (label == null) label = "";
 
-			Log.i(Utils.TAG, "[Analytics] Tracking event - category: " + category + ", action: " + action + ", label: " + label);
+			Log.i(Utils.TAG, "[Analytics] Tracking event - category: " + category + ", action: "
+					+ action + ", label: " + label);
 
             Map<String,String> event = attachCustomDimensions(activity, new HitBuilders.EventBuilder()
                 .setCategory(category)
@@ -77,46 +77,42 @@ public class Analytics {
             ((CongressApp) activity.getApplication()).appTracker().send(event);
 		}
 	}
-	
+
 	public static boolean analyticsEnabled(Activity activity) {
 		boolean debugDisabled = activity.getResources().getString(R.string.debug_disable_analytics).equals("true");
 
         // these should be in sync, but in case they get out of sync, err towards turning off analytics
         boolean googleOptout = GoogleAnalytics.getInstance(activity).getAppOptOut();
-		boolean userEnabled = Utils.getBooleanPreference(activity, Settings.ANALYTICS_ENABLED_KEY, Settings.ANALYTICS_ENABLED_DEFAULT);
+		boolean userEnabled = Utils.getBooleanPreference(activity, Settings.ANALYTICS_ENABLED_KEY,
+				Settings.ANALYTICS_ENABLED_DEFAULT);
 
 		return (!debugDisabled && !googleOptout && userEnabled);
 	}
-	
-	
-	/*
-	 *  Custom dimensions and metrics.
-	 */
-	
+
+	/* Custom dimensions and metrics */
+
 	public static final int DIMENSION_NOTIFICATIONS_ON = 3; // whether notifications are enabled (session)
-	
+
 	public static final int DIMENSION_ENTRY = 4; // how the user entered the app (hit)
-	
+
 	public static HitBuilders.EventBuilder attachCustomDimensions(Activity activity, HitBuilders.EventBuilder event) {
 		Resources res = activity.getResources();
 
-		boolean notificationsOn = Utils.getBooleanPreference(activity, NotificationSettings.KEY_NOTIFY_ENABLED, false);
+		boolean notificationsOn = Utils.getBooleanPreference(activity, NotificationSettings.KEY_NOTIFY_ENABLED,
+				false);
         event = event.setCustomDimension(DIMENSION_NOTIFICATIONS_ON, notificationsOn ? "on" : "off");
 
 		String entrySource = entrySource(activity);
 		if (entrySource != null)
-            event = event.setCustomDimension(DIMENSION_ENTRY, entrySource);
+			event = event.setCustomDimension(DIMENSION_ENTRY, entrySource);
 
         return event;
 	}
-	
-	
-	/*
-	 *  Utility function for discerning an entry source from an activity's Intent. 
-	 */
-	
+
+	/* Utility function for discerning an entry source from an activity's Intent */
+
 	public static final String EXTRA_ENTRY_FROM = "com.sunlightlabs.android.congress.utils.ENTRY_FROM";
-	
+
 	public static String entrySource(Activity activity) {
 		Intent intent = activity.getIntent();
 		String action = intent.getAction();
@@ -133,25 +129,21 @@ public class Analytics {
 		} else
 			return null;
 	}
-	
+
 	public static Intent passEntry(Activity activity, Intent intent) {
 		String action = activity.getIntent().getAction();
 		if (action != null && action.equals(Intent.ACTION_MAIN)) {
 			intent.setAction(Intent.ACTION_MAIN);
 			intent.putExtra(Analytics.EXTRA_ENTRY_FROM, activity.getIntent().getStringExtra(Analytics.EXTRA_ENTRY_FROM));
 		}
-		
 		return intent;
 	}
-	
-	/*
-	 * Event definitions
-	 */
-	
+
+	/* Event definitions */
+
 	// types of entry into the application
 	public static final String ENTRY_MAIN = "main";
 	public static final String ENTRY_NOTIFICATION = "notification";
-
 
 	// categories of events
 	public static final String EVENT_FAVORITE = "favorites";
@@ -192,11 +184,11 @@ public class Analytics {
 	public static void aboutPage(Activity activity) {
 		event(activity, EVENT_ABOUT, ABOUT_VALUE, null);
 	}
-	
+
 	public static void changelog(Activity activity) {
 		event(activity, EVENT_CHANGELOG, CHANGELOG_VALUE, null);
 	}
-	
+
 	public static void reviewClick(Activity activity) {
 		event(activity, EVENT_REVIEW, null, null);
 	}
@@ -204,53 +196,52 @@ public class Analytics {
 	public static void addFavoriteLegislator(Activity activity, String bioguideId) {
 		event(activity, EVENT_FAVORITE, FAVORITE_ADD_LEGISLATOR, bioguideId);
 	}
-	
+
 	public static void removeFavoriteLegislator(Activity activity, String bioguideId) {
 		event(activity, EVENT_FAVORITE, FAVORITE_REMOVE_LEGISLATOR, bioguideId);
 	}
-	
+
 	public static void addFavoriteBill(Activity activity, String billId) {
 		event(activity, EVENT_FAVORITE, FAVORITE_ADD_BILL, billId);
 	}
-	
+
 	public static void removeFavoriteBill(Activity activity, String billId) {
 		event(activity, EVENT_FAVORITE, FAVORITE_REMOVE_BILL, billId);
 	}
-	
+
 	public static void subscribeNotification(Activity activity, String subscriber) {
 		event(activity, EVENT_NOTIFICATION, NOTIFICATION_ADD, subscriber);
 	}
-	
+
 	public static void unsubscribeNotification(Activity activity, String subscriber) {
 		event(activity, EVENT_NOTIFICATION, NOTIFICATION_REMOVE, subscriber);
 	}
-	
+
 	public static void legislatorCall(Activity activity, String bioguideId) {
 		event(activity, EVENT_LEGISLATOR, LEGISLATOR_CALL, bioguideId);
 	}
-	
+
 	public static void legislatorWebsite(Activity activity, String bioguideId, String network) {
 		event(activity, EVENT_LEGISLATOR, network, bioguideId);
 	}
-	
+
 	public static void legislatorContacts(Activity activity, String bioguideId) {
 		event(activity, EVENT_LEGISLATOR, LEGISLATOR_CONTACTS, bioguideId);
 	}
-	
+
 	public static void billText(Activity activity, String billId) {
 		event(activity, EVENT_BILL, BILL_TEXT, billId);
 	}
-	
+
 	public static void billGovTrack(Activity activity, String billId) {
 		event(activity, EVENT_BILL, BILL_GOVTRACK, billId);
 	}
-	
+
 	public static void billUpcoming(Activity activity, String billId) {
 		event(activity, EVENT_BILL, BILL_UPCOMING, billId);
 	}
-	
+
 	public static void analyticsDisable(Activity activity) {
 		event(activity, EVENT_ANALYTICS, ANALYTICS_DISABLE, "");
 	}
-	
 }
