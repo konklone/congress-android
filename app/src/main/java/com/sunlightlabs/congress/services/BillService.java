@@ -72,7 +72,7 @@ public class BillService {
 		return billFor(ProPublica.url(endpoint));
 	}
 
-	protected static Bill fromAPI(JSONObject json) throws JSONException, ParseException, CongressException {
+	protected static Bill fromAPI(JSONObject json) throws JSONException, ParseException {
 		Bill bill = new Bill();
 
         // Fail if this isn't present.

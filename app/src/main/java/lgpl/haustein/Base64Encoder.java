@@ -43,7 +43,7 @@ public final class Base64Encoder {
      * @return the input string encoded using Base 64 encoding.
      */
     public static String encode (String string) {
-        return encode(string.getBytes()).toString ();
+        return encode(string.getBytes());
     }
     
     public static String encode (byte [] data) {
@@ -119,7 +119,7 @@ public final class Base64Encoder {
         case '/': return 63;
         case '=': return 0;
         default:
-            throw new RuntimeException (new StringBuffer("unexpected code: ").append(c).toString());
+            throw new RuntimeException ("unexpected code: " + c);
         }
     }
                 

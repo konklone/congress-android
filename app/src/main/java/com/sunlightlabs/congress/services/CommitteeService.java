@@ -48,7 +48,7 @@ public class CommitteeService {
 		return committeesFor(ProPublica.url(endpoint));
 	}
 
-	protected static Committee fromAPI(JSONObject json) throws JSONException, CongressException {
+	protected static Committee fromAPI(JSONObject json) throws JSONException {
         Committee committee = new Committee();
 
         if (!json.isNull("id"))

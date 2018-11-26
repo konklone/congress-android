@@ -74,10 +74,7 @@ public class Bill implements Serializable {
 		public boolean passed() {
 			if (this.result == null) return false;
 
-            Pattern pattern = Pattern.compile("passed", Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(this.result);
-            boolean passed = matcher.find();
-            return passed;
+            		return Pattern.compile("passed", Pattern.CASE_INSENSITIVE).matcher(this.result).find();
 		}
 	}
 	
@@ -133,14 +130,13 @@ public class Bill implements Serializable {
 
 	// returns [bill_type, number, congress]
 	public static String[] splitBillId(String bill_id) {
-        Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)-(\\d+)$");
-        Matcher matcher = pattern.matcher(bill_id);
-        if (!matcher.find())
-            return null;
+		Pattern pattern = Pattern.compile("^([a-z]+)(\\d+)-(\\d+)$");
+		Matcher matcher = pattern.matcher(bill_id);
+        	if (!matcher.find())
+			return null;
 
-        String[] pieces = { matcher.group(1), matcher.group(2), matcher.group(3) };
-        return pieces;
-    }
+        	return new String[]{ matcher.group(1), matcher.group(2), matcher.group(3) };
+	}
 
     // also expanded to handle amendment IDs
 	public static String formatCode(String bill_type, int number) {

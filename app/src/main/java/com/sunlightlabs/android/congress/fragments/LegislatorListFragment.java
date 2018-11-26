@@ -333,8 +333,13 @@ public class LegislatorListFragment extends ListFragment implements LoadPhotoTas
 			
 			@Override
 			public boolean equals(Object holder) {
+
+				if (!(holder instanceof ViewHolder)) {
+					return false;
+				}
 				ViewHolder other = (ViewHolder) holder;
-				return other != null && other instanceof ViewHolder && this.bioguide_id.equals(other.bioguide_id);
+
+				return this.bioguide_id.equals(other.bioguide_id);
 			}
 		}
 

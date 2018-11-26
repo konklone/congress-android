@@ -20,14 +20,12 @@ public class FloorUpdateService {
 	// /{congress}/{chamber}/floor_updates.json
 	public static List<FloorUpdate> latest(String chamber, int page) throws CongressException {
 		String congress = String.valueOf(Bill.currentCongress());
-        String[] endpoint = { congress, chamber, "floor_updates" };
-		
-		List<FloorUpdate> updates = updatesFor(ProPublica.url(endpoint, page));
+		String[] endpoint = { congress, chamber, "floor_updates" };
 
-        return updates;
+		return updatesFor(ProPublica.url(endpoint, page));
 	}
 	
-	protected static FloorUpdate fromAPI(JSONObject json) throws JSONException, ParseException, CongressException {
+	protected static FloorUpdate fromAPI(JSONObject json) throws JSONException, ParseException {
 		FloorUpdate update = new FloorUpdate();
 
         if (!json.isNull("description"))

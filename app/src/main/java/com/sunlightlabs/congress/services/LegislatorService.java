@@ -103,7 +103,7 @@ public class LegislatorService {
 	
 	/* JSON parsers, also useful for other service endpoints within this package */
 
-	protected static Legislator fromAPI(JSONObject json) throws ParseException, JSONException, CongressException {
+	protected static Legislator fromAPI(JSONObject json) throws ParseException, JSONException {
         if (json == null)
             return null;
 

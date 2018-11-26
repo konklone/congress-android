@@ -71,8 +71,7 @@ public class Database {
 		try {
 			Class<?> cls = Class.forName("com.sunlightlabs.congress.models.Legislator");
 			ContentValues cv = new ContentValues(size);
-			for (int i = 0; i < LEGISLATOR_COLUMNS.length; i++) {
-				String column = LEGISLATOR_COLUMNS[i];
+			for (String column : LEGISLATOR_COLUMNS) {
 				cv.put(column, (String) cls.getDeclaredField(column).get(legislator));
 			}
 			return cv;
@@ -130,8 +129,7 @@ public class Database {
 		try {
 			Class<?> cls = Class.forName("com.sunlightlabs.congress.models.Bill");
 			ContentValues cv = new ContentValues(BILL_COLUMNS.length);
-			for (int i = 0; i < BILL_COLUMNS.length; i++) {
-				String column = BILL_COLUMNS[i];
+			for (String column : BILL_COLUMNS) {
 				cv.put(column, (String) cls.getDeclaredField(column).get(bill));
 			}
 			return database.insert("bills", null, cv);
@@ -253,8 +251,7 @@ public class Database {
 			StringBuilder sql = new StringBuilder("CREATE TABLE " + table);
 			sql.append(" (_id INTEGER PRIMARY KEY AUTOINCREMENT");
 
-			for (int i = 0; i < columns.length; i++)
-				sql.append(", " + columns[i] + " TEXT");
+			for (String column : columns) sql.append(", ").append(column).append(" TEXT");
 
 			sql.append(");");
 			db.execSQL(sql.toString());
@@ -442,56 +439,54 @@ public class Database {
 					
 					
 					String[] subscriptions = new String[] {"ActionsBillSubscriber", "VotesBillSubscriber", "NewsBillSubscriber"};
-					for (int i=0; i<subscriptions.length; i++) {
-						String subscription = subscriptions[i];
+					for (String subscription : subscriptions) {
 						rows = 0;
-						
+
 						Log.i(Utils.TAG, "- In subscriptions table (" + subscription + ")...");
-						cursor = db.rawQuery("SELECT * FROM subscriptions WHERE notification_class = ? AND id LIKE \"%cres%\"", new String[] { subscription });
+						cursor = db.rawQuery("SELECT * FROM subscriptions WHERE notification_class = ? AND id LIKE \"%cres%\"", new String[]{subscription});
 						if (cursor.moveToFirst()) {
 							do {
 								String billId = cursor.getString(cursor.getColumnIndexOrThrow("id"));
 								if (billId.contains("cres")) {
-									
+
 									String newId = billId.replace("cres", "conres");
 									String newData = newId;
-									
+
 									// bill news subscriptions use the formatted code as the data
 									if (subscription.equals("NewsBillSubscriber")) {
 										String billCode = cursor.getString(cursor.getColumnIndexOrThrow("data"));
 										newData = billCode.replace("C. Res.", "Con. Res.");
 									}
-									
+
 									Log.i(Utils.TAG, "    [" + billId + "] -> [" + newId + "]");
-									db.execSQL("UPDATE subscriptions SET id=?, data=? WHERE id=? AND notification_class=?", new String[] {newId, newData, billId, subscription});
+									db.execSQL("UPDATE subscriptions SET id=?, data=? WHERE id=? AND notification_class=?", new String[]{newId, newData, billId, subscription});
 									rows += 1;
 								}
 							} while (cursor.moveToNext());
 						}
-						
+
 						Log.i(Utils.TAG, "Updated " + rows + " subscriptions rows with new ids (" + subscription + ")");
 					}
 					
 					String[] seenTypes = new String[] { "BillsLawsSubscriber", "BillsLegislatorSubscriber", "BillsRecentSubscriber", "BillsSearchSubscriber" };
-					for (int i=0; i<seenTypes.length; i++) {
-						String seenType = seenTypes[i];
+					for (String seenType : seenTypes) {
 						rows = 0;
-						
+
 						Log.i(Utils.TAG, "- In seen_items table (" + seenType + ")...");
-						cursor = db.rawQuery("SELECT * FROM seen_items WHERE subscription_class = ? AND seen_id LIKE \"%cres%\"", new String[] { seenType});
+						cursor = db.rawQuery("SELECT * FROM seen_items WHERE subscription_class = ? AND seen_id LIKE \"%cres%\"", new String[]{seenType});
 						if (cursor.moveToFirst()) {
 							do {
 								String billId = cursor.getString(cursor.getColumnIndexOrThrow("seen_id"));
 								if (billId.contains("cres")) {
 									String newId = billId.replace("cres", "conres");
-									
+
 									Log.i(Utils.TAG, "    [" + billId + "] -> [" + newId + "]");
-									db.execSQL("UPDATE seen_items SET seen_id=? WHERE seen_id=? and subscription_class=?", new String[] {newId, billId, seenType});
+									db.execSQL("UPDATE seen_items SET seen_id=? WHERE seen_id=? and subscription_class=?", new String[]{newId, billId, seenType});
 									rows += 1;
 								}
 							} while (cursor.moveToNext());
 						}
-						
+
 						Log.i(Utils.TAG, "Updated " + rows + " seen_items rows with new ids (" + seenType + ")");
 					}
 					
