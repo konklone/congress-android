@@ -33,6 +33,8 @@ import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 import com.sunlightlabs.congress.models.Legislator;
 
+import androidx.core.app.ActivityCompat;
+
 public class LegislatorPager extends Activity implements HasActionMenu, LoadPhotoTask.LoadsPhoto {
 	public String bioguide_id;
 	public Legislator legislator;
@@ -42,6 +44,8 @@ public class LegislatorPager extends Activity implements HasActionMenu, LoadPhot
 	
 	public Database database;
 	public Cursor cursor;
+
+	public static final int PERMISSION_TO_DIAL_DIRECTLY = 0;
 	
 	
 	@Override
@@ -202,10 +206,40 @@ public class LegislatorPager extends Activity implements HasActionMenu, LoadPhot
 
         // if user gave us permission to directly initiate calls, do so
         if (Utils.checkPermission(this, Manifest.permission.CALL_PHONE))
-            startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel://" + legislator.phone)));
-        // otherwise, open up the dialer with the number ready to go (needs no permission)
+            doCallOffice(true);
+        // otherwise, prompt for permission
         else
-            startActivity(new Intent(Intent.ACTION_DIAL));
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CALL_PHONE}, PERMISSION_TO_DIAL_DIRECTLY);
+
+    }
+
+    // Execute either a direct or an indirect dial.
+    public void doCallOffice(boolean direct) {
+	    Intent intent;
+        if (direct)
+            intent = new Intent(Intent.ACTION_CALL);
+        else
+            intent = new Intent(Intent.ACTION_DIAL);
+
+	    intent.setData(Uri.parse("tel:" + legislator.phone));
+        startActivity(intent);
+	}
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_TO_DIAL_DIRECTLY: {
+                // if we got permission, dial them
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    doCallOffice(true);
+
+                // otherwise, fall back to opening the dialer with number ready to go (needs no permission)
+                else
+                    doCallOffice(false);
+
+                return;
+            }
+        }
     }
 
     public void visit(String url, String social) {

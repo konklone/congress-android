@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 28
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId "com.sunlightlabs.android.congress"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 28
     }
 
     buildTypes {
@@ -29,7 +29,7 @@ dependencies {
     implementation files('libs/jackson-core-2.3.1.jar')
     implementation files('libs/jackson-databind-2.3.1.jar')
 
-    implementation 'com.android.support:support-v13:25.3.1'
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'com.squareup.okhttp:okhttp:1.3.0'
     implementation 'com.squareup.picasso:picasso:2.2.0'
     implementation 'com.google.android.gms:play-services:4.3.23'
