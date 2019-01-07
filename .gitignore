@@ -3,6 +3,7 @@
 *.iml
 
 /app/build
+/app/release
 .idea
 
 /app/src/main/res/values/keys.xml
