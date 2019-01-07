@@ -200,12 +200,16 @@ public class LegislatorPager extends Activity implements HasActionMenu, LoadPhot
     public void callOffice() {
         Analytics.legislatorCall(this, legislator.bioguide_id);
 
+        Intent intent;
         // if user gave us permission to directly initiate calls, do so
         if (Utils.checkPermission(this, Manifest.permission.CALL_PHONE))
-            startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel://" + legislator.phone)));
+            intent = new Intent(Intent.ACTION_CALL);
         // otherwise, open up the dialer with the number ready to go (needs no permission)
         else
-            startActivity(new Intent(Intent.ACTION_DIAL));
+            intent = new Intent(Intent.ACTION_DIAL);
+
+        intent.setData(Uri.parse("tel:" + legislator.phone));
+        startActivity(intent);
     }
 
     public void visit(String url, String social) {
