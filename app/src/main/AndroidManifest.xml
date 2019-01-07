@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.sunlightlabs.android.congress"
-      android:versionCode="61"
-      android:versionName="4.9.2"
-      >
+      package="com.sunlightlabs.android.congress">
       
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
