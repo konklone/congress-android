@@ -68,7 +68,7 @@ public class BillService {
 	public static Bill find(String id) throws CongressException {
         String[] pieces = Bill.splitBillId(id);
         String typeNumber = pieces[0] + pieces[1];
-        String[] endpoint = { String.valueOf(Bill.currentCongress()), "bills", typeNumber };
+        String[] endpoint = { String.valueOf(pieces[2]), "bills", typeNumber };
 		return billFor(ProPublica.url(endpoint));
 	}
 
