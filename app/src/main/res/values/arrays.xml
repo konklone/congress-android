@@ -2,7 +2,7 @@
 <resources>
     
     <string-array name="changelog">
-		<item>Generally: I'm going over the app and fixing bugs and cleaning it up as we move into the 116th Congress. Please email me at eric+congress@konklone.com if you're having issues or see any bugs.</item>
+		<item>Generally: I\'m going over the app and fixing bugs and cleaning it up as we move into the 116th Congress. Please email me at eric+congress@konklone.com if you\'re having issues or see any bugs.</item>
 		<item>Fixed the loading of bills in prior Congresses.</item>
 		<item>Fixed the call button when dialing members of Congress.</item>
 		<item>Properly request direct dialing permissions to make dialing members of Congress easier (if users want that).</item>
