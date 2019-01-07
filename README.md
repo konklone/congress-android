@@ -52,7 +52,7 @@ Code changes:
 Then, release work:
 
 * Check keys.xml:
-  - is api_endpoint pointing to production?
+  - is pro_publica_api_endpoint pointing to production?
   - are all debug flags set to false?
 * Produce signed APK version
 * Take any screenshots needed to replace outdated ones
