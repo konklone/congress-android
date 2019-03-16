@@ -3,24 +3,13 @@ package com.sunlightlabs.android.congress.utils;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.sunlightlabs.android.congress.R;
-import com.sunlightlabs.congress.models.CongressException;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOError;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Various static methods that other classes can use to fetch legislator profile images,
@@ -38,7 +27,7 @@ public class LegislatorImage {
 	/**
 	 * Return the URL for a given bioguideID and size pair
 	 */
-	public static String getImageURL(String bioguideId, String size) {
+	private static String getImageURL(String bioguideId, String size) {
 		return "https://theunitedstates.io/images/congress/" + size + "/" + bioguideId + ".jpg";
 	}
 
