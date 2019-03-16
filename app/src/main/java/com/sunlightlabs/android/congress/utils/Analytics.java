@@ -32,8 +32,6 @@ public class Analytics {
     // in onStart(), start auto-tracking with any previously initialized trackers
     public static void start(Activity activity) {
         if (analyticsEnabled(activity)) {
-            // play nice with OkHttp
-            HttpManager.init();
             Log.i(Utils.TAG, "[Analytics] Tracker starting for " + activity.getLocalClassName());
             GoogleAnalytics.getInstance(activity).reportActivityStart(activity);
 
@@ -46,8 +44,6 @@ public class Analytics {
 
     // in onStop(), stop auto-tracking with any previously initialized trackers
     public static void stop(Activity activity) {
-        // play nice with OkHttp
-        HttpManager.init();
         Log.i(Utils.TAG, "[Analytics] Tracker stopping for " + activity.getLocalClassName());
         GoogleAnalytics.getInstance(activity).reportActivityStop(activity);
     }
@@ -61,8 +57,6 @@ public class Analytics {
 
     public static void event(Activity activity, String category, String action, String label) {
 		if (analyticsEnabled(activity)) {
-            // play nice with OkHttp
-            HttpManager.init();
 
             if (label == null) label = "";
 
