@@ -15,7 +15,7 @@ import javax.net.ssl.SSLContext;
  */
 public class HttpManager {
 
-    public static boolean initialized = false;
+    private static boolean initialized = false;
 
     public static void init() {
         if (initialized) return;
@@ -26,7 +26,7 @@ public class HttpManager {
         // adapted from https://github.com/mapbox/mapbox-android-sdk/pull/244
         SSLContext sslContext;
         try {
-            sslContext = SSLContext.getInstance("TLS");
+            sslContext = SSLContext.getInstance("TLSv1.2");
             sslContext.init(null, null, null);
         } catch (GeneralSecurityException e) {
             throw new AssertionError(); // The system has no TLS. Just give up.
