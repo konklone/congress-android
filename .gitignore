@@ -10,6 +10,6 @@
 /app/src/main/res/xml/tracker.xml
 
 # gradle/android studio stuff
-/.gradle
-/local.properties
-/build
+.gradle
+local.properties
+build
