@@ -5,7 +5,7 @@ android {
 
     defaultConfig {
         applicationId "com.sunlightlabs.android.congress"
-        minSdkVersion 21
+        minSdkVersion 16
         targetSdkVersion 28
 		versionCode 61
 	    versionName "4.9.2"
@@ -50,7 +50,7 @@ dependencies {
 	implementation 'com.commonsware.cwac:wakeful:1.1.0'
 
 	// Other
-	implementation 'com.squareup.okhttp3:okhttp:3.14.0'
+	implementation 'com.squareup.okhttp3:okhttp:3.12.2'
     implementation 'com.squareup.picasso:picasso:2.2.0' //2.5.2, 2.71828
 	//implementation 'com.squareup.picasso3:picasso:3.0.0-SNAPSHOT'
     
