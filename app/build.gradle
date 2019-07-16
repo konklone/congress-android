@@ -40,9 +40,9 @@ dependencies {
 
 	// Jackson
 	implementation 'de.grundid.opendatalab:geojson-jackson:1.1' //1.8.1
-	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.3.1' //2.9.8
-	implementation 'com.fasterxml.jackson.core:jackson-core:2.3.1' //2.9.8
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.3.1' //2.9.8
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.8' //2.9.8
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.9.8' //2.9.8
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8' //2.9.8
 
 	// Commonsware
 	implementation 'com.commonsware.cwac:merge:1.1.2'
