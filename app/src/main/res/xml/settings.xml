@@ -4,10 +4,7 @@
           
 	<CheckBoxPreference android:key="analytics_enabled"
 		android:title="@string/analytics_enabled"
-		
-		android:summaryOn="@string/analytics_enabled_summary_on"
-		android:summaryOff="@string/analytics_enabled_summary_off"
-		
+		android:summary="@string/analytics_summary"
 		android:defaultValue="true"
 		/>
 		

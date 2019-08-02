@@ -217,9 +217,8 @@
     <string name="notify_ringtone">Select a ringtone</string>
     
     <string name="analytics_enabled">Allow Analytics</string>
-    <string name="analytics_enabled_summary_on">Allow collection of anonymous app usage statistics.</string>
-    <string name="analytics_enabled_summary_off">Do not allow collection of anonymous app usage statistics.</string>
-  
+    <string name="analytics_summary">Allow collection of anonymous app usage statistics.</string>
+
     <string name="notification_ticker_text">Congress updates</string>
     
     <string name="tab_profile">Profile</string>
