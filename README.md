@@ -19,7 +19,7 @@ When setting this up:
 
 If you're using Google Analytics, fill in `app/src/main/res/xml/tracker.xml`'s `ga_trackingId` field with your Google Analytics profile tracking ID. (Make sure you've set up a profile in Google Analytics first.)
 
-If you're **not** using Google Analytics, then turn off analytics by setting `app/src/main/res/values/keys,xml`'s `debug_disable_analytics` field to `true`.
+If you're **not** using Google Analytics, then turn off analytics by setting `app/src/main/res/values/keys.xml`'s `debug_disable_analytics` field to `true`.
 
 
 
