@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
 
     defaultConfig {
         applicationId "com.sunlightlabs.android.congress"
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 30
 		versionCode 61
 	    versionName "4.9.2"
     }

@@ -59,7 +59,7 @@ public class ProPublica {
             throw new CongressException("No path components given.");
 
         // cobble together the path components
-        StringBuilder path = new StringBuilder("");
+        StringBuilder path = new StringBuilder();
 
         try {
             for (int i=0; i < components.length; i++) {
@@ -82,7 +82,7 @@ public class ProPublica {
             params.put("offset", String.valueOf(offset));
         }
 
-        StringBuilder query = new StringBuilder("");
+        StringBuilder query = new StringBuilder();
         Iterator<String> iterator = params.keySet().iterator();
         if (iterator.hasNext()) {
             query.append("?");

@@ -226,7 +226,7 @@ public class LegislatorPager extends Activity implements HasActionMenu, LoadPhot
 	}
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_TO_DIAL_DIRECTLY: {
                 // if we got permission, dial them

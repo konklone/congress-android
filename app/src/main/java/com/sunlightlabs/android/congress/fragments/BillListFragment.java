@@ -318,7 +318,7 @@ public class BillListFragment extends ListFragment implements PaginationListener
 					return BillService.recentlySponsored(context.sponsor.bioguide_id, page);
 				case BILLS_CODE:
 				    int congress = Bill.currentCongress();
-				    String bill_id = context.bill_type + String.valueOf(context.number) + "-" + String.valueOf(congress);
+				    String bill_id = context.bill_type + context.number + "-" + congress;
 					List<Bill> matches = new ArrayList<Bill>();
                     Bill bill = BillService.find(bill_id);
                     if (bill != null) matches.add(bill);
