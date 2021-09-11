@@ -3,7 +3,6 @@ package com.sunlightlabs.congress.services;
 
 import android.util.Log;
 
-import com.sunlightlabs.android.congress.utils.HttpManager;
 import com.sunlightlabs.android.congress.utils.Utils;
 import com.sunlightlabs.congress.models.CongressException;
 
@@ -11,17 +10,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -31,14 +24,20 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import okhttp3.ConnectionSpec;
+import okhttp3.Headers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class ProPublica {
 
-    public static TimeZone CONGRESS_TIMEZONE = TimeZone.getTimeZone("America/New_York");
-    public static String dateOnlyFormat = "yyyy-MM-dd";
+    public static final TimeZone CONGRESS_TIMEZONE = TimeZone.getTimeZone("America/New_York");
+    public static final String dateOnlyFormat = "yyyy-MM-dd";
 
 
     // Pro Publica Per Page
-    public static int PER_PAGE = 20;
+    public static final int PER_PAGE = 20;
 
     // filled in by the client in keys.xml
     public static String baseUrl = null;
@@ -59,11 +58,11 @@ public class ProPublica {
             throw new CongressException("No path components given.");
 
         // cobble together the path components
-        StringBuilder path = new StringBuilder("");
+        StringBuilder path = new StringBuilder();
 
         try {
             for (int i=0; i < components.length; i++) {
-                path.append(URLEncoder.encode(components[i], "UTF-8"));
+                path.append(URLEncoder.encode(components[i], "UTF-8" ));
                 if ((i + 1) < components.length)
                     path.append("/");
             }
@@ -72,9 +71,8 @@ public class ProPublica {
         }
         path.append(".json");
 
-
         // cobble together any needed query string params
-        if (params == null) params = new HashMap<String,String>();
+        if (params == null) params = new HashMap<>();
 
         // Only use for query string is an "offset" for pagination as needed
         if (page > 0) {
@@ -82,24 +80,27 @@ public class ProPublica {
             params.put("offset", String.valueOf(offset));
         }
 
-        StringBuilder query = new StringBuilder("");
-        Iterator<String> iterator = params.keySet().iterator();
-        if (iterator.hasNext()) {
-            query.append("?");
-            try {
-                while (iterator.hasNext()) {
-                    String key = iterator.next();
-                    String value = params.get(key);
+        StringBuilder query = new StringBuilder();
 
-                    query.append(URLEncoder.encode(key, "UTF-8"));
-                    query.append("=");
-                    query.append(URLEncoder.encode(value, "UTF-8"));
-                    if (iterator.hasNext())
-                        query.append("&");
-                }
-            } catch (UnsupportedEncodingException e) {
-                throw new CongressException(e, "Unicode not supported on this device somehow.");
+        if (!params.keySet().isEmpty()) {
+            query.append("?");
+        }
+
+        Iterator<String> iterator = params.keySet().iterator();
+
+        try {
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+                String value = params.get(key);
+
+                query.append(URLEncoder.encode(key, "UTF-8"));
+                query.append("=");
+                query.append(URLEncoder.encode(value, "UTF-8"));
+                if (iterator.hasNext())
+                    query.append("&");
             }
+        } catch (UnsupportedEncodingException e) {
+            throw new CongressException(e, "Unicode not supported on this device somehow.");
         }
 
         return baseUrl + path.toString() + query.toString();
@@ -108,51 +109,31 @@ public class ProPublica {
     public static String fetchJSON(String url) throws CongressException {
         Log.d(Utils.TAG, "Pro Publica API: " + url);
 
-        // play nice with OkHttp
-        HttpManager.init();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectionSpecs(Arrays.asList(ConnectionSpec.MODERN_TLS, ConnectionSpec.COMPATIBLE_TLS))
+                .build();
 
-        HttpURLConnection connection;
-        URL theUrl;
+        Headers headers = new Headers.Builder()
+                .add("User-Agent", userAgent)
+                .add("X-API-Key", apiKey)
+                .build();
 
-        try {
-            theUrl = new URL(url);
-            connection = (HttpURLConnection) theUrl.openConnection();
-        } catch(MalformedURLException e) {
-            throw new CongressException(e, "Bad URL: " + url);
-        } catch (IOException e) {
-            throw new CongressException(e, "Problem opening connection to " + url);
-        }
+        Request request = new Request.Builder()
+                .url(url)
+                .headers(headers)
+                .build();
 
-        try {
-            // Identify ourselves as the Congress app
-            connection.setRequestProperty("User-Agent", userAgent);
-
-            // Supply the Pro Publica API key over a header
-            connection.setRequestProperty("X-API-Key", apiKey);
-
-            int status = connection.getResponseCode();
-            if (status == HttpURLConnection.HTTP_OK) {
-                // read input stream first to fetch response headers
-                InputStream in = connection.getInputStream();
-
-                // adapted from https://stackoverflow.com/a/2549222/16075
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                StringBuilder total = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) total.append(line);
-
-                return total.toString();
-
-            } else if (status == HttpURLConnection.HTTP_NOT_FOUND)
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
                 throw new CongressException.NotFound("404 Not Found from " + url);
-            else
-                throw new CongressException("Bad status code " + status+ " on fetching JSON from " + url);
-
-        } catch (IOException e) {
+            }
+            if(response.body() != null) {
+                return response.body().string();
+            }
+        } catch (Exception e) {
             throw new CongressException(e, "Problem fetching JSON from " + url);
-        } finally {
-            connection.disconnect();
         }
+        return "";
     }
 
     public static JSONObject firstResult(String url) throws CongressException {
