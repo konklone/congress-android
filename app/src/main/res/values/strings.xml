@@ -214,7 +214,7 @@
     <string name="notify_vibration">Vibrate</string>
     <string name="notify_vibration_summary_on">Vibrate on notify</string>
     <string name="notify_vibration_summary_off">Do not vibrate on notify</string>
-    <string name="notify_ringtone">Select a ringtone</string>
+    <string name="notify_ringtone">Select a notification sound</string>
     
     <string name="analytics_enabled">Allow Analytics</string>
     <string name="analytics_enabled_summary_on">Allow collection of anonymous app usage statistics.</string>
