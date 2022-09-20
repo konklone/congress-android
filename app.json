@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Congress",
+    "slug": "Congress",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./app/src/main/assets/app_icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./app/src/main/assets/app_icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./app/src/main/assets/app_icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "web": {
+      "favicon": "./app/src/main/assets/app_icon.png"
+    }
+  }
+}

@@ -1,3 +1,15 @@
+# Congress for Android and IOS
+
+Below is the original README for Eric Mill's Android-only app. A platform-independent version based on React Native is now in progress here.
+
+## Setup
+
+Install the dependencies, and open up the app using Expo:
+
+* `npm install`
+* `npm start`
+
+
 ## Congress for Android
 
 This is the source code for the Eric Mill's Congress app for Android phones. (This app was previously funded and developed for years by the [Sunlight Foundation](https://sunlightfoundation.com).)
